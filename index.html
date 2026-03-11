@@ -166,7 +166,7 @@
           if (data) {
             if (data.moves)    localStorage.setItem('mb_moves',    data.moves);
             if (data.sets)     localStorage.setItem('mb_sets',     data.sets);
-            if (data.rounds)   localStorage.setItem('mb_rounds',   data.rounds);
+            if (data.rounds) { try { const pr=JSON.parse(data.rounds); if(pr.length>0) localStorage.setItem('mb_rounds', data.rounds); } catch{} }
             if (data.ideas)    localStorage.setItem('mb_ideas',    data.ideas);
             if (data.profile)  localStorage.setItem('mb_profile',  data.profile);
             if (data.settings) localStorage.setItem('mb_settings', data.settings);
@@ -184,7 +184,7 @@
           try {
             if (d.moves)    localStorage.setItem('mb_moves',    d.moves);
             if (d.sets)     localStorage.setItem('mb_sets',     d.sets);
-            if (d.rounds)   localStorage.setItem('mb_rounds',   d.rounds);
+            if (d.rounds) { try { const pr=JSON.parse(d.rounds); if(pr.length>0) localStorage.setItem('mb_rounds', d.rounds); } catch{} }
             if (d.ideas)    localStorage.setItem('mb_ideas',    d.ideas);
             if (d.profile)  localStorage.setItem('mb_profile',  d.profile);
             if (d.settings) localStorage.setItem('mb_settings', d.settings);
@@ -3751,6 +3751,7 @@ const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAdd
   const [expEntries, setExpEntries] = useState({});
   const [editRound, setEditRound] = useState(null);   // round being edited full-screen
   const [addingRound, setAddingRound] = useState(false);
+  const [confirmRestore, setConfirmRestore] = useState(false);
   useEffect(()=>{ if(onAddTrigger) setAddingRound(true); },[onAddTrigger]);
 
   // ── Vocab picker state (inside Edit Round) ──────────────────────────────────
@@ -3836,12 +3837,39 @@ const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAdd
         {/* Header */}
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"8px 14px", borderBottom:`1px solid ${C.border}`, background:C.surface, flexShrink:0 }}>
           <span style={{ fontSize:11, fontWeight:800, letterSpacing:1.5, color:C.brownMid, fontFamily:FONT_DISPLAY }}>{t("rounds")}</span>
-          <button onClick={()=>setAddingRound(true)}
-            style={{ background:C.accent, border:"none", borderRadius:6, cursor:"pointer",
-              color:"#fff", padding:"3px 10px", fontSize:10, fontFamily:FONT_DISPLAY, fontWeight:700, display:"flex", alignItems:"center", gap:3 }}>
-            <Ic n="plus" s={10} c="#fff"/> ADD
-          </button>
+          <div style={{ display:"flex", alignItems:"center", gap:6 }}>
+            <button onClick={()=>setConfirmRestore(true)}
+              style={{ background:"none", border:`1px solid ${C.border}`, borderRadius:6, cursor:"pointer",
+                color:C.textMuted, padding:"3px 10px", fontSize:10, fontFamily:FONT_DISPLAY, fontWeight:700,
+                display:"flex", alignItems:"center", gap:3 }}>
+              ↺ Defaults
+            </button>
+            <button onClick={()=>setAddingRound(true)}
+              style={{ background:C.accent, border:"none", borderRadius:6, cursor:"pointer",
+                color:"#fff", padding:"3px 10px", fontSize:10, fontFamily:FONT_DISPLAY, fontWeight:700, display:"flex", alignItems:"center", gap:3 }}>
+              <Ic n="plus" s={10} c="#fff"/> ADD
+            </button>
+          </div>
         </div>
+
+        {/* Confirm restore modal */}
+        {confirmRestore&&(
+          <Modal title="RESTORE DEFAULT ROUNDS" onClose={()=>setConfirmRestore(false)}>
+            <p style={{ color:C.textSec, marginBottom:8, lineHeight:1.6, fontSize:13 }}>
+              This will replace your current rounds with the default battle structure:
+            </p>
+            <div style={{ background:C.surfaceAlt, borderRadius:8, padding:"10px 14px", marginBottom:16, fontSize:12, color:C.textSec, lineHeight:1.9 }}>
+              Prelims · Top 32 · Top 16 · Top 8 · Semi-Finals · Finals · Reserve
+            </div>
+            <p style={{ color:C.accent, fontWeight:700, fontSize:12, marginBottom:20, lineHeight:1.6 }}>
+              ⚠️ All your current rounds and their entries will be permanently erased. This cannot be undone.
+            </p>
+            <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
+              <Btn variant="secondary" onClick={()=>setConfirmRestore(false)}>{t("cancel")}</Btn>
+              <Btn variant="danger" onClick={()=>{ setRounds(INIT_ROUNDS); setConfirmRestore(false); }}>Yes, Restore</Btn>
+            </div>
+          </Modal>
+        )}
 
         {/* Rounds list */}
         <div style={{ flex:1, overflow:"auto", padding:"10px 12px" }}>
@@ -4524,7 +4552,7 @@ const ProfileModal = ({ onClose, profile, onSave }) => {
 };
 
 // ─── SETTINGS MODAL ───────────────────────────────────────────────────────────
-const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onRestartTour, zoom=1, onZoomChange }) => {
+const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onRestoreRounds, onRestartTour, zoom=1, onZoomChange }) => {
   const t = useT();
   const [s,setS]=useState({
     theme:"light", defaultTab:"wip", showMastery:false, autoGraduate:true,
@@ -4535,6 +4563,7 @@ const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onRestartTour,
     ...settings
   });
   const [confirmClear,setConfirmClear]=useState(false);
+  const [confirmRestoreRounds,setConfirmRestoreRounds]=useState(false);
   const set=k=>v=>setS(p=>({...p,[k]:v}));
 
   const ACCENTS = {
@@ -4839,6 +4868,29 @@ const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onRestartTour,
             )
           , true)}
 
+          {row("Restore Default Rounds",
+            "Reset your Battle rounds back to the default preset structure (Prelims → Finals → Reserve).",
+            confirmRestoreRounds ? (
+              <div style={{ display:"flex", gap:6 }}>
+                <button onClick={()=>setConfirmRestoreRounds(false)}
+                  style={{ padding:"6px 10px", borderRadius:7, border:`1px solid ${panelBrd}`,
+                    background:panelSrf, color:panelMut, cursor:"pointer", fontSize:12,
+                    fontWeight:700, fontFamily:FONT_DISPLAY }}>{t("cancel")}</button>
+                <button onClick={()=>{ onRestoreRounds(); setConfirmRestoreRounds(false); onClose(); }}
+                  style={{ padding:"6px 10px", borderRadius:7, border:`1px solid ${accent}`,
+                    background:`${accent}22`, color:accent, cursor:"pointer", fontSize:12,
+                    fontWeight:700, fontFamily:FONT_DISPLAY }}>{t("confirm")}</button>
+              </div>
+            ) : (
+              <button onClick={()=>setConfirmRestoreRounds(true)}
+                style={{ padding:"7px 14px", borderRadius:7, border:`1px solid ${panelBrd}`,
+                  background:panelSrf, color:panelTxt, cursor:"pointer", fontSize:12,
+                  fontWeight:700, fontFamily:FONT_DISPLAY, whiteSpace:"nowrap" }}>
+                ↺ Restore
+              </button>
+            )
+          , true)}
+
           {/* ── ABOUT ───────────────────────────────────── */}
           {sectionHdr("ABOUT","📱")}
           <div style={{ padding:"12px 0", borderBottom:`1px solid ${panelBrd}` }}>
@@ -4930,7 +4982,7 @@ function App() {
     return Array.isArray(raw) ? raw.map(migrateMove) : INIT_MOVES;
   });
   const [sets,   setSets]   = useState(() => loadLocal("mb_sets",    INIT_SETS));
-  const [rounds, setRounds] = useState(() => loadLocal("mb_rounds",  INIT_ROUNDS));
+  const [rounds, setRounds] = useState(() => { const r = loadLocal("mb_rounds", INIT_ROUNDS); return (Array.isArray(r) && r.length > 0) ? r : INIT_ROUNDS; });
   const [profile, setProfile] = useState(() => loadLocal("mb_profile", {
     nickname:"", age:"", gender:"", goals:"", years:"",
     startYear:"", startMonth:"", startDay:"", why:""
@@ -5112,7 +5164,7 @@ function App() {
 
         <Toast toasts={toasts} remove={removeToast}/>
         {showProfile&&<ProfileModal onClose={()=>setShowProfile(false)} profile={profile} onSave={setProfile}/>}
-        {showSettings&&<SettingsModal onClose={()=>setShowSettings(false)} settings={appSettings} onSave={setAppSettings} onClearMoves={()=>setMoves([])} onRestartTour={()=>setShowTour(true)} zoom={zoom} onZoomChange={setZoom}/> }
+        {showSettings&&<SettingsModal onClose={()=>setShowSettings(false)} settings={appSettings} onSave={setAppSettings} onClearMoves={()=>setMoves([])} onRestoreRounds={()=>setRounds(INIT_ROUNDS)} onRestartTour={()=>setShowTour(true)} zoom={zoom} onZoomChange={setZoom}/> }
         {showTour&&<Walkthrough onDone={handleTourDone}/>}
         {showFeedback&&<FeedbackModal onClose={()=>setShowFeedback(false)}/>}
 
