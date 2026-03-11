@@ -1723,12 +1723,115 @@ const TypeChooserModal = ({ onClose, onChoose }) => {
           cursor:"pointer", textAlign:"left", display:"flex", alignItems:"center", gap:14 }}>
         <span style={{ fontSize:28 }}>🎯</span>
         <div>
-          <div style={{ fontWeight:800, fontSize:14, color:C.accent, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>SET A GOAL</div>
+          <div style={{ fontWeight:800, fontSize:14, color:C.accent, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>JOURNEY GOAL</div>
           <div style={{ fontSize:12, color:C.textMuted, marginTop:3 }}>Define what you want to achieve and build a plan to get there</div>
+        </div>
+      </button>
+      <button onClick={()=>onChoose("target")}
+        style={{ padding:"18px 16px", background:C.surface, border:`2px solid ${C.accent}55`, borderRadius:12,
+          cursor:"pointer", textAlign:"left", display:"flex", alignItems:"center", gap:14 }}>
+        <span style={{ fontSize:28 }}>🏹</span>
+        <div>
+          <div style={{ fontWeight:800, fontSize:14, color:C.accent, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>TARGET GOAL</div>
+          <div style={{ fontSize:12, color:C.textMuted, marginTop:3 }}>Track a number — moves learned, sessions done, hours trained</div>
         </div>
       </button>
     </div>
   </Modal>
+  );
+};
+
+
+// ─── TARGET GOAL MODAL ───────────────────────────────────────────────────────
+const TargetGoalModal = ({ onClose, onSave, idea, moves=[] }) => {
+  const { C, settings } = useSettings();
+  const isEdit = !!idea;
+  const autoLinkEnabled = settings.targetAutoLink === true;
+  const [title,    setTitle]    = useState(idea?.title    || "");
+  const [target,   setTarget]   = useState(idea?.target   || 10);
+  const [unit,     setUnit]     = useState(idea?.unit     || "moves");
+  const [current,  setCurrent]  = useState(idea?.current  || 0);
+  const [byWhen,   setByWhen]   = useState(idea?.byWhen   || "");
+  const [autoLink, setAutoLink] = useState(idea?.autoLink || false);
+  const [color,    setColor]    = useState(idea?.color    || IDEA_COLORS[0]);
+
+  const effectiveCurrent = autoLink && autoLinkEnabled ? moves.length : current;
+
+  const inputStyle = { width:"100%", background:C.surface, border:`1px solid ${C.border}`, borderRadius:8,
+    padding:"9px 12px", color:C.text, fontSize:13, outline:"none", fontFamily:FONT_BODY, boxSizing:"border-box" };
+
+  return (
+    <Modal title={isEdit?"EDIT TARGET":"NEW TARGET GOAL"} onClose={onClose}>
+      <div style={{ marginBottom:14 }}>
+        <label style={lbl()}>TITLE *</label>
+        <input value={title} onChange={e=>setTitle(e.target.value)} placeholder="e.g. Learn 20 new moves…"
+          style={{ ...inputStyle, fontSize:14, fontWeight:700, border:`1.5px solid ${C.accent}`, fontFamily:FONT_DISPLAY }}/>
+      </div>
+      <div style={{ display:"flex", gap:10, marginBottom:14 }}>
+        <div style={{ flex:1 }}>
+          <label style={lbl()}>TARGET NUMBER *</label>
+          <input type="number" min="1" value={target} onChange={e=>setTarget(Math.max(1,parseInt(e.target.value)||1))}
+            style={{ ...inputStyle, fontWeight:800, fontSize:18, fontFamily:FONT_DISPLAY, textAlign:"center" }}/>
+        </div>
+        <div style={{ flex:2 }}>
+          <label style={lbl()}>UNIT (what are you counting?)</label>
+          <input value={unit} onChange={e=>setUnit(e.target.value)} placeholder="moves, sessions, hours…"
+            style={inputStyle}/>
+        </div>
+      </div>
+      {!(autoLink && autoLinkEnabled) && (
+        <div style={{ marginBottom:14 }}>
+          <label style={lbl()}>CURRENT PROGRESS</label>
+          <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+            <button onClick={()=>setCurrent(Math.max(0,current-1))}
+              style={{ width:36, height:36, borderRadius:8, border:`1px solid ${C.border}`, background:C.surface,
+                fontSize:18, cursor:"pointer", color:C.textSec, fontWeight:700 }}>−</button>
+            <input type="number" min="0" value={current} onChange={e=>setCurrent(Math.max(0,parseInt(e.target.value)||0))}
+              style={{ ...inputStyle, textAlign:"center", fontWeight:800, fontSize:18, fontFamily:FONT_DISPLAY }}/>
+            <button onClick={()=>setCurrent(current+1)}
+              style={{ width:36, height:36, borderRadius:8, border:`1px solid ${C.accent}`, background:`${C.accent}15`,
+                fontSize:18, cursor:"pointer", color:C.accent, fontWeight:700 }}>+</button>
+          </div>
+        </div>
+      )}
+      {autoLinkEnabled && (
+        <div style={{ marginBottom:14, display:"flex", alignItems:"center", justifyContent:"space-between",
+          padding:"10px 12px", background:C.surfaceAlt, borderRadius:8, border:`1px solid ${C.border}` }}>
+          <div>
+            <div style={{ fontSize:12, fontWeight:800, color:C.text, fontFamily:FONT_DISPLAY }}>AUTO-LINK TO MOVE LIBRARY</div>
+            <div style={{ fontSize:11, color:C.textMuted, marginTop:2 }}>Use your actual move count as progress ({moves.length} moves)</div>
+          </div>
+          <button onClick={()=>setAutoLink(x=>!x)}
+            style={{ width:40, height:22, borderRadius:11, border:"none", cursor:"pointer",
+              background: autoLink ? C.accent : C.border, position:"relative", transition:"background 0.2s" }}>
+            <div style={{ position:"absolute", top:2, left: autoLink?20:2, width:18, height:18,
+              borderRadius:"50%", background:"#fff", transition:"left 0.2s" }}/>
+          </button>
+        </div>
+      )}
+      <div style={{ marginBottom:14 }}>
+        <label style={lbl()}>DEADLINE (optional)</label>
+        <input type="date" value={byWhen} onChange={e=>setByWhen(e.target.value)}
+          style={{ ...inputStyle, colorScheme: C.bg==="#121212"?"dark":"light" }}/>
+      </div>
+      <div style={{ marginBottom:20 }}>
+        <label style={lbl()}>COLOUR</label>
+        <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginTop:6 }}>
+          {IDEA_COLORS.map(c=>(
+            <button key={c} onClick={()=>setColor(c)}
+              style={{ width:30, height:30, borderRadius:6, background:c, cursor:"pointer", outline:"none",
+                border: color===c ? `3px solid ${C.brown}` : "2px solid transparent" }}/>
+          ))}
+        </div>
+      </div>
+      <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
+        <Btn variant="secondary" onClick={onClose}>Cancel</Btn>
+        <Btn onClick={()=>{ if(title.trim()){ onSave({ type:"target", pinned:true, title:title.trim(),
+          target, unit:unit.trim()||"items", current:effectiveCurrent, byWhen, autoLink, color, text:"",
+          createdDate: idea?.createdDate || new Date().toISOString().split("T")[0]
+        }); onClose(); }}} disabled={!title.trim()}>Save</Btn>
+      </div>
+    </Modal>
   );
 };
 
@@ -2023,7 +2126,8 @@ const GoalModal = ({ onClose, onSave, idea }) => {
 // ─── ADD IDEA MODAL — legacy wrapper (kept for edit routing) ──────────────────
 const AddIdeaModal = ({ onClose, onSave, idea }) => {
   // When editing, route to the correct modal type
-  if (idea?.type === "goal") return <GoalModal onClose={onClose} onSave={onSave} idea={idea}/>;
+  if (idea?.type === "goal")   return <GoalModal onClose={onClose} onSave={onSave} idea={idea}/>;
+  if (idea?.type === "target") return <TargetGoalModal onClose={onClose} onSave={onSave} idea={idea}/>;
   return <NoteModal onClose={onClose} onSave={onSave} idea={idea}/>;
 };
 
@@ -2037,6 +2141,15 @@ const menuBtnStyle = (color, border) => ({
 
 
 // ─── GOAL TIME PROGRESS ───────────────────────────────────────────────────────
+
+const targetProgress = (current, target) => {
+  if (!target || target <= 0) return { pct:0, color:"#e53935", label:"0%" };
+  const pct = Math.min(100, Math.max(0, Math.round((current / target) * 100)));
+  const color = pct >= 100 ? "#2d6a4f" : pct >= 60 ? "#b5850a" : "#e53935";
+  const label = pct >= 100 ? "Goal reached! 🎉" : `${pct}% there`;
+  return { pct, color, label };
+};
+
 const goalTimeProgress = (createdDate, byWhen) => {
   if (!byWhen) return null;
   const now   = Date.now();
@@ -2063,11 +2176,12 @@ const IdeaTile = (props) => {
   const color  = idea.color || IDEA_COLORS[0];
   const title  = idea.title || "Untitled";
   const text   = idea.text  || "";
-  const isGoal = idea.type === "goal";
-  const isPinned = idea.pinned || isGoal;
-  const isTile = viewMode === "tiles";
-  const typeEmoji = isGoal ? "🎯" : "📝";
-  const typeLabel = isGoal ? t("goal") : "NOTE";
+  const isGoal   = idea.type === "goal";
+  const isTarget = idea.type === "target";
+  const isPinned = idea.pinned || isGoal || isTarget;
+  const isTile   = viewMode === "tiles";
+  const typeEmoji = isGoal ? "🎯" : isTarget ? "🏹" : "📝";
+  const typeLabel = isGoal ? t("goal") : isTarget ? "TARGET" : "NOTE";
 
   const handleOpenMenu = (e) => {
     e.stopPropagation();
@@ -2109,7 +2223,35 @@ const IdeaTile = (props) => {
             </div>
           </div>
           {/* Content preview */}
-          {isGoal ? (
+          {isTarget ? (
+            <div style={{ flex:1 }}>
+              {/* Big counter */}
+              <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:6 }}>
+                <div style={{ fontFamily:FONT_DISPLAY }}>
+                  <span style={{ fontSize:22, fontWeight:900, color }}>{onIncrTarget ? idea.current||0 : idea.current||0}</span>
+                  <span style={{ fontSize:11, color:C.textMuted, marginLeft:3 }}>/ {idea.target} {idea.unit}</span>
+                </div>
+                <div style={{ display:"flex", gap:4 }}>
+                  <button onClick={e=>{ e.stopPropagation(); onDecrTarget&&onDecrTarget(); }}
+                    style={{ width:26, height:26, borderRadius:6, border:`1px solid ${C.border}`, background:C.surface,
+                      fontSize:14, cursor:"pointer", color:C.textSec, fontWeight:700, display:"flex", alignItems:"center", justifyContent:"center" }}>−</button>
+                  <button onClick={e=>{ e.stopPropagation(); onIncrTarget&&onIncrTarget(); }}
+                    style={{ width:26, height:26, borderRadius:6, border:`1px solid ${color}`, background:`${color}20`,
+                      fontSize:14, cursor:"pointer", color, fontWeight:700, display:"flex", alignItems:"center", justifyContent:"center" }}>+</button>
+                </div>
+              </div>
+              {/* Progress bar — red→green */}
+              {(()=>{ const tp=targetProgress(idea.current||0, idea.target); return (
+                <div>
+                  <div style={{ height:4, borderRadius:2, background:C.border }}>
+                    <div style={{ height:"100%", width:`${tp.pct}%`, borderRadius:2, background:tp.color, transition:"width 0.3s" }}/>
+                  </div>
+                  <div style={{ fontSize:9, color:tp.color, fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:0.5, marginTop:2 }}>{tp.label}</div>
+                </div>
+              );})()}
+              {idea.byWhen&&<div style={{ fontSize:10, color:C.textMuted, marginTop:4 }}>📅 {idea.byWhen}</div>}
+            </div>
+          ) : isGoal ? (
             <div style={{ flex:1 }}>
               <div style={{ fontSize:11, color:C.textMuted, fontFamily:FONT_BODY }}>
                 {idea.byWhen ? <span>📅 <strong style={{color:C.textSec}}>{idea.byWhen}</strong></span> : <span style={{fontStyle:"italic"}}>No deadline set</span>}
@@ -2190,7 +2332,36 @@ const IdeaTile = (props) => {
         </div>
         {expanded&&(
           <div style={{ borderTop:`1px solid ${C.borderLight}`, padding:"8px 12px 12px 30px" }}>
-            {isGoal ? (
+            {isTarget ? (
+              <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
+                {/* Counter row */}
+                <div style={{ display:"flex", alignItems:"center", gap:14 }}>
+                  <div style={{ fontFamily:FONT_DISPLAY }}>
+                    <span style={{ fontSize:28, fontWeight:900, color }}>{idea.current||0}</span>
+                    <span style={{ fontSize:13, color:C.textMuted, marginLeft:4 }}>/ {idea.target} {idea.unit}</span>
+                  </div>
+                  <div style={{ display:"flex", gap:6 }}>
+                    <button onClick={e=>{ e.stopPropagation(); onDecrTarget&&onDecrTarget(); }}
+                      style={{ width:32, height:32, borderRadius:8, border:`1px solid ${C.border}`, background:C.surface,
+                        fontSize:16, cursor:"pointer", color:C.textSec, fontWeight:700 }}>−</button>
+                    <button onClick={e=>{ e.stopPropagation(); onIncrTarget&&onIncrTarget(); }}
+                      style={{ width:32, height:32, borderRadius:8, border:`1px solid ${color}`, background:`${color}20`,
+                        fontSize:16, cursor:"pointer", color, fontWeight:700 }}>+</button>
+                  </div>
+                </div>
+                {/* Progress bar */}
+                {(()=>{ const tp=targetProgress(idea.current||0,idea.target); return (
+                  <div>
+                    <div style={{ height:6, borderRadius:3, background:C.border }}>
+                      <div style={{ height:"100%", width:`${tp.pct}%`, borderRadius:3, background:tp.color, transition:"width 0.4s" }}/>
+                    </div>
+                    <div style={{ fontSize:10, color:tp.color, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:0.5, marginTop:3 }}>{tp.label}</div>
+                  </div>
+                );})()}
+                {idea.byWhen&&<div style={{ fontSize:11, color:C.textMuted }}>📅 Deadline: {idea.byWhen}</div>}
+                {idea.autoLink&&<div style={{ fontSize:10, color:C.textMuted, fontStyle:"italic" }}>Auto-linked to move library</div>}
+              </div>
+            ) : isGoal ? (
               <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
                 {idea.why&&<div><span style={{ fontSize:10, fontWeight:800, color:C.textMuted, letterSpacing:1, fontFamily:FONT_DISPLAY }}>WHY</span><p style={{ fontSize:12, color:C.textSec, marginTop:2 }}>{idea.why}</p></div>}
                 {idea.steps&&idea.steps.filter(s=>s).length>0&&(
@@ -2215,7 +2386,10 @@ const IdeaTile = (props) => {
           </div>
         )}
         {!expanded&&<div style={{ margin:"0 10px 8px", height:2, borderRadius:1, background:C.border }}>
-          <div style={{ height:"100%", width:(isGoal||text)?"40%":"0%", borderRadius:1, background:color }}/>
+          {isTarget
+            ? <div style={{ height:"100%", width:`${targetProgress(idea.current||0,idea.target).pct}%`, borderRadius:1, background:targetProgress(idea.current||0,idea.target).color, transition:"width 0.3s" }}/>
+            : <div style={{ height:"100%", width:(isGoal||text)?"40%":"0%", borderRadius:1, background:color }}/>
+          }
         </div>}
       </div>
 
@@ -2636,13 +2810,23 @@ const IdeasPage = ({ onAddMove, onAddTrigger }) => {
   const [typeChooser,setTypeChooser]= useState(false);
   useEffect(()=>{ if(onAddTrigger){
     if(trainTab==="habits") { /* handled by HabitsPage */ }
-    else if(trainTab==="goals") { openModal("goal", null, addIdea); }
     else if(trainTab==="notes") { openModal("note", null, addIdea); }
     else { setTypeChooser(true); }
   } },[onAddTrigger]);
   const [newType,    setNewType]    = useState(null);
   const { openModal } = useTrainModal();
   const [trainTab,   setTrainTab]   = useState("goals");
+  // Auto-link: sync move count to target goals that have autoLink=true
+  const { settings: ideaSettings2 } = useSettings();
+  // We get moves count from localStorage as a proxy (no prop needed)
+  useEffect(() => {
+    if (!ideaSettings2.targetAutoLink) return;
+    try {
+      const m = localStorage.getItem("mb_moves");
+      const cnt = m ? JSON.parse(m).length : 0;
+      setIdeas(p => p.map(i => (i.type==="target" && i.autoLink) ? {...i, current:cnt} : i));
+    } catch {}
+  }, [ideaSettings2.targetAutoLink]);
   const [search,     setSearch]     = useState("");
   const [showSearch, setShowSearch] = useState(false);
 
@@ -2654,6 +2838,8 @@ const IdeasPage = ({ onAddMove, onAddTrigger }) => {
   const del       = id => setIdeas(p=>p.filter(i=>i.id!==id));
   const askDelete = (idea) => setConfirmDel(idea);
   const save      = (id, fields) => setIdeas(p=>p.map(i=>i.id===id?{...i,...fields}:i));
+  const incrTarget = (id) => setIdeas(p=>p.map(i=>i.id===id?{...i,current:Math.min((i.current||0)+1,i.target||9999)}:i));
+  const decrTarget = (id) => setIdeas(p=>p.map(i=>i.id===id?{...i,current:Math.max(0,(i.current||0)-1)}:i));
   const dup       = id => { const orig=ideas.find(i=>i.id===id); if(orig) setIdeas(p=>[...p,{...orig,id:Date.now(),title:(orig.title||"")+" (copy)",pinned:false}]); };
   const changeColor = (id, color) => setIdeas(p=>p.map(i=>i.id===id?{...i,color}:i));
   const togglePin   = (id) => setIdeas(p=>p.map(i=>i.id===id&&i.type!=="goal"?{...i,pinned:!i.pinned}:i));
@@ -2682,7 +2868,7 @@ const IdeasPage = ({ onAddMove, onAddTrigger }) => {
   ];
 
   // Split ideas by type for sub-tabs
-  const goals = ideas.filter(i=>i.type==="goal");
+  const goals = ideas.filter(i=>i.type==="goal"||i.type==="target");
   const notes = ideas.filter(i=>i.type==="note");
 
   return (
@@ -2744,7 +2930,7 @@ const IdeasPage = ({ onAddMove, onAddTrigger }) => {
           onDragEnd={()=>{ dragItem.current=null; setDragOver(null); }}
           onDragLeave={e=>{ if(!e.currentTarget.contains(e.relatedTarget)) setDragOver(null); }}
         >
-          {filtered.filter(i=>trainTab==="goals"?i.type==="goal":i.type==="note").map((idea, idx) => (
+          {filtered.filter(i=>trainTab==="goals"?(i.type==="goal"||i.type==="target"):i.type==="note").map((idea, idx) => (
             <IdeaTile
               key={idea.id}
               idea={idea}
@@ -2756,12 +2942,14 @@ const IdeasPage = ({ onAddMove, onAddTrigger }) => {
               onAddToMove={text=>onAddMove(text)}
               onChangeColor={col=>changeColor(idea.id,col)}
               onTogglePin={()=>togglePin(idea.id)}
+              onIncrTarget={()=>incrTarget(idea.id)}
+              onDecrTarget={()=>decrTarget(idea.id)}
               draggable={true}
               onDragStart={()=>handleDragStart(idx)}
               onDragOver={e=>{ e.preventDefault(); e.stopPropagation(); if(dragItem.current!==null) setDragOver(idx); }}
               onDrop={e=>{ e.preventDefault(); e.stopPropagation(); handleDrop(idx); }}/>
           ))}
-          {view!=="tiles"&&filtered.filter(i=>trainTab==="goals"?i.type==="goal":i.type==="note").length>0&&(
+          {view!=="tiles"&&filtered.filter(i=>trainTab==="goals"?(i.type==="goal"||i.type==="target"):i.type==="note").length>0&&(
             <div
               onDragOver={e=>{ e.preventDefault(); e.stopPropagation(); if(dragItem.current!==null) setDragOver(filtered.length); }}
               onDragLeave={e=>{ if(!e.currentTarget.contains(e.relatedTarget)) setDragOver(null); }}
@@ -2777,7 +2965,7 @@ const IdeasPage = ({ onAddMove, onAddTrigger }) => {
         {filtered.length===0&&search&&<div style={{ textAlign:"center", padding:30, color:C.textMuted }}><p style={{fontSize:13}}>No results for "{search}"</p></div>}
       </div>
       }
-      {typeChooser&&<TypeChooserModal onClose={()=>setTypeChooser(false)} onChoose={t=>{ setTypeChooser(false); setTrainTab(t==="goal"?"goals":"notes"); openModal(t, null, addIdea); }}/>}
+      {typeChooser&&<TypeChooserModal onClose={()=>setTypeChooser(false)} onChoose={t=>{ setTypeChooser(false); setTrainTab((t==="goal"||t==="target")?"goals":"notes"); openModal(t, null, addIdea); }}/>}
       {confirmDel&&(
         <div style={{ position:"absolute", inset:0, background:"rgba(0,0,0,0.6)", zIndex:4000, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
           <div style={{ background:C.bg, border:`2px solid ${C.border}`, borderRadius:14, padding:24, width:"100%" }}>
@@ -4929,7 +5117,7 @@ const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onRestoreRound
     compactCards:false, sortMoves:"date", fontSize:"medium",
     showReadyBadge:true, showMoveCount:false, confirmDelete:true, practiceReminders:false,
     reminderTime:"18:00", streakTracking:true, hideFullyMastered:false,
-    categorySort:"manual", showMoveCount:true, accentColor:"crimson", defaultView:"list", language:"en", linkOnCard:"inside",
+    categorySort:"manual", showMoveCount:true, accentColor:"crimson", defaultView:"list", language:"en", linkOnCard:"inside", targetAutoLink:false,
     ...settings
   });
   const [confirmClear,setConfirmClear]=useState(false);
@@ -5113,6 +5301,16 @@ const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onRestoreRound
               <option value="inside">🔒 Inside only</option>
               <option value="both">🔗 Inside & outside</option>
             </select>
+          )}
+
+          {row("Target Goal Auto-Link",
+            "Auto-sync move library count to Target Goals with auto-link enabled (off by default)",
+            <button onClick={()=>set("targetAutoLink")(!s.targetAutoLink)}
+              style={{ width:44, height:24, borderRadius:12, border:"none", cursor:"pointer", padding:0, position:"relative",
+                background: s.targetAutoLink ? C.accent : panelBrd, transition:"background 0.2s" }}>
+              <div style={{ position:"absolute", top:3, left: s.targetAutoLink?22:2, width:18, height:18,
+                borderRadius:"50%", background:"#fff", transition:"left 0.2s" }}/>
+            </button>
           )}
 
           {/* ── NAVIGATION ──────────────────────────────── */}
@@ -5437,7 +5635,7 @@ function App() {
       compactCards:false, sortMoves:"date", fontSize:"medium",
       showReadyBadge:true, showMoveCount:false, confirmDelete:true, practiceReminders:false,
       reminderTime:"18:00", streakTracking:true, hideFullyMastered:false,
-      categorySort:"manual", accentColor:"crimson", defaultView:"list", language:"en", linkOnCard:"inside",
+      categorySort:"manual", accentColor:"crimson", defaultView:"list", language:"en", linkOnCard:"inside", targetAutoLink:false,
     },
     ...loadLocal("mb_settings", {}),
   }));
@@ -5510,7 +5708,7 @@ function App() {
 
         <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column", position:"relative" }}>
           {/* Train modals + menu — inside position:relative so absolute children are scoped to app width */}
-          {(trainModal.type==="note"||trainModal.type==="goal")&&(
+          {(trainModal.type==="note"||trainModal.type==="goal"||trainModal.type==="target")&&(
             <div style={{ position:"absolute", inset:0, background:"rgba(0,0,0,0.6)", zIndex:3000, display:"flex", alignItems:"center", justifyContent:"center", padding:10 }}>
               {trainModal.type==="note"&&<NoteModal
                 idea={trainModal.idea}
@@ -5518,6 +5716,11 @@ function App() {
                 onSave={fields=>{ trainModal.onSave(fields); setTrainModal({}); }}/>}
               {trainModal.type==="goal"&&<GoalModal
                 idea={trainModal.idea}
+                onClose={()=>setTrainModal({})}
+                onSave={fields=>{ trainModal.onSave(fields); setTrainModal({}); }}/>}
+              {trainModal.type==="target"&&<TargetGoalModal
+                idea={trainModal.idea}
+                moves={moves}
                 onClose={()=>setTrainModal({})}
                 onSave={fields=>{ trainModal.onSave(fields); setTrainModal({}); }}/>}
             </div>
