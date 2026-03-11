@@ -170,6 +170,7 @@
             if (data.ideas)    localStorage.setItem('mb_ideas',    data.ideas);
             if (data.profile)  localStorage.setItem('mb_profile',  data.profile);
             if (data.settings) localStorage.setItem('mb_settings', data.settings);
+            if (data.habits)   localStorage.setItem('mb_habits',   data.habits);
             localStorage.setItem('mb_data_version','5');
           }
           if (loginDiv) { loginDiv.style.opacity='0'; setTimeout(function(){ loginDiv.style.display='none'; },300); }
@@ -188,6 +189,7 @@
             if (d.ideas)    localStorage.setItem('mb_ideas',    d.ideas);
             if (d.profile)  localStorage.setItem('mb_profile',  d.profile);
             if (d.settings) localStorage.setItem('mb_settings', d.settings);
+            if (d.habits)   localStorage.setItem('mb_habits',   d.habits);
           } catch(e){}
           window.dispatchEvent(new Event('mb-auth-resolved'));
         });
@@ -960,22 +962,20 @@ const INIT_MOVES = [
   { id:105, name:"Baby Freeze",   category:"Freezes",     mastery:91, description:"The Baby Freeze is the entry-level freeze — balance on one elbow planted in your hip while the other arm and your head form a tripod. Clean, compact, and essential.", link:"", date:"2025-01-20", status:"ready", rotation:false, travelling:false },
 ];
 const INIT_IDEAS = [
-  { id:201, type:"goal", title:"Hit my first battle", text:"", color:"#c0391b", pinned:true,
-    why:"I want to test myself under pressure, feel the energy of a real cipher, and see where my level actually stands. Battles push you to grow faster than training alone.",
-    byWhen:"2025-09-30",
-    steps:["Enter a practice jam or open cypher first","Build a reliable 30-second set I can do under pressure","Film and review at least 5 training sessions before the date"],
-    daysPerWeek:"4", sessionLength:"1.5 hours", trainWhere:"Local dance studio or garage",
-    obstacles:"Nerves freezing me up, forgetting my set under pressure, not feeling ready",
-    journal:[] },
-  { id:202, type:"goal", title:"Clean up my Six Steps", text:"", color:"#b5850a", pinned:true,
-    why:"Six Steps is the foundation of everything — footworks, transitions, combos. If mine is sloppy, everything built on top will be too.",
-    byWhen:"2025-07-15",
-    steps:["Drill Six Steps for 10 minutes every session","Record myself weekly and compare","Try linking Six Steps into 3 different go-downs"],
-    daysPerWeek:"5", sessionLength:"45 mins", trainWhere:"Home — just need a smooth floor",
-    obstacles:"Rushing the count, collapsing my base arm when tired",
-    journal:[] },
-  { id:203, type:"note", title:"Combo idea — toprock to backspin", text:"Try flowing straight from the Indian Step into a Backspin without standing back up. The momentum from the cross-step might carry the spin naturally. Test it slow first, then speed it up.", color:"#2a5f8a", pinned:false },
-  { id:204, type:"note", title:"Freeze exit options", text:"Instead of just standing up from the Baby Freeze, experiment with rolling out into Six Steps or kicking out into a Knee Drop. Freezes should connect, not just stop.", color:"#2d6a4f", pinned:false },
+  { id:201, type:"goal", title:"Example Goal — read me first 🎯", text:"", color:"#c0391b", pinned:true,
+    link:"",
+    why:"Goals keep you focused on what matters. Every b-boy/b-girl has a target — whether it\'s hitting a battle, cleaning up a move, or training consistently. Use this section to define yours with clarity.",
+    byWhen: (() => { const d = new Date(); d.setMonth(d.getMonth()+3); return d.toISOString().split('T')[0]; })(),
+    steps:["Define your goal clearly in the title above","Set a realistic deadline using the BY WHEN date","Add 3 concrete steps that will get you there"],
+    daysPerWeek:"3–4 days", sessionLength:"1 hour", trainWhere:"Wherever you train",
+    obstacles:"Staying consistent when motivation dips — that\'s why you have this goal written down.",
+    journal:[{ id:99901, date: new Date().toLocaleDateString("en-AU",{day:"2-digit",month:"short",year:"numeric"}), text:"This is a journal entry. Every time you train toward this goal, add an entry here — what went well, what was hard, what you noticed. Over time this becomes your training diary.", link:"" }] },
+  { id:202, type:"note", title:"Example Note — read me first 📝", text:"Notes are your creative scratchpad. Use them for:\n\n• Combo ideas you want to try\n• Observations from training sessions\n• References you want to come back to\n• Anything your brain needs to offload\n\nTap the pencil icon to edit this note, or tap + ADD to create your own. You can pin important notes to keep them at the top.", color:"#2a5f8a", pinned:false, link:"" },
+];
+
+const INIT_HABITS = [
+  { id:601, name:"Daily Practice", emoji:"🕺", frequency:"daily", createdDate: new Date().toISOString().split('T')[0], checkIns:[], color:"#c0391b" },
+  { id:602, name:"Watch a Battle or Tutorial", emoji:"📺", frequency:"daily", createdDate: new Date().toISOString().split('T')[0], checkIns:[], color:"#2a5f8a" },
 ];
 const INIT_SETS = [
   { id:301, name:"Opening Combo",    color:"#2a5f8a", notes:"Toprock → footwork → freeze. My go-to opener.", mastery:35, date:"2025-03-01" },
@@ -1819,7 +1819,8 @@ const GoalModal = ({ onClose, onSave, idea }) => {
     if (!title.trim()) return;
     onSave({ type:"goal", pinned:true, title:title.trim(), why, byWhen,
       steps, daysPerWeek, sessionLength:sessionLen, trainWhere,
-      obstacles, color, journal, link:link.trim(), text:"" });
+      obstacles, color, journal, link:link.trim(), text:"",
+      createdDate: idea?.createdDate || new Date().toISOString().split('T')[0] });
     onClose();
   };
 
@@ -2034,6 +2035,21 @@ const menuBtnStyle = (color, border) => ({
   borderTop: border ? `1px solid ${C.borderLight}` : "none",
 });
 
+
+// ─── GOAL TIME PROGRESS ───────────────────────────────────────────────────────
+const goalTimeProgress = (createdDate, byWhen) => {
+  if (!byWhen) return null;
+  const now   = Date.now();
+  const start = createdDate ? new Date(createdDate).getTime() : now;
+  const end   = new Date(byWhen).getTime();
+  if (end <= start) return { pct: 100, color: "#e53935", label: "Past deadline" };
+  const pct = Math.min(100, Math.max(0, Math.round((now - start) / (end - start) * 100)));
+  const daysLeft = Math.ceil((end - now) / 86400000);
+  const color = pct < 50 ? "#2d6a4f" : pct < 80 ? "#b5850a" : "#e53935";
+  const label = daysLeft <= 0 ? "Past deadline" : daysLeft === 1 ? "1 day left" : `${daysLeft} days left`;
+  return { pct, color, label };
+};
+
 // ─── IDEA TILE ───────────────────────────────────────────────────────────────
 const IdeaTile = (props) => {
   const { idea, viewMode="list", onEdit, onDelete, onDuplicate, onAddToMove, onChangeColor, onTogglePin, draggable, onDragStart, onDragOver, onDrop, searchQuery="" } = props;
@@ -2097,6 +2113,14 @@ const IdeaTile = (props) => {
             <div style={{ flex:1 }}>
               <div style={{ fontSize:11, color:C.textMuted, fontFamily:FONT_BODY }}>
                 {idea.byWhen ? <span>📅 <strong style={{color:C.textSec}}>{idea.byWhen}</strong></span> : <span style={{fontStyle:"italic"}}>No deadline set</span>}
+              {(()=>{ const tp=goalTimeProgress(idea.createdDate||idea.date, idea.byWhen); if(!tp) return null; return (
+                <div style={{ marginTop:5 }}>
+                  <div style={{ height:3, borderRadius:2, background:C.border }}>
+                    <div style={{ height:"100%", width:`${tp.pct}%`, borderRadius:2, background:tp.color, transition:"width 0.3s" }}/>
+                  </div>
+                  <div style={{ fontSize:9, color:tp.color, fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:0.5, marginTop:2 }}>{tp.label}</div>
+                </div>
+              );})()}
               </div>
               {idea.steps&&idea.steps.filter(s=>s).length>0&&(
                 <div style={{ marginTop:6 }}>
@@ -2273,6 +2297,318 @@ const IdeaMenu = ({ menu, onClose }) => {
 };
 
 // ─── TRAIN PAGE ───────────────────────────────────────────────────────────────
+
+// ─── HABITS ───────────────────────────────────────────────────────────────────
+
+const HABIT_COLORS = ["#c0391b","#2a5f8a","#2d6a4f","#b5850a","#6b3a8a","#4a4a4a","#1a7a6a"];
+
+const habitStreak = (checkIns) => {
+  if (!checkIns || checkIns.length === 0) return 0;
+  const today = new Date(); today.setHours(0,0,0,0);
+  let streak = 0;
+  let check = new Date(today);
+  while (true) {
+    const ds = check.toISOString().split("T")[0];
+    if (checkIns.includes(ds)) { streak++; check.setDate(check.getDate()-1); }
+    else break;
+  }
+  return streak;
+};
+
+const habitDoneToday = (checkIns) => {
+  const today = new Date().toISOString().split("T")[0];
+  return (checkIns||[]).includes(today);
+};
+
+const HabitModal = ({ onClose, onSave, habit }) => {
+  const { C } = useSettings();
+  const isEdit = !!habit;
+  const [name,      setName]      = useState(habit?.name      || "");
+  const [emoji,     setEmoji]     = useState(habit?.emoji     || "🎯");
+  const [frequency, setFrequency] = useState(habit?.frequency || "daily");
+  const [color,     setColor]     = useState(habit?.color     || HABIT_COLORS[0]);
+  const EMOJIS = ["🎯","🕺","💪","📺","🧘","📝","🏃","🎵","📚","💧","🌅","🔥"];
+  return (
+    <Modal title={isEdit?"EDIT HABIT":"NEW HABIT"} onClose={onClose}>
+      <div style={{ marginBottom:14 }}>
+        <label style={lbl()}>EMOJI</label>
+        <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginTop:6 }}>
+          {EMOJIS.map(e=>(
+            <button key={e} onClick={()=>setEmoji(e)}
+              style={{ width:36, height:36, borderRadius:8, fontSize:18, cursor:"pointer", border:`2px solid ${e===emoji?C.accent:C.border}`,
+                background: e===emoji ? `${C.accent}15` : C.surface }}>
+              {e}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div style={{ marginBottom:14 }}>
+        <label style={lbl()}>HABIT NAME *</label>
+        <input value={name} onChange={e=>setName(e.target.value)} placeholder="e.g. Daily Practice…"
+          style={{ width:"100%", background:C.surface, border:`1px solid ${C.border}`, borderRadius:8,
+            padding:"9px 12px", color:C.text, fontSize:14, outline:"none", fontFamily:FONT_BODY, boxSizing:"border-box" }}/>
+      </div>
+      <div style={{ marginBottom:14 }}>
+        <label style={lbl()}>FREQUENCY</label>
+        <div style={{ display:"flex", gap:8, marginTop:6 }}>
+          {["daily","weekly"].map(f=>(
+            <button key={f} onClick={()=>setFrequency(f)}
+              style={{ flex:1, padding:"9px 0", borderRadius:8, cursor:"pointer", fontSize:12, fontWeight:800,
+                fontFamily:FONT_DISPLAY, letterSpacing:1, border:`2px solid ${frequency===f?C.accent:C.border}`,
+                background: frequency===f ? `${C.accent}15` : C.surface,
+                color: frequency===f ? C.accent : C.textMuted }}>
+              {f.toUpperCase()}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div style={{ marginBottom:20 }}>
+        <label style={lbl()}>COLOR</label>
+        <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginTop:6 }}>
+          {HABIT_COLORS.map(c=>(
+            <button key={c} onClick={()=>setColor(c)}
+              style={{ width:30, height:30, borderRadius:6, background:c, cursor:"pointer", outline:"none",
+                border: color===c ? `3px solid ${C.brown}` : "2px solid transparent" }}/>
+          ))}
+        </div>
+      </div>
+      <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
+        <Btn variant="secondary" onClick={onClose}>Cancel</Btn>
+        <Btn onClick={()=>{ if(name.trim()){ onSave({name:name.trim(),emoji,frequency,color}); onClose(); }}} disabled={!name.trim()}>Save</Btn>
+      </div>
+    </Modal>
+  );
+};
+
+const HabitCard = ({ habit, onCheckIn, onEdit, onDelete }) => {
+  const { C } = useSettings();
+  const [expanded, setExpanded] = useState(false);
+  const streak   = habitStreak(habit.checkIns);
+  const doneToday = habitDoneToday(habit.checkIns);
+
+  // 30-day dot grid
+  const dots = [];
+  for (let i=29; i>=0; i--) {
+    const d = new Date(); d.setDate(d.getDate()-i);
+    const ds = d.toISOString().split("T")[0];
+    dots.push({ ds, done: (habit.checkIns||[]).includes(ds), isToday: i===0 });
+  }
+
+  return (
+    <div style={{ background:C.bg, border:`1px solid ${C.border}`, borderRadius:10,
+      borderLeft:`4px solid ${habit.color||C.accent}`, marginBottom:8, overflow:"hidden" }}>
+      {/* Main row */}
+      <div style={{ display:"flex", alignItems:"center", gap:10, padding:"10px 12px" }}>
+        {/* Check-in button */}
+        <button onClick={()=>onCheckIn(habit.id)}
+          style={{ width:36, height:36, borderRadius:10, flexShrink:0, cursor:"pointer",
+            border:`2px solid ${doneToday ? habit.color||C.accent : C.border}`,
+            background: doneToday ? habit.color||C.accent : "transparent",
+            display:"flex", alignItems:"center", justifyContent:"center", fontSize:16,
+            transition:"all 0.15s" }}>
+          {doneToday ? "✓" : habit.emoji||"🎯"}
+        </button>
+        {/* Name + streak */}
+        <div style={{ flex:1, minWidth:0 }} onClick={()=>setExpanded(x=>!x)}>
+          <div style={{ fontWeight:800, fontSize:14, color:C.text, fontFamily:FONT_DISPLAY, letterSpacing:0.5 }}>{habit.name}</div>
+          <div style={{ display:"flex", alignItems:"center", gap:6, marginTop:2 }}>
+            {streak > 0 && (
+              <span style={{ fontSize:11, fontWeight:800, color:habit.color||C.accent, fontFamily:FONT_DISPLAY }}>
+                🔥 {streak} day{streak!==1?"s":""} streak
+              </span>
+            )}
+            {streak === 0 && <span style={{ fontSize:11, color:C.textMuted, fontFamily:FONT_DISPLAY }}>No streak yet — start today</span>}
+            <span style={{ fontSize:10, color:C.textMuted, fontFamily:FONT_DISPLAY }}>{habit.frequency}</span>
+          </div>
+        </div>
+        {/* Expand + menu */}
+        <button onClick={()=>setExpanded(x=>!x)}
+          style={{ background:"none", border:"none", cursor:"pointer", padding:3, display:"flex" }}>
+          <Ic n={expanded?"chevD":"chevR"} s={13} c={C.textMuted}/>
+        </button>
+        <button onClick={onEdit}
+          style={{ background:"none", border:"none", cursor:"pointer", padding:3, display:"flex" }}>
+          <Ic n="edit" s={13} c={C.textMuted}/>
+        </button>
+        <button onClick={onDelete}
+          style={{ background:"none", border:"none", cursor:"pointer", padding:3, display:"flex" }}>
+          <Ic n="trash" s={13} c={C.accent}/>
+        </button>
+      </div>
+
+      {/* Expanded: 30-day dot grid */}
+      {expanded && (
+        <div style={{ padding:"4px 12px 12px", borderTop:`1px solid ${C.borderLight}` }}>
+          <div style={{ fontSize:10, fontWeight:800, letterSpacing:1.5, color:C.textMuted,
+            fontFamily:FONT_DISPLAY, marginBottom:8 }}>LAST 30 DAYS</div>
+          <div style={{ display:"flex", flexWrap:"wrap", gap:4 }}>
+            {dots.map(dot=>(
+              <div key={dot.ds}
+                title={dot.ds}
+                style={{ width:14, height:14, borderRadius:3,
+                  background: dot.done ? habit.color||C.accent : C.border,
+                  opacity: dot.isToday && !dot.done ? 0.5 : 1,
+                  outline: dot.isToday ? `2px solid ${habit.color||C.accent}` : "none",
+                  outlineOffset:1 }}/>
+            ))}
+          </div>
+          <div style={{ display:"flex", gap:16, marginTop:10 }}>
+            <div>
+              <div style={{ fontSize:10, color:C.textMuted, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>COMPLETED</div>
+              <div style={{ fontSize:18, fontWeight:900, color:habit.color||C.accent, fontFamily:FONT_DISPLAY }}>
+                {dots.filter(d=>d.done).length}<span style={{ fontSize:11, color:C.textMuted }}>/30</span>
+              </div>
+            </div>
+            <div>
+              <div style={{ fontSize:10, color:C.textMuted, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>BEST STREAK</div>
+              <div style={{ fontSize:18, fontWeight:900, color:habit.color||C.accent, fontFamily:FONT_DISPLAY }}>
+                {(()=>{
+                  let best=0, cur=0;
+                  dots.forEach(d=>{ if(d.done){cur++;best=Math.max(best,cur);}else{cur=0;} });
+                  return best;
+                })()}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const HabitsPage = ({ onAddTrigger }) => {
+  const { C } = useSettings();
+  const [habits, setHabits] = useState(() => {
+    try {
+      const v = localStorage.getItem("mb_data_version");
+      if (v !== "5") return INIT_HABITS;
+      const saved = localStorage.getItem("mb_habits");
+      const parsed = saved ? JSON.parse(saved) : null;
+      return (parsed && parsed.length > 0) ? parsed : INIT_HABITS;
+    } catch { return INIT_HABITS; }
+  });
+
+  useEffect(() => {
+    try { localStorage.setItem("mb_habits", JSON.stringify(habits)); } catch {}
+    const timer = setTimeout(() => {
+      if (window.__MB_USER__?.uid && window.__MB_DB__) {
+        window.__MB_DB__.save(window.__MB_USER__.uid, "habits", habits);
+      }
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, [habits]);
+
+  // Load from Firestore on auth
+  useEffect(() => {
+    const handler = () => {
+      const raw = localStorage.getItem("mb_habits");
+      if (raw) { try { const p=JSON.parse(raw); if(p.length>0) setHabits(p); } catch{} }
+    };
+    window.addEventListener("mb-auth-resolved", handler);
+    return () => window.removeEventListener("mb-auth-resolved", handler);
+  }, []);
+
+  const [editHabit,   setEditHabit]   = useState(null);
+  const [addingHabit, setAddingHabit] = useState(false);
+  const [confirmDel,  setConfirmDel]  = useState(null);
+  useEffect(()=>{ if(onAddTrigger) setAddingHabit(true); },[onAddTrigger]);
+
+  const addHabit = (fields) => setHabits(p=>[...p,{
+    id:Date.now(), checkIns:[], createdDate:new Date().toISOString().split("T")[0], ...fields
+  }]);
+  const updateHabit = (id, fields) => setHabits(p=>p.map(h=>h.id===id?{...h,...fields}:h));
+  const deleteHabit = (id) => setHabits(p=>p.filter(h=>h.id!==id));
+
+  const checkIn = (id) => {
+    const today = new Date().toISOString().split("T")[0];
+    setHabits(p=>p.map(h=>{
+      if (h.id!==id) return h;
+      const already = (h.checkIns||[]).includes(today);
+      return { ...h, checkIns: already
+        ? h.checkIns.filter(d=>d!==today)
+        : [...(h.checkIns||[]), today]
+      };
+    }));
+  };
+
+  const doneCount = habits.filter(h=>habitDoneToday(h.checkIns)).length;
+
+  return (
+    <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column" }}>
+      {/* Header */}
+      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between",
+        padding:"8px 14px", borderBottom:`1px solid ${C.borderLight}`, background:C.surface, flexShrink:0 }}>
+        <div>
+          <span style={{ fontSize:12, fontWeight:700, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY }}>
+            HABITS · {habits.length}
+          </span>
+          {habits.length>0&&(
+            <span style={{ fontSize:11, color:C.textMuted, marginLeft:8 }}>
+              {doneCount}/{habits.length} done today
+            </span>
+          )}
+        </div>
+        <button onClick={()=>setAddingHabit(true)}
+          style={{ background:C.accent, border:"none", borderRadius:6, cursor:"pointer",
+            color:"#fff", padding:"3px 10px", fontSize:10, fontFamily:FONT_DISPLAY,
+            fontWeight:700, display:"flex", alignItems:"center", gap:3 }}>
+          <Ic n="plus" s={10} c="#fff"/> ADD
+        </button>
+      </div>
+
+      {/* Today banner */}
+      {habits.length>0&&(
+        <div style={{ padding:"8px 14px", background: doneCount===habits.length ? `${C.accent}12` : C.surfaceAlt,
+          borderBottom:`1px solid ${C.borderLight}`, flexShrink:0, display:"flex", alignItems:"center", gap:8 }}>
+          <div style={{ flex:1, height:4, borderRadius:2, background:C.border }}>
+            <div style={{ height:"100%", borderRadius:2, background:C.accent,
+              width:`${habits.length>0?Math.round(doneCount/habits.length*100):0}%`, transition:"width 0.3s" }}/>
+          </div>
+          <span style={{ fontSize:11, fontWeight:800, color: doneCount===habits.length?C.accent:C.textMuted,
+            fontFamily:FONT_DISPLAY, flexShrink:0 }}>
+            {doneCount===habits.length && habits.length>0 ? "🔥 All done!" : `${Math.round(doneCount/habits.length*100||0)}% today`}
+          </span>
+        </div>
+      )}
+
+      {/* List */}
+      <div style={{ flex:1, overflow:"auto", padding:"10px 12px", paddingBottom:76 }}>
+        {habits.length===0&&(
+          <div style={{ textAlign:"center", padding:"40px 20px", color:C.textMuted }}>
+            <div style={{ fontSize:32, marginBottom:8 }}>🔥</div>
+            <div style={{ fontSize:13, fontWeight:700, fontFamily:FONT_DISPLAY, marginBottom:6 }}>No habits yet</div>
+            <div style={{ fontSize:12 }}>Build your routine one habit at a time. Tap ADD to start.</div>
+          </div>
+        )}
+        {habits.map(h=>(
+          <HabitCard key={h.id} habit={h}
+            onCheckIn={checkIn}
+            onEdit={()=>setEditHabit(h)}
+            onDelete={()=>setConfirmDel(h)}/>
+        ))}
+      </div>
+
+      {/* Modals */}
+      {addingHabit&&<HabitModal onClose={()=>setAddingHabit(false)} onSave={addHabit}/>}
+      {editHabit&&<HabitModal onClose={()=>setEditHabit(null)} onSave={f=>updateHabit(editHabit.id,f)} habit={editHabit}/>}
+      {confirmDel&&(
+        <Modal title="DELETE HABIT" onClose={()=>setConfirmDel(null)}>
+          <p style={{ color:C.textSec, marginBottom:8, fontSize:13, lineHeight:1.6 }}>
+            Delete <strong style={{color:C.text}}>{confirmDel.name}</strong>?
+          </p>
+          <p style={{ color:C.accent, fontSize:12, fontWeight:700, marginBottom:20 }}>
+            ⚠️ All check-in history and streaks will be permanently lost.
+          </p>
+          <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
+            <Btn variant="secondary" onClick={()=>setConfirmDel(null)}>Cancel</Btn>
+            <Btn variant="danger" onClick={()=>{ deleteHabit(confirmDel.id); setConfirmDel(null); }}>Delete</Btn>
+          </div>
+        </Modal>
+      )}
+    </div>
+  );
+};
+
 const IdeasPage = ({ onAddMove, onAddTrigger }) => {
   const [ideas, setIdeas] = useState(() => {
     try {
@@ -2298,9 +2634,15 @@ const IdeasPage = ({ onAddMove, onAddTrigger }) => {
   useEffect(() => { setView(ideaSettings.defaultView||"tiles"); }, [ideaSettings.defaultView]);
   const [editIdea,   setEditIdea]   = useState(null);
   const [typeChooser,setTypeChooser]= useState(false);
-  useEffect(()=>{ if(onAddTrigger){ setTypeChooser(true); } },[onAddTrigger]);
+  useEffect(()=>{ if(onAddTrigger){
+    if(trainTab==="habits") { /* handled by HabitsPage */ }
+    else if(trainTab==="goals") { openModal("goal", null, addIdea); }
+    else if(trainTab==="notes") { openModal("note", null, addIdea); }
+    else { setTypeChooser(true); }
+  } },[onAddTrigger]);
   const [newType,    setNewType]    = useState(null);
   const { openModal } = useTrainModal();
+  const [trainTab,   setTrainTab]   = useState("goals");
   const [search,     setSearch]     = useState("");
   const [showSearch, setShowSearch] = useState(false);
 
@@ -2339,11 +2681,37 @@ const IdeasPage = ({ onAddMove, onAddTrigger }) => {
     ...base.filter(i=>i.type!=="goal"&&!i.pinned),
   ];
 
+  // Split ideas by type for sub-tabs
+  const goals = ideas.filter(i=>i.type==="goal");
+  const notes = ideas.filter(i=>i.type==="note");
+
   return (
     <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column" }}>
       <SectionBanner tab="ideas"/>
-      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"6px 14px", borderBottom:`1px solid ${C.borderLight}`, background:C.surface, flexShrink:0 }}>
-        <span style={{ fontSize:12, fontWeight:700, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY }}>TRAIN · {ideas.length}</span>
+      {/* Sub-tab nav */}
+      <div style={{ display:"flex", background:C.surface, borderBottom:`2px solid ${C.border}`, flexShrink:0 }}>
+        {[["goals","🎯 GOALS",goals.length],["notes","📝 NOTES",notes.length],["habits","🔥 HABITS",null]].map(([id,label,count])=>{
+          const on = trainTab===id;
+          return (
+            <button key={id} onClick={()=>setTrainTab(id)}
+              style={{ flex:1, padding:"9px 4px", border:"none", cursor:"pointer",
+                background: on ? C.bg : "transparent",
+                color: on ? C.accent : C.textSec,
+                borderBottom:`3px solid ${on?C.accent:"transparent"}`,
+                fontSize:11, fontWeight:800, letterSpacing:1, fontFamily:FONT_DISPLAY,
+                display:"flex", alignItems:"center", justifyContent:"center", gap:4 }}>
+              {label}
+              {count!==null&&<span style={{ fontSize:10, color:on?C.accent:C.textMuted,
+                background:C.surfaceAlt, borderRadius:10, padding:"0 5px" }}>{count}</span>}
+            </button>
+          );
+        })}
+      </div>
+      {/* Search + view toggle (only for goals/notes) */}
+      {trainTab!=="habits"&&<div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"6px 14px", borderBottom:`1px solid ${C.borderLight}`, background:C.surface, flexShrink:0 }}>
+        <span style={{ fontSize:12, fontWeight:700, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY }}>
+          {trainTab==="goals"?"GOALS":"NOTES"} · {trainTab==="goals"?goals.length:notes.length}
+        </span>
         <div style={{ display:"flex", gap:3 }}>
           <button onClick={()=>{ setShowSearch(s=>!s); setSearch(""); }}
             style={{ background:showSearch?C.surfaceAlt:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:showSearch?C.accent:C.textMuted }}>
@@ -2354,8 +2722,9 @@ const IdeasPage = ({ onAddMove, onAddTrigger }) => {
             <Ic n={view==="list"?"grid":"list"} s={16}/>
           </button>
         </div>
-      </div>
-      {showSearch&&(
+      </div>}
+      {trainTab==="habits" && <HabitsPage onAddTrigger={trainTab==="habits"?onAddTrigger:null}/>}
+      {trainTab!=="habits"&&showSearch&&(
         <div style={{ padding:"6px 14px", background:C.surface, borderBottom:`1px solid ${C.borderLight}` }}>
           <div style={{ display:"flex", alignItems:"center", background:C.bg, borderRadius:7, padding:"5px 10px", gap:6, border:`1px solid ${search?C.accent:C.border}` }}>
             <Ic n="search" s={13} c={C.textMuted}/>
@@ -2366,7 +2735,7 @@ const IdeasPage = ({ onAddMove, onAddTrigger }) => {
           {search&&<div style={{ fontSize:11, color:C.textMuted, marginTop:4 }}>{filtered.length} result{filtered.length!==1?"s":""}</div>}
         </div>
       )}
-      <div style={{ flex:1, overflow:"auto", padding:10, paddingBottom:76 }}>
+      {trainTab!=="habits"&&<div style={{ flex:1, overflow:"auto", padding:10, paddingBottom:76 }}>
         <div
           style={view==="tiles"
             ? {display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}
@@ -2375,7 +2744,7 @@ const IdeasPage = ({ onAddMove, onAddTrigger }) => {
           onDragEnd={()=>{ dragItem.current=null; setDragOver(null); }}
           onDragLeave={e=>{ if(!e.currentTarget.contains(e.relatedTarget)) setDragOver(null); }}
         >
-          {filtered.map((idea, idx) => (
+          {filtered.filter(i=>trainTab==="goals"?i.type==="goal":i.type==="note").map((idea, idx) => (
             <IdeaTile
               key={idea.id}
               idea={idea}
@@ -2392,7 +2761,7 @@ const IdeasPage = ({ onAddMove, onAddTrigger }) => {
               onDragOver={e=>{ e.preventDefault(); e.stopPropagation(); if(dragItem.current!==null) setDragOver(idx); }}
               onDrop={e=>{ e.preventDefault(); e.stopPropagation(); handleDrop(idx); }}/>
           ))}
-          {view!=="tiles"&&filtered.length>0&&(
+          {view!=="tiles"&&filtered.filter(i=>trainTab==="goals"?i.type==="goal":i.type==="note").length>0&&(
             <div
               onDragOver={e=>{ e.preventDefault(); e.stopPropagation(); if(dragItem.current!==null) setDragOver(filtered.length); }}
               onDragLeave={e=>{ if(!e.currentTarget.contains(e.relatedTarget)) setDragOver(null); }}
@@ -2407,7 +2776,8 @@ const IdeasPage = ({ onAddMove, onAddTrigger }) => {
         {ideas.length===0&&<div style={{ textAlign:"center", padding:50, color:C.textMuted }}><div style={{ fontSize:32, marginBottom:10 }}>💪</div><p style={{fontSize:13}}>Nothing here yet — tap + to add a note or set a goal</p></div>}
         {filtered.length===0&&search&&<div style={{ textAlign:"center", padding:30, color:C.textMuted }}><p style={{fontSize:13}}>No results for "{search}"</p></div>}
       </div>
-      {typeChooser&&<TypeChooserModal onClose={()=>setTypeChooser(false)} onChoose={t=>{ setTypeChooser(false); openModal(t, null, addIdea); }}/>}
+      }
+      {typeChooser&&<TypeChooserModal onClose={()=>setTypeChooser(false)} onChoose={t=>{ setTypeChooser(false); setTrainTab(t==="goal"?"goals":"notes"); openModal(t, null, addIdea); }}/>}
       {confirmDel&&(
         <div style={{ position:"absolute", inset:0, background:"rgba(0,0,0,0.6)", zIndex:4000, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
           <div style={{ background:C.bg, border:`2px solid ${C.border}`, borderRadius:14, padding:24, width:"100%" }}>
