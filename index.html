@@ -170,7 +170,8 @@
             if (data.ideas)    localStorage.setItem('mb_ideas',    data.ideas);
             if (data.profile)  localStorage.setItem('mb_profile',  data.profile);
             if (data.settings) localStorage.setItem('mb_settings', data.settings);
-            if (data.habits)   localStorage.setItem('mb_habits',   data.habits);
+            if (data.habits)     localStorage.setItem('mb_habits',     data.habits);
+            if (data.templates)  localStorage.setItem('mb_templates',  data.templates);
             localStorage.setItem('mb_data_version','5');
           }
           if (loginDiv) { loginDiv.style.opacity='0'; setTimeout(function(){ loginDiv.style.display='none'; },300); }
@@ -189,7 +190,8 @@
             if (d.ideas)    localStorage.setItem('mb_ideas',    d.ideas);
             if (d.profile)  localStorage.setItem('mb_profile',  d.profile);
             if (d.settings) localStorage.setItem('mb_settings', d.settings);
-            if (d.habits)   localStorage.setItem('mb_habits',   d.habits);
+            if (d.habits)     localStorage.setItem('mb_habits',     d.habits);
+            if (d.templates)  localStorage.setItem('mb_templates',  d.templates);
           } catch(e){}
           window.dispatchEvent(new Event('mb-auth-resolved'));
         });
@@ -4327,6 +4329,57 @@ const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAdd
   const [editRound, setEditRound] = useState(null);   // round being edited full-screen
   const [addingRound, setAddingRound] = useState(false);
   const [confirmRestore, setConfirmRestore] = useState(false);
+
+  // ── Battle Templates ────────────────────────────────────────────────────────
+  const [templates, setTemplates] = useState(() => {
+    try { const s = localStorage.getItem("mb_templates"); return s ? JSON.parse(s) : []; } catch { return []; }
+  });
+  useEffect(() => {
+    try { localStorage.setItem("mb_templates", JSON.stringify(templates)); } catch {}
+    const timer = setTimeout(() => {
+      if (window.__MB_USER__?.uid && window.__MB_DB__) window.__MB_DB__.save(window.__MB_USER__.uid, "templates", templates);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, [templates]);
+  useEffect(() => {
+    const handler = () => {
+      const raw = localStorage.getItem("mb_templates");
+      if (raw) { try { const p = JSON.parse(raw); setTemplates(p); } catch {} }
+    };
+    window.addEventListener("mb-auth-resolved", handler);
+    return () => window.removeEventListener("mb-auth-resolved", handler);
+  }, []);
+
+  const [showSaveTemplate,  setShowSaveTemplate]  = useState(false);
+  const [showLoadTemplate,  setShowLoadTemplate]  = useState(false);
+  const [templateName,      setTemplateName]      = useState("");
+  const [confirmLoadTpl,    setConfirmLoadTpl]    = useState(null); // template to load
+  const [confirmDeleteTpl,  setConfirmDeleteTpl]  = useState(null); // template to delete
+
+  const saveTemplate = () => {
+    if (!templateName.trim()) return;
+    const tpl = {
+      id: Date.now(),
+      name: templateName.trim(),
+      savedAt: new Date().toLocaleDateString("en-AU", {day:"2-digit", month:"short", year:"numeric"}),
+      rounds: JSON.parse(JSON.stringify(rounds)), // deep clone
+    };
+    setTemplates(p => [...p, tpl]);
+    setTemplateName("");
+    setShowSaveTemplate(false);
+  };
+
+  const loadTemplate = (tpl) => {
+    setRounds(JSON.parse(JSON.stringify(tpl.rounds)));
+    setConfirmLoadTpl(null);
+    setShowLoadTemplate(false);
+  };
+
+  const deleteTemplate = (id) => {
+    setTemplates(p => p.filter(t => t.id !== id));
+    setConfirmDeleteTpl(null);
+  };
+
   useEffect(()=>{ if(onAddTrigger) setAddingRound(true); },[onAddTrigger]);
 
   // ── Vocab picker state (inside Edit Round) ──────────────────────────────────
@@ -4412,12 +4465,26 @@ const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAdd
         {/* Header */}
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"8px 14px", borderBottom:`1px solid ${C.border}`, background:C.surface, flexShrink:0 }}>
           <span style={{ fontSize:11, fontWeight:800, letterSpacing:1.5, color:C.brownMid, fontFamily:FONT_DISPLAY }}>{t("rounds")}</span>
-          <div style={{ display:"flex", alignItems:"center", gap:6 }}>
+          <div style={{ display:"flex", alignItems:"center", gap:5 }}>
             <button onClick={()=>setConfirmRestore(true)}
               style={{ background:"none", border:`1px solid ${C.border}`, borderRadius:6, cursor:"pointer",
-                color:C.textMuted, padding:"3px 10px", fontSize:10, fontFamily:FONT_DISPLAY, fontWeight:700,
+                color:C.textMuted, padding:"3px 8px", fontSize:10, fontFamily:FONT_DISPLAY, fontWeight:700,
                 display:"flex", alignItems:"center", gap:3 }}>
-              ↺ Defaults
+              ↺
+            </button>
+            <button onClick={()=>setShowLoadTemplate(true)}
+              style={{ background:"none", border:`1px solid ${C.border}`, borderRadius:6, cursor:"pointer",
+                color:C.textMuted, padding:"3px 8px", fontSize:10, fontFamily:FONT_DISPLAY, fontWeight:700,
+                display:"flex", alignItems:"center", gap:3 }}
+              title="Load a saved battle template">
+              📂 Load{templates.length>0&&<span style={{ marginLeft:3, background:C.accent, color:"#fff", borderRadius:8, padding:"0 5px", fontSize:9 }}>{templates.length}</span>}
+            </button>
+            <button onClick={()=>{ setTemplateName(""); setShowSaveTemplate(true); }}
+              style={{ background:"none", border:`1px solid ${C.border}`, borderRadius:6, cursor:"pointer",
+                color:C.textMuted, padding:"3px 8px", fontSize:10, fontFamily:FONT_DISPLAY, fontWeight:700,
+                display:"flex", alignItems:"center", gap:3 }}
+              title="Save current rounds as a template">
+              💾 Save
             </button>
             <button onClick={()=>setAddingRound(true)}
               style={{ background:C.accent, border:"none", borderRadius:6, cursor:"pointer",
@@ -4442,6 +4509,111 @@ const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAdd
             <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
               <Btn variant="secondary" onClick={()=>setConfirmRestore(false)}>{t("cancel")}</Btn>
               <Btn variant="danger" onClick={()=>{ setRounds(INIT_ROUNDS); setConfirmRestore(false); }}>Yes, Restore</Btn>
+            </div>
+          </Modal>
+        )}
+
+        {/* Save Template Modal */}
+        {showSaveTemplate&&(
+          <Modal title="SAVE BATTLE TEMPLATE" onClose={()=>setShowSaveTemplate(false)}>
+            <p style={{ fontSize:13, color:C.textSec, marginBottom:14, lineHeight:1.6 }}>
+              Saves your current round structure and all entries as a reusable template.
+            </p>
+            <div style={{ marginBottom:6 }}>
+              <label style={lbl()}>TEMPLATE NAME *</label>
+              <input autoFocus value={templateName} onChange={e=>setTemplateName(e.target.value)}
+                onKeyDown={e=>{ if(e.key==="Enter") saveTemplate(); }}
+                placeholder="e.g. Red Bull BC One, Local Jam, 2v2 Format…"
+                style={{ width:"100%", background:C.surface, border:`1.5px solid ${C.accent}`, borderRadius:8,
+                  padding:"9px 12px", color:C.text, fontSize:14, outline:"none", fontFamily:FONT_BODY, boxSizing:"border-box" }}/>
+            </div>
+            <div style={{ fontSize:11, color:C.textMuted, marginBottom:20, marginTop:6 }}>
+              {rounds.length} round{rounds.length!==1?"s":""} will be saved ·{" "}
+              {rounds.reduce((n,r)=>n+(r.entries?.length||0),0)} entr{rounds.reduce((n,r)=>n+(r.entries?.length||0),0)!==1?"ies":"y"} total
+            </div>
+            <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
+              <Btn variant="secondary" onClick={()=>setShowSaveTemplate(false)}>Cancel</Btn>
+              <Btn onClick={saveTemplate} disabled={!templateName.trim()}>💾 Save Template</Btn>
+            </div>
+          </Modal>
+        )}
+
+        {/* Load Template Modal */}
+        {showLoadTemplate&&!confirmLoadTpl&&!confirmDeleteTpl&&(
+          <Modal title="LOAD BATTLE TEMPLATE" onClose={()=>setShowLoadTemplate(false)}>
+            {templates.length===0 ? (
+              <div style={{ textAlign:"center", padding:"24px 0", color:C.textMuted }}>
+                <div style={{ fontSize:28, marginBottom:8 }}>📂</div>
+                <div style={{ fontSize:13, fontWeight:700, fontFamily:FONT_DISPLAY, marginBottom:4 }}>No templates saved yet</div>
+                <div style={{ fontSize:12 }}>Set up your rounds then tap 💾 Save to create your first template.</div>
+              </div>
+            ) : (
+              <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+                <p style={{ fontSize:12, color:C.textMuted, marginBottom:4, lineHeight:1.5 }}>
+                  Tap a template to load it. This will replace your current rounds and entries.
+                </p>
+                {templates.map(tpl=>(
+                  <div key={tpl.id}
+                    style={{ display:"flex", alignItems:"center", gap:10, padding:"12px 14px",
+                      background:C.surface, border:`1px solid ${C.border}`, borderRadius:10, cursor:"pointer" }}
+                    onClick={()=>setConfirmLoadTpl(tpl)}>
+                    <div style={{ flex:1, minWidth:0 }}>
+                      <div style={{ fontWeight:800, fontSize:14, color:C.text, fontFamily:FONT_DISPLAY, letterSpacing:0.5 }}>{tpl.name}</div>
+                      <div style={{ fontSize:11, color:C.textMuted, marginTop:3 }}>
+                        {tpl.rounds.length} round{tpl.rounds.length!==1?"s":""} ·{" "}
+                        {tpl.rounds.reduce((n,r)=>n+(r.entries?.length||0),0)} entr{tpl.rounds.reduce((n,r)=>n+(r.entries?.length||0),0)!==1?"ies":"y"} · Saved {tpl.savedAt}
+                      </div>
+                      <div style={{ display:"flex", flexWrap:"wrap", gap:4, marginTop:5 }}>
+                        {tpl.rounds.slice(0,6).map(r=>(
+                          <span key={r.id} style={{ fontSize:10, padding:"1px 7px", borderRadius:10,
+                            background:`${r.color||C.accent}25`, color:r.color||C.accent,
+                            fontFamily:FONT_DISPLAY, fontWeight:700 }}>{r.name}</span>
+                        ))}
+                        {tpl.rounds.length>6&&<span style={{ fontSize:10, color:C.textMuted }}>+{tpl.rounds.length-6} more</span>}
+                      </div>
+                    </div>
+                    <button onClick={e=>{ e.stopPropagation(); setConfirmDeleteTpl(tpl); }}
+                      style={{ background:"none", border:"none", cursor:"pointer", padding:6, display:"flex", flexShrink:0 }}>
+                      <Ic n="trash" s={14} c={C.accent}/>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+            <div style={{ display:"flex", justifyContent:"flex-end", marginTop:16 }}>
+              <Btn variant="secondary" onClick={()=>setShowLoadTemplate(false)}>Close</Btn>
+            </div>
+          </Modal>
+        )}
+
+        {/* Confirm Load */}
+        {confirmLoadTpl&&(
+          <Modal title="LOAD TEMPLATE" onClose={()=>setConfirmLoadTpl(null)}>
+            <p style={{ fontSize:13, color:C.textSec, marginBottom:8, lineHeight:1.6 }}>
+              Load <strong style={{color:C.text}}>{confirmLoadTpl.name}</strong>?
+            </p>
+            <p style={{ fontSize:12, color:C.accent, fontWeight:700, marginBottom:20, lineHeight:1.6 }}>
+              ⚠️ Your current rounds and all their entries will be replaced. This cannot be undone.
+            </p>
+            <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
+              <Btn variant="secondary" onClick={()=>setConfirmLoadTpl(null)}>Cancel</Btn>
+              <Btn variant="danger" onClick={()=>loadTemplate(confirmLoadTpl)}>Yes, Load Template</Btn>
+            </div>
+          </Modal>
+        )}
+
+        {/* Confirm Delete Template */}
+        {confirmDeleteTpl&&(
+          <Modal title="DELETE TEMPLATE" onClose={()=>setConfirmDeleteTpl(null)}>
+            <p style={{ fontSize:13, color:C.textSec, marginBottom:8, lineHeight:1.6 }}>
+              Delete <strong style={{color:C.text}}>{confirmDeleteTpl.name}</strong>?
+            </p>
+            <p style={{ fontSize:12, color:C.accent, fontWeight:700, marginBottom:20 }}>
+              ⚠️ This cannot be undone.
+            </p>
+            <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
+              <Btn variant="secondary" onClick={()=>setConfirmDeleteTpl(null)}>Cancel</Btn>
+              <Btn variant="danger" onClick={()=>deleteTemplate(confirmDeleteTpl.id)}>Delete</Btn>
             </div>
           </Modal>
         )}
@@ -5615,6 +5787,8 @@ function App() {
           if (m) setMoves(JSON.parse(m).map(migrateMove));
           if (s) setSets(JSON.parse(s));
           if (r) { const parsed = JSON.parse(r); setRounds(parsed.length > 0 ? parsed : INIT_ROUNDS); }
+          const tpl = localStorage.getItem("mb_templates");
+          if (tpl) { try { setTemplatesSynced(JSON.parse(tpl)); } catch {} }
           if (p) setProfile(JSON.parse(p));
           const st = localStorage.getItem("mb_settings");
           if (st) setAppSettings(prev=>({...prev,...JSON.parse(st)}));
