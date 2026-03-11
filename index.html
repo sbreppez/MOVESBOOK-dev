@@ -4977,7 +4977,7 @@ function App() {
           const p = localStorage.getItem("mb_profile");
           if (m) setMoves(JSON.parse(m).map(migrateMove));
           if (s) setSets(JSON.parse(s));
-          if (r) setRounds(JSON.parse(r));
+          if (r) { const parsed = JSON.parse(r); setRounds(parsed.length > 0 ? parsed : INIT_ROUNDS); }
           if (p) setProfile(JSON.parse(p));
           const st = localStorage.getItem("mb_settings");
           if (st) setAppSettings(prev=>({...prev,...JSON.parse(st)}));
