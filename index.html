@@ -4,6 +4,13 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>MovesBook</title>
+  <meta name="description" content="Your personal breaking trainer — moves, goals, habits and battle planning in one place."/>
+  <meta name="theme-color" content="#0d0d0d"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="MovesBook"/>
+  <link rel="manifest" href="/manifest.json"/>
+  <link rel="apple-touch-icon" href="/icons/icon-192.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet"/>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -176,14 +183,16 @@
         window.__MB_USER__ = { uid:user.uid, name:user.displayName, email:user.email, photo:user.photoURL };
         window.__MB_DB__.load(user.uid).then(function(data) {
           if (data) {
-            if (data.moves)    localStorage.setItem('mb_moves',    data.moves);
-            if (data.sets)     localStorage.setItem('mb_sets',     data.sets);
-            if (data.rounds) { try { const pr=JSON.parse(data.rounds); if(pr.length>0) localStorage.setItem('mb_rounds', data.rounds); } catch{} }
-            if (data.ideas)    localStorage.setItem('mb_ideas',    data.ideas);
-            if (data.profile) { try { const pp=JSON.parse(data.profile); if(pp&&Object.values(pp).some(v=>v)) localStorage.setItem('mb_profile', data.profile); } catch{} }
-            if (data.settings) localStorage.setItem('mb_settings', data.settings);
-            if (data.habits)     localStorage.setItem('mb_habits',     data.habits);
+            if (data.moves)    { try { const p=JSON.parse(data.moves);    if(Array.isArray(p)&&p.length>0)    localStorage.setItem('mb_moves',    data.moves);    } catch{} }
+            if (data.sets)     { try { const p=JSON.parse(data.sets);     if(Array.isArray(p)&&p.length>0)    localStorage.setItem('mb_sets',     data.sets);     } catch{} }
+            if (data.rounds)   { try { const p=JSON.parse(data.rounds);   if(Array.isArray(p)&&p.length>0)    localStorage.setItem('mb_rounds',   data.rounds);   } catch{} }
+            if (data.ideas)    { try { const p=JSON.parse(data.ideas);    if(Array.isArray(p)&&p.length>0)    localStorage.setItem('mb_ideas',    data.ideas);    } catch{} }
+            if (data.habits)   { try { const p=JSON.parse(data.habits);   if(Array.isArray(p)&&p.length>0)    localStorage.setItem('mb_habits',   data.habits);   } catch{} }
+            if (data.cats)     { try { const p=JSON.parse(data.cats);     if(Array.isArray(p)&&p.length>0)    localStorage.setItem('mb_cats',     data.cats);     } catch{} }
+            if (data.profile)  { try { const pp=JSON.parse(data.profile); if(pp&&Object.values(pp).some(v=>v)) localStorage.setItem('mb_profile',  data.profile);  } catch{} }
+            if (data.settings)   localStorage.setItem('mb_settings',   data.settings);
             if (data.templates)  localStorage.setItem('mb_templates',  data.templates);
+            if (data.catColors)  localStorage.setItem('mb_cat_colors', data.catColors);
             localStorage.setItem('mb_data_version','5');
           }
           if (loginDiv) { loginDiv.style.opacity='0'; setTimeout(function(){ loginDiv.style.display='none'; },300); }
@@ -206,6 +215,10 @@
             if (d.settings) localStorage.setItem('mb_settings', d.settings);
             if (d.habits)     localStorage.setItem('mb_habits',     d.habits);
             if (d.templates)  localStorage.setItem('mb_templates',  d.templates);
+            // NOTE: cats and catColors are NOT updated from the subscriber to prevent
+            // Firestore overwriting the locally reordered category order before it has
+            // time to sync. They are loaded correctly at auth resolution instead.
+            if (d.catColors)  localStorage.setItem('mb_cat_colors', d.catColors);
           } catch(e){}
           // Removed: window.dispatchEvent(new Event('mb-auth-resolved'))
           // Reason: re-dispatching resets all React state from localStorage on every
@@ -7326,7 +7339,10 @@ function loadLocal(key, fallback) {
 }
 
 function saveLocal(key, val) {
-  try { localStorage.setItem(key, JSON.stringify(val)); } catch {}
+  try {
+    localStorage.setItem(key, JSON.stringify(val));
+    localStorage.setItem("mb_data_version", SCHEMA_VERSION);
+  } catch {}
 }
 
 function debounce(fn, ms) {
@@ -7339,36 +7355,60 @@ function App() {
 
   // ── Data state ─────────────────────────────────────────────────────────────
   const [moves,  setMoves]  = useState(() => {
-    const raw = loadLocal("mb_moves", INIT_MOVES);
-    return Array.isArray(raw) ? raw.map(migrateMove) : INIT_MOVES;
+    try {
+      const s = localStorage.getItem("mb_moves");
+      if (s) { const p = JSON.parse(s); if (Array.isArray(p) && p.length > 0) return p.map(migrateMove); }
+    } catch {}
+    return INIT_MOVES;
   });
   const [cats, setCats] = useState(() => {
-    const saved = loadLocal("mb_cats", null);
-    return (Array.isArray(saved) && saved.length > 0) ? saved : [...CATS];
+    try {
+      const s = localStorage.getItem("mb_cats");
+      if (s) { const p = JSON.parse(s); if (Array.isArray(p) && p.length > 0) return p; }
+    } catch {}
+    return [...CATS];
   });
-  const [catColors, setCatColors] = useState(() => loadLocal("mb_cat_colors", {...CAT_COLORS}));
-  const [sets,   setSets]   = useState(() => loadLocal("mb_sets",    INIT_SETS));
-  const [rounds, setRounds] = useState(() => { const r = loadLocal("mb_rounds", INIT_ROUNDS); return (Array.isArray(r) && r.length > 0) ? r : INIT_ROUNDS; });
+  const [catColors, setCatColors] = useState(() => {
+    try {
+      const s = localStorage.getItem("mb_cat_colors");
+      if (s) { const p = JSON.parse(s); if (p && typeof p === "object") return p; }
+    } catch {}
+    return {...CAT_COLORS};
+  });
+  const [sets, setSets] = useState(() => {
+    try {
+      const s = localStorage.getItem("mb_sets");
+      if (s) { const p = JSON.parse(s); if (Array.isArray(p) && p.length > 0) return p; }
+    } catch {}
+    return INIT_SETS;
+  });
+  const [rounds, setRounds] = useState(() => {
+    try {
+      const s = localStorage.getItem("mb_rounds");
+      if (s) { const p = JSON.parse(s); if (Array.isArray(p) && p.length > 0) return p; }
+    } catch {}
+    return INIT_ROUNDS;
+  });
   const [habits, setHabits] = useState(() => {
     try {
-      const v = localStorage.getItem("mb_data_version");
-      if (v !== "5") return INIT_HABITS;
-      const saved = localStorage.getItem("mb_habits");
-      const parsed = saved ? JSON.parse(saved) : null;
-      return (parsed && parsed.length > 0) ? parsed : INIT_HABITS;
-    } catch { return INIT_HABITS; }
+      const s = localStorage.getItem("mb_habits");
+      if (s) { const p = JSON.parse(s); if (Array.isArray(p) && p.length > 0) return p; }
+    } catch {}
+    return INIT_HABITS;
   });
-  const [profile, setProfile] = useState(() => loadLocal("mb_profile", {
-    nickname:"", age:"", gender:"", goals:"", years:"",
-    startYear:"", startMonth:"", startDay:"", why:""
-  }));
+  const [profile, setProfile] = useState(() => {
+    try {
+      const s = localStorage.getItem("mb_profile");
+      if (s) { const p = JSON.parse(s); if (p && Object.values(p).some(v=>v)) return p; }
+    } catch {}
+    return { nickname:"", age:"", gender:"", goals:"", years:"", startYear:"", startMonth:"", startDay:"", why:"" };
+  });
   const [ideas, setIdeas] = useState(() => {
     try {
-      const v = localStorage.getItem("mb_data_version");
-      if (v !== SCHEMA_VERSION) return INIT_IDEAS;
-      const saved = localStorage.getItem("mb_ideas");
-      return saved ? JSON.parse(saved) : INIT_IDEAS;
-    } catch { return INIT_IDEAS; }
+      const s = localStorage.getItem("mb_ideas");
+      if (s) { const p = JSON.parse(s); if (Array.isArray(p) && p.length > 0) return p; }
+    } catch {}
+    return INIT_IDEAS;
   });
 
   // ── Persist to localStorage on every change ────────────────────────────────
@@ -7382,7 +7422,7 @@ function App() {
     const timer = setTimeout(()=>{ if(window.__MB_USER__?.uid && window.__MB_DB__) window.__MB_DB__.save(window.__MB_USER__.uid,"habits",habits); }, 1500);
     return ()=>clearTimeout(timer);
   },[habits]);
-  useEffect(()=>{ saveLocal("mb_profile", profile); },[profile]);
+  useEffect(()=>{ if(Object.values(profile).some(v=>v)) saveLocal("mb_profile", profile); },[profile]);
   useEffect(()=>{ saveLocal("mb_ideas",   ideas);
     const timer = setTimeout(() => {
       if (window.__MB_USER__?.uid && window.__MB_DB__) {
@@ -7401,12 +7441,14 @@ function App() {
       (uid, val) => window.__MB_DB__?.save(uid, key, val), ms
     );
     dbSave.current = {
-      moves:    save("moves"),
-      sets:     save("sets"),
-      rounds:   save("rounds"),
-      profile:  save("profile"),
-      ideas:    save("ideas"),
-      settings: save("settings"),
+      moves:     save("moves"),
+      sets:      save("sets"),
+      rounds:    save("rounds"),
+      profile:   save("profile"),
+      ideas:     save("ideas"),
+      settings:  save("settings"),
+      cats:      save("cats"),
+      catColors: save("catColors"),
     };
   }, []);
 
@@ -7415,6 +7457,8 @@ function App() {
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.sets?.(fbUser.uid,    sets);    },[sets,    fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.rounds?.(fbUser.uid,  rounds);  },[rounds,  fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.profile?.(fbUser.uid, profile); },[profile, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.cats?.(fbUser.uid,      cats);      },[cats,      fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.catColors?.(fbUser.uid, catColors); },[catColors, fbUser]);
 
   // ── Auth resolution ────────────────────────────────────────────────────────
   useEffect(()=>{
@@ -7426,17 +7470,17 @@ function App() {
           const s = localStorage.getItem("mb_sets");
           const r = localStorage.getItem("mb_rounds");
           const p = localStorage.getItem("mb_profile");
-          if (m) setMoves(JSON.parse(m).map(migrateMove));
+          if (m) { try { const p=JSON.parse(m); if(Array.isArray(p)&&p.length>0) setMoves(p.map(migrateMove)); } catch {} }
           const ct = localStorage.getItem("mb_cats"); if (ct) { try { const p=JSON.parse(ct); if(Array.isArray(p)&&p.length>0) setCats(p); } catch {} }
           const cc = localStorage.getItem("mb_cat_colors"); if (cc) { try { setCatColors(JSON.parse(cc)); } catch {} }
-          if (s) setSets(JSON.parse(s));
-          if (r) { const parsed = JSON.parse(r); setRounds(parsed.length > 0 ? parsed : INIT_ROUNDS); }
+          if (s) { try { const p=JSON.parse(s); if(Array.isArray(p)&&p.length>0) setSets(p); } catch {} }
+          if (r) { try { const p=JSON.parse(r); if(Array.isArray(p)&&p.length>0) setRounds(p); } catch {} }
           const id = localStorage.getItem("mb_ideas");
-          if (id) { try { setIdeas(JSON.parse(id)); } catch {} }
+          if (id) { try { const p=JSON.parse(id); if(Array.isArray(p)&&p.length>0) setIdeas(p); } catch {} }
           const tpl = localStorage.getItem("mb_templates");
           if (tpl) { try { setTemplatesSynced(JSON.parse(tpl)); } catch {} }
           const hb = localStorage.getItem("mb_habits");
-          if (hb) { try { const p=JSON.parse(hb); if(p.length>0) setHabits(p); } catch {} }
+          if (hb) { try { const p=JSON.parse(hb); if(Array.isArray(p)&&p.length>0) setHabits(p); } catch {} }
           if (p) { try { const pp=JSON.parse(p); if(pp&&Object.values(pp).some(v=>v)) setProfile(pp); } catch{} }
           const st = localStorage.getItem("mb_settings");
           if (st) {
@@ -7717,6 +7761,15 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
         }
       }, 100);
     })();
+  </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js')
+          .then(function(reg) { console.log('MovesBook SW registered:', reg.scope); })
+          .catch(function(err) { console.log('SW registration failed:', err); });
+      });
+    }
   </script>
 </body>
 </html>
