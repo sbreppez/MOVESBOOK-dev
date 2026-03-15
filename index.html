@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>MovesBook</title>
-  <meta name="description" content="Your personal breaking trainer &mdash; moves, goals, habits and battle planning in one place."/>
+  <meta name="description" content="Your personal breaking trainer — moves, goals, habits and battle planning in one place."/>
   <meta name="theme-color" content="#0d0d0d"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -2176,10 +2176,10 @@ const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initialDesc=
   return (
     <Modal title={move?t("editMove"):"ADD A MOVE"} onClose={onClose}>
       <Sel label=t("category") value={f.category} onChange={set("category")} options={cats.map(c=>({value:c,label:c}))}/>
-      <Inp label="NAME *" value={f.name} onChange={set("name")} placeholder="Move name&hellip;"/>
+      <Inp label="NAME *" value={f.name} onChange={set("name")} placeholder="Move name…"/>
       <Txtarea label=t("description") value={f.description} onChange={set("description")} placeholder={t("describeMove")}/>
       <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-        <div style={{ flex:1 }}><Inp label="VIDEO LINK (optional)" value={f.link} onChange={set("link")} placeholder="https://youtube.com/&hellip;"/></div>
+        <div style={{ flex:1 }}><Inp label="VIDEO LINK (optional)" value={f.link} onChange={set("link")} placeholder="https://youtube.com/…"/></div>
         {f.link&&<a href={f.link.startsWith("http")?f.link:"https://"+f.link} target="_blank" rel="noopener noreferrer"
           style={{ flexShrink:0, marginTop:18, display:"flex", alignItems:"center", justifyContent:"center",
             width:34, height:34, borderRadius:8, background:C.accent, color:C.bg, border:"none", textDecoration:"none" }}
@@ -2661,7 +2661,7 @@ const AddCategoryModal = ({ onClose, onAdd, existingCats=[], existingColors={} }
 
   return (
     <Modal title="ADD CATEGORY" onClose={onClose}>
-      <Inp label="CATEGORY NAME *" value={name} onChange={v=>{setName(v);setDupWarning(false);}} placeholder="e.g. Signature Moves&hellip;"/>
+      <Inp label="CATEGORY NAME *" value={name} onChange={v=>{setName(v);setDupWarning(false);}} placeholder="e.g. Signature Moves…"/>
       {nameDup && !isExactDup && <p style={{ color:C.yellow, fontSize:12, marginTop:-10, marginBottom:12 }}>⚠ A category with this name already exists.</p>}
       <div style={{ marginBottom:16 }}>
         <label style={lbl()}>{t("colour")}</label>
@@ -2820,7 +2820,7 @@ const TargetGoalModal = ({ onClose, onSave, idea, moves=[] }) => {
             )}
             <div style={{ marginBottom:14 }}>
               <label style={lbl()}>TITLE *</label>
-              <input value={title} onChange={e=>setTitle(e.target.value)} placeholder="e.g. Learn 20 new moves&hellip;"
+              <input value={title} onChange={e=>setTitle(e.target.value)} placeholder="e.g. Learn 20 new moves…"
                 style={{ ...inputStyle, fontSize:14, fontWeight:700, border:`1.5px solid ${C.accent}`, fontFamily:FONT_DISPLAY }}/>
             </div>
             <div style={{ display:"flex", gap:10, marginBottom:14 }}>
@@ -2833,7 +2833,7 @@ const TargetGoalModal = ({ onClose, onSave, idea, moves=[] }) => {
               </div>
               <div style={{ flex:2 }}>
                 <label style={lbl()}>UNIT (what are you counting?)</label>
-                <input value={unit} onChange={e=>setUnit(e.target.value)} placeholder="moves, sessions, hours&hellip;"
+                <input value={unit} onChange={e=>setUnit(e.target.value)} placeholder="moves, sessions, hours…"
                   style={inputStyle}/>
               </div>
             </div>
@@ -2875,7 +2875,7 @@ const TargetGoalModal = ({ onClose, onSave, idea, moves=[] }) => {
             <div style={{ marginBottom:14 }}>
               <label style={lbl()}>VIDEO REFERENCE (optional)</label>
               <input value={link} onChange={e=>setLink(e.target.value)}
-                placeholder="https://youtube.com/&hellip;"
+                placeholder="https://youtube.com/…"
                 style={inputStyle}/>
             </div>
             <div style={{ marginBottom:14 }}>
@@ -2934,7 +2934,7 @@ const NoteModal = ({ onClose, onSave, idea }) => {
         <div style={{ marginBottom:14 }}>
           <label style={lbl()}>VIDEO / REFERENCE LINK (optional)</label>
           <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-            <input value={link} onChange={e=>setLink(e.target.value)} placeholder="https://youtube.com/&hellip;"
+            <input value={link} onChange={e=>setLink(e.target.value)} placeholder="https://youtube.com/…"
               style={{ flex:1, background:C.surface, border:`1px solid ${C.border}`, borderRadius:8,
                 padding:"9px 12px", color:C.text, fontSize:13, outline:"none", fontFamily:FONT_BODY, boxSizing:"border-box" }}/>
             {link&&<a href={link.startsWith("http")?link:"https://"+link} target="_blank" rel="noopener noreferrer"
@@ -3036,7 +3036,7 @@ const JournalEntryInput = ({ onAdd, placeholder }) => {
       </div>
       <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:8 }}>
         <input ref={linkRef} value={link} onChange={e=>setLink(e.target.value)}
-          placeholder="https://youtube.com/&hellip;"
+          placeholder="https://youtube.com/…"
           style={{ flex:1, ...inputStyle, fontSize:12 }}/>
         {link&&<a href={link.startsWith("http")?link:"https://"+link} target="_blank" rel="noopener noreferrer"
           style={{ flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center",
@@ -3169,12 +3169,12 @@ const GoalModal = ({ onClose, onSave, idea }) => {
             {/* Goal title */}
             <div style={{ marginBottom:18 }}>
               <label style={{ ...lbl(), fontSize:11, letterSpacing:1.5 }}>WHAT DO YOU WANT TO ACHIEVE?</label>
-              <input value={title} onChange={e=>setTitle(e.target.value)} placeholder="e.g. Win a local jam&hellip;"
+              <input value={title} onChange={e=>setTitle(e.target.value)} placeholder="e.g. Win a local jam…"
                 style={{ ...inputStyle, border:`1.5px solid ${C.accent}`, fontSize:14, fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:0.5 }}/>
             </div>
 
             <GoalField label="WHY?" hint="How will it benefit your current situation?" minHeight="20vh"
-              value={why} onChange={setWhy} placeholder="This goal matters because&hellip;"/>
+              value={why} onChange={setWhy} placeholder="This goal matters because…"/>
 
             {/* BY WHEN &mdash; date picker */}
             <div style={{ marginBottom:18 }}>
@@ -3221,7 +3221,7 @@ const GoalModal = ({ onClose, onSave, idea }) => {
             </div>
 
             <GoalField label={t("obstaclesAnticipate")} hint="Write all possible hurdles and setbacks you might face on the journey"
-              value={obstacles} onChange={setObstacles} rows={3} placeholder="e.g. Nerves, inconsistent footwork under pressure&hellip;"/>
+              value={obstacles} onChange={setObstacles} rows={3} placeholder="e.g. Nerves, inconsistent footwork under pressure…"/>
 
             {/* Colour */}
             <div style={{ marginBottom:14 }}>
@@ -3237,7 +3237,7 @@ const GoalModal = ({ onClose, onSave, idea }) => {
             <div style={{ marginBottom:14 }}>
               <label style={{ ...lbl(), fontSize:11, letterSpacing:1.5 }}>VIDEO / REFERENCE LINK (optional)</label>
               <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-                <input value={link} onChange={e=>setLink(e.target.value)} placeholder="https://youtube.com/&hellip;"
+                <input value={link} onChange={e=>setLink(e.target.value)} placeholder="https://youtube.com/…"
                   style={{ flex:1, ...inputStyle }}/>
                 {link&&<a href={link.startsWith("http")?link:"https://"+link} target="_blank" rel="noopener noreferrer"
                   style={{ flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center",
@@ -3750,7 +3750,7 @@ const HabitModal = ({ onClose, onSave, habit }) => {
         <div style={{ fontSize:11, color:C.textMuted, marginBottom:5, fontStyle:"italic" }}>
           Tip: include an emoji in the title, e.g. "🕺 Daily Practice"
         </div>
-        <input value={name} onChange={e=>setName(e.target.value)} placeholder="e.g. 🕺 Daily Practice&hellip;"
+        <input value={name} onChange={e=>setName(e.target.value)} placeholder="e.g. 🕺 Daily Practice…"
           style={{ ...inputStyle, fontSize:14, fontWeight:700, border:`1.5px solid ${C.accent}` }}/>
       </div>
 
@@ -4517,7 +4517,7 @@ const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[], setHab
         <div style={{ padding:"6px 14px", background:C.surface, borderBottom:`1px solid ${C.borderLight}` }}>
           <div style={{ display:"flex", alignItems:"center", background:C.bg, borderRadius:7, padding:"5px 10px", gap:6, border:`1px solid ${search?C.accent:C.border}` }}>
             <Ic n="search" s={13} c={C.textMuted}/>
-            <input autoFocus value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search&hellip;"
+            <input autoFocus value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search…"
               style={{ flex:1, background:"none", border:"none", outline:"none", color:C.text, fontSize:13, fontFamily:"inherit" }}/>
             {search&&<button onClick={()=>setSearch("")} style={{ background:"none", border:"none", cursor:"pointer", color:C.textMuted, padding:0, display:"flex" }}><Ic n="x" s={13}/></button>}
           </div>
@@ -4589,7 +4589,7 @@ const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[], setHab
           </div>
           <div style={{ marginBottom:20 }}>
             <label style={{ ...lbl(), fontSize:11, letterSpacing:1.5 }}>REFERENCE LINK (optional)</label>
-            <input value={logLink} onChange={e=>setLogLink(e.target.value)} placeholder="https://youtube.com/&hellip;"
+            <input value={logLink} onChange={e=>setLogLink(e.target.value)} placeholder="https://youtube.com/…"
               style={{ width:"100%", background:C.surface, border:`1px solid ${C.border}`, borderRadius:8,
                 padding:"9px 12px", color:C.text, fontSize:13, outline:"none", fontFamily:FONT_BODY, boxSizing:"border-box", marginTop:4 }}/>
           </div>
@@ -5344,7 +5344,7 @@ const SetDetailModal = ({ item, onClose, onSave, type="set", allMoves=[], allSet
       </div>
 
       {/* Video Link */}
-      <Inp label="VIDEO LINK (optional)" value={link} onChange={setLink} placeholder="https://youtube.com/&hellip;"/>
+      <Inp label="VIDEO LINK (optional)" value={link} onChange={setLink} placeholder="https://youtube.com/…"/>
 
       {/* Date Created */}
       <div style={{ marginBottom:14 }}>
@@ -5392,7 +5392,7 @@ const NewRoundModal = ({ onClose, onConfirm }) => {
         <label style={{ display:"block", fontSize:11, fontWeight:800, letterSpacing:1.5, color:C.textSec, fontFamily:FONT_DISPLAY, marginBottom:6 }}>ROUND NAME *</label>
         <input autoFocus value={name} onChange={e=>setName(e.target.value)}
           onKeyDown={e=>{ if(e.key==="Enter"&&name.trim()) onConfirm({name:name.trim(),color,entries:entryCount}); }}
-          placeholder="e.g. Semi Finals&hellip;" style={inputStyle}/>
+          placeholder="e.g. Semi Finals…" style={inputStyle}/>
       </div>
       <div style={{ marginBottom:14 }}>
         <label style={{ display:"block", fontSize:11, fontWeight:800, letterSpacing:1.5, color:C.textSec, fontFamily:FONT_DISPLAY, marginBottom:8 }}>COLOUR</label>
@@ -5894,7 +5894,7 @@ const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger }) => {
             <label style={lbl()}>LIST NAME *</label>
             <input autoFocus value={saveListName} onChange={e=>setSaveListName(e.target.value)}
               onKeyDown={e=>{ if(e.key==="Enter") saveList(); }}
-              placeholder="e.g. Battle Set, Warm-Up Routine&hellip;"
+              placeholder="e.g. Battle Set, Warm-Up Routine…"
               style={{ width:"100%", background:C.surface, border:`1.5px solid ${C.accent}`, borderRadius:8,
                 padding:"9px 12px", color:C.text, fontSize:14, outline:"none",
                 fontFamily:FONT_BODY, boxSizing:"border-box" }}/>
@@ -6402,7 +6402,7 @@ const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAdd
               <label style={lbl()}>TEMPLATE NAME *</label>
               <input autoFocus value={templateName} onChange={e=>setTemplateName(e.target.value)}
                 onKeyDown={e=>{ if(e.key==="Enter") saveTemplate(); }}
-                placeholder="e.g. Red Bull BC One, Local Jam, 2v2 Format&hellip;"
+                placeholder="e.g. Red Bull BC One, Local Jam, 2v2 Format…"
                 style={{ width:"100%", background:C.surface, border:`1.5px solid ${C.accent}`, borderRadius:8,
                   padding:"9px 12px", color:C.text, fontSize:14, outline:"none", fontFamily:FONT_BODY, boxSizing:"border-box" }}/>
             </div>
@@ -6763,7 +6763,7 @@ const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAdd
       {/* Modals */}
       {addingRound&&<NewRoundModal onClose={()=>setAddingRound(false)}
         onConfirm={({name,color,entries})=>{ addRound(name,color,entries); setAddingRound(false); }}/>}
-      {addingSet&&<NameModal title=t("newSet") placeholder="e.g. Opening Combo&hellip;" onClose={()=>setAddingSet(false)}
+      {addingSet&&<NameModal title=t("newSet") placeholder="e.g. Opening Combo…" onClose={()=>setAddingSet(false)}
         onConfirm={name=>{ addSet(name); setAddingSet(false); }}/>}
       {editSet&&<SetDetailModal set={editSet} onClose={()=>setEditSet(null)}/>}
     </div>
@@ -7052,7 +7052,7 @@ const ManualModal = ({ onClose }) => {
             ref={searchRef}
             value={search}
             onChange={e=>setSearch(e.target.value)}
-            placeholder="Search the manual&hellip;"
+            placeholder="Search the manual…"
             style={{ flex:1, background:"none", border:"none", outline:"none", color:C.text,
               fontSize:13, fontFamily:FONT_BODY }}
             autoFocus
@@ -7712,7 +7712,7 @@ const ProfileModal = ({ onClose, profile, onSave }) => {
       {sectionHdr(t("identity"),"user")}
       <div style={{ marginBottom:14 }}>
         <label style={lbl()}>NICKNAME</label>
-        <input value={f.nickname} onChange={e=>set("nickname")(e.target.value)} placeholder="e.g. Shadow&hellip;"
+        <input value={f.nickname} onChange={e=>set("nickname")(e.target.value)} placeholder="e.g. Shadow…"
           style={{ width:"100%", background:C.surface, border:`1px solid ${C.border}`, borderRadius:8, padding:"9px 12px", color:C.text, fontSize:14, outline:"none", boxSizing:"border-box", fontFamily:FONT_BODY }}/>
         {f.nickname&&<div style={{ fontSize:11, color:C.textMuted, marginTop:4 }}>Header will show: MOVESBOOK <span style={{color:C.accent}}>of {f.nickname}</span></div>}
       </div>
@@ -7758,7 +7758,7 @@ const ProfileModal = ({ onClose, profile, onSave }) => {
       {sectionHdr(t("breakingGoals"),"target")}
       <div style={{ marginBottom:14 }}>
         <textarea value={f.goals} onChange={e=>set("goals")(e.target.value)} rows={3}
-          placeholder="What do you want to achieve? Competitions, style, specific moves&hellip;"
+          placeholder="What do you want to achieve? Competitions, style, specific moves…"
           style={{ width:"100%", background:C.surface, border:`1px solid ${C.border}`, borderRadius:8, padding:"9px 12px", color:C.text, fontSize:14, outline:"none", boxSizing:"border-box", fontFamily:FONT_DISPLAY, letterSpacing:0.3, resize:"vertical" }}/>
       </div>
       {sectionHdr(t("whyBreaking"),"bulb")}
