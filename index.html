@@ -20,38 +20,26 @@
 
     /* ── RESPONSIVE LAYOUT ─────────────────────────────────── */
 
-    /* Mobile: constrain content width and center */
-    @media (min-width: 600px) {
-      body { align-items: center; justify-content: center; }
-      #root { max-width: 480px; border-left: 1px solid rgba(255,255,255,0.06); border-right: 1px solid rgba(255,255,255,0.06); }
-    }
-
     /* Tablet (768px+): sidebar layout */
     @media (min-width: 768px) {
-      #root { max-width: 100%; width: 100%; height: 100vh; }
+      body { background: #0a0a0a; }
       #mb-sidebar { display: flex !important; }
       #mb-top-header { display: none !important; }
       #mb-tabbar { display: none !important; }
       #mb-bottom-bar { display: none !important; }
-      #mb-main-content { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
     }
 
-    /* Desktop (1024px+): wider sidebar + content max-width */
+    /* Desktop (1024px+): wider sidebar with labels */
     @media (min-width: 1024px) {
-      #mb-sidebar { width: 240px !important; }
+      #mb-sidebar { width: 220px !important; }
       #mb-sidebar .mb-nav-label { display: block !important; }
       #mb-sidebar .mb-nav-section { display: block !important; }
-      #mb-content-wrapper { max-width: 900px; margin: 0 auto; width: 100%; }
     }
 
     /* Sidebar nav items hover */
     .mb-nav-btn:hover { background: rgba(207,0,0,0.08) !important; }
     .mb-nav-btn.active { background: rgba(207,0,0,0.12) !important; color: #cf0000 !important; }
     .mb-nav-btn.active .mb-nav-icon { color: #cf0000 !important; }
-
-    /* Sidebar add button pulse on hover */
-    .mb-add-btn:hover .mb-add-inner { transform: scale(1.06) !important; box-shadow: 0 6px 24px rgba(207,0,0,0.5) !important; }
-    .mb-add-btn:hover .mb-add-inner { transition: transform 0.15s, box-shadow 0.15s; }
 
     #splash{display:flex;flex-direction:column;align-items:center;gap:18px;padding:40px;text-align:center}
     .logo{font-size:34px;font-weight:900;letter-spacing:6px;color:#cf0000;font-family:'Barlow Condensed',sans-serif}
@@ -7644,7 +7632,9 @@ function App() {
   return (
     <SettingsCtx.Provider value={{ settings:appSettings, C, cardPad, cardFontSize }}>
       <style>{`
-        #movesbook-root { zoom: ${(fontScale * zoom).toFixed(3)}; }
+        #mb-content-wrapper { zoom: ${(fontScale * zoom).toFixed(3)}; }
+        #mb-content-wrapper * { box-sizing: border-box; }
+        #mb-main-content-mobile { zoom: ${(fontScale * zoom).toFixed(3)}; }
         #movesbook-root * { box-sizing: border-box; }
       `}</style>
       <div id="movesbook-root" style={{ fontFamily:FONT_BODY, background:C.bg, color:C.text,
@@ -7798,7 +7788,7 @@ function App() {
           </div>
 
           {/* Page content */}
-          <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column", position:"relative" }}>
+          <div id="mb-content-wrapper" style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column", position:"relative" }}>
             {(trainModal.type==="note"||trainModal.type==="goal"||trainModal.type==="target")&&(
               <div style={{ position:"absolute", inset:0, background:"rgba(0,0,0,0.6)", zIndex:10000, display:"flex", alignItems:"center", justifyContent:"center", padding:10 }}>
                 {trainModal.type==="note"&&<NoteModal idea={trainModal.idea} onClose={()=>setTrainModal({})} onSave={fields=>{ trainModal.onSave(fields); setTrainModal({}); }}/>}
