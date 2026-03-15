@@ -7912,12 +7912,19 @@ const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onRestoreRound
             </div>
           )}
 
-          <div style={{ opacity:0.45, pointerEvents:"none", userSelect:"none" }}>
-          {row("Language", "Coming soon — full translation support is in the works.",
-            <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-              <span style={{ fontSize:12, fontWeight:700, letterSpacing:1.5, color:"#fff",
-                background:"#9a7a55", borderRadius:5, padding:"3px 8px" }}>COMING SOON</span>
-            </div>
+          <div>
+          {row("Language", "App display language",
+            <select value={s.language||"en"} onChange={e=>set("language")(e.target.value)}
+              style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:7,
+                padding:"6px 10px", color:C.text, fontSize:13, fontFamily:FONT_BODY, cursor:"pointer" }}>
+              <option value="en">🇬🇧 English</option>
+              <option value="it">🇮🇹 Italiano</option>
+              <option value="es">🇪🇸 Español</option>
+              <option value="fr">🇫🇷 Français</option>
+              <option value="pt">🇧🇷 Português</option>
+              <option value="de">🇩🇪 Deutsch</option>
+              <option value="ja">🇯🇵 日本語</option>
+            </select>
           )}
           </div>
 
@@ -8037,8 +8044,6 @@ const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onRestoreRound
           </div>
 
           {/* ── DATA ────────────────────────────────────── */}
-          {sectionHdr(t("dataPrivacy"),"🔒")}
-
           {sectionHdr(t("dataPrivacy"),"🔒")}
 
           {row(t("exportAllData"),
