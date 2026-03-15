@@ -6948,7 +6948,7 @@ const MANUAL_SECTIONS = [
       { title:"Data — Export All Data",
         body:"Downloads all your data (moves, habits, goals, notes, sets) as a single timestamped CSV file." },
       { title:"Data — Import Moves from CSV",
-        body:t("importMovesDesc") },
+        body:"Re-import moves from a MovesBook CSV export. Duplicates are skipped." },
       { title:"Data — Restart Tour",
         body:"Replays the onboarding walkthrough from the beginning." },
     ]
@@ -6993,6 +6993,7 @@ const MANUAL_SECTIONS = [
 
 const ManualModal = ({ onClose }) => {
   const { C } = useSettings();
+  const t = useT();
   const [search, setSearch] = useState("");
   const [openSections, setOpenSections] = useState({});
   const searchRef = useRef(null);
