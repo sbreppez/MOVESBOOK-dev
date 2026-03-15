@@ -3599,6 +3599,7 @@ const IdeaTile = (props) => {
 
 // ─── IDEA MENU — renders at App level, above ZoomWrap ───────────────────────
 const IdeaMenu = ({ menu, onClose }) => {
+  const t = useT();
   const [subColor, setSubColor] = useState(false);
   const menuRef = useRef(null);
 
@@ -3723,6 +3724,7 @@ const habitDoneToday = (checkIns) => {
 
 const HabitModal = ({ onClose, onSave, habit }) => {
   const { C } = useSettings();
+  const t = useT();
   const isEdit = !!habit;
   const [name,      setName]      = useState(habit?.name      || "");
   const [frequency, setFrequency] = useState(habit?.frequency || "daily");
@@ -3832,6 +3834,7 @@ const HabitModal = ({ onClose, onSave, habit }) => {
 
 const HabitCard = ({ habit, onCheckIn, onEdit, onDelete }) => {
   const { C } = useSettings();
+  const t = useT();
   const [expanded, setExpanded] = useState(false);
 
   const today    = new Date().toISOString().split("T")[0];
@@ -6250,13 +6253,13 @@ const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAdd
   const [freestyleAddTick, setFreestyleAddTick] = useState(0);
   useEffect(()=>{
     if(!onAddTrigger) return;
-    if(battleTab==="freestyle") setFreestyleAddTick(t=>t+1);
+    if(battleTab==="freestyle") setFreestyleAddTick(v=>v+1);
     else setAddingRound(true);
   },[onAddTrigger]);
   // onAddTrigger2 in Battle: t("addMove2") opens freestyle picker regardless of sub-tab
   useEffect(()=>{
     if(!onAddTrigger2) return;
-    setFreestyleAddTick(t=>t+1);
+    setFreestyleAddTick(v=>v+1);
   },[onAddTrigger2]);
 
   // ── Vocab picker state (inside Edit Round) ──────────────────────────────────
@@ -8508,6 +8511,8 @@ function App() {
   useEffect(()=>{ saveLocal("mb_settings", appSettings); },[appSettings]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.settings?.(fbUser.uid, appSettings); },[appSettings, fbUser]);
 
+  const t = useT();
+
   // ── Apply theme: mutate the shared C object so all components re-read it ──
   const newPalette = buildPalette(appSettings.theme);
   Object.assign(C, newPalette);
@@ -8518,8 +8523,8 @@ function App() {
   const cardPad = appSettings.compactCards ? "6px 8px" : "10px 12px";
   const cardFontSize = appSettings.compactCards ? 11 : 13;
 
-  const addToast=useCallback(t=>{ const id=Date.now(); setToasts(prev=>[...prev,{...t,id}]); setTimeout(()=>setToasts(prev=>prev.filter(x=>x.id!==id)),5500); },[]);
-  const removeToast=id=>setToasts(prev=>prev.filter(t=>t.id!==id));
+  const addToast=useCallback(toast=>{ const id=Date.now(); setToasts(prev=>[...prev,{...toast,id}]); setTimeout(()=>setToasts(prev=>prev.filter(x=>x.id!==id)),5500); },[]);
+  const removeToast=id=>setToasts(prev=>prev.filter(toast=>toast.id!==id));
 
   const setMovesGrad = useCallback(updater => {
     setMoves(prev => typeof updater==="function" ? updater(prev) : updater);
@@ -8534,8 +8539,8 @@ function App() {
   const getAddMenuOptions = () => {
     if (tab === "ideas") return null;
     if (tab === "wip" && subTab === "moves") return [
-      { label:"Add Move",     emoji:"🕺", action:()=>{ setAddMenu(false); setAddTick(t=>t+1); } },
-      { label:"Add Category", emoji:"📂", action:()=>{ setAddMenu(false); setAddTick2(t=>t+1); } },
+      { label:"Add Move",     emoji:"🕺", action:()=>{ setAddMenu(false); setAddTick(v=>v+1); } },
+      { label:"Add Category", emoji:"📂", action:()=>{ setAddMenu(false); setAddTick2(v=>v+1); } },
     ];
     if (tab === "wip" && subTab === "sets") return null; // fires Add Set directly
     if (tab === "ready" && subTab === "freestyle") return null; // fires picker directly
@@ -8547,8 +8552,8 @@ function App() {
     const opts = getAddMenuOptions();
     if (!opts) {
       // Sets sub-tab: fire Add Set (addTick2), everything else fires addTick
-      if (tab === "wip" && subTab === "sets") setAddTick2(t=>t+1);
-      else setAddTick(t=>t+1);
+      if (tab === "wip" && subTab === "sets") setAddTick2(v=>v+1);
+      else setAddTick(v=>v+1);
     }
     else { setAddMenu(m=>!m); }
   };
