@@ -1201,8 +1201,8 @@ const TabBar = ({ active, onChange }) => {
     {tabs.map(tb=>{
       const on = active===tb.id;
       return (
-        <button id={tb.tid} key={tb.id} onClick={()=>onChange(tb.id)} style={{ flex:1, padding:"9px 6px", border:"none", cursor:"pointer", background:on?C.bg:"transparent", color:on?C.accent:C.textSec, borderBottom:`3px solid ${on?C.accent:"transparent"}`, display:"flex", alignItems:"center", justifyContent:"center", gap:5, fontSize:14, fontWeight:800, letterSpacing:2, transition:"all 0.15s", fontFamily:FONT_DISPLAY }}>
-          <Ic n={tb.icon} s={13} c={on?C.accent:C.textMuted}/>{tb.label}
+        <button id={tb.tid} key={tb.id} onClick={()=>onChange(tb.id)} style={{ flex:1, padding:"13px 6px", border:"none", cursor:"pointer", background:on?C.bg:"transparent", color:on?C.accent:C.textSec, borderBottom:`3px solid ${on?C.accent:"transparent"}`, display:"flex", alignItems:"center", justifyContent:"center", gap:6, fontSize:14, fontWeight:800, letterSpacing:2, transition:"all 0.15s", fontFamily:FONT_DISPLAY }}>
+          <Ic n={tb.icon} s={15} c={on?C.accent:C.textMuted}/>{tb.label}
         </button>
       );
     })}
@@ -3520,11 +3520,11 @@ const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[], setHab
           const on = trainTab===id;
           return (
             <button key={id} onClick={()=>setTrainTab(id)}
-              style={{ flex:1, padding:"9px 4px", border:"none", cursor:"pointer",
+              style={{ flex:1, padding:"13px 4px", border:"none", cursor:"pointer",
                 background: on ? C.bg : "transparent",
                 color: on ? C.accent : C.textSec,
                 borderBottom:`3px solid ${on?C.accent:"transparent"}`,
-                fontSize:11, fontWeight:800, letterSpacing:1, fontFamily:FONT_DISPLAY,
+                fontSize:12, fontWeight:800, letterSpacing:1, fontFamily:FONT_DISPLAY,
                 display:"flex", alignItems:"center", justifyContent:"center", gap:4 }}>
               {label}
               {count!==null&&<span style={{ fontSize:10, color:on?C.accent:C.textMuted,
@@ -3908,8 +3908,8 @@ const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, sets
         <div style={{ display:"flex", gap:0 }}>
           {[["moves","MOVES"],["sets","SETS"]].map(([id,label])=>(
             <button key={id} onClick={()=>setVocabTabAndNotify(id)}
-              style={{ padding:"4px 10px", background:"none", border:"none", cursor:"pointer",
-                fontSize:10, fontWeight:800, letterSpacing:1.5, fontFamily:FONT_DISPLAY,
+              style={{ padding:"10px 14px", background:"none", border:"none", cursor:"pointer",
+                fontSize:11, fontWeight:800, letterSpacing:1.5, fontFamily:FONT_DISPLAY,
                 color: vocabTab===id ? C.accent : C.textMuted,
                 borderBottom: vocabTab===id ? `2px solid ${C.accent}` : "2px solid transparent" }}>
               {label}
@@ -5799,8 +5799,8 @@ const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAdd
       <div style={{ display:"flex", borderBottom:`1px solid ${C.border}`, background:C.surface, flexShrink:0 }}>
         {subTabs.map(([id,label])=>(
           <button key={id} onClick={()=>setBattleTabAndNotify(id)}
-            style={{ flex:1, padding:"9px 0", background:"none", border:"none", cursor:"pointer",
-              fontSize:11, fontWeight:800, letterSpacing:1.5, fontFamily:FONT_DISPLAY,
+            style={{ flex:1, padding:"13px 0", background:"none", border:"none", cursor:"pointer",
+              fontSize:12, fontWeight:800, letterSpacing:1.5, fontFamily:FONT_DISPLAY,
               color: battleTab===id ? C.accent : C.textMuted,
               borderBottom: battleTab===id ? `2px solid ${C.accent}` : "2px solid transparent" }}>
             {label}
