@@ -2175,9 +2175,9 @@ const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initialDesc=
   const handleSave = () => { if (f.name) { onSave(f); onClose(); } };
   return (
     <Modal title={move?t("editMove"):"ADD A MOVE"} onClose={onClose}>
-      <Sel label=t("category") value={f.category} onChange={set("category")} options={cats.map(c=>({value:c,label:c}))}/>
+      <Sel label={t("category")} value={f.category} onChange={set("category")} options={cats.map(c=>({value:c,label:c}))}/>
       <Inp label="NAME *" value={f.name} onChange={set("name")} placeholder="Move name…"/>
-      <Txtarea label=t("description") value={f.description} onChange={set("description")} placeholder={t("describeMove")}/>
+      <Txtarea label={t("description")} value={f.description} onChange={set("description")} placeholder={t("describeMove")}/>
       <div style={{ display:"flex", alignItems:"center", gap:8 }}>
         <div style={{ flex:1 }}><Inp label="VIDEO LINK (optional)" value={f.link} onChange={set("link")} placeholder="https://youtube.com/…"/></div>
         {f.link&&<a href={f.link.startsWith("http")?f.link:"https://"+f.link} target="_blank" rel="noopener noreferrer"
@@ -2190,14 +2190,14 @@ const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initialDesc=
 
       <MasterySlider value={f.mastery} onChange={set("mastery")}/>
 
-      <Sel label=t("status") value={f.status} onChange={set("status")} options={[{value:"wip",label:"📜 Moves"},{value:"ready",label:"⚔ Battle Ready"}]}/>
-      <Inp label=t("date") value={f.date} onChange={set("date")} type="date"/>
+      <Sel label={t("status")} value={f.status} onChange={set("status")} options={[{value:"wip",label:"📜 Moves"},{value:"ready",label:"⚔ Battle Ready"}]}/>
+      <Inp label={t("date")} value={f.date} onChange={set("date")} type="date"/>
       <button onClick={()=>setMore(!more)} style={{ background:"none", border:"none", color:C.brownLight, cursor:"pointer", fontSize:12, padding:"0 0 14px", display:"flex", alignItems:"center", gap:4, fontFamily:"inherit" }}>
         <Ic n={more?"chevD":"chevR"} s={12} c={C.brownLight}/>{more?"Hide details":"More details"}
       </button>
       {more && <div style={{ background:C.surfaceAlt, borderRadius:10, padding:14, marginBottom:16, border:`1px solid ${C.borderLight}` }}>
-        <Sel label=t("direction") value={f.rotation} onChange={set("rotation")} options={[{value:"",label:"None"},t("clockwise"),t("counterclockwise")]}/>
-        <Sel label=t("travelling") value={f.travelling} onChange={set("travelling")} options={[{value:"",label:"None"},t("forward"),t("backwards"),"Sideways","Going Around"]}/>
+        <Sel label={t("direction")} value={f.rotation} onChange={set("rotation")} options={[{value:"",label:"None"},t("clockwise"),t("counterclockwise")]}/>
+        <Sel label={t("travelling")} value={f.travelling} onChange={set("travelling")} options={[{value:"",label:"None"},t("forward"),t("backwards"),"Sideways","Going Around"]}/>
       </div>}
       <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
         <Btn variant="secondary" onClick={onClose}>{t("cancel")}</Btn>
@@ -2226,7 +2226,7 @@ const BulkModal = ({ onClose, onImport, category }) => {
           <Btn onClick={parse} disabled={!txt.trim()}>Find Moves 🔍</Btn>
         </div>
       </Fragment> : <Fragment>
-        <Sel label=t("importToCategory") value={cat} onChange={setCat} options={CATS}/>
+        <Sel label={t("importToCategory")} value={cat} onChange={setCat} options={CATS}/>
         <MasterySlider value={mastery} onChange={setMastery}/>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:8 }}>
           <span style={{ fontSize:13, color:C.textSec, fontWeight:700, letterSpacing:1 }}>{parsed.length} MOVES FOUND</span>
@@ -2690,7 +2690,7 @@ const IDEA_COLORS = [
 // ─── TYPE CHOOSER ─────────────────────────────────────────────────────────────
 const TypeChooserModal = ({ onClose, onChoose }) => {
   return (
-  <Modal title=t("newGoal") onClose={onClose}>
+  <Modal title={t("newGoal")} onClose={onClose}>
     <div style={{ display:"flex", flexDirection:"column", gap:12, padding:"8px 0" }}>
       <button onClick={()=>onChoose("goal")}
         style={{ padding:"18px 16px", background:C.surface, border:`2px solid ${C.accent}`, borderRadius:12,
@@ -4293,7 +4293,7 @@ const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
 
       {/* Modals */}
       {habitNudge&&(
-        <Modal title=t("headsUp") onClose={()=>setHabitNudge(false)}>
+        <Modal title={t("headsUp")} onClose={()=>setHabitNudge(false)}>
           <p style={{ color:C.textSec, marginBottom:16, fontSize:13, lineHeight:1.6 }}>
             Pro tip: start with two habits max. Consistency on a few beats chaos on many. You can always add more later.
           </p>
@@ -4312,7 +4312,7 @@ const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
       {addingHabit&&<HabitModal onClose={()=>setAddingHabit(false)} onSave={addHabit}/>}
       {editHabit&&<HabitModal onClose={()=>setEditHabit(null)} onSave={f=>updateHabit(editHabit.id,f)} habit={editHabit}/>}
       {confirmDel&&(
-        <Modal title=t("deleteHabit") onClose={()=>setConfirmDel(null)}>
+        <Modal title={t("deleteHabit")} onClose={()=>setConfirmDel(null)}>
           <p style={{ color:C.textSec, marginBottom:8, fontSize:13, lineHeight:1.6 }}>
             Delete <strong style={{color:C.text}}>{confirmDel.name}</strong>?
           </p>
@@ -4572,7 +4572,7 @@ const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[], setHab
       }
       {typeChooser&&<TypeChooserModal onClose={()=>setTypeChooser(false)} onChoose={t=>{ setTypeChooser(false); setTrainTab((t==="goal"||t==="target")?"goals":"notes"); openModal(t, null, addIdea); }}/>}
       {logEntry&&(
-        <Modal title=t("logProgress") onClose={()=>{ confirmLogEntry(logEntry.id); }}>
+        <Modal title={t("logProgress")} onClose={()=>{ confirmLogEntry(logEntry.id); }}>
           <div style={{ marginBottom:6 }}>
             <div style={{ fontSize:13, fontWeight:800, color:C.text, fontFamily:FONT_DISPLAY, marginBottom:2 }}>{logEntry.title}</div>
             <div style={{ fontSize:11, color:C.textMuted, marginBottom:14 }}>
@@ -5387,7 +5387,7 @@ const NewRoundModal = ({ onClose, onConfirm }) => {
   const inputStyle = { width:"100%", background:C.surface, border:`1px solid ${C.border}`, borderRadius:8,
     padding:"9px 12px", color:C.text, fontSize:14, outline:"none", fontFamily:FONT_BODY, boxSizing:"border-box" };
   return (
-    <Modal title=t("newRoundModal") onClose={onClose}>
+    <Modal title={t("newRoundModal")} onClose={onClose}>
       <div style={{ marginBottom:14 }}>
         <label style={{ display:"block", fontSize:11, fontWeight:800, letterSpacing:1.5, color:C.textSec, fontFamily:FONT_DISPLAY, marginBottom:6 }}>ROUND NAME *</label>
         <input autoFocus value={name} onChange={e=>setName(e.target.value)}
@@ -5886,7 +5886,7 @@ const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger }) => {
 
       {/* Save List Modal */}
       {showSaveList&&(
-        <Modal title=t("saveFreestyleList") onClose={()=>setShowSaveList(false)}>
+        <Modal title={t("saveFreestyleList")} onClose={()=>setShowSaveList(false)}>
           <p style={{ fontSize:13, color:C.textSec, marginBottom:14, lineHeight:1.6 }}>
             Saves your current list of {toUse.length} move{toUse.length!==1?"s":""} to reuse later.
           </p>
@@ -5908,7 +5908,7 @@ const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger }) => {
 
       {/* Load List Modal */}
       {showLoadList&&!confirmLoadList&&!confirmDeleteList&&(
-        <Modal title=t("loadFreestyleList") onClose={()=>setShowLoadList(false)}>
+        <Modal title={t("loadFreestyleList")} onClose={()=>setShowLoadList(false)}>
           {savedLists.length===0 ? (
             <div style={{ textAlign:"center", padding:"24px 0", color:C.textMuted }}>
               <div style={{ fontSize:28, marginBottom:8 }}>📂</div>
@@ -5947,7 +5947,7 @@ const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger }) => {
 
       {/* Confirm Load */}
       {confirmLoadList&&(
-        <Modal title=t("loadList") onClose={()=>setConfirmLoadList(null)}>
+        <Modal title={t("loadList")} onClose={()=>setConfirmLoadList(null)}>
           <p style={{ fontSize:13, color:C.textSec, marginBottom:8, lineHeight:1.6 }}>
             Load <strong style={{color:C.text}}>{confirmLoadList.name}</strong>?
           </p>
@@ -5963,7 +5963,7 @@ const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger }) => {
 
       {/* Confirm Delete List */}
       {confirmDeleteList&&(
-        <Modal title=t("deleteList") onClose={()=>setConfirmDeleteList(null)}>
+        <Modal title={t("deleteList")} onClose={()=>setConfirmDeleteList(null)}>
           <p style={{ fontSize:13, color:C.textSec, marginBottom:8, lineHeight:1.6 }}>
             Delete <strong style={{color:C.text}}>{confirmDeleteList.name}</strong>?
           </p>
@@ -5977,7 +5977,7 @@ const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger }) => {
 
       {/* Confirm reset modal */}
       {confirmReset&&(
-        <Modal title=t("resetListLabel") onClose={()=>setConfirmReset(false)}>
+        <Modal title={t("resetListLabel")} onClose={()=>setConfirmReset(false)}>
           <p style={{ color:C.textSec, marginBottom:20, lineHeight:1.6 }}>
             This will clear all <strong style={{color:C.text}}>{toUse.length} moves</strong> from your freestyle list. This cannot be undone.
           </p>
@@ -6375,7 +6375,7 @@ const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAdd
 
         {/* Confirm restore modal */}
         {confirmRestore&&(
-          <Modal title=t("restoreDefaultRounds") onClose={()=>setConfirmRestore(false)}>
+          <Modal title={t("restoreDefaultRounds")} onClose={()=>setConfirmRestore(false)}>
             <p style={{ color:C.textSec, marginBottom:8, lineHeight:1.6, fontSize:13 }}>
               This will replace your current rounds with the default battle structure:
             </p>
@@ -6394,7 +6394,7 @@ const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAdd
 
         {/* Save Template Modal */}
         {showSaveTemplate&&(
-          <Modal title=t("saveBattleTemplate") onClose={()=>setShowSaveTemplate(false)}>
+          <Modal title={t("saveBattleTemplate")} onClose={()=>setShowSaveTemplate(false)}>
             <p style={{ fontSize:13, color:C.textSec, marginBottom:14, lineHeight:1.6 }}>
               Saves your current round structure and all entries as a reusable template.
             </p>
@@ -6419,7 +6419,7 @@ const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAdd
 
         {/* Load Template Modal */}
         {showLoadTemplate&&!confirmLoadTpl&&!confirmDeleteTpl&&(
-          <Modal title=t("loadBattleTemplate") onClose={()=>setShowLoadTemplate(false)}>
+          <Modal title={t("loadBattleTemplate")} onClose={()=>setShowLoadTemplate(false)}>
             {templates.length===0 ? (
               <div style={{ textAlign:"center", padding:"24px 0", color:C.textMuted }}>
                 <div style={{ fontSize:28, marginBottom:8 }}>📂</div>
@@ -6467,7 +6467,7 @@ const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAdd
 
         {/* Confirm Load */}
         {confirmLoadTpl&&(
-          <Modal title=t("loadTemplate") onClose={()=>setConfirmLoadTpl(null)}>
+          <Modal title={t("loadTemplate")} onClose={()=>setConfirmLoadTpl(null)}>
             <p style={{ fontSize:13, color:C.textSec, marginBottom:8, lineHeight:1.6 }}>
               Load <strong style={{color:C.text}}>{confirmLoadTpl.name}</strong>?
             </p>
@@ -6483,7 +6483,7 @@ const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAdd
 
         {/* Confirm Delete Template */}
         {confirmDeleteTpl&&(
-          <Modal title=t("deleteTemplate") onClose={()=>setConfirmDeleteTpl(null)}>
+          <Modal title={t("deleteTemplate")} onClose={()=>setConfirmDeleteTpl(null)}>
             <p style={{ fontSize:13, color:C.textSec, marginBottom:8, lineHeight:1.6 }}>
               Delete <strong style={{color:C.text}}>{confirmDeleteTpl.name}</strong>?
             </p>
@@ -6763,7 +6763,7 @@ const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAdd
       {/* Modals */}
       {addingRound&&<NewRoundModal onClose={()=>setAddingRound(false)}
         onConfirm={({name,color,entries})=>{ addRound(name,color,entries); setAddingRound(false); }}/>}
-      {addingSet&&<NameModal title=t("newSet") placeholder="e.g. Opening Combo…" onClose={()=>setAddingSet(false)}
+      {addingSet&&<NameModal title={t("newSet")} placeholder="e.g. Opening Combo…" onClose={()=>setAddingSet(false)}
         onConfirm={name=>{ addSet(name); setAddingSet(false); }}/>}
       {editSet&&<SetDetailModal set={editSet} onClose={()=>setEditSet(null)}/>}
     </div>
@@ -8606,7 +8606,7 @@ function App() {
               style={{ background:"none", border:"none", cursor:"pointer", padding:"3px 5px",
                 borderRadius:6, color:C.brownLight, fontWeight:900, fontSize:16,
                 fontFamily:FONT_DISPLAY, lineHeight:1 }}
-              id="tour-manual-btn" title=t("userManual")>?</button>
+              id="tour-manual-btn" title={t("userManual")}>?</button>
 
           </div>
         </div>
