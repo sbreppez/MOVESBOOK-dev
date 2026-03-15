@@ -205,7 +205,7 @@
 
         if (_unsubSnap) _unsubSnap();
         _unsubSnap = window.__MB_DB__.subscribe(user.uid, function(d){
-          // Only update localStorage for background sync — do NOT re-dispatch mb-auth-resolved
+          // Only update localStorage for background sync \u2014 do NOT re-dispatch mb-auth-resolved
           // as that would overwrite live React state with potentially stale Firestore snapshots
           try {
             if (d.moves)    localStorage.setItem('mb_moves',    d.moves);
@@ -319,12 +319,12 @@ const TRANSLATIONS = {
     manual:"Manual (drag)", mostProgress:"Most Progress",
     // Empty states
     emptyMoves:"No moves yet", emptyMovesInCat:"No moves in this category yet",
-    emptyRounds:"No rounds yet — tap ADD to create one",
-    emptySets:"No sets yet — tap + to create one",
-    emptyEntries:"No entries yet — start tracking your journey",
+    emptyRounds:"No rounds yet \u2014 tap ADD to create one",
+    emptySets:"No sets yet \u2014 tap + to create one",
+    emptyEntries:"No entries yet \u2014 start tracking your journey",
     emptyFreestyle:"Tap ADD to build your freestyle list",
     emptySearch:"No moves found",
-    emptyEntry:"Empty — tap ADD to fill this entry",
+    emptyEntry:"Empty \u2014 tap ADD to fill this entry",
     tapAdd:"Tap + to add your first move",
     // Placeholders
     searchMoves:"Search moves…", searchMovesAndSets:"Search moves and sets…",
@@ -359,7 +359,7 @@ const TRANSLATIONS = {
     deleteCat:"Delete", direction:"DIRECTION OF ROTATION",
     of:"of", editTarget:"EDIT TARGET", notesSection:"NOTES",
     tourWelcomeTitle:"WELCOME TO MOVESBOOK"
-    tourWelcomeBody:"Your Breaking Logbook — to Study and Evolve."
+    tourWelcomeBody:"Your Breaking Logbook \u2014 to Study and Evolve."
     tourWelcomeSub:"Quick 60-second tour. Skip anytime."
     tourWelcomeCta:"LET'S GO →"
     tourSectionsTitle:"THREE SECTIONS"
@@ -378,18 +378,18 @@ const TRANSLATIONS = {
     tourHabitsTitle:"BUILD HABITS"
     tourHabitsBody:"Show up every day and let consistency do the work. Track your streak and watch yourself grow over time. Small steps. Long game."
     tourMovesTitle:"MOVES"
-    tourMovesBody:"Build your vocabulary — organized, rated and fully customizable. See your full arsenal at a glance."
+    tourMovesBody:"Build your vocabulary \u2014 organized, rated and fully customizable. See your full arsenal at a glance."
     tourMasteryTitle:"MASTERY"
     tourMasteryBody:"Know where you are. That's where progress begins."
-    tourMasterySub:"Each move has a mastery bar — set it to where you honestly stand."
+    tourMasterySub:"Each move has a mastery bar \u2014 set it to where you honestly stand."
     tourBattleTitle:"BATTLE"
-    tourBattleBody:"Plan every round before you step on the floor, or build a freestyle list and tick off moves as you throw them — stay fresh, no repeats."
+    tourBattleBody:"Plan every round before you step on the floor, or build a freestyle list and tick off moves as you throw them \u2014 stay fresh, no repeats."
     tourPlusTitle:"THE + BUTTON"
-    tourPlusBody:"The + button does it all — add a move, goal, habit, round, or pick moves for your freestyle list."
+    tourPlusBody:"The + button does it all \u2014 add a move, goal, habit, round, or pick moves for your freestyle list."
     tourManualTitle:"USER MANUAL"
     tourManualBody:"Tap ? anytime for the full manual. Every feature documented, fully searchable. The whole playbook."
     tourProfileTitle:"YOUR PROFILE"
-    tourProfileBody:"Set your name and leave a message to your future self — for the hard days."
+    tourProfileBody:"Set your name and leave a message to your future self \u2014 for the hard days."
     tourReadyTitle:"YOU'RE READY"
     tourReadyBody:"Go add your first move. Set your first goal. Elevate your breaking today."
     tourReadyCta:"LET'S GET IT 🔥"
@@ -405,7 +405,7 @@ const TRANSLATIONS = {
     feedbackSubmit:"SUBMIT FEEDBACK"
     feedbackSending:"SENDING…"
     showDeadlineIndicatorDesc:"Show the days-remaining label on Journey Goals"
-    exportAllDataDesc:"Download all your data as a CSV file — moves, sets, goals, habits and notes"
+    exportAllDataDesc:"Download all your data as a CSV file \u2014 moves, sets, goals, habits and notes"
     importMovesDesc:"Re-import moves from a MovesBook CSV export. Duplicates are skipped."
     userManualDesc:"Full feature guide, fully searchable"
     masteryLearning:"Still learning it"
@@ -543,12 +543,12 @@ const TRANSLATIONS = {
     dateAdded:"Data aggiunta", alphabetical:"Alfabetico", masteryPct:"% Padronanza",
     manual:"Manuale (trascina)", mostProgress:"Più progresso",
     emptyMoves:"Nessuna mossa", emptyMovesInCat:"Nessuna mossa in questa categoria",
-    emptyRounds:"Nessun round — premi AGGIUNGI per crearne uno",
-    emptySets:"Nessun set — premi + per crearne uno",
-    emptyEntries:"Nessuna voce — inizia a tracciare il tuo percorso",
+    emptyRounds:"Nessun round \u2014 premi AGGIUNGI per crearne uno",
+    emptySets:"Nessun set \u2014 premi + per crearne uno",
+    emptyEntries:"Nessuna voce \u2014 inizia a tracciare il tuo percorso",
     emptyFreestyle:"Premi AGGIUNGI per costruire la tua lista freestyle",
     emptySearch:"Nessuna mossa trovata",
-    emptyEntry:"Vuoto — premi AGGIUNGI per riempire questa voce",
+    emptyEntry:"Vuoto \u2014 premi AGGIUNGI per riempire questa voce",
     tapAdd:"Premi + per aggiungere la prima mossa",
     searchMoves:"Cerca mosse…", searchMovesAndSets:"Cerca mosse e set…",
     searchCatsMoves:"Cerca categorie o mosse…",
@@ -578,7 +578,7 @@ const TRANSLATIONS = {
     deleteCat:"Elimina", direction:"DIREZIONE DI ROTAZIONE",
     of:"di", editTarget:"MODIFICA TARGET", notesSection:"NOTE",
     tourWelcomeTitle:"BENVENUTO SU MOVESBOOK"
-    tourWelcomeBody:"Il tuo diario del Breaking — per studiare ed evolvere."
+    tourWelcomeBody:"Il tuo diario del Breaking \u2014 per studiare ed evolvere."
     tourWelcomeSub:"Tour rapido di 60 secondi. Salta quando vuoi."
     tourWelcomeCta:"ANDIAMO →"
     tourSectionsTitle:"TRE SEZIONI"
@@ -597,18 +597,18 @@ const TRANSLATIONS = {
     tourHabitsTitle:"COSTRUISCI ABITUDINI"
     tourHabitsBody:"Presentati ogni giorno e lascia che la costanza faccia il lavoro. Tieni traccia della tua serie e osservati crescere nel tempo. Piccoli passi. Lungo percorso."
     tourMovesTitle:"MOSSE"
-    tourMovesBody:"Costruisci il tuo vocabolario — organizzato, valutato e completamente personalizzabile. Vedi il tuo arsenale completo a colpo d'occhio."
+    tourMovesBody:"Costruisci il tuo vocabolario \u2014 organizzato, valutato e completamente personalizzabile. Vedi il tuo arsenale completo a colpo d'occhio."
     tourMasteryTitle:"PADRONANZA"
     tourMasteryBody:"Sappi dove sei. È lì che inizia il progresso."
-    tourMasterySub:"Ogni mossa ha una barra di padronanza — impostala dove sei onestamente."
+    tourMasterySub:"Ogni mossa ha una barra di padronanza \u2014 impostala dove sei onestamente."
     tourBattleTitle:"BATTLE"
-    tourBattleBody:"Pianifica ogni round prima di scendere in campo, o costruisci una lista freestyle e spunta le mosse mentre le esegui — resta fresco, senza ripetizioni."
+    tourBattleBody:"Pianifica ogni round prima di scendere in campo, o costruisci una lista freestyle e spunta le mosse mentre le esegui \u2014 resta fresco, senza ripetizioni."
     tourPlusTitle:"IL TASTO +"
-    tourPlusBody:"Il tasto + fa tutto — aggiungi una mossa, obiettivo, abitudine, round, o scegli mosse per la tua lista freestyle."
+    tourPlusBody:"Il tasto + fa tutto \u2014 aggiungi una mossa, obiettivo, abitudine, round, o scegli mosse per la tua lista freestyle."
     tourManualTitle:"MANUALE UTENTE"
     tourManualBody:"Tocca ? in qualsiasi momento per il manuale completo. Ogni funzione documentata, completamente ricercabile. Il playbook completo."
     tourProfileTitle:"IL TUO PROFILO"
-    tourProfileBody:"Imposta il tuo nome e lascia un messaggio al tuo sé futuro — per i giorni difficili."
+    tourProfileBody:"Imposta il tuo nome e lascia un messaggio al tuo sé futuro \u2014 per i giorni difficili."
     tourReadyTitle:"SEI PRONTO"
     tourReadyBody:"Vai ad aggiungere la tua prima mossa. Imposta il tuo primo obiettivo. Eleva il tuo breaking oggi."
     tourReadyCta:"INIZIAMO 🔥"
@@ -762,12 +762,12 @@ const TRANSLATIONS = {
     dateAdded:"Fecha añadida", alphabetical:"Alfabético", masteryPct:"% Dominio",
     manual:"Manual (arrastrar)", mostProgress:"Más progreso",
     emptyMoves:"Sin movimientos", emptyMovesInCat:"Sin movimientos en esta categoría",
-    emptyRounds:"Sin rondas — toca AGREGAR para crear una",
-    emptySets:"Sin sets — toca + para crear uno",
-    emptyEntries:"Sin entradas — empieza a registrar tu viaje",
+    emptyRounds:"Sin rondas \u2014 toca AGREGAR para crear una",
+    emptySets:"Sin sets \u2014 toca + para crear uno",
+    emptyEntries:"Sin entradas \u2014 empieza a registrar tu viaje",
     emptyFreestyle:"Toca AGREGAR para construir tu lista freestyle",
     emptySearch:"No se encontraron movimientos",
-    emptyEntry:"Vacío — toca AGREGAR para llenar esta entrada",
+    emptyEntry:"Vacío \u2014 toca AGREGAR para llenar esta entrada",
     tapAdd:"Toca + para agregar tu primer movimiento",
     searchMoves:"Buscar movimientos…", searchMovesAndSets:"Buscar movimientos y sets…",
     searchCatsMoves:"Buscar categorías o movimientos…",
@@ -797,7 +797,7 @@ const TRANSLATIONS = {
     deleteCat:"Eliminar", direction:"DIRECCIÓN DE ROTACIÓN",
     of:"de", editTarget:"EDITAR OBJETIVO", notesSection:"NOTAS",
     tourWelcomeTitle:"BIENVENIDO A MOVESBOOK"
-    tourWelcomeBody:"Tu diario de Breaking — para estudiar y evolucionar."
+    tourWelcomeBody:"Tu diario de Breaking \u2014 para estudiar y evolucionar."
     tourWelcomeSub:"Tour rápido de 60 segundos. Omite cuando quieras."
     tourWelcomeCta:"VAMOS →"
     tourSectionsTitle:"TRES SECCIONES"
@@ -816,18 +816,18 @@ const TRANSLATIONS = {
     tourHabitsTitle:"CONSTRUYE HÁBITOS"
     tourHabitsBody:"Preséntate cada día y deja que la consistencia haga el trabajo. Rastrea tu racha y observa tu crecimiento. Pequeños pasos. Juego largo."
     tourMovesTitle:"MOVIMIENTOS"
-    tourMovesBody:"Construye tu vocabulario — organizado, calificado y completamente personalizable. Ve tu arsenal completo de un vistazo."
+    tourMovesBody:"Construye tu vocabulario \u2014 organizado, calificado y completamente personalizable. Ve tu arsenal completo de un vistazo."
     tourMasteryTitle:"DOMINIO"
     tourMasteryBody:"Sabe dónde estás. Ahí es donde comienza el progreso."
-    tourMasterySub:"Cada movimiento tiene una barra de dominio — establécela donde realmente estás."
+    tourMasterySub:"Cada movimiento tiene una barra de dominio \u2014 establécela donde realmente estás."
     tourBattleTitle:"BATTLE"
-    tourBattleBody:"Planifica cada ronda antes de saltar al piso, o construye una lista freestyle y marca los movimientos mientras los lanzas — mantente fresco, sin repeticiones."
+    tourBattleBody:"Planifica cada ronda antes de saltar al piso, o construye una lista freestyle y marca los movimientos mientras los lanzas \u2014 mantente fresco, sin repeticiones."
     tourPlusTitle:"EL BOTÓN +"
-    tourPlusBody:"El botón + lo hace todo — agrega un movimiento, meta, hábito, ronda, o elige movimientos para tu lista freestyle."
+    tourPlusBody:"El botón + lo hace todo \u2014 agrega un movimiento, meta, hábito, ronda, o elige movimientos para tu lista freestyle."
     tourManualTitle:"MANUAL DE USUARIO"
     tourManualBody:"Toca ? en cualquier momento para el manual completo. Cada función documentada, completamente buscable. El playbook completo."
     tourProfileTitle:"TU PERFIL"
-    tourProfileBody:"Establece tu nombre y deja un mensaje a tu yo futuro — para los días difíciles."
+    tourProfileBody:"Establece tu nombre y deja un mensaje a tu yo futuro \u2014 para los días difíciles."
     tourReadyTitle:"ESTÁS LISTO"
     tourReadyBody:"Ve a agregar tu primer movimiento. Establece tu primera meta. Eleva tu breaking hoy."
     tourReadyCta:"VAMOS 🔥"
@@ -981,12 +981,12 @@ const TRANSLATIONS = {
     dateAdded:"Date d'ajout", alphabetical:"Alphabétique", masteryPct:"% Maîtrise",
     manual:"Manuel (glisser)", mostProgress:"Plus de progrès",
     emptyMoves:"Aucun move", emptyMovesInCat:"Aucun move dans cette catégorie",
-    emptyRounds:"Aucun round — appuyez sur AJOUTER pour en créer un",
-    emptySets:"Aucun set — appuyez sur + pour en créer un",
-    emptyEntries:"Aucune entrée — commencez à suivre votre parcours",
+    emptyRounds:"Aucun round \u2014 appuyez sur AJOUTER pour en créer un",
+    emptySets:"Aucun set \u2014 appuyez sur + pour en créer un",
+    emptyEntries:"Aucune entrée \u2014 commencez à suivre votre parcours",
     emptyFreestyle:"Appuyez sur AJOUTER pour construire votre liste freestyle",
     emptySearch:"Aucun move trouvé",
-    emptyEntry:"Vide — appuyez sur AJOUTER pour remplir cette entrée",
+    emptyEntry:"Vide \u2014 appuyez sur AJOUTER pour remplir cette entrée",
     tapAdd:"Appuyez sur + pour ajouter votre premier move",
     searchMoves:"Rechercher des moves…", searchMovesAndSets:"Rechercher moves et sets…",
     searchCatsMoves:"Rechercher catégories ou moves…",
@@ -1016,7 +1016,7 @@ const TRANSLATIONS = {
     deleteCat:"Supprimer", direction:"DIRECTION DE ROTATION",
     of:"sur", editTarget:"MODIFIER OBJECTIF", notesSection:"NOTES",
     tourWelcomeTitle:"BIENVENUE SUR MOVESBOOK"
-    tourWelcomeBody:"Ton journal de Breaking — pour étudier et évoluer."
+    tourWelcomeBody:"Ton journal de Breaking \u2014 pour étudier et évoluer."
     tourWelcomeSub:"Tour rapide de 60 secondes. Passer à tout moment."
     tourWelcomeCta:"ALLONS-Y →"
     tourSectionsTitle:"TROIS SECTIONS"
@@ -1035,18 +1035,18 @@ const TRANSLATIONS = {
     tourHabitsTitle:"CONSTRUIRE DES HABITUDES"
     tourHabitsBody:"Soyez présent chaque jour et laissez la constance faire le travail. Suivez votre série et observez votre progression. Petits pas. Long jeu."
     tourMovesTitle:"MOVES"
-    tourMovesBody:"Construisez votre vocabulaire — organisé, évalué et entièrement personnalisable. Voyez votre arsenal complet d'un coup d'œil."
+    tourMovesBody:"Construisez votre vocabulaire \u2014 organisé, évalué et entièrement personnalisable. Voyez votre arsenal complet d'un coup d'œil."
     tourMasteryTitle:"MAÎTRISE"
     tourMasteryBody:"Sachez où vous en êtes. C'est là que commence le progrès."
-    tourMasterySub:"Chaque move a une barre de maîtrise — réglez-la là où vous en êtes honnêtement."
+    tourMasterySub:"Chaque move a une barre de maîtrise \u2014 réglez-la là où vous en êtes honnêtement."
     tourBattleTitle:"BATTLE"
-    tourBattleBody:"Planifiez chaque round avant de monter sur le dancefloor, ou construisez une liste freestyle et cochez les moves au fur et à mesure — restez frais, sans répétitions."
+    tourBattleBody:"Planifiez chaque round avant de monter sur le dancefloor, ou construisez une liste freestyle et cochez les moves au fur et à mesure \u2014 restez frais, sans répétitions."
     tourPlusTitle:"LE BOUTON +"
-    tourPlusBody:"Le bouton + fait tout — ajouter un move, objectif, habitude, round, ou choisir des moves pour votre liste freestyle."
+    tourPlusBody:"Le bouton + fait tout \u2014 ajouter un move, objectif, habitude, round, ou choisir des moves pour votre liste freestyle."
     tourManualTitle:"MANUEL D'UTILISATION"
     tourManualBody:"Appuyez sur ? à tout moment pour le manuel complet. Chaque fonctionnalité documentée, entièrement consultable. Le playbook complet."
     tourProfileTitle:"VOTRE PROFIL"
-    tourProfileBody:"Définissez votre nom et laissez un message à votre futur vous — pour les jours difficiles."
+    tourProfileBody:"Définissez votre nom et laissez un message à votre futur vous \u2014 pour les jours difficiles."
     tourReadyTitle:"VOUS ÊTES PRÊT"
     tourReadyBody:"Ajoutez votre premier move. Définissez votre premier objectif. Élevez votre breaking aujourd'hui."
     tourReadyCta:"ALLONS-Y 🔥"
@@ -1200,12 +1200,12 @@ const TRANSLATIONS = {
     dateAdded:"Data de adição", alphabetical:"Alfabético", masteryPct:"% Domínio",
     manual:"Manual (arrastar)", mostProgress:"Mais progresso",
     emptyMoves:"Nenhum move", emptyMovesInCat:"Nenhum move nesta categoria",
-    emptyRounds:"Nenhum round — toque ADICIONAR para criar um",
-    emptySets:"Nenhum set — toque + para criar um",
-    emptyEntries:"Nenhuma entrada — comece a rastrear sua jornada",
+    emptyRounds:"Nenhum round \u2014 toque ADICIONAR para criar um",
+    emptySets:"Nenhum set \u2014 toque + para criar um",
+    emptyEntries:"Nenhuma entrada \u2014 comece a rastrear sua jornada",
     emptyFreestyle:"Toque ADICIONAR para construir sua lista freestyle",
     emptySearch:"Nenhum move encontrado",
-    emptyEntry:"Vazio — toque ADICIONAR para preencher esta entrada",
+    emptyEntry:"Vazio \u2014 toque ADICIONAR para preencher esta entrada",
     tapAdd:"Toque + para adicionar seu primeiro move",
     searchMoves:"Buscar moves…", searchMovesAndSets:"Buscar moves e sets…",
     searchCatsMoves:"Buscar categorias ou moves…",
@@ -1235,7 +1235,7 @@ const TRANSLATIONS = {
     deleteCat:"Excluir", direction:"DIREÇÃO DE ROTAÇÃO",
     editTarget:"EDITAR META", notesSection:"NOTAS",
     tourWelcomeTitle:"BEM-VINDO AO MOVESBOOK"
-    tourWelcomeBody:"Seu diário de Breaking — para estudar e evoluir."
+    tourWelcomeBody:"Seu diário de Breaking \u2014 para estudar e evoluir."
     tourWelcomeSub:"Tour rápido de 60 segundos. Pule quando quiser."
     tourWelcomeCta:"VAMOS →"
     tourSectionsTitle:"TRÊS SEÇÕES"
@@ -1254,18 +1254,18 @@ const TRANSLATIONS = {
     tourHabitsTitle:"CONSTRUA HÁBITOS"
     tourHabitsBody:"Apareça todos os dias e deixe a consistência fazer o trabalho. Acompanhe sua sequência e observe seu crescimento. Pequenos passos. Jogo longo."
     tourMovesTitle:"MOVES"
-    tourMovesBody:"Construa seu vocabulário — organizado, avaliado e totalmente personalizável. Veja seu arsenal completo de relance."
+    tourMovesBody:"Construa seu vocabulário \u2014 organizado, avaliado e totalmente personalizável. Veja seu arsenal completo de relance."
     tourMasteryTitle:"DOMÍNIO"
     tourMasteryBody:"Saiba onde você está. É aí que começa o progresso."
-    tourMasterySub:"Cada move tem uma barra de domínio — defina-a onde você realmente está."
+    tourMasterySub:"Cada move tem uma barra de domínio \u2014 defina-a onde você realmente está."
     tourBattleTitle:"BATTLE"
-    tourBattleBody:"Planeje cada rodada antes de entrar na pista, ou construa uma lista freestyle e marque os moves conforme os executa — fique fresco, sem repetições."
+    tourBattleBody:"Planeje cada rodada antes de entrar na pista, ou construa uma lista freestyle e marque os moves conforme os executa \u2014 fique fresco, sem repetições."
     tourPlusTitle:"O BOTÃO +"
-    tourPlusBody:"O botão + faz tudo — adicione um move, meta, hábito, rodada, ou escolha moves para sua lista freestyle."
+    tourPlusBody:"O botão + faz tudo \u2014 adicione um move, meta, hábito, rodada, ou escolha moves para sua lista freestyle."
     tourManualTitle:"MANUAL DO USUÁRIO"
     tourManualBody:"Toque ? a qualquer momento para o manual completo. Cada recurso documentado, totalmente pesquisável. O playbook completo."
     tourProfileTitle:"SEU PERFIL"
-    tourProfileBody:"Defina seu nome e deixe uma mensagem para seu eu futuro — para os dias difíceis."
+    tourProfileBody:"Defina seu nome e deixe uma mensagem para seu eu futuro \u2014 para os dias difíceis."
     tourReadyTitle:"VOCÊ ESTÁ PRONTO"
     tourReadyBody:"Vá adicionar seu primeiro move. Defina sua primeira meta. Eleve seu breaking hoje."
     tourReadyCta:"VAMOS 🔥"
@@ -1419,12 +1419,12 @@ const TRANSLATIONS = {
     dateAdded:"Hinzugefügt am", alphabetical:"Alphabetisch", masteryPct:"% Beherrschung",
     manual:"Manuell (ziehen)", mostProgress:"Meiste Fortschritte",
     emptyMoves:"Keine Moves", emptyMovesInCat:"Keine Moves in dieser Kategorie",
-    emptyRounds:"Keine Runden — tippe HINZUFÜGEN zum Erstellen",
-    emptySets:"Keine Sets — tippe + zum Erstellen",
-    emptyEntries:"Keine Einträge — beginne deine Reise zu verfolgen",
+    emptyRounds:"Keine Runden \u2014 tippe HINZUFÜGEN zum Erstellen",
+    emptySets:"Keine Sets \u2014 tippe + zum Erstellen",
+    emptyEntries:"Keine Einträge \u2014 beginne deine Reise zu verfolgen",
     emptyFreestyle:"Tippe HINZUFÜGEN um deine Freestyle-Liste zu erstellen",
     emptySearch:"Keine Moves gefunden",
-    emptyEntry:"Leer — tippe HINZUFÜGEN um diesen Eintrag zu füllen",
+    emptyEntry:"Leer \u2014 tippe HINZUFÜGEN um diesen Eintrag zu füllen",
     tapAdd:"Tippe + um deinen ersten Move hinzuzufügen",
     searchMoves:"Moves suchen…", searchMovesAndSets:"Moves und Sets suchen…",
     searchCatsMoves:"Kategorien oder Moves suchen…",
@@ -1454,7 +1454,7 @@ const TRANSLATIONS = {
     deleteCat:"Löschen", direction:"ROTATIONSRICHTUNG",
     of:"von", editTarget:"ZIEL BEARBEITEN", notesSection:"NOTIZEN",
     tourWelcomeTitle:"WILLKOMMEN BEI MOVESBOOK"
-    tourWelcomeBody:"Dein Breaking-Logbuch — zum Lernen und Wachsen."
+    tourWelcomeBody:"Dein Breaking-Logbuch \u2014 zum Lernen und Wachsen."
     tourWelcomeSub:"Schnelle 60-Sekunden-Tour. Jederzeit überspringen."
     tourWelcomeCta:"LOS GEHT'S →"
     tourSectionsTitle:"DREI BEREICHE"
@@ -1473,18 +1473,18 @@ const TRANSLATIONS = {
     tourHabitsTitle:"GEWOHNHEITEN AUFBAUEN"
     tourHabitsBody:"Erscheine jeden Tag und lass die Beständigkeit die Arbeit erledigen. Verfolge deine Serie und beobachte dein Wachstum. Kleine Schritte. Langes Spiel."
     tourMovesTitle:"MOVES"
-    tourMovesBody:"Baue deinen Wortschatz auf — organisiert, bewertet und vollständig anpassbar. Sieh dein gesamtes Arsenal auf einen Blick."
+    tourMovesBody:"Baue deinen Wortschatz auf \u2014 organisiert, bewertet und vollständig anpassbar. Sieh dein gesamtes Arsenal auf einen Blick."
     tourMasteryTitle:"BEHERRSCHUNG"
     tourMasteryBody:"Wisse wo du stehst. Dort beginnt der Fortschritt."
-    tourMasterySub:"Jeder Move hat eine Beherrschungsleiste — stelle sie ehrlich ein."
+    tourMasterySub:"Jeder Move hat eine Beherrschungsleiste \u2014 stelle sie ehrlich ein."
     tourBattleTitle:"BATTLE"
-    tourBattleBody:"Plane jede Runde bevor du aufs Floor gehst, oder baue eine Freestyle-Liste und hake Moves ab während du sie zeigst — bleib frisch, keine Wiederholungen."
+    tourBattleBody:"Plane jede Runde bevor du aufs Floor gehst, oder baue eine Freestyle-Liste und hake Moves ab während du sie zeigst \u2014 bleib frisch, keine Wiederholungen."
     tourPlusTitle:"DER + KNOPF"
-    tourPlusBody:"Der + Knopf macht alles — Move, Ziel, Gewohnheit, Runde hinzufügen oder Moves für die Freestyle-Liste auswählen."
+    tourPlusBody:"Der + Knopf macht alles \u2014 Move, Ziel, Gewohnheit, Runde hinzufügen oder Moves für die Freestyle-Liste auswählen."
     tourManualTitle:"BENUTZERHANDBUCH"
     tourManualBody:"Tippe jederzeit auf ? für das vollständige Handbuch. Jede Funktion dokumentiert, vollständig durchsuchbar. Das gesamte Playbook."
     tourProfileTitle:"DEIN PROFIL"
-    tourProfileBody:"Lege deinen Namen fest und hinterlasse eine Nachricht an dein zukünftiges Ich — für die schweren Tage."
+    tourProfileBody:"Lege deinen Namen fest und hinterlasse eine Nachricht an dein zukünftiges Ich \u2014 für die schweren Tage."
     tourReadyTitle:"DU BIST BEREIT"
     tourReadyBody:"Füge deinen ersten Move hinzu. Setze dein erstes Ziel. Hebe dein Breaking auf das nächste Level."
     tourReadyCta:"LOS GEHT'S 🔥"
@@ -1638,12 +1638,12 @@ const TRANSLATIONS = {
     dateAdded:"追加日", alphabetical:"アルファベット順", masteryPct:"習熟度%",
     manual:"手動（ドラッグ）", mostProgress:"進捗順",
     emptyMoves:"ムーブなし", emptyMovesInCat:"このカテゴリにムーブなし",
-    emptyRounds:"ラウンドなし — 追加をタップして作成",
-    emptySets:"セットなし — +をタップして作成",
-    emptyEntries:"エントリなし — 記録を始めましょう",
+    emptyRounds:"ラウンドなし \u2014 追加をタップして作成",
+    emptySets:"セットなし \u2014 +をタップして作成",
+    emptyEntries:"エントリなし \u2014 記録を始めましょう",
     emptyFreestyle:"追加をタップしてリストを作成",
     emptySearch:"ムーブが見つかりません",
-    emptyEntry:"空 — 追加をタップして入力",
+    emptyEntry:"空 \u2014 追加をタップして入力",
     tapAdd:"+ をタップして最初のムーブを追加",
     searchMoves:"ムーブを検索…", searchMovesAndSets:"ムーブとセットを検索…",
     searchCatsMoves:"カテゴリまたはムーブを検索…",
@@ -1673,7 +1673,7 @@ const TRANSLATIONS = {
     deleteCat:"削除", direction:"回転方向",
     of:"の", editTarget:"ターゲット編集", notesSection:"ノート",
     tourWelcomeTitle:"MOVESBOOKへようこそ"
-    tourWelcomeBody:"あなたのブレイキングログブック — 研究し、進化するために。"
+    tourWelcomeBody:"あなたのブレイキングログブック \u2014 研究し、進化するために。"
     tourWelcomeSub:"60秒のクイックツアー。いつでもスキップ可能。"
     tourWelcomeCta:"はじめよう →"
     tourSectionsTitle:"3つのセクション"
@@ -1692,18 +1692,18 @@ const TRANSLATIONS = {
     tourHabitsTitle:"習慣を作る"
     tourHabitsBody:"毎日顔を出し、継続性に仕事をさせましょう。ストリークを追跡し、成長を見守りましょう。小さな歩み。長いゲーム。"
     tourMovesTitle:"ムーブ"
-    tourMovesBody:"語彙を構築する — 整理され、評価され、完全にカスタマイズ可能。あなたの全アーセナルを一目で確認。"
+    tourMovesBody:"語彙を構築する \u2014 整理され、評価され、完全にカスタマイズ可能。あなたの全アーセナルを一目で確認。"
     tourMasteryTitle:"習熟度"
     tourMasteryBody:"自分がどこにいるかを知る。そこから進歩が始まる。"
-    tourMasterySub:"すべてのムーブに習熟度バーがあります — 正直な位置に設定してください。"
+    tourMasterySub:"すべてのムーブに習熟度バーがあります \u2014 正直な位置に設定してください。"
     tourBattleTitle:"BATTLE"
-    tourBattleBody:"床に出る前に各ラウンドを計画するか、フリースタイルリストを作ってムーブをこなしながらチェックしよう — フレッシュに、繰り返しなし。"
+    tourBattleBody:"床に出る前に各ラウンドを計画するか、フリースタイルリストを作ってムーブをこなしながらチェックしよう \u2014 フレッシュに、繰り返しなし。"
     tourPlusTitle:"+ ボタン"
-    tourPlusBody:"+ ボタンで何でもできます — ムーブ、目標、習慣、ラウンドの追加、またはフリースタイルリストのムーブ選択。"
+    tourPlusBody:"+ ボタンで何でもできます \u2014 ムーブ、目標、習慣、ラウンドの追加、またはフリースタイルリストのムーブ選択。"
     tourManualTitle:"ユーザーマニュアル"
     tourManualBody:"いつでも ? をタップして完全なマニュアルを確認。すべての機能が文書化され、完全に検索可能。"
     tourProfileTitle:"あなたのプロフィール"
-    tourProfileBody:"名前を設定し、未来の自分へのメッセージを残そう — 辛い日のために。"
+    tourProfileBody:"名前を設定し、未来の自分へのメッセージを残そう \u2014 辛い日のために。"
     tourReadyTitle:"準備完了"
     tourReadyBody:"最初のムーブを追加しよう。最初の目標を設定しよう。今日からブレイキングを向上させよう。"
     tourReadyCta:"やるぞ 🔥"
@@ -1824,11 +1824,11 @@ const useT = () => {
 
 
 
-// ─── TRAIN MODAL CONTEXT — lets IdeasPage open full-screen modals above ZoomWrap ─
+// ─── TRAIN MODAL CONTEXT \u2014 lets IdeasPage open full-screen modals above ZoomWrap ─
 const TrainModalCtx = createContext({ openModal: () => {} });
 const useTrainModal = () => useContext(TrainModalCtx);
 
-// ─── TRAIN MENU CONTEXT — lets IdeaTile render dropdown above ZoomWrap ─────────
+// ─── TRAIN MENU CONTEXT \u2014 lets IdeaTile render dropdown above ZoomWrap ─────────
 const TrainMenuCtx = createContext({ openMenu: () => {}, closeMenu: () => {} });
 const useTrainMenu = () => useContext(TrainMenuCtx);
 
@@ -1836,28 +1836,28 @@ const useTrainMenu = () => useContext(TrainMenuCtx);
 const SettingsCtx = createContext({ settings:{}, C:{} });
 const useSettings = () => useContext(SettingsCtx);
 
-// Single accent colour — red #cf0000 in light, white #ffffff in dark
-// Build a full colour palette — notepad (white/black) with red accent
+// Single accent colour \u2014 red #cf0000 in light, white #ffffff in dark
+// Build a full colour palette \u2014 notepad (white/black) with red accent
 const buildPalette = (theme) => {
   const accent = theme === "dark" ? "#e53935" : "#cf0000";
   if (theme === "dark") return {
     bg:           "#121212",   // page background
-    surface:      "#1e1e1e",   // cards/tiles — clearly lighter than bg
+    surface:      "#1e1e1e",   // cards/tiles \u2014 clearly lighter than bg
     surfaceAlt:   "#282828",   // rows, hover states
     surfaceHigh:  "#323232",   // menus, modals, elevated
     border:       "#3a3a3a",   // visible but not harsh
     borderLight:  "#2a2a2a",   // hairline dividers inside cards
-    header:       "#0a0a0a",   // darkest — grounds the header
+    header:       "#0a0a0a",   // darkest \u2014 grounds the header
     headerText:   "#ffffff",
     accent,
     accentLight:  accent,
     accentWarm:   "#e53935",
     brown:        "#ffffff",   // primary text
-    brownMid:     "#b3b3b3",   // secondary headings — Spotify exact
+    brownMid:     "#b3b3b3",   // secondary headings \u2014 Spotify exact
     brownLight:   "#7a7a7a",   // tertiary labels
     text:         "#ffffff",   // primary
-    textSec:      "#b3b3b3",   // secondary — Spotify exact, readable
-    textMuted:    "#7a7a7a",   // muted — bumped up from #535353 for legibility
+    textSec:      "#b3b3b3",   // secondary \u2014 Spotify exact, readable
+    textMuted:    "#7a7a7a",   // muted \u2014 bumped up from #535353 for legibility
     green:        "#1db954",
     yellow:       "#ffa726",
     blue:         "#42a5f5",
@@ -1889,7 +1889,7 @@ const buildPalette = (theme) => {
 };
 
 // ─── WARM TIMBER PALETTE (initial default, mutated on theme change) ────────────
-// Components read C.xx — it is replaced wholesale on settings change via context
+// Components read C.xx \u2014 it is replaced wholesale on settings change via context
 let C = buildPalette("light");
 
 // Font size scale
@@ -1908,7 +1908,7 @@ const CAT_COLORS = {
 };
 const CATS = Object.keys(CAT_COLORS);
 
-// ─── SHARED CARD STYLES — IdeaTile + CatTile use these for pixel-perfect match ─
+// ─── SHARED CARD STYLES \u2014 IdeaTile + CatTile use these for pixel-perfect match ─
 const CARD_BASE  = () => ({ border:`2px solid ${C.border}`, borderRadius:12, background:C.bg, overflow:"hidden", boxShadow:"0 4px 15px rgba(0,0,0,0.12)", minHeight:168, minWidth:0, display:"flex", flexDirection:"column", position:"relative" });
 const CARD_BAR   = (color) => ({ height:5, background:`linear-gradient(90deg,${color},${color}55)`, flexShrink:0 });
 const CARD_BODY  = () => ({ padding:"12px 12px 8px 12px", flex:1, display:"flex", flexDirection:"column" });
@@ -1916,7 +1916,7 @@ const CARD_BODY  = () => ({ padding:"12px 12px 8px 12px", flex:1, display:"flex"
 const masteryColor = p => p < 30 ? C.red : p < 60 ? C.yellow : p < 80 ? C.blue : C.green;
 const masteryLabel = p => p < 20 ? "Just discovered" : p < 40 ? "Learning basics" : p < 60 ? "Getting consistent" : p < 80 ? "Battle tested" : "Mastered ✓";
 
-// ─── HIGHLIGHT — bold-highlights query matches in search results ──────────────
+// ─── HIGHLIGHT \u2014 bold-highlights query matches in search results ──────────────
 const Highlight = ({ text="", query="" }) => {
   if (!query.trim()) return <Fragment>{text}</Fragment>;
   const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -1927,29 +1927,29 @@ const Highlight = ({ text="", query="" }) => {
 };
 
 const INIT_MOVES = [
-  { id:101, name:"Indian Step",   category:"Toprocks",    mastery:78, description:"The Indian Step is a classic toprock — cross your right foot over your left while swinging your arms, then step back. Keep the rhythm bouncy and relaxed.", link:"", date:"2025-01-10", status:"wip", rotation:false, travelling:false },
-  { id:102, name:"Knee Drop",     category:"Godowns",     mastery:45, description:"The Knee Drop is a foundational go-down — from standing, swing one leg forward while dropping onto your trailing knee in one fluid motion. Protect your knee with pads when learning.", link:"", date:"2025-01-12", status:"wip",   rotation:false, travelling:false },
-  { id:103, name:"Six Steps",     category:"Footworks",   mastery:62, description:"Six Steps is the core footwork pattern of breaking — a six-count cycle that circles your legs around your supporting arms. Master this and everything else builds on top.", link:"", date:"2025-01-08", status:"wip",   rotation:false, travelling:false },
-  { id:104, name:"Backspin",      category:"Power Moves", mastery:22, description:"The Backspin is one of the first power moves to learn — spin horizontally on your back with legs tucked in or extended. Use your arms to initiate the rotation.", link:"", date:"2025-02-01", status:"wip",   rotation:true,  travelling:false },
-  { id:105, name:"Baby Freeze",   category:"Freezes",     mastery:91, description:"The Baby Freeze is the entry-level freeze — balance on one elbow planted in your hip while the other arm and your head form a tripod. Clean, compact, and essential.", link:"", date:"2025-01-20", status:"wip", rotation:false, travelling:false },
+  { id:101, name:"Indian Step",   category:"Toprocks",    mastery:78, description:"The Indian Step is a classic toprock \u2014 cross your right foot over your left while swinging your arms, then step back. Keep the rhythm bouncy and relaxed.", link:"", date:"2025-01-10", status:"wip", rotation:false, travelling:false },
+  { id:102, name:"Knee Drop",     category:"Godowns",     mastery:45, description:"The Knee Drop is a foundational go-down \u2014 from standing, swing one leg forward while dropping onto your trailing knee in one fluid motion. Protect your knee with pads when learning.", link:"", date:"2025-01-12", status:"wip",   rotation:false, travelling:false },
+  { id:103, name:"Six Steps",     category:"Footworks",   mastery:62, description:"Six Steps is the core footwork pattern of breaking \u2014 a six-count cycle that circles your legs around your supporting arms. Master this and everything else builds on top.", link:"", date:"2025-01-08", status:"wip",   rotation:false, travelling:false },
+  { id:104, name:"Backspin",      category:"Power Moves", mastery:22, description:"The Backspin is one of the first power moves to learn \u2014 spin horizontally on your back with legs tucked in or extended. Use your arms to initiate the rotation.", link:"", date:"2025-02-01", status:"wip",   rotation:true,  travelling:false },
+  { id:105, name:"Baby Freeze",   category:"Freezes",     mastery:91, description:"The Baby Freeze is the entry-level freeze \u2014 balance on one elbow planted in your hip while the other arm and your head form a tripod. Clean, compact, and essential.", link:"", date:"2025-01-20", status:"wip", rotation:false, travelling:false },
 ];
 const INIT_IDEAS = [
   {
     id:201, type:"goal", title:"Hit my first battle 🎯", text:"", color:"#c0391b", pinned:true, link:"",
     createdDate: (() => { const d = new Date(); return d.toISOString().split("T")[0]; })(),
     byWhen: (() => { const d = new Date(); d.setMonth(d.getMonth()+4); return d.toISOString().split("T")[0]; })(),
-    why:"I want to test myself under real pressure and see where my level actually stands. Battles push you to grow faster than solo training ever will — there\'s nothing like a real cipher to expose the gaps.",
+    why:"I want to test myself under real pressure and see where my level actually stands. Battles push you to grow faster than solo training ever will \u2014 there\'s nothing like a real cipher to expose the gaps.",
     steps:[
       "Build a reliable 30-second set I can throw down under pressure without blanking",
       "Enter at least one open jam or practice cipher before the battle date",
       "Film and review 5 training sessions to spot and fix weak points"
     ],
-    daysPerWeek:"4 days", sessionLength:"1.5 hours", trainWhere:"Local studio or garage — just need a clean floor",
+    daysPerWeek:"4 days", sessionLength:"1.5 hours", trainWhere:"Local studio or garage \u2014 just need a clean floor",
     obstacles:"Nerves freezing me up and forgetting my set under pressure. Solution: drill it so many times it\'s automatic.",
     journal:[{
       id:99901,
       date: new Date().toLocaleDateString("en-AU",{day:"2-digit",month:"short",year:"numeric"}),
-      text:"This is a Journey Goal — use it to track a qualitative milestone. Fill in your WHY (what drives you), 3 concrete steps to get there, your training commitments, and what obstacles you\'ll face. Add a journal entry here every time you train — what went well, what was hard, what you noticed. Over time this becomes your training diary.",
+      text:"This is a Journey Goal \u2014 use it to track a qualitative milestone. Fill in your WHY (what drives you), 3 concrete steps to get there, your training commitments, and what obstacles you\'ll face. Add a journal entry here every time you train \u2014 what went well, what was hard, what you noticed. Over time this becomes your training diary.",
       link:""
     }]
   },
@@ -1959,7 +1959,7 @@ const INIT_IDEAS = [
     byWhen: (() => { const d = new Date(); d.setMonth(d.getMonth()+5); return d.toISOString().split("T")[0]; })(),
     target:20, unit:"moves", current:0, autoLink:false
   },
-  { id:202, type:"note", title:"Example Note — read me first 📝", text:"Notes are your creative scratchpad. Use them for:\n\n• Combo ideas you want to try\n• Observations from training sessions\n• References you want to come back to\n• Anything your brain needs to offload\n\nTap the pencil icon to edit this note, or tap + ADD to create your own. You can pin important notes to keep them at the top.", color:"#2d6a4f", pinned:false, link:"" },
+  { id:202, type:"note", title:"Example Note \u2014 read me first 📝", text:"Notes are your creative scratchpad. Use them for:\n\n• Combo ideas you want to try\n• Observations from training sessions\n• References you want to come back to\n• Anything your brain needs to offload\n\nTap the pencil icon to edit this note, or tap + ADD to create your own. You can pin important notes to keep them at the top.", color:"#2d6a4f", pinned:false, link:"" },
 ];
 
 const INIT_HABITS = [
@@ -1969,7 +1969,7 @@ const INIT_HABITS = [
 const INIT_SETS = [
   { id:301, name:"Opening Combo",    color:"#2a5f8a", notes:"Toprock → footwork → freeze. My go-to opener.", mastery:35, date:"2025-03-01" },
   { id:302, name:"Power Run",        color:"#b5850a", notes:"Godown → backspin → baby freeze. High risk, high reward.", mastery:18, date:"2025-03-10" },
-  { id:303, name:"Signature Combo",  color:"#2d6a4f", notes:"My signature sequence — toprock into godown into footwork. Drill until automatic.", mastery:52, date:"2025-03-15" },
+  { id:303, name:"Signature Combo",  color:"#2d6a4f", notes:"My signature sequence \u2014 toprock into godown into footwork. Drill until automatic.", mastery:52, date:"2025-03-15" },
 ];
 const INIT_ROUNDS = [
   { id:401, name:"Prelims",      color:"#4a4a4a", notes:"", date:"2025-03-01",
@@ -2104,7 +2104,7 @@ const Btn = ({ onClick, children, variant="primary", style:ex={}, disabled, smal
   };
   return <button onClick={onClick} disabled={disabled} style={{...base,...v[variant],...ex}}>{children}</button>;
 };
-// Fab removed — ADD action lives in bottom bar
+// Fab removed \u2014 ADD action lives in bottom bar
 const Crumbs = ({ items }) => (
   <div style={{ display:"flex", alignItems:"center", gap:4, fontSize:12, color:C.textMuted, padding:"5px 14px", background:C.surface, borderBottom:`1px solid ${C.borderLight}`, flexShrink:0 }}>
     {items.map((x,i)=>(
@@ -2117,9 +2117,9 @@ const Crumbs = ({ items }) => (
 );
 
 const SECTION_DESC = {
-  ideas:  "TRAIN — set your goals, capture ideas and decide what to practice.",
-  wip:    "MOVES — all your moves in one place, organised and ready to grow.",
-  ready:  "BATTLE — plan your rounds and sets, or freestyle through your arsenal.",
+  ideas:  "TRAIN \u2014 set your goals, capture ideas and decide what to practice.",
+  wip:    "MOVES \u2014 all your moves in one place, organised and ready to grow.",
+  ready:  "BATTLE \u2014 plan your rounds and sets, or freestyle through your arsenal.",
 };
 const SectionBanner = ({ tab }) => (
   <div style={{ padding:"7px 14px", background:C.surface, borderBottom:`1px solid ${C.borderLight}`, flexShrink:0 }}>
@@ -2219,7 +2219,7 @@ const BulkModal = ({ onClose, onImport, category }) => {
   return (
     <Modal title="BULK IMPORT MOVES" onClose={onClose} wide>
       {step===1 ? <Fragment>
-        <p style={{ color:C.textSec, fontSize:13, marginBottom:16, lineHeight:1.6 }}>Paste your list — one move per line or comma-separated.</p>
+        <p style={{ color:C.textSec, fontSize:13, marginBottom:16, lineHeight:1.6 }}>Paste your list \u2014 one move per line or comma-separated.</p>
         <Txtarea value={txt} onChange={setTxt} placeholder={"Sixstep\nTwostep, Pretzels\nBabylon\n..."} rows={8}/>
         <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
           <Btn variant="secondary" onClick={onClose}>{t("cancel")}</Btn>
@@ -2457,7 +2457,7 @@ const CatTile = (props) => {
 
           {/* Header row */}
           <div style={{ display:"flex", alignItems:"flex-start", gap:6, marginBottom:6 }}>
-            {/* Title + stats — clicking opens category */}
+            {/* Title + stats \u2014 clicking opens category */}
             <div style={{ flex:1, minWidth:0 }} onClick={onClick}>
               {renaming ? (
                 <input autoFocus value={draft} onChange={e=>setDraft(e.target.value)}
@@ -2471,7 +2471,7 @@ const CatTile = (props) => {
                   overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{name.toUpperCase()}</div>
               )}
               {showMoveCount&&<div style={{ fontSize:11, color:C.textMuted, marginTop:2 }}><span style={{color,fontWeight:700}}>{total}</span> move{total!==1?"s":""}</div>}
-              {/* No progress bar on category tile header — by design */}
+              {/* No progress bar on category tile header \u2014 by design */}
             </div>
             {/* ··· menu */}
             <div ref={menuRef} style={{ flexShrink:0 }}>
@@ -2556,7 +2556,7 @@ const CatTile = (props) => {
             style={{ background:"none", border:"none", cursor:"pointer", display:"flex", alignItems:"center", padding:2, flexShrink:0 }}>
             <Ic n={expanded?"chevD":"chevR"} s={13} c={C.textMuted}/>
           </button>
-          {/* Title — clicking opens category */}
+          {/* Title \u2014 clicking opens category */}
           <div style={{ flex:1, minWidth:0 }} onClick={onClick}>
             {renaming ? (
               <input autoFocus value={draft} onChange={e=>setDraft(e.target.value)}
@@ -2598,7 +2598,7 @@ const CatTile = (props) => {
           </div>
         </div>
 
-        {/* Expanded moves list — only when expanded */}
+        {/* Expanded moves list \u2014 only when expanded */}
         {expanded&&moves.length>0&&(
           <div style={{ borderTop:`1px solid ${C.borderLight}`, padding:"4px 0 6px" }}>
             {moves.map(m=>(
@@ -2707,7 +2707,7 @@ const TypeChooserModal = ({ onClose, onChoose }) => {
         <span style={{ fontSize:28 }}>🏹</span>
         <div>
           <div style={{ fontWeight:800, fontSize:14, color:C.accent, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>TARGET</div>
-          <div style={{ fontSize:12, color:C.textMuted, marginTop:3 }}>A number to hit — moves learned, sessions done, hours trained</div>
+          <div style={{ fontSize:12, color:C.textMuted, marginTop:3 }}>A number to hit \u2014 moves learned, sessions done, hours trained</div>
         </div>
       </button>
     </div>
@@ -2765,7 +2765,7 @@ const TargetGoalModal = ({ onClose, onSave, idea, moves=[] }) => {
         </div>
       </div>
 
-      {/* Tabs — only when editing */}
+      {/* Tabs \u2014 only when editing */}
       {isEdit&&(
         <div style={{ display:"flex", background:C.surface, borderBottom:`2px solid ${C.border}`, flexShrink:0 }}>
           {tabs.map(tb=>{
@@ -2789,13 +2789,13 @@ const TargetGoalModal = ({ onClose, onSave, idea, moves=[] }) => {
           <div>
             <JournalEntryInput
               onAdd={({text,link})=>{ const entry={id:Date.now(),date:new Date().toLocaleDateString("en-AU",{day:"2-digit",month:"short",year:"numeric"}),text,link}; setJournal(j=>[entry,...j]); }}
-              placeholder={`What did you do today? e.g. "Finally landed the six step clean — 20 reps in a row"`}
+              placeholder={`What did you do today? e.g. "Finally landed the six step clean \u2014 20 reps in a row"`}
             />
             {journal.length===0 ? (
               <div style={{ textAlign:"center", padding:"40px 20px", color:C.textMuted }}>
                 <div style={{ fontSize:28, marginBottom:8 }}>📓</div>
                 <div style={{ fontSize:13, fontWeight:700, fontFamily:FONT_DISPLAY, marginBottom:4 }}>No entries yet</div>
-                <div style={{ fontSize:12 }}>Each time you hit a milestone, add an entry — what you did, how it felt, what clicked.</div>
+                <div style={{ fontSize:12 }}>Each time you hit a milestone, add an entry \u2014 what you did, how it felt, what clicked.</div>
               </div>
             ) : journal.map(entry=>(
               <JournalEntryCard key={entry.id} entry={entry}
@@ -2814,7 +2814,7 @@ const TargetGoalModal = ({ onClose, onSave, idea, moves=[] }) => {
                 border:`1px solid ${C.accent}30`, borderRadius:8, marginBottom:18 }}>
                 <span style={{ fontSize:16, flexShrink:0 }}>📓</span>
                 <span style={{ fontSize:12, color:C.textSec, lineHeight:1.6 }}>
-                  Once created, this target will have a <strong style={{color:C.text}}>training journal</strong> — log entries as you make progress, e.g. "finally landed the six step clean."
+                  Once created, this target will have a <strong style={{color:C.text}}>training journal</strong> \u2014 log entries as you make progress, e.g. "finally landed the six step clean."
                 </span>
               </div>
             )}
@@ -2957,7 +2957,7 @@ const NoteModal = ({ onClose, onSave, idea }) => {
   );
 };
 
-// Stable journal entry input — defined outside modals to prevent remount-on-rerender
+// Stable journal entry input \u2014 defined outside modals to prevent remount-on-rerender
 const JournalEntryCard = ({ entry, onDelete, onUpdate }) => {
   const { C } = useSettings();
   const [editing, setEditing] = useState(false);
@@ -3048,7 +3048,7 @@ const JournalEntryInput = ({ onAdd, placeholder }) => {
   );
 };
 
-// Stable textarea field for GoalModal — defined outside to prevent remount-on-rerender
+// Stable textarea field for GoalModal \u2014 defined outside to prevent remount-on-rerender
 const GoalField = ({ label, hint, value, onChange, rows=2, placeholder, minHeight }) => {
   const [local, setLocal] = useState(value);
   const onChangeRef = useRef(onChange);
@@ -3113,7 +3113,7 @@ const GoalModal = ({ onClose, onSave, idea }) => {
         </div>
       </div>
 
-      {/* Tab switcher — only show when editing */}
+      {/* Tab switcher \u2014 only show when editing */}
       {isEdit&&(
         <div style={{ display:"flex", background:C.surface, borderBottom:`2px solid ${C.border}`, flexShrink:0 }}>
           {tabs.map(t=>{
@@ -3143,7 +3143,7 @@ const GoalModal = ({ onClose, onSave, idea }) => {
             {journal.length===0 ? (
               <div style={{ textAlign:"center", padding:"40px 20px", color:C.textMuted }}>
                 <div style={{ fontSize:28, marginBottom:8 }}>📓</div>
-                <div style={{ fontSize:13 }}>No entries yet — start tracking your journey</div>
+                <div style={{ fontSize:13 }}>No entries yet \u2014 start tracking your journey</div>
               </div>
             ) : journal.map(entry=>(
               <JournalEntryCard key={entry.id} entry={entry}
@@ -3162,7 +3162,7 @@ const GoalModal = ({ onClose, onSave, idea }) => {
                 border:`1px solid ${C.accent}30`, borderRadius:8, marginBottom:18 }}>
                 <span style={{ fontSize:16, flexShrink:0 }}>📓</span>
                 <span style={{ fontSize:12, color:C.textSec, lineHeight:1.6 }}>
-                  Once created, this goal will have a <strong style={{color:C.text}}>training journal</strong> — log your sessions, breakthroughs, and setbacks as you work toward it.
+                  Once created, this goal will have a <strong style={{color:C.text}}>training journal</strong> \u2014 log your sessions, breakthroughs, and setbacks as you work toward it.
                 </span>
               </div>
             )}
@@ -3176,7 +3176,7 @@ const GoalModal = ({ onClose, onSave, idea }) => {
             <GoalField label="WHY?" hint="How will it benefit your current situation?" minHeight="20vh"
               value={why} onChange={setWhy} placeholder="This goal matters because…"/>
 
-            {/* BY WHEN — date picker */}
+            {/* BY WHEN \u2014 date picker */}
             <div style={{ marginBottom:18 }}>
               <label style={{ ...lbl(), fontSize:11, letterSpacing:1.5 }}>BY WHEN?</label>
               <div style={{ fontSize:11, color:C.textMuted, marginBottom:5, fontStyle:"italic" }}>Set your deadline</div>
@@ -3198,7 +3198,7 @@ const GoalModal = ({ onClose, onSave, idea }) => {
               ))}
             </div>
 
-            {/* COMMITMENTS — 3 separate fields */}
+            {/* COMMITMENTS \u2014 3 separate fields */}
             <div style={{ marginBottom:18 }}>
               <label style={{ ...lbl(), fontSize:11, letterSpacing:1.5 }}>{t("commitments")}</label>
               <div style={{ display:"flex", flexDirection:"column", gap:8, marginTop:6 }}>
@@ -3253,7 +3253,7 @@ const GoalModal = ({ onClose, onSave, idea }) => {
   );
 };
 
-// ─── ADD IDEA MODAL — legacy wrapper (kept for edit routing) ──────────────────
+// ─── ADD IDEA MODAL \u2014 legacy wrapper (kept for edit routing) ──────────────────
 const AddIdeaModal = ({ onClose, onSave, idea }) => {
   // When editing, route to the correct modal type
   if (idea?.type === "goal")   return <GoalModal onClose={onClose} onSave={onSave} idea={idea}/>;
@@ -3261,7 +3261,7 @@ const AddIdeaModal = ({ onClose, onSave, idea }) => {
   return <NoteModal onClose={onClose} onSave={onSave} idea={idea}/>;
 };
 
-// shared helper — returns inline-style obj for popup menu buttons
+// shared helper \u2014 returns inline-style obj for popup menu buttons
 const menuBtnStyle = (color, border) => ({
   width:"100%", padding:"10px 13px", background:"none", border:"none", cursor:"pointer",
   display:"flex", alignItems:"center", gap:8,
@@ -3381,7 +3381,7 @@ const IdeaTile = (props) => {
                       fontSize:14, cursor:"pointer", color, fontWeight:700, display:"flex", alignItems:"center", justifyContent:"center" }}>+</button>
                 </div>
               </div>
-              {/* Progress bar — red→green */}
+              {/* Progress bar \u2014 red→green */}
               {(()=>{ const tp=targetProgress(idea.current||0, idea.target); return (
                 <div>
                   <div style={{ height:4, borderRadius:2, background:C.border }}>
@@ -3454,7 +3454,7 @@ const IdeaTile = (props) => {
               <span style={{ fontSize:11 }}>📓</span>
               <span style={{ fontSize:10, color, fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:0.3,
                 overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", flex:1 }}>
-                Tap OPEN — this goal has a training journal
+                Tap OPEN \u2014 this goal has a training journal
               </span>
               <Ic n="x" s={10} c={color}/>
             </div>
@@ -3597,7 +3597,7 @@ const IdeaTile = (props) => {
   );
 };
 
-// ─── IDEA MENU — renders at App level, above ZoomWrap ───────────────────────
+// ─── IDEA MENU \u2014 renders at App level, above ZoomWrap ───────────────────────
 const IdeaMenu = ({ menu, onClose }) => {
   const [subColor, setSubColor] = useState(false);
   const menuRef = useRef(null);
@@ -3615,7 +3615,7 @@ const IdeaMenu = ({ menu, onClose }) => {
   const { rect, idea, color, isGoal, isPinned, typeEmoji, typeLabel, text, title,
     onEdit, onDelete, onDuplicate, onAddToMove, onTogglePin, onChangeColor } = menu;
 
-  // Position below the button, aligned to right edge — no transform math needed
+  // Position below the button, aligned to right edge \u2014 no transform math needed
   // rect is in real viewport coords; we use fixed positioning from viewport
   const style = {
     position: "fixed",
@@ -3687,7 +3687,7 @@ const habitStreak = (checkIns, frequency="daily") => {
   if (!checkIns || checkIns.length === 0) return 0;
   const dpw = freqDaysPerWeek(frequency);
   if (dpw >= 7) {
-    // daily streak — must check in every day
+    // daily streak \u2014 must check in every day
     const today = new Date(); today.setHours(0,0,0,0);
     let streak = 0, check = new Date(today);
     while (true) {
@@ -3696,7 +3696,7 @@ const habitStreak = (checkIns, frequency="daily") => {
     }
     return streak;
   } else {
-    // weekly streak — count consecutive weeks meeting the target
+    // weekly streak \u2014 count consecutive weeks meeting the target
     const today = new Date(); today.setHours(0,0,0,0);
     let streak = 0;
     let weekStart = new Date(today);
@@ -3756,7 +3756,7 @@ const HabitModal = ({ onClose, onSave, habit }) => {
 
       {/* Why */}
       <div style={{ marginBottom:14 }}>
-        <label style={lbl()}>WHY? <span style={{ fontWeight:400, fontSize:10, color:C.textMuted }}>(optional — shown on the card)</span></label>
+        <label style={lbl()}>WHY? <span style={{ fontWeight:400, fontSize:10, color:C.textMuted }}>(optional \u2014 shown on the card)</span></label>
         <input value={why} onChange={e=>setWhy(e.target.value)}
           placeholder="e.g. Consistency is what separates good dancers from great ones"
           style={inputStyle}/>
@@ -3804,7 +3804,7 @@ const HabitModal = ({ onClose, onSave, habit }) => {
 
       {/* Notes */}
       <div style={{ marginBottom:14 }}>
-        <label style={lbl()}>{t("notesSection")} <span style={{ fontWeight:400, fontSize:10, color:C.textMuted }}>(optional — shown when expanded)</span></label>
+        <label style={lbl()}>{t("notesSection")} <span style={{ fontWeight:400, fontSize:10, color:C.textMuted }}>(optional \u2014 shown when expanded)</span></label>
         <textarea value={notes} onChange={e=>setNotes(e.target.value)} rows={3}
           placeholder="e.g. Focus on footwork first, then musicality. 20 min minimum."
           style={{ ...inputStyle, resize:"vertical" }}/>
@@ -3883,7 +3883,7 @@ const HabitCard = ({ habit, onCheckIn, onEdit, onDelete }) => {
           {doneToday?"✓":(habit.emoji||"🎯")}
         </button>
 
-        {/* Name + info — tap to expand */}
+        {/* Name + info \u2014 tap to expand */}
         <div style={{ flex:1, minWidth:0, cursor:"pointer" }} onClick={()=>setExpanded(x=>!x)}>
           <div style={{ fontWeight:800, fontSize:14, color:C.text, fontFamily:FONT_DISPLAY,
             letterSpacing:0.5, lineHeight:1.2,
@@ -3979,7 +3979,7 @@ const HabitCard = ({ habit, onCheckIn, onEdit, onDelete }) => {
                 <div>
                   <div style={{ fontSize:9, color:C.textMuted, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>{t("streak")}</div>
                   <div style={{ fontSize:15, fontWeight:900, color, fontFamily:FONT_DISPLAY }}>
-                    {streak>0?`🔥 ${streak} ${streak===1?t("day"):t("days")}`:"—"}
+                    {streak>0?`🔥 ${streak} ${streak===1?t("day"):t("days")}`:"\u2014"}
                   </div>
                 </div>
                 <div style={{ textAlign:"right" }}>
@@ -4155,7 +4155,7 @@ const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
                   <div style={{ height:4, background:`linear-gradient(90deg,${color},${color}44)`, flexShrink:0 }}/>
                   <div style={{ padding:"12px 12px 10px", display:"flex", flexDirection:"column" }}>
 
-                    {/* Ring — centred, prominent */}
+                    {/* Ring \u2014 centred, prominent */}
                     <div style={{ display:"flex", justifyContent:"center", marginBottom:12 }}>
                       <svg width="110" height="110" viewBox="0 0 110 110">
                         <circle cx="55" cy="55" r={R} fill="none" stroke={C.border} strokeWidth="9"/>
@@ -4376,7 +4376,7 @@ const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[], setHab
   const save      = (id, fields) => setIdeas(p=>p.map(i=>i.id===id?{...i,...fields}:i));
   const incrTarget = (id) => setIdeas(p=>p.map(i=>i.id===id?{...i,current:Math.min((i.current||0)+1,i.target||9999)}:i));
   const decrTarget = (id) => setIdeas(p=>p.map(i=>i.id===id?{...i,current:Math.max(0,(i.current||0)-1)}:i));
-  const [logEntry,   setLogEntry]   = useState(null); // { id } — which target to log
+  const [logEntry,   setLogEntry]   = useState(null); // { id } \u2014 which target to log
   const [logText,    setLogText]    = useState("");
   const [logLink,    setLogLink]    = useState("");
   const confirmLogEntry = (id) => {
@@ -4468,7 +4468,7 @@ const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[], setHab
             </button>
           );
         })}
-        {/* 🔥 Flame pulse — habits done today / total */}
+        {/* 🔥 Flame pulse \u2014 habits done today / total */}
         {(()=>{
           if (!habits.length) return null;
           const today = new Date().toISOString().split("T")[0];
@@ -4566,7 +4566,7 @@ const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[], setHab
             <div style={{ minHeight:36 }}/>
           )}
         </div>
-        {ideas.length===0&&<div style={{ textAlign:"center", padding:50, color:C.textMuted }}><div style={{ fontSize:32, marginBottom:10 }}>💪</div><p style={{fontSize:13}}>Nothing here yet — tap + to add a note or set a goal</p></div>}
+        {ideas.length===0&&<div style={{ textAlign:"center", padding:50, color:C.textMuted }}><div style={{ fontSize:32, marginBottom:10 }}>💪</div><p style={{fontSize:13}}>Nothing here yet \u2014 tap + to add a note or set a goal</p></div>}
         {filtered.length===0&&search&&<div style={{ textAlign:"center", padding:30, color:C.textMuted }}><p style={{fontSize:13}}>No results for "{search}"</p></div>}
       </div>
       }
@@ -4582,7 +4582,7 @@ const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[], setHab
           <div style={{ marginBottom:12 }}>
             <label style={{ ...lbl(), fontSize:11, letterSpacing:1.5 }}>ADD A NOTE (optional)</label>
             <textarea value={logText} onChange={e=>setLogText(e.target.value)} rows={3} autoFocus
-              placeholder={`e.g. "Finally nailed the six step — 20 clean reps today"`}
+              placeholder={`e.g. "Finally nailed the six step \u2014 20 clean reps today"`}
               style={{ width:"100%", background:C.surface, border:`1px solid ${C.border}`, borderRadius:8,
                 padding:"9px 12px", color:C.text, fontSize:13, outline:"none", fontFamily:FONT_BODY,
                 boxSizing:"border-box", resize:"none", lineHeight:1.5, marginTop:4 }}/>
@@ -4659,7 +4659,7 @@ const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, sets
   const [showAdd,setShowAdd]=useState(false); const [bulk,setBulk]=useState(false);
   useEffect(()=>{ if(onAddTrigger) setShowAdd(true); },[onAddTrigger]);
   const [editMove,setEditMove]=useState(null);
-  // cats/catColors are now lifted to App — received as props
+  // cats/catColors are now lifted to App \u2014 received as props
   const [showAddCat,setShowAddCat]=useState(false);
   const [ideaDesc,setIdeaDesc]=useState(null);
   const [search,setSearch]=useState("");
@@ -4742,7 +4742,7 @@ const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, sets
       // Recompute sort on latest cats to avoid stale closure
       const sorted = st.categorySort==="name"
         ? [...prev].sort((a,b)=>a.localeCompare(b))
-        : prev; // manual or progress — use current order
+        : prev; // manual or progress \u2014 use current order
       const next=[...sorted];
       const [moved]=next.splice(from,1);
       const insertAt = from < targetIdx ? targetIdx-1 : targetIdx;
@@ -4792,7 +4792,7 @@ const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, sets
           ) : catMoves.length===0 ? (
             <div style={{ textAlign:"center", padding:30, color:C.textMuted }}><p style={{fontSize:13}}>No moves match "{search}"</p></div>
           ) : catReorderMode ? (
-            /* Reorder mode — always list, ▲▼ on each item */
+            /* Reorder mode \u2014 always list, ▲▼ on each item */
             <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
               {allCatMoves.map((m,idx)=>(
                 <div key={m.id} style={{ position:"relative" }}>
@@ -4828,7 +4828,7 @@ const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, sets
     );
   }
 
-  // — search across both categories and moves inside them —
+  // \u2014 search across both categories and moves inside them \u2014
   const searchResults = search.trim() ? (() => {
     const q = search.toLowerCase();
     const catHits = cats.filter(c => c.toLowerCase().includes(q));
@@ -4893,8 +4893,8 @@ const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, sets
             {sets.length===0&&(
               <div style={{ textAlign:"center", padding:40, color:C.textMuted }}>
                 <div style={{ fontSize:28, marginBottom:8 }}>📋</div>
-                <p style={{ fontSize:13 }}>No sets yet — tap + to create one</p>
-                <p style={{ fontSize:11, marginTop:6, fontStyle:"italic" }}>Think of a Set like a Notion database — add your moves to it, then slot it into Battle rounds</p>
+                <p style={{ fontSize:13 }}>No sets yet \u2014 tap + to create one</p>
+                <p style={{ fontSize:11, marginTop:6, fontStyle:"italic" }}>Think of a Set like a Notion database \u2014 add your moves to it, then slot it into Battle rounds</p>
               </div>
             )}
             {/* ── Tiles view ── */}
@@ -4992,7 +4992,7 @@ const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, sets
                             );
                           }) : (
                             <div style={{ fontSize:11, color:C.textMuted, fontStyle:"italic" }}>
-                              No moves — tap the name to add some
+                              No moves \u2014 tap the name to add some
                             </div>
                           )}
                         </div>
@@ -5086,7 +5086,7 @@ const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, sets
                 </div>
               </div>
             ))}
-            {/* End-of-list sentinel — list view only, lets items drop to last spot */}
+            {/* End-of-list sentinel \u2014 list view only, lets items drop to last spot */}
             {view!=="tiles"&&sortedCats.length>0&&(
               <div
                 onDragOver={e=>{ e.preventDefault(); e.stopPropagation(); setCatDragOver(sortedCats.length); }}
@@ -5128,7 +5128,7 @@ const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, sets
         </div>
       )}
       {showAddCat&&<AddCategoryModal onClose={()=>setShowAddCat(false)} onAdd={addCategory} existingCats={cats} existingColors={catColors}/>}
-      {/* MoveModal at root level — for t("addToMove") arriving from Ideas tab */}
+      {/* MoveModal at root level \u2014 for t("addToMove") arriving from Ideas tab */}
       {showAdd&&<MoveModal initialCat={cats[0]||""} cats={cats} initialDesc={ideaDesc} onClose={()=>{setShowAdd(false);setIdeaDesc(null);}} onSave={f=>saveMove(f)}/>}
     </div>
   );
@@ -5189,7 +5189,7 @@ const SetDetailModal = ({ item, onClose, onSave, type="set", allMoves=[], allSet
       <div style={{ marginBottom:16 }}>
         <label style={lbl()}>DETAILS</label>
         <textarea value={details} onChange={e=>setDetails(e.target.value)} rows={2}
-          placeholder={isSet ? "Describe this set — style, purpose, context…" : "Describe this round…"}
+          placeholder={isSet ? "Describe this set \u2014 style, purpose, context…" : "Describe this round…"}
           style={{ width:"100%", background:C.surface, border:`1px solid ${C.border}`, borderRadius:8,
             padding:"9px 12px", color:C.text, fontSize:13, outline:"none", resize:"vertical",
             fontFamily:FONT_BODY, lineHeight:1.5 }}/>
@@ -5207,12 +5207,12 @@ const SetDetailModal = ({ item, onClose, onSave, type="set", allMoves=[], allSet
         </div>
       </div>
 
-      {/* ── MOVES IN THIS SET — Notion-style inline picker ── */}
+      {/* ── MOVES IN THIS SET \u2014 Notion-style inline picker ── */}
       {isSet && (
         <div style={{ marginBottom:16 }}>
           <label style={lbl()}>MOVES IN THIS SET ({localIds.length})</label>
 
-          {/* Added moves — draggable to reorder */}
+          {/* Added moves \u2014 draggable to reorder */}
           {localIds.length > 0 && (
             <div onDragOver={e=>e.preventDefault()} onDrop={()=>{ if(localDragItem.current!==null) handleDrop(localIds.length); }}
               style={{ marginBottom:6 }}>
@@ -5314,7 +5314,7 @@ const SetDetailModal = ({ item, onClose, onSave, type="set", allMoves=[], allSet
                 <button onClick={()=>setPickerOpen(false)}
                   style={{ width:"100%", padding:"8px", background:C.accent, border:"none", borderRadius:7,
                     color:C.bg, fontSize:12, fontWeight:900, fontFamily:FONT_DISPLAY, letterSpacing:1, cursor:"pointer" }}>
-                  DONE — {localIds.length} move{localIds.length!==1?"s":""}
+                  DONE \u2014 {localIds.length} move{localIds.length!==1?"s":""}
                 </button>
               </div>
             </div>
@@ -5324,7 +5324,7 @@ const SetDetailModal = ({ item, onClose, onSave, type="set", allMoves=[], allSet
 
       {/* Mastery slider */}
       <div style={{ marginBottom:16 }}>
-        <label style={lbl()}>HOW WELL DO YOU KNOW THIS {isSet?"SET":t("rounds")}? — <span style={{ color:masteryColor(mastery), fontWeight:800 }}>{mastery}%</span></label>
+        <label style={lbl()}>HOW WELL DO YOU KNOW THIS {isSet?"SET":t("rounds")}? \u2014 <span style={{ color:masteryColor(mastery), fontWeight:800 }}>{mastery}%</span></label>
         <div style={{ display:"flex", gap:6, alignItems:"center", marginBottom:6, flexWrap:"wrap" }}>
           {[[0,"🌱 Just started"],[25,"🔧 Learning"],[50,"⚡ Getting there"],[75,"🔥 Almost there"],[100,"💎 Mastered"]].map(([v,label])=>(
             <button key={v} onClick={()=>setMastery(v)}
@@ -5376,7 +5376,7 @@ const NameModal = ({ title, placeholder, onClose, onConfirm }) => {
   );
 };
 
-// ─── READY PAGE — full drag-and-drop + delete for Sets AND Rounds ─────────────
+// ─── READY PAGE \u2014 full drag-and-drop + delete for Sets AND Rounds ─────────────
 
 // ─── FREESTYLE PAGE ───────────────────────────────────────────────────────────
 const NewRoundModal = ({ onClose, onConfirm }) => {
@@ -6096,7 +6096,7 @@ const EditRoundView = ({ round, onSave, onClose, getMove, getSet, setPickerEntry
                   onDragOver={e=>e.preventDefault()}
                   onDrop={e=>{ e.stopPropagation(); if(itemDragRef.current?.eid===entry.id) localReorder(entry.id, itemDragRef.current.idx, (entry.items||[]).length); }}>
                   {(entry.items||[]).length===0&&(
-                    <div style={{ padding:"8px 14px", fontSize:11, color:C.textMuted, fontStyle:"italic" }}>Empty — tap ADD to fill this entry</div>
+                    <div style={{ padding:"8px 14px", fontSize:11, color:C.textMuted, fontStyle:"italic" }}>Empty \u2014 tap ADD to fill this entry</div>
                   )}
                   {(entry.items||[]).map((item,idx)=>{
                     const label = item.type==="move" ? getMove(item.refId)?.name : getSet(item.refId)?.name;
@@ -6502,7 +6502,7 @@ const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAdd
           {rounds.length === 0 && (
             <div style={{ textAlign:"center", padding:40, color:C.textMuted }}>
               <div style={{ fontSize:28, marginBottom:8 }}>⚔</div>
-              <p style={{ fontSize:12 }}>No rounds yet — tap ADD to create one</p>
+              <p style={{ fontSize:12 }}>No rounds yet \u2014 tap ADD to create one</p>
             </div>
           )}
           {rounds.map((round, roundIdx) => {
@@ -6547,7 +6547,7 @@ const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAdd
                         fontSize:14, fontWeight:700, display:"flex", alignItems:"center", justifyContent:"center" }}>▼</button>
                   </div>}
                 </div>
-                {/* Entries — expanded by default */}
+                {/* Entries \u2014 expanded by default */}
                 {isOpen && (round.entries||[]).map(entry => (
                   <div key={entry.id}
                     style={{ borderTop:`1px solid ${C.borderLight}`, padding:"6px 12px 6px 28px" }}>
@@ -6711,7 +6711,7 @@ const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAdd
               placeholder={t("describeSet")}
               style={{ width:"100%", background:C.surface, border:`1px solid ${C.border}`, borderRadius:8, padding:"9px 12px", color:C.text, fontSize:13, outline:"none", boxSizing:"border-box", fontFamily:FONT_BODY, resize:"vertical", marginBottom:14 }}/>
             {showMastery&&(<Fragment>
-              <label style={{ fontSize:11, fontWeight:800, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY, display:"block", marginBottom:5 }}>MASTERY — {f.mastery}%</label>
+              <label style={{ fontSize:11, fontWeight:800, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY, display:"block", marginBottom:5 }}>MASTERY \u2014 {f.mastery}%</label>
               <input type="range" min={0} max={100} value={f.mastery} onChange={e=>setF(p=>({...p,mastery:+e.target.value}))}
                 style={{ width:"100%", accentColor:C.accent, cursor:"pointer", marginBottom:14 }}/>
             </Fragment>)}
@@ -6790,9 +6790,9 @@ const MANUAL_SECTIONS = [
       { title:"What is MovesBook?",
         body:"MovesBook is a personal breaking trainer designed to help you train smarter. It covers every stage of your practice: setting goals, building your move library, planning battle sets, and tracking daily habits. Everything is saved locally on your device and synced to the cloud when you're signed in." },
       { title:"The three main tabs",
-        body:"TRAIN — where you set goals, capture ideas and track habits.\nMOVES — your personal move library and combo sets.\nBATTLE — where you plan rounds and build freestyle lists for jams and battles." },
+        body:"TRAIN \u2014 where you set goals, capture ideas and track habits.\nMOVES \u2014 your personal move library and combo sets.\nBATTLE \u2014 where you plan rounds and build freestyle lists for jams and battles." },
       { title:"The + button (bottom center)",
-        body:"The large + button at the bottom center is context-aware. It does something different depending on which tab and sub-tab you're on:\n• TRAIN › Goals — opens the goal type chooser\n• TRAIN › Notes — opens a new note\n• TRAIN › Habits — opens a new habit\n• MOVES › Moves — opens a new move\n• MOVES › Sets — opens a new set\n• BATTLE › Plan — opens the new round modal\n• BATTLE › Freestyle — opens the move picker" },
+        body:"The large + button at the bottom center is context-aware. It does something different depending on which tab and sub-tab you're on:\n• TRAIN › Goals \u2014 opens the goal type chooser\n• TRAIN › Notes \u2014 opens a new note\n• TRAIN › Habits \u2014 opens a new habit\n• MOVES › Moves \u2014 opens a new move\n• MOVES › Sets \u2014 opens a new set\n• BATTLE › Plan \u2014 opens the new round modal\n• BATTLE › Freestyle \u2014 opens the move picker" },
       { title:"Cloud sync",
         body:"Sign in with Google or Email to sync all your data to the cloud. Your moves, goals, habits, rounds and sets are stored securely and available on any device. If you're not signed in, everything is still saved locally in your browser." },
       { title:"Zoom",
@@ -6803,7 +6803,7 @@ const MANUAL_SECTIONS = [
     id:"train", title:"🎯 TRAIN", icon:"🎯",
     items:[
       { title:"What TRAIN is for",
-        body:"TRAIN is your planning and reflection space. Use it to define what you want to achieve (Goals), capture anything on your mind (Notes), and build daily routines (Habits). It's not about tracking moves — it's about tracking progress as a dancer." },
+        body:"TRAIN is your planning and reflection space. Use it to define what you want to achieve (Goals), capture anything on your mind (Notes), and build daily routines (Habits). It's not about tracking moves \u2014 it's about tracking progress as a dancer." },
       { title:"Sub-tabs: Goals · Habits · Notes",
         body:"TRAIN has three sub-tabs. You can reorder them in Settings › Behaviour › TRAIN Tab Order using the ▲▼ buttons. The order is saved and applied immediately." },
       { title:"The flame counter",
@@ -6814,21 +6814,21 @@ const MANUAL_SECTIONS = [
     id:"goals", title:"🎯 Goals", icon:"🎯",
     items:[
       { title:"Journey Goals vs Target Goals",
-        body:"There are two types of goals:\n• Journey Goal 🎯 — a qualitative milestone with a plan and a deadline. E.g. 'Hit my first battle'.\n• Target Goal 🏹 — a number to reach. E.g. 'Learn 20 new moves'. You track progress with a counter." },
+        body:"There are two types of goals:\n• Journey Goal 🎯 \u2014 a qualitative milestone with a plan and a deadline. E.g. 'Hit my first battle'.\n• Target Goal 🏹 \u2014 a number to reach. E.g. 'Learn 20 new moves'. You track progress with a counter." },
       { title:"Creating a Journey Goal",
-        body:"Tap + and select 🎯 GOAL. Fill in:\n• What you want to achieve (required)\n• Why — how it benefits your situation\n• By When — your deadline\n• 3 Steps — three concrete actions to get there\n• Practice Plan — days per week, session length, where you train\n• Obstacles — what might get in the way\n• Colour — visual identifier" },
+        body:"Tap + and select 🎯 GOAL. Fill in:\n• What you want to achieve (required)\n• Why \u2014 how it benefits your situation\n• By When \u2014 your deadline\n• 3 Steps \u2014 three concrete actions to get there\n• Practice Plan \u2014 days per week, session length, where you train\n• Obstacles \u2014 what might get in the way\n• Colour \u2014 visual identifier" },
       { title:"Journey Goal tile",
-        body:"Collapsed view shows the deadline and the first 2 steps. Tap the tile to expand — all 3 steps in full, your Why, Commitments as badges, and Obstacles. Tap again to collapse. The deadline label is colour-coded: green = plenty of time (>30% remaining), amber = getting close (11–30%), red = nearly due (0–10%)." },
+        body:"Collapsed view shows the deadline and the first 2 steps. Tap the tile to expand \u2014 all 3 steps in full, your Why, Commitments as badges, and Obstacles. Tap again to collapse. The deadline label is colour-coded: green = plenty of time (>30% remaining), amber = getting close (11–30%), red = nearly due (0–10%)." },
       { title:"Deadline indicator",
         body:"The coloured days-remaining label (e.g. '122 days left') appears next to the deadline date. You can hide it in Settings › Behaviour › Show Deadline Indicator." },
       { title:"Journey Goal journal",
-        body:"Open any Journey Goal via the ··· menu and go to the 📓 JOURNAL tab. Add an entry after every session — what went well, what clicked. Each entry is date-stamped, editable, and can include an optional video reference link." },
+        body:"Open any Journey Goal via the ··· menu and go to the 📓 JOURNAL tab. Add an entry after every session \u2014 what went well, what clicked. Each entry is date-stamped, editable, and can include an optional video reference link." },
       { title:"Creating a Target Goal",
-        body:"Tap + and select 🏹 TARGET. Fill in:\n• Title (required)\n• Target number — what you're working toward\n• Unit — what you're counting (moves, sessions, hours…)\n• Current progress\n• Deadline (optional)\n• Video Reference — a link to a tutorial or inspiration\n• Colour" },
+        body:"Tap + and select 🏹 TARGET. Fill in:\n• Title (required)\n• Target number \u2014 what you're working toward\n• Unit \u2014 what you're counting (moves, sessions, hours…)\n• Current progress\n• Deadline (optional)\n• Video Reference \u2014 a link to a tutorial or inspiration\n• Colour" },
       { title:"Target Goal counter",
         body:"Tap the + button on the tile to increment the counter directly. Tap − to decrement. The current count and total are always visible on the tile (e.g. '3 / 20 moves'). No popup, no friction." },
       { title:"Target Goal journal",
-        body:"Open the goal and switch to the 📓 JOURNAL tab to log entries. Each entry can include a note and a video reference link. Entries are editable — tap the pencil icon on any entry to update it." },
+        body:"Open the goal and switch to the 📓 JOURNAL tab to log entries. Each entry can include a note and a video reference link. Entries are editable \u2014 tap the pencil icon on any entry to update it." },
       { title:"Goal colours and pinning",
         body:"All goals are pinned by default. Change colour or unpin via the ··· menu. Use colour to group or prioritise goals visually." },
     ]
@@ -6841,7 +6841,7 @@ const MANUAL_SECTIONS = [
       { title:"Creating a note",
         body:"Go to TRAIN › Notes and tap +. Add a title, body text, an optional video/reference link, and pick a colour. Tap Save." },
       { title:"Pinning and colours",
-        body:"Tap ··· on any note to pin it (keeps it at the top), change colour, or delete. Colours are purely visual — use them however makes sense to you." },
+        body:"Tap ··· on any note to pin it (keeps it at the top), change colour, or delete. Colours are purely visual \u2014 use them however makes sense to you." },
     ]
   },
   {
@@ -6850,11 +6850,11 @@ const MANUAL_SECTIONS = [
       { title:"What habits are for",
         body:"Habits are recurring actions you want to do consistently. Unlike goals (which have an end point), habits are ongoing. The app tracks your check-in history, calculates streaks, and shows your completion rate over the last 30 days." },
       { title:"Creating a habit",
-        body:"Go to TRAIN › Habits and tap +. Fill in:\n• Name — include an emoji, e.g. '👟 Daily Practice'\n• Why — one sentence on your motivation\n• Time of Day — 🌅 Morning / ☀️ Afternoon / 🌙 Evening / ⚡ Anytime\n• Frequency — Every day, 2–6× per week, or Weekdays\n• Notes — shown when you expand the card\n• Colour — your habit's accent colour" },
+        body:"Go to TRAIN › Habits and tap +. Fill in:\n• Name \u2014 include an emoji, e.g. '👟 Daily Practice'\n• Why \u2014 one sentence on your motivation\n• Time of Day \u2014 🌅 Morning / ☀️ Afternoon / 🌙 Evening / ⚡ Anytime\n• Frequency \u2014 Every day, 2–6× per week, or Weekdays\n• Notes \u2014 shown when you expand the card\n• Colour \u2014 your habit's accent colour" },
       { title:"Checking in",
         body:"On the habit card, tap the check-in button (✓ or your emoji) to mark today as done. It fills with the habit colour. Tap again to undo. Each check-in stores today's date and resets automatically the next day." },
       { title:"Tile view and List view",
-        body:"Tile view shows a ring chart for the current week with a Did it! / Done ✓ · undo button. List view shows each habit as a row — tap the › chevron to expand and see the same ring chart, 7-day bar, 30-day dot grid, streak, best, notes, and the full Did it! button." },
+        body:"Tile view shows a ring chart for the current week with a Did it! / Done ✓ · undo button. List view shows each habit as a row \u2014 tap the › chevron to expand and see the same ring chart, 7-day bar, 30-day dot grid, streak, best, notes, and the full Did it! button." },
       { title:"Did it! button",
         body:"The large button at the bottom of each expanded card is your check-in. When done it shows DONE ✅ · undo in green. Tapping it again undoes the check-in." },
       { title:"Streaks and Best",
@@ -6873,15 +6873,15 @@ const MANUAL_SECTIONS = [
       { title:"What MOVES is for",
         body:"MOVES is your personal move library. Every move you know or are learning lives here. Organise by category, track mastery, add descriptions and video references, and group moves into sets for battle." },
       { title:"Adding a move",
-        body:"Tap + in the MOVES tab. Fill in:\n• Move name (required)\n• Category\n• Description — technique notes, cues, anything helpful\n• Video link — a YouTube or other reference URL\n• Mastery — 0–100% slider\nTap Save." },
+        body:"Tap + in the MOVES tab. Fill in:\n• Move name (required)\n• Category\n• Description \u2014 technique notes, cues, anything helpful\n• Video link \u2014 a YouTube or other reference URL\n• Mastery \u2014 0–100% slider\nTap Save." },
       { title:"Mastery level",
-        body:"Mastery is a 0–100% score you assign manually. The bar colour follows:\n• Red — 0–30% (learning)\n• Amber — 30–60% (developing)\n• Yellow — 60–80% (solid)\n• Green — 80–100% (battle-ready)" },
+        body:"Mastery is a 0–100% score you assign manually. The bar colour follows:\n• Red \u2014 0–30% (learning)\n• Amber \u2014 30–60% (developing)\n• Yellow \u2014 60–80% (solid)\n• Green \u2014 80–100% (battle-ready)" },
       { title:"Move tiles and rows",
         body:"In tile view, each move shows its name, description (2 lines), and mastery bar. In list view, each row shows name, description, and mastery. Tap anywhere on a tile or row to open and edit the move. The × button deletes." },
       { title:"Categories",
         body:"Moves are grouped by category. Tap a category to drill in and see its moves. From the ··· menu on a category you can rename, change colour, duplicate, or delete it. Reorder categories manually using the ⇅ button." },
       { title:"Sets",
-        body:"Sets are named groups of moves — a combo or sequence. Go to MOVES › Sets to create one. Give it a name, details, and colour, then add moves from your library. Sets appear in both tile and list view with their details and move count visible." },
+        body:"Sets are named groups of moves \u2014 a combo or sequence. Go to MOVES › Sets to create one. Give it a name, details, and colour, then add moves from your library. Sets appear in both tile and list view with their details and move count visible." },
       { title:"Tile vs List view",
         body:"Toggle between views with the grid/list icon in the top right of MOVES. Your preference is remembered per section." },
       { title:"Video links",
@@ -6889,27 +6889,27 @@ const MANUAL_SECTIONS = [
       { title:"Searching moves",
         body:"Tap the 🔍 icon to filter moves by name. The search is live." },
       { title:"CSV export and import",
-        body:"Export all your data (moves, habits, goals, sets, notes) as a single CSV file via Settings › Data › Export All Data. Re-import moves from a CSV file using Import Moves — duplicates are automatically skipped." },
+        body:"Export all your data (moves, habits, goals, sets, notes) as a single CSV file via Settings › Data › Export All Data. Re-import moves from a CSV file using Import Moves \u2014 duplicates are automatically skipped." },
     ]
   },
   {
     id:"battle", title:"⚔️ BATTLE", icon:"⚔️",
     items:[
       { title:"What BATTLE is for",
-        body:"BATTLE has two modes:\n• PLAN — build and organise your battle rounds in advance\n• FREESTYLE — build a live list of moves to cycle through during a jam or cypher" },
+        body:"BATTLE has two modes:\n• PLAN \u2014 build and organise your battle rounds in advance\n• FREESTYLE \u2014 build a live list of moves to cycle through during a jam or cypher" },
       { title:"Creating a round",
         body:"In BATTLE › Plan, tap + to open the New Round modal. Set:\n• Name (e.g. 'Semi Finals')\n• Colour\n• Number of entry slots (how many entries to pre-create)\nTap Create Round." },
       { title:"Round entries",
         body:"Each entry inside a round holds moves or sets from your library. Tap + inside an entry to add from your library. Reorder entries with ▲▼. Remove with ×. The mastery level of each item is shown." },
       { title:"Save and Load templates",
-        body:"Save your current round layout as a named template with 💾 Save in the PLAN header. Load it back with 📂 Load. Templates store the full structure. Loading replaces your current rounds — you'll be warned first." },
+        body:"Save your current round layout as a named template with 💾 Save in the PLAN header. Load it back with 📂 Load. Templates store the full structure. Loading replaces your current rounds \u2014 you'll be warned first." },
       { title:"Reset rounds",
-        body:"Tap ↺ in the PLAN header to restore the default round structure. You'll be asked to confirm — this erases all current rounds." },
-      { title:"FREESTYLE — Building a list",
+        body:"Tap ↺ in the PLAN header to restore the default round structure. You'll be asked to confirm \u2014 this erases all current rounds." },
+      { title:"FREESTYLE \u2014 Building a list",
         body:"In BATTLE › Freestyle, tap + to open the move picker. Search by name or category, select moves or entire sets, then tap DONE to add them to your list." },
-      { title:"FREESTYLE — Using the list",
+      { title:"FREESTYLE \u2014 Using the list",
         body:"Tap a move to mark it as used (moves to the bottom with a checkmark). Drag to reorder. The header shows remaining vs used count." },
-      { title:"FREESTYLE — Save, Load and Reset",
+      { title:"FREESTYLE \u2014 Save, Load and Reset",
         body:"Save your list with 💾 Save, load a saved list with 📂 Load, or clear it with ↺ Reset. Saved lists persist across sessions." },
     ]
   },
@@ -6918,35 +6918,35 @@ const MANUAL_SECTIONS = [
     items:[
       { title:"Opening Settings",
         body:"Tap the ⚙️ icon in the bottom navigation bar." },
-      { title:"Display — Theme",
+      { title:"Display \u2014 Theme",
         body:"Switch between Light and Dark mode. Dark mode uses a deep Spotify-style palette with high contrast accents." },
-      { title:"Display — Accent Colour",
-        body:"Change the app's primary accent colour. Choose from several presets — the colour applies globally across buttons, highlights, and category bars." },
-      { title:"Display — Default View",
+      { title:"Display \u2014 Accent Colour",
+        body:"Change the app's primary accent colour. Choose from several presets \u2014 the colour applies globally across buttons, highlights, and category bars." },
+      { title:"Display \u2014 Default View",
         body:"Sets the starting layout for MOVES and Sets: List or Tiles." },
-      { title:"Display — Show Mastery Level",
+      { title:"Display \u2014 Show Mastery Level",
         body:"Shows or hides the mastery bar on move cards. Turn off for a cleaner look." },
-      { title:"Display — Show Move Count Badge",
+      { title:"Display \u2014 Show Move Count Badge",
         body:"Shows the number of moves on category tiles." },
-      { title:"Display — Video Link on Card",
+      { title:"Display \u2014 Video Link on Card",
         body:"'Inside only' = link only in the move detail. 'Inside & outside' = quick-open icon on the card surface." },
-      { title:"Display — Zoom",
+      { title:"Display \u2014 Zoom",
         body:"Scales the entire app. Range: 60%–140%. Use + and − buttons. Tap the % number to reset to 100%." },
-      { title:"Behaviour — Confirm Before Deleting",
+      { title:"Behaviour \u2014 Confirm Before Deleting",
         body:"Shows a confirmation dialog before any delete. Recommended on. Default: on." },
-      { title:"Behaviour — Show Deadline Indicator",
+      { title:"Behaviour \u2014 Show Deadline Indicator",
         body:"Shows or hides the coloured days-remaining label on Journey Goal tiles and list rows. Default: on." },
-      { title:"Behaviour — Sort Categories By",
+      { title:"Behaviour \u2014 Sort Categories By",
         body:"Manual (drag to reorder), Date Added, Alphabetical, or Mastery %. Default: Manual." },
-      { title:"Behaviour — TRAIN Tab Order",
+      { title:"Behaviour \u2014 TRAIN Tab Order",
         body:"Reorder the Goals, Habits and Notes sub-tabs using the ▲▼ buttons. Saved immediately." },
-      { title:"Behaviour — Streak Tracking",
+      { title:"Behaviour \u2014 Streak Tracking",
         body:"Enables streak counting for Habits. Default: on." },
-      { title:"Data — Export All Data",
+      { title:"Data \u2014 Export All Data",
         body:"Downloads all your data (moves, habits, goals, notes, sets) as a single timestamped CSV file." },
-      { title:"Data — Import Moves from CSV",
+      { title:"Data \u2014 Import Moves from CSV",
         body:t("importMovesDesc") },
-      { title:"Data — Restart Tour",
+      { title:"Data \u2014 Restart Tour",
         body:"Replays the onboarding walkthrough from the beginning." },
     ]
   },
@@ -6971,15 +6971,15 @@ const MANUAL_SECTIONS = [
       { title:"Use emojis in titles",
         body:"Goals, habits, notes and moves all support emojis in the title. E.g. '👟 Daily Practice', '🏹 Learn 20 moves', '🔥 Six Step Drill'. Makes the list feel alive and easier to scan at a glance." },
       { title:"Tap a goal tile to expand",
-        body:"Journey Goal tiles expand in place — tap to see all 3 steps in full, your Why, Commitments, and Obstacles. Tap again to collapse. No need to open the edit modal just to review your plan." },
+        body:"Journey Goal tiles expand in place \u2014 tap to see all 3 steps in full, your Why, Commitments, and Obstacles. Tap again to collapse. No need to open the edit modal just to review your plan." },
       { title:"Use sets for signature combos",
-        body:"Create a Set in MOVES › Sets for your signature combo or opening sequence. Add it to your Freestyle list or Battle round as a single entry — all its moves come along for the ride." },
+        body:"Create a Set in MOVES › Sets for your signature combo or opening sequence. Add it to your Freestyle list or Battle round as a single entry \u2014 all its moves come along for the ride." },
       { title:"Keep notes short",
-        body:"Notes work best as quick captures. If something needs structure, it's probably a Goal. Use Notes for fragments, observations, and references — use Goals for anything with a plan behind it." },
+        body:"Notes work best as quick captures. If something needs structure, it's probably a Goal. Use Notes for fragments, observations, and references \u2014 use Goals for anything with a plan behind it." },
       { title:"Check in daily",
-        body:"The streak system only works if you check in consistently. Make it a ritual — open the app after training, tap ✓ on each habit. 5 seconds." },
+        body:"The streak system only works if you check in consistently. Make it a ritual \u2014 open the app after training, tap ✓ on each habit. 5 seconds." },
       { title:"Add descriptions to moves",
-        body:"The description field on a move is your personal technique note — key cues, common mistakes, what to focus on. It shows as a preview on the tile so you can read it without opening the move." },
+        body:"The description field on a move is your personal technique note \u2014 key cues, common mistakes, what to focus on. It shows as a preview on the tile so you can read it without opening the move." },
       { title:"The Freestyle list persists",
         body:"Your Freestyle list is saved automatically. If you close the app mid-session, it's still there when you come back. Use 💾 Save to store it as a named list for future use." },
       { title:"Export before big changes",
@@ -7719,7 +7719,7 @@ const ProfileModal = ({ onClose, profile, onSave }) => {
       <div style={{ display:"flex", gap:10 }}>
         <div style={{ flex:1, marginBottom:14 }}>
           <label style={lbl()}>AGE</label>
-          <input type="number" value={f.age} onChange={e=>set("age")(e.target.value)} placeholder="—"
+          <input type="number" value={f.age} onChange={e=>set("age")(e.target.value)} placeholder="\u2014"
             style={{ width:"100%", background:C.surface, border:`1px solid ${C.border}`, borderRadius:8, padding:"9px 12px", color:C.text, fontSize:14, outline:"none", boxSizing:"border-box", fontFamily:FONT_BODY }}/>
         </div>
         <div style={{ flex:2, marginBottom:14 }}>
@@ -8173,7 +8173,7 @@ const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onRestoreRound
                     alert(msg);
                     if (toAdd.length) window.location.reload();
                     e.target.value="";
-                  } catch(err) { alert("Import failed — please check the file format."); }
+                  } catch(err) { alert("Import failed \u2014 please check the file format."); }
                 };
                 reader.readAsText(file);
               }}/>
@@ -8254,7 +8254,7 @@ const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onRestoreRound
         </div>
         </div>{/* end zoom+scroll */}
 
-        {/* Footer — outside zoom so always fully visible */}
+        {/* Footer \u2014 outside zoom so always fully visible */}
         <div style={{ display:"flex", gap:8, justifyContent:"flex-end",
           padding:"12px 18px", borderTop:`1px solid ${panelBrd}`, flexShrink:0, background:panelBg }}>
           <button onClick={onClose}
@@ -8512,7 +8512,7 @@ function App() {
   const newPalette = buildPalette(appSettings.theme);
   Object.assign(C, newPalette);
 
-  // Font scale — inject into document root so all px-based sizes scale via CSS zoom
+  // Font scale \u2014 inject into document root so all px-based sizes scale via CSS zoom
   const fontScale = FONT_SIZES[appSettings.fontSize] || 1;
   // Card padding scale
   const cardPad = appSettings.compactCards ? "6px 8px" : "10px 12px";
@@ -8527,7 +8527,7 @@ function App() {
 
   const handleAddMoveFromIdea = (text) => { setIdeaToMove(text); setTab("wip"); };
 
-  // Secondary add trigger — used for t("addCategory2") and t("createRound") from bottom menu
+  // Secondary add trigger \u2014 used for t("addCategory2") and t("createRound") from bottom menu
   const [addTick2, setAddTick2] = useState(0);
 
   // Contextual + menu: null = no menu needed (Train handles its own), array = show menu
@@ -8614,7 +8614,7 @@ function App() {
         <TabBar active={tab} onChange={t=>{ setTrainMenu(null); setTab(t); setAddTick(0); setAddTick2(0); setAddMenu(false); setSubTab("moves"); }}/>
 
         <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column", position:"relative" }}>
-          {/* Train modals + menu — inside position:relative so absolute children are scoped to app width */}
+          {/* Train modals + menu \u2014 inside position:relative so absolute children are scoped to app width */}
           {(trainModal.type==="note"||trainModal.type==="goal"||trainModal.type==="target")&&(
             <div style={{ position:"absolute", inset:0, background:"rgba(0,0,0,0.6)", zIndex:10000, display:"flex", alignItems:"center", justifyContent:"center", padding:10 }}>
               {trainModal.type==="note"&&<NoteModal
@@ -8664,7 +8664,7 @@ function App() {
               <span style={{ fontSize:9, fontFamily:FONT_DISPLAY, fontWeight:800, letterSpacing:1.2 }}>FEEDBACK</span>
             </button>
 
-            {/* ＋ ADD — centre, contextual menu */}
+            {/* ＋ ADD \u2014 centre, contextual menu */}
             <div style={{ flex:"0 0 64px", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", position:"relative" }}>
               {addMenu&&(
                 <div id="add-menu-popup" style={{ position:"absolute", bottom:62, left:"50%", transform:"translateX(-50%)",
