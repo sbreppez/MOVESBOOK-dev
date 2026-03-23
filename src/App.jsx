@@ -281,14 +281,17 @@ export default function App() {
 
   const vocabMoves = moves;
 
+  const effectiveZoom = fontScale * zoom;
+  const rootHeight = effectiveZoom < 1 ? `${(100 / effectiveZoom).toFixed(2)}vh` : "100vh";
+
   return (
     <SettingsCtx.Provider value={{ settings:appSettings, C, cardPad, cardFontSize }}>
       <style>{`
-        #movesbook-root { zoom: ${(fontScale * zoom).toFixed(3)}; }
+        #movesbook-root { zoom: ${effectiveZoom.toFixed(3)}; }
         #movesbook-root * { box-sizing: border-box; }
       `}</style>
       <div id="movesbook-root" style={{ fontFamily:FONT_BODY, background:C.bg, color:C.text,
-        height:"100vh", width:"100%", display:"flex", flexDirection:"column",
+        height: rootHeight, width:"100%", display:"flex", flexDirection:"column",
         boxShadow:"0 0 60px rgba(0,0,0,0.35)", overflow:"hidden", transition:"background 0.3s, color 0.3s" }}>
 
         {/* Header */}
