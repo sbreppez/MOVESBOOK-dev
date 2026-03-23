@@ -1197,7 +1197,7 @@ export const TRANSLATIONS = {
   },
 
   zh: {
-    train:"TRAIN", vocab:"MOVES", battle:"BATTLE",
+    train:"训练", vocab:"动作", battle:"对战",
     plan:"计划", freestyle:"FREESTYLE",
     save:"保存", cancel:"取消", delete:"删除", done:"完成", confirm:"确认",
     rename:"重命名", duplicate:"复制", add:"添加", edit:"编辑",

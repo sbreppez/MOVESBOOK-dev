@@ -137,14 +137,22 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
             </div>
           )}
 
-          <div style={{ opacity:0.45, pointerEvents:"none", userSelect:"none" }}>
-          {row("Language", "Coming soon — full translation support is in the works.",
-            <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-              <span style={{ fontSize:12, fontWeight:700, letterSpacing:1.5, color:"#fff",
-                background:"#9a7a55", borderRadius:5, padding:"3px 8px" }}>COMING SOON</span>
-            </div>
+          {row(t("language"), t("languageDesc"),
+            <select value={s.language||"en"} onChange={e=>set("language")(e.target.value)}
+              style={{ background:panelSrf, border:`1px solid ${panelBrd}`, borderRadius:7,
+                padding:"7px 10px", color:panelTxt, fontSize:12, fontFamily:FONT_DISPLAY,
+                fontWeight:700, outline:"none" }}>
+              <option value="en">English</option>
+              <option value="it">Italiano</option>
+              <option value="es">Español</option>
+              <option value="fr">Français</option>
+              <option value="pt">Português</option>
+              <option value="de">Deutsch</option>
+              <option value="ja">日本語</option>
+              <option value="zh">简体中文</option>
+              <option value="ru">Русский</option>
+            </select>
           )}
-          </div>
 
           {/* ── BEHAVIOUR ───────────────────────────────── */}
           {sectionHdr(t("behaviour"),"⚡")}
