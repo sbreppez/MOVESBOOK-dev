@@ -1,0 +1,12 @@
+import { C } from './colors';
+import { FONT_DISPLAY, FONT_BODY } from './fonts';
+
+export const CARD_BASE  = () => ({ border:`2px solid ${C.border}`, borderRadius:12, background:C.bg, overflow:"hidden", boxShadow:"0 4px 15px rgba(0,0,0,0.12)", minHeight:168, minWidth:0, display:"flex", flexDirection:"column", position:"relative" });
+export const CARD_BAR   = (color) => ({ height:5, background:`linear-gradient(90deg,${color},${color}55)`, flexShrink:0 });
+export const CARD_BODY  = () => ({ padding:"12px 12px 8px 12px", flex:1, display:"flex", flexDirection:"column" });
+
+export const masteryColor = p => p < 30 ? C.red : p < 60 ? C.yellow : p < 80 ? C.blue : C.green;
+export const masteryLabel = p => p < 20 ? "Just discovered" : p < 40 ? "Learning basics" : p < 60 ? "Getting consistent" : p < 80 ? "Battle tested" : "Mastered ✓";
+
+export const lbl = () => ({ display:"block", fontSize:13, color:C.textSec, marginBottom:5, letterSpacing:1.2, fontWeight:700, fontFamily:FONT_DISPLAY });
+export const inp = () => ({ width:"100%", background:C.surface, border:`1px solid ${C.border}`, borderRadius:8, padding:"9px 12px", color:C.text, fontSize:14, outline:"none", boxSizing:"border-box", fontFamily:FONT_BODY });

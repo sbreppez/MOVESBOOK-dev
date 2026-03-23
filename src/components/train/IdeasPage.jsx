@@ -1,0 +1,307 @@
+import React, { Fragment, useState, useEffect, useRef } from 'react';
+import { C } from '../../constants/colors';
+import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
+import { lbl } from '../../constants/styles';
+import { Ic } from '../shared/Ic';
+import { Modal } from '../shared/Modal';
+import { Btn } from '../shared/Btn';
+import { SectionBanner } from '../shared/SectionBanner';
+import { useT, usePlural } from '../../hooks/useTranslation';
+import { useSettings } from '../../hooks/useSettings';
+import { useTrainModal } from '../../hooks/useTrainContext';
+import { ensureHttps } from './helpers';
+import { TypeChooserModal } from './TypeChooserModal';
+import { IdeaTile } from './IdeaTile';
+import { HabitsPage } from './HabitsPage';
+
+export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[], setHabits=()=>{} }) => {
+  const t = useT();
+  const { resultCountStr, dayCountStr } = usePlural();
+  const { settings: ideaSettings } = useSettings();
+  const [view,       setView]       = useState("tiles");
+  useEffect(() => { setView("tiles"); }, []);
+  const [editIdea,   setEditIdea]   = useState(null);
+  const [typeChooser,setTypeChooser]= useState(false);
+  useEffect(()=>{ if(onAddTrigger){
+    if(trainTab==="habits") { /* handled by HabitsPage */ }
+    else if(trainTab==="notes") { openModal("note", null, addIdea); }
+    else { setTypeChooser(true); }
+  } },[onAddTrigger]);
+  const [newType,    setNewType]    = useState(null);
+  const { openModal } = useTrainModal();
+  const [trainTab,   setTrainTab]   = useState("goals");
+  // Auto-link: sync move count to target goals that have autoLink=true
+  const { settings: ideaSettings2 } = useSettings();
+  // We get moves count from localStorage as a proxy (no prop needed)
+  useEffect(() => {
+    if (!ideaSettings2.targetAutoLink) return;
+    try {
+      const m = localStorage.getItem("mb_moves");
+      const cnt = m ? JSON.parse(m).length : 0;
+      setIdeas(p => p.map(i => (i.type==="target" && i.autoLink) ? {...i, current:cnt} : i));
+    } catch {}
+  }, [ideaSettings2.targetAutoLink]);
+  const [search,     setSearch]     = useState("");
+  const [showSearch, setShowSearch] = useState(false);
+  const [reorderMode, setReorderMode] = useState(false);
+
+  const dragItem = useRef(null);
+  const [dragOver,    setDragOver]    = useState(null);
+  const [confirmDel,  setConfirmDel]  = useState(null); // holds idea to delete
+  const [hintDismissed, setHintDismissed] = useState(() => {
+    try { return localStorage.getItem("mb_hint_goal_journal") === "1"; } catch { return false; }
+  });
+  const dismissHint = () => {
+    setHintDismissed(true);
+    try { localStorage.setItem("mb_hint_goal_journal", "1"); } catch {}
+  };
+
+  const addIdea   = (fields) => setIdeas(p=>[...p,{ id:Date.now(), ...fields }]);
+  const del       = id => setIdeas(p=>p.filter(i=>i.id!==id));
+  const askDelete = (idea) => setConfirmDel(idea);
+  const save      = (id, fields) => setIdeas(p=>p.map(i=>i.id===id?{...i,...fields}:i));
+  const incrTarget = (id) => setIdeas(p=>p.map(i=>i.id===id?{...i,current:Math.min((i.current||0)+1,i.target||9999)}:i));
+  const decrTarget = (id) => setIdeas(p=>p.map(i=>i.id===id?{...i,current:Math.max(0,(i.current||0)-1)}:i));
+  const [logEntry,   setLogEntry]   = useState(null); // { id } — which target to log
+  const [logText,    setLogText]    = useState("");
+  const [logLink,    setLogLink]    = useState("");
+  const confirmLogEntry = (id) => {
+    // increment always, add journal entry if text provided
+    incrTarget(id);
+    if (logText.trim()) {
+      const entry = { id:Date.now(), date: new Date().toLocaleDateString("en-AU",{day:"2-digit",month:"short",year:"numeric"}), text:logText.trim(), link:ensureHttps(logLink.trim()) };
+      setIdeas(p=>p.map(i=>i.id===id?{...i,journal:[entry,...(i.journal||[])]}:i));
+    }
+    setLogEntry(null); setLogText(""); setLogLink("");
+  };
+  const dup       = id => { const orig=ideas.find(i=>i.id===id); if(orig) setIdeas(p=>[...p,{...orig,id:Date.now(),title:(orig.title||"")+" (copy)",pinned:false}]); };
+  const moveIdeaUp = (idx, list) => {
+    if(idx===0) return;
+    setIdeas(prev=>{
+      // Build new visible order with the swap
+      const newList=[...list];
+      [newList[idx],newList[idx-1]]=[newList[idx-1],newList[idx]];
+      // Rebuild full array: replace visible items in their original positions with new order
+      const visibleIds=new Set(list.map(i=>i.id));
+      const result=[]; let vi=0;
+      prev.forEach(item=>{ if(visibleIds.has(item.id)) result.push(newList[vi++]); else result.push(item); });
+      return result;
+    });
+  };
+  const moveIdeaDown = (idx, list) => {
+    if(idx===list.length-1) return;
+    setIdeas(prev=>{
+      const newList=[...list];
+      [newList[idx],newList[idx+1]]=[newList[idx+1],newList[idx]];
+      const visibleIds=new Set(list.map(i=>i.id));
+      const result=[]; let vi=0;
+      prev.forEach(item=>{ if(visibleIds.has(item.id)) result.push(newList[vi++]); else result.push(item); });
+      return result;
+    });
+  };
+  const changeColor = (id, color) => setIdeas(p=>p.map(i=>i.id===id?{...i,color}:i));
+  const togglePin   = (id) => setIdeas(p=>p.map(i=>i.id===id&&i.type!=="goal"?{...i,pinned:!i.pinned}:i));
+
+  const handleDragStart = (idx) => { dragItem.current = idx; };
+  const handleDrop = (targetIdx) => {
+    const from = dragItem.current;
+    setDragOver(null);
+    if (from === null || from === targetIdx) return;
+    setIdeas(prev => {
+      const next = [...prev];
+      const [moved] = next.splice(from, 1);
+      const insertAt = from < targetIdx ? targetIdx - 1 : targetIdx;
+      next.splice(insertAt, 0, moved);
+      return next;
+    });
+  };
+
+  const q = search.toLowerCase().trim();
+  const base = q ? ideas.filter(i=>(i.title||"").toLowerCase().includes(q)||(i.text||"").toLowerCase().includes(q)) : ideas;
+  // In reorder mode use raw order so ▲▼ buttons map correctly; otherwise sort goals first
+  const filtered = reorderMode ? base : [
+    ...base.filter(i=>i.type==="goal"),
+    ...base.filter(i=>i.type!=="goal"&&i.pinned),
+    ...base.filter(i=>i.type!=="goal"&&!i.pinned),
+  ];
+
+  // Split ideas by type for sub-tabs
+  const goals = ideas.filter(i=>i.type==="goal"||i.type==="target");
+  const notes = ideas.filter(i=>i.type==="note");
+
+  return (
+    <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column" }}>
+      <SectionBanner tab="ideas"/>
+      {/* Sub-tab nav */}
+      <div style={{ display:"flex", background:C.surface, borderBottom:`2px solid ${C.border}`, flexShrink:0, alignItems:"stretch" }}>
+        {(()=>{
+          const order = (ideaSettings.trainTabOrder||["goals","habits","notes"]);
+          const tabDefs = { goals:["goals","🎯 GOALS",goals.length], notes:["notes","📝 NOTES",notes.length], habits:["habits","🔥 HABITS",null] };
+          return order.map(tabId => tabDefs[tabId]||tabDefs.goals);
+        })().map(([id,label,count])=>{
+          const on = trainTab===id;
+          return (
+            <button key={id} onClick={()=>setTrainTab(id)}
+              style={{ flex:1, padding:"9px 4px", border:"none", cursor:"pointer",
+                background: on ? C.bg : "transparent",
+                color: on ? C.accent : C.textSec,
+                borderBottom:`3px solid ${on?C.accent:"transparent"}`,
+                fontSize:11, fontWeight:800, letterSpacing:1, fontFamily:FONT_DISPLAY,
+                display:"flex", alignItems:"center", justifyContent:"center", gap:4 }}>
+              {label}
+              {count!==null&&<span style={{ fontSize:10, color:on?C.accent:C.textMuted,
+                background:C.surfaceAlt, borderRadius:10, padding:"0 5px" }}>{count}</span>}
+            </button>
+          );
+        })}
+        {/* 🔥 Flame pulse — habits done today / total */}
+        {(()=>{
+          if (!habits.length) return null;
+          const today = new Date().toISOString().split("T")[0];
+          const doneToday = habits.filter(h => (h.checkIns||[]).includes(today)).length;
+          const allOn = doneToday === habits.length;
+          const someOn = doneToday > 0;
+          return (
+            <button onClick={()=>setTrainTab("habits")}
+              style={{ padding:"0 12px", border:"none", cursor:"pointer", background:"transparent",
+                display:"flex", alignItems:"center", gap:4, flexShrink:0,
+                borderBottom:`3px solid transparent` }}
+              title={`${doneToday} of ${habits.length} habits done today`}>
+              <span style={{ fontSize: allOn ? 18 : 15,
+                opacity: someOn ? 1 : 0.35, lineHeight:1 }}>🔥</span>
+              <span style={{ fontSize:12, fontWeight:900, fontFamily:FONT_DISPLAY,
+                color: allOn ? "#ffa726" : someOn ? C.textSec : C.textMuted }}>
+                {doneToday}/{habits.length}
+              </span>
+            </button>
+          );
+        })()}
+      </div>
+      {/* Search + view toggle (only for goals/notes) */}
+      {trainTab!=="habits"&&<div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"6px 14px", borderBottom:`1px solid ${C.borderLight}`, background:C.surface, flexShrink:0 }}>
+        <span style={{ fontSize:12, fontWeight:700, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY }}>
+          {trainTab==="goals"?"GOALS":"NOTES"} · {trainTab==="goals"?goals.length:notes.length}
+        </span>
+        <div style={{ display:"flex", gap:3 }}>
+          {!reorderMode&&<button onClick={()=>{ setShowSearch(s=>!s); setSearch(""); }}
+            style={{ background:showSearch?C.surfaceAlt:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:showSearch?C.accent:C.textMuted }}>
+            <Ic n="search" s={16}/>
+          </button>}
+          {!reorderMode&&<button onClick={()=>setView(v=>v==="list"?"tiles":"list")}
+            style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}>
+            <Ic n={view==="list"?"grid":"list"} s={16}/>
+          </button>}
+          <button onClick={()=>{ setReorderMode(r=>!r); setSearch(""); setShowSearch(false); }}
+            style={{ background:reorderMode?C.accent:"none", border:"none", cursor:"pointer", padding:"4px 8px", borderRadius:5,
+              color:reorderMode?C.bg:C.textMuted, fontSize:13, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>
+            {reorderMode?"DONE":"⇅"}
+          </button>
+        </div>
+      </div>}
+      {trainTab==="habits" && <HabitsPage onAddTrigger={trainTab==="habits"?onAddTrigger:null} habits={habits} setHabits={setHabits}/>}
+      {trainTab!=="habits"&&showSearch&&(
+        <div style={{ padding:"6px 14px", background:C.surface, borderBottom:`1px solid ${C.borderLight}` }}>
+          <div style={{ display:"flex", alignItems:"center", background:C.bg, borderRadius:7, padding:"5px 10px", gap:6, border:`1px solid ${search?C.accent:C.border}` }}>
+            <Ic n="search" s={13} c={C.textMuted}/>
+            <input autoFocus value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search…"
+              style={{ flex:1, background:"none", border:"none", outline:"none", color:C.text, fontSize:13, fontFamily:"inherit" }}/>
+            {search&&<button onClick={()=>setSearch("")} style={{ background:"none", border:"none", cursor:"pointer", color:C.textMuted, padding:0, display:"flex" }}><Ic n="x" s={13}/></button>}
+          </div>
+          {search&&<div style={{ fontSize:11, color:C.textMuted, marginTop:4 }}>{resultCountStr(filtered.length)}</div>}
+        </div>
+      )}
+      {trainTab!=="habits"&&<div style={{ flex:1, overflow:"auto", padding:10, paddingBottom:76 }}>
+        <div
+          style={view==="tiles"
+            ? {display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,minWidth:0}
+            : {display:"flex",flexDirection:"column",gap:8}}
+        >
+          {(()=>{ const visibleIdeas = filtered.filter(i=>trainTab==="goals"?(i.type==="goal"||i.type==="target"):i.type==="note"); return visibleIdeas.map((idea, idx) => (
+            <div key={idea.id} style={{ position:"relative", minWidth:0, overflow:"hidden" }}>
+              {reorderMode&&(
+                <div style={{ position:"absolute", right:6, top:"50%", transform:"translateY(-50%)", zIndex:10,
+                  display:"flex", flexDirection:"column", gap:2 }}>
+                  <button onClick={()=>moveIdeaUp(idx,visibleIdeas)} disabled={idx===0}
+                    style={{ width:26, height:26, borderRadius:6, border:`1px solid ${C.border}`, background:C.bg,
+                      cursor:idx===0?"default":"pointer", color:idx===0?C.border:C.accent,
+                      fontSize:14, fontWeight:700, display:"flex", alignItems:"center", justifyContent:"center" }}>▲</button>
+                  <button onClick={()=>moveIdeaDown(idx,visibleIdeas)} disabled={idx===visibleIdeas.length-1}
+                    style={{ width:26, height:26, borderRadius:6, border:`1px solid ${C.border}`, background:C.bg,
+                      cursor:idx===visibleIdeas.length-1?"default":"pointer", color:idx===visibleIdeas.length-1?C.border:C.accent,
+                      fontSize:14, fontWeight:700, display:"flex", alignItems:"center", justifyContent:"center" }}>▼</button>
+                </div>
+              )}
+              <IdeaTile
+                idea={idea}
+                viewMode={reorderMode?"list":view}
+                searchQuery={search}
+                onEdit={()=>{ if(!reorderMode) openModal(idea.type, idea, fields=>save(idea.id,fields)); }}
+                onDelete={()=>askDelete(idea)}
+                onDuplicate={()=>dup(idea.id)}
+                onAddToMove={text=>onAddMove(text)}
+                onChangeColor={col=>changeColor(idea.id,col)}
+                onTogglePin={()=>togglePin(idea.id)}
+                onIncrTarget={()=>incrTarget(idea.id)}
+                onDecrTarget={()=>decrTarget(idea.id)}
+                onShowJournalHint={!hintDismissed && !reorderMode && (idea.type==="goal"||idea.type==="target")}
+                onDismissHint={dismissHint}
+                draggable={false}/>
+            </div>
+          )); })()}
+          {view!=="tiles"&&!reorderMode&&filtered.filter(i=>trainTab==="goals"?(i.type==="goal"||i.type==="target"):i.type==="note").length>0&&(
+            <div style={{ minHeight:36 }}/>
+          )}
+        </div>
+        {ideas.length===0&&<div style={{ textAlign:"center", padding:50, color:C.textMuted }}><div style={{ fontSize:32, marginBottom:10 }}>💪</div><p style={{fontSize:13}}>{t("emptyGoalsNotes")}</p></div>}
+        {filtered.length===0&&search&&<div style={{ textAlign:"center", padding:30, color:C.textMuted }}><p style={{fontSize:13}}>{t("noResultsFor")} "{search}"</p></div>}
+      </div>
+      }
+      {typeChooser&&<TypeChooserModal onClose={()=>setTypeChooser(false)} onChoose={t=>{ setTypeChooser(false); setTrainTab((t==="goal"||t==="target")?"goals":"notes"); openModal(t, null, addIdea); }}/>}
+      {logEntry&&(
+        <Modal title={t("logProgress")} onClose={()=>{ confirmLogEntry(logEntry.id); }}>
+          <div style={{ marginBottom:6 }}>
+            <div style={{ fontSize:13, fontWeight:800, color:C.text, fontFamily:FONT_DISPLAY, marginBottom:2 }}>{logEntry.title}</div>
+            <div style={{ fontSize:11, color:C.textMuted, marginBottom:14 }}>
+              {(logEntry.current||0)+1} / {logEntry.target} {logEntry.unit} after this
+            </div>
+          </div>
+          <div style={{ marginBottom:12 }}>
+            <label style={{ ...lbl(), fontSize:11, letterSpacing:1.5 }}>ADD A NOTE (optional)</label>
+            <textarea value={logText} onChange={e=>setLogText(e.target.value)} rows={3} autoFocus
+              placeholder={`e.g. "Finally nailed the six step — 20 clean reps today"`}
+              style={{ width:"100%", background:C.surface, border:`1px solid ${C.border}`, borderRadius:8,
+                padding:"9px 12px", color:C.text, fontSize:13, outline:"none", fontFamily:FONT_BODY,
+                boxSizing:"border-box", resize:"none", lineHeight:1.5, marginTop:4 }}/>
+          </div>
+          <div style={{ marginBottom:20 }}>
+            <label style={{ ...lbl(), fontSize:11, letterSpacing:1.5 }}>REFERENCE LINK (optional)</label>
+            <input value={logLink} onChange={e=>setLogLink(e.target.value)} placeholder="https://youtube.com/…"
+              style={{ width:"100%", background:C.surface, border:`1px solid ${C.border}`, borderRadius:8,
+                padding:"9px 12px", color:C.text, fontSize:13, outline:"none", fontFamily:FONT_BODY, boxSizing:"border-box", marginTop:4 }}/>
+          </div>
+          <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
+            <Btn variant="secondary" onClick={()=>{ confirmLogEntry(logEntry.id); }}>Skip note</Btn>
+            <Btn onClick={()=>confirmLogEntry(logEntry.id)}>+ Log {(logEntry.current||0)+1}</Btn>
+          </div>
+        </Modal>
+      )}
+      {confirmDel&&(
+        <div style={{ position:"absolute", inset:0, background:"rgba(0,0,0,0.6)", zIndex:4000, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
+          <div style={{ background:C.bg, border:`2px solid ${C.border}`, borderRadius:14, padding:24, width:"100%" }}>
+            <div style={{ fontWeight:800, fontSize:15, letterSpacing:2, color:C.brown, fontFamily:FONT_DISPLAY, marginBottom:12 }}>
+              {confirmDel.type==="goal"?t("deleteGoal"):t("deleteNote")}
+            </div>
+            <p style={{ color:C.textSec, marginBottom:20, lineHeight:1.6 }}>
+              Delete <strong style={{color:C.text}}>{confirmDel.title}</strong>? This cannot be undone.
+            </p>
+            <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
+              <Btn variant="secondary" onClick={()=>setConfirmDel(null)}>Keep it</Btn>
+              <Btn variant="danger" onClick={()=>{ del(confirmDel.id); setConfirmDel(null); }}>{t("delete")}</Btn>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* NoteModal, GoalModal, AddIdeaModal are rendered at App level via TrainModalCtx */}
+    </div>
+  );
+};

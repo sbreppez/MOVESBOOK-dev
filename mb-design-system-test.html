@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MovesBook — Design System Preview</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+    html,body { background:#f4f4f4; font-family:sans-serif; }
+    .page { max-width:720px; margin:0 auto; padding:32px 16px; }
+    .section { background:#fff; border-radius:12px; padding:24px; margin-bottom:24px; box-shadow:0 2px 8px rgba(0,0,0,0.08); }
+    h2 { font-size:11px; letter-spacing:2px; color:#888; margin-bottom:16px; font-family:'Barlow Condensed',sans-serif; }
+    .row { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:10px; }
+    .swatch { width:36px; height:36px; border-radius:8px; border:1px solid rgba(0,0,0,0.1); }
+    .token { font-size:11px; color:#888; margin-top:4px; text-align:center; font-family:monospace; }
+    .swatch-wrap { display:flex; flex-direction:column; align-items:center; }
+    #theme-toggle { position:fixed; top:16px; right:16px; padding:8px 16px; background:#cf0000; color:#fff; border:none; border-radius:8px; cursor:pointer; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:13px; letter-spacing:1px; z-index:100; }
+  </style>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.23.10/babel.min.js"></script>
+  <script src="mb-design-system.js"></script>
+</head>
+<body>
+<button id="theme-toggle">Toggle Dark Mode</button>
+<div class="page">
+  <div style="margin-bottom:24px">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;letter-spacing:4px;color:#cf0000">MOVES<span style="color:#111">BOOK</span></div>
+    <div style="font-size:12px;color:#888;letter-spacing:2px;margin-top:4px">DESIGN SYSTEM — v1.0</div>
+  </div>
+  <div id="root"></div>
+</div>
+
+<script type="text/babel" data-presets="env,react">
+const {
+  useState, useEffect, Fragment
+} = React;
+
+const {
+  C, buildPalette, setTheme,
+  FONT_DISPLAY, FONT_BODY,
+  CAT_COLORS, IDEA_COLORS, PRESET_COLORS,
+  masteryColor, masteryLabel,
+  Ic, Btn, Modal, Inp, Txtarea, Sel,
+  useToasts, Toast, ColourPicker,
+  EmptyState, MasteryBar,
+  lbl, inp, genId,
+} = MB;
+
+// ── Theme toggle wires into MB ──────────────────────────────────────────
+function App() {
+  const [theme, setThemeState] = useState("light");
+  const [showModal, setShowModal] = useState(false);
+  const [toasts, addToast, removeToast] = useToasts();
+
+  useEffect(() => {
+    MB.setTheme(theme);
+    document.body.style.background = theme === "dark" ? "#181818" : "#f4f4f4";
+    document.getElementById("theme-toggle").onclick = () => {
+      setThemeState(t => t === "light" ? "dark" : "light");
+    };
+  }, [theme]);
+
+  const palette = buildPalette(theme);
+
+  return (
+    <div style={{ fontFamily: FONT_BODY }}>
+
+      {/* ── COLOUR PALETTE ── */}
+      <div style={{ background: palette.bg, borderRadius:12, padding:24, marginBottom:24, border:`1px solid ${palette.border}` }}>
+        <div style={{ fontSize:11, letterSpacing:2, color:palette.textMuted, marginBottom:16, fontFamily:FONT_DISPLAY }}>COLOUR PALETTE — {theme.toUpperCase()}</div>
+        <div style={{ display:"flex", flexWrap:"wrap", gap:12 }}>
+          {Object.entries(palette).filter(([k])=>!['accentLight','accentWarm','brownMid','brownLight'].includes(k)).map(([key, val]) => (
+            <div key={key} style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:4 }}>
+              <div style={{ width:40, height:40, borderRadius:8, background:val, border:`1px solid ${palette.border}` }}/>
+              <div style={{ fontSize:9, color:palette.textMuted, fontFamily:"monospace" }}>{key}</div>
+              <div style={{ fontSize:9, color:palette.textMuted, fontFamily:"monospace" }}>{val}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── CATEGORY COLOURS ── */}
+      <div style={{ background: palette.bg, borderRadius:12, padding:24, marginBottom:24, border:`1px solid ${palette.border}` }}>
+        <div style={{ fontSize:11, letterSpacing:2, color:palette.textMuted, marginBottom:16, fontFamily:FONT_DISPLAY }}>CATEGORY COLOURS</div>
+        <div style={{ display:"flex", flexWrap:"wrap", gap:10 }}>
+          {Object.entries(CAT_COLORS).map(([name, col]) => (
+            <div key={name} style={{ display:"flex", alignItems:"center", gap:6, background:col+"22", border:`1px solid ${col}66`, borderRadius:8, padding:"6px 10px" }}>
+              <div style={{ width:10, height:10, borderRadius:"50%", background:col }}/>
+              <span style={{ fontSize:12, color:col, fontFamily:FONT_DISPLAY, fontWeight:700, letterSpacing:0.5 }}>{name}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── BUTTONS ── */}
+      <div style={{ background: palette.bg, borderRadius:12, padding:24, marginBottom:24, border:`1px solid ${palette.border}` }}>
+        <div style={{ fontSize:11, letterSpacing:2, color:palette.textMuted, marginBottom:16, fontFamily:FONT_DISPLAY }}>BUTTONS</div>
+        <div style={{ display:"flex", flexWrap:"wrap", gap:10, marginBottom:12 }}>
+          <Btn variant="primary"   onClick={()=>addToast({title:"Primary clicked",msg:"Looking good!",emoji:"✅"})}>Primary</Btn>
+          <Btn variant="secondary" onClick={()=>addToast({title:"Secondary",msg:"Secondary button",emoji:"👍"})}>Secondary</Btn>
+          <Btn variant="ghost"     onClick={()=>{}}>Ghost</Btn>
+          <Btn variant="danger"    onClick={()=>addToast({title:"Danger",msg:"Careful now",emoji:"⚠️"})}>Danger</Btn>
+          <Btn variant="primary" disabled>Disabled</Btn>
+        </div>
+        <div style={{ display:"flex", flexWrap:"wrap", gap:10 }}>
+          <Btn variant="primary"   small>Primary sm</Btn>
+          <Btn variant="secondary" small>Secondary sm</Btn>
+          <Btn variant="ghost"     small>Ghost sm</Btn>
+          <Btn variant="danger"    small>Danger sm</Btn>
+        </div>
+      </div>
+
+      {/* ── ICONS ── */}
+      <div style={{ background: palette.bg, borderRadius:12, padding:24, marginBottom:24, border:`1px solid ${palette.border}` }}>
+        <div style={{ fontSize:11, letterSpacing:2, color:palette.textMuted, marginBottom:16, fontFamily:FONT_DISPLAY }}>ICONS</div>
+        <div style={{ display:"flex", flexWrap:"wrap", gap:16 }}>
+          {["scroll","sword","plus","minus","link","edit","trash","copy","upload","chevR","chevD","chevL","x","more","bell","cog","check","grip","info","zIn","zOut","star","user","sun","moon","target","pin","journal","habit","fire"].map(n => (
+            <div key={n} style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:4 }}>
+              <Ic n={n} s={20} c={palette.accent}/>
+              <span style={{ fontSize:9, color:palette.textMuted, fontFamily:"monospace" }}>{n}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── FORM ELEMENTS ── */}
+      <div style={{ background: palette.bg, borderRadius:12, padding:24, marginBottom:24, border:`1px solid ${palette.border}` }}>
+        <div style={{ fontSize:11, letterSpacing:2, color:palette.textMuted, marginBottom:16, fontFamily:FONT_DISPLAY }}>FORM ELEMENTS</div>
+        <Inp label="MOVE NAME" value="" onChange={()=>{}} placeholder="e.g. Six Steps"/>
+        <Txtarea label="DESCRIPTION" value="" onChange={()=>{}} placeholder="Describe the move…" rows={3}/>
+        <Sel label="CATEGORY" value="Footworks" onChange={()=>{}} options={Object.keys(CAT_COLORS)}/>
+      </div>
+
+      {/* ── MASTERY BAR ── */}
+      <div style={{ background: palette.bg, borderRadius:12, padding:24, marginBottom:24, border:`1px solid ${palette.border}` }}>
+        <div style={{ fontSize:11, letterSpacing:2, color:palette.textMuted, marginBottom:16, fontFamily:FONT_DISPLAY }}>MASTERY BAR</div>
+        {[10, 35, 62, 80, 95].map(v => (
+          <div key={v} style={{ marginBottom:14 }}>
+            <MasteryBar value={v}/>
+          </div>
+        ))}
+      </div>
+
+      {/* ── COLOUR PICKER ── */}
+      <div style={{ background: palette.bg, borderRadius:12, padding:24, marginBottom:24, border:`1px solid ${palette.border}` }}>
+        <div style={{ fontSize:11, letterSpacing:2, color:palette.textMuted, marginBottom:16, fontFamily:FONT_DISPLAY }}>COLOUR PICKER</div>
+        <ColourPicker colors={IDEA_COLORS} value={IDEA_COLORS[0]} onChange={()=>{}}/>
+      </div>
+
+      {/* ── EMPTY STATE ── */}
+      <div style={{ background: palette.bg, borderRadius:12, padding:24, marginBottom:24, border:`1px solid ${palette.border}`, minHeight:180 }}>
+        <div style={{ fontSize:11, letterSpacing:2, color:palette.textMuted, marginBottom:16, fontFamily:FONT_DISPLAY }}>EMPTY STATE</div>
+        <EmptyState emoji="📭" message="NO MOVES YET" sub="Tap + to add your first move"/>
+      </div>
+
+      {/* ── MODAL ── */}
+      <div style={{ background: palette.bg, borderRadius:12, padding:24, marginBottom:24, border:`1px solid ${palette.border}` }}>
+        <div style={{ fontSize:11, letterSpacing:2, color:palette.textMuted, marginBottom:16, fontFamily:FONT_DISPLAY }}>MODAL</div>
+        <Btn variant="primary" onClick={()=>setShowModal(true)}>Open Modal</Btn>
+        {showModal && (
+          <Modal title="EXAMPLE MODAL" onClose={()=>setShowModal(false)}>
+            <p style={{ color:palette.textSec, fontSize:14, lineHeight:1.6, marginBottom:16 }}>
+              This is the standard Modal component. All sections use this for editing, confirming, and adding content.
+            </p>
+            <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
+              <Btn variant="secondary" onClick={()=>setShowModal(false)}>Cancel</Btn>
+              <Btn variant="primary"   onClick={()=>{ setShowModal(false); addToast({title:"Saved",msg:"Modal action confirmed",emoji:"✅"}); }}>Save</Btn>
+            </div>
+          </Modal>
+        )}
+      </div>
+
+      {/* ── TYPOGRAPHY ── */}
+      <div style={{ background: palette.bg, borderRadius:12, padding:24, marginBottom:24, border:`1px solid ${palette.border}` }}>
+        <div style={{ fontSize:11, letterSpacing:2, color:palette.textMuted, marginBottom:16, fontFamily:FONT_DISPLAY }}>TYPOGRAPHY</div>
+        <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:32, color:palette.accent, letterSpacing:4, marginBottom:8 }}>MOVESBOOK</div>
+        <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:18, color:palette.text, letterSpacing:2, marginBottom:8 }}>SECTION HEADING</div>
+        <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:13, color:palette.textSec, letterSpacing:1.5, marginBottom:8 }}>LABEL / SUBHEADING</div>
+        <div style={{ fontFamily:FONT_BODY, fontSize:14, color:palette.text, lineHeight:1.6, marginBottom:8 }}>Body text — regular weight, 14px. Used for descriptions, notes, and general content throughout the app.</div>
+        <div style={{ fontFamily:FONT_BODY, fontSize:12, color:palette.textMuted, lineHeight:1.5 }}>Muted text — 12px. Used for timestamps, helper text, and secondary metadata.</div>
+      </div>
+
+      <Toast toasts={toasts} remove={removeToast}/>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
