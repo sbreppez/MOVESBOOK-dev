@@ -25,10 +25,10 @@ export const JournalEntryInput = ({ onAdd, placeholder }) => {
     <div style={{ marginBottom:20 }}>
       <label style={{ ...lbl(), fontSize:11, letterSpacing:1.5 }}>{t("todaysNote")}</label>
       <textarea ref={textRef} value={text} onChange={e=>setText(e.target.value)} rows={4}
-        placeholder={placeholder||"How did today's session go? What did you learn? Any breakthroughs or setbacks…"}
+        placeholder={placeholder||t("journalPlaceholder")}
         style={{ ...inputStyle, resize:"vertical", lineHeight:1.5, marginBottom:8 }}/>
       <div style={{ marginBottom:4 }}>
-        <label style={{ ...lbl(), fontSize:11, letterSpacing:1.5 }}>VIDEO REFERENCE LINK (optional)</label>
+        <label style={{ ...lbl(), fontSize:11, letterSpacing:1.5 }}>{t("videoRefLabel")}</label>
       </div>
       <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:8 }}>
         <input ref={linkRef} value={link} onChange={e=>setLink(e.target.value)}
@@ -37,7 +37,7 @@ export const JournalEntryInput = ({ onAdd, placeholder }) => {
         {link&&<a href={link.startsWith("http")?link:"https://"+link} target="_blank" rel="noopener noreferrer"
           style={{ flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center",
             width:34, height:34, borderRadius:8, background:C.accent, color:C.bg, textDecoration:"none" }}
-          title="Open link"><Ic n="extLink" s={15} c="#fff"/></a>}
+          title={t("openLink")}><Ic n="extLink" s={15} c="#fff"/></a>}
       </div>
       <Btn onClick={handleAdd} disabled={!text.trim()}>{t("addEntryBtn")}</Btn>
     </div>

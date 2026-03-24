@@ -104,14 +104,14 @@ export const GoalModal = ({ onClose, onSave, idea }) => {
                 border:`1px solid ${C.accent}30`, borderRadius:8, marginBottom:18 }}>
                 <span style={{ fontSize:16, flexShrink:0 }}>{"📓"}</span>
                 <span style={{ fontSize:12, color:C.textSec, lineHeight:1.6 }}>
-                  Once created, this goal will have a <strong style={{color:C.text}}>training journal</strong> — log your sessions, breakthroughs, and setbacks as you work toward it.
+                  {t("journalDesc").split(t("trainingJournal")).map((part,i,arr)=>i<arr.length-1?<React.Fragment key={i}>{part}<strong style={{color:C.text}}>{t("trainingJournal")}</strong></React.Fragment>:part)}
                 </span>
               </div>
             )}
             {/* Goal title */}
             <div style={{ marginBottom:18 }}>
               <label style={{ ...lbl(), fontSize:11, letterSpacing:1.5 }}>{t("whatAchieve")}</label>
-              <input value={title} onChange={e=>setTitle(e.target.value)} placeholder="e.g. Win a local jam…"
+              <input value={title} onChange={e=>setTitle(e.target.value)} placeholder={t("goalPlaceholder")}
                 style={{ ...inputStyle, border:`1.5px solid ${C.accent}`, fontSize:14, fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:0.5 }}/>
             </div>
 
@@ -135,7 +135,7 @@ export const GoalModal = ({ onClose, onSave, idea }) => {
                   <div style={{ width:22, height:22, borderRadius:"50%", background:C.accent, color:C.bg, display:"flex", alignItems:"center",
                     justifyContent:"center", fontSize:11, fontWeight:900, flexShrink:0, fontFamily:FONT_DISPLAY }}>{i+1}</div>
                   <input value={s} onChange={e=>{ const n=[...steps]; n[i]=e.target.value; setSteps(n); }}
-                    placeholder={`Step ${i+1}…`} style={inputStyle}/>
+                    placeholder={t("stepPlaceholder")+" "+(i+1)+"…"} style={inputStyle}/>
                 </div>
               ))}
             </div>
@@ -147,23 +147,23 @@ export const GoalModal = ({ onClose, onSave, idea }) => {
                 <div>
                   <div style={{ fontSize:11, color:C.textMuted, marginBottom:4 }}>{t("daysPerWeek")}</div>
                   <input value={daysPerWeek} onChange={e=>setDaysPerWeek(e.target.value)}
-                    placeholder="e.g. 4 days" style={inputStyle}/>
+                    placeholder={t("daysPlaceholder")} style={inputStyle}/>
                 </div>
                 <div>
                   <div style={{ fontSize:11, color:C.textMuted, marginBottom:4 }}>{t("sessionLength")}</div>
                   <input value={sessionLen} onChange={e=>setSessionLen(e.target.value)}
-                    placeholder="e.g. 1 hour" style={inputStyle}/>
+                    placeholder={t("sessionPlaceholder")} style={inputStyle}/>
                 </div>
                 <div>
                   <div style={{ fontSize:11, color:C.textMuted, marginBottom:4 }}>{t("whereTrain")}</div>
                   <input value={trainWhere} onChange={e=>setTrainWhere(e.target.value)}
-                    placeholder="e.g. Community center" style={inputStyle}/>
+                    placeholder={t("locationPlaceholder")} style={inputStyle}/>
                 </div>
               </div>
             </div>
 
             <GoalField label={t("obstaclesAnticipate")} hint="Write all possible hurdles and setbacks you might face on the journey"
-              value={obstacles} onChange={setObstacles} rows={3} placeholder="e.g. Nerves, inconsistent footwork under pressure…"/>
+              value={obstacles} onChange={setObstacles} rows={3} placeholder={t("obstaclesPlaceholder")}/>
 
             {/* Colour */}
             <div style={{ marginBottom:14 }}>

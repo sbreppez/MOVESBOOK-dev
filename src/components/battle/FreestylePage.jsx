@@ -145,14 +145,14 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger }) => 
             style={{ background:"none", border:`1px solid ${C.border}`, borderRadius:6, cursor:"pointer",
               color:C.textMuted, padding:"5px 11px", fontSize:13, fontFamily:FONT_DISPLAY, fontWeight:700,
               display:"flex", alignItems:"center", opacity:toUse.length===0?0.35:1 }}
-            title="Reset list">↺</button>
+            title={t("resetList")}>↺</button>
           {/* Load */}
           <button onClick={()=>setShowLoadList(true)}
             style={{ background:"none", border:`1px solid ${C.border}`, borderRadius:6, cursor:"pointer",
               color:C.textMuted, padding:"5px 11px", fontSize:13, fontFamily:FONT_DISPLAY, fontWeight:700,
               display:"flex", alignItems:"center", gap:4 }}
-            title="Load a saved list">
-            📂 Load
+            title={t("loadSavedList")}>
+            📂 {t("loadBtn")}
             {savedLists.length>0&&<span style={{ background:C.accent, color:C.bg, borderRadius:8,
               padding:"0 5px", fontSize:10, fontFamily:FONT_DISPLAY }}>{savedLists.length}</span>}
           </button>
@@ -161,14 +161,14 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger }) => 
             style={{ background:"none", border:`1px solid ${C.border}`, borderRadius:6, cursor:"pointer",
               color:C.textMuted, padding:"5px 11px", fontSize:13, fontFamily:FONT_DISPLAY, fontWeight:700,
               display:"flex", alignItems:"center", gap:4 }}
-            title="Save current list">
-            💾 Save
+            title={t("saveCurrentList")}>
+            💾 {t("saveBtn")}
           </button>
           {/* Reorder */}
           <button onClick={()=>setReorderMode(r=>!r)}
             style={{ background:reorderMode?C.accent:"none", border:`1px solid ${reorderMode?C.accent:C.border}`, borderRadius:6, cursor:"pointer",
               color:reorderMode?C.bg:C.textMuted, padding:"5px 11px", fontSize:13, fontFamily:FONT_DISPLAY, fontWeight:700 }}>
-            {reorderMode?"DONE":"⇅"}
+            {reorderMode?t("done"):"⇅"}
           </button>
         </div>
       </div>
@@ -466,7 +466,7 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger }) => 
               style={{ padding:"8px 18px", background:pickerSel.length>0?C.accent:C.border, border:"none",
                 borderRadius:8, color:C.bg, fontSize:13, fontWeight:800, fontFamily:FONT_DISPLAY,
                 letterSpacing:1, cursor:pickerSel.length>0?"pointer":"default" }}>
-              DONE {pickerSel.length>0?`(${pickerSel.length})`:""}
+              {t("done")} {pickerSel.length>0?`(${pickerSel.length})`:""}
             </button>
           </div>
         </div>

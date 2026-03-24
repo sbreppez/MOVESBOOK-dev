@@ -113,7 +113,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
   const addRound = (name, color=PRESET_COLORS[0], entryCount=1) => {
     const id = Date.now();
     const entries = Array.from({length: Math.max(1, entryCount)}, (_,i) => ({
-      id: id + i + 1, name: entryCount === 1 ? "Entry 1" : `Entry ${i+1}`, items: []
+      id: id + i + 1, name: entryCount === 1 ? t("entryPrefix")+" 1" : t("entryPrefix")+" "+(i+1), items: []
     }));
     setRounds(p => [...p, { id, name, color, notes:"", date: new Date().toISOString().split("T")[0], entries }]);
   };
@@ -123,7 +123,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
   const addEntry = rid => setRounds(p => p.map(r => {
     if (r.id !== rid) return r;
     const n = (r.entries||[]).length + 1;
-    return {...r, entries:[...(r.entries||[]), { id: Date.now(), name:`Entry ${n}`, items:[] }]};
+    return {...r, entries:[...(r.entries||[]), { id: Date.now(), name:t("entryPrefix")+" "+n, items:[] }]};
   }));
   const removeEntry = (rid, eid) => setRounds(p => p.map(r =>
     r.id !== rid ? r : {...r, entries: (r.entries||[]).filter(e => e.id !== eid)}
@@ -192,20 +192,20 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
               style={{ background:"none", border:`1px solid ${C.border}`, borderRadius:6, cursor:"pointer",
                 color:C.textMuted, padding:"5px 11px", fontSize:13, fontFamily:FONT_DISPLAY, fontWeight:700,
                 display:"flex", alignItems:"center", gap:3 }}
-              title="Load a saved battle template">
-              📂 Load{templates.length>0&&<span style={{ marginLeft:3, background:C.accent, color:C.bg, borderRadius:8, padding:"0 5px", fontSize:10 }}>{templates.length}</span>}
+              title={t("loadSavedTemplate")}>
+              📂 {t("loadBtn")}{templates.length>0&&<span style={{ marginLeft:3, background:C.accent, color:C.bg, borderRadius:8, padding:"0 5px", fontSize:10 }}>{templates.length}</span>}
             </button>
             <button onClick={()=>{ setTemplateName(""); setShowSaveTemplate(true); }}
               style={{ background:"none", border:`1px solid ${C.border}`, borderRadius:6, cursor:"pointer",
                 color:C.textMuted, padding:"5px 11px", fontSize:13, fontFamily:FONT_DISPLAY, fontWeight:700,
                 display:"flex", alignItems:"center", gap:3 }}
-              title="Save current rounds as a template">
-              💾 Save
+              title={t("saveCurrentTemplate")}>
+              💾 {t("saveBtn")}
             </button>
             {rounds.length>1&&<button onClick={()=>setReorderRounds(r=>!r)}
               style={{ background:reorderRounds?C.accent:"none", border:"none", cursor:"pointer", padding:"4px 8px", borderRadius:5,
                 color:reorderRounds?C.bg:C.textMuted, fontSize:13, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>
-              {reorderRounds?"DONE":"⇅"}
+              {reorderRounds?t("done"):"⇅"}
             </button>}
           </div>
         </div>

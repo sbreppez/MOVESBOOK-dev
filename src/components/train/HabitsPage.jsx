@@ -63,7 +63,7 @@ export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
           </span>
           {habits.length>0&&(
             <span style={{ fontSize:11, color:C.textMuted, marginLeft:8 }}>
-              {doneCount}/{habits.length} done today
+              {doneCount}/{habits.length} {t("doneTodayOf")}
             </span>
           )}
         </div>
@@ -90,7 +90,7 @@ export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
           </div>
           <span style={{ fontSize:11, fontWeight:800, color: doneCount===habits.length?C.accent:C.textMuted,
             fontFamily:FONT_DISPLAY, flexShrink:0 }}>
-            {doneCount===habits.length && habits.length>0 ? "🔥 All done!" : `${Math.round(doneCount/habits.length*100||0)}% today`}
+            {doneCount===habits.length && habits.length>0 ? "🔥 "+t("allDone") : `${Math.round(doneCount/habits.length*100||0)}% ${t("percentToday")}`}
           </span>
         </div>
       )}
@@ -113,7 +113,7 @@ export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
               const color = h.color || C.accent;
               const streak = habitStreak(checkIns, h.frequency);
               const dpw = freqDaysPerWeek(h.frequency);
-              const freqLabel = { daily:"Every day","2x":"2×/wk","3x":"3×/wk","4x":"4×/wk","5x":"5×/wk","6x":"6×/wk",weekdays:"Weekdays" }[h.frequency]||"Every day";
+              const freqLabel = { daily:t("everyDay"),"2x":t("freq2xShort"),"3x":t("freq3xShort"),"4x":t("freq4xShort"),"5x":t("freq5xShort"),"6x":t("freq6xShort"),weekdays:t("freqWeekdays") }[h.frequency]||t("everyDay");
               const weekStart = (()=>{ const d=new Date(); d.setDate(d.getDate()-d.getDay()); return d.toISOString().split("T")[0]; })();
               const weekDone = checkIns.filter(d=>d>=weekStart).length;
               const weekTarget = dpw>=7?7:dpw;
@@ -142,14 +142,14 @@ export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
                             <text x="55" y="46" textAnchor="middle" dominantBaseline="central"
                               fontSize="18" fill={color} fontWeight="800">✓</text>
                             <text x="55" y="64" textAnchor="middle" dominantBaseline="central"
-                              fontSize="10" fill={color} fontWeight="700">Week done!</text>
+                              fontSize="10" fill={color} fontWeight="700">{t("weekDone")}</text>
                           </Fragment>
                         ) : (
                           <Fragment>
                             <text x="55" y="48" textAnchor="middle" dominantBaseline="central"
                               fontSize="24" fill={C.text} fontWeight="900">{weekDone}</text>
                             <text x="55" y="68" textAnchor="middle" dominantBaseline="central"
-                              fontSize="10" fill={C.textMuted}>of {weekTarget} days</text>
+                              fontSize="10" fill={C.textMuted}>{t("ofDays").replace("{0}",weekTarget)}</text>
                           </Fragment>
                         )}
                       </svg>
@@ -174,7 +174,7 @@ export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
 
                     {/* 7-day dots */}
                     <div style={{ marginBottom:10 }}>
-                      <div style={{ fontSize:9, color:C.textMuted, fontFamily:FONT_DISPLAY, letterSpacing:1, marginBottom:5 }}>THIS WEEK</div>
+                      <div style={{ fontSize:9, color:C.textMuted, fontFamily:FONT_DISPLAY, letterSpacing:1, marginBottom:5 }}>{t("thisWeek")}</div>
                       <div style={{ display:"flex", gap:4 }}>
                         {last7.map(({ds,isToday})=>(
                           <div key={ds} style={{ flex:1, height:8, borderRadius:4,
@@ -228,15 +228,15 @@ export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
                         display:"flex", alignItems:"center", justifyContent:"center", gap:6,
                         transition:"all 0.18s" }}>
                       {doneToday
-                        ? <Fragment><span style={{ fontSize:14, color:"#ffffff", fontFamily:FONT_DISPLAY, fontWeight:900, letterSpacing:0.5 }}>DONE</span><span style={{ fontSize:16, marginLeft:6 }}>✅</span><span style={{ fontSize:10, color:"rgba(255,255,255,0.6)", fontFamily:FONT_DISPLAY, marginLeft:6 }}>· undo</span></Fragment>
+                        ? <Fragment><span style={{ fontSize:14, color:"#ffffff", fontFamily:FONT_DISPLAY, fontWeight:900, letterSpacing:0.5 }}>{t("done")}</span><span style={{ fontSize:16, marginLeft:6 }}>✅</span><span style={{ fontSize:10, color:"rgba(255,255,255,0.6)", fontFamily:FONT_DISPLAY, marginLeft:6 }}>· {t("undoLabel")}</span></Fragment>
                         : <Fragment>
                             <span style={{ fontSize:15 }}>✊</span>
-                            <span style={{ fontSize:12, color, fontFamily:FONT_DISPLAY, fontWeight:800, letterSpacing:0.5 }}>Did it!</span>
+                            <span style={{ fontSize:12, color, fontFamily:FONT_DISPLAY, fontWeight:800, letterSpacing:0.5 }}>{t("didIt")}</span>
                           </Fragment>
                       }
                     </button>
 
-                    {isOpen&&<div style={{ fontSize:9, color:C.textMuted, textAlign:"center", marginTop:6 }}>tap to collapse</div>}
+                    {isOpen&&<div style={{ fontSize:9, color:C.textMuted, textAlign:"center", marginTop:6 }}>{t("tapToCollapse")}</div>}
                   </div>
                 </div>
               );

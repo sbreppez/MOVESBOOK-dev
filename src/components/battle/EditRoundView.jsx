@@ -25,7 +25,7 @@ export const EditRoundView = ({ round, onSave, onClose, getMove, getSet, setPick
 
   const localAddEntry = () => {
     const n = (localRound.entries||[]).length + 1;
-    setLocalRound(r => ({...r, entries:[...(r.entries||[]), { id:Date.now(), name:`Entry ${n}`, items:[] }]}));
+    setLocalRound(r => ({...r, entries:[...(r.entries||[]), { id:Date.now(), name:t("entryPrefix")+" "+n, items:[] }]}));
   };
   const localRemoveEntry = eid => setLocalRound(r => ({...r, entries:(r.entries||[]).filter(e=>e.id!==eid)}));
   const localAddItems = (eid, newItems) => setLocalRound(r => ({...r, entries:(r.entries||[]).map(e=>{
@@ -137,8 +137,8 @@ export const EditRoundView = ({ round, onSave, onClose, getMove, getSet, setPick
                         <span style={{ flex:1, fontSize:12, color:C.text }}>{label}</span>
                         {item.type==="set"&&<span style={{ fontSize:9, background:`${C.blue}22`, color:C.blue, padding:"1px 5px", borderRadius:4, fontFamily:FONT_DISPLAY, fontWeight:700 }}>SET</span>}
                         {dupes.length>0&&(
-                          <span style={{ fontSize:9, color:C.yellow, fontWeight:700, fontFamily:FONT_DISPLAY }} title={`Also in: ${dupes.join(", ")}`}>
-                            also in {dupes[0]}
+                          <span style={{ fontSize:9, color:C.yellow, fontWeight:700, fontFamily:FONT_DISPLAY }} title={t("alsoIn")+" "+dupes.join(", ")}>
+                            {t("alsoIn")} {dupes[0]}
                           </span>
                         )}
                         <button onClick={()=>localRemoveItem(entry.id,idx)}

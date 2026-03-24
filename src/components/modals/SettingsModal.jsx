@@ -104,11 +104,11 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
           {/* ── APPEARANCE ──────────────────────────────── */}
           {sectionHdr(t("appearance"),"🎨")}
 
-          {row(t("theme"), "How the app looks",
+          {row(t("theme"), t("themeDesc"),
             segmented("theme",[{value:"light",icon:"☀️",label:t("light")},{value:"dark",icon:"🌙",label:t("dark")}])
           )}
 
-          {row(t("textSize"), "Font size throughout the app",
+          {row(t("textSize"), t("textSizeDesc"),
             segmented("fontSize",[{value:"small",label:"S"},{value:"medium",label:"M"},{value:"large",label:"L"}])
           )}
 
@@ -116,7 +116,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
             segmented("defaultView",[{value:"list",icon:"☰",label:t("list")},{value:"tiles",icon:"⊞",label:t("tiles")}])
           )}
 
-          {row("Display Zoom", "Scale the content area to fit your screen.",
+          {row(t("displayZoom"), t("displayZoomDesc"),
             <div style={{ display:"flex", alignItems:"center", gap:8 }}>
               <button onClick={()=>onZoomChange&&onZoomChange(Math.max(0.6,parseFloat((zoom-0.1).toFixed(1))))}
                 disabled={zoom<=0.6}
@@ -133,7 +133,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
                   fontWeight:800, fontSize:16, color:C.brown, opacity:zoom>=1.4?0.4:1 }}>+</button>
               <button onClick={()=>onZoomChange&&onZoomChange(1)}
                 style={{ fontSize:11, color:C.textMuted, background:"none", border:"none", cursor:"pointer",
-                  fontFamily:FONT_BODY, padding:"2px 4px", textDecoration:"underline" }}>reset</button>
+                  fontFamily:FONT_BODY, padding:"2px 4px", textDecoration:"underline" }}>{t("resetZoom")}</button>
             </div>
           )}
 
@@ -151,6 +151,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
               <option value="ja">日本語</option>
               <option value="zh">简体中文</option>
               <option value="ru">Русский</option>
+              <option value="ko">한국어 (Korean)</option>
             </select>
           )}
 
@@ -185,7 +186,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
 
           {(()=>{
             const order = s.trainTabOrder||["goals","habits","notes"];
-            const labels = { goals:"🎯 Goals", habits:"🔥 Habits", notes:"📝 Notes" };
+            const labels = { goals:"🎯 "+t("trainTabGoals"), habits:"🔥 "+t("trainTabHabits"), notes:"📝 "+t("trainTabNotes") };
             const move = (from, to) => {
               const next = [...order];
               const [item] = next.splice(from,1);
@@ -265,17 +266,15 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
             <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
               <span style={{ background:panelSrf, border:`1px solid ${panelBrd}`, borderRadius:8,
                 padding:"5px 12px", fontSize:11, fontWeight:800, letterSpacing:1.5,
-                color:panelMut, fontFamily:FONT_DISPLAY }}>COMING SOON</span>
+                color:panelMut, fontFamily:FONT_DISPLAY }}>{t("comingSoon")}</span>
             </div>
           </div>
 
           {/* ── DATA ────────────────────────────────────── */}
           {sectionHdr(t("dataPrivacy"),"🔒")}
 
-          {sectionHdr(t("dataPrivacy"),"🔒")}
-
-          {row("Export All Data",
-            "Download all your data as a CSV file — moves, sets, goals, habits and notes",
+          {row(t("exportAllData"),
+            t("exportAllDataDesc"),
             <button onClick={()=>{
               try {
                 const escape = v => {
@@ -331,28 +330,28 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
                   sections.push("");
                 }
 
-                if (!sections.length) { alert("No data to export yet."); return; }
+                if (!sections.length) { alert(t("noDataToExport")); return; }
                 const csv = sections.join("\n");
                 const blob = new Blob([csv], {type:"text/csv;charset=utf-8;"});
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement("a");
                 a.href=url; a.download=`movesbook-export-${new Date().toISOString().split("T")[0]}.csv`; a.click();
                 URL.revokeObjectURL(url);
-              } catch(e) { alert("Export failed. Please try again."); }
+              } catch(e) { alert(t("exportFailed")); }
             }}
               style={{ padding:"7px 14px", borderRadius:7, border:`1px solid ${panelBrd}`,
                 background:panelSrf, color:panelTxt, cursor:"pointer", fontSize:12,
                 fontWeight:700, fontFamily:FONT_DISPLAY, whiteSpace:"nowrap" }}>
-              ⬇ Export CSV
+              {"⬇ "+t("exportCsvBtn")}
             </button>
           )}
 
-          {row("Import Moves from CSV",
-            "Re-import moves from a MovesBook CSV export. Duplicates (same name + category) are skipped.",
+          {row(t("importMovesFromCsv"),
+            t("importMovesFromCsvDesc"),
             <label style={{ padding:"7px 14px", borderRadius:7, border:`1px solid ${panelBrd}`,
               background:panelSrf, color:panelTxt, cursor:"pointer", fontSize:12,
               fontWeight:700, fontFamily:FONT_DISPLAY, whiteSpace:"nowrap", display:"inline-block" }}>
-              ⬆ Import CSV
+              {"⬆ "+t("importCsvBtn")}
               <input type="file" accept=".csv" style={{ display:"none" }} onChange={e=>{
                 const file = e.target.files?.[0]; if(!file) return;
                 const reader = new FileReader();
@@ -392,7 +391,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
                         link:link?.trim()||"", date:date?.trim()||new Date().toISOString().split("T")[0],
                         status:"wip" });
                     }
-                    if (!toAdd.length && !skipped) { alert("No move rows found in this file. Make sure it's a MovesBook CSV export."); return; }
+                    if (!toAdd.length && !skipped) { alert(t("noMoveRowsFound")); return; }
                     if (toAdd.length) {
                       const updated = [...existing, ...toAdd];
                       localStorage.setItem("mb_moves", JSON.stringify(updated));
@@ -401,15 +400,15 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
                     alert(msg);
                     if (toAdd.length) window.location.reload();
                     e.target.value="";
-                  } catch(err) { alert("Import failed — please check the file format."); }
+                  } catch(err) { alert(t("importFailedCheck")); }
                 };
                 reader.readAsText(file);
               }}/>
             </label>
           )}
 
-          {row("Clear All Moves",
-            "Permanently delete your entire move library. Cannot be undone.",
+          {row(t("clearAllMoves"),
+            t("clearAllMovesDesc"),
             confirmClear ? (
               <div style={{ display:"flex", gap:6 }}>
                 <button onClick={()=>setConfirmClear(false)}
@@ -426,13 +425,13 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
                 style={{ padding:"7px 14px", borderRadius:7, border:`1px solid ${accent}44`,
                   background:`${accent}10`, color:accent, cursor:"pointer", fontSize:12,
                   fontWeight:700, fontFamily:FONT_DISPLAY, whiteSpace:"nowrap" }}>
-                🗑 Clear
+                {"🗑 "+t("clearBtn")}
               </button>
             )
           , true)}
 
-          {row("Restore Default Rounds",
-            "Reset your Battle rounds back to the default preset structure (Prelims → Finals → Reserve).",
+          {row(t("restoreDefaultRounds"),
+            t("restoreDefaultRoundsDesc"),
             confirmRestoreRounds ? (
               <div style={{ display:"flex", gap:6 }}>
                 <button onClick={()=>setConfirmRestoreRounds(false)}
@@ -449,24 +448,24 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
                 style={{ padding:"7px 14px", borderRadius:7, border:`1px solid ${panelBrd}`,
                   background:panelSrf, color:panelTxt, cursor:"pointer", fontSize:12,
                   fontWeight:700, fontFamily:FONT_DISPLAY, whiteSpace:"nowrap" }}>
-                ↺ Restore
+                {"↺ "+t("restoreBtn")}
               </button>
             )
           , true)}
 
           {/* ── ABOUT ───────────────────────────────────── */}
-          {sectionHdr("ABOUT","📱")}
+          {sectionHdr(t("aboutSection"),"📱")}
           <div style={{ padding:"12px 0", borderBottom:`1px solid ${panelBrd}` }}>
             <div style={{ display:"flex", justifyContent:"space-between", marginBottom:6 }}>
-              <span style={{ fontSize:13, color:panelMut }}>Version</span>
+              <span style={{ fontSize:13, color:panelMut }}>{t("version")}</span>
               <span style={{ fontSize:13, color:panelTxt, fontWeight:700 }}>1.0.0-beta</span>
             </div>
             <div style={{ display:"flex", justifyContent:"space-between", marginBottom:6 }}>
-              <span style={{ fontSize:13, color:panelMut }}>Build</span>
+              <span style={{ fontSize:13, color:panelMut }}>{t("buildLabel")}</span>
               <span style={{ fontSize:13, color:panelTxt, fontWeight:700 }}>MovesBook Prototype</span>
             </div>
             <div style={{ fontSize:12, color:panelMut, marginTop:8, lineHeight:1.6, fontStyle:"italic" }}>
-              Built for b-boys and b-girls who take their craft seriously. 🕺
+              {t("builtForBreakers")+" 🕺"}
             </div>
           </div>
 
@@ -475,7 +474,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
         <button onClick={()=>{ onClose(); setTimeout(()=>{ if(typeof onRestartTour==="function") onRestartTour(); },200); }}
           style={{ background:"none", border:`1px solid ${C.borderLight}`, borderRadius:8, padding:"9px 14px",
             color:C.textMuted, fontSize:12, cursor:"pointer", fontFamily:FONT_DISPLAY, letterSpacing:1, width:"100%" }}>
-          ↺  Restart walkthrough
+          {"↺ "+t("restartWalkthrough")}
         </button>
       </div>
 
@@ -492,7 +491,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
           <button onClick={onClose}
             style={{ padding:"11px 20px", borderRadius:8, border:"none",
               background:accent, color:C.bg, cursor:"pointer", fontSize:14,
-              fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:0.8 }}>Save Settings</button>
+              fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:0.8 }}>{t("saveSettings")}</button>
         </div>
       </div>
     </div>

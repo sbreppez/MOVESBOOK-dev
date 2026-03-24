@@ -30,10 +30,10 @@ export const FeedbackModal = ({ onClose }) => {
     setList(p => p.includes(val) ? p.filter(x=>x!==val) : [...p, val]);
   };
 
-  const TRAIN_OPTIONS  = ["Simple design and layout","Great to organise ideas","Motivated me to train more"];
-  const VOCAB_OPTIONS  = ["Great to record all moves","Well-defined categories","Easy to sort and navigate moves"];
-  const BATTLE_OPTIONS = ["Easy to select from my moves","Helps with structuring sets","Useful to re-arrange moves in sets"];
-  const FEELINGS       = ["Very disappointed","Somewhat disappointed","Not disappointed"];
+  const TRAIN_OPTIONS  = [t("fbTrainOpt1"),t("fbTrainOpt2"),t("fbTrainOpt3")];
+  const VOCAB_OPTIONS  = [t("fbVocabOpt1"),t("fbVocabOpt2"),t("fbVocabOpt3")];
+  const BATTLE_OPTIONS = [t("fbBattleOpt1"),t("fbBattleOpt2"),t("fbBattleOpt3")];
+  const FEELINGS       = [t("veryDisappointed"),t("somewhatDisappointed"),t("notDisappointed")];
 
   const canSubmit = overall.trim() && rating && feeling;
 
@@ -103,13 +103,13 @@ export const FeedbackModal = ({ onClose }) => {
         border:`1px solid ${C.border}` }}>
         <div style={{ fontSize:48, marginBottom:16 }}>🙏</div>
         <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:18, letterSpacing:1,
-          color:C.text, marginBottom:8 }}>THANK YOU!</div>
+          color:C.text, marginBottom:8 }}>{t("thankYou")}</div>
         <div style={{ fontSize:13, color:C.textSec, lineHeight:1.6, marginBottom:24 }}>
-          Your feedback helps make MovesBook better for the whole breaking community.
+          {t("feedbackThankYouMsg")}
         </div>
         <button onClick={onClose} style={{ background:C.accent, color:C.bg, border:"none",
           borderRadius:8, padding:"11px 28px", fontSize:13, fontWeight:800,
-          fontFamily:FONT_DISPLAY, letterSpacing:1, cursor:"pointer" }}>CLOSE</button>
+          fontFamily:FONT_DISPLAY, letterSpacing:1, cursor:"pointer" }}>{t("close")}</button>
       </div>
     </div>
   );
@@ -128,9 +128,9 @@ export const FeedbackModal = ({ onClose }) => {
           background:C.surface }}>
           <div>
             <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:14, letterSpacing:2,
-              color:C.text }}>💬 FEEDBACK</div>
+              color:C.text }}>{"💬 "+t("feedbackTitle")}</div>
             <div style={{ fontSize:11, color:C.textMuted, marginTop:1 }}>
-              Help us make MovesBook better 🔥
+              {t("feedbackSubtitle")+" 🔥"}
             </div>
           </div>
           <button onClick={onClose} style={{ background:"none", border:"none", cursor:"pointer",
@@ -144,14 +144,14 @@ export const FeedbackModal = ({ onClose }) => {
 
           {/* Overall thoughts */}
           <div style={{ marginBottom:22 }}>
-            <div style={{ fontSize:11, fontWeight:800, letterSpacing:2, color:C.accent, fontFamily:FONT_DISPLAY, marginBottom:10 }}>OVERALL THOUGHTS *</div>
-            <div style={{ fontSize:12, color:C.textMuted, marginBottom:8 }}>How easy/intuitive was it? What stood out – good or bad?</div>
-            <textarea value={overall} onChange={e=>setOverall(e.target.value)} placeholder="Share your experience..." style={textareaStyle}/>
+            <div style={{ fontSize:11, fontWeight:800, letterSpacing:2, color:C.accent, fontFamily:FONT_DISPLAY, marginBottom:10 }}>{t("overallThoughts")+" *"}</div>
+            <div style={{ fontSize:12, color:C.textMuted, marginBottom:8 }}>{t("overallThoughtsHint")}</div>
+            <textarea value={overall} onChange={e=>setOverall(e.target.value)} placeholder={t("sharePlaceholder")} style={textareaStyle}/>
           </div>
 
           {/* Rating */}
           <div style={{ marginBottom:22 }}>
-            <div style={{ fontSize:11, fontWeight:800, letterSpacing:2, color:C.accent, fontFamily:FONT_DISPLAY, marginBottom:10 }}>OVERALL RATING *</div>
+            <div style={{ fontSize:11, fontWeight:800, letterSpacing:2, color:C.accent, fontFamily:FONT_DISPLAY, marginBottom:10 }}>{t("overallRating")+" *"}</div>
             <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
               {[1,2,3,4,5,6,7,8,9,10].map(n=>(
                 <button key={n} onClick={()=>setRating(n)}
@@ -166,8 +166,8 @@ export const FeedbackModal = ({ onClose }) => {
 
           {/* Train */}
           <div style={{ marginBottom:22 }}>
-            <div style={{ fontSize:11, fontWeight:800, letterSpacing:2, color:C.accent, fontFamily:FONT_DISPLAY, marginBottom:10 }}>🎯 TRAIN SECTION</div>
-            <div style={{ fontSize:12, color:C.textMuted, marginBottom:6 }}>What did you like?</div>
+            <div style={{ fontSize:11, fontWeight:800, letterSpacing:2, color:C.accent, fontFamily:FONT_DISPLAY, marginBottom:10 }}>{"🎯 "+t("trainSectionLabel")}</div>
+            <div style={{ fontSize:12, color:C.textMuted, marginBottom:6 }}>{t("whatDidYouLike")}</div>
             {TRAIN_OPTIONS.map(o=>(
               <button key={o} onClick={()=>toggleCheck(o,trainLikes,setTrainLikes)}
                 style={{ display:"flex", alignItems:"center", gap:10, width:"100%", background:"none", border:"none", cursor:"pointer", padding:"7px 0", textAlign:"left" }}>
@@ -178,15 +178,15 @@ export const FeedbackModal = ({ onClose }) => {
                 <span style={{ fontSize:13, color:C.textSec, fontFamily:FONT_BODY }}>{o}</span>
               </button>
             ))}
-            <input value={trainOther} onChange={e=>setTrainOther(e.target.value)} placeholder="Other..." style={{...inputStyle, marginTop:6}}/>
-            <div style={{ fontSize:12, color:C.textMuted, margin:"10px 0 6px" }}>What can be improved?</div>
-            <textarea value={trainImp} onChange={e=>setTrainImp(e.target.value)} placeholder="Anything confusing or missing?" style={{...textareaStyle, minHeight:60}}/>
+            <input value={trainOther} onChange={e=>setTrainOther(e.target.value)} placeholder={t("otherPlaceholder")} style={{...inputStyle, marginTop:6}}/>
+            <div style={{ fontSize:12, color:C.textMuted, margin:"10px 0 6px" }}>{t("whatCanBeImproved")}</div>
+            <textarea value={trainImp} onChange={e=>setTrainImp(e.target.value)} placeholder={t("confusingOrMissing")} style={{...textareaStyle, minHeight:60}}/>
           </div>
 
           {/* Vocab */}
           <div style={{ marginBottom:22 }}>
-            <div style={{ fontSize:11, fontWeight:800, letterSpacing:2, color:C.accent, fontFamily:FONT_DISPLAY, marginBottom:10 }}>📚 VOCAB SECTION</div>
-            <div style={{ fontSize:12, color:C.textMuted, marginBottom:6 }}>What did you like?</div>
+            <div style={{ fontSize:11, fontWeight:800, letterSpacing:2, color:C.accent, fontFamily:FONT_DISPLAY, marginBottom:10 }}>{"📚 "+t("vocabSectionLabel")}</div>
+            <div style={{ fontSize:12, color:C.textMuted, marginBottom:6 }}>{t("whatDidYouLike")}</div>
             {VOCAB_OPTIONS.map(o=>(
               <button key={o} onClick={()=>toggleCheck(o,vocabLikes,setVocabLikes)}
                 style={{ display:"flex", alignItems:"center", gap:10, width:"100%", background:"none", border:"none", cursor:"pointer", padding:"7px 0", textAlign:"left" }}>
@@ -197,15 +197,15 @@ export const FeedbackModal = ({ onClose }) => {
                 <span style={{ fontSize:13, color:C.textSec, fontFamily:FONT_BODY }}>{o}</span>
               </button>
             ))}
-            <input value={vocabOther} onChange={e=>setVocabOther(e.target.value)} placeholder="Other..." style={{...inputStyle, marginTop:6}}/>
-            <div style={{ fontSize:12, color:C.textMuted, margin:"10px 0 6px" }}>What can be improved?</div>
-            <textarea value={vocabImp} onChange={e=>setVocabImp(e.target.value)} placeholder="Anything confusing or missing?" style={{...textareaStyle, minHeight:60}}/>
+            <input value={vocabOther} onChange={e=>setVocabOther(e.target.value)} placeholder={t("otherPlaceholder")} style={{...inputStyle, marginTop:6}}/>
+            <div style={{ fontSize:12, color:C.textMuted, margin:"10px 0 6px" }}>{t("whatCanBeImproved")}</div>
+            <textarea value={vocabImp} onChange={e=>setVocabImp(e.target.value)} placeholder={t("confusingOrMissing")} style={{...textareaStyle, minHeight:60}}/>
           </div>
 
           {/* Battle */}
           <div style={{ marginBottom:22 }}>
-            <div style={{ fontSize:11, fontWeight:800, letterSpacing:2, color:C.accent, fontFamily:FONT_DISPLAY, marginBottom:10 }}>⚔️ BATTLE SECTION</div>
-            <div style={{ fontSize:12, color:C.textMuted, marginBottom:6 }}>What did you like?</div>
+            <div style={{ fontSize:11, fontWeight:800, letterSpacing:2, color:C.accent, fontFamily:FONT_DISPLAY, marginBottom:10 }}>{"⚔️ "+t("battleSectionLabel")}</div>
+            <div style={{ fontSize:12, color:C.textMuted, marginBottom:6 }}>{t("whatDidYouLike")}</div>
             {BATTLE_OPTIONS.map(o=>(
               <button key={o} onClick={()=>toggleCheck(o,battleLikes,setBattleLikes)}
                 style={{ display:"flex", alignItems:"center", gap:10, width:"100%", background:"none", border:"none", cursor:"pointer", padding:"7px 0", textAlign:"left" }}>
@@ -216,14 +216,14 @@ export const FeedbackModal = ({ onClose }) => {
                 <span style={{ fontSize:13, color:C.textSec, fontFamily:FONT_BODY }}>{o}</span>
               </button>
             ))}
-            <input value={battleOther} onChange={e=>setBattleOther(e.target.value)} placeholder="Other..." style={{...inputStyle, marginTop:6}}/>
-            <div style={{ fontSize:12, color:C.textMuted, margin:"10px 0 6px" }}>What can be improved?</div>
-            <textarea value={battleImp} onChange={e=>setBattleImp(e.target.value)} placeholder="Anything confusing or missing?" style={{...textareaStyle, minHeight:60}}/>
+            <input value={battleOther} onChange={e=>setBattleOther(e.target.value)} placeholder={t("otherPlaceholder")} style={{...inputStyle, marginTop:6}}/>
+            <div style={{ fontSize:12, color:C.textMuted, margin:"10px 0 6px" }}>{t("whatCanBeImproved")}</div>
+            <textarea value={battleImp} onChange={e=>setBattleImp(e.target.value)} placeholder={t("confusingOrMissing")} style={{...textareaStyle, minHeight:60}}/>
           </div>
 
           {/* Feeling */}
           <div style={{ marginBottom:22 }}>
-            <div style={{ fontSize:11, fontWeight:800, letterSpacing:2, color:C.accent, fontFamily:FONT_DISPLAY, marginBottom:10 }}>IF THE APP DISAPPEARED TOMORROW... *</div>
+            <div style={{ fontSize:11, fontWeight:800, letterSpacing:2, color:C.accent, fontFamily:FONT_DISPLAY, marginBottom:10 }}>{t("ifAppDisappeared")+" *"}</div>
             <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
               {FEELINGS.map(f=>(
                 <button key={f} onClick={()=>setFeeling(f)}
@@ -249,12 +249,12 @@ export const FeedbackModal = ({ onClose }) => {
           flexShrink:0, background:C.surface }}>
           {status === "error" && (
             <div style={{ fontSize:12, color:C.red, marginBottom:8, textAlign:"center" }}>
-              Something went wrong. Please try again.
+              {t("somethingWentWrong")}
             </div>
           )}
           {!canSubmit && (
             <div style={{ fontSize:11, color:C.textMuted, marginBottom:6, textAlign:"center" }}>
-              * Overall thoughts, rating and feeling are required
+              {"* "+t("requiredFields")}
             </div>
           )}
           <button onClick={handleSubmit} disabled={!canSubmit || status==="sending"}
@@ -264,7 +264,7 @@ export const FeedbackModal = ({ onClose }) => {
               fontSize:14, fontWeight:900, fontFamily:FONT_DISPLAY, letterSpacing:1.5,
               cursor: canSubmit ? "pointer" : "not-allowed",
               opacity: status==="sending" ? 0.7 : 1, transition:"all 0.2s" }}>
-            {status === "sending" ? "SENDING…" : "SUBMIT FEEDBACK"}
+            {status === "sending" ? t("sendingBtn") : t("submitFeedback")}
           </button>
         </div>
       </div>

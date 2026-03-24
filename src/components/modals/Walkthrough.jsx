@@ -3,87 +3,88 @@ import { FONT_DISPLAY, FONT_BODY } from "../../constants/fonts";
 import { Ic } from "../shared/Ic";
 import { useT } from "../../hooks/useTranslation";
 
-const TOUR_STEPS = [
+const getTourSteps = (t) => [
   { type:"center", skippable:true,
-    emoji:"👟", title:"WELCOME TO MOVESBOOK",
-    body:"Your Breaking Logbook — to Study and Evolve.",
-    sub:"Quick 60-second tour. Skip anytime.",
-    cta:"LET'S GO →" },
+    emoji:"👟", title:t("tourWelcomeTitle"),
+    body:t("tourWelcomeBody"),
+    sub:t("tourWelcomeSub"),
+    cta:t("tourWelcomeCta")+" →" },
 
   { type:"center",
-    emoji:"🗺️", title:"THREE SECTIONS",
-    body:"Everything in MovesBook lives in one of three places:",
+    emoji:"🗺️", title:t("tourSectionsTitle"),
+    body:t("tourSectionsBody"),
     cards:[
-      { emoji:"🎯", label:"TRAIN", desc:"Set goals, develop habits & take notes" },
-      { emoji:"📜", label:"MOVES", desc:"Build your vocabulary and track your arsenal" },
-      { emoji:"⚔️", label:"BATTLE", desc:"Plan your rounds or freestyle without repeating" },
+      { emoji:"🎯", label:"TRAIN", desc:t("tourTrainCardDesc") },
+      { emoji:"📜", label:"MOVES", desc:t("tourMovesCardDesc") },
+      { emoji:"⚔️", label:"BATTLE", desc:t("tourBattleCardDesc") },
     ],
-    cta:"GOT IT →" },
+    cta:t("tourGotItCta")+" →" },
 
   { type:"spotlight", target:"tour-tab-ideas",
     emoji:"🎯", title:"TRAIN",
-    body:"Set goals, capture training ideas, and build daily habits. Your planning space.",
-    cta:"NEXT →" },
+    body:t("tourTrainBody"),
+    cta:t("tourNextCta")+" →" },
 
   { type:"center",
-    emoji:"🎯", title:"TWO TYPES OF GOAL",
+    emoji:"🎯", title:t("tourTwoGoalsTitle"),
     cards:[
-      { emoji:"🎯", label:"JOURNEY GOAL", desc:"A long-term goal with a plan and a deadline. e.g. \"Be ready to compete at BOTY by December\"" },
-      { emoji:"🏹", label:"TARGET GOAL",  desc:"A number to hit by a deadline. e.g. \"1000 reps of six step by June\"" },
+      { emoji:"🎯", label:t("tourJourneyGoalLabel"), desc:t("tourJourneyGoalDesc") },
+      { emoji:"🏹", label:t("tourTargetGoalLabel"),  desc:t("tourTargetGoalDesc") },
     ],
-    sub:"Both goals have a training journal attached.",
-    cta:"NEXT →" },
+    sub:t("tourGoalsSub"),
+    cta:t("tourNextCta")+" →" },
 
   { type:"center",
-    emoji:"🔥", title:"BUILD HABITS",
-    body:"Show up every day and let consistency do the work. Track your streak and watch yourself grow over time. Small steps. Long game.",
-    cta:"NEXT →" },
+    emoji:"🔥", title:t("tourHabitsTitle"),
+    body:t("tourHabitsBody"),
+    cta:t("tourNextCta")+" →" },
 
   { type:"spotlight", target:"tour-tab-wip",
     emoji:"📜", title:"MOVES",
-    body:"Build your vocabulary — organized, rated and fully customizable. See your full arsenal at a glance.",
-    cta:"NEXT →" },
+    body:t("tourMovesBody"),
+    cta:t("tourNextCta")+" →" },
 
   { type:"center",
-    emoji:"📈", title:"MASTERY",
-    body:"Know where you are. That's where progress begins.",
+    emoji:"📈", title:t("tourMasteryTitle"),
+    body:t("tourMasteryBody"),
     cards:[
-      { emoji:"🔴", label:"0–30%",  desc:"Still learning it" },
-      { emoji:"🟠", label:"30–60%", desc:"Getting consistent" },
-      { emoji:"🟡", label:"60–80%", desc:"Solid, can use it" },
-      { emoji:"🟢", label:"80%+",   desc:"Battle-ready" },
+      { emoji:"🔴", label:"0–30%",  desc:t("tourMasteryL1") },
+      { emoji:"🟠", label:"30–60%", desc:t("tourMasteryL2") },
+      { emoji:"🟡", label:"60–80%", desc:t("tourMasteryL3") },
+      { emoji:"🟢", label:"80%+",   desc:t("tourMasteryL4") },
     ],
-    sub:"Each move has a mastery bar — set it to where you honestly stand.",
-    cta:"NEXT →" },
+    sub:t("tourMasterySub"),
+    cta:t("tourNextCta")+" →" },
 
   { type:"spotlight", target:"tour-tab-ready",
     emoji:"⚔️", title:"BATTLE",
-    body:"Plan every round before you step on the floor, or build a freestyle list and tick off moves as you throw them — stay fresh, no repeats.",
-    cta:"NEXT →" },
+    body:t("tourBattleBody"),
+    cta:t("tourNextCta")+" →" },
 
   { type:"center",
-    emoji:"➕", title:"THE + BUTTON",
-    body:"The + button does it all — add a move, goal, habit, round, or pick moves for your freestyle list.",
-    cta:"NEXT →" },
+    emoji:"➕", title:t("tourPlusTitle"),
+    body:t("tourPlusBody"),
+    cta:t("tourNextCta")+" →" },
 
   { type:"spotlight", target:"tour-manual-btn",
-    emoji:"❓", title:"USER MANUAL",
-    body:"Tap ? anytime for the full manual. Every feature documented, fully searchable. The whole playbook.",
-    cta:"NEXT →" },
+    emoji:"❓", title:t("tourManualTitle"),
+    body:t("tourManualBody"),
+    cta:t("tourNextCta")+" →" },
 
   { type:"spotlight", target:"tour-profile",
-    emoji:"👤", title:"YOUR PROFILE",
-    body:"Set your name and leave a message to your future self — for the hard days.",
-    cta:"NEXT →" },
+    emoji:"👤", title:t("tourProfileTitle"),
+    body:t("tourProfileBody"),
+    cta:t("tourNextCta")+" →" },
 
   { type:"center", skippable:false,
-    emoji:"🔥", title:"YOU'RE READY",
-    body:"Go add your first move. Set your first goal. Elevate your breaking today.",
-    cta:"LET'S GET IT 🔥" },
+    emoji:"🔥", title:t("tourReadyTitle"),
+    body:t("tourReadyBody"),
+    cta:t("tourReadyCta")+" 🔥" },
 ];
 
 export const Walkthrough = ({ onDone }) => {
   const t = useT();
+  const TOUR_STEPS = getTourSteps(t);
   const [step, setStep] = useState(0);
   const [rect, setRect] = useState(null);
   const [fade, setFade] = useState(true);
@@ -261,7 +262,7 @@ export const Walkthrough = ({ onDone }) => {
               padding:"8px 18px", color:"#fff", fontFamily:FONT_DISPLAY, fontWeight:900,
               fontSize:11, letterSpacing:2, cursor:"pointer",
               boxShadow:"0 2px 12px rgba(207,32,32,0.35)" }}>
-            {isLast ? "DONE 🔥" : current.cta}
+            {isLast ? t("tourDone")+" 🔥" : current.cta}
           </button>
         </div>
       </div>

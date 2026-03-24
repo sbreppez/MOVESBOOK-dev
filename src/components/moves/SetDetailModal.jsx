@@ -72,7 +72,7 @@ export const SetDetailModal = ({ item, onClose, onSave, type="set", allMoves=[],
 
       {/* Details */}
       <div style={{ marginBottom:16 }}>
-        <label style={lbl()}>DETAILS</label>
+        <label style={lbl()}>{t("detailsLabel")}</label>
         <textarea value={details} onChange={e=>setDetails(e.target.value)} rows={2}
           placeholder={isSet ? "Describe this set — style, purpose, context…" : "Describe this round…"}
           style={{ width:"100%", background:C.surface, border:`1px solid ${C.border}`, borderRadius:8,
@@ -95,7 +95,7 @@ export const SetDetailModal = ({ item, onClose, onSave, type="set", allMoves=[],
       {/* ── MOVES IN THIS SET — Notion-style inline picker ── */}
       {isSet && (
         <div style={{ marginBottom:16 }}>
-          <label style={lbl()}>MOVES IN THIS SET ({localIds.length})</label>
+          <label style={lbl()}>{t("movesInThisSet")} ({localIds.length})</label>
 
           {/* Added moves — draggable to reorder */}
           {localIds.length > 0 && (
@@ -140,7 +140,7 @@ export const SetDetailModal = ({ item, onClose, onSave, type="set", allMoves=[],
                 color:C.accent, fontSize:13, fontFamily:FONT_BODY,
                 display:"flex", alignItems:"center", gap:8, textAlign:"left" }}>
               <Ic n="plus" s={14} c={C.accent}/>
-              Add a move…
+              {t("addAMovePlaceholder")}
             </button>
           ) : (
             <div style={{ border:`1.5px solid ${C.accent}`, borderRadius:10, overflow:"hidden", background:C.bg }}>
@@ -209,9 +209,9 @@ export const SetDetailModal = ({ item, onClose, onSave, type="set", allMoves=[],
 
       {/* Mastery slider */}
       <div style={{ marginBottom:16 }}>
-        <label style={lbl()}>HOW WELL DO YOU KNOW THIS {isSet?"SET":"ROUND"}? — <span style={{ color:masteryColor(mastery), fontWeight:800 }}>{mastery}%</span></label>
+        <label style={lbl()}>{isSet?t("howWellKnowSet"):t("howWellKnowRound")} — <span style={{ color:masteryColor(mastery), fontWeight:800 }}>{mastery}%</span></label>
         <div style={{ display:"flex", gap:6, alignItems:"center", marginBottom:6, flexWrap:"wrap" }}>
-          {[[0,"🌱 Just started"],[25,"🔧 Learning"],[50,"⚡ Getting there"],[75,"🔥 Almost there"],[100,"💎 Mastered"]].map(([v,label])=>(
+          {[[0,"🌱 "+t("justStarted")],[25,"🔧 "+t("learning")],[50,"⚡ "+t("gettingThere")],[75,"🔥 "+t("almostThere")],[100,"💎 "+t("mastered")]].map(([v,label])=>(
             <button key={v} onClick={()=>setMastery(v)}
               style={{ fontSize:11, padding:"3px 8px", borderRadius:12, cursor:"pointer", fontFamily:FONT_BODY,
                 background: mastery===v ? masteryColor(v) : C.surfaceAlt,

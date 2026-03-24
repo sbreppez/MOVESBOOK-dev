@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo, Fragment } from 'react';
 import { C, buildPalette, FONT_SIZES, PRESET_COLORS } from './constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from './constants/fonts';
-import { CATS, CAT_COLORS, INIT_MOVES, INIT_IDEAS, INIT_HABITS, INIT_SETS, INIT_ROUNDS } from './constants/categories';
+import { CATS, CAT_COLORS, INIT_MOVES, INIT_IDEAS, INIT_HABITS, INIT_SETS, INIT_ROUNDS, getInitIdeas, getInitHabits, getInitSets } from './constants/categories';
 import { SettingsCtx } from './hooks/useSettings';
 import { TrainModalCtx, TrainMenuCtx } from './hooks/useTrainContext';
-import { useT } from './hooks/useTranslation';
+import { TRANSLATIONS } from './constants/translations';
 import { SCHEMA_VERSION, migrateMove, loadLocal, saveLocal, debounce } from './utils/storage';
 import { Ic } from './components/shared/Ic';
 import { Toast } from './components/shared/Toast';
@@ -29,6 +29,7 @@ if (typeof window !== "undefined") {
 }
 
 export default function App() {
+  const initLang = (() => { try { return JSON.parse(localStorage.getItem("mb_settings"))?.language || "en"; } catch { return "en"; } })();
   const [tab,setTab]=useState(()=>{ try { const st=localStorage.getItem("mb_settings"); if(st){ const p=JSON.parse(st); if(p.defaultTab) return p.defaultTab; } } catch {} return "wip"; });
 
   // ── Data state ─────────────────────────────────────────────────────────────
@@ -58,7 +59,7 @@ export default function App() {
       const s = localStorage.getItem("mb_sets");
       if (s) { const p = JSON.parse(s); if (Array.isArray(p) && p.length > 0) return p; }
     } catch {}
-    return INIT_SETS;
+    return getInitSets(initLang);
   });
   const [rounds, setRounds] = useState(() => {
     try {
@@ -72,7 +73,7 @@ export default function App() {
       const s = localStorage.getItem("mb_habits");
       if (s) { const p = JSON.parse(s); if (Array.isArray(p) && p.length > 0) return p; }
     } catch {}
-    return INIT_HABITS;
+    return getInitHabits(initLang);
   });
   const [profile, setProfile] = useState(() => {
     try {
@@ -86,7 +87,7 @@ export default function App() {
       const s = localStorage.getItem("mb_ideas");
       if (s) { const p = JSON.parse(s); if (Array.isArray(p) && p.length > 0) return p; }
     } catch {}
-    return INIT_IDEAS;
+    return getInitIdeas(initLang);
   });
 
   // ── Persist to localStorage on every change ────────────────────────────────
@@ -217,6 +218,11 @@ export default function App() {
   useEffect(()=>{ saveLocal("mb_settings", appSettings); },[appSettings]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.settings?.(fbUser.uid, appSettings); },[appSettings, fbUser]);
 
+  // ── Local translation function (App is above SettingsCtx.Provider, can't use useT) ──
+  const _lang = appSettings.language || "en";
+  const _dict = TRANSLATIONS[_lang] || TRANSLATIONS.en;
+  const tr = (key) => _dict[key] ?? TRANSLATIONS.en[key] ?? key;
+
   // ── Apply theme: mutate the shared C object so all components re-read it ──
   const newPalette = buildPalette(appSettings.theme);
   Object.assign(C, newPalette);
@@ -243,8 +249,8 @@ export default function App() {
   const getAddMenuOptions = () => {
     if (tab === "ideas") return null;
     if (tab === "wip" && subTab === "moves") return [
-      { label:"Add Move",     emoji:"🕺", action:()=>{ setAddMenu(false); setAddTick(t=>t+1); } },
-      { label:"Add Category", emoji:"📂", action:()=>{ setAddMenu(false); setAddTick2(t=>t+1); } },
+      { label:tr("addMoveMenu"),     emoji:"🕺", action:()=>{ setAddMenu(false); setAddTick(t=>t+1); } },
+      { label:tr("addCategoryMenu"), emoji:"📂", action:()=>{ setAddMenu(false); setAddTick2(t=>t+1); } },
     ];
     if (tab === "wip" && subTab === "sets") return null; // fires Add Set directly
     if (tab === "ready" && subTab === "freestyle") return null; // fires picker directly
@@ -372,7 +378,7 @@ export default function App() {
                 justifyContent:"center", gap:3, background:"none", border:"none", cursor:"pointer",
                 color: showFeedback ? C.accent : C.textMuted, transition:"color 0.15s" }}>
               <span style={{ fontSize:20, lineHeight:1 }}>{"💬"}</span>
-              <span style={{ fontSize:9, fontFamily:FONT_DISPLAY, fontWeight:800, letterSpacing:1.2 }}>FEEDBACK</span>
+              <span style={{ fontSize:9, fontFamily:FONT_DISPLAY, fontWeight:800, letterSpacing:1.2 }}>{tr("feedbackLabel")}</span>
             </button>
 
             {/* ADD — centre, contextual menu */}
@@ -414,7 +420,7 @@ export default function App() {
                 justifyContent:"center", gap:3, background:"none", border:"none", cursor:"pointer",
                 color: showSettings ? C.accent : C.textMuted, transition:"color 0.15s" }}>
               <Ic n="cog" s={20} c={showSettings ? C.accent : C.textMuted}/>
-              <span style={{ fontSize:9, fontFamily:FONT_DISPLAY, fontWeight:800, letterSpacing:1.2 }}>SETTINGS</span>
+              <span style={{ fontSize:9, fontFamily:FONT_DISPLAY, fontWeight:800, letterSpacing:1.2 }}>{tr("settingsLabel")}</span>
             </button>
 
           </div>

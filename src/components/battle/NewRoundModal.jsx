@@ -20,7 +20,7 @@ export const NewRoundModal = ({ onClose, onConfirm }) => {
         <label style={{ display:"block", fontSize:11, fontWeight:800, letterSpacing:1.5, color:C.textSec, fontFamily:FONT_DISPLAY, marginBottom:6 }}>{t("roundNameLabel")} *</label>
         <input autoFocus value={name} onChange={e=>setName(e.target.value)}
           onKeyDown={e=>{ if(e.key==="Enter"&&name.trim()) onConfirm({name:name.trim(),color,entries:entryCount}); }}
-          placeholder="e.g. Semi Finals…" style={inputStyle}/>
+          placeholder={t("roundPlaceholder")} style={inputStyle}/>
       </div>
       <div style={{ marginBottom:14 }}>
         <label style={{ display:"block", fontSize:11, fontWeight:800, letterSpacing:1.5, color:C.textSec, fontFamily:FONT_DISPLAY, marginBottom:8 }}>{t("colour")}</label>
@@ -42,7 +42,7 @@ export const NewRoundModal = ({ onClose, onConfirm }) => {
           <button onClick={()=>setEntryCount(e=>Math.min(32,e+1))}
             style={{ width:32, height:32, borderRadius:8, border:`1px solid ${C.accent}`, background:`${C.accent}15`,
               fontSize:16, cursor:"pointer", color:C.accent, fontWeight:700 }}>+</button>
-          <span style={{ fontSize:11, color:C.textMuted }}>{entryCount === 1 ? "1 entry slot" : `${entryCount} entry slots`}</span>
+          <span style={{ fontSize:11, color:C.textMuted }}>{entryCount === 1 ? "1 "+t("entrySlot") : entryCount+" "+t("entrySlotsPlural")}</span>
         </div>
       </div>
       <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>

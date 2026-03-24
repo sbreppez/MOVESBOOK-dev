@@ -23,9 +23,9 @@ export const ProfileModal = ({ onClose, profile, onSave }) => {
       {sectionHdr(t("identity"),"user")}
       <div style={{ marginBottom:14 }}>
         <label style={lbl()}>{t("nickname")}</label>
-        <input value={f.nickname} onChange={e=>set("nickname")(e.target.value)} placeholder="e.g. Shadow…"
+        <input value={f.nickname} onChange={e=>set("nickname")(e.target.value)} placeholder={t("nicknamePlaceholder")}
           style={{ width:"100%", background:C.surface, border:`1px solid ${C.border}`, borderRadius:8, padding:"9px 12px", color:C.text, fontSize:14, outline:"none", boxSizing:"border-box", fontFamily:FONT_BODY }}/>
-        {f.nickname&&<div style={{ fontSize:11, color:C.textMuted, marginTop:4 }}>Header will show: MOVESBOOK <span style={{color:C.accent}}>of {f.nickname}</span></div>}
+        {f.nickname&&<div style={{ fontSize:11, color:C.textMuted, marginTop:4 }}>{t("headerWillShow")} <span style={{color:C.accent}}>of {f.nickname}</span></div>}
       </div>
       <div style={{ display:"flex", gap:10 }}>
         <div style={{ flex:1, marginBottom:14 }}>
@@ -63,13 +63,13 @@ export const ProfileModal = ({ onClose, profile, onSave }) => {
               placeholder="DD" min="1" max="31"
               style={{ width:"100%", background:C.surface, border:`1px solid ${C.border}`, borderRadius:8, padding:"9px 10px", color:C.text, fontSize:14, outline:"none", boxSizing:"border-box", fontFamily:FONT_BODY, textAlign:"center" }}/>
           </div>
-          <div style={{ fontSize:11, color:C.textMuted, lineHeight:1.3, flex:1 }}>Year required.<br/>Month &amp; day optional.</div>
+          <div style={{ fontSize:11, color:C.textMuted, lineHeight:1.3, flex:1 }}>{t("yearRequired")}<br/>{t("monthDayOptional")}</div>
         </div>
       </div>
       {sectionHdr(t("breakingGoals"),"target")}
       <div style={{ marginBottom:14 }}>
         <textarea value={f.goals} onChange={e=>set("goals")(e.target.value)} rows={3}
-          placeholder="What do you want to achieve? Competitions, style, specific moves…"
+          placeholder={t("goalsPlaceholder")}
           style={{ width:"100%", background:C.surface, border:`1px solid ${C.border}`, borderRadius:8, padding:"9px 12px", color:C.text, fontSize:14, outline:"none", boxSizing:"border-box", fontFamily:FONT_DISPLAY, letterSpacing:0.3, resize:"vertical" }}/>
       </div>
       {sectionHdr(t("whyBreaking"),"bulb")}
@@ -77,7 +77,7 @@ export const ProfileModal = ({ onClose, profile, onSave }) => {
         <div style={{ position:"relative" }}>
           <textarea value={f.why} onChange={e=>set("why")(e.target.value)} rows={6}
             style={{ width:"100%", background:C.surface, border:`1px solid ${C.border}`, borderRadius:8, padding:"9px 12px", color:C.text, fontSize:14, outline:"none", boxSizing:"border-box", fontFamily:FONT_DISPLAY, letterSpacing:0.3, resize:"vertical", minHeight:"20vh" }}/>
-          {!f.why&&<div style={{ position:"absolute", top:10, left:13, fontSize:13, color:C.textMuted, pointerEvents:"none", fontStyle:"italic", fontFamily:FONT_DISPLAY }}>Remember why you're doing it…</div>}
+          {!f.why&&<div style={{ position:"absolute", top:10, left:13, fontSize:13, color:C.textMuted, pointerEvents:"none", fontStyle:"italic", fontFamily:FONT_DISPLAY }}>{t("rememberWhy")}</div>}
         </div>
       </div>
       <div style={{ marginTop:24, paddingTop:16, borderTop:`1px solid ${C.borderLight}` }}>

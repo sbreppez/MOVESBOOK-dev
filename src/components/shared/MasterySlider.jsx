@@ -17,7 +17,7 @@ export const MasterySlider = ({ value, onChange }) => {
       </div>
       <input type="range" min={0} max={100} value={value} onChange={e=>onChange(+e.target.value)} style={{ width:"100%", accentColor:col, cursor:"pointer" }}/>
       <div style={{ display:"flex", justifyContent:"space-between", fontSize:13, color:C.textMuted, marginTop:4 }}>
-        <span>Beginner</span><span style={{color:C.yellow}}>Consistent</span><span style={{color:C.green}}>{t("masteredCheck")}</span>
+        <span>{t("beginnerLabel")}</span><span style={{color:C.yellow}}>{t("consistentLabel")}</span><span style={{color:C.green}}>{t("masteredCheck")}</span>
       </div>
     </div>
   );

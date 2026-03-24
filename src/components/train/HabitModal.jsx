@@ -35,17 +35,17 @@ export const HabitModal = ({ onClose, onSave, habit }) => {
       <div style={{ marginBottom:14 }}>
         <label style={lbl()}>{t("habitNameLabel")} *</label>
         <div style={{ fontSize:11, color:C.textMuted, marginBottom:5, fontStyle:"italic" }}>
-          Tip: include an emoji in the title, e.g. "🕺 Daily Practice"
+          {t("habitTip")}
         </div>
-        <input value={name} onChange={e=>setName(e.target.value)} placeholder="e.g. 🕺 Daily Practice…"
+        <input value={name} onChange={e=>setName(e.target.value)} placeholder={t("habitNamePlaceholder")}
           style={{ ...inputStyle, fontSize:14, fontWeight:700, border:`1.5px solid ${C.accent}` }}/>
       </div>
 
       {/* Why */}
       <div style={{ marginBottom:14 }}>
-        <label style={lbl()}>WHY? <span style={{ fontWeight:400, fontSize:10, color:C.textMuted }}>(optional — shown on the card)</span></label>
+        <label style={lbl()}>WHY? <span style={{ fontWeight:400, fontSize:10, color:C.textMuted }}>{t("whyOptional")}</span></label>
         <input value={why} onChange={e=>setWhy(e.target.value)}
-          placeholder="e.g. Consistency is what separates good dancers from great ones"
+          placeholder={t("whyHabitPlaceholder")}
           style={inputStyle}/>
       </div>
 
@@ -70,13 +70,13 @@ export const HabitModal = ({ onClose, onSave, habit }) => {
         <label style={lbl()}>{t("frequencyLabel")}</label>
         <div style={{ display:"flex", flexWrap:"wrap", gap:6, marginTop:6 }}>
           {[
-            {id:"daily",    label:"Every day"},
-            {id:"2x",       label:"2× / week"},
-            {id:"3x",       label:"3× / week"},
-            {id:"4x",       label:"4× / week"},
-            {id:"5x",       label:"5× / week"},
-            {id:"6x",       label:"6× / week"},
-            {id:"weekdays", label:"Weekdays"},
+            {id:"daily",    label:t("everyDay")},
+            {id:"2x",       label:t("freq2x")},
+            {id:"3x",       label:t("freq3x")},
+            {id:"4x",       label:t("freq4x")},
+            {id:"5x",       label:t("freq5x")},
+            {id:"6x",       label:t("freq6x")},
+            {id:"weekdays", label:t("freqWeekdays")},
           ].map(f=>(
             <button key={f.id} onClick={()=>setFrequency(f.id)}
               style={{ padding:"7px 12px", borderRadius:8, cursor:"pointer", fontSize:11, fontWeight:800,
@@ -91,9 +91,9 @@ export const HabitModal = ({ onClose, onSave, habit }) => {
 
       {/* Notes */}
       <div style={{ marginBottom:14 }}>
-        <label style={lbl()}>NOTES <span style={{ fontWeight:400, fontSize:10, color:C.textMuted }}>(optional — shown when expanded)</span></label>
+        <label style={lbl()}>NOTES <span style={{ fontWeight:400, fontSize:10, color:C.textMuted }}>{t("notesOptional")}</span></label>
         <textarea value={notes} onChange={e=>setNotes(e.target.value)} rows={3}
-          placeholder="e.g. Focus on footwork first, then musicality. 20 min minimum."
+          placeholder={t("notesHabitPlaceholder")}
           style={{ ...inputStyle, resize:"vertical" }}/>
       </div>
 

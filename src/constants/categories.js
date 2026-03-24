@@ -1,3 +1,5 @@
+import { TRANSLATIONS } from './translations';
+
 export const CAT_COLORS = {
   Toprocks:       "#8b1a1a",
   Godowns:        "#6b3a8a",
@@ -26,45 +28,46 @@ export const INIT_MOVES = [
   { id:105, name:"Baby Freeze",   category:"Freezes",     mastery:91, description:"The Baby Freeze is the entry-level freeze — balance on one elbow planted in your hip while the other arm and your head form a tripod. Clean, compact, and essential.", link:"", date:"2025-01-20", status:"wip", rotation:false, travelling:false },
 ];
 
-export const INIT_IDEAS = [
+const _t = (lang, key) => TRANSLATIONS[lang]?.[key] ?? TRANSLATIONS.en?.[key] ?? key;
+
+export const getInitIdeas = (lang="en") => [
   {
-    id:201, type:"goal", title:"Hit my first battle 🎯", text:"", color:"#c0391b", pinned:true, link:"",
+    id:201, type:"goal", title:_t(lang,"initGoalTitle"), text:"", color:"#c0391b", pinned:true, link:"",
     createdDate: (() => { const d = new Date(); return d.toISOString().split("T")[0]; })(),
     byWhen: (() => { const d = new Date(); d.setMonth(d.getMonth()+4); return d.toISOString().split("T")[0]; })(),
-    why:"I want to test myself under real pressure and see where my level actually stands. Battles push you to grow faster than solo training ever will — there's nothing like a real cipher to expose the gaps.",
-    steps:[
-      "Build a reliable 30-second set I can throw down under pressure without blanking",
-      "Enter at least one open jam or practice cipher before the battle date",
-      "Film and review 5 training sessions to spot and fix weak points"
-    ],
-    daysPerWeek:"4 days", sessionLength:"1.5 hours", trainWhere:"Local studio or garage — just need a clean floor",
-    obstacles:"Nerves freezing me up and forgetting my set under pressure. Solution: drill it so many times it's automatic.",
+    why:_t(lang,"initGoalWhy"),
+    steps:[_t(lang,"initGoalStep1"), _t(lang,"initGoalStep2"), _t(lang,"initGoalStep3")],
+    daysPerWeek:_t(lang,"initGoalCommitments"), sessionLength:_t(lang,"initGoalSession"), trainWhere:_t(lang,"initGoalWhere"),
+    obstacles:_t(lang,"initGoalObstacles"),
     journal:[{
       id:99901,
       date: new Date().toLocaleDateString("en-AU",{day:"2-digit",month:"short",year:"numeric"}),
-      text:"This is a Journey Goal — use it to track a qualitative milestone. Fill in your WHY (what drives you), 3 concrete steps to get there, your training commitments, and what obstacles you'll face. Add a journal entry here every time you train — what went well, what was hard, what you noticed. Over time this becomes your training diary.",
+      text:_t(lang,"initGoalJournalEntry"),
       link:""
     }]
   },
   {
-    id:203, type:"target", title:"Learn 20 new moves 🏹", text:"", color:"#2a5f8a", pinned:true, link:"",
+    id:203, type:"target", title:_t(lang,"initTargetTitle"), text:"", color:"#2a5f8a", pinned:true, link:"",
     createdDate: (() => { const d = new Date(); return d.toISOString().split("T")[0]; })(),
     byWhen: (() => { const d = new Date(); d.setMonth(d.getMonth()+5); return d.toISOString().split("T")[0]; })(),
     target:20, unit:"moves", current:0, autoLink:false
   },
-  { id:202, type:"note", title:"Example Note — read me first 📝", text:"Notes are your creative scratchpad. Use them for:\n\n• Combo ideas you want to try\n• Observations from training sessions\n• References you want to come back to\n• Anything your brain needs to offload\n\nTap the pencil icon to edit this note, or tap + ADD to create your own. You can pin important notes to keep them at the top.", color:"#2d6a4f", pinned:false, link:"" },
+  { id:202, type:"note", title:_t(lang,"initNoteTitle"), text:_t(lang,"initNoteText"), color:"#2d6a4f", pinned:false, link:"" },
 ];
+export const INIT_IDEAS = getInitIdeas("en");
 
-export const INIT_HABITS = [
-  { id:601, name:"👟 Daily Practice", frequency:"daily", createdDate: new Date().toISOString().split('T')[0], checkIns:[], color:"#c0391b", why:"Consistency is what separates good dancers from great ones", timeOfDay:"anytime", notes:"" },
-  { id:602, name:"👟 Condition & Stretch", frequency:"daily", createdDate: new Date().toISOString().split('T')[0], checkIns:[], color:"#2a5f8a", why:"Your body is your instrument. Tune it every day.", timeOfDay:"morning", notes:"Core work, wrist strength, flexibility. The unglamorous stuff that makes everything else possible." },
+export const getInitHabits = (lang="en") => [
+  { id:601, name:_t(lang,"initHabit1Name"), frequency:"daily", createdDate: new Date().toISOString().split('T')[0], checkIns:[], color:"#c0391b", why:_t(lang,"initHabit1Why"), timeOfDay:"anytime", notes:"" },
+  { id:602, name:_t(lang,"initHabit2Name"), frequency:"daily", createdDate: new Date().toISOString().split('T')[0], checkIns:[], color:"#2a5f8a", why:_t(lang,"initHabit2Why"), timeOfDay:"morning", notes:_t(lang,"initHabit2Notes") },
 ];
+export const INIT_HABITS = getInitHabits("en");
 
-export const INIT_SETS = [
-  { id:301, name:"Opening Combo",    color:"#2a5f8a", notes:"Toprock → footwork → freeze. My go-to opener.", mastery:35, date:"2025-03-01" },
-  { id:302, name:"Power Run",        color:"#b5850a", notes:"Godown → backspin → baby freeze. High risk, high reward.", mastery:18, date:"2025-03-10" },
-  { id:303, name:"Signature Combo",  color:"#2d6a4f", notes:"My signature sequence — toprock into godown into footwork. Drill until automatic.", mastery:52, date:"2025-03-15" },
+export const getInitSets = (lang="en") => [
+  { id:301, name:_t(lang,"initSet1Name"), color:"#2a5f8a", notes:_t(lang,"initSet1Notes"), mastery:35, date:"2025-03-01" },
+  { id:302, name:_t(lang,"initSet2Name"), color:"#b5850a", notes:_t(lang,"initSet2Notes"), mastery:18, date:"2025-03-10" },
+  { id:303, name:_t(lang,"initSet3Name"), color:"#2d6a4f", notes:_t(lang,"initSet3Notes"), mastery:52, date:"2025-03-15" },
 ];
+export const INIT_SETS = getInitSets("en");
 
 export const INIT_ROUNDS = [
   { id:401, name:"Prelims",      color:"#4a4a4a", notes:"", date:"2025-03-01",

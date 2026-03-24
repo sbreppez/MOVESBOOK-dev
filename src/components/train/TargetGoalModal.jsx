@@ -84,13 +84,13 @@ export const TargetGoalModal = ({ onClose, onSave, idea, moves=[] }) => {
           <div>
             <JournalEntryInput
               onAdd={({text,link})=>{ const entry={id:Date.now(),date:new Date().toLocaleDateString("en-AU",{day:"2-digit",month:"short",year:"numeric"}),text,link}; setJournal(j=>[entry,...j]); }}
-              placeholder={`What did you do today? e.g. "Finally landed the six step clean — 20 reps in a row"`}
+              placeholder={t("targetJournalPlaceholder")}
             />
             {journal.length===0 ? (
               <div style={{ textAlign:"center", padding:"40px 20px", color:C.textMuted }}>
                 <div style={{ fontSize:28, marginBottom:8 }}>{"📓"}</div>
                 <div style={{ fontSize:13, fontWeight:700, fontFamily:FONT_DISPLAY, marginBottom:4 }}>{t("noEntriesYet")}</div>
-                <div style={{ fontSize:12 }}>Each time you hit a milestone, add an entry — what you did, how it felt, what clicked.</div>
+                <div style={{ fontSize:12 }}>{t("noEntriesHint")}</div>
               </div>
             ) : journal.map(entry=>(
               <JournalEntryCard key={entry.id} entry={entry}
@@ -109,7 +109,7 @@ export const TargetGoalModal = ({ onClose, onSave, idea, moves=[] }) => {
                 border:`1px solid ${C.accent}30`, borderRadius:8, marginBottom:18 }}>
                 <span style={{ fontSize:16, flexShrink:0 }}>{"📓"}</span>
                 <span style={{ fontSize:12, color:C.textSec, lineHeight:1.6 }}>
-                  Once created, this target will have a <strong style={{color:C.text}}>training journal</strong> — log entries as you make progress, e.g. "finally landed the six step clean."
+                  {t("targetJournalDesc").split(t("trainingJournal")).map((part,i,arr)=>i<arr.length-1?<React.Fragment key={i}>{part}<strong style={{color:C.text}}>{t("trainingJournal")}</strong></React.Fragment>:part)}
                 </span>
               </div>
             )}
@@ -128,7 +128,7 @@ export const TargetGoalModal = ({ onClose, onSave, idea, moves=[] }) => {
               </div>
               <div style={{ flex:2 }}>
                 <label style={lbl()}>{t("unitLabel")}</label>
-                <input value={unit} onChange={e=>setUnit(e.target.value)} placeholder="moves, sessions, hours…"
+                <input value={unit} onChange={e=>setUnit(e.target.value)} placeholder={t("unitPlaceholder")}
                   style={inputStyle}/>
               </div>
             </div>
