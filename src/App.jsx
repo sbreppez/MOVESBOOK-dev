@@ -23,6 +23,8 @@ import { FeedbackModal } from './components/modals/FeedbackModal';
 import { SettingsModal } from './components/modals/SettingsModal';
 import { Walkthrough } from './components/modals/Walkthrough';
 import { BackupModal } from './components/modals/BackupModal';
+import { RepCounter } from './components/train/RepCounter';
+import { Sparring } from './components/train/Sparring';
 
 // ── Firebase stubs for preview ──
 if (typeof window !== "undefined") {
@@ -94,6 +96,12 @@ export default function App() {
   const [customAttrs, setCustomAttrs] = useState(() => {
     try { const s=localStorage.getItem("mb_custom_attrs"); if(s){const p=JSON.parse(s); if(Array.isArray(p)) return p;} } catch{} return [];
   });
+  const [reps, setReps] = useState(() => {
+    try { const s=localStorage.getItem("mb_reps"); if(s){const p=JSON.parse(s); if(Array.isArray(p)) return p;} } catch{} return [];
+  });
+  const [sparring, setSparring] = useState(() => {
+    try { const s=localStorage.getItem("mb_sparring"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { sessions:[], records:{} };
+  });
 
   // ── Persist to localStorage on every change ────────────────────────────────
   useEffect(()=>{ saveLocal("mb_moves",   moves);   },[moves]);
@@ -108,6 +116,8 @@ export default function App() {
   },[habits]);
   useEffect(()=>{ if(Object.values(profile).some(v=>v)) saveLocal("mb_profile", profile); },[profile]);
   useEffect(()=>{ saveLocal("mb_custom_attrs", customAttrs); },[customAttrs]);
+  useEffect(()=>{ saveLocal("mb_reps", reps); },[reps]);
+  useEffect(()=>{ saveLocal("mb_sparring", sparring); },[sparring]);
   useEffect(()=>{ saveLocal("mb_ideas",   ideas);
     const timer = setTimeout(() => {
       if (window.__MB_USER__?.uid && window.__MB_DB__) {
@@ -135,6 +145,8 @@ export default function App() {
       cats:      save("cats"),
       catColors: save("catColors"),
       customAttrs: save("customAttrs"),
+      reps:        save("reps"),
+      sparring:    save("sparring"),
     };
   }, []);
 
@@ -146,6 +158,8 @@ export default function App() {
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.cats?.(fbUser.uid,      cats);      },[cats,      fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.catColors?.(fbUser.uid, catColors); },[catColors, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.customAttrs?.(fbUser.uid, customAttrs); },[customAttrs, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.reps?.(fbUser.uid, reps); },[reps, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.sparring?.(fbUser.uid, sparring); },[sparring, fbUser]);
 
   // ── Auth resolution ────────────────────────────────────────────────────────
   useEffect(()=>{
@@ -168,6 +182,10 @@ export default function App() {
           if (hb) { try { const p=JSON.parse(hb); if(Array.isArray(p)&&p.length>0) setHabits(p); } catch {} }
           const ca = localStorage.getItem("mb_custom_attrs");
           if (ca) { try { const p=JSON.parse(ca); if(Array.isArray(p)) setCustomAttrs(p); } catch {} }
+          const rp = localStorage.getItem("mb_reps");
+          if (rp) { try { const p=JSON.parse(rp); if(Array.isArray(p)) setReps(p); } catch {} }
+          const sp = localStorage.getItem("mb_sparring");
+          if (sp) { try { const p=JSON.parse(sp); if(p&&typeof p==="object") setSparring(p); } catch {} }
           if (p) { try { const pp=JSON.parse(p); if(pp&&Object.values(pp).some(v=>v)) setProfile(pp); } catch{} }
           const st = localStorage.getItem("mb_settings");
           if (st) {
@@ -193,6 +211,8 @@ export default function App() {
         setProfile({ nickname:"", age:"", gender:"", goals:"", years:"",
           startYear:"", startMonth:"", startDay:"", why:"" });
         setCustomAttrs([]);
+        setReps([]);
+        setSparring({ sessions:[], records:{} });
       }
     }
     window.addEventListener("mb-auth-resolved", handleAuthResolved);
@@ -225,13 +245,15 @@ export default function App() {
   const [showManual,   setShowManual]   =useState(false);
   const [showTour,setShowTour]=useState(false);
   const [showBackup,setShowBackup]=useState(false);
+  const [showRepCounter,setShowRepCounter]=useState(false);
+  const [showSparring,setShowSparring]=useState(false);
   const [appSettings,setAppSettings]=useState(()=>({
     ...{
       theme:"light", defaultTab:"wip", showMastery:false,
       compactCards:false, sortMoves:"custom", fontSize:"medium",
       showMoveCount:false, confirmDelete:true, practiceReminders:false,
       reminderTime:"18:00", streakTracking:true, showDeadlineIndicator:true,
-      categorySort:"manual", defaultView:"list", language:"en", linkOnCard:"inside", targetAutoLink:false, trainTabOrder:["goals","habits","notes"],
+      categorySort:"manual", defaultView:"list", language:"en", linkOnCard:"inside", targetAutoLink:false, trainTabOrder:["goals","habits","notes"], trackMovesInSparring:true,
     },
     ...loadLocal("mb_settings", {}),
   }));
@@ -267,7 +289,11 @@ export default function App() {
 
   // Contextual + menu: null = no menu needed (Train handles its own), array = show menu
   const getAddMenuOptions = () => {
-    if (tab === "ideas") return null;
+    if (tab === "ideas") return [
+      { label:tr("addGoalOrNote"), emoji:"🎯", action:()=>{ setAddMenu(false); setAddTick(t=>t+1); } },
+      { label:tr("repCounter"),    emoji:"🔢", action:()=>{ setAddMenu(false); setShowRepCounter(true); } },
+      { label:tr("sparring"),      emoji:"🥊", action:()=>{ setAddMenu(false); setShowSparring(true); } },
+    ];
     if (tab === "wip" && subTab === "moves") return [
       { label:tr("addMoveMenu"),     emoji:"🕺", action:()=>{ setAddMenu(false); setAddTick(t=>t+1); } },
       { label:tr("addCategoryMenu"), emoji:"📂", action:()=>{ setAddMenu(false); setAddTick2(t=>t+1); } },
@@ -317,7 +343,7 @@ export default function App() {
         #movesbook-root * { box-sizing: border-box; }
       `}</style>
       <div id="movesbook-root" style={{ fontFamily:FONT_BODY, background:C.bg, color:C.text,
-        height: rootHeight, width:"100%", display:"flex", flexDirection:"column",
+        height: rootHeight, width:"100%", display:"flex", flexDirection:"column", position:"relative",
         boxShadow:"0 0 60px rgba(0,0,0,0.35)", overflow:"hidden", transition:"background 0.3s, color 0.3s" }}>
 
         {/* Header */}
@@ -389,6 +415,21 @@ export default function App() {
       {showFeedback&&<FeedbackModal onClose={()=>setShowFeedback(false)}/>}
       {showSettings&&<SettingsModal onClose={()=>setShowSettings(false)} settings={appSettings} onSave={setAppSettings} onClearMoves={()=>setMoves([])} onRestoreRounds={()=>setRounds(INIT_ROUNDS)} onRestartTour={()=>setShowTour(true)} zoom={zoom} onZoomChange={handleZoomChange} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs}/>}
         {showBackup&&<BackupModal onClose={()=>setShowBackup(false)}/>}
+        {showRepCounter&&<RepCounter moves={moves} catColors={catColors} reps={reps}
+          onSaveSession={(session)=>{
+            setReps(prev=>[session,...prev]);
+            setMoves(prev=>prev.map(m=>m.id===session.moveId?{...m,date:new Date().toISOString().split("T")[0]}:m));
+          }}
+          onClose={()=>setShowRepCounter(false)}/>}
+        {showSparring&&<Sparring moves={moves} catColors={catColors} sparring={sparring} settings={appSettings}
+          onSaveSession={(session, updatedSparring)=>{
+            setSparring(updatedSparring);
+            if(session.movesTrained?.length){
+              setMoves(prev=>prev.map(m=>session.movesTrained.includes(m.id)?{...m,date:new Date().toISOString().split("T")[0]}:m));
+            }
+          }}
+          onSettingsChange={setAppSettings}
+          onClose={()=>setShowSparring(false)}/>}
         {showTour&&<Walkthrough onDone={handleTourDone}/>}
 
         {/* ── Bottom Bar ── */}

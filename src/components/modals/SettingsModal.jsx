@@ -193,6 +193,11 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
             </select>
           )}
 
+          {row(t("trackMovesInSparring"),
+            t("trackMovesInSparringDesc"),
+            toggle("trackMovesInSparring")
+          )}
+
           {(()=>{
             const order = s.trainTabOrder||["goals","habits","notes"];
             const labels = { goals:"🎯 "+t("trainTabGoals"), habits:"🔥 "+t("trainTabHabits"), notes:"📝 "+t("trainTabNotes") };
