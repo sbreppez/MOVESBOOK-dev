@@ -26,6 +26,7 @@ import { BackupModal } from './components/modals/BackupModal';
 import { RepCounter } from './components/train/RepCounter';
 import { Sparring } from './components/train/Sparring';
 import { ComboMachine } from './components/train/ComboMachine';
+import { Lab } from './components/moves/Lab';
 
 // ── Firebase stubs for preview ──
 if (typeof window !== "undefined") {
@@ -107,6 +108,9 @@ export default function App() {
   const [combos, setCombos] = useState(() => {
     try { const s=localStorage.getItem("mb_combos"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { transitions:[...DEFAULT_TRANSITIONS], selectedMoveIds:null };
   });
+  const [lab, setLab] = useState(() => {
+    try { const s=localStorage.getItem("mb_lab"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { customChips:{ technical:{}, conceptual:{} } };
+  });
 
   // ── Persist to localStorage on every change ────────────────────────────────
   useEffect(()=>{ saveLocal("mb_moves",   moves);   },[moves]);
@@ -124,6 +128,7 @@ export default function App() {
   useEffect(()=>{ saveLocal("mb_reps", reps); },[reps]);
   useEffect(()=>{ saveLocal("mb_sparring", sparring); },[sparring]);
   useEffect(()=>{ saveLocal("mb_combos", combos); },[combos]);
+  useEffect(()=>{ saveLocal("mb_lab", lab); },[lab]);
   useEffect(()=>{ saveLocal("mb_ideas",   ideas);
     const timer = setTimeout(() => {
       if (window.__MB_USER__?.uid && window.__MB_DB__) {
@@ -154,6 +159,7 @@ export default function App() {
       reps:        save("reps"),
       sparring:    save("sparring"),
       combos:      save("combos"),
+      lab:         save("lab"),
     };
   }, []);
 
@@ -168,6 +174,7 @@ export default function App() {
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.reps?.(fbUser.uid, reps); },[reps, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.sparring?.(fbUser.uid, sparring); },[sparring, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.combos?.(fbUser.uid, combos); },[combos, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.lab?.(fbUser.uid, lab); },[lab, fbUser]);
 
   // ── Auth resolution ────────────────────────────────────────────────────────
   useEffect(()=>{
@@ -196,6 +203,8 @@ export default function App() {
           if (sp) { try { const p=JSON.parse(sp); if(p&&typeof p==="object") setSparring(p); } catch {} }
           const cb = localStorage.getItem("mb_combos");
           if (cb) { try { const p=JSON.parse(cb); if(p&&typeof p==="object") setCombos(p); } catch {} }
+          const lb = localStorage.getItem("mb_lab");
+          if (lb) { try { const p=JSON.parse(lb); if(p&&typeof p==="object") setLab(p); } catch {} }
           if (p) { try { const pp=JSON.parse(p); if(pp&&Object.values(pp).some(v=>v)) setProfile(pp); } catch{} }
           const st = localStorage.getItem("mb_settings");
           if (st) {
@@ -224,6 +233,7 @@ export default function App() {
         setReps([]);
         setSparring({ sessions:[], records:{} });
         setCombos({ transitions:[...DEFAULT_TRANSITIONS], selectedMoveIds:null });
+        setLab({ customChips:{ technical:{}, conceptual:{} } });
       }
     }
     window.addEventListener("mb-auth-resolved", handleAuthResolved);
@@ -259,6 +269,7 @@ export default function App() {
   const [showRepCounter,setShowRepCounter]=useState(false);
   const [showSparring,setShowSparring]=useState(false);
   const [showComboMachine,setShowComboMachine]=useState(false);
+  const [showLab,setShowLab]=useState(false);
   const [appSettings,setAppSettings]=useState(()=>({
     ...{
       theme:"light", defaultTab:"wip", showMastery:false,
@@ -307,9 +318,10 @@ export default function App() {
       { label:tr("sparring"),      emoji:"🥊", action:()=>{ setAddMenu(false); setShowSparring(true); } },
       { label:tr("comboMachine"),  emoji:"🎰", action:()=>{ setAddMenu(false); setShowComboMachine(true); } },
     ];
-    if (tab === "wip" && subTab === "moves") return [
+    if (tab === "wip" && (subTab === "moves" || subTab === "gap")) return [
       { label:tr("addMoveMenu"),     emoji:"🕺", action:()=>{ setAddMenu(false); setAddTick(t=>t+1); } },
       { label:tr("addCategoryMenu"), emoji:"📂", action:()=>{ setAddMenu(false); setAddTick2(t=>t+1); } },
+      { label:tr("openLab"),         emoji:"🧪", action:()=>{ setAddMenu(false); setShowLab(true); } },
     ];
     if (tab === "wip" && subTab === "sets") return null; // fires Add Set directly
     if (tab === "ready" && subTab === "freestyle") return null; // fires picker directly
@@ -448,6 +460,11 @@ export default function App() {
           onSaveSet={(fields)=>{ setSets(p=>[...p,{id:Date.now(),...fields}]); }}
           addToast={addToast}
           onClose={()=>setShowComboMachine(false)}/>}
+        {showLab&&<Lab moves={moves} cats={cats} catColors={catColors} lab={lab}
+          onLabChange={setLab}
+          onSaveMove={(moveData)=>{ setMoves(prev=>[...prev,{...moveData, id:Date.now()}]); }}
+          addToast={addToast}
+          onClose={()=>setShowLab(false)}/>}
         {showTour&&<Walkthrough onDone={handleTourDone}/>}
 
         {/* ── Bottom Bar ── */}
