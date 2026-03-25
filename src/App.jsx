@@ -25,6 +25,7 @@ import { Walkthrough } from './components/modals/Walkthrough';
 import { BackupModal } from './components/modals/BackupModal';
 import { RepCounter } from './components/train/RepCounter';
 import { Sparring } from './components/train/Sparring';
+import { ComboMachine } from './components/train/ComboMachine';
 
 // ── Firebase stubs for preview ──
 if (typeof window !== "undefined") {
@@ -102,6 +103,10 @@ export default function App() {
   const [sparring, setSparring] = useState(() => {
     try { const s=localStorage.getItem("mb_sparring"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { sessions:[], records:{} };
   });
+  const DEFAULT_TRANSITIONS = ["Thread","Jump","Counter Spin","Slide","Sweep","Touch Foot","Kick","Hop","Roll","Twist","Drop","Spin Through"];
+  const [combos, setCombos] = useState(() => {
+    try { const s=localStorage.getItem("mb_combos"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { transitions:[...DEFAULT_TRANSITIONS], selectedMoveIds:null };
+  });
 
   // ── Persist to localStorage on every change ────────────────────────────────
   useEffect(()=>{ saveLocal("mb_moves",   moves);   },[moves]);
@@ -118,6 +123,7 @@ export default function App() {
   useEffect(()=>{ saveLocal("mb_custom_attrs", customAttrs); },[customAttrs]);
   useEffect(()=>{ saveLocal("mb_reps", reps); },[reps]);
   useEffect(()=>{ saveLocal("mb_sparring", sparring); },[sparring]);
+  useEffect(()=>{ saveLocal("mb_combos", combos); },[combos]);
   useEffect(()=>{ saveLocal("mb_ideas",   ideas);
     const timer = setTimeout(() => {
       if (window.__MB_USER__?.uid && window.__MB_DB__) {
@@ -147,6 +153,7 @@ export default function App() {
       customAttrs: save("customAttrs"),
       reps:        save("reps"),
       sparring:    save("sparring"),
+      combos:      save("combos"),
     };
   }, []);
 
@@ -160,6 +167,7 @@ export default function App() {
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.customAttrs?.(fbUser.uid, customAttrs); },[customAttrs, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.reps?.(fbUser.uid, reps); },[reps, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.sparring?.(fbUser.uid, sparring); },[sparring, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.combos?.(fbUser.uid, combos); },[combos, fbUser]);
 
   // ── Auth resolution ────────────────────────────────────────────────────────
   useEffect(()=>{
@@ -186,6 +194,8 @@ export default function App() {
           if (rp) { try { const p=JSON.parse(rp); if(Array.isArray(p)) setReps(p); } catch {} }
           const sp = localStorage.getItem("mb_sparring");
           if (sp) { try { const p=JSON.parse(sp); if(p&&typeof p==="object") setSparring(p); } catch {} }
+          const cb = localStorage.getItem("mb_combos");
+          if (cb) { try { const p=JSON.parse(cb); if(p&&typeof p==="object") setCombos(p); } catch {} }
           if (p) { try { const pp=JSON.parse(p); if(pp&&Object.values(pp).some(v=>v)) setProfile(pp); } catch{} }
           const st = localStorage.getItem("mb_settings");
           if (st) {
@@ -213,6 +223,7 @@ export default function App() {
         setCustomAttrs([]);
         setReps([]);
         setSparring({ sessions:[], records:{} });
+        setCombos({ transitions:[...DEFAULT_TRANSITIONS], selectedMoveIds:null });
       }
     }
     window.addEventListener("mb-auth-resolved", handleAuthResolved);
@@ -247,6 +258,7 @@ export default function App() {
   const [showBackup,setShowBackup]=useState(false);
   const [showRepCounter,setShowRepCounter]=useState(false);
   const [showSparring,setShowSparring]=useState(false);
+  const [showComboMachine,setShowComboMachine]=useState(false);
   const [appSettings,setAppSettings]=useState(()=>({
     ...{
       theme:"light", defaultTab:"wip", showMastery:false,
@@ -293,6 +305,7 @@ export default function App() {
       { label:tr("addGoalOrNote"), emoji:"🎯", action:()=>{ setAddMenu(false); setAddTick(t=>t+1); } },
       { label:tr("repCounter"),    emoji:"🔢", action:()=>{ setAddMenu(false); setShowRepCounter(true); } },
       { label:tr("sparring"),      emoji:"🥊", action:()=>{ setAddMenu(false); setShowSparring(true); } },
+      { label:tr("comboMachine"),  emoji:"🎰", action:()=>{ setAddMenu(false); setShowComboMachine(true); } },
     ];
     if (tab === "wip" && subTab === "moves") return [
       { label:tr("addMoveMenu"),     emoji:"🕺", action:()=>{ setAddMenu(false); setAddTick(t=>t+1); } },
@@ -430,6 +443,11 @@ export default function App() {
           }}
           onSettingsChange={setAppSettings}
           onClose={()=>setShowSparring(false)}/>}
+        {showComboMachine&&<ComboMachine moves={moves} catColors={catColors} combos={combos}
+          onCombosChange={setCombos}
+          onSaveSet={(fields)=>{ setSets(p=>[...p,{id:Date.now(),...fields}]); }}
+          addToast={addToast}
+          onClose={()=>setShowComboMachine(false)}/>}
         {showTour&&<Walkthrough onDone={handleTourDone}/>}
 
         {/* ── Bottom Bar ── */}
