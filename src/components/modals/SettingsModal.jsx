@@ -155,6 +155,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
               <option value="zh">简体中文</option>
               <option value="ru">Русский</option>
               <option value="ko">한국어 (Korean)</option>
+              <option value="th">ไทย (Thai)</option>
             </select>
           )}
 

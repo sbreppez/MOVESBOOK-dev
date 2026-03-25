@@ -15,6 +15,7 @@ export const usePlural = () => {
     if (lang==="zh") return n+" 条";
     if (lang==="ja") return n+" エントリ";
     if (lang==="ko") return n+"개 항목";
+    if (lang==="th") return n+" รายการ";
     if (lang==="it") return n===1?n+" voce":n+" voci";
     if (lang==="es"||lang==="pt") return n===1?n+" entrada":n+" entradas";
     if (lang==="fr") return n===1?n+" entrée":n+" entrées";
@@ -26,6 +27,7 @@ export const usePlural = () => {
     if (lang==="zh") return n+" 个动作";
     if (lang==="ja") return n+" ムーブ";
     if (lang==="ko") return n+"개 무브";
+    if (lang==="th") return n+" ท่า";
     if (lang==="it") return n===1?n+" mossa":n+" mosse";
     if (lang==="es") return n===1?n+" movimiento":n+" movimientos";
     if (lang==="fr") return n===1?n+" mouvement":n+" mouvements";
@@ -38,6 +40,7 @@ export const usePlural = () => {
     if (lang==="zh") return n+" 项";
     if (lang==="ja") return n+" 個";
     if (lang==="ko") return n+"개";
+    if (lang==="th") return n+" รายการ";
     if (lang==="it") return n===1?n+" elemento":n+" elementi";
     if (lang==="es") return n===1?n+" elemento":n+" elementos";
     if (lang==="fr") return n===1?n+" élément":n+" éléments";
@@ -50,6 +53,7 @@ export const usePlural = () => {
     if (lang==="zh") return n+" 天";
     if (lang==="ja") return n+" 日";
     if (lang==="ko") return n+"일";
+    if (lang==="th") return n+" วัน";
     if (lang==="it") return n===1?n+" giorno":n+" giorni";
     if (lang==="es") return n===1?n+" día":n+" días";
     if (lang==="pt") return n===1?n+" dia":n+" dias";
@@ -62,6 +66,7 @@ export const usePlural = () => {
     if (lang==="zh") return n+" 轮";
     if (lang==="ja") return n+" ラウンド";
     if (lang==="ko") return n+"라운드";
+    if (lang==="th") return n+" ราวด์";
     if (lang==="it") return n+" round";
     if (lang==="es") return n===1?n+" ronda":n+" rondas";
     if (lang==="fr") return n+" round"+(n!==1?"s":"");
@@ -74,6 +79,7 @@ export const usePlural = () => {
     if (lang==="zh") return n+" 条结果";
     if (lang==="ja") return n+" 件";
     if (lang==="ko") return n+"개 결과";
+    if (lang==="th") return n+" ผลลัพธ์";
     if (lang==="it") return n===1?n+" risultato":n+" risultati";
     if (lang==="es") return n===1?n+" resultado":n+" resultados";
     if (lang==="fr") return n===1?n+" résultat":n+" résultats";
@@ -86,6 +92,7 @@ export const usePlural = () => {
     if (lang==="zh") return n+" 步";
     if (lang==="ja") return n+" ステップ";
     if (lang==="ko") return n+"단계";
+    if (lang==="th") return n+" ขั้นตอน";
     if (lang==="it") return n===1?n+" passo":n+" passi";
     if (lang==="es") return n===1?n+" paso":n+" pasos";
     if (lang==="fr") return n===1?n+" étape":n+" étapes";
