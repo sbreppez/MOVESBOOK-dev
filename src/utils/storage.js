@@ -12,6 +12,7 @@ export function migrateMove(m) {
     notes:       m.notes       || "",
     link:        m.link        || "",
     date:        m.date        || Date.now(),
+    attrs:       m.attrs       || {},
   };
 }
 

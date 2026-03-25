@@ -6,6 +6,7 @@ import { SettingsCtx } from './hooks/useSettings';
 import { TrainModalCtx, TrainMenuCtx } from './hooks/useTrainContext';
 import { TRANSLATIONS } from './constants/translations';
 import { SCHEMA_VERSION, migrateMove, loadLocal, saveLocal, debounce } from './utils/storage';
+import { migrateOldAttributes } from './utils/attributeHelpers';
 import { Ic } from './components/shared/Ic';
 import { Toast } from './components/shared/Toast';
 import { TabBar } from './components/shared/TabBar';
@@ -90,6 +91,9 @@ export default function App() {
     } catch {}
     return getInitIdeas(initLang);
   });
+  const [customAttrs, setCustomAttrs] = useState(() => {
+    try { const s=localStorage.getItem("mb_custom_attrs"); if(s){const p=JSON.parse(s); if(Array.isArray(p)) return p;} } catch{} return [];
+  });
 
   // ── Persist to localStorage on every change ────────────────────────────────
   useEffect(()=>{ saveLocal("mb_moves",   moves);   },[moves]);
@@ -103,6 +107,7 @@ export default function App() {
     return ()=>clearTimeout(timer);
   },[habits]);
   useEffect(()=>{ if(Object.values(profile).some(v=>v)) saveLocal("mb_profile", profile); },[profile]);
+  useEffect(()=>{ saveLocal("mb_custom_attrs", customAttrs); },[customAttrs]);
   useEffect(()=>{ saveLocal("mb_ideas",   ideas);
     const timer = setTimeout(() => {
       if (window.__MB_USER__?.uid && window.__MB_DB__) {
@@ -129,6 +134,7 @@ export default function App() {
       settings:  save("settings"),
       cats:      save("cats"),
       catColors: save("catColors"),
+      customAttrs: save("customAttrs"),
     };
   }, []);
 
@@ -139,6 +145,7 @@ export default function App() {
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.profile?.(fbUser.uid, profile); },[profile, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.cats?.(fbUser.uid,      cats);      },[cats,      fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.catColors?.(fbUser.uid, catColors); },[catColors, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.customAttrs?.(fbUser.uid, customAttrs); },[customAttrs, fbUser]);
 
   // ── Auth resolution ────────────────────────────────────────────────────────
   useEffect(()=>{
@@ -159,6 +166,8 @@ export default function App() {
           if (id) { try { const p=JSON.parse(id); if(Array.isArray(p)&&p.length>0) setIdeas(p); } catch {} }
           const hb = localStorage.getItem("mb_habits");
           if (hb) { try { const p=JSON.parse(hb); if(Array.isArray(p)&&p.length>0) setHabits(p); } catch {} }
+          const ca = localStorage.getItem("mb_custom_attrs");
+          if (ca) { try { const p=JSON.parse(ca); if(Array.isArray(p)) setCustomAttrs(p); } catch {} }
           if (p) { try { const pp=JSON.parse(p); if(pp&&Object.values(pp).some(v=>v)) setProfile(pp); } catch{} }
           const st = localStorage.getItem("mb_settings");
           if (st) {
@@ -183,11 +192,20 @@ export default function App() {
         setHabits(INIT_HABITS);
         setProfile({ nickname:"", age:"", gender:"", goals:"", years:"",
           startYear:"", startMonth:"", startDay:"", why:"" });
+        setCustomAttrs([]);
       }
     }
     window.addEventListener("mb-auth-resolved", handleAuthResolved);
     if (window.__MB_USER__) handleAuthResolved();
     return () => window.removeEventListener("mb-auth-resolved", handleAuthResolved);
+  },[]);
+
+  // ── Migrate old rotation/travelling to custom attributes (one-time) ──
+  useEffect(()=>{
+    if(customAttrs.length===0 && moves.some(m=>m.rotation===true||m.travelling===true)){
+      const result = migrateOldAttributes(moves, customAttrs);
+      if(result.customAttrs.length>0){ setCustomAttrs(result.customAttrs); setMoves(result.moves); }
+    }
   },[]);
 
   const [toasts,setToasts]=useState([]);
@@ -361,7 +379,7 @@ export default function App() {
             {tab==="ideas" && <IdeasPage onAddMove={handleAddMoveFromIdea} onAddTrigger={addTick} ideas={ideas} setIdeas={setIdeas} habits={habits} setHabits={setHabits}/>}
           </TrainMenuCtx.Provider>
           </TrainModalCtx.Provider>
-          {tab==="wip"   && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} sets={sets} setSets={setSets} addToast={addToast} pendingDesc={ideaToMove} clearPendingDesc={()=>setIdeaToMove(null)} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))}/>}
+          {tab==="wip"   && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} sets={sets} setSets={setSets} addToast={addToast} pendingDesc={ideaToMove} clearPendingDesc={()=>setIdeaToMove(null)} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs}/>}
           {tab==="ready" && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab}/>}
         </div>
 
@@ -369,7 +387,7 @@ export default function App() {
         {showProfile&&<ProfileModal onClose={()=>setShowProfile(false)} profile={profile} onSave={setProfile}/>}
         {showManual&&<ManualModal onClose={()=>setShowManual(false)}/>}
       {showFeedback&&<FeedbackModal onClose={()=>setShowFeedback(false)}/>}
-      {showSettings&&<SettingsModal onClose={()=>setShowSettings(false)} settings={appSettings} onSave={setAppSettings} onClearMoves={()=>setMoves([])} onRestoreRounds={()=>setRounds(INIT_ROUNDS)} onRestartTour={()=>setShowTour(true)} zoom={zoom} onZoomChange={handleZoomChange}/>}
+      {showSettings&&<SettingsModal onClose={()=>setShowSettings(false)} settings={appSettings} onSave={setAppSettings} onClearMoves={()=>setMoves([])} onRestoreRounds={()=>setRounds(INIT_ROUNDS)} onRestartTour={()=>setShowTour(true)} zoom={zoom} onZoomChange={handleZoomChange} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs}/>}
         {showBackup&&<BackupModal onClose={()=>setShowBackup(false)}/>}
         {showTour&&<Walkthrough onDone={handleTourDone}/>}
 

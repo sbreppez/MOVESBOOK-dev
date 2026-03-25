@@ -4,8 +4,9 @@ import { FONT_DISPLAY, FONT_BODY } from "../../constants/fonts";
 import { Ic } from "../shared/Ic";
 import { useT } from "../../hooks/useTranslation";
 import { downloadBackup, restoreBackup } from "./BackupModal";
+import { AttributeModal } from "./AttributeModal";
 
-export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onRestoreRounds, onRestartTour, zoom=1, onZoomChange }) => {
+export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onRestoreRounds, onRestartTour, zoom=1, onZoomChange, customAttrs=[], setCustomAttrs }) => {
   const t = useT();
   const [s,setS]=useState({
     theme:"light", defaultTab:"wip", showMastery:false,
@@ -19,6 +20,9 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
   const [confirmClear,setConfirmClear]=useState(false);
   const [confirmRestoreRounds,setConfirmRestoreRounds]=useState(false);
   const [confirmRestore,setConfirmRestore]=useState(null);
+  const [editAttr, setEditAttr] = useState(null);
+  const [showAddAttr, setShowAddAttr] = useState(false);
+  const [confirmDeleteAttr, setConfirmDeleteAttr] = useState(null);
   const restoreFileRef=useRef(null);
   const set=k=>v=>{
     setS(p=>{
@@ -254,6 +258,46 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
               <option value="progress">{`📈 ${t("mostProgress")}`}</option>
             </select>
           )}
+
+          {/* ── CUSTOM ATTRIBUTES ──────────────────────── */}
+          {sectionHdr(t("customAttributes"),"🏷️")}
+
+          {customAttrs.length===0 ? (
+            <div style={{ fontSize:12, color:panelMut, fontStyle:"italic", padding:"8px 0" }}>
+              {t("noAttributesDefined")}
+            </div>
+          ) : customAttrs.map(attr=>(
+            <div key={attr.id} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:10,
+              padding:"10px 0", borderBottom:`1px solid ${panelBrd}` }}>
+              <div style={{ flex:1, minWidth:0 }}>
+                <div style={{ fontSize:13, fontWeight:700, color:panelTxt, fontFamily:FONT_DISPLAY, letterSpacing:0.3 }}>{attr.name}</div>
+                <div style={{ fontSize:11, color:panelMut, marginTop:2, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
+                  {attr.values.join(" · ")}
+                </div>
+              </div>
+              <div style={{ display:"flex", alignItems:"center", gap:4, flexShrink:0 }}>
+                <span style={{ fontSize:10, fontWeight:700, color:panelMut, fontFamily:FONT_DISPLAY,
+                  background:panelSrf, border:`1px solid ${panelBrd}`, borderRadius:6, padding:"2px 6px" }}>
+                  {attr.multi ? t("multiSelect") : t("singleSelect")}
+                </span>
+                <button onClick={()=>setEditAttr(attr)}
+                  style={{ background:"none", border:"none", cursor:"pointer", padding:4, display:"flex" }}>
+                  <Ic n="edit" s={13} c={panelMut}/>
+                </button>
+                <button onClick={()=>setConfirmDeleteAttr(attr)}
+                  style={{ background:"none", border:"none", cursor:"pointer", padding:4, display:"flex" }}>
+                  <Ic n="trash" s={13} c={C.accent}/>
+                </button>
+              </div>
+            </div>
+          ))}
+
+          <button onClick={()=>setShowAddAttr(true)}
+            style={{ width:"100%", padding:"10px", borderRadius:8, marginTop:8,
+              border:`1px dashed ${panelBrd}`, background:"none", color:panelMut, cursor:"pointer",
+              fontSize:12, fontFamily:FONT_DISPLAY, fontWeight:700, letterSpacing:1 }}>
+            + {t("addAttribute")}
+          </button>
 
           {/* ── PRACTICE ────────────────────────────────── */}
           {sectionHdr(t("practiceTracking"),"🏆")}
@@ -531,6 +575,34 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
               fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:0.8 }}>{t("saveSettings")}</button>
         </div>
       </div>
+      {(showAddAttr||editAttr)&&(
+        <AttributeModal
+          attr={editAttr}
+          existingNames={customAttrs.filter(a=>a.id!==editAttr?.id).map(a=>a.name)}
+          onClose={()=>{ setShowAddAttr(false); setEditAttr(null); }}
+          onSave={def=>{
+            if(editAttr) setCustomAttrs(prev=>prev.map(a=>a.id===def.id?def:a));
+            else setCustomAttrs(prev=>[...prev,def]);
+            setShowAddAttr(false); setEditAttr(null);
+          }}
+        />
+      )}
+      {confirmDeleteAttr&&(
+        <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", zIndex:1200, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
+          <div style={{ background:C.bg, border:`1px solid ${C.border}`, borderRadius:14, width:"100%", maxWidth:340, padding:20, boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
+            <div style={{ fontWeight:900, fontSize:14, letterSpacing:1.5, fontFamily:FONT_DISPLAY, color:C.brown, marginBottom:8 }}>{t("deleteAttribute")}</div>
+            <p style={{ fontSize:13, color:C.textSec, marginBottom:16, lineHeight:1.5 }}>
+              {t("deleteAttributeConfirm").replace("{name}", confirmDeleteAttr.name)}
+            </p>
+            <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
+              <button onClick={()=>setConfirmDeleteAttr(null)}
+                style={{ padding:"8px 16px", borderRadius:8, border:`1px solid ${C.border}`, background:"none", color:C.textSec, fontSize:13, cursor:"pointer", fontFamily:FONT_BODY }}>{t("cancel")}</button>
+              <button onClick={()=>{ setCustomAttrs(prev=>prev.filter(a=>a.id!==confirmDeleteAttr.id)); setConfirmDeleteAttr(null); }}
+                style={{ padding:"8px 16px", borderRadius:8, border:"none", background:C.accent, color:C.bg, fontSize:13, fontWeight:700, cursor:"pointer", fontFamily:FONT_BODY }}>{t("delete")}</button>
+            </div>
+          </div>
+        </div>
+      )}
       {confirmRestore&&(
         <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", zIndex:1200, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
           <div style={{ background:C.bg, border:`1px solid ${C.border}`, borderRadius:14, width:"100%", maxWidth:340, padding:20, boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>

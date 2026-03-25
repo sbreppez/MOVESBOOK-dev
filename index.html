@@ -203,6 +203,7 @@ firebase.initializeApp({
             if (data.settings)   localStorage.setItem('mb_settings',   data.settings);
             if (data.templates)  localStorage.setItem('mb_templates',  data.templates);
             if (data.catColors)  localStorage.setItem('mb_cat_colors', data.catColors);
+            if (data.customAttrs) { try { var _ca=JSON.parse(data.customAttrs); if(Array.isArray(_ca)) localStorage.setItem('mb_custom_attrs', data.customAttrs); } catch(e){} }
           }
           if (loginDiv) { loginDiv.style.opacity='0'; setTimeout(function(){ loginDiv.style.display='none'; },300); }
           window.dispatchEvent(new Event('mb-auth-resolved'));
@@ -224,12 +225,13 @@ firebase.initializeApp({
             if (d.habits)     localStorage.setItem('mb_habits',     d.habits);
             if (d.templates)  localStorage.setItem('mb_templates',  d.templates);
             if (d.catColors)  localStorage.setItem('mb_cat_colors', d.catColors);
+            if (d.customAttrs) localStorage.setItem('mb_custom_attrs', d.customAttrs);
           } catch(e){}
         });
       } else {
         window.__MB_USER__ = null;
         ['mb_moves','mb_sets','mb_rounds','mb_ideas','mb_profile','mb_settings',
-         'mb_habits','mb_templates','mb_cats','mb_cat_colors','mb_data_version'].forEach(function(k){ localStorage.removeItem(k); });
+         'mb_habits','mb_templates','mb_cats','mb_cat_colors','mb_custom_attrs','mb_data_version'].forEach(function(k){ localStorage.removeItem(k); });
         if (loginDiv) { loginDiv.style.display='flex'; loginDiv.style.opacity='1'; }
         if (_unsubSnap) { _unsubSnap(); _unsubSnap=null; }
       }

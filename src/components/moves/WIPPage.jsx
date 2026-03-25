@@ -16,8 +16,10 @@ import { MoveListRow } from './MoveListRow';
 import { CatTile } from './CatTile';
 import { AddCategoryModal } from './AddCategoryModal';
 import { SetDetailModal } from './SetDetailModal';
+import { AttributeFilter } from './AttributeFilter';
+import { filterMovesByAttrs } from '../../utils/attributeHelpers';
 
-export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, onSortChange }) => {
+export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, onSortChange, customAttrs=[], setCustomAttrs }) => {
   const t = useT();
   const { moveCountStr, resultCountStr } = usePlural();
   const { settings:ctxSettings } = useSettings();
@@ -51,6 +53,8 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   const [expSets,setExpSets]=useState({});
   const [confirmDeleteSet,setConfirmDeleteSet]=useState(null);
   const [confirmDeleteMove,setConfirmDeleteMove]=useState(null);
+  const [showFilter, setShowFilter] = useState(false);
+  const [attrFilters, setAttrFilters] = useState({});
   const setDragItem=useRef(null);
   const [setDragOver,setSetDragOver]=useState(null);
   const masteryColorWip = p => p<30?C.red:p<60?C.yellow:p<80?C.blue:C.green;
@@ -64,7 +68,8 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   const sortFn = st.sortMoves==="name" ? (a,b)=>a.name.localeCompare(b.name)
     : st.sortMoves==="mastery" ? (a,b)=>b.mastery-a.mastery
     : (a,b)=>0; // custom/date = insertion order
-  const inCat=cat=>[...wipMoves.filter(m=>m.category===cat)].sort(sortFn);
+  const hasActiveFilters = Object.keys(attrFilters).some(k => { const v=attrFilters[k]; return Array.isArray(v)?v.length>0:v!==""&&v!=null; });
+  const inCat=cat=>{ let filtered=[...wipMoves.filter(m=>m.category===cat)]; if(hasActiveFilters) filtered=filterMovesByAttrs(filtered,attrFilters,customAttrs); return filtered.sort(sortFn); };
   const masteredCount=cat=>inCat(cat).filter(m=>m.mastery>=80).length;
 
   const sortedCats = reorderMode ? cats : (
@@ -134,6 +139,11 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"6px 14px", borderBottom:`1px solid ${C.borderLight}`, background:C.surface, flexShrink:0 }}>
           <button onClick={()=>{setOpenCat(null);setSearch("");setShowSearch(false);setCatReorderMode(false);}} style={{ background:"none", border:"none", cursor:"pointer", color:C.accent, fontSize:14, fontFamily:FONT_DISPLAY, fontWeight:700 }}>← Back</button>
           <div style={{ display:"flex", gap:3 }}>
+            {!catReorderMode&&customAttrs.length>0&&<button onClick={()=>setShowFilter(s=>!s)}
+              style={{ background:showFilter?C.surfaceAlt:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:showFilter?C.accent:C.textMuted, position:"relative" }}>
+              <Ic n="filter" s={16}/>
+              {hasActiveFilters&&<div style={{ position:"absolute", top:2, right:2, width:6, height:6, borderRadius:"50%", background:C.accent }}/>}
+            </button>}
             {!catReorderMode&&<button onClick={()=>{ setShowSearch(s=>!s); setSearch(""); }} style={{ background:showSearch?C.surfaceAlt:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:showSearch?C.accent:C.textMuted }}><Ic n="search" s={16}/></button>}
             {!catReorderMode&&<button onClick={()=>setCatView(v=>v==="tiles"?"list":"tiles")} style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}><Ic n={catView==="tiles"?"list":"grid"} s={16}/></button>}
             {!catReorderMode&&<button onClick={()=>setBulk(true)} style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}><Ic n="upload" s={16}/></button>}
@@ -154,6 +164,10 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
             </div>
             {search&&<div style={{ fontSize:11, color:C.textMuted, marginTop:4 }}>{resultCountStr(catMoves.length)}</div>}
           </div>
+        )}
+        {showFilter&&(
+          <AttributeFilter customAttrs={customAttrs} activeFilters={attrFilters} setActiveFilters={setAttrFilters}
+            totalCount={allCatMoves.length} filteredCount={catMoves.length} />
         )}
         <div style={{ flex:1, overflow:"auto", padding:10, paddingBottom:76 }}>
           {allCatMoves.length===0 ? (
@@ -194,8 +208,8 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
             </div>
           )}
         </div>
-        {showAdd&&<MoveModal initialCat={openCat} cats={cats} initialDesc={ideaDesc} onClose={()=>{setShowAdd(false);setIdeaDesc(null);}} onSave={f=>saveMove(f)}/>}
-        {editMove&&<MoveModal move={editMove} cats={cats} onClose={()=>setEditMove(null)} onSave={f=>{saveMove(f,editMove.id);setEditMove(null);}}/>}
+        {showAdd&&<MoveModal initialCat={openCat} cats={cats} initialDesc={ideaDesc} onClose={()=>{setShowAdd(false);setIdeaDesc(null);}} onSave={f=>saveMove(f)} customAttrs={customAttrs} onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])}/>}
+        {editMove&&<MoveModal move={editMove} cats={cats} onClose={()=>setEditMove(null)} onSave={f=>{saveMove(f,editMove.id);setEditMove(null);}} customAttrs={customAttrs} onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])}/>}
         {bulk&&<BulkModal onClose={()=>setBulk(false)} onImport={bulkImport} category={openCat}/>}
         {confirmDeleteMove&&(
           <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", zIndex:900, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
@@ -247,6 +261,11 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
         </div>
         <div style={{ display:"flex", gap:3 }}>
           {vocabTab==="moves"&&<Fragment>
+            {customAttrs.length>0&&<button onClick={()=>setShowFilter(s=>!s)}
+              style={{ background:showFilter?C.surfaceAlt:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:showFilter?C.accent:C.textMuted, position:"relative" }}>
+              <Ic n="filter" s={16}/>
+              {hasActiveFilters&&<div style={{ position:"absolute", top:2, right:2, width:6, height:6, borderRadius:"50%", background:C.accent }}/>}
+            </button>}
             <button onClick={()=>{ setShowSearch(s=>!s); setSearch(""); }} style={{ background:showSearch?C.surfaceAlt:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:showSearch?C.accent:C.textMuted }}><Ic n="search" s={16}/></button>
             <button onClick={()=>setView(v=>v==="tiles"?"list":"tiles")} style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}><Ic n={view==="tiles"?"list":"grid"} s={16}/></button>
             <button onClick={()=>{ const next=!reorderMode; setReorderMode(next); if(next) setCats(sortedCats); if(!next && onSortChange) onSortChange("categorySort","manual"); }}
@@ -278,6 +297,11 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
             {searchResults.catHits.length} {searchResults.catHits.length!==1?"categories":"category"} · {moveCountStr(searchResults.moveHits.length)}
           </div>}
         </div>
+      )}
+
+      {showFilter&&vocabTab==="moves"&&(
+        <AttributeFilter customAttrs={customAttrs} activeFilters={attrFilters} setActiveFilters={setAttrFilters}
+          totalCount={moves.length} filteredCount={cats.reduce((sum,cat)=>sum+inCat(cat).length,0)} />
       )}
 
       <div style={{ flex:1, overflow:"auto", padding:10, paddingBottom:76 }}>
@@ -542,7 +566,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
       )}
       {showAddCat&&<AddCategoryModal onClose={()=>setShowAddCat(false)} onAdd={addCategory} existingCats={cats} existingColors={catColors}/>}
       {/* MoveModal at root level — for "Add to Move" arriving from Ideas tab */}
-      {showAdd&&<MoveModal initialCat={cats[0]||""} cats={cats} initialDesc={ideaDesc} onClose={()=>{setShowAdd(false);setIdeaDesc(null);}} onSave={f=>saveMove(f)}/>}
+      {showAdd&&<MoveModal initialCat={cats[0]||""} cats={cats} initialDesc={ideaDesc} onClose={()=>{setShowAdd(false);setIdeaDesc(null);}} onSave={f=>saveMove(f)} customAttrs={customAttrs} onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])}/>}
     </div>
   );
 };
