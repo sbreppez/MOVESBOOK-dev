@@ -14,7 +14,7 @@ import { TypeChooserModal } from './TypeChooserModal';
 import { IdeaTile } from './IdeaTile';
 import { HabitsPage } from './HabitsPage';
 
-export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[], setHabits=()=>{} }) => {
+export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[], setHabits=()=>{}, calendar, onOpenCalendarJournal }) => {
   const t = useT();
   const { resultCountStr, dayCountStr } = usePlural();
   const { settings: ideaSettings } = useSettings();
@@ -54,6 +54,13 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
   const dismissHint = () => {
     setHintDismissed(true);
     try { localStorage.setItem("mb_hint_goal_journal", "1"); } catch {}
+  };
+  const [quickLogDismissed, setQuickLogDismissed] = useState(() => {
+    try { const st = JSON.parse(localStorage.getItem("mb_settings") || "{}"); return st.quickLogDismissed === new Date().toISOString().split("T")[0]; } catch { return false; }
+  });
+  const dismissQuickLog = () => {
+    setQuickLogDismissed(true);
+    try { const st = JSON.parse(localStorage.getItem("mb_settings") || "{}"); st.quickLogDismissed = new Date().toISOString().split("T")[0]; localStorage.setItem("mb_settings", JSON.stringify(st)); } catch {}
   };
 
   const addIdea   = (fields) => setIdeas(p=>[...p,{ id:Date.now(), ...fields }]);
@@ -132,6 +139,29 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
   return (
     <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column" }}>
       <SectionBanner tab="ideas"/>
+      {/* Quick Log banner */}
+      {(()=>{
+        const todayStr = new Date().toISOString().split("T")[0];
+        const hasTodayTraining = (calendar?.events||[]).some(e => e.date === todayStr && e.type === "training");
+        if (hasTodayTraining || quickLogDismissed || !onOpenCalendarJournal) return null;
+        return (
+          <div style={{ margin:"0 12px 6px", display:"flex", alignItems:"center", gap:8,
+            background:C.surfaceAlt, borderRadius:10, padding:"10px 14px" }}>
+            <button onClick={onOpenCalendarJournal}
+              style={{ flex:1, display:"flex", alignItems:"center", gap:8, background:"none",
+                border:"none", cursor:"pointer", padding:0, textAlign:"left" }}>
+              <span style={{ fontSize:16 }}>🎯</span>
+              <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:13, color:C.text,
+                letterSpacing:0.3 }}>{t("logTodaysSession")}</span>
+              <Ic n="chevR" s={14} c={C.textMuted}/>
+            </button>
+            <button onClick={dismissQuickLog}
+              style={{ background:"none", border:"none", cursor:"pointer", padding:2, display:"flex", flexShrink:0 }}>
+              <Ic n="x" s={14} c={C.textMuted}/>
+            </button>
+          </div>
+        );
+      })()}
       {/* Sub-tab nav */}
       <div style={{ display:"flex", background:C.surface, borderBottom:`2px solid ${C.border}`, flexShrink:0, alignItems:"stretch" }}>
         {(()=>{

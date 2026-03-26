@@ -194,6 +194,10 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onClose, pre
     const cc = catColor(savedSession.moveCategory);
     return (
       <div style={{ position:"absolute", inset:0, zIndex:500, background:C.bg, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:24 }}>
+        {/* Close button */}
+        <button onClick={onClose} style={{ position:"absolute", top:14, right:14, background:C.surfaceAlt, border:`1px solid ${C.border}`, cursor:"pointer", color:C.textSec, padding:5, borderRadius:7, display:"flex", zIndex:1 }}>
+          <Ic n="x" s={14}/>
+        </button>
         {/* Checkmark */}
         <div style={{ width:64, height:64, borderRadius:"50%", background:C.green, display:"flex", alignItems:"center", justifyContent:"center", marginBottom:16 }}>
           <Ic n="check" s={32} c="#fff"/>

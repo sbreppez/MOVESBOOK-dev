@@ -21,7 +21,7 @@ import { filterMovesByAttrs } from '../../utils/attributeHelpers';
 import { ConstraintCard } from './ConstraintCard';
 import { GAPTab } from './GAPTab';
 
-export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, onSortChange, customAttrs=[], setCustomAttrs, constraint, onConstraintChange, onDrill }) => {
+export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, constraint, onConstraintChange, onDrill }) => {
   const t = useT();
   const { moveCountStr, resultCountStr } = usePlural();
   const { settings:ctxSettings } = useSettings();
@@ -30,6 +30,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   const [vocabTab,setVocabTab]=useState("moves"); // "moves" | "sets"
   const setVocabTabAndNotify = (t) => { setVocabTab(t); if(onSubTabChange) onSubTabChange(t); };
   useEffect(()=>{ if(onSubTabChange) onSubTabChange("moves"); },[]);
+  useEffect(()=>{ if(parentSubTab==="gap"&&vocabTab!=="gap") { setVocabTab("gap"); setOpenCat(null); } },[parentSubTab]);
   const [openCat,setOpenCat]=useState(null);
   const [showAdd,setShowAdd]=useState(false); const [bulk,setBulk]=useState(false);
   useEffect(()=>{ if(onAddTrigger) setShowAdd(true); },[onAddTrigger]);
@@ -89,7 +90,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
       setMoves(prev=>[...prev,{...form, id:Date.now(), status:form.status||"wip"}]);
     }
   };
-  const handleToggleTrainedToday = (id) => { setMoves(prev => prev.map(m => m.id === id ? { ...m, date: new Date().toISOString().split("T")[0] } : m)); setOpenCat(null); setVocabTabAndNotify("gap"); };
+  const handleToggleTrainedToday = (id) => { setMoves(prev => prev.map(m => m.id === id ? { ...m, date: new Date().toISOString().split("T")[0] } : m)); };
   const bulkImport=newMoves=>{ const w=newMoves.map(m=>({...m,id:Date.now()+Math.random(),status:m.status||"wip"})); setMoves(prev=>[...prev,...w]); };
   const delMove=id=>setMoves(prev=>prev.filter(m=>m.id!==id));
   const tryDelMove=m=>{ if(st.confirmDelete!==false) setConfirmDeleteMove(m); else delMove(m.id); };

@@ -28,6 +28,7 @@ import { Sparring } from './components/train/Sparring';
 import { ComboMachine } from './components/train/ComboMachine';
 import { Lab } from './components/moves/Lab';
 import { getDefaultConstraintState } from './constants/constraints';
+import { CalendarOverlay } from './components/calendar/CalendarOverlay';
 
 // ── Firebase stubs for preview ──
 if (typeof window !== "undefined") {
@@ -115,6 +116,9 @@ export default function App() {
   const [constraint, setConstraint] = useState(() => {
     try { const s=localStorage.getItem("mb_constraint"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return getDefaultConstraintState();
   });
+  const [calendar, setCalendar] = useState(() => {
+    try { const s=localStorage.getItem("mb_calendar"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { events:[] };
+  });
 
   // ── Persist to localStorage on every change ────────────────────────────────
   useEffect(()=>{ saveLocal("mb_moves",   moves);   },[moves]);
@@ -134,6 +138,7 @@ export default function App() {
   useEffect(()=>{ saveLocal("mb_combos", combos); },[combos]);
   useEffect(()=>{ saveLocal("mb_lab", lab); },[lab]);
   useEffect(()=>{ saveLocal("mb_constraint", constraint); },[constraint]);
+  useEffect(()=>{ saveLocal("mb_calendar", calendar); },[calendar]);
   useEffect(()=>{ saveLocal("mb_ideas",   ideas);
     const timer = setTimeout(() => {
       if (window.__MB_USER__?.uid && window.__MB_DB__) {
@@ -166,6 +171,7 @@ export default function App() {
       combos:      save("combos"),
       lab:         save("lab"),
       constraint:  save("constraint"),
+      calendar:    save("calendar"),
     };
   }, []);
 
@@ -182,6 +188,7 @@ export default function App() {
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.combos?.(fbUser.uid, combos); },[combos, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.lab?.(fbUser.uid, lab); },[lab, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.constraint?.(fbUser.uid, constraint); },[constraint, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.calendar?.(fbUser.uid, calendar); },[calendar, fbUser]);
 
   // ── Auth resolution ────────────────────────────────────────────────────────
   useEffect(()=>{
@@ -214,6 +221,8 @@ export default function App() {
           if (lb) { try { const p=JSON.parse(lb); if(p&&typeof p==="object") setLab(p); } catch {} }
           const cn = localStorage.getItem("mb_constraint");
           if (cn) { try { const p=JSON.parse(cn); if(p&&typeof p==="object") setConstraint(p); } catch {} }
+          const cal = localStorage.getItem("mb_calendar");
+          if (cal) { try { const p=JSON.parse(cal); if(p&&typeof p==="object") setCalendar(p); } catch {} }
           if (p) { try { const pp=JSON.parse(p); if(pp&&Object.values(pp).some(v=>v)) setProfile(pp); } catch{} }
           const st = localStorage.getItem("mb_settings");
           if (st) {
@@ -244,6 +253,7 @@ export default function App() {
         setCombos({ transitions:[...DEFAULT_TRANSITIONS], selectedMoveIds:null });
         setLab({ customChips:{ technical:{}, conceptual:{} } });
         setConstraint(getDefaultConstraintState());
+        setCalendar({ events:[] });
       }
     }
     window.addEventListener("mb-auth-resolved", handleAuthResolved);
@@ -281,6 +291,8 @@ export default function App() {
   const [showSparring,setShowSparring]=useState(false);
   const [showComboMachine,setShowComboMachine]=useState(false);
   const [showLab,setShowLab]=useState(false);
+  const [showCalendar,setShowCalendar]=useState(false);
+  const [calendarInitialDay,setCalendarInitialDay]=useState(null);
   const [appSettings,setAppSettings]=useState(()=>({
     ...{
       theme:"light", defaultTab:"wip", showMastery:false,
@@ -410,6 +422,9 @@ export default function App() {
             <button onClick={()=>setShowBackup(true)} style={{ background:"none", border:"none", cursor:"pointer", padding:5, display:"flex" }} title="Backup">
               <Ic n="download" s={17} c={C.brownLight}/>
             </button>
+            <button onClick={()=>{setCalendarInitialDay(null);setShowCalendar(true);}} style={{ background:"none", border:"none", cursor:"pointer", padding:5, display:"flex" }} title="Calendar">
+              <Ic n="calendarIc" s={17} c={C.brownLight}/>
+            </button>
             {fbUser?.photo
               ? <button id="tour-profile" onClick={()=>setShowProfile(true)} style={{ background:"none", border:"none", cursor:"pointer", padding:2, display:"flex", borderRadius:"50%", overflow:"hidden" }}>
                   <img src={fbUser.photo} alt={fbUser.name} style={{ width:26, height:26, borderRadius:"50%", objectFit:"cover", border:`1.5px solid ${C.border}` }}/>
@@ -425,7 +440,7 @@ export default function App() {
           </div>
         </div>
 
-        <TabBar active={tab} onChange={t=>{ setTrainMenu(null); setTab(t); setAddTick(0); setAddTick2(0); setAddMenu(false); setSubTab("moves"); }} badges={{ wip: staleCount }}/>
+        {!showCalendar&&<TabBar active={tab} onChange={(t,sub)=>{ setTrainMenu(null); setTab(t); setAddTick(0); setAddTick2(0); setAddMenu(false); setSubTab(sub||"moves"); }} badges={{ wip: staleCount }}/>}
 
         <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column", position:"relative" }}>
           {/* Train modals + menu — inside position:relative so absolute children are scoped to app width */}
@@ -449,11 +464,17 @@ export default function App() {
           <IdeaMenu menu={trainMenu} onClose={()=>setTrainMenu(null)}/>
           <TrainModalCtx.Provider value={{ openModal:(type,idea,onSave)=>{ setTrainMenu(null); setTrainModal({type,idea,onSave}); } }}>
           <TrainMenuCtx.Provider value={{ openMenu:(m)=>setTrainMenu(m), closeMenu:()=>setTrainMenu(null) }}>
-            {tab==="ideas" && <IdeasPage onAddMove={handleAddMoveFromIdea} onAddTrigger={addTick} ideas={ideas} setIdeas={setIdeas} habits={habits} setHabits={setHabits}/>}
+            {tab==="ideas" && <IdeasPage onAddMove={handleAddMoveFromIdea} onAddTrigger={addTick} ideas={ideas} setIdeas={setIdeas} habits={habits} setHabits={setHabits} calendar={calendar} onOpenCalendarJournal={()=>{setCalendarInitialDay(new Date().toISOString().split("T")[0]);setShowCalendar(true);}}/>}
           </TrainMenuCtx.Provider>
           </TrainModalCtx.Provider>
-          {tab==="wip"   && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} sets={sets} setSets={setSets} addToast={addToast} pendingDesc={ideaToMove} clearPendingDesc={()=>setIdeaToMove(null)} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} constraint={constraint} onConstraintChange={setConstraint} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}}/>}
+          {tab==="wip"   && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} sets={sets} setSets={setSets} addToast={addToast} pendingDesc={ideaToMove} clearPendingDesc={()=>setIdeaToMove(null)} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} constraint={constraint} onConstraintChange={setConstraint} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}}/>}
           {tab==="ready" && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab}/>}
+          {showCalendar&&<CalendarOverlay
+            moves={moves} setMoves={setMovesGrad} reps={reps} sparring={sparring} habits={habits} ideas={ideas}
+            calendar={calendar} setCalendar={setCalendar}
+            cats={cats} catColors={catColors} settings={appSettings} onSettingsChange={setAppSettings}
+            addToast={addToast} initialDay={calendarInitialDay}
+            onClose={()=>setShowCalendar(false)}/>}
         </div>
 
         <Toast toasts={toasts} remove={removeToast}/>

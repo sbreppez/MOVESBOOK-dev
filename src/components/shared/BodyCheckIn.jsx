@@ -4,21 +4,21 @@ import { FONT_DISPLAY } from '../../constants/fonts';
 import { useT } from '../../hooks/useTranslation';
 import { Ic } from './Ic';
 
-const EXERTION_OPTIONS = [
+export const EXERTION_OPTIONS = [
   { value: 1, emoji: "\u{1F60C}", key: "exertionEasy" },
   { value: 2, emoji: "\u{1F60A}", key: "exertionModerate" },
   { value: 3, emoji: "\u{1F624}", key: "exertionHard" },
   { value: 4, emoji: "\u{1F975}", key: "exertionMax" },
 ];
 
-const BODY_PARTS = [
+export const BODY_PARTS = [
   { field: "wrists",    emoji: "\u{1F91A}", key: "wrists" },
   { field: "shoulders", emoji: "\u{1F4AA}", key: "shoulders" },
   { field: "knees",     emoji: "\u{1F9B5}", key: "knees" },
   { field: "back",      emoji: "\u{1F519}", key: "lowerBack" },
 ];
 
-const BODY_STATES = [
+export const BODY_STATES = [
   null,
   { key: "good",  color: "green" },
   { key: "tight", color: "yellow" },
