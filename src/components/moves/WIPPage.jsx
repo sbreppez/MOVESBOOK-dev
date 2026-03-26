@@ -89,7 +89,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
       setMoves(prev=>[...prev,{...form, id:Date.now(), status:form.status||"wip"}]);
     }
   };
-  const handleToggleTrainedToday = (id) => { setMoves(prev => prev.map(m => m.id === id ? { ...m, date: new Date().toISOString().split("T")[0] } : m)); };
+  const handleToggleTrainedToday = (id) => { setMoves(prev => prev.map(m => m.id === id ? { ...m, date: new Date().toISOString().split("T")[0] } : m)); setOpenCat(null); setVocabTabAndNotify("gap"); };
   const bulkImport=newMoves=>{ const w=newMoves.map(m=>({...m,id:Date.now()+Math.random(),status:m.status||"wip"})); setMoves(prev=>[...prev,...w]); };
   const delMove=id=>setMoves(prev=>prev.filter(m=>m.id!==id));
   const tryDelMove=m=>{ if(st.confirmDelete!==false) setConfirmDeleteMove(m); else delMove(m.id); };
