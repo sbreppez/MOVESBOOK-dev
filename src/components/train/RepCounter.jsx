@@ -10,7 +10,7 @@ const fmtTime = (ms) => {
   return `${String(m).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 };
 
-export const RepCounter = ({ moves, catColors, reps, onSaveSession, onClose }) => {
+export const RepCounter = ({ moves, catColors, reps, onSaveSession, onClose, preselectedMove }) => {
   const t = useT();
   const [screen, setScreen] = useState("select");
   const [selectedMove, setSelectedMove] = useState(null);
@@ -32,6 +32,9 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onClose }) =
 
   // Clear reset confirm timeout on unmount
   useEffect(() => () => { if (resetTimeout.current) clearTimeout(resetTimeout.current); }, []);
+
+  // Auto-start with preselected move (from DRILL button)
+  useEffect(() => { if (preselectedMove) startCounting(preselectedMove); }, []);
 
   const startCounting = (m) => {
     setSelectedMove(m);

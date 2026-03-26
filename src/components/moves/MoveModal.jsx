@@ -45,6 +45,28 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
 
       <MasterySlider value={f.mastery} onChange={set("mastery")}/>
 
+      {/* ── Difficulty ── */}
+      <div style={{ marginTop:8, marginBottom:4 }}>
+        <div style={{ fontSize:10, fontWeight:800, letterSpacing:1, color:C.textMuted, fontFamily:FONT_DISPLAY, marginBottom:6 }}>
+          {t("difficulty")}
+        </div>
+        <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
+          {["easy","intermediate","advanced"].map(d => {
+            const active = f.difficulty === d;
+            return (
+              <button key={d} onClick={() => setF(p => ({...p, difficulty: active ? null : d}))}
+                style={{ border:`1.5px solid ${active ? C.accent : C.border}`, cursor:"pointer",
+                  borderRadius:20, fontFamily:FONT_DISPLAY, fontWeight:700, letterSpacing:0.3,
+                  fontSize:12, padding:"5px 12px", whiteSpace:"nowrap", transition:"all 0.15s",
+                  background: active ? C.accent : C.surface,
+                  color: active ? C.bg : C.textSec }}>
+                {t("difficulty_"+d)}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* ── More Details (Custom Attributes) ── */}
       <button onClick={() => setShowMore(s => !s)}
         style={{ background:"none", border:"none", cursor:"pointer", display:"flex",

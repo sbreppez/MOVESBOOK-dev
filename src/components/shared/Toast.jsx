@@ -3,7 +3,7 @@ import { C } from '../../constants/colors';
 import { Ic } from './Ic';
 
 export const Toast = ({ toasts, remove }) => (
-  <div style={{ position:"fixed", top:68, right:10, zIndex:9999, display:"flex", flexDirection:"column", gap:8, maxWidth:280, pointerEvents:"none" }}>
+  <div style={{ position:"fixed", top:68, left:"50%", transform:"translateX(-50%)", width:"100%", maxWidth:480, zIndex:9999, display:"flex", flexDirection:"column", alignItems:"flex-end", gap:8, pointerEvents:"none", padding:"0 10px", boxSizing:"border-box" }}>
     {toasts.map(t => (
       <div key={t.id} style={{ background: C.surface, border:`2px solid ${C.accent}`, borderRadius:10, padding:"11px 14px", boxShadow:`0 6px 24px rgba(0,0,0,0.25)`, display:"flex", alignItems:"flex-start", gap:10, pointerEvents:"all", animation:"toastIn 0.3s ease" }}>
         <span style={{ fontSize:16, flexShrink:0 }}>{t.emoji||"⚔"}</span>

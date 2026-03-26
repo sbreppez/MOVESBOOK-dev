@@ -19,8 +19,9 @@ import { SetDetailModal } from './SetDetailModal';
 import { AttributeFilter } from './AttributeFilter';
 import { filterMovesByAttrs } from '../../utils/attributeHelpers';
 import { ConstraintCard } from './ConstraintCard';
+import { GAPTab } from './GAPTab';
 
-export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, onSortChange, customAttrs=[], setCustomAttrs, constraint, onConstraintChange }) => {
+export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, onSortChange, customAttrs=[], setCustomAttrs, constraint, onConstraintChange, onDrill }) => {
   const t = useT();
   const { moveCountStr, resultCountStr } = usePlural();
   const { settings:ctxSettings } = useSettings();
@@ -88,6 +89,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
       setMoves(prev=>[...prev,{...form, id:Date.now(), status:form.status||"wip"}]);
     }
   };
+  const handleToggleTrainedToday = (id) => { setMoves(prev => prev.map(m => m.id === id ? { ...m, date: new Date().toISOString().split("T")[0] } : m)); };
   const bulkImport=newMoves=>{ const w=newMoves.map(m=>({...m,id:Date.now()+Math.random(),status:m.status||"wip"})); setMoves(prev=>[...prev,...w]); };
   const delMove=id=>setMoves(prev=>prev.filter(m=>m.id!==id));
   const tryDelMove=m=>{ if(st.confirmDelete!==false) setConfirmDeleteMove(m); else delMove(m.id); };
@@ -195,17 +197,17 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
                         cursor:idx===allCatMoves.length-1?"default":"pointer", color:idx===allCatMoves.length-1?C.border:C.accent,
                         fontSize:14, fontWeight:700, display:"flex", alignItems:"center", justifyContent:"center" }}>▼</button>
                   </div>
-                  <MoveListRow move={m} catColor={catColor} onEdit={()=>setEditMove(m)} onDelete={()=>tryDelMove(m)} onMove={cat=>moveToCat(m.id,cat)} allCats={cats} catColors={catColors}/>
+                  <MoveListRow move={m} catColor={catColor} onEdit={()=>setEditMove(m)} onDelete={()=>tryDelMove(m)} onMove={cat=>moveToCat(m.id,cat)} allCats={cats} catColors={catColors} onToggleTrainedToday={handleToggleTrainedToday}/>
                 </div>
               ))}
             </div>
           ) : catView==="tiles" ? (
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8 }}>
-              {catMoves.map(m=><MoveTile key={m.id} move={m} searchQuery={search} onClick={()=>setEditMove(m)} onEdit={()=>setEditMove(m)} onDelete={()=>tryDelMove(m)} onDuplicate={()=>dupMove(m)} onMove={cat=>moveToCat(m.id,cat)} allCats={cats} catColors={catColors}/>)}
+              {catMoves.map(m=><MoveTile key={m.id} move={m} searchQuery={search} onClick={()=>setEditMove(m)} onEdit={()=>setEditMove(m)} onDelete={()=>tryDelMove(m)} onDuplicate={()=>dupMove(m)} onMove={cat=>moveToCat(m.id,cat)} allCats={cats} catColors={catColors} onToggleTrainedToday={handleToggleTrainedToday}/>)}
             </div>
           ) : (
             <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
-              {catMoves.map(m=><MoveListRow key={m.id} move={m} searchQuery={search} catColor={catColor} onEdit={()=>setEditMove(m)} onDelete={()=>tryDelMove(m)} onMove={cat=>moveToCat(m.id,cat)} allCats={cats} catColors={catColors}/>)}
+              {catMoves.map(m=><MoveListRow key={m.id} move={m} searchQuery={search} catColor={catColor} onEdit={()=>setEditMove(m)} onDelete={()=>tryDelMove(m)} onMove={cat=>moveToCat(m.id,cat)} allCats={cats} catColors={catColors} onToggleTrainedToday={handleToggleTrainedToday}/>)}
             </div>
           )}
         </div>
@@ -253,7 +255,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"6px 14px", borderBottom:`1px solid ${C.borderLight}`, background:C.surface, flexShrink:0 }}>
         {/* MOVES / SETS sub-tabs */}
         <div style={{ display:"flex", gap:0 }}>
-          {[["moves","MOVES"],["sets","SETS"]].map(([id,label])=>(
+          {[["moves","MOVES"],["sets","SETS"],["gap","GAP"]].map(([id,label])=>(
             <button key={id} onClick={()=>setVocabTabAndNotify(id)}
               style={{ padding:"4px 10px", background:"none", border:"none", cursor:"pointer",
                 fontSize:10, fontWeight:800, letterSpacing:1.5, fontFamily:FONT_DISPLAY,
@@ -308,8 +310,10 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
           totalCount={moves.length} filteredCount={cats.reduce((sum,cat)=>sum+inCat(cat).length,0)} />
       )}
 
-      <div style={{ flex:1, overflow:"auto", padding:10, paddingBottom:76 }}>
-        {vocabTab==="sets" ? (
+      <div style={{ flex:1, overflow:"auto", paddingTop: vocabTab==="gap" ? 0 : 10, paddingLeft: vocabTab==="gap" ? 0 : 10, paddingRight: vocabTab==="gap" ? 0 : 10, paddingBottom:76 }}>
+        {vocabTab==="gap" ? (
+          <GAPTab moves={moves} catColors={catColors} setMoves={setMoves} onDrill={onDrill} settings={st}/>
+        ) : vocabTab==="sets" ? (
           <div>
             {sets.length===0&&(
               <div style={{ textAlign:"center", padding:40, color:C.textMuted }}>

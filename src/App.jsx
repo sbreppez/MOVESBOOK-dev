@@ -277,6 +277,7 @@ export default function App() {
   const [showTour,setShowTour]=useState(false);
   const [showBackup,setShowBackup]=useState(false);
   const [showRepCounter,setShowRepCounter]=useState(false);
+  const [repCounterPreselect,setRepCounterPreselect]=useState(null);
   const [showSparring,setShowSparring]=useState(false);
   const [showComboMachine,setShowComboMachine]=useState(false);
   const [showLab,setShowLab]=useState(false);
@@ -368,6 +369,17 @@ export default function App() {
 
   const vocabMoves = moves;
 
+  // GAP badge: count stale moves (default 14-day threshold with difficulty adjustment)
+  const staleCount = useMemo(() => {
+    const todayMs = new Date(new Date().toISOString().split("T")[0]).getTime();
+    return moves.filter(m => {
+      const lastMs = m.date ? new Date(m.date).getTime() : 0;
+      const days = Math.floor((todayMs - lastMs) / 86400000);
+      const mult = m.difficulty === "easy" ? 0.7 : m.difficulty === "advanced" ? 1.5 : 1;
+      return days >= Math.round(14 * mult);
+    }).length;
+  }, [moves]);
+
   const effectiveZoom = fontScale * zoom;
   const rootHeight = effectiveZoom < 1 ? `${(100 / effectiveZoom).toFixed(2)}vh` : "100vh";
 
@@ -413,7 +425,7 @@ export default function App() {
           </div>
         </div>
 
-        <TabBar active={tab} onChange={t=>{ setTrainMenu(null); setTab(t); setAddTick(0); setAddTick2(0); setAddMenu(false); setSubTab("moves"); }}/>
+        <TabBar active={tab} onChange={t=>{ setTrainMenu(null); setTab(t); setAddTick(0); setAddTick2(0); setAddMenu(false); setSubTab("moves"); }} badges={{ wip: staleCount }}/>
 
         <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column", position:"relative" }}>
           {/* Train modals + menu — inside position:relative so absolute children are scoped to app width */}
@@ -440,7 +452,7 @@ export default function App() {
             {tab==="ideas" && <IdeasPage onAddMove={handleAddMoveFromIdea} onAddTrigger={addTick} ideas={ideas} setIdeas={setIdeas} habits={habits} setHabits={setHabits}/>}
           </TrainMenuCtx.Provider>
           </TrainModalCtx.Provider>
-          {tab==="wip"   && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} sets={sets} setSets={setSets} addToast={addToast} pendingDesc={ideaToMove} clearPendingDesc={()=>setIdeaToMove(null)} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} constraint={constraint} onConstraintChange={setConstraint}/>}
+          {tab==="wip"   && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} sets={sets} setSets={setSets} addToast={addToast} pendingDesc={ideaToMove} clearPendingDesc={()=>setIdeaToMove(null)} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} constraint={constraint} onConstraintChange={setConstraint} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}}/>}
           {tab==="ready" && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab}/>}
         </div>
 
@@ -451,11 +463,12 @@ export default function App() {
       {showSettings&&<SettingsModal onClose={()=>setShowSettings(false)} settings={appSettings} onSave={setAppSettings} onClearMoves={()=>setMoves([])} onRestoreRounds={()=>setRounds(INIT_ROUNDS)} onRestartTour={()=>setShowTour(true)} zoom={zoom} onZoomChange={handleZoomChange} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs}/>}
         {showBackup&&<BackupModal onClose={()=>setShowBackup(false)}/>}
         {showRepCounter&&<RepCounter moves={moves} catColors={catColors} reps={reps}
+          preselectedMove={repCounterPreselect}
           onSaveSession={(session)=>{
             setReps(prev=>[session,...prev]);
             setMoves(prev=>prev.map(m=>m.id===session.moveId?{...m,date:new Date().toISOString().split("T")[0]}:m));
           }}
-          onClose={()=>setShowRepCounter(false)}/>}
+          onClose={()=>{setShowRepCounter(false);setRepCounterPreselect(null);}}/>}
         {showSparring&&<Sparring moves={moves} catColors={catColors} sparring={sparring} settings={appSettings}
           onSaveSession={(session, updatedSparring)=>{
             setSparring(updatedSparring);

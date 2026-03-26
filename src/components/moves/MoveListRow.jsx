@@ -6,7 +6,7 @@ import { Highlight } from '../shared/Highlight';
 import { masteryColor } from '../../constants/styles';
 import { useSettings } from '../../hooks/useSettings';
 
-export const MoveListRow = ({ move, catColor, onEdit, onDelete, onMove, allCats, catColors }) => {
+export const MoveListRow = ({ move, catColor, onEdit, onDelete, onMove, allCats, catColors, onToggleTrainedToday }) => {
   const { settings } = useSettings();
   const showMastery = settings.showMastery !== false;
   return (
@@ -17,6 +17,16 @@ export const MoveListRow = ({ move, catColor, onEdit, onDelete, onMove, allCats,
         {move.description&&<div style={{ fontSize:11, color:C.textSec, marginTop:2, lineHeight:1.4,
           overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{move.description}</div>}
       </div>
+      {onToggleTrainedToday&&(()=>{
+        const isTrained = move.date === new Date().toISOString().split("T")[0];
+        return <button onClick={e=>{e.stopPropagation();onToggleTrainedToday(move.id);}}
+          style={{ width:16, height:16, borderRadius:"50%", flexShrink:0, padding:0,
+            border: isTrained ? "none" : `1.5px solid ${C.border}`,
+            background: isTrained ? C.green : "transparent",
+            display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer" }}>
+          {isTrained&&<Ic n="check" s={10} c="#fff"/>}
+        </button>;
+      })()}
       {showMastery&&<Fragment>
         <div style={{ width:44, height:3, borderRadius:2, background:C.border, flexShrink:0 }}>
           <div style={{ height:"100%", width:`${move.mastery}%`, borderRadius:2, background:masteryColor(move.mastery) }}/>

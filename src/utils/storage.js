@@ -13,6 +13,7 @@ export function migrateMove(m) {
     link:        m.link        || "",
     date:        m.date        || Date.now(),
     attrs:       m.attrs       || {},
+    difficulty:  m.difficulty  || null,
   };
 }
 

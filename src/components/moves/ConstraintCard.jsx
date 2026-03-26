@@ -241,7 +241,6 @@ const ManageOverlay = ({ constraint, onConstraintChange, onClose, addToast }) =>
       }
     }
     onConstraintChange(next);
-    if (addToast) addToast({ text: t("constraintRemoved") });
   };
 
   const handleRemoveCustom = (id) => {
@@ -261,7 +260,6 @@ const ManageOverlay = ({ constraint, onConstraintChange, onClose, addToast }) =>
       }
     }
     onConstraintChange(next);
-    if (addToast) addToast({ text: t("constraintRemoved") });
   };
 
   const handleAddCustom = () => {
@@ -318,7 +316,8 @@ const ManageOverlay = ({ constraint, onConstraintChange, onClose, addToast }) =>
 
   return (
     <div style={{
-      position:"absolute", inset:0, zIndex:500, background:C.bg,
+      position:"fixed", top:0, bottom:0, left:"50%", transform:"translateX(-50%)",
+      width:"100%", maxWidth:480, zIndex:500, background:C.bg,
       display:"flex", flexDirection:"column", overflow:"hidden",
     }}>
       {/* Header */}
