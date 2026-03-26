@@ -167,7 +167,7 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
   // MAIN SCREEN
   // ════════════════════════════════════════════════════════════════════════
   return (
-    <div style={{ position:"fixed", inset:0, zIndex:500, background:C.bg, display:"flex", flexDirection:"column", fontFamily:FONT_BODY }}>
+    <div style={{ position:"absolute", inset:0, zIndex:500, background:C.bg, display:"flex", flexDirection:"column", fontFamily:FONT_BODY }}>
       <style>{`
         @keyframes mb-combo-spin { 0%{transform:rotateX(90deg) scale(0.8);opacity:0} 60%{transform:rotateX(-5deg) scale(1.02);opacity:1} 100%{transform:rotateX(0) scale(1);opacity:1} }
         @keyframes mb-combo-flicker { 0%,49%{opacity:1} 50%,100%{opacity:0.3} }
@@ -408,7 +408,7 @@ const MovePicker = ({ moves, catColors, combos, onCombosChange, onBack }) => {
   };
 
   return (
-    <div style={{ position:"fixed", inset:0, zIndex:500, background:C.bg, display:"flex", flexDirection:"column", fontFamily:FONT_BODY }}>
+    <div style={{ position:"absolute", inset:0, zIndex:500, background:C.bg, display:"flex", flexDirection:"column", fontFamily:FONT_BODY }}>
       {/* Header */}
       <div style={{ display:"flex", alignItems:"center", padding:"14px 16px", borderBottom:`1px solid ${C.border}`, background:C.header, flexShrink:0 }}>
         <button onClick={onBack} style={{ background:"none", border:"none", cursor:"pointer", padding:6, marginRight:8 }}>
@@ -496,7 +496,7 @@ const TransitionManager = ({ combos, onCombosChange, onBack }) => {
   };
 
   return (
-    <div style={{ position:"fixed", inset:0, zIndex:500, background:C.bg, display:"flex", flexDirection:"column", fontFamily:FONT_BODY }}>
+    <div style={{ position:"absolute", inset:0, zIndex:500, background:C.bg, display:"flex", flexDirection:"column", fontFamily:FONT_BODY }}>
       {/* Header */}
       <div style={{ display:"flex", alignItems:"center", padding:"14px 16px", borderBottom:`1px solid ${C.border}`, background:C.header, flexShrink:0 }}>
         <button onClick={onBack} style={{ background:"none", border:"none", cursor:"pointer", padding:6, marginRight:8 }}>

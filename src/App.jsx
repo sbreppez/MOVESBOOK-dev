@@ -440,7 +440,7 @@ export default function App() {
           </div>
         </div>
 
-        {!showCalendar&&<TabBar active={tab} onChange={(t,sub)=>{ setTrainMenu(null); setTab(t); setAddTick(0); setAddTick2(0); setAddMenu(false); setSubTab(sub||"moves"); }} badges={{ wip: staleCount }}/>}
+        {!showCalendar&&!showRepCounter&&!showSparring&&!showComboMachine&&<TabBar active={tab} onChange={(t,sub)=>{ setTrainMenu(null); setTab(t); setAddTick(0); setAddTick2(0); setAddMenu(false); setSubTab(sub||"moves"); }} badges={{ wip: staleCount }}/>}
 
         <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column", position:"relative" }}>
           {/* Train modals + menu — inside position:relative so absolute children are scoped to app width */}
@@ -475,6 +475,27 @@ export default function App() {
             cats={cats} catColors={catColors} settings={appSettings} onSettingsChange={setAppSettings}
             addToast={addToast} initialDay={calendarInitialDay}
             onClose={()=>setShowCalendar(false)}/>}
+          {showRepCounter&&<RepCounter moves={moves} catColors={catColors} reps={reps}
+            preselectedMove={repCounterPreselect}
+            onSaveSession={(session)=>{
+              setReps(prev=>[session,...prev]);
+              setMoves(prev=>prev.map(m=>m.id===session.moveId?{...m,date:new Date().toISOString().split("T")[0]}:m));
+            }}
+            onClose={()=>{setShowRepCounter(false);setRepCounterPreselect(null);}}/>}
+          {showSparring&&<Sparring moves={moves} catColors={catColors} sparring={sparring} settings={appSettings}
+            onSaveSession={(session, updatedSparring)=>{
+              setSparring(updatedSparring);
+              if(session.movesTrained?.length){
+                setMoves(prev=>prev.map(m=>session.movesTrained.includes(m.id)?{...m,date:new Date().toISOString().split("T")[0]}:m));
+              }
+            }}
+            onSettingsChange={setAppSettings}
+            onClose={()=>setShowSparring(false)}/>}
+          {showComboMachine&&<ComboMachine moves={moves} catColors={catColors} combos={combos}
+            onCombosChange={setCombos}
+            onSaveSet={(fields)=>{ setSets(p=>[...p,{id:Date.now(),...fields}]); }}
+            addToast={addToast}
+            onClose={()=>setShowComboMachine(false)}/>}
         </div>
 
         <Toast toasts={toasts} remove={removeToast}/>
@@ -483,27 +504,6 @@ export default function App() {
       {showFeedback&&<FeedbackModal onClose={()=>setShowFeedback(false)}/>}
       {showSettings&&<SettingsModal onClose={()=>setShowSettings(false)} settings={appSettings} onSave={setAppSettings} onClearMoves={()=>setMoves([])} onRestoreRounds={()=>setRounds(INIT_ROUNDS)} onRestartTour={()=>setShowTour(true)} zoom={zoom} onZoomChange={handleZoomChange} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs}/>}
         {showBackup&&<BackupModal onClose={()=>setShowBackup(false)}/>}
-        {showRepCounter&&<RepCounter moves={moves} catColors={catColors} reps={reps}
-          preselectedMove={repCounterPreselect}
-          onSaveSession={(session)=>{
-            setReps(prev=>[session,...prev]);
-            setMoves(prev=>prev.map(m=>m.id===session.moveId?{...m,date:new Date().toISOString().split("T")[0]}:m));
-          }}
-          onClose={()=>{setShowRepCounter(false);setRepCounterPreselect(null);}}/>}
-        {showSparring&&<Sparring moves={moves} catColors={catColors} sparring={sparring} settings={appSettings}
-          onSaveSession={(session, updatedSparring)=>{
-            setSparring(updatedSparring);
-            if(session.movesTrained?.length){
-              setMoves(prev=>prev.map(m=>session.movesTrained.includes(m.id)?{...m,date:new Date().toISOString().split("T")[0]}:m));
-            }
-          }}
-          onSettingsChange={setAppSettings}
-          onClose={()=>setShowSparring(false)}/>}
-        {showComboMachine&&<ComboMachine moves={moves} catColors={catColors} combos={combos}
-          onCombosChange={setCombos}
-          onSaveSet={(fields)=>{ setSets(p=>[...p,{id:Date.now(),...fields}]); }}
-          addToast={addToast}
-          onClose={()=>setShowComboMachine(false)}/>}
         {showLab&&<Lab moves={moves} cats={cats} catColors={catColors} lab={lab}
           onLabChange={setLab}
           onSaveMove={(moveData)=>{ setMoves(prev=>[...prev,{...moveData, id:Date.now()}]); }}
