@@ -10,6 +10,7 @@ const BACKUP_KEYS = {
   habits: "mb_habits", templates: "mb_templates",
   categories: "mb_cats", catColors: "mb_cat_colors",
   customAttrs: "mb_custom_attrs",
+  constraint: "mb_constraint",
 };
 
 export const downloadBackup = () => {

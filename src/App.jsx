@@ -27,6 +27,7 @@ import { RepCounter } from './components/train/RepCounter';
 import { Sparring } from './components/train/Sparring';
 import { ComboMachine } from './components/train/ComboMachine';
 import { Lab } from './components/moves/Lab';
+import { getDefaultConstraintState } from './constants/constraints';
 
 // ── Firebase stubs for preview ──
 if (typeof window !== "undefined") {
@@ -111,6 +112,9 @@ export default function App() {
   const [lab, setLab] = useState(() => {
     try { const s=localStorage.getItem("mb_lab"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { customChips:{ technical:{}, conceptual:{} } };
   });
+  const [constraint, setConstraint] = useState(() => {
+    try { const s=localStorage.getItem("mb_constraint"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return getDefaultConstraintState();
+  });
 
   // ── Persist to localStorage on every change ────────────────────────────────
   useEffect(()=>{ saveLocal("mb_moves",   moves);   },[moves]);
@@ -129,6 +133,7 @@ export default function App() {
   useEffect(()=>{ saveLocal("mb_sparring", sparring); },[sparring]);
   useEffect(()=>{ saveLocal("mb_combos", combos); },[combos]);
   useEffect(()=>{ saveLocal("mb_lab", lab); },[lab]);
+  useEffect(()=>{ saveLocal("mb_constraint", constraint); },[constraint]);
   useEffect(()=>{ saveLocal("mb_ideas",   ideas);
     const timer = setTimeout(() => {
       if (window.__MB_USER__?.uid && window.__MB_DB__) {
@@ -160,6 +165,7 @@ export default function App() {
       sparring:    save("sparring"),
       combos:      save("combos"),
       lab:         save("lab"),
+      constraint:  save("constraint"),
     };
   }, []);
 
@@ -175,6 +181,7 @@ export default function App() {
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.sparring?.(fbUser.uid, sparring); },[sparring, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.combos?.(fbUser.uid, combos); },[combos, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.lab?.(fbUser.uid, lab); },[lab, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.constraint?.(fbUser.uid, constraint); },[constraint, fbUser]);
 
   // ── Auth resolution ────────────────────────────────────────────────────────
   useEffect(()=>{
@@ -205,6 +212,8 @@ export default function App() {
           if (cb) { try { const p=JSON.parse(cb); if(p&&typeof p==="object") setCombos(p); } catch {} }
           const lb = localStorage.getItem("mb_lab");
           if (lb) { try { const p=JSON.parse(lb); if(p&&typeof p==="object") setLab(p); } catch {} }
+          const cn = localStorage.getItem("mb_constraint");
+          if (cn) { try { const p=JSON.parse(cn); if(p&&typeof p==="object") setConstraint(p); } catch {} }
           if (p) { try { const pp=JSON.parse(p); if(pp&&Object.values(pp).some(v=>v)) setProfile(pp); } catch{} }
           const st = localStorage.getItem("mb_settings");
           if (st) {
@@ -234,6 +243,7 @@ export default function App() {
         setSparring({ sessions:[], records:{} });
         setCombos({ transitions:[...DEFAULT_TRANSITIONS], selectedMoveIds:null });
         setLab({ customChips:{ technical:{}, conceptual:{} } });
+        setConstraint(getDefaultConstraintState());
       }
     }
     window.addEventListener("mb-auth-resolved", handleAuthResolved);
@@ -430,7 +440,7 @@ export default function App() {
             {tab==="ideas" && <IdeasPage onAddMove={handleAddMoveFromIdea} onAddTrigger={addTick} ideas={ideas} setIdeas={setIdeas} habits={habits} setHabits={setHabits}/>}
           </TrainMenuCtx.Provider>
           </TrainModalCtx.Provider>
-          {tab==="wip"   && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} sets={sets} setSets={setSets} addToast={addToast} pendingDesc={ideaToMove} clearPendingDesc={()=>setIdeaToMove(null)} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs}/>}
+          {tab==="wip"   && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} sets={sets} setSets={setSets} addToast={addToast} pendingDesc={ideaToMove} clearPendingDesc={()=>setIdeaToMove(null)} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} constraint={constraint} onConstraintChange={setConstraint}/>}
           {tab==="ready" && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab}/>}
         </div>
 
