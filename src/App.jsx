@@ -27,6 +27,7 @@ import { RepCounter } from './components/train/RepCounter';
 import { Sparring } from './components/train/Sparring';
 import { ComboMachine } from './components/train/ComboMachine';
 import { Lab } from './components/moves/Lab';
+import { RestoreRemixRebuild } from './components/moves/RestoreRemixRebuild';
 import { CalendarOverlay } from './components/calendar/CalendarOverlay';
 import { ManageReminders } from './components/moves/ManageReminders';
 
@@ -113,6 +114,9 @@ export default function App() {
   const [lab, setLab] = useState(() => {
     try { const s=localStorage.getItem("mb_lab"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { customChips:{ technical:{}, conceptual:{} } };
   });
+  const [rrr, setRRR] = useState(() => {
+    try { const s=localStorage.getItem("mb_rrr"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { lastUsed:{ mode:null, moveId:null, moveName:null, date:null } };
+  });
   const [reminders, setReminders] = useState(() => {
     try { const s=localStorage.getItem("mb_reminders"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { items:[] };
   });
@@ -137,6 +141,7 @@ export default function App() {
   useEffect(()=>{ saveLocal("mb_sparring", sparring); },[sparring]);
   useEffect(()=>{ saveLocal("mb_combos", combos); },[combos]);
   useEffect(()=>{ saveLocal("mb_lab", lab); },[lab]);
+  useEffect(()=>{ saveLocal("mb_rrr", rrr); },[rrr]);
   useEffect(()=>{ saveLocal("mb_reminders", reminders); },[reminders]);
   useEffect(()=>{ saveLocal("mb_calendar", calendar); },[calendar]);
   useEffect(()=>{ saveLocal("mb_ideas",   ideas);
@@ -170,6 +175,7 @@ export default function App() {
       sparring:    save("sparring"),
       combos:      save("combos"),
       lab:         save("lab"),
+      rrr:         save("rrr"),
       reminders:   save("reminders"),
       calendar:    save("calendar"),
     };
@@ -187,6 +193,7 @@ export default function App() {
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.sparring?.(fbUser.uid, sparring); },[sparring, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.combos?.(fbUser.uid, combos); },[combos, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.lab?.(fbUser.uid, lab); },[lab, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.rrr?.(fbUser.uid, rrr); },[rrr, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.reminders?.(fbUser.uid, reminders); },[reminders, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.calendar?.(fbUser.uid, calendar); },[calendar, fbUser]);
 
@@ -219,6 +226,8 @@ export default function App() {
           if (cb) { try { const p=JSON.parse(cb); if(p&&typeof p==="object") setCombos(p); } catch {} }
           const lb = localStorage.getItem("mb_lab");
           if (lb) { try { const p=JSON.parse(lb); if(p&&typeof p==="object") setLab(p); } catch {} }
+          const rr = localStorage.getItem("mb_rrr");
+          if (rr) { try { const p=JSON.parse(rr); if(p&&typeof p==="object") setRRR(p); } catch {} }
           const rm = localStorage.getItem("mb_reminders");
           if (rm) { try { const p=JSON.parse(rm); if(p&&typeof p==="object") setReminders(p); } catch {} }
           const cal = localStorage.getItem("mb_calendar");
@@ -252,6 +261,7 @@ export default function App() {
         setSparring({ sessions:[], records:{} });
         setCombos({ transitions:[...DEFAULT_TRANSITIONS], selectedMoveIds:null });
         setLab({ customChips:{ technical:{}, conceptual:{} } });
+        setRRR({ lastUsed:{ mode:null, moveId:null, moveName:null, date:null } });
         setReminders({ items:[] });
         setCalendar({ events:[] });
       }
@@ -292,6 +302,7 @@ export default function App() {
   const [showComboMachine,setShowComboMachine]=useState(false);
   const [showManageReminders,setShowManageReminders]=useState(false);
   const [showLab,setShowLab]=useState(false);
+  const [showRRR,setShowRRR]=useState(false);
   const [showCalendar,setShowCalendar]=useState(false);
   const [calendarInitialDay,setCalendarInitialDay]=useState(null);
   const [appSettings,setAppSettings]=useState(()=>({
@@ -346,6 +357,7 @@ export default function App() {
       { label:tr("addMoveMenu"),     emoji:"🕺", action:()=>{ setAddMenu(false); setAddTick(t=>t+1); } },
       { label:tr("addCategoryMenu"), emoji:"📂", action:()=>{ setAddMenu(false); setAddTick2(t=>t+1); } },
       { label:tr("openLab"),         emoji:"🧪", action:()=>{ setAddMenu(false); setShowLab(true); } },
+      { label:tr("restoreRemixRebuild"), emoji:"🔄", action:()=>{ setAddMenu(false); setShowRRR(true); } },
     ];
     if (tab === "wip" && subTab === "sets") return null; // fires Add Set directly
     if (tab === "ready" && subTab === "freestyle") return null; // fires picker directly
@@ -441,7 +453,7 @@ export default function App() {
           </div>
         </div>
 
-        {!showCalendar&&!showRepCounter&&!showSparring&&!showComboMachine&&!showManageReminders&&<TabBar active={tab} onChange={(t,sub)=>{ setTrainMenu(null); setTab(t); setAddTick(0); setAddTick2(0); setAddMenu(false); setSubTab(sub||"moves"); }} badges={{ wip: staleCount }}/>}
+        {!showCalendar&&!showRepCounter&&!showSparring&&!showComboMachine&&!showManageReminders&&!showRRR&&<TabBar active={tab} onChange={(t,sub)=>{ setTrainMenu(null); setTab(t); setAddTick(0); setAddTick2(0); setAddMenu(false); setSubTab(sub||"moves"); }} badges={{ wip: staleCount }}/>}
 
         <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column", position:"relative" }}>
           {/* Train modals + menu — inside position:relative so absolute children are scoped to app width */}
@@ -516,6 +528,9 @@ export default function App() {
           onSaveMove={(moveData)=>{ setMoves(prev=>[...prev,{...moveData, id:Date.now()}]); }}
           addToast={addToast}
           onClose={()=>setShowLab(false)}/>}
+        {showRRR&&<RestoreRemixRebuild moves={moves} catColors={catColors} rrr={rrr}
+          onRRRChange={setRRR} addToast={addToast}
+          onClose={()=>setShowRRR(false)}/>}
         {showTour&&<Walkthrough onDone={handleTourDone}/>}
 
         {/* ── Bottom Bar ── */}
