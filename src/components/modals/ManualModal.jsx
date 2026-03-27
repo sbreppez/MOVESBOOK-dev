@@ -250,7 +250,7 @@ export const ManualModal = ({ onClose }) => {
   };
 
   return (
-    <div style={{ position:"fixed", inset:0, zIndex:900, display:"flex", flexDirection:"column",
+    <div style={{ position:"absolute", inset:0, zIndex:900, display:"flex", flexDirection:"column",
       background:C.bg }}>
 
       {/* Header */}

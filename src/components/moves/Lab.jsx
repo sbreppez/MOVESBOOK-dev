@@ -54,7 +54,7 @@ const emptyTech = () => {
 };
 
 // ── Main Component ──────────────────────────────────────────────────────────
-export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addToast, onClose }) => {
+export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addToast, onClose, addCalendarEvent }) => {
   const t = useT();
 
   // ── State ──
@@ -253,6 +253,15 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
     setSavedFlash(true);
     if (savedTimer.current) clearTimeout(savedTimer.current);
     savedTimer.current = setTimeout(() => setSavedFlash(false), 2500);
+    if (addCalendarEvent) {
+      addCalendarEvent({
+        date: new Date().toISOString().split("T")[0],
+        type: "training",
+        title: `Lab — ${saveName.trim() || t("variation")}`,
+        categories: saveCat ? [saveCat] : [],
+        source: "lab",
+      }, { silent: true });
+    }
   };
 
   // ── Long press handler for custom chip removal ──

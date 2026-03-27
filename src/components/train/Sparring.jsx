@@ -59,7 +59,7 @@ const haptic = (pattern) => {
 
 // ── Main Component ───────────────────────────────────────────────────────────
 
-export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, onSettingsChange, onClose }) => {
+export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, onSettingsChange, onClose, addCalendarEvent }) => {
   const t = useT();
   const { settings: appSettings } = useSettings();
   const isDark = (appSettings.theme || settings.theme) === "dark";
@@ -336,6 +336,19 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
     };
 
     onSaveSession(session, updatedSparring);
+
+    if (addCalendarEvent) {
+      const modeLabel = mode === "rounds" ? `${session.rounds} rounds` : mode === "time" ? "Timed" : "Cypher Till Death";
+      addCalendarEvent({
+        date: new Date().toISOString().split("T")[0],
+        type: "training",
+        title: `Sparring — ${modeLabel}`,
+        duration: Math.round((session.totalDuration || 0) / 60000) || 1,
+        notes: notes.trim() || null,
+        exertion, bodyStatus,
+        source: "sparring",
+      }, { silent: true });
+    }
 
     if (prs.length > 0) {
       setPrBroken(prs[0]);

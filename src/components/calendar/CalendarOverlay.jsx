@@ -351,6 +351,16 @@ export const CalendarOverlay = ({
                           {e.eventLink.length > 40 ? e.eventLink.slice(0, 40) + "…" : e.eventLink}
                         </a>
                       )}
+                      {e.source && (
+                        <div style={{ fontSize: 10, color: C.textMuted, marginTop: 3, fontFamily: FONT_DISPLAY,
+                          fontWeight: 600, letterSpacing: 0.3, fontStyle: "italic" }}>
+                          {e.source === "rep_counter" ? t("viaRepCounter") :
+                           e.source === "sparring" ? t("viaSparring") :
+                           e.source === "combo_machine" ? t("viaComboMachine") :
+                           e.source === "lab" ? t("viaLab") :
+                           e.source === "rrr" ? t("viaRRR") : ""}
+                        </div>
+                      )}
                     </div>
                     <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
                       <button onClick={() => { setEditEvent(e); setShowJournal(true); }}

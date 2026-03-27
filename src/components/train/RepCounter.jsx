@@ -10,7 +10,7 @@ const fmtTime = (ms) => {
   return `${String(m).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 };
 
-export const RepCounter = ({ moves, catColors, reps, onSaveSession, onClose, preselectedMove }) => {
+export const RepCounter = ({ moves, catColors, reps, onSaveSession, onClose, preselectedMove, addCalendarEvent }) => {
   const t = useT();
   const [screen, setScreen] = useState("select");
   const [selectedMove, setSelectedMove] = useState(null);
@@ -86,6 +86,17 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onClose, pre
       date: new Date().toISOString(),
     };
     onSaveSession(session);
+    if (addCalendarEvent) {
+      addCalendarEvent({
+        date: new Date().toISOString().split("T")[0],
+        type: "training",
+        title: `Rep Counter — ${selectedMove.name}`,
+        categories: [selectedMove.category],
+        moveIds: [selectedMove.id],
+        duration: Math.round(Math.floor(elapsed / 1000) / 60) || 1,
+        source: "rep_counter",
+      }, { silent: true });
+    }
     setSavedSession(session);
     setScreen("complete");
   };

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { FONT_DISPLAY, FONT_BODY } from "../../constants/fonts";
 import { Ic } from "../shared/Ic";
-import { Modal } from "../shared/Modal";
 import { Btn } from "../shared/Btn";
 import { useT } from "../../hooks/useTranslation";
 import { useSettings } from "../../hooks/useSettings";
@@ -23,6 +22,7 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
     setNoteText("");
     setShowNoteAdd(false);
   };
+  const handleSaveAndClose = () => { onSave(f); onClose(); };
   const lbl = () => ({ display:"block", fontSize:11, fontWeight:800, letterSpacing:1.5, color:C.textSec, fontFamily:FONT_DISPLAY, marginBottom:6 });
   const sectionHdr = (label, icon) => (
     <div style={{ display:"flex", alignItems:"center", gap:7, margin:"20px 0 10px", paddingBottom:6, borderBottom:`1px solid ${C.borderLight}` }}>
@@ -31,7 +31,14 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
     </div>
   );
   return (
-    <Modal title={t("myProfile")} onClose={()=>{ onSave(f); onClose(); }}>
+    <div style={{ position:"absolute", inset:0, zIndex:900, background:C.bg, display:"flex", flexDirection:"column", overflow:"hidden" }}>
+      {/* Header */}
+      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"13px 18px", borderBottom:`1px solid ${C.border}`, flexShrink:0, background:C.bg, zIndex:10 }}>
+        <span style={{ fontWeight:800, fontSize:15, letterSpacing:2, color:C.brown, fontFamily:FONT_DISPLAY }}>{t("myProfile")}</span>
+        <button onClick={handleSaveAndClose} style={{ background:C.surfaceAlt, border:`1px solid ${C.border}`, cursor:"pointer", color:C.textSec, padding:5, borderRadius:7, display:"flex" }}><Ic n="x" s={14}/></button>
+      </div>
+      {/* Scrollable content */}
+      <div style={{ flex:1, overflowY:"auto", padding:18 }}>
       {sectionHdr(t("identity"),"user")}
       <div style={{ marginBottom:14 }}>
         <label style={lbl()}>{t("nickname")}</label>
@@ -162,10 +169,11 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
           {t("signOut")}
         </button>
       </div>
-      <div style={{ display:"flex", gap:8, justifyContent:"flex-end", marginTop:12 }}>
+      <div style={{ display:"flex", gap:8, justifyContent:"flex-end", marginTop:12, paddingBottom:16 }}>
         <Btn variant="secondary" onClick={onClose}>{t("cancel")}</Btn>
-        <Btn onClick={()=>{ onSave(f); onClose(); }}>{t("saveProfileBtn")}</Btn>
+        <Btn onClick={handleSaveAndClose}>{t("saveProfileBtn")}</Btn>
       </div>
-    </Modal>
+      </div>
+    </div>
   );
 };

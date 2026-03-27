@@ -87,11 +87,8 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
   const accent=C.accent;
 
   return (
-    <div style={{ position:"fixed", inset:0, background:"rgba(10,5,2,0.8)", zIndex:1000,
-      display:"flex", alignItems:"flex-end", justifyContent:"center", padding:"0 0 0 0" }}>
-      <div style={{ background:panelBg, border:`2px solid ${panelBrd}`, borderRadius:"14px 14px 0 0", width:"100%",
-        maxWidth:480, height:"90dvh", display:"flex", flexDirection:"column", overflow:"hidden",
-        boxShadow:"0 -8px 40px rgba(0,0,0,0.6)", color:panelTxt }}>
+    <div style={{ position:"absolute", inset:0, zIndex:1000,
+      background:panelBg, display:"flex", flexDirection:"column", overflow:"hidden", color:panelTxt }}>
 
         {/* Sticky header */}
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between",
@@ -579,7 +576,6 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
               background:accent, color:C.bg, cursor:"pointer", fontSize:14,
               fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:0.8 }}>{t("saveSettings")}</button>
         </div>
-      </div>
       {(showAddAttr||editAttr)&&(
         <AttributeModal
           attr={editAttr}

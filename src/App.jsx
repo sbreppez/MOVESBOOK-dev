@@ -336,6 +336,17 @@ export default function App() {
   const addToast=useCallback(t=>{ const id=Date.now(); setToasts(prev=>[...prev,{...t,id}]); setTimeout(()=>setToasts(prev=>prev.filter(x=>x.id!==id)),5500); },[]);
   const removeToast=id=>setToasts(prev=>prev.filter(t=>t.id!==id));
 
+  const addCalendarEvent = useCallback((eventData, { silent = false } = {}) => {
+    setCalendar(prev => {
+      const isDup = (prev.events || []).some(e =>
+        e.source === eventData.source && e.date === eventData.date && e.title === eventData.title
+      );
+      if (isDup) return prev;
+      return { ...prev, events: [...(prev.events || []), { id: Date.now(), ...eventData }] };
+    });
+    if (!silent) addToast({ emoji: "✅", title: tr("sessionLogged") });
+  }, [setCalendar, addToast, tr]);
+
   const setMovesGrad = useCallback(updater => {
     setMoves(prev => typeof updater==="function" ? updater(prev) : updater);
   }, []);
@@ -453,7 +464,7 @@ export default function App() {
           </div>
         </div>
 
-        {!showCalendar&&!showRepCounter&&!showSparring&&!showComboMachine&&!showManageReminders&&!showRRR&&<TabBar active={tab} onChange={(t,sub)=>{ setTrainMenu(null); setTab(t); setAddTick(0); setAddTick2(0); setAddMenu(false); setSubTab(sub||"moves"); }} badges={{ wip: staleCount }}/>}
+        {!(showCalendar||showRepCounter||showSparring||showComboMachine||showManageReminders||showRRR||showLab||showProfile||showSettings||showManual||showFeedback||showBackup)&&<TabBar active={tab} onChange={(t,sub)=>{ setTrainMenu(null); setTab(t); setAddTick(0); setAddTick2(0); setAddMenu(false); setSubTab(sub||"moves"); }} badges={{ wip: staleCount }}/>}
 
         <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column", position:"relative" }}>
           {/* Train modals + menu — inside position:relative so absolute children are scoped to app width */}
@@ -494,6 +505,7 @@ export default function App() {
               setReps(prev=>[session,...prev]);
               setMoves(prev=>prev.map(m=>m.id===session.moveId?{...m,date:new Date().toISOString().split("T")[0]}:m));
             }}
+            addCalendarEvent={addCalendarEvent}
             onClose={()=>{setShowRepCounter(false);setRepCounterPreselect(null);}}/>}
           {showSparring&&<Sparring moves={moves} catColors={catColors} sparring={sparring} settings={appSettings}
             onSaveSession={(session, updatedSparring)=>{
@@ -503,34 +515,35 @@ export default function App() {
               }
             }}
             onSettingsChange={setAppSettings}
+            addCalendarEvent={addCalendarEvent}
             onClose={()=>setShowSparring(false)}/>}
           {showComboMachine&&<ComboMachine moves={moves} catColors={catColors} combos={combos}
             onCombosChange={setCombos}
             onSaveSet={(fields)=>{ setSets(p=>[...p,{id:Date.now(),...fields}]); }}
-            addToast={addToast}
+            addToast={addToast} addCalendarEvent={addCalendarEvent}
             onClose={()=>setShowComboMachine(false)}/>}
           {showManageReminders&&<ManageReminders
             reminders={reminders} onRemindersChange={setReminders}
             addToast={addToast} settings={appSettings}
             onClose={()=>setShowManageReminders(false)}/>}
+          {showLab&&<Lab moves={moves} cats={cats} catColors={catColors} lab={lab}
+            onLabChange={setLab}
+            onSaveMove={(moveData)=>{ setMoves(prev=>[...prev,{...moveData, id:Date.now()}]); }}
+            addToast={addToast} addCalendarEvent={addCalendarEvent}
+            onClose={()=>setShowLab(false)}/>}
+          {showRRR&&<RestoreRemixRebuild moves={moves} catColors={catColors} rrr={rrr}
+            onRRRChange={setRRR} addToast={addToast} addCalendarEvent={addCalendarEvent}
+            onClose={()=>setShowRRR(false)}/>}
+          {showProfile&&<ProfileModal onClose={()=>setShowProfile(false)} profile={profile} onSave={setProfile}
+            reminders={reminders} onRemindersChange={setReminders} addToast={addToast}
+            onOpenManageReminders={()=>{ setShowProfile(false); setShowManageReminders(true); }}/>}
+          {showManual&&<ManualModal onClose={()=>setShowManual(false)}/>}
+          {showFeedback&&<FeedbackModal onClose={()=>setShowFeedback(false)}/>}
+          {showSettings&&<SettingsModal onClose={()=>setShowSettings(false)} settings={appSettings} onSave={setAppSettings} onClearMoves={()=>setMoves([])} onRestoreRounds={()=>setRounds(INIT_ROUNDS)} onRestartTour={()=>setShowTour(true)} zoom={zoom} onZoomChange={handleZoomChange} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs}/>}
+          {showBackup&&<BackupModal onClose={()=>setShowBackup(false)}/>}
         </div>
 
         <Toast toasts={toasts} remove={removeToast}/>
-        {showProfile&&<ProfileModal onClose={()=>setShowProfile(false)} profile={profile} onSave={setProfile}
-          reminders={reminders} onRemindersChange={setReminders} addToast={addToast}
-          onOpenManageReminders={()=>{ setShowProfile(false); setShowManageReminders(true); }}/>}
-        {showManual&&<ManualModal onClose={()=>setShowManual(false)}/>}
-      {showFeedback&&<FeedbackModal onClose={()=>setShowFeedback(false)}/>}
-      {showSettings&&<SettingsModal onClose={()=>setShowSettings(false)} settings={appSettings} onSave={setAppSettings} onClearMoves={()=>setMoves([])} onRestoreRounds={()=>setRounds(INIT_ROUNDS)} onRestartTour={()=>setShowTour(true)} zoom={zoom} onZoomChange={handleZoomChange} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs}/>}
-        {showBackup&&<BackupModal onClose={()=>setShowBackup(false)}/>}
-        {showLab&&<Lab moves={moves} cats={cats} catColors={catColors} lab={lab}
-          onLabChange={setLab}
-          onSaveMove={(moveData)=>{ setMoves(prev=>[...prev,{...moveData, id:Date.now()}]); }}
-          addToast={addToast}
-          onClose={()=>setShowLab(false)}/>}
-        {showRRR&&<RestoreRemixRebuild moves={moves} catColors={catColors} rrr={rrr}
-          onRRRChange={setRRR} addToast={addToast}
-          onClose={()=>setShowRRR(false)}/>}
         {showTour&&<Walkthrough onDone={handleTourDone}/>}
 
         {/* ── Bottom Bar ── */}

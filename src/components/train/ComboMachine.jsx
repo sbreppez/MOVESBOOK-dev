@@ -19,7 +19,7 @@ const TIERS = {
 const DEFAULT_TRANSITIONS = ["Thread","Jump","Counter Spin","Slide","Sweep","Touch Foot","Kick","Hop","Roll","Twist","Drop","Spin Through"];
 
 // ── Main Component ──────────────────────────────────────────────────────────
-export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveSet, addToast, onClose }) => {
+export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveSet, addToast, onClose, addCalendarEvent }) => {
   const t = useT();
   const [screen, setScreen] = useState("main");
   const [moveCount, setMoveCount] = useState(5);
@@ -143,6 +143,17 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
     });
     setSaveModal(false);
     addToast({ emoji:"\u2705", title: t("comboSaved") });
+    if (addCalendarEvent) {
+      addCalendarEvent({
+        date: new Date().toISOString().split("T")[0],
+        type: "training",
+        title: `Combo Machine — ${saveName || "Combo"}`,
+        categories: [...new Set(slots.map(s => s.move.category))],
+        moveIds: slots.map(s => s.move.id),
+        notes: comboText,
+        source: "combo_machine",
+      }, { silent: true });
+    }
   };
 
   // ── Combo preview text ─────────────────────────────────────────────────

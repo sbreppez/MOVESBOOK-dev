@@ -104,14 +104,19 @@ const TIMER_OPTIONS = [
 ];
 
 // ── Component ───────────────────────────────────────────────────────────────
-export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToast, onClose }) => {
+export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToast, addCalendarEvent, onClose }) => {
   const t = useT();
   const { settings } = useSettings();
   const showMastery = settings.showMastery === true;
 
   // ── Navigation state ──
-  const [screen, setScreen] = useState("modes"); // modes | picker | prompt
+  const [screen, setScreen] = useState("modes"); // modes | picker | prompt | summary
   const [mode, setMode] = useState(null); // restore | remix | rebuild
+
+  // ── Summary state ──
+  const [summaryNotes, setSummaryNotes] = useState("");
+  const [lastPromptText, setLastPromptText] = useState("");
+  const [lastTimerDuration, setLastTimerDuration] = useState(0);
 
   // ── Move picker state ──
   const [selectedMoveId, setSelectedMoveId] = useState(null);
@@ -234,6 +239,9 @@ export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToa
 
   const handleDone = () => {
     clearInterval(timerRef.current);
+    // Capture before reset
+    setLastPromptText(getPromptText());
+    setLastTimerDuration(timerDuration);
     // Save last used
     onRRRChange({
       lastUsed: {
@@ -243,15 +251,35 @@ export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToa
         date: new Date().toISOString().split("T")[0],
       }
     });
-    addToast({ emoji: "✓", title: t("sessionComplete") });
-    setScreen("modes");
+    setScreen("summary");
+  };
+
+  const handleSaveAndClose = () => {
+    const today = new Date().toISOString().split("T")[0];
+    const selectedMove = selectedMoveId ? moves.find(m => m.id === selectedMoveId) : null;
+    const notesWithPrompt = [summaryNotes.trim(), lastPromptText ? `Prompt: ${lastPromptText}` : ""].filter(Boolean).join("\n\n");
+    if (addCalendarEvent) {
+      addCalendarEvent({
+        date: today, type: "training",
+        title: `${t(mode)} — ${moveName}`,
+        categories: selectedMove ? [selectedMove.category] : [],
+        moveIds: selectedMoveId ? [selectedMoveId] : [],
+        duration: lastTimerDuration > 0 ? Math.round(lastTimerDuration / 60) : null,
+        notes: notesWithPrompt || null,
+        source: "rrr",
+      });
+    }
+    setSummaryNotes("");
     setTimerState("idle");
     setTimerDuration(0);
     setTimerRemaining(0);
+    setScreen("modes");
   };
 
   const handleBack = () => {
-    if (screen === "prompt") {
+    if (screen === "summary") {
+      setScreen("prompt");
+    } else if (screen === "prompt") {
       clearInterval(timerRef.current);
       setTimerState("idle");
       setTimerDuration(0);
@@ -290,6 +318,7 @@ export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToa
           {screen === "modes" && t("restoreRemixRebuild")}
           {screen === "picker" && t(mode)}
           {screen === "prompt" && t(mode)}
+          {screen === "summary" && t(mode)}
         </div>
         <button onClick={onClose} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textMuted, display:"flex" }}>
           <Ic n="x" s={18} c={C.textMuted}/>
@@ -508,6 +537,80 @@ export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToa
                 fontSize:14, letterSpacing:1.2, cursor:"pointer",
               }}>
               ✓ {t("done") || "DONE"}
+            </button>
+          </div>
+        )}
+
+        {/* ════════ SUMMARY SCREEN ════════ */}
+        {screen === "summary" && (
+          <div style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"8px 0" }}>
+            {/* Mode badge */}
+            <div style={{
+              background: mc + "26", color:mc, fontFamily:FONT_DISPLAY, fontWeight:700,
+              fontSize:11, letterSpacing:1.5, borderRadius:20, padding:"4px 14px",
+              border:`1.5px solid ${mc}`, marginBottom:16, textTransform:"uppercase",
+            }}>
+              {t(mode)}
+            </div>
+
+            {/* Checkmark */}
+            <div style={{ width:56, height:56, borderRadius:"50%", background:C.green,
+              display:"flex", alignItems:"center", justifyContent:"center", marginBottom:12 }}>
+              <Ic n="check" s={28} c="#fff"/>
+            </div>
+            <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:14, letterSpacing:2,
+              color:C.green, marginBottom:20, textAlign:"center" }}>
+              {t("sessionComplete")}
+            </div>
+
+            {/* Move name */}
+            <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:22, color:C.text,
+              textAlign:"center", marginBottom:6 }}>
+              {moveName}
+            </div>
+
+            {/* Prompt text */}
+            {lastPromptText && (
+              <div style={{ background:C.surface, borderRadius:12, padding:16, margin:"8px 0 16px",
+                width:"100%", boxSizing:"border-box" }}>
+                <div style={{ fontFamily:FONT_BODY, fontSize:14, color:C.textSec,
+                  lineHeight:1.6, textAlign:"center", fontStyle:"italic" }}>
+                  {lastPromptText}
+                </div>
+              </div>
+            )}
+
+            {/* Duration */}
+            {lastTimerDuration > 0 && (
+              <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:13, color:C.textMuted,
+                marginBottom:16 }}>
+                Duration: {Math.round(lastTimerDuration / 60)} min
+              </div>
+            )}
+
+            {/* Notes */}
+            <div style={{ width:"100%", marginBottom:20 }}>
+              <textarea
+                value={summaryNotes}
+                onChange={e => setSummaryNotes(e.target.value)}
+                placeholder={t("howDidItGo")}
+                rows={3}
+                style={{
+                  width:"100%", background:C.surface, border:`1px solid ${C.border}`,
+                  borderRadius:10, padding:12, color:C.text, fontSize:14,
+                  fontFamily:FONT_BODY, resize:"vertical", outline:"none", boxSizing:"border-box",
+                }}
+              />
+            </div>
+
+            {/* SAVE & CLOSE */}
+            <button onClick={handleSaveAndClose}
+              style={{
+                width:"100%", padding:14, borderRadius:12, border:"none",
+                background:C.green, color:"#fff", fontFamily:FONT_DISPLAY, fontWeight:900,
+                fontSize:14, letterSpacing:1.2, cursor:"pointer",
+              }}>
+              ✓ {t("saveAndClose")}
             </button>
           </div>
         )}

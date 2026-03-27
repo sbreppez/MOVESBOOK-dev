@@ -115,12 +115,8 @@ export const FeedbackModal = ({ onClose }) => {
   );
 
   return (
-    <div onClick={onClose} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.75)",
-      zIndex:1000, display:"flex", alignItems:"flex-end", justifyContent:"center" }}>
-      <div onClick={e=>e.stopPropagation()} style={{ background:C.bg, borderRadius:"16px 16px 0 0",
-        width:"100%", maxWidth:480, height:"90dvh", display:"flex", flexDirection:"column",
-        overflow:"hidden", boxShadow:"0 -8px 40px rgba(0,0,0,0.5)",
-        border:`1px solid ${C.border}`, borderBottom:"none" }}>
+    <div style={{ position:"absolute", inset:0, zIndex:1000, background:C.bg,
+      display:"flex", flexDirection:"column", overflow:"hidden" }}>
 
         {/* Header */}
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between",
@@ -267,7 +263,6 @@ export const FeedbackModal = ({ onClose }) => {
             {status === "sending" ? t("sendingBtn") : t("submitFeedback")}
           </button>
         </div>
-      </div>
     </div>
   );
 };
