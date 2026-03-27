@@ -5,7 +5,9 @@ import { Btn } from "../shared/Btn";
 import { useT } from "../../hooks/useTranslation";
 import { useSettings } from "../../hooks/useSettings";
 
-export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersChange, addToast, onOpenManageReminders }) => {
+import { MyStanceSection } from "../stance/MyStanceSection";
+
+export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersChange, addToast, onOpenManageReminders, moves, stance, onOpenStanceAssessment }) => {
   const { C } = useSettings();
   const t = useT();
   const [f,setF]=useState({ nickname:"", age:"", gender:"", goals:"", years:"", startYear:"", startMonth:"", startDay:"", why:"", ...profile });
@@ -160,6 +162,8 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
           </div>
         )}
       </div>
+
+      <MyStanceSection moveCount={moves?.length||0} stance={stance} onOpenAssessment={onOpenStanceAssessment}/>
 
       <div style={{ marginTop:24, paddingTop:16, borderTop:`1px solid ${C.borderLight}` }}>
         <button onClick={()=>{ if(window.__MB_AUTH__) window.__MB_AUTH__.signOut(); onClose(); }}

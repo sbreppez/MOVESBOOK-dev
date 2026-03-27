@@ -30,6 +30,7 @@ import { Lab } from './components/moves/Lab';
 import { RestoreRemixRebuild } from './components/moves/RestoreRemixRebuild';
 import { CalendarOverlay } from './components/calendar/CalendarOverlay';
 import { ManageReminders } from './components/moves/ManageReminders';
+import { MyStanceAssessment } from './components/stance/MyStanceAssessment';
 
 // ── Firebase stubs for preview ──
 if (typeof window !== "undefined") {
@@ -123,6 +124,9 @@ export default function App() {
   const [calendar, setCalendar] = useState(() => {
     try { const s=localStorage.getItem("mb_calendar"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { events:[] };
   });
+  const [stance, setStance] = useState(() => {
+    try { const s=localStorage.getItem("mb_stance"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { assessments:[] };
+  });
 
   // ── Persist to localStorage on every change ────────────────────────────────
   useEffect(()=>{ saveLocal("mb_moves",   moves);   },[moves]);
@@ -144,6 +148,7 @@ export default function App() {
   useEffect(()=>{ saveLocal("mb_rrr", rrr); },[rrr]);
   useEffect(()=>{ saveLocal("mb_reminders", reminders); },[reminders]);
   useEffect(()=>{ saveLocal("mb_calendar", calendar); },[calendar]);
+  useEffect(()=>{ saveLocal("mb_stance", stance); },[stance]);
   useEffect(()=>{ saveLocal("mb_ideas",   ideas);
     const timer = setTimeout(() => {
       if (window.__MB_USER__?.uid && window.__MB_DB__) {
@@ -178,6 +183,7 @@ export default function App() {
       rrr:         save("rrr"),
       reminders:   save("reminders"),
       calendar:    save("calendar"),
+      stance:      save("stance"),
     };
   }, []);
 
@@ -196,6 +202,7 @@ export default function App() {
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.rrr?.(fbUser.uid, rrr); },[rrr, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.reminders?.(fbUser.uid, reminders); },[reminders, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.calendar?.(fbUser.uid, calendar); },[calendar, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.stance?.(fbUser.uid, stance); },[stance, fbUser]);
 
   // ── Auth resolution ────────────────────────────────────────────────────────
   useEffect(()=>{
@@ -232,6 +239,8 @@ export default function App() {
           if (rm) { try { const p=JSON.parse(rm); if(p&&typeof p==="object") setReminders(p); } catch {} }
           const cal = localStorage.getItem("mb_calendar");
           if (cal) { try { const p=JSON.parse(cal); if(p&&typeof p==="object") setCalendar(p); } catch {} }
+          const stn = localStorage.getItem("mb_stance");
+          if (stn) { try { const p=JSON.parse(stn); if(p&&typeof p==="object") setStance(p); } catch {} }
           if (p) { try { const pp=JSON.parse(p); if(pp&&Object.values(pp).some(v=>v)) setProfile(pp); } catch{} }
           const st = localStorage.getItem("mb_settings");
           if (st) {
@@ -264,6 +273,7 @@ export default function App() {
         setRRR({ lastUsed:{ mode:null, moveId:null, moveName:null, date:null } });
         setReminders({ items:[] });
         setCalendar({ events:[] });
+        setStance({ assessments:[] });
       }
     }
     window.addEventListener("mb-auth-resolved", handleAuthResolved);
@@ -305,6 +315,7 @@ export default function App() {
   const [showRRR,setShowRRR]=useState(false);
   const [showCalendar,setShowCalendar]=useState(false);
   const [calendarInitialDay,setCalendarInitialDay]=useState(null);
+  const [showStanceAssessment,setShowStanceAssessment]=useState(false);
   const [appSettings,setAppSettings]=useState(()=>({
     ...{
       theme:"light", defaultTab:"wip", showMastery:false,
@@ -464,7 +475,7 @@ export default function App() {
           </div>
         </div>
 
-        {!(showCalendar||showRepCounter||showSparring||showComboMachine||showManageReminders||showRRR||showLab||showProfile||showSettings||showManual||showFeedback||showBackup)&&<TabBar active={tab} onChange={(t,sub)=>{ setTrainMenu(null); setTab(t); setAddTick(0); setAddTick2(0); setAddMenu(false); setSubTab(sub||"moves"); }} badges={{ wip: staleCount }}/>}
+        {!(showCalendar||showRepCounter||showSparring||showComboMachine||showManageReminders||showRRR||showLab||showProfile||showSettings||showManual||showFeedback||showBackup||showStanceAssessment)&&<TabBar active={tab} onChange={(t,sub)=>{ setTrainMenu(null); setTab(t); setAddTick(0); setAddTick2(0); setAddMenu(false); setSubTab(sub||"moves"); }} badges={{ wip: staleCount }}/>}
 
         <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column", position:"relative" }}>
           {/* Train modals + menu — inside position:relative so absolute children are scoped to app width */}
@@ -534,9 +545,13 @@ export default function App() {
           {showRRR&&<RestoreRemixRebuild moves={moves} catColors={catColors} rrr={rrr}
             onRRRChange={setRRR} addToast={addToast} addCalendarEvent={addCalendarEvent}
             onClose={()=>setShowRRR(false)}/>}
+          {showStanceAssessment&&<MyStanceAssessment stance={stance} onStanceChange={setStance}
+            addToast={addToast} onClose={()=>setShowStanceAssessment(false)}/>}
           {showProfile&&<ProfileModal onClose={()=>setShowProfile(false)} profile={profile} onSave={setProfile}
             reminders={reminders} onRemindersChange={setReminders} addToast={addToast}
-            onOpenManageReminders={()=>{ setShowProfile(false); setShowManageReminders(true); }}/>}
+            onOpenManageReminders={()=>{ setShowProfile(false); setShowManageReminders(true); }}
+            moves={moves} stance={stance}
+            onOpenStanceAssessment={()=>{ setShowProfile(false); setShowStanceAssessment(true); }}/>}
           {showManual&&<ManualModal onClose={()=>setShowManual(false)}/>}
           {showFeedback&&<FeedbackModal onClose={()=>setShowFeedback(false)}/>}
           {showSettings&&<SettingsModal onClose={()=>setShowSettings(false)} settings={appSettings} onSave={setAppSettings} onClearMoves={()=>setMoves([])} onRestoreRounds={()=>setRounds(INIT_ROUNDS)} onRestartTour={()=>setShowTour(true)} zoom={zoom} onZoomChange={handleZoomChange} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs}/>}
