@@ -31,9 +31,8 @@ const getModeLabel = (mode, t) => {
 
 // ── ConstraintCard ──
 
-export const ConstraintCard = ({ constraint, onConstraintChange, addToast }) => {
+export const ConstraintCard = ({ constraint, onConstraintChange, addToast, onOpenManage }) => {
   const t = useT();
-  const [showManage, setShowManage] = useState(false);
 
   // ── Daily auto-pick ──
   useEffect(() => {
@@ -149,7 +148,7 @@ export const ConstraintCard = ({ constraint, onConstraintChange, addToast }) => 
 
           {/* Right: gear + shuffle + dismiss */}
           <div style={{ display:"flex", gap:6, flexShrink:0, paddingTop:2 }}>
-            <button onClick={()=>setShowManage(true)} title={t("constraintManage")}
+            <button onClick={onOpenManage} title={t("constraintManage")}
               style={{
                 width:32, height:32, borderRadius:8,
                 background:C.surface, border:`1px solid ${C.border}`,
@@ -178,15 +177,6 @@ export const ConstraintCard = ({ constraint, onConstraintChange, addToast }) => 
         </div>
       </div>
 
-      {/* Manage overlay */}
-      {showManage && (
-        <ManageOverlay
-          constraint={constraint}
-          onConstraintChange={onConstraintChange}
-          onClose={() => setShowManage(false)}
-          addToast={addToast}
-        />
-      )}
     </>
   );
 };
@@ -195,12 +185,13 @@ export const ConstraintCard = ({ constraint, onConstraintChange, addToast }) => 
 // MANAGE CONSTRAINTS OVERLAY
 // ══════════════════════════════════════════════════════════════════════════════
 
-const ManageOverlay = ({ constraint, onConstraintChange, onClose, addToast }) => {
+export const ManageOverlay = ({ constraint, onConstraintChange, onClose, addToast }) => {
   const t = useT();
   const modeFilter = constraint.modeFilter || null;
   const setModeFilter = (val) => onConstraintChange({ ...constraint, modeFilter: val });
   const [addingCustom, setAddingCustom] = useState(false);
   const [newText, setNewText] = useState("");
+  const [showConfirmRestore, setShowConfirmRestore] = useState(false);
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -297,27 +288,15 @@ const ManageOverlay = ({ constraint, onConstraintChange, onClose, addToast }) =>
     onConstraintChange(next);
   };
 
-  const modeChip = (mode, label) => {
-    const active = modeFilter === mode;
-    return (
-      <button key={mode} onClick={() => toggleMode(mode)}
-        style={{
-          borderRadius: 20, padding: "5px 12px",
-          border: `1.5px solid ${active ? C.accent : C.border}`,
-          background: active ? C.accent + "20" : C.surface,
-          color: active ? C.accent : C.textSec,
-          fontSize: 11, fontWeight: 700, fontFamily: FONT_DISPLAY,
-          letterSpacing: 0.5, cursor: "pointer",
-        }}>
-        {label}
-      </button>
-    );
+  const handleRestoreDefaults = () => {
+    onConstraintChange({ ...constraint, removedConstraints: [] });
+    setShowConfirmRestore(false);
+    if (addToast) addToast({ text: t("constraintRestored") });
   };
 
   return (
     <div style={{
-      position:"fixed", top:0, bottom:0, left:"50%", transform:"translateX(-50%)",
-      width:"100%", maxWidth:480, zIndex:500, background:C.bg,
+      position:"absolute", inset:0, zIndex:500, background:C.bg,
       display:"flex", flexDirection:"column", overflow:"hidden",
     }}>
       {/* Header */}
@@ -375,11 +354,36 @@ const ManageOverlay = ({ constraint, onConstraintChange, onClose, addToast }) =>
           </div>
         )}
 
-        {/* Filter chips */}
-        <div style={{ display:"flex", gap:6, marginBottom:6 }}>
-          {modeChip("restore", t("constraintRestore"))}
-          {modeChip("remix", t("constraintRemix"))}
-          {modeChip("rebuild", t("constraintRebuild"))}
+        {/* Filter chips with descriptions */}
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:6, marginBottom:6 }}>
+          {[
+            { mode:"restore", label:t("constraintRestore"), desc:t("restoreDesc") },
+            { mode:"remix",   label:t("constraintRemix"),   desc:t("remixDesc") },
+            { mode:"rebuild", label:t("constraintRebuild"), desc:t("rebuildDesc") },
+          ].map(({ mode, label, desc }) => {
+            const active = modeFilter === mode;
+            return (
+              <div key={mode} style={{ textAlign:"center" }}>
+                <button onClick={() => toggleMode(mode)} style={{
+                  borderRadius:20, padding:"5px 12px",
+                  border:`1.5px solid ${active ? C.accent : C.border}`,
+                  background: active ? C.accent+"20" : C.surface,
+                  color: active ? C.accent : C.textSec,
+                  fontSize:11, fontWeight:700, fontFamily:FONT_DISPLAY,
+                  letterSpacing:0.5, cursor:"pointer", width:"100%",
+                }}>
+                  {label}
+                </button>
+                <div style={{
+                  fontSize:11, fontStyle:"italic", fontFamily:FONT_BODY,
+                  color: active ? C.text : C.textMuted,
+                  marginTop:4, lineHeight:1.3,
+                }}>
+                  {desc}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -472,7 +476,63 @@ const ManageOverlay = ({ constraint, onConstraintChange, onClose, addToast }) =>
             <p style={{ fontSize:13 }}>{t("constraintNoPool")}</p>
           </div>
         )}
+
+        {/* Restore defaults */}
+        <div style={{ marginTop:24 }}>
+          <button onClick={() => setShowConfirmRestore(true)}
+            style={{
+              width:"100%", padding:12, borderRadius:10,
+              background:C.surfaceAlt, border:"none",
+              color:C.textSec, fontSize:13, fontWeight:700,
+              fontFamily:FONT_DISPLAY, cursor:"pointer",
+            }}>
+            {t("restoreDefaults")}
+          </button>
+          <p style={{
+            fontSize:11, fontStyle:"italic", fontFamily:FONT_BODY,
+            color:C.textMuted, textAlign:"center", marginTop:6,
+          }}>
+            {t("restoreDefaultsHint")}
+          </p>
+        </div>
       </div>
+
+      {/* Confirm restore dialog */}
+      {showConfirmRestore && (
+        <div style={{
+          position:"absolute", inset:0, background:"rgba(0,0,0,0.6)",
+          zIndex:600, display:"flex", alignItems:"center", justifyContent:"center", padding:20,
+        }} onClick={() => setShowConfirmRestore(false)}>
+          <div onClick={e => e.stopPropagation()} style={{
+            background:C.surface, borderRadius:14, padding:20, maxWidth:340, width:"100%",
+            border:`1px solid ${C.border}`,
+          }}>
+            <p style={{ fontSize:14, color:C.text, fontFamily:FONT_BODY, lineHeight:1.5, marginBottom:16 }}>
+              {t("restoreDefaultsConfirm")}
+            </p>
+            <div style={{ display:"flex", gap:10 }}>
+              <button onClick={() => setShowConfirmRestore(false)}
+                style={{
+                  flex:1, padding:10, borderRadius:8,
+                  background:C.surfaceAlt, border:`1px solid ${C.border}`,
+                  color:C.textSec, fontSize:13, fontWeight:700,
+                  fontFamily:FONT_DISPLAY, cursor:"pointer",
+                }}>
+                {t("cancel")}
+              </button>
+              <button onClick={handleRestoreDefaults}
+                style={{
+                  flex:1, padding:10, borderRadius:8,
+                  background:C.accent, border:"none",
+                  color:"#fff", fontSize:13, fontWeight:700,
+                  fontFamily:FONT_DISPLAY, cursor:"pointer",
+                }}>
+                {t("confirm")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

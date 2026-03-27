@@ -18,10 +18,10 @@ import { AddCategoryModal } from './AddCategoryModal';
 import { SetDetailModal } from './SetDetailModal';
 import { AttributeFilter } from './AttributeFilter';
 import { filterMovesByAttrs } from '../../utils/attributeHelpers';
-import { ConstraintCard } from './ConstraintCard';
+import { ReminderBlock } from './ReminderBlock';
 import { GAPTab } from './GAPTab';
 
-export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, constraint, onConstraintChange, onDrill }) => {
+export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders }) => {
   const t = useT();
   const { moveCountStr, resultCountStr } = usePlural();
   const { settings:ctxSettings } = useSettings();
@@ -250,8 +250,8 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   return (
     <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column" }}>
       <SectionBanner tab="wip"/>
-      {constraint && onConstraintChange && (
-        <ConstraintCard constraint={constraint} onConstraintChange={onConstraintChange} addToast={addToast}/>
+      {reminders?.items?.length > 0 && (
+        <ReminderBlock reminders={reminders} onRemindersChange={onRemindersChange} addToast={addToast} onOpenManage={onOpenManageReminders}/>
       )}
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"6px 14px", borderBottom:`1px solid ${C.borderLight}`, background:C.surface, flexShrink:0 }}>
         {/* MOVES / SETS sub-tabs */}
