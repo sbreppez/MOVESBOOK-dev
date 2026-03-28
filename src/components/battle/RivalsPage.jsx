@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Fragment } from 'react';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { lbl, inp } from '../../constants/styles';
 import { Ic } from '../shared/Ic';
@@ -16,12 +16,27 @@ const CONF_OPTIONS = [
   { val:3, emoji:"\ud83d\udd25", key:"idFeelGood" },
 ];
 
-export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger }) => {
+const RESULT_OPTIONS = [
+  { val:"won", emoji:"\ud83c\udfc6", key:"won" },
+  { val:"draw", emoji:"\ud83e\udd1d", key:"draw" },
+  { val:"lost", emoji:"\ud83d\udcaa", key:"lost" },
+];
+
+const today = () => new Date().toISOString().split("T")[0];
+
+export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, addCalendarEvent }) => {
   const t = useT();
   const { C } = useSettings();
   const [showModal, setShowModal] = useState(false);
   const [editingRival, setEditingRival] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const [showConfPrompt, setShowConfPrompt] = useState(false);
+  const [pendingConf, setPendingConf] = useState(null);
+
+  // Ensure all fields exist on a rival (handles data from before new fields were added)
+  const normalizeRival = (r) => r ? ({
+    signatureMoves:"", gamePlan:"", targetWhen:"", targetWhere:"", battles:[], videoRefs:[], strongDomains:[], ...r,
+  }) : null;
 
   useEffect(() => {
     if (!onAddTrigger) return;
@@ -31,7 +46,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger }
 
   const addRival = (data) => {
     const now = new Date().toISOString();
-    onRivalsChange(prev => [...prev, { ...data, id: Date.now(), createdDate: now, updatedDate: now }]);
+    onRivalsChange(prev => [...prev, { ...data, id: Date.now(), battles:[], createdDate: now, updatedDate: now }]);
   };
   const updateRival = (id, data) => {
     onRivalsChange(prev => prev.map(r => r.id === id ? { ...r, ...data, updatedDate: new Date().toISOString() } : r));
@@ -46,8 +61,14 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger }
   const RivalCard = ({ rival }) => {
     const initials = rival.name.split(" ").map(w => w[0]).join("").slice(0,2).toUpperCase();
     const conf = CONF_OPTIONS.find(c => c.val === rival.confidence);
+    const lastBattle = (rival.battles||[]).length > 0 ? [...rival.battles].sort((a,b) => b.date.localeCompare(a.date))[0] : null;
+    const lastResult = lastBattle ? RESULT_OPTIONS.find(r => r.val === lastBattle.result) : null;
+    const whenWhere = [
+      rival.targetWhen ? `\ud83d\udcc5 ${rival.targetWhen}` : null,
+      rival.targetWhere ? `\ud83d\udccd ${rival.targetWhere}` : null,
+    ].filter(Boolean).join(" \u00b7 ");
     return (
-      <div onClick={() => { setEditingRival(rival); setShowModal(true); }}
+      <div onClick={() => { setEditingRival(normalizeRival(rival)); setShowModal(true); }}
         style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:14, padding:16,
           cursor:"pointer", marginBottom:10, display:"flex", alignItems:"center", gap:12 }}>
         <div style={{ width:48, height:48, borderRadius:"50%", flexShrink:0, overflow:"hidden",
@@ -71,6 +92,14 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger }
               ))}
             </div>
           )}
+          {whenWhere && (
+            <div style={{ fontSize:11, color:C.textMuted, marginTop:4, fontFamily:FONT_BODY }}>{whenWhere}</div>
+          )}
+          {lastBattle && lastResult && (
+            <div style={{ fontSize:11, color:C.textMuted, marginTop:2, fontFamily:FONT_BODY }}>
+              {t("lastBattle")}: {lastBattle.date} \u00b7 {lastResult.emoji}
+            </div>
+          )}
         </div>
         <button onClick={e => { e.stopPropagation(); setConfirmDelete(rival); }}
           style={{ background:"none", border:"none", cursor:"pointer", padding:6 }}>
@@ -84,15 +113,24 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger }
   const RivalModal = ({ rival, onClose, onSave }) => {
     const isEdit = !!rival;
     const [f, setF] = useState({
-      name: rival?.name || "",
-      photo: rival?.photo || null,
-      strongDomains: rival?.strongDomains || [],
-      signatureMoves: rival?.signatureMoves || "",
-      gamePlan: rival?.gamePlan || "",
-      confidence: rival?.confidence || null,
-      videoRefs: rival?.videoRefs || [],
+      name: rival?.name ?? "",
+      photo: rival?.photo ?? null,
+      strongDomains: rival?.strongDomains ?? [],
+      signatureMoves: rival?.signatureMoves ?? "",
+      gamePlan: rival?.gamePlan ?? "",
+      confidence: rival?.confidence ?? null,
+      videoRefs: rival?.videoRefs ?? [],
+      targetWhen: rival?.targetWhen ?? "",
+      targetWhere: rival?.targetWhere ?? "",
     });
     const photoRef = useRef(null);
+
+    // Battle log state
+    const [showBattleLog, setShowBattleLog] = useState(false);
+    const [battleForm, setBattleForm] = useState({ date: today(), result: null, event: rival?.targetWhere ?? "", howDidItGo:"", whatSurprised:"", trainingNext:"" });
+
+    // Battle history expand state
+    const [expandedBattle, setExpandedBattle] = useState(null);
 
     const toggleDomain = (d) => {
       setF(prev => ({
@@ -139,11 +177,133 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger }
       const clean = {
         ...f,
         name: f.name.trim(),
+        targetWhen: f.targetWhen.trim() || null,
+        targetWhere: f.targetWhere.trim() || null,
         videoRefs: f.videoRefs.filter(v => v.url.trim()),
       };
       onSave(clean);
     };
 
+    // Battle log save
+    const handleSaveBattle = () => {
+      if (!battleForm.result) return;
+      const entry = {
+        id: String(Date.now()),
+        date: battleForm.date,
+        result: battleForm.result,
+        event: battleForm.event.trim() || null,
+        howDidItGo: battleForm.howDidItGo.trim() || null,
+        whatSurprised: battleForm.whatSurprised.trim() || null,
+        trainingNext: battleForm.trainingNext.trim() || null,
+      };
+      const updatedBattles = [...(rival.battles||[]), entry];
+      updateRival(rival.id, { battles: updatedBattles });
+      // Update the local rival ref for the modal
+      if (rival) rival.battles = updatedBattles;
+
+      // Calendar event
+      const resultLabel = RESULT_OPTIONS.find(r => r.val === entry.result);
+      if (addCalendarEvent) {
+        addCalendarEvent({
+          date: entry.date,
+          type: "battle",
+          title: `Battle vs ${rival.name}`,
+          notes: `Result: ${resultLabel ? resultLabel.val.charAt(0).toUpperCase()+resultLabel.val.slice(1) : entry.result}${entry.event ? ` \u2014 ${entry.event}` : ""}`,
+          source: "rivals",
+          rivalId: rival.id,
+        }, { silent: true });
+      }
+      if (addToast) addToast({ emoji:"\u2694\ufe0f", title: t("battleLogged") });
+
+      setShowBattleLog(false);
+      // Trigger confidence prompt at parent level (survives re-render)
+      setPendingConf(rival.confidence || null);
+      setShowConfPrompt(true);
+    };
+
+    const battles = [...(rival?.battles||[])].sort((a,b) => b.date.localeCompare(a.date));
+
+    // ── Battle Log form screen ──
+    if (showBattleLog) {
+      return (
+        <Modal title={t("battleLog")} onClose={() => setShowBattleLog(false)} wide>
+          {/* Date */}
+          <div style={{ marginBottom:14 }}>
+            <label style={lbl()}>DATE</label>
+            <input type="date" value={battleForm.date} onChange={e => setBattleForm(p => ({...p, date: e.target.value}))}
+              style={inp()}/>
+          </div>
+
+          {/* Result */}
+          <div style={{ marginBottom:14 }}>
+            <label style={lbl()}>{t("resultLabel")}</label>
+            <div style={{ display:"flex", gap:6 }}>
+              {RESULT_OPTIONS.map(opt => {
+                const active = battleForm.result === opt.val;
+                return (
+                  <button key={opt.val} onClick={() => setBattleForm(p => ({...p, result: active ? null : opt.val}))}
+                    style={{ flex:1, borderRadius:10, padding:"10px 4px", fontSize:12, fontWeight:700, fontFamily:FONT_DISPLAY,
+                      letterSpacing:0.3, cursor:"pointer", transition:"all 0.15s", textAlign:"center",
+                      background: active ? `${C.accent}18` : C.surface,
+                      color: active ? C.accent : C.textSec,
+                      border: `1.5px solid ${active ? C.accent : C.border}` }}>
+                    {t(opt.key)}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Event */}
+          <div style={{ marginBottom:14 }}>
+            <label style={lbl()}>{t("eventName")}</label>
+            <input value={battleForm.event} onChange={e => setBattleForm(p => ({...p, event: e.target.value}))}
+              placeholder={t("eventPlaceholder")} style={inp()}/>
+          </div>
+
+          {/* How did it go */}
+          <div style={{ marginBottom:14 }}>
+            <label style={lbl()}>{t("howDidItGo")}</label>
+            <textarea value={battleForm.howDidItGo} onChange={e => setBattleForm(p => ({...p, howDidItGo: e.target.value}))}
+              placeholder={t("howDidItGoPlaceholder")} rows={3}
+              style={{ ...inp(), resize:"vertical" }}/>
+          </div>
+
+          {/* What surprised you */}
+          <div style={{ marginBottom:14 }}>
+            <label style={lbl()}>{t("whatSurprised")}</label>
+            <textarea value={battleForm.whatSurprised} onChange={e => setBattleForm(p => ({...p, whatSurprised: e.target.value}))}
+              placeholder={t("whatSurprisedPlaceholder")} rows={2}
+              style={{ ...inp(), resize:"vertical" }}/>
+          </div>
+
+          {/* Training next */}
+          <div style={{ marginBottom:14 }}>
+            <label style={lbl()}>{t("trainingNext")}</label>
+            <textarea value={battleForm.trainingNext} onChange={e => setBattleForm(p => ({...p, trainingNext: e.target.value}))}
+              placeholder={t("trainingNextPlaceholder")} rows={2}
+              style={{ ...inp(), resize:"vertical" }}/>
+          </div>
+
+          {/* Buttons */}
+          <button onClick={handleSaveBattle} disabled={!battleForm.result}
+            style={{ width:"100%", padding:"12px 0", borderRadius:8, border:"none",
+              background: battleForm.result ? C.accent : C.surfaceAlt,
+              color: battleForm.result ? C.bg : C.textMuted,
+              fontSize:14, fontWeight:900, fontFamily:FONT_DISPLAY, letterSpacing:1, cursor: battleForm.result ? "pointer" : "not-allowed",
+              opacity: battleForm.result ? 1 : 0.5, marginBottom:8 }}>
+            {t("saveBattleLog")}
+          </button>
+          <button onClick={() => setShowBattleLog(false)}
+            style={{ width:"100%", padding:"8px 0", background:"none", border:"none", color:C.textSec, fontSize:12,
+              fontWeight:700, fontFamily:FONT_DISPLAY, cursor:"pointer", letterSpacing:0.5 }}>
+            {t("cancel")}
+          </button>
+        </Modal>
+      );
+    }
+
+    // ── Main rival edit/add modal ──
     return (
       <Modal title={isEdit ? t("editRival") : t("addRival")} onClose={onClose} wide>
         {/* Photo */}
@@ -240,6 +400,22 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger }
           </div>
         </div>
 
+        {/* When */}
+        <div style={{ marginBottom:14 }}>
+          <label style={lbl()}>{t("rivalWhen")}</label>
+          <div style={{ fontSize:12, color:C.textMuted, marginBottom:6, fontFamily:FONT_BODY }}>{t("rivalWhenHint")}</div>
+          <input value={f.targetWhen} onChange={e => setF(prev => ({ ...prev, targetWhen: e.target.value }))}
+            placeholder={t("rivalWhenPlaceholder")} style={inp()}/>
+        </div>
+
+        {/* Where */}
+        <div style={{ marginBottom:14 }}>
+          <label style={lbl()}>{t("rivalWhere")}</label>
+          <div style={{ fontSize:12, color:C.textMuted, marginBottom:6, fontFamily:FONT_BODY }}>{t("rivalWhereHint")}</div>
+          <input value={f.targetWhere} onChange={e => setF(prev => ({ ...prev, targetWhere: e.target.value }))}
+            placeholder={t("rivalWherePlaceholder")} style={inp()}/>
+        </div>
+
         {/* Video References */}
         <div style={{ marginBottom:14 }}>
           <div style={{ fontSize:10, fontWeight:700, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY, marginBottom:8 }}>{t("videoReference")}</div>
@@ -264,8 +440,64 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger }
           </button>
         </div>
 
+        {/* Battle History */}
+        {isEdit && battles.length > 0 && (
+          <div style={{ marginBottom:14 }}>
+            <div style={{ fontSize:10, fontWeight:700, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY, marginBottom:8 }}>{t("battleHistory")}</div>
+            {battles.map(b => {
+              const res = RESULT_OPTIONS.find(r => r.val === b.result);
+              const isExpanded = expandedBattle === b.id;
+              const hasDetail = b.howDidItGo || b.whatSurprised || b.trainingNext;
+              return (
+                <div key={b.id} onClick={() => hasDetail && setExpandedBattle(isExpanded ? null : b.id)}
+                  style={{ background:C.surfaceAlt, borderRadius:10, padding:"10px 12px", marginBottom:6,
+                    border:`1px solid ${C.border}`, cursor: hasDetail ? "pointer" : "default" }}>
+                  <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                    <span style={{ fontSize:12, fontWeight:700, color:C.text, fontFamily:FONT_DISPLAY }}>{b.date}</span>
+                    {res && <span style={{ fontSize:12 }}>{t(res.key)}</span>}
+                    {b.event && <span style={{ fontSize:11, color:C.textMuted, fontFamily:FONT_BODY }}>\u2014 {b.event}</span>}
+                    {hasDetail && <span style={{ marginLeft:"auto", fontSize:10, color:C.textMuted }}>{isExpanded ? "\u25b2" : "\u25bc"}</span>}
+                  </div>
+                  {isExpanded && (
+                    <div style={{ marginTop:8, paddingTop:8, borderTop:`1px solid ${C.border}` }}>
+                      {b.howDidItGo && (
+                        <div style={{ marginBottom:6 }}>
+                          <div style={{ fontSize:10, fontWeight:700, color:C.textMuted, fontFamily:FONT_DISPLAY, letterSpacing:0.8, marginBottom:2 }}>{t("howDidItGo")}</div>
+                          <div style={{ fontSize:12, color:C.textSec, lineHeight:1.5, fontFamily:FONT_BODY }}>{b.howDidItGo}</div>
+                        </div>
+                      )}
+                      {b.whatSurprised && (
+                        <div style={{ marginBottom:6 }}>
+                          <div style={{ fontSize:10, fontWeight:700, color:C.textMuted, fontFamily:FONT_DISPLAY, letterSpacing:0.8, marginBottom:2 }}>{t("whatSurprised")}</div>
+                          <div style={{ fontSize:12, color:C.textSec, lineHeight:1.5, fontFamily:FONT_BODY }}>{b.whatSurprised}</div>
+                        </div>
+                      )}
+                      {b.trainingNext && (
+                        <div>
+                          <div style={{ fontSize:10, fontWeight:700, color:C.textMuted, fontFamily:FONT_DISPLAY, letterSpacing:0.8, marginBottom:2 }}>{t("trainingNext")}</div>
+                          <div style={{ fontSize:12, color:C.textSec, lineHeight:1.5, fontFamily:FONT_BODY }}>{b.trainingNext}</div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Log a Battle button */}
+        {isEdit && (
+          <button onClick={() => { setBattleForm({ date: today(), result: null, event: rival?.targetWhere ?? "", howDidItGo:"", whatSurprised:"", trainingNext:"" }); setShowBattleLog(true); }}
+            style={{ width:"100%", padding:"12px 0", borderRadius:8, border:"none",
+              background:C.accent, color:C.bg,
+              fontSize:14, fontWeight:900, fontFamily:FONT_DISPLAY, letterSpacing:1, cursor:"pointer", marginBottom:14 }}>
+            {t("logABattle")}
+          </button>
+        )}
+
         {/* Action buttons */}
-        <div style={{ display:"flex", gap:8, marginTop:8 }}>
+        <div style={{ display:"flex", gap:8, marginTop:4 }}>
           {isEdit && (
             <button onClick={() => { onClose(); setTimeout(() => setConfirmDelete(rival), 100); }}
               style={{ fontSize:12, color:C.red || C.accent, background:"none", border:"none", cursor:"pointer",
@@ -323,6 +555,44 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger }
               <Btn variant="secondary" onClick={() => setConfirmDelete(null)}>{t("cancel")}</Btn>
               <Btn variant="danger" onClick={() => deleteRival(confirmDelete.id)}>{t("delete")}</Btn>
             </div>
+          </div>
+        </div>
+      )}
+
+      {showConfPrompt && editingRival && (
+        <div onClick={() => setShowConfPrompt(false)}
+          style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.7)", zIndex:1000,
+            display:"flex", alignItems:"center", justifyContent:"center", padding:"28px 12px" }}>
+          <div onClick={e => e.stopPropagation()}
+            style={{ background:C.bg, border:`2px solid ${C.border}`, borderRadius:14, width:"100%", maxWidth:420,
+              padding:20, boxShadow:"0 24px 80px rgba(0,0,0,0.4)" }}>
+            <p style={{ fontSize:13, color:C.textSec, lineHeight:1.6, fontFamily:FONT_BODY, marginBottom:16, textAlign:"center" }}>
+              {t("stillFeelTheSame")}
+            </p>
+            <div style={{ display:"flex", gap:6, marginBottom:16 }}>
+              {CONF_OPTIONS.map(opt => {
+                const active = pendingConf === opt.val;
+                return (
+                  <button key={opt.val} onClick={() => {
+                    updateRival(editingRival.id, { confidence: opt.val });
+                    setShowConfPrompt(false);
+                  }}
+                    style={{ flex:1, borderRadius:10, padding:"8px 4px", fontSize:11, fontWeight:700, fontFamily:FONT_DISPLAY,
+                      letterSpacing:0.3, cursor:"pointer", transition:"all 0.15s", textAlign:"center",
+                      background: active ? `${C.accent}18` : C.surface,
+                      color: active ? C.accent : C.textSec,
+                      border: `1.5px solid ${active ? C.accent : C.border}` }}>
+                    <div style={{ fontSize:20, marginBottom:2 }}>{opt.emoji}</div>
+                    {t(opt.key)}
+                  </button>
+                );
+              })}
+            </div>
+            <button onClick={() => setShowConfPrompt(false)}
+              style={{ width:"100%", padding:"10px 0", background:"none", border:`1.5px solid ${C.border}`, borderRadius:8,
+                color:C.textSec, fontSize:12, fontWeight:700, fontFamily:FONT_DISPLAY, cursor:"pointer", letterSpacing:1 }}>
+              {t("skip")}
+            </button>
           </div>
         </div>
       )}

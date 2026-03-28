@@ -15,7 +15,7 @@ import { RivalsPage } from './RivalsPage';
 import { NewRoundModal } from './NewRoundModal';
 import { SectionBanner } from '../shared/SectionBanner';
 
-export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, addToast, freestyle, onFreestyleChange, rivals, onRivalsChange }) => {
+export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, addToast, freestyle, onFreestyleChange, rivals, onRivalsChange, addCalendarEvent }) => {
   const t = useT();
   const { moveCountStr, itemCountStr, roundCountStr, entryCountStr } = usePlural();
   const { C } = useSettings();
@@ -750,7 +750,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
       {battleTab==="freestyle"&&<FreestylePage moves={moves} sets={sets} settings={settings} onAddTrigger={freestyleAddTick} addToast={addToast} freestyle={freestyle} onFreestyleChange={onFreestyleChange}/>}
 
       {/* RIVALS tab */}
-      {battleTab==="rivals"&&<RivalsPage rivals={rivals||[]} onRivalsChange={onRivalsChange} addToast={addToast} onAddTrigger={rivalsAddTick}/>}
+      {battleTab==="rivals"&&<RivalsPage rivals={rivals||[]} onRivalsChange={onRivalsChange} addToast={addToast} onAddTrigger={rivalsAddTick} addCalendarEvent={addCalendarEvent}/>}
 
       {/* Modals */}
       {addingRound&&<NewRoundModal onClose={()=>setAddingRound(false)}
