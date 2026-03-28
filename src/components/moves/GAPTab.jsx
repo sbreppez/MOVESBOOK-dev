@@ -8,7 +8,7 @@ import { CAT_COLORS } from '../../constants/categories';
 
 const PRESETS = [7, 14, 30];
 
-export const GAPTab = ({ moves, catColors=CAT_COLORS, setMoves, onDrill, settings={} }) => {
+export const GAPTab = ({ moves, catColors=CAT_COLORS, setMoves, onDrill, settings={}, onTrainToday }) => {
   const t = useT();
   const [threshold, setThreshold] = useState(14);
   const [customDays, setCustomDays] = useState("");
@@ -37,7 +37,8 @@ export const GAPTab = ({ moves, catColors=CAT_COLORS, setMoves, onDrill, setting
   const freshPct = totalCount ? freshCount / totalCount : 1;
 
   const handleTrainToday = (id) => {
-    setMoves(prev => prev.map(m => m.id === id ? { ...m, date: today } : m));
+    if (onTrainToday) { onTrainToday(id); }
+    else { setMoves(prev => prev.map(m => m.id === id ? { ...m, date: today } : m)); }
   };
 
   const borderColor = (m) => {

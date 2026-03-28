@@ -117,7 +117,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
           )}
 
           {row(t("defaultView"), t("defaultViewDesc"),
-            segmented("defaultView",[{value:"list",icon:"☰",label:t("list")},{value:"tiles",icon:"⊞",label:t("tiles")}])
+            segmented("defaultView",[{value:"list",icon:"☰",label:t("list")},{value:"tiles",icon:"⊞",label:t("tiles")},{value:"tree",icon:"🌿",label:t("treeView")}])
           )}
 
           {row(t("displayZoom"), t("displayZoomDesc"),

@@ -39,7 +39,8 @@ export const AddCategoryModal = ({ onClose, onAdd, existingCats=[], existingColo
   return (
     <Modal title={t("addCategory")} onClose={onClose}>
       <Inp label={t("categoryNameLabel") + " *"} value={name} onChange={v=>{setName(v);setDupWarning(false);}} placeholder={t("catPlaceholder")}/>
-      {nameDup && !isExactDup && <p style={{ color:C.yellow, fontSize:12, marginTop:-10, marginBottom:12 }}>⚠ {t("categoryExists")}</p>}
+      {nameDup && !isExactDup && <p style={{ color:C.yellow, fontSize:12, marginTop:-10, marginBottom:12 }}>{"\u26a0"} {t("categoryExists")}</p>}
+
       <div style={{ marginBottom:16 }}>
         <label style={lbl()}>{t("colour")}</label>
         <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginTop:4 }}>

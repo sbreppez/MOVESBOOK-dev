@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { C } from '../../constants/colors';
 import { FONT_DISPLAY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
@@ -27,12 +27,13 @@ export const MoveListRow = ({ move, catColor, onEdit, onDelete, onMove, allCats,
           {isTrained&&<Ic n="check" s={10} c="#fff"/>}
         </button>;
       })()}
-      {showMastery&&<Fragment>
-        <div style={{ width:44, height:3, borderRadius:2, background:C.border, flexShrink:0 }}>
-          <div style={{ height:"100%", width:`${move.mastery}%`, borderRadius:2, background:masteryColor(move.mastery) }}/>
-        </div>
-        <span style={{ fontSize:12, color:masteryColor(move.mastery), fontWeight:700, width:30, textAlign:"right", flexShrink:0 }}>{move.mastery}%</span>
-      </Fragment>}
+      {move.musicEnergy && move.musicEnergy !== "any" && (
+        <span style={{ fontSize:10, flexShrink:0 }}>{{slow:"\ud83c\udfb5",mid:"\ud83c\udfb6",fast:"\u26a1",heavy:"\ud83d\udd25"}[move.musicEnergy]}</span>
+      )}
+      {showMastery&&<div style={{ width:44, height:3, borderRadius:2, background:C.border, flexShrink:0 }}>
+        <div style={{ height:"100%", width:`${move.mastery}%`, borderRadius:2, background:masteryColor(move.mastery) }}/>
+      </div>}
+      <span style={{ fontSize:12, color:masteryColor(move.mastery), fontWeight:700, fontFamily:FONT_DISPLAY, width:30, textAlign:"right", flexShrink:0 }}>{move.mastery}%</span>
       <button onClick={e=>{e.stopPropagation();onDelete();}}
         style={{ background:"none", border:"none", cursor:"pointer", padding:2, display:"flex", flexShrink:0 }}>
         <Ic n="x" s={13} c={C.textMuted}/>

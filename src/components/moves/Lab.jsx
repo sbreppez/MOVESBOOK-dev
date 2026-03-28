@@ -248,6 +248,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
       date: new Date().toISOString().split("T")[0],
       status: "wip",
       attrs: {},
+      origin: "creation",
     });
     setSaveModal(false);
     setSavedFlash(true);

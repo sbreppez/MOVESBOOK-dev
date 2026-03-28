@@ -8,7 +8,7 @@ const BACKUP_KEYS = {
   moves: "mb_moves", sets: "mb_sets", rounds: "mb_rounds",
   ideas: "mb_ideas", profile: "mb_profile", settings: "mb_settings",
   habits: "mb_habits", templates: "mb_templates",
-  categories: "mb_cats", catColors: "mb_cat_colors",
+  categories: "mb_cats", catColors: "mb_cat_colors", catDomains: "mb_cat_domains",
   customAttrs: "mb_custom_attrs",
   constraint: "mb_constraint",
 };

@@ -20,8 +20,9 @@ import { AttributeFilter } from './AttributeFilter';
 import { filterMovesByAttrs } from '../../utils/attributeHelpers';
 import { ReminderBlock } from './ReminderBlock';
 import { GAPTab } from './GAPTab';
+import { MoveTree } from './MoveTree';
 
-export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders }) => {
+export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains={}, setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders }) => {
   const t = useT();
   const { moveCountStr, resultCountStr } = usePlural();
   const { settings:ctxSettings } = useSettings();
@@ -50,12 +51,13 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   // onAddTrigger2: Add Category (moves tab) or Add Set (sets tab)
   useEffect(()=>{ if(onAddTrigger2) { if(vocabTab==="sets") setAddingSet(true); else setShowAddCat(true); } },[onAddTrigger2]);
   const [editSetModal,setEditSetModal]=useState(null);
-  const [setsView,setSetsView]=useState(st.defaultView||"list");
+  const [setsView,setSetsView]=useState(st.defaultView==="tree"?"list":(st.defaultView||"list"));
   // Sync view states when the defaultView setting changes
-  useEffect(()=>{ setView(st.defaultView||"list"); setSetsView(st.defaultView||"list"); },[st.defaultView]);
+  useEffect(()=>{ setView(st.defaultView||"list"); setSetsView(st.defaultView==="tree"?"list":(st.defaultView||"list")); },[st.defaultView]);
   const [expSets,setExpSets]=useState({});
   const [confirmDeleteSet,setConfirmDeleteSet]=useState(null);
   const [confirmDeleteMove,setConfirmDeleteMove]=useState(null);
+  const [versionMove, setVersionMove] = useState(null);
   const [showFilter, setShowFilter] = useState(false);
   const [attrFilters, setAttrFilters] = useState({});
   const setDragItem=useRef(null);
@@ -90,7 +92,19 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
       setMoves(prev=>[...prev,{...form, id:Date.now(), status:form.status||"wip"}]);
     }
   };
-  const handleToggleTrainedToday = (id) => { setMoves(prev => prev.map(m => m.id === id ? { ...m, date: new Date().toISOString().split("T")[0] } : m)); };
+  const handleToggleTrainedToday = (id) => {
+    const today = new Date().toISOString().split("T")[0];
+    const move = moves.find(m => m.id === id);
+    if (!move) return;
+    const isToday = move.date === today;
+    setMoves(prev => prev.map(m => {
+      if (m.id !== id) return m;
+      return isToday
+        ? { ...m, date: m.prevDate || null, prevDate: null }
+        : { ...m, prevDate: m.date, date: today };
+    }));
+    addToast({ emoji: isToday ? "↩️" : "✅", title: t(isToday ? "unmarkedToday" : "markedTrainedToday") });
+  };
   const bulkImport=newMoves=>{ const w=newMoves.map(m=>({...m,id:Date.now()+Math.random(),status:m.status||"wip"})); setMoves(prev=>[...prev,...w]); };
   const delMove=id=>setMoves(prev=>prev.filter(m=>m.id!==id));
   const tryDelMove=m=>{ if(st.confirmDelete!==false) setConfirmDeleteMove(m); else delMove(m.id); };
@@ -211,8 +225,8 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
             </div>
           )}
         </div>
-        {showAdd&&<MoveModal initialCat={openCat} cats={cats} initialDesc={ideaDesc} onClose={()=>{setShowAdd(false);setIdeaDesc(null);}} onSave={f=>saveMove(f)} customAttrs={customAttrs} onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])}/>}
-        {editMove&&<MoveModal move={editMove} cats={cats} onClose={()=>setEditMove(null)} onSave={f=>{saveMove(f,editMove.id);setEditMove(null);}} customAttrs={customAttrs} onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])}/>}
+        {showAdd&&<MoveModal initialCat={openCat} cats={cats} initialDesc={ideaDesc} onClose={()=>{setShowAdd(false);setIdeaDesc(null);}} onSave={f=>saveMove(f)} customAttrs={customAttrs} onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])} allMoves={moves} catColors={catColors}/>}
+        {editMove&&<MoveModal move={editMove} cats={cats} onClose={()=>setEditMove(null)} onSave={f=>{saveMove(f,editMove.id);setEditMove(null);}} customAttrs={customAttrs} onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])} allMoves={moves} catColors={catColors}/>}
         {confirmDeleteMove&&(
           <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", zIndex:900, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
             <div style={{ background:C.bg, border:`1px solid ${C.border}`, borderRadius:14, width:"100%", maxWidth:320, padding:20, boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
@@ -245,12 +259,65 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
     return { catHits, moveHits };
   })() : null;
 
+  // ── Version tracking prompt ──
+  const versionShown = st.versionPromptsShown || [];
+  const today = new Date();
+  const versionEligible = vocabTab === "moves" ? moves.find(m => {
+    if ((m.mastery || 0) < 75) return false;
+    if (versionShown.includes(m.id)) return false;
+    if (!m.date) return false;
+    const d = new Date(m.date);
+    return (today - d) / (1000*60*60*24) >= 30;
+  }) : null;
+  const dismissVersion = (id) => {
+    if (onSettingsChange) onSettingsChange(p => ({...p, versionPromptsShown: [...(p.versionPromptsShown||[]), id]}));
+  };
+  const VERSION_CHIPS = [
+    { key:"entry", label:"changeEntry" },
+    { key:"exit", label:"changeExit" },
+    { key:"speed", label:"changeSpeed" },
+    { key:"level", label:"changeLevel" },
+    { key:"mirror", label:"mirrorIt" },
+  ];
+
   return (
     <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column" }}>
       <SectionBanner tab="wip"/>
       {reminders?.items?.length > 0 && (
         <ReminderBlock reminders={reminders} onRemindersChange={onRemindersChange} addToast={addToast} onOpenManage={onOpenManageReminders}/>
       )}
+
+      {/* ── Version tracking prompt ── */}
+      {versionEligible && !openCat && vocabTab === "moves" && (
+        <div style={{ margin:"6px 14px", padding:14, background:C.surfaceAlt, border:`1px solid ${C.border}`, borderRadius:12, position:"relative" }}>
+          <button onClick={() => dismissVersion(versionEligible.id)}
+            style={{ position:"absolute", top:8, right:8, background:"none", border:"none", cursor:"pointer", padding:2, display:"flex" }}>
+            <Ic n="x" s={14} c={C.textMuted}/>
+          </button>
+          <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:14, color:C.text, marginBottom:8 }}>
+            <span style={{ color:C.accent }}>{versionEligible.name}</span> — {t("createVariation")}
+          </div>
+          <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
+            {VERSION_CHIPS.map(ch => (
+              <button key={ch.key} onClick={() => {
+                dismissVersion(versionEligible.id);
+                setVersionMove({ ...versionEligible, _versionChip: ch.key });
+              }}
+                style={{ border:`1.5px solid ${C.border}`, cursor:"pointer", borderRadius:20, fontFamily:FONT_DISPLAY, fontWeight:700, letterSpacing:0.3, fontSize:11, padding:"4px 10px", whiteSpace:"nowrap", transition:"all 0.15s", background:C.surface, color:C.textSec }}>
+                {t(ch.label)}
+              </button>
+            ))}
+            <button onClick={() => {
+              dismissVersion(versionEligible.id);
+              setVersionMove({ ...versionEligible, _versionChip: null });
+            }}
+              style={{ border:`1.5px solid ${C.accent}`, cursor:"pointer", borderRadius:20, fontFamily:FONT_DISPLAY, fontWeight:700, letterSpacing:0.3, fontSize:11, padding:"4px 10px", whiteSpace:"nowrap", transition:"all 0.15s", background:C.accent+"18", color:C.accent }}>
+              + {t("createOwnVersion")}
+            </button>
+          </div>
+        </div>
+      )}
+
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"6px 14px", borderBottom:`1px solid ${C.borderLight}`, background:C.surface, flexShrink:0 }}>
         {/* MOVES / SETS sub-tabs */}
         <div style={{ display:"flex", gap:0 }}>
@@ -272,13 +339,15 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
               {hasActiveFilters&&<div style={{ position:"absolute", top:2, right:2, width:6, height:6, borderRadius:"50%", background:C.accent }}/>}
             </button>}
             <button onClick={()=>{ setShowSearch(s=>!s); setSearch(""); }} style={{ background:showSearch?C.surfaceAlt:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:showSearch?C.accent:C.textMuted }}><Ic n="search" s={16}/></button>
-            <button onClick={()=>setView(v=>v==="tiles"?"list":"tiles")} style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}><Ic n={view==="tiles"?"list":"grid"} s={16}/></button>
+            {[{v:"tiles",ic:"grid"},{v:"list",ic:"list"},{v:"tree",ic:"tree"}].map(({v,ic})=>(
+              <button key={v} onClick={()=>setView(v)} style={{ background:view===v?C.surfaceAlt:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:view===v?C.accent:C.textMuted }}><Ic n={ic} s={16}/></button>
+            ))}
             <button onClick={()=>setBulk(true)} style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}><Ic n="upload" s={16}/></button>
-            <button onClick={()=>{ const next=!reorderMode; setReorderMode(next); if(next) setCats(sortedCats); if(!next && onSortChange) onSortChange("categorySort","manual"); }}
+            {view!=="tree"&&<button onClick={()=>{ const next=!reorderMode; setReorderMode(next); if(next) setCats(sortedCats); if(!next && onSortChange) onSortChange("categorySort","manual"); }}
               style={{ background:reorderMode?C.accent:"none", border:"none", cursor:"pointer", padding:"4px 8px", borderRadius:5,
                 color:reorderMode?C.bg:C.textMuted, fontSize:13, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>
               {reorderMode?"DONE":"⇅"}
-            </button>
+            </button>}
           </Fragment>}
           {vocabTab==="sets"&&<Fragment>
             <button onClick={()=>setSetsView(v=>v==="list"?"tiles":"list")} style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}><Ic n={setsView==="list"?"grid":"list"} s={16}/></button>
@@ -312,7 +381,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
 
       <div style={{ flex:1, overflow:"auto", paddingTop: vocabTab==="gap" ? 0 : 10, paddingLeft: vocabTab==="gap" ? 0 : 10, paddingRight: vocabTab==="gap" ? 0 : 10, paddingBottom:76 }}>
         {vocabTab==="gap" ? (
-          <GAPTab moves={moves} catColors={catColors} setMoves={setMoves} onDrill={onDrill} settings={st}/>
+          <GAPTab moves={moves} catColors={catColors} setMoves={setMoves} onDrill={onDrill} settings={st} onTrainToday={handleToggleTrainedToday}/>
         ) : vocabTab==="sets" ? (
           <div>
             {sets.length===0&&(
@@ -463,7 +532,9 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
           </Fragment>}
           {searchResults.catHits.length===0&&searchResults.moveHits.length===0&&
             <div style={{ textAlign:"center", padding:30, color:C.textMuted }}><p style={{fontSize:13}}>Nothing matches "{search}"</p></div>}
-        </Fragment> : (
+        </Fragment> : view==="tree" ? (
+          <MoveTree moves={hasActiveFilters ? filterMovesByAttrs(wipMoves, attrFilters, customAttrs) : wipMoves} catColors={catColors} onEdit={m=>setEditMove(m)} settings={st}/>
+        ) : (
           <div
             style={view==="tiles"
               ? {display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,alignItems:"stretch"}
@@ -574,7 +645,22 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
       )}
       {showAddCat&&<AddCategoryModal onClose={()=>setShowAddCat(false)} onAdd={addCategory} existingCats={cats} existingColors={catColors}/>}
       {/* MoveModal at root level — for "Add to Move" arriving from Ideas tab */}
-      {showAdd&&<MoveModal initialCat={cats[0]||""} cats={cats} initialDesc={ideaDesc} onClose={()=>{setShowAdd(false);setIdeaDesc(null);}} onSave={f=>saveMove(f)} customAttrs={customAttrs} onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])}/>}
+      {showAdd&&<MoveModal initialCat={cats[0]||""} cats={cats} initialDesc={ideaDesc} onClose={()=>{setShowAdd(false);setIdeaDesc(null);}} onSave={f=>saveMove(f)} customAttrs={customAttrs} onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])} allMoves={moves} catColors={catColors}/>}
+      {/* EditMove at root level — for tree/search views where openCat is null */}
+      {!openCat&&editMove&&<MoveModal move={editMove} cats={cats} onClose={()=>setEditMove(null)} onSave={f=>{saveMove(f,editMove.id);setEditMove(null);}} customAttrs={customAttrs} onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])} allMoves={moves} catColors={catColors}/>}
+      {/* Version move modal — triggered by version tracking prompt */}
+      {versionMove&&<MoveModal
+        initialCat={versionMove.category}
+        cats={cats}
+        initialDesc={versionMove._versionChip ? t(VERSION_CHIPS.find(c=>c.key===versionMove._versionChip)?.label||"") : ""}
+        onClose={()=>setVersionMove(null)}
+        onSave={f=>{ saveMove({...f, origin:"version", parentId:versionMove.id}); setVersionMove(null); }}
+        customAttrs={customAttrs}
+        onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])}
+        allMoves={moves}
+        catColors={catColors}
+        move={{ name: `${versionMove.name} (v2)`, category: versionMove.category, origin:"version", parentId: versionMove.id, mastery:0 }}
+      />}
       {bulk&&<BulkModal onClose={()=>setBulk(false)} onImport={bulkImport} cats={cats}/>}
     </div>
   );

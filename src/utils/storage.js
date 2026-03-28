@@ -14,6 +14,11 @@ export function migrateMove(m) {
     date:        m.date        || Date.now(),
     attrs:       m.attrs       || {},
     difficulty:  m.difficulty  || null,
+    origin:      m.origin      || "learned",
+    musicEnergy: m.musicEnergy || null,
+    domains:     Array.isArray(m.domains) ? m.domains : [],
+    prevDate:    m.prevDate    || null,
+    parentId:    m.parentId    || null,
   };
 }
 

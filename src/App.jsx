@@ -64,6 +64,13 @@ export default function App() {
     } catch {}
     return {...CAT_COLORS};
   });
+  const [catDomains, setCatDomains] = useState(() => {
+    try {
+      const s = localStorage.getItem("mb_cat_domains");
+      if (s) { const p = JSON.parse(s); if (p && typeof p === "object") return p; }
+    } catch {}
+    return {};
+  });
   const [sets, setSets] = useState(() => {
     try {
       const s = localStorage.getItem("mb_sets");
@@ -132,6 +139,7 @@ export default function App() {
   useEffect(()=>{ saveLocal("mb_moves",   moves);   },[moves]);
   useEffect(()=>{ saveLocal("mb_cats",      cats);      },[cats]);
   useEffect(()=>{ saveLocal("mb_cat_colors",catColors); },[catColors]);
+  useEffect(()=>{ saveLocal("mb_cat_domains",catDomains); },[catDomains]);
   useEffect(()=>{ saveLocal("mb_sets",    sets);    },[sets]);
   useEffect(()=>{ saveLocal("mb_rounds",  rounds);  },[rounds]);
   useEffect(()=>{
@@ -175,6 +183,7 @@ export default function App() {
       settings:  save("settings"),
       cats:      save("cats"),
       catColors: save("catColors"),
+      catDomains: save("catDomains"),
       customAttrs: save("customAttrs"),
       reps:        save("reps"),
       sparring:    save("sparring"),
@@ -194,6 +203,7 @@ export default function App() {
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.profile?.(fbUser.uid, profile); },[profile, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.cats?.(fbUser.uid,      cats);      },[cats,      fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.catColors?.(fbUser.uid, catColors); },[catColors, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.catDomains?.(fbUser.uid, catDomains); },[catDomains, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.customAttrs?.(fbUser.uid, customAttrs); },[customAttrs, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.reps?.(fbUser.uid, reps); },[reps, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.sparring?.(fbUser.uid, sparring); },[sparring, fbUser]);
@@ -217,6 +227,7 @@ export default function App() {
           if (m) { try { const p=JSON.parse(m); if(Array.isArray(p)&&p.length>0) setMoves(p.map(migrateMove)); } catch {} }
           const ct = localStorage.getItem("mb_cats"); if (ct) { try { const p=JSON.parse(ct); if(Array.isArray(p)&&p.length>0) setCats(p); } catch {} }
           const cc = localStorage.getItem("mb_cat_colors"); if (cc) { try { setCatColors(JSON.parse(cc)); } catch {} }
+          const cd = localStorage.getItem("mb_cat_domains"); if (cd) { try { setCatDomains(JSON.parse(cd)); } catch {} }
           if (s) { try { const p=JSON.parse(s); if(Array.isArray(p)&&p.length>0) setSets(p); } catch {} }
           if (r) { try { const p=JSON.parse(r); if(Array.isArray(p)&&p.length>0) setRounds(p); } catch {} }
           const id = localStorage.getItem("mb_ideas");
@@ -259,6 +270,7 @@ export default function App() {
         setMoves(INIT_MOVES);
         setCats([...CATS]);
         setCatColors({...CAT_COLORS});
+        setCatDomains({});
         setSets(INIT_SETS);
         setRounds(INIT_ROUNDS);
         setIdeas(INIT_IDEAS);
@@ -503,7 +515,7 @@ export default function App() {
             {tab==="ideas" && <IdeasPage onAddMove={handleAddMoveFromIdea} onAddTrigger={addTick} ideas={ideas} setIdeas={setIdeas} habits={habits} setHabits={setHabits} calendar={calendar} onOpenCalendarJournal={()=>{setCalendarInitialDay(new Date().toISOString().split("T")[0]);setShowCalendar(true);}}/>}
           </TrainMenuCtx.Provider>
           </TrainModalCtx.Provider>
-          {tab==="wip" && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} sets={sets} setSets={setSets} addToast={addToast} pendingDesc={ideaToMove} clearPendingDesc={()=>setIdeaToMove(null)} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} reminders={reminders} onRemindersChange={setReminders} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}} onOpenManageReminders={()=>setShowManageReminders(true)}/>}
+          {tab==="wip" && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} catDomains={catDomains} setCatDomains={setCatDomains} sets={sets} setSets={setSets} addToast={addToast} pendingDesc={ideaToMove} clearPendingDesc={()=>setIdeaToMove(null)} settings={appSettings} onSettingsChange={setAppSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} reminders={reminders} onRemindersChange={setReminders} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}} onOpenManageReminders={()=>setShowManageReminders(true)}/>}
           {tab==="ready" && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab}/>}
           {showCalendar&&<CalendarOverlay
             moves={moves} setMoves={setMovesGrad} reps={reps} sparring={sparring} habits={habits} ideas={ideas}

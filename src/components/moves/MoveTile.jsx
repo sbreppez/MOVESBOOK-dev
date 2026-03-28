@@ -55,7 +55,9 @@ export const MoveTile = ({ move, onClick, onEdit, onDelete, onDuplicate, onMove,
         </div>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
           <span style={{ fontSize: compact ? 11 : 13, color:col, fontWeight:700 }}>{move.mastery}%</span>
-
+          {move.musicEnergy && move.musicEnergy !== "any" && (
+            <span style={{ fontSize:10 }}>{{slow:"\ud83c\udfb5",mid:"\ud83c\udfb6",fast:"\u26a1",heavy:"\ud83d\udd25"}[move.musicEnergy]}</span>
+          )}
         </div>
       </Fragment>}
 

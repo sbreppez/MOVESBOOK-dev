@@ -207,6 +207,22 @@ export const SetDetailModal = ({ item, onClose, onSave, type="set", allMoves=[],
         </div>
       )}
 
+      {/* ── Grooves best at (music energy) ── */}
+      {isSet && (() => {
+        const ENERGY_LABELS = { slow:"\ud83c\udfb5 Slow Groove", mid:"\ud83c\udfb6 Mid Tempo", fast:"\u26a1 Fast Breaks", heavy:"\ud83d\udd25 Heavy & Aggressive" };
+        const setMoves = localIds.map(id => allMoves.find(mv => mv.id === id)).filter(Boolean);
+        const energies = setMoves.map(m => m.musicEnergy).filter(e => e && e !== "any");
+        if (energies.length > 0 && energies.length === setMoves.length && new Set(energies).size === 1) {
+          const e = energies[0];
+          return (
+            <div style={{ fontSize:12, color:C.textSec, fontStyle:"italic", marginBottom:12, padding:"6px 10px", background:C.surfaceAlt, borderRadius:8, border:`1px solid ${C.borderLight}` }}>
+              {t("setGroovesBest")} {ENERGY_LABELS[e] || e}
+            </div>
+          );
+        }
+        return null;
+      })()}
+
       {/* Mastery slider */}
       <div style={{ marginBottom:16 }}>
         <label style={lbl()}>{isSet?t("howWellKnowSet"):t("howWellKnowRound")} — <span style={{ color:masteryColor(mastery), fontWeight:800 }}>{mastery}%</span></label>

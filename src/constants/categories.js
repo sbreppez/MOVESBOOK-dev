@@ -13,6 +13,17 @@ export const CAT_COLORS = {
 };
 export const CATS = Object.keys(CAT_COLORS);
 
+export const CATEGORY_DOMAIN_MAP = {
+  Toprocks:      { primary: 'performance', secondary: 'musicality' },
+  Godowns:       { primary: 'technique',   secondary: 'variety' },
+  Footworks:     { primary: 'technique',   secondary: 'musicality' },
+  'Power Moves': { primary: 'technique',   secondary: 'variety' },
+  Freezes:       { primary: 'technique',   secondary: 'performance' },
+  Transitions:   { primary: 'variety',     secondary: 'creativity' },
+  Burns:         { primary: 'performance', secondary: 'personality' },
+  Blowups:       { primary: 'performance', secondary: 'creativity' },
+};
+
 export const IDEA_COLORS = [
   "#c0391b","#8b1a1a","#2a5f8a","#2d6a4f","#b5850a","#6b3a8a",
   "#1a6a6a","#4a4a6a","#8a3a2a","#2a6a3a","#6a2a5a","#3a5a8a",
