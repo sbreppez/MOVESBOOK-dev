@@ -5,6 +5,7 @@ import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
 import { BodyCheckIn } from '../shared/BodyCheckIn';
+import { TrainingLog } from '../shared/TrainingLog';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -59,7 +60,7 @@ const haptic = (pattern) => {
 
 // ── Main Component ───────────────────────────────────────────────────────────
 
-export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, onSettingsChange, onClose, addCalendarEvent }) => {
+export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, onSettingsChange, reflections, onReflectionsChange, onClose, addCalendarEvent }) => {
   const t = useT();
   const { settings: appSettings } = useSettings();
   const isDark = (appSettings.theme || settings.theme) === "dark";
@@ -94,6 +95,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
 
   // ── Done screen state ──
   const [notes, setNotes] = useState("");
+  const [reflection, setReflection] = useState("");
   const [selectedMoves, setSelectedMoves] = useState([]);
   const [moveSearch, setMoveSearch] = useState("");
   const [exertion, setExertion] = useState(null);
@@ -301,6 +303,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
       shortestRound: completedSession.shortestRound,
       movesTrained: selectedMoves,
       notes,
+      reflection: reflection.trim() || null,
       exertion,
       bodyStatus,
       date: new Date().toISOString(),
@@ -852,6 +855,11 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
               style={{ width:"100%", background:C.surface, border:`1px solid ${C.border}`, borderRadius:10, padding:12, color:C.text, fontSize:13, fontFamily:FONT_BODY, resize:"vertical", outline:"none", boxSizing:"border-box" }}
             />
           </div>
+
+          {/* Training Log */}
+          <TrainingLog value={reflection} onChange={setReflection}
+            framingKey="reflectionSparring" reflections={reflections}
+            onReflectionsChange={onReflectionsChange} />
         </div>
 
         {/* Save / Discard */}

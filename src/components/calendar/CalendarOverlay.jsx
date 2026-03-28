@@ -17,7 +17,7 @@ const MONTH_KEYS = ["january","february","march","april","may","june","july","au
 const DAY_KEYS = ["sunS","monS","tueS","wedS","thuS","friS","satS"];
 
 export const CalendarOverlay = ({
-  moves, setMoves, reps, sparring, habits, ideas,
+  moves, setMoves, reps, sparring, musicflow, habits, ideas,
   calendar, setCalendar,
   cats, catColors, settings, onSettingsChange,
   addToast, initialDay,
@@ -72,11 +72,12 @@ export const CalendarOverlay = ({
       movesTrained: (moves || []).filter(m => toYMD(m.date) === d),
       repSessions: (reps || []).filter(r => toYMD(r.date) === d),
       sparringSessions: (sparring?.sessions || []).filter(s => toYMD(s.date) === d),
+      musicflowSessions: (musicflow?.sessions || []).filter(s => toYMD(s.date) === d),
       habitsCompleted: (habits || []).filter(h => (h.checkIns || []).includes(d)),
       notesOnDay: (ideas || []).filter(i => (i.journal || []).some(j => toYMD(j.date) === d)),
       calendarEvents: (calendar?.events || []).filter(e => e.date === d),
     };
-  }, [selectedDay, moves, reps, sparring, habits, ideas, calendar]);
+  }, [selectedDay, moves, reps, sparring, musicflow, habits, ideas, calendar]);
 
   const handleSaveEvent = useCallback((eventObj) => {
     setCalendar(prev => {
@@ -303,7 +304,8 @@ export const CalendarOverlay = ({
 
             {/* No activity */}
             {dayData.movesTrained.length === 0 && dayData.repSessions.length === 0 &&
-             dayData.sparringSessions.length === 0 && dayData.habitsCompleted.length === 0 &&
+             dayData.sparringSessions.length === 0 && dayData.musicflowSessions.length === 0 &&
+             dayData.habitsCompleted.length === 0 &&
              dayData.notesOnDay.length === 0 && dayData.calendarEvents.length === 0 && (
               <div style={{ color: C.textMuted, fontSize: 12, fontFamily: FONT_BODY, padding: "12px 0", textAlign: "center" }}>
                 {t("noActivity")}
@@ -400,10 +402,17 @@ export const CalendarOverlay = ({
               <div>
                 <div style={sectionLabel}>{t("repSession")}</div>
                 {dayData.repSessions.map(r => (
-                  <div key={r.id} style={{ fontSize: 11, color: C.textSec, padding: "3px 0", display: "flex", gap: 8 }}>
-                    <span style={{ color: C.text, fontWeight: 600 }}>{r.moveName}</span>
-                    <span>{r.reps} reps</span>
-                    {r.duration > 0 && <span>{Math.round(r.duration)}s</span>}
+                  <div key={r.id} style={{ fontSize: 11, color: C.textSec, padding: "3px 0" }}>
+                    <div style={{ display: "flex", gap: 8 }}>
+                      <span style={{ color: C.text, fontWeight: 600 }}>{r.moveName}</span>
+                      <span>{r.reps} reps</span>
+                      {r.duration > 0 && <span>{Math.round(r.duration)}s</span>}
+                    </div>
+                    {r.reflection && (
+                      <div style={{ fontSize: 11, color: C.textMuted, fontStyle: "italic", marginTop: 2 }}>
+                        "{r.reflection}"
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -419,6 +428,31 @@ export const CalendarOverlay = ({
                       {s.roundLog?.length || 0} rounds
                     </span>
                     {s.notes && <span style={{ marginLeft: 8, fontStyle: "italic" }}>{s.notes}</span>}
+                    {s.reflection && (
+                      <div style={{ fontSize: 11, color: C.textMuted, fontStyle: "italic", marginTop: 2 }}>
+                        "{s.reflection}"
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Music Flow Sessions */}
+            {dayData.musicflowSessions.length > 0 && (
+              <div>
+                <div style={sectionLabel}>{t("musicFlow")}</div>
+                {dayData.musicflowSessions.map(s => (
+                  <div key={s.id} style={{ fontSize: 11, color: C.textSec, padding: "3px 0" }}>
+                    <span style={{ color: C.text, fontWeight: 600 }}>
+                      {Math.floor(s.duration / 60)}:{String(s.duration % 60).padStart(2, "0")}
+                    </span>
+                    <span style={{ marginLeft: 8 }}>Stage {s.stageReached}</span>
+                    {s.reflection && (
+                      <div style={{ fontSize: 11, color: C.textMuted, fontStyle: "italic", marginTop: 2 }}>
+                        "{s.reflection}"
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

@@ -53,6 +53,110 @@ export const EditRoundView = ({ round, onSave, onClose, getMove, getSet, setPick
     return found;
   };
 
+  // ── Tension Role mapping ────────────────────────────────────────────────────
+  const ROLE_LEVEL = { flow:1, build:2, hit:3, peak:4 };
+  const TENSION_COLORS = { 1: C.textMuted, 2: C.blue, 3: C.yellow, 4: C.red };
+  const LEVEL_TO_ROLE = { 1:"flow", 2:"build", 3:"hit", 4:"peak" };
+
+  const getItemTension = (item) => {
+    if (item.tensionOverride) return ROLE_LEVEL[item.tensionOverride] || 2;
+    if (item.type === "move") {
+      const m = getMove(item.refId);
+      if (m?.tensionRole) return ROLE_LEVEL[m.tensionRole] || 2;
+    }
+    return 2;
+  };
+
+  const cycleItemTension = (entryId, itemIdx) => {
+    setLocalRound(r => ({
+      ...r,
+      entries: (r.entries||[]).map(e => e.id !== entryId ? e : {
+        ...e,
+        items: (e.items||[]).map((it, i) => {
+          if (i !== itemIdx) return it;
+          const cur = getItemTension(it);
+          const next = (cur % 4) + 1;
+          return { ...it, tensionOverride: LEVEL_TO_ROLE[next] };
+        })
+      })
+    }));
+  };
+
+  const resetItemTension = (entryId, itemIdx) => {
+    setLocalRound(r => ({
+      ...r,
+      entries: (r.entries||[]).map(e => e.id !== entryId ? e : {
+        ...e,
+        items: (e.items||[]).map((it, i) => i !== itemIdx ? it : { ...it, tensionOverride: null })
+      })
+    }));
+  };
+
+  const TensionDots = ({ level, onTap, onLongPress }) => {
+    const color = TENSION_COLORS[level] || TENSION_COLORS[2];
+    const longRef = useRef(null);
+    return (
+      <button
+        onClick={e=>{ e.stopPropagation(); onTap(); }}
+        onTouchStart={()=>{ longRef.current = setTimeout(()=>{ if(onLongPress) onLongPress(); }, 600); }}
+        onTouchEnd={()=>clearTimeout(longRef.current)}
+        onMouseDown={()=>{ longRef.current = setTimeout(()=>{ if(onLongPress) onLongPress(); }, 600); }}
+        onMouseUp={()=>clearTimeout(longRef.current)}
+        onMouseLeave={()=>clearTimeout(longRef.current)}
+        style={{ background:"none", border:"none", cursor:"pointer", padding:"6px 4px",
+          display:"flex", alignItems:"center", gap:3, flexShrink:0, minWidth:44, justifyContent:"center" }}>
+        {[1,2,3,4].map(i => (
+          <div key={i} style={{ width:6, height:6, borderRadius:"50%",
+            background: i <= level ? color : `${color}33` }}/>
+        ))}
+      </button>
+    );
+  };
+
+  const ArcVis = ({ items }) => {
+    if (!items || items.length < 2) return null;
+    const W = 200, H = 60, PAD_X = 16, PAD_Y = 8;
+    const plotW = W - PAD_X * 2, plotH = H - PAD_Y * 2;
+    const points = items.map((it, i) => {
+      const tension = getItemTension(it);
+      const x = PAD_X + (items.length === 1 ? plotW / 2 : (i / (items.length - 1)) * plotW);
+      const y = PAD_Y + plotH - (((tension - 1) / 3) * plotH);
+      return { x, y, tension };
+    });
+    const lineStr = points.map(p => `${p.x},${p.y}`).join(" ");
+    const areaStr = `${PAD_X},${H - PAD_Y} ${lineStr} ${W - PAD_X},${H - PAD_Y}`;
+    const gridYs = [1,2,3,4].map(v => PAD_Y + plotH - (((v - 1) / 3) * plotH));
+    return (
+      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none"
+        style={{ width:"100%", height:60, display:"block", padding:"0 12px", boxSizing:"border-box" }}>
+        {gridYs.map((gy,i) => (
+          <line key={i} x1={PAD_X} y1={gy} x2={W - PAD_X} y2={gy}
+            stroke={C.border} strokeWidth={0.5} strokeOpacity={0.3}/>
+        ))}
+        <polygon points={areaStr} fill={C.accent} fillOpacity={0.1}/>
+        <polyline points={lineStr} fill="none" stroke={C.accent} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"/>
+        {points.map((p,i) => (
+          <circle key={i} cx={p.x} cy={p.y} r={3} fill={TENSION_COLORS[p.tension]}/>
+        ))}
+      </svg>
+    );
+  };
+
+  const getArcFeedback = (items) => {
+    if (!items || items.length < 3) return null;
+    const levels = items.map(it => getItemTension(it));
+    const allSame = levels.every(l => l === levels[0]);
+    if (allSame) return t("arcNoDynamics");
+    const hasPeak = levels.includes(4);
+    if (hasPeak) return t("arcBuild");
+    for (let i = 1; i < levels.length; i++) {
+      if (levels[i] >= 3 && levels[i - 1] >= 3) return t("arcBackToBack");
+    }
+    const last = levels[levels.length - 1];
+    if (last >= 3) return t("arcStrongCloser");
+    return null;
+  };
+
   return (
     <div style={{ position:"absolute", inset:0, background:C.bg, zIndex:500, display:"flex", flexDirection:"column" }}>
       {/* Header */}
@@ -112,6 +216,8 @@ export const EditRoundView = ({ round, onSave, onClose, getMove, getSet, setPick
                 <div style={{ padding:"4px 0" }}
                   onDragOver={e=>e.preventDefault()}
                   onDrop={e=>{ e.stopPropagation(); if(itemDragRef.current?.eid===entry.id) localReorder(entry.id, itemDragRef.current.idx, (entry.items||[]).length); }}>
+                  {(entry.items||[]).filter(it=>it.type==="move").length >= 2 && <ArcVis items={entry.items}/>}
+                  {(() => { const fb = getArcFeedback(entry.items); return fb ? <div style={{ fontSize:10, color:C.textSec, fontStyle:"italic", padding:"2px 12px 4px" }}>{fb}</div> : null; })()}
                   {(entry.items||[]).length===0&&(
                     <div style={{ padding:"8px 14px", fontSize:11, color:C.textMuted, fontStyle:"italic" }}>Empty — tap ADD to fill this entry</div>
                   )}
@@ -121,6 +227,7 @@ export const EditRoundView = ({ round, onSave, onClose, getMove, getSet, setPick
                     const dupes = findLocalDupes(item.type, item.refId, entry.id);
                     const isDragging = itemDragRef.current?.eid===entry.id&&itemDragRef.current?.idx===idx;
                     const isOver = itemDragOver?.eid===entry.id&&itemDragOver?.idx===idx;
+                    const tension = getItemTension(item);
                     return (
                       <div key={idx}
                         draggable
@@ -141,6 +248,9 @@ export const EditRoundView = ({ round, onSave, onClose, getMove, getSet, setPick
                             {t("alsoIn")} {dupes[0]}
                           </span>
                         )}
+                        {item.type==="move"&&<TensionDots level={tension}
+                          onTap={()=>cycleItemTension(entry.id,idx)}
+                          onLongPress={()=>resetItemTension(entry.id,idx)}/>}
                         <button onClick={()=>localRemoveItem(entry.id,idx)}
                           style={{ background:"none", border:"none", cursor:"pointer", padding:2, display:"flex", flexShrink:0 }}>
                           <Ic n="x" s={11} c={C.textMuted}/>

@@ -19,12 +19,11 @@ const ORIGIN_KEYS = ["learned","version","creation"];
 const ORIGIN_HINTS = { learned:"learnedHint", version:"myVersionHint", creation:"myCreationHint" };
 const ORIGIN_LABELS = { learned:"learned", version:"myVersion", creation:"myCreation" };
 
-const ENERGY_OPTS = [
-  { key:"slow",  emoji:"\ud83c\udfb5", label:"slowGroove" },
-  { key:"mid",   emoji:"\ud83c\udfb6", label:"midTempo" },
-  { key:"fast",  emoji:"\u26a1",       label:"fastBreaks" },
-  { key:"heavy", emoji:"\ud83d\udd25", label:"heavyAggressive" },
-  { key:"any",   emoji:"\u267e\ufe0f", label:"anyVibe" },
+const TENSION_ROLE_OPTS = [
+  { key:"flow",  emoji:"\ud83c\udf0a", label:"tensionFlow", hint:"flowHint" },
+  { key:"build", emoji:"\ud83d\udcc8", label:"tensionBuild", hint:"buildHint" },
+  { key:"hit",   emoji:"\ud83d\udca5", label:"tensionHit", hint:"hitHint" },
+  { key:"peak",  emoji:"\ud83d\udd25", label:"tensionPeak", hint:"peakHint" },
 ];
 
 const chipStyle = (active) => ({
@@ -39,7 +38,7 @@ const sectionLabel = { fontSize:10, fontWeight:800, letterSpacing:1, color:C.tex
 
 export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initialDesc="", cats=CATS, customAttrs=[], onAddAttr, allMoves=[], catColors=CAT_COLORS }) => {
   const t = useT();
-  const [f,setF] = useState({ name:"", category:initialCat, description:initialDesc||"", link:"", mastery:50, date:new Date().toISOString().split("T")[0], status:"wip", rotation:"", travelling:"", custom:"", attrs:{}, origin:"learned", musicEnergy:null, parentId:null, ...move });
+  const [f,setF] = useState({ name:"", category:initialCat, description:initialDesc||"", link:"", mastery:50, date:new Date().toISOString().split("T")[0], status:"wip", rotation:"", travelling:"", custom:"", attrs:{}, origin:"learned", musicEnergy:null, tensionRole:null, parentId:null, ...move });
   const set = k => v => setF(p=>({...p,[k]:v}));
   const handleSave = () => { if (f.name) { onSave(f); onClose(); } };
   const [showMore, setShowMore] = useState(false);
@@ -214,20 +213,26 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
         </div>
       </div>
 
-      {/* ── Music Energy ── */}
+      {/* ── Tension Role ── */}
       <div style={{ marginTop:8, marginBottom:4 }}>
-        <div style={sectionLabel}>{t("musicEnergy")}</div>
+        <div style={sectionLabel}>{t("tensionRole")}</div>
+        <div style={{ fontSize:11, color:C.textMuted, fontStyle:"italic", marginBottom:6 }}>{t("whatRoleDoesThisMove")}</div>
         <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
-          {ENERGY_OPTS.map(e => {
-            const active = f.musicEnergy === e.key;
+          {TENSION_ROLE_OPTS.map(r => {
+            const active = f.tensionRole === r.key;
             return (
-              <button key={e.key} onClick={() => setF(p => ({...p, musicEnergy: active ? null : e.key}))}
+              <button key={r.key} onClick={() => setF(p => ({...p, tensionRole: active ? null : r.key}))}
                 style={chipStyle(active)}>
-                {e.emoji} {t(e.label)}
+                {r.emoji} {t(r.label)}
               </button>
             );
           })}
         </div>
+        {f.tensionRole && (
+          <div style={{ fontSize:11, color:C.textMuted, fontStyle:"italic", marginTop:5 }}>
+            {t(TENSION_ROLE_OPTS.find(r => r.key === f.tensionRole)?.hint || "")}
+          </div>
+        )}
       </div>
 
       {/* ── Domains (multi-select) ── */}

@@ -176,6 +176,143 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
   const masteryColorLocal = p => p < 30 ? C.red : p < 60 ? C.yellow : p < 80 ? C.blue : C.green;
 
   // ── PLAN layout ─────────────────────────────────────────────────────────────
+  // ── Tension Role mapping ────────────────────────────────────────────────────
+  const ROLE_LEVEL = { flow:1, build:2, hit:3, peak:4 };
+  const TENSION_COLORS = { 1: C.textMuted, 2: C.blue, 3: C.yellow, 4: C.red };
+
+  const getItemTension = (item) => {
+    if (item.tensionOverride) return ROLE_LEVEL[item.tensionOverride] || 2;
+    if (item.type === "move") {
+      const m = getMove(item.refId);
+      if (m?.tensionRole) return ROLE_LEVEL[m.tensionRole] || 2;
+    }
+    return 2; // default build
+  };
+
+  const LEVEL_TO_ROLE = { 1:"flow", 2:"build", 3:"hit", 4:"peak" };
+
+  const cycleItemTension = (roundId, entryId, itemIdx) => {
+    setRounds(prev => prev.map(r => r.id !== roundId ? r : {
+      ...r,
+      entries: (r.entries||[]).map(e => e.id !== entryId ? e : {
+        ...e,
+        items: (e.items||[]).map((it, i) => {
+          if (i !== itemIdx) return it;
+          const cur = getItemTension(it);
+          const next = (cur % 4) + 1;
+          return { ...it, tensionOverride: LEVEL_TO_ROLE[next] };
+        })
+      })
+    }));
+  };
+
+  const resetItemTension = (roundId, entryId, itemIdx) => {
+    setRounds(prev => prev.map(r => r.id !== roundId ? r : {
+      ...r,
+      entries: (r.entries||[]).map(e => e.id !== entryId ? e : {
+        ...e,
+        items: (e.items||[]).map((it, i) => i !== itemIdx ? it : { ...it, tensionOverride: null })
+      })
+    }));
+    if (addToast) addToast("\u21a9\ufe0f " + t("resetToDefault"));
+  };
+
+  const TensionDots = ({ level, onTap, onLongPress }) => {
+    const color = TENSION_COLORS[level] || TENSION_COLORS[2];
+    const longRef = useRef(null);
+    return (
+      <button
+        onClick={e=>{ e.stopPropagation(); onTap(); }}
+        onTouchStart={()=>{ longRef.current = setTimeout(()=>{ if(onLongPress) onLongPress(); }, 600); }}
+        onTouchEnd={()=>clearTimeout(longRef.current)}
+        onMouseDown={()=>{ longRef.current = setTimeout(()=>{ if(onLongPress) onLongPress(); }, 600); }}
+        onMouseUp={()=>clearTimeout(longRef.current)}
+        onMouseLeave={()=>clearTimeout(longRef.current)}
+        style={{ background:"none", border:"none", cursor:"pointer", padding:"6px 4px",
+          display:"flex", alignItems:"center", gap:3, flexShrink:0, minWidth:44, justifyContent:"center" }}>
+        {[1,2,3,4].map(i => (
+          <div key={i} style={{ width:6, height:6, borderRadius:"50%",
+            background: i <= level ? color : `${color}33` }}/>
+        ))}
+      </button>
+    );
+  };
+
+  const ArcVis = ({ items }) => {
+    if (!items || items.length < 2) return null;
+    const W = 200, H = 60, PAD_X = 16, PAD_Y = 8;
+    const plotW = W - PAD_X * 2, plotH = H - PAD_Y * 2;
+    const points = items.map((it, i) => {
+      const tension = getItemTension(it);
+      const x = PAD_X + (items.length === 1 ? plotW / 2 : (i / (items.length - 1)) * plotW);
+      const y = PAD_Y + plotH - (((tension - 1) / 3) * plotH);
+      return { x, y, tension };
+    });
+    const lineStr = points.map(p => `${p.x},${p.y}`).join(" ");
+    const areaStr = `${PAD_X},${H - PAD_Y} ${lineStr} ${W - PAD_X},${H - PAD_Y}`;
+    const gridYs = [1,2,3,4].map(v => PAD_Y + plotH - (((v - 1) / 3) * plotH));
+    return (
+      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none"
+        style={{ width:"100%", height:60, display:"block", padding:"0 12px", boxSizing:"border-box" }}>
+        {gridYs.map((gy,i) => (
+          <line key={i} x1={PAD_X} y1={gy} x2={W - PAD_X} y2={gy}
+            stroke={C.border} strokeWidth={0.5} strokeOpacity={0.3}/>
+        ))}
+        <polygon points={areaStr} fill={C.accent} fillOpacity={0.1}/>
+        <polyline points={lineStr} fill="none" stroke={C.accent} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"/>
+        {points.map((p,i) => (
+          <circle key={i} cx={p.x} cy={p.y} r={3} fill={TENSION_COLORS[p.tension]}/>
+        ))}
+      </svg>
+    );
+  };
+
+  const getArcFeedback = (items) => {
+    if (!items || items.length < 3) return null;
+    const levels = items.map(it => getItemTension(it));
+    const allSame = levels.every(l => l === levels[0]);
+    if (allSame) return t("arcNoDynamics");
+    const hasPeak = levels.includes(4);
+    if (hasPeak) return t("arcBuild");
+    for (let i = 1; i < levels.length; i++) {
+      if (levels[i] >= 3 && levels[i - 1] >= 3) return t("arcBackToBack");
+    }
+    const last = levels[levels.length - 1];
+    if (last >= 3) return t("arcStrongCloser");
+    return null;
+  };
+
+  // ── Arc legend (first-time) ───────────────────────────────────────────────
+  const [arcLegendOpen, setArcLegendOpen] = useState(!(settings.arcLegendSeen));
+
+  const ArcLegend = () => {
+    const seen = settings.arcLegendSeen;
+    return (
+      <div style={{ margin:"4px 12px 6px", padding:"8px 10px", background:C.surface, borderRadius:8, border:`1px solid ${C.borderLight}` }}>
+        <div onClick={()=>{ setArcLegendOpen(p=>!p); if(!seen && window.__MB_SETTINGS_SET__) window.__MB_SETTINGS_SET__(s=>({...s,arcLegendSeen:true})); }}
+          style={{ display:"flex", alignItems:"center", cursor:"pointer", gap:6 }}>
+          <Ic n={arcLegendOpen?"chevD":"chevR"} s={10} c={C.textMuted}/>
+          <span style={{ fontSize:10, fontWeight:800, letterSpacing:1, color:C.brownMid, fontFamily:FONT_DISPLAY }}>{t("roundArc")}</span>
+        </div>
+        {arcLegendOpen && (
+          <div style={{ marginTop:6 }}>
+            <div style={{ fontSize:13, color:C.textSec, fontStyle:"italic", fontFamily:FONT_BODY, lineHeight:1.4, marginBottom:6 }}>{t("roundArcExplain")}</div>
+            <div style={{ display:"flex", gap:10, flexWrap:"wrap", marginBottom:4 }}>
+              {[{e:"\ud83c\udf0a",n:1,l:"arcLegendFlow"},{e:"\ud83d\udcc8",n:2,l:"arcLegendBuild"},{e:"\ud83d\udca5",n:3,l:"arcLegendHit"},{e:"\ud83d\udd25",n:4,l:"arcLegendPeak"}].map(x=>(
+                <div key={x.n} style={{ display:"flex", alignItems:"center", gap:3, fontSize:11, color:C.textMuted }}>
+                  <span>{x.e}</span>
+                  {[1,2,3,4].map(i=><div key={i} style={{ width:5, height:5, borderRadius:"50%", background: i<=x.n ? TENSION_COLORS[x.n] : `${TENSION_COLORS[x.n]}33` }}/>)}
+                  <span>{t(x.l)}</span>
+                </div>
+              ))}
+            </div>
+            <div style={{ fontSize:11, color:C.textMuted, fontStyle:"italic" }}>{t("tapDotsToOverride")}</div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   const PlanView = () => {
     return (
       <div style={{ flex:1, display:"flex", flexDirection:"column", overflow:"hidden" }}>
@@ -337,6 +474,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
 
         {/* Rounds list */}
         <div style={{ flex:1, overflow:"auto", padding:"10px 12px" }}>
+          {rounds.some(r => (r.entries||[]).some(e => (e.items||[]).filter(it=>it.type==="move").length >= 2)) && <ArcLegend/>}
           {rounds.length === 0 && (
             <div style={{ textAlign:"center", padding:40, color:C.textMuted }}>
               <div style={{ fontSize:28, marginBottom:8 }}>⚔</div>
@@ -386,27 +524,36 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
                   </div>}
                 </div>
                 {/* Entries — expanded by default */}
-                {isOpen && (round.entries||[]).map(entry => (
-                  <div key={entry.id}
-                    style={{ borderTop:`1px solid ${C.borderLight}`, padding:"6px 12px 6px 28px" }}>
-                    <div style={{ display:"flex", alignItems:"center", gap:5 }}>
-                      <Ic n="chevR" s={10} c={C.textMuted}/>
-                      <span style={{ fontSize:11, fontWeight:700, color:C.brownMid, fontFamily:FONT_DISPLAY, flex:1 }}>{entry.name}</span>
-                      <span style={{ fontSize:9, color:C.textMuted }}>{(entry.items||[]).length} items</span>
+                {isOpen && (round.entries||[]).map(entry => {
+                  const moveItems = (entry.items||[]).filter(it => it.type === "move");
+                  return (
+                    <div key={entry.id}
+                      style={{ borderTop:`1px solid ${C.borderLight}`, padding:"6px 12px 6px 28px" }}>
+                      <div style={{ display:"flex", alignItems:"center", gap:5 }}>
+                        <Ic n="chevR" s={10} c={C.textMuted}/>
+                        <span style={{ fontSize:11, fontWeight:700, color:C.brownMid, fontFamily:FONT_DISPLAY, flex:1 }}>{entry.name}</span>
+                        <span style={{ fontSize:9, color:C.textMuted }}>{(entry.items||[]).length} items</span>
+                      </div>
+                      {moveItems.length >= 2 && <ArcVis items={entry.items}/>}
+                      {(() => { const fb = getArcFeedback(entry.items); return fb ? <div style={{ fontSize:10, color:C.textSec, fontStyle:"italic", padding:"2px 0 4px" }}>{fb}</div> : null; })()}
+                      {(entry.items||[]).map((item,i) => {
+                        const label = item.type==="move" ? getMove(item.refId)?.name : getSet(item.refId)?.name;
+                        if (!label) return null;
+                        const tension = getItemTension(item);
+                        return (
+                          <div key={i} style={{ fontSize:10, color:C.textMuted, paddingLeft:14, paddingTop:2, display:"flex", alignItems:"center", gap:4 }}>
+                            <span>·</span>
+                            {item.type==="set"&&<span style={{ fontSize:8, background:`${C.blue}22`, color:C.blue, padding:"0 3px", borderRadius:3, fontFamily:FONT_DISPLAY, fontWeight:700 }}>SET</span>}
+                            <span style={{ flex:1 }}>{label}</span>
+                            {item.type==="move"&&<TensionDots level={tension}
+                              onTap={()=>cycleItemTension(round.id, entry.id, i)}
+                              onLongPress={()=>resetItemTension(round.id, entry.id, i)}/>}
+                          </div>
+                        );
+                      })}
                     </div>
-                    {(entry.items||[]).map((item,i) => {
-                      const label = item.type==="move" ? getMove(item.refId)?.name : getSet(item.refId)?.name;
-                      if (!label) return null;
-                      return (
-                        <div key={i} style={{ fontSize:10, color:C.textMuted, paddingLeft:14, paddingTop:2, display:"flex", alignItems:"center", gap:4 }}>
-                          <span>·</span>
-                          {item.type==="set"&&<span style={{ fontSize:8, background:`${C.blue}22`, color:C.blue, padding:"0 3px", borderRadius:3, fontFamily:FONT_DISPLAY, fontWeight:700 }}>SET</span>}
-                          <span>{label}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             );
           })}

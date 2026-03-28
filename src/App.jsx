@@ -141,6 +141,9 @@ export default function App() {
   const [freestyle, setFreestyle] = useState(() => {
     try { const s=localStorage.getItem("mb_freestyle"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { trustMode:false };
   });
+  const [reflections, setReflections] = useState(() => {
+    try { const s=localStorage.getItem("mb_reflections"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { lastCategory:-1, lastDate:null };
+  });
 
   // ── Persist to localStorage on every change ────────────────────────────────
   useEffect(()=>{ saveLocal("mb_moves",   moves);   },[moves]);
@@ -166,6 +169,7 @@ export default function App() {
   useEffect(()=>{ saveLocal("mb_stance", stance); },[stance]);
   useEffect(()=>{ saveLocal("mb_musicflow", musicflow); },[musicflow]);
   useEffect(()=>{ saveLocal("mb_freestyle", freestyle); },[freestyle]);
+  useEffect(()=>{ saveLocal("mb_reflections", reflections); },[reflections]);
   useEffect(()=>{ saveLocal("mb_ideas",   ideas);
     const timer = setTimeout(() => {
       if (window.__MB_USER__?.uid && window.__MB_DB__) {
@@ -204,6 +208,7 @@ export default function App() {
       stance:      save("stance"),
       musicflow:   save("musicflow"),
       freestyle:   save("freestyle"),
+      reflections: save("reflections"),
     };
   }, []);
 
@@ -226,6 +231,7 @@ export default function App() {
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.stance?.(fbUser.uid, stance); },[stance, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.musicflow?.(fbUser.uid, musicflow); },[musicflow, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.freestyle?.(fbUser.uid, freestyle); },[freestyle, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.reflections?.(fbUser.uid, reflections); },[reflections, fbUser]);
 
   // ── Auth resolution ────────────────────────────────────────────────────────
   useEffect(()=>{
@@ -269,6 +275,8 @@ export default function App() {
           if (mf) { try { const p=JSON.parse(mf); if(p&&typeof p==="object") setMusicflow(p); } catch {} }
           const fsl = localStorage.getItem("mb_freestyle");
           if (fsl) { try { const p=JSON.parse(fsl); if(p&&typeof p==="object") setFreestyle(p); } catch {} }
+          const ref = localStorage.getItem("mb_reflections");
+          if (ref) { try { const p=JSON.parse(ref); if(p&&typeof p==="object") setReflections(p); } catch {} }
           if (p) { try { const pp=JSON.parse(p); if(pp&&Object.values(pp).some(v=>v)) setProfile(pp); } catch{} }
           const st = localStorage.getItem("mb_settings");
           if (st) {
@@ -304,6 +312,7 @@ export default function App() {
         setCalendar({ events:[] });
         setStance({ assessments:[] });
         setMusicflow({ sessions:[] });
+        setReflections({ lastCategory:-1, lastDate:null });
       }
     }
     window.addEventListener("mb-auth-resolved", handleAuthResolved);
@@ -389,6 +398,16 @@ export default function App() {
     });
     if (!silent) addToast({ emoji: "✅", title: tr("sessionLogged") });
   }, [setCalendar, addToast, tr]);
+
+  const onUpdateRepSession = useCallback((sessionId, updates) => {
+    setReps(prev => prev.map(s => s.id === sessionId ? {...s, ...updates} : s));
+  }, []);
+  const onUpdateMusicflowSession = useCallback((sessionId, updates) => {
+    setMusicflow(prev => ({
+      ...prev,
+      sessions: (prev.sessions || []).map(s => s.id === sessionId ? {...s, ...updates} : s),
+    }));
+  }, []);
 
   const setMovesGrad = useCallback(updater => {
     setMoves(prev => typeof updater==="function" ? updater(prev) : updater);
@@ -538,7 +557,7 @@ export default function App() {
           {tab==="wip" && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} catDomains={catDomains} setCatDomains={setCatDomains} sets={sets} setSets={setSets} addToast={addToast} pendingDesc={ideaToMove} clearPendingDesc={()=>setIdeaToMove(null)} settings={appSettings} onSettingsChange={setAppSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} reminders={reminders} onRemindersChange={setReminders} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}} onOpenManageReminders={()=>setShowManageReminders(true)}/>}
           {tab==="ready" && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} addToast={addToast} freestyle={freestyle} onFreestyleChange={setFreestyle}/>}
           {showCalendar&&<CalendarOverlay
-            moves={moves} setMoves={setMovesGrad} reps={reps} sparring={sparring} habits={habits} ideas={ideas}
+            moves={moves} setMoves={setMovesGrad} reps={reps} sparring={sparring} musicflow={musicflow} habits={habits} ideas={ideas}
             calendar={calendar} setCalendar={setCalendar}
             cats={cats} catColors={catColors} settings={appSettings} onSettingsChange={setAppSettings}
             addToast={addToast} initialDay={calendarInitialDay}
@@ -549,6 +568,8 @@ export default function App() {
               setReps(prev=>[session,...prev]);
               setMoves(prev=>prev.map(m=>m.id===session.moveId?{...m,date:new Date().toISOString().split("T")[0]}:m));
             }}
+            onUpdateSession={onUpdateRepSession}
+            reflections={reflections} onReflectionsChange={setReflections}
             addCalendarEvent={addCalendarEvent}
             onClose={()=>{setShowRepCounter(false);setRepCounterPreselect(null);}}/>}
           {showSparring&&<Sparring moves={moves} catColors={catColors} sparring={sparring} settings={appSettings}
@@ -558,6 +579,7 @@ export default function App() {
                 setMoves(prev=>prev.map(m=>session.movesTrained.includes(m.id)?{...m,date:new Date().toISOString().split("T")[0]}:m));
               }
             }}
+            reflections={reflections} onReflectionsChange={setReflections}
             onSettingsChange={setAppSettings}
             addCalendarEvent={addCalendarEvent}
             onClose={()=>setShowSparring(false)}/>}
@@ -579,6 +601,8 @@ export default function App() {
             onRRRChange={setRRR} addToast={addToast} addCalendarEvent={addCalendarEvent}
             onClose={()=>setShowRRR(false)}/>}
           {showMusicFlow&&<MusicFlow musicflow={musicflow} onMusicflowChange={setMusicflow}
+            onUpdateSession={onUpdateMusicflowSession}
+            reflections={reflections} onReflectionsChange={setReflections}
             addToast={addToast} addCalendarEvent={addCalendarEvent}
             onClose={()=>setShowMusicFlow(false)}/>}
           {showStanceAssessment&&<MyStanceAssessment stance={stance} onStanceChange={setStance}

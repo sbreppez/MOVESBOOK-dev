@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
+import { TrainingLog } from '../shared/TrainingLog';
 import { useT } from '../../hooks/useTranslation';
 
 const PROMPT_KEYS = [
@@ -21,7 +22,7 @@ const fmtTime = (ms) => {
   return `${m}:${s}`;
 };
 
-export const MusicFlow = ({ musicflow, onMusicflowChange, addToast, addCalendarEvent, onClose }) => {
+export const MusicFlow = ({ musicflow, onMusicflowChange, onUpdateSession, reflections, onReflectionsChange, addToast, addCalendarEvent, onClose }) => {
   const t = useT();
 
   const [screen, setScreen] = useState("active");
@@ -31,6 +32,7 @@ export const MusicFlow = ({ musicflow, onMusicflowChange, addToast, addCalendarE
   const [promptOpacity, setPromptOpacity] = useState(0);
   const [promptCount, setPromptCount] = useState(0);
   const [savedSession, setSavedSession] = useState(null);
+  const [reflection, setReflection] = useState("");
   const [introVisible, setIntroVisible] = useState(true);
   const [introOpacity, setIntroOpacity] = useState(1);
 
@@ -38,6 +40,7 @@ export const MusicFlow = ({ musicflow, onMusicflowChange, addToast, addCalendarE
   const fadeOutRef = useRef(null);
   const advanceRef = useRef(null);
   const introRef = useRef(null);
+  const reflectionTimer = useRef(null);
 
   // ── Count-up timer ──
   useEffect(() => {
@@ -76,6 +79,23 @@ export const MusicFlow = ({ musicflow, onMusicflowChange, addToast, addCalendarE
       clearTimeout(advanceRef.current);
     };
   }, [screen, promptIdx, introVisible]);
+
+  // Debounced reflection save
+  useEffect(() => {
+    if (!savedSession || !reflection.trim()) return;
+    clearTimeout(reflectionTimer.current);
+    reflectionTimer.current = setTimeout(() => {
+      onUpdateSession(savedSession.id, { reflection: reflection.trim() });
+    }, 800);
+    return () => clearTimeout(reflectionTimer.current);
+  }, [reflection, savedSession]);
+
+  const flushReflection = () => {
+    clearTimeout(reflectionTimer.current);
+    if (savedSession && reflection.trim()) {
+      onUpdateSession(savedSession.id, { reflection: reflection.trim() });
+    }
+  };
 
   const handleDone = () => {
     const duration = Math.floor(elapsed / 1000);
@@ -174,13 +194,14 @@ export const MusicFlow = ({ musicflow, onMusicflowChange, addToast, addCalendarE
 
   // ── Done Screen ──
   if (screen === "done" && savedSession) {
+    const handleClose = () => { flushReflection(); onClose(); };
     return (
       <div style={{ position:"absolute", inset:0, zIndex:500, background:C.bg,
-        display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
-        padding:24 }}>
+        display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"flex-start",
+        padding:24, paddingTop:48, overflowY:"auto" }}>
 
         {/* Close button */}
-        <button onClick={onClose} style={{ position:"absolute", top:14, right:16,
+        <button onClick={handleClose} style={{ position:"absolute", top:14, right:16,
           background:C.surfaceAlt, border:`1px solid ${C.border}`, borderRadius:10,
           width:36, height:36, display:"flex", alignItems:"center", justifyContent:"center",
           cursor:"pointer" }}>
@@ -200,7 +221,7 @@ export const MusicFlow = ({ musicflow, onMusicflowChange, addToast, addCalendarE
 
         {/* Stats grid */}
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:10,
-          width:"100%", maxWidth:340, marginBottom:32 }}>
+          width:"100%", maxWidth:340, marginBottom:20 }}>
           {[
             { value: fmtTime(savedSession.duration * 1000), label: t("mfSessionLength") },
             { value: savedSession.promptCount, label: t("mfPromptsCycled") },
@@ -216,8 +237,15 @@ export const MusicFlow = ({ musicflow, onMusicflowChange, addToast, addCalendarE
           ))}
         </div>
 
+        {/* Training Log */}
+        <div style={{ width:"100%", maxWidth:340, marginBottom:20 }}>
+          <TrainingLog value={reflection} onChange={setReflection}
+            framingKey="reflectionMusic" reflections={reflections}
+            onReflectionsChange={onReflectionsChange} />
+        </div>
+
         {/* Done button */}
-        <button onClick={onClose} style={{ width:"100%", maxWidth:340, padding:"16px 0",
+        <button onClick={handleClose} style={{ width:"100%", maxWidth:340, padding:"16px 0",
           background:C.accent, color:"#fff", border:"none", borderRadius:12,
           fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:14, letterSpacing:2,
           cursor:"pointer" }}>

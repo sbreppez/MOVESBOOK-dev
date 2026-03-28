@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
+import { TrainingLog } from '../shared/TrainingLog';
 import { useT } from '../../hooks/useTranslation';
 
 const fmtTime = (ms) => {
@@ -10,7 +11,7 @@ const fmtTime = (ms) => {
   return `${String(m).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 };
 
-export const RepCounter = ({ moves, catColors, reps, onSaveSession, onClose, preselectedMove, addCalendarEvent }) => {
+export const RepCounter = ({ moves, catColors, reps, onSaveSession, onUpdateSession, reflections, onReflectionsChange, onClose, preselectedMove, addCalendarEvent }) => {
   const t = useT();
   const [screen, setScreen] = useState("select");
   const [selectedMove, setSelectedMove] = useState(null);
@@ -21,7 +22,9 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onClose, pre
   const [flash, setFlash] = useState(false);
   const [resetConfirm, setResetConfirm] = useState(false);
   const [savedSession, setSavedSession] = useState(null);
+  const [reflection, setReflection] = useState("");
   const resetTimeout = useRef(null);
+  const reflectionTimer = useRef(null);
 
   // Timer
   useEffect(() => {
@@ -36,6 +39,23 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onClose, pre
   // Auto-start with preselected move (from DRILL button)
   useEffect(() => { if (preselectedMove) startCounting(preselectedMove); }, []);
 
+  // Debounced reflection save
+  useEffect(() => {
+    if (!savedSession || !reflection.trim()) return;
+    clearTimeout(reflectionTimer.current);
+    reflectionTimer.current = setTimeout(() => {
+      onUpdateSession(savedSession.id, { reflection: reflection.trim() });
+    }, 800);
+    return () => clearTimeout(reflectionTimer.current);
+  }, [reflection, savedSession]);
+
+  const flushReflection = () => {
+    clearTimeout(reflectionTimer.current);
+    if (savedSession && reflection.trim()) {
+      onUpdateSession(savedSession.id, { reflection: reflection.trim() });
+    }
+  };
+
   const startCounting = (m) => {
     setSelectedMove(m);
     setCount(0);
@@ -43,6 +63,7 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onClose, pre
     setTimerStart(Date.now());
     setScreen("counting");
     setResetConfirm(false);
+    setReflection("");
   };
 
   const handleTap = () => {
@@ -204,9 +225,9 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onClose, pre
   if (screen === "complete" && savedSession) {
     const cc = catColor(savedSession.moveCategory);
     return (
-      <div style={{ position:"absolute", inset:0, zIndex:500, background:C.bg, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:24 }}>
+      <div style={{ position:"absolute", inset:0, zIndex:500, background:C.bg, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"flex-start", padding:24, paddingTop:48, overflowY:"auto" }}>
         {/* Close button */}
-        <button onClick={onClose} style={{ position:"absolute", top:14, right:14, background:C.surfaceAlt, border:`1px solid ${C.border}`, cursor:"pointer", color:C.textSec, padding:5, borderRadius:7, display:"flex", zIndex:1 }}>
+        <button onClick={() => { flushReflection(); onClose(); }} style={{ position:"absolute", top:14, right:14, background:C.surfaceAlt, border:`1px solid ${C.border}`, cursor:"pointer", color:C.textSec, padding:5, borderRadius:7, display:"flex", zIndex:1 }}>
           <Ic n="x" s={14}/>
         </button>
         {/* Checkmark */}
@@ -215,7 +236,7 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onClose, pre
         </div>
         <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:2, color:C.green, marginBottom:24 }}>{t("sessionSaved")}</div>
         {/* Summary card */}
-        <div style={{ width:"100%", maxWidth:340, background:C.surface, borderRadius:12, border:`1px solid ${C.border}`, padding:16, marginBottom:32, borderLeft:`4px solid ${cc}` }}>
+        <div style={{ width:"100%", maxWidth:340, background:C.surface, borderRadius:12, border:`1px solid ${C.border}`, padding:16, marginBottom:20, borderLeft:`4px solid ${cc}` }}>
           <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:15, color:C.text }}>{savedSession.moveName}</div>
           <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:10, color:cc, letterSpacing:0.5, marginTop:2 }}>{savedSession.moveCategory}</div>
           <div style={{ display:"flex", justifyContent:"space-between", marginTop:14 }}>
@@ -229,17 +250,23 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onClose, pre
             </div>
           </div>
         </div>
+        {/* Training Log */}
+        <div style={{ width:"100%", maxWidth:340 }}>
+          <TrainingLog value={reflection} onChange={setReflection}
+            framingKey="reflectionReps" reflections={reflections}
+            onReflectionsChange={onReflectionsChange} />
+        </div>
         {/* Buttons */}
         <div style={{ width:"100%", maxWidth:340, display:"flex", flexDirection:"column", gap:10 }}>
-          <button onClick={() => startCounting(selectedMove)}
+          <button onClick={() => { flushReflection(); startCounting(selectedMove); }}
             style={{ width:"100%", padding:14, borderRadius:12, border:"none", background:C.accent, color:"#fff", cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:13, letterSpacing:1 }}>
             {t("goAgain").toUpperCase()} — {savedSession.moveName.toUpperCase()}
           </button>
-          <button onClick={() => { setSearch(""); setScreen("select"); }}
+          <button onClick={() => { flushReflection(); setSearch(""); setScreen("select"); }}
             style={{ width:"100%", padding:14, borderRadius:12, border:`1px solid ${C.border}`, background:C.surfaceAlt, color:C.text, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:13, letterSpacing:1 }}>
             {t("pickDifferentMove").toUpperCase()}
           </button>
-          <button onClick={() => setScreen("history")}
+          <button onClick={() => { flushReflection(); setScreen("history"); }}
             style={{ width:"100%", padding:14, borderRadius:12, border:"none", background:"transparent", color:C.textSec, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:13, letterSpacing:1 }}>
             {t("sessionHistory")}
           </button>

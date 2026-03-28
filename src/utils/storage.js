@@ -16,6 +16,7 @@ export function migrateMove(m) {
     difficulty:  m.difficulty  || null,
     origin:      m.origin      || "learned",
     musicEnergy: m.musicEnergy || null,
+    tensionRole: m.tensionRole || null,
     domains:     Array.isArray(m.domains) ? m.domains : [],
     prevDate:    m.prevDate    || null,
     parentId:    m.parentId    || null,
