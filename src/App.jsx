@@ -26,6 +26,7 @@ import { BackupModal } from './components/modals/BackupModal';
 import { RepCounter } from './components/train/RepCounter';
 import { Sparring } from './components/train/Sparring';
 import { ComboMachine } from './components/train/ComboMachine';
+import { MusicFlow } from './components/train/MusicFlow';
 import { Lab } from './components/moves/Lab';
 import { RestoreRemixRebuild } from './components/moves/RestoreRemixRebuild';
 import { CalendarOverlay } from './components/calendar/CalendarOverlay';
@@ -134,6 +135,9 @@ export default function App() {
   const [stance, setStance] = useState(() => {
     try { const s=localStorage.getItem("mb_stance"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { assessments:[] };
   });
+  const [musicflow, setMusicflow] = useState(() => {
+    try { const s=localStorage.getItem("mb_musicflow"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { sessions:[] };
+  });
 
   // ── Persist to localStorage on every change ────────────────────────────────
   useEffect(()=>{ saveLocal("mb_moves",   moves);   },[moves]);
@@ -157,6 +161,7 @@ export default function App() {
   useEffect(()=>{ saveLocal("mb_reminders", reminders); },[reminders]);
   useEffect(()=>{ saveLocal("mb_calendar", calendar); },[calendar]);
   useEffect(()=>{ saveLocal("mb_stance", stance); },[stance]);
+  useEffect(()=>{ saveLocal("mb_musicflow", musicflow); },[musicflow]);
   useEffect(()=>{ saveLocal("mb_ideas",   ideas);
     const timer = setTimeout(() => {
       if (window.__MB_USER__?.uid && window.__MB_DB__) {
@@ -193,6 +198,7 @@ export default function App() {
       reminders:   save("reminders"),
       calendar:    save("calendar"),
       stance:      save("stance"),
+      musicflow:   save("musicflow"),
     };
   }, []);
 
@@ -213,6 +219,7 @@ export default function App() {
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.reminders?.(fbUser.uid, reminders); },[reminders, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.calendar?.(fbUser.uid, calendar); },[calendar, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.stance?.(fbUser.uid, stance); },[stance, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.musicflow?.(fbUser.uid, musicflow); },[musicflow, fbUser]);
 
   // ── Auth resolution ────────────────────────────────────────────────────────
   useEffect(()=>{
@@ -252,6 +259,8 @@ export default function App() {
           if (cal) { try { const p=JSON.parse(cal); if(p&&typeof p==="object") setCalendar(p); } catch {} }
           const stn = localStorage.getItem("mb_stance");
           if (stn) { try { const p=JSON.parse(stn); if(p&&typeof p==="object") setStance(p); } catch {} }
+          const mf = localStorage.getItem("mb_musicflow");
+          if (mf) { try { const p=JSON.parse(mf); if(p&&typeof p==="object") setMusicflow(p); } catch {} }
           if (p) { try { const pp=JSON.parse(p); if(pp&&Object.values(pp).some(v=>v)) setProfile(pp); } catch{} }
           const st = localStorage.getItem("mb_settings");
           if (st) {
@@ -286,6 +295,7 @@ export default function App() {
         setReminders({ items:[] });
         setCalendar({ events:[] });
         setStance({ assessments:[] });
+        setMusicflow({ sessions:[] });
       }
     }
     window.addEventListener("mb-auth-resolved", handleAuthResolved);
@@ -328,6 +338,7 @@ export default function App() {
   const [showCalendar,setShowCalendar]=useState(false);
   const [calendarInitialDay,setCalendarInitialDay]=useState(null);
   const [showStanceAssessment,setShowStanceAssessment]=useState(false);
+  const [showMusicFlow,setShowMusicFlow]=useState(false);
   const [scrollToStance,setScrollToStance]=useState(false);
   const [appSettings,setAppSettings]=useState(()=>({
     ...{
@@ -387,6 +398,7 @@ export default function App() {
       { label:tr("repCounter"),    emoji:"🔢", action:()=>{ setAddMenu(false); setShowRepCounter(true); } },
       { label:tr("sparring"),      emoji:"🥊", action:()=>{ setAddMenu(false); setShowSparring(true); } },
       { label:tr("comboMachine"),  emoji:"🎰", action:()=>{ setAddMenu(false); setShowComboMachine(true); } },
+      { label:tr("musicFlow"),     emoji:"🎵", action:()=>{ setAddMenu(false); setShowMusicFlow(true); } },
     ];
     if (tab === "wip" && (subTab === "moves" || subTab === "gap")) return [
       { label:tr("addMoveMenu"),     emoji:"🕺", action:()=>{ setAddMenu(false); setAddTick(t=>t+1); } },
@@ -488,7 +500,7 @@ export default function App() {
           </div>
         </div>
 
-        {!(showCalendar||showRepCounter||showSparring||showComboMachine||showManageReminders||showRRR||showLab||showProfile||showSettings||showManual||showFeedback||showBackup||showStanceAssessment)&&<TabBar active={tab} onChange={(t,sub)=>{ setTrainMenu(null); setTab(t); setAddTick(0); setAddTick2(0); setAddMenu(false); setSubTab(sub||"moves"); }} badges={{ wip: staleCount }}/>}
+        {!(showCalendar||showRepCounter||showSparring||showComboMachine||showManageReminders||showRRR||showLab||showProfile||showSettings||showManual||showFeedback||showBackup||showStanceAssessment||showMusicFlow)&&<TabBar active={tab} onChange={(t,sub)=>{ setTrainMenu(null); setTab(t); setAddTick(0); setAddTick2(0); setAddMenu(false); setSubTab(sub||"moves"); }} badges={{ wip: staleCount }}/>}
 
         <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column", position:"relative" }}>
           {/* Train modals + menu — inside position:relative so absolute children are scoped to app width */}
@@ -558,6 +570,9 @@ export default function App() {
           {showRRR&&<RestoreRemixRebuild moves={moves} catColors={catColors} rrr={rrr}
             onRRRChange={setRRR} addToast={addToast} addCalendarEvent={addCalendarEvent}
             onClose={()=>setShowRRR(false)}/>}
+          {showMusicFlow&&<MusicFlow musicflow={musicflow} onMusicflowChange={setMusicflow}
+            addToast={addToast} addCalendarEvent={addCalendarEvent}
+            onClose={()=>setShowMusicFlow(false)}/>}
           {showStanceAssessment&&<MyStanceAssessment stance={stance} onStanceChange={setStance}
             addToast={addToast} onClose={()=>{ setShowStanceAssessment(false); setShowProfile(true); setScrollToStance(true); }}/>}
           {showProfile&&<ProfileModal onClose={()=>setShowProfile(false)} profile={profile} onSave={setProfile}
