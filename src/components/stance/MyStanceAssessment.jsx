@@ -18,9 +18,10 @@ export const MyStanceAssessment = ({ stance, onStanceChange, addToast, onClose }
   const { C } = useSettings();
   const t = useT();
   const [screen, setScreen] = useState(0);
-  const [scores, setScores] = useState({
-    musicality:5, performance:5, technique:5, variety:5, creativity:5, personality:5,
-  });
+  const latestScores = stance?.assessments?.length ? stance.assessments[stance.assessments.length - 1].scores : null;
+  const [scores, setScores] = useState(
+    latestScores ? { ...latestScores } : { musicality:5, performance:5, technique:5, variety:5, creativity:5, personality:5 }
+  );
 
   const current = SCREEN_CONTENT[screen];
   const isLast = screen === 5;

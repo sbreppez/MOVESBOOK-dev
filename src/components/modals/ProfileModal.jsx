@@ -7,7 +7,7 @@ import { useSettings } from "../../hooks/useSettings";
 
 import { MyStanceSection } from "../stance/MyStanceSection";
 
-export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersChange, addToast, onOpenManageReminders, moves, stance, onOpenStanceAssessment }) => {
+export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersChange, addToast, onOpenManageReminders, moves, stance, sparring, calendar, onOpenStanceAssessment }) => {
   const { C } = useSettings();
   const t = useT();
   const [f,setF]=useState({ nickname:"", age:"", gender:"", goals:"", years:"", startYear:"", startMonth:"", startDay:"", why:"", ...profile });
@@ -163,7 +163,7 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
         )}
       </div>
 
-      <MyStanceSection moveCount={moves?.length||0} stance={stance} onOpenAssessment={onOpenStanceAssessment}/>
+      <MyStanceSection moves={moves||[]} stance={stance} sparring={sparring} calendar={calendar} onOpenAssessment={onOpenStanceAssessment}/>
 
       <div style={{ marginTop:24, paddingTop:16, borderTop:`1px solid ${C.borderLight}` }}>
         <button onClick={()=>{ if(window.__MB_AUTH__) window.__MB_AUTH__.signOut(); onClose(); }}

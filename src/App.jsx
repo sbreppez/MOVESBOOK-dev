@@ -550,7 +550,7 @@ export default function App() {
           {showProfile&&<ProfileModal onClose={()=>setShowProfile(false)} profile={profile} onSave={setProfile}
             reminders={reminders} onRemindersChange={setReminders} addToast={addToast}
             onOpenManageReminders={()=>{ setShowProfile(false); setShowManageReminders(true); }}
-            moves={moves} stance={stance}
+            moves={moves} stance={stance} sparring={sparring} calendar={calendar}
             onOpenStanceAssessment={()=>{ setShowProfile(false); setShowStanceAssessment(true); }}/>}
           {showManual&&<ManualModal onClose={()=>setShowManual(false)}/>}
           {showFeedback&&<FeedbackModal onClose={()=>setShowFeedback(false)}/>}

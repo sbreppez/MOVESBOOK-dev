@@ -2,14 +2,137 @@ import React from "react";
 import { FONT_DISPLAY, FONT_BODY } from "../../constants/fonts";
 import { useT } from "../../hooks/useTranslation";
 import { useSettings } from "../../hooks/useSettings";
+import { StanceRadarChart } from "./StanceRadarChart";
 
 export const STANCE_DOMAINS = ["musicality","performance","technique","variety","creativity","personality"];
 
-export const MyStanceSection = ({ moveCount, stance, onOpenAssessment }) => {
+// ── Stamina helpers ──
+const computeStamina = (sparring) => {
+  const sessions = sparring?.sessions || [];
+  if (!sessions.length) return { empty: true };
+
+  const avgRounds = Math.round(sessions.reduce((s, x) => s + (x.rounds || 0), 0) / sessions.length * 10) / 10;
+  const avgRoundLen = Math.round(sessions.reduce((s, x) => s + (x.avgRoundLength || 0), 0) / sessions.length);
+
+  // Consistency: do later rounds drop off?
+  let consistency = "stable";
+  const withLogs = sessions.filter(s => s.roundLog && s.roundLog.length >= 3);
+  if (withLogs.length) {
+    let drops = 0;
+    withLogs.forEach(s => {
+      const log = s.roundLog;
+      const half = Math.floor(log.length / 2);
+      const firstAvg = log.slice(0, half).reduce((a, r) => a + r.workSecs, 0) / half;
+      const secondAvg = log.slice(half).reduce((a, r) => a + r.workSecs, 0) / (log.length - half);
+      if (secondAvg < firstAvg * 0.8) drops++;
+    });
+    if (drops > withLogs.length / 2) consistency = "dropsOff";
+  }
+
+  // Trend: last 5 vs previous 5
+  let trend = "stable";
+  if (sessions.length >= 6) {
+    const last5 = sessions.slice(-5).reduce((s, x) => s + (x.rounds || 0), 0) / 5;
+    const prev5 = sessions.slice(-10, -5).reduce((s, x) => s + (x.rounds || 0), 0) / Math.min(5, sessions.slice(-10, -5).length || 1);
+    if (last5 > prev5 * 1.1) trend = "improving";
+    else if (last5 < prev5 * 0.9) trend = "declining";
+  }
+
+  return { avgRounds, avgRoundLen, consistency, trend };
+};
+
+// ── Vocabulary helpers ──
+const computeVocabulary = (moves) => {
+  const total = moves.length;
+  if (!total) return { total: 0, learned: 0, versions: 0, creations: 0, battleReady: 0, variations: 0, deepestBranch: 0, foundationPct: 0, avgMastery: 0 };
+
+  let learned = 0, versions = 0, creations = 0;
+  moves.forEach(m => {
+    if (m.origin === "creation") creations++;
+    else if (m.origin === "version") versions++;
+    else learned++;
+  });
+
+  const battleReady = moves.filter(m => (m.mastery || 0) >= 80).length;
+  const variations = moves.filter(m => m.parentId).length;
+
+  // Deepest lineage branch via BFS
+  const children = {};
+  const hasParent = new Set();
+  moves.forEach(m => {
+    if (m.parentId) {
+      hasParent.add(m.id);
+      if (!children[m.parentId]) children[m.parentId] = [];
+      children[m.parentId].push(m.id);
+    }
+  });
+  let deepestBranch = 0;
+  const roots = moves.filter(m => !m.parentId).map(m => m.id);
+  if (Object.keys(children).length) {
+    const queue = roots.filter(id => children[id]).map(id => ({ id, depth: 1 }));
+    while (queue.length) {
+      const { id, depth } = queue.shift();
+      if (depth > deepestBranch) deepestBranch = depth;
+      (children[id] || []).forEach(cid => queue.push({ id: cid, depth: depth + 1 }));
+    }
+  }
+
+  const foundationCats = ["Toprocks", "Footworks", "Godowns", "Freezes"];
+  const foundationCount = moves.filter(m => foundationCats.includes(m.category)).length;
+  const foundationPct = Math.round(foundationCount / total * 100);
+  const avgMastery = Math.round(moves.reduce((s, m) => s + (m.mastery || 0), 0) / total);
+
+  return { total, learned, versions, creations, battleReady, variations, deepestBranch, foundationPct, avgMastery };
+};
+
+// ── Consistency helpers ──
+const computeConsistency = (calendar) => {
+  const events = (calendar?.events || []).filter(e => e.type === "training");
+  if (!events.length) return { empty: true };
+
+  const today = new Date().toISOString().split("T")[0];
+  const fourWeeksAgo = new Date(Date.now() - 28 * 86400000).toISOString().split("T")[0];
+  const recent = events.filter(e => e.date >= fourWeeksAgo);
+  const avgPerWeek = (recent.length / 4).toFixed(1);
+
+  // Unique sorted dates
+  const dates = [...new Set(events.map(e => e.date))].sort();
+
+  // Current streak
+  let streak = 0;
+  const todayMs = new Date(today + "T00:00:00").getTime();
+  for (let i = 0; i <= 365; i++) {
+    const d = new Date(todayMs - i * 86400000).toISOString().split("T")[0];
+    if (dates.includes(d)) streak++;
+    else if (i === 0) continue; // today might not have a session yet
+    else break;
+  }
+
+  // Longest gap
+  let longestGap = 0;
+  for (let i = 1; i < dates.length; i++) {
+    const diff = Math.round((new Date(dates[i]).getTime() - new Date(dates[i - 1]).getTime()) / 86400000);
+    if (diff > longestGap) longestGap = diff;
+  }
+
+  return { avgPerWeek, streak, longestGap };
+};
+
+// ── Format seconds as Xm Xs ──
+const fmtSecs = (s) => {
+  if (!s) return "0s";
+  const m = Math.floor(s / 60);
+  const sec = Math.round(s % 60);
+  return m ? `${m}m ${sec}s` : `${sec}s`;
+};
+
+// ── Component ──
+export const MyStanceSection = ({ moves, stance, sparring, calendar, onOpenAssessment }) => {
   const { C } = useSettings();
   const t = useT();
   const assessments = stance?.assessments || [];
   const hasAssessment = assessments.length > 0;
+  const moveCount = moves?.length || 0;
 
   // Nothing if <10 moves and no assessments
   if (moveCount < 10 && !hasAssessment) return null;
@@ -34,35 +157,151 @@ export const MyStanceSection = ({ moveCount, stance, onOpenAssessment }) => {
     </div>
   );
 
-  // Summary display when assessments exist
+  // ── Has assessment data ──
   const latest = assessments[assessments.length - 1];
+  const previous = assessments.length >= 2 ? assessments[assessments.length - 2] : null;
   const isFirst = assessments.length === 1;
+
+  const stamina = computeStamina(sparring);
+  const vocab = computeVocabulary(moves || []);
+  const consistency = computeConsistency(calendar);
+
+  const statLabel = { fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 11, letterSpacing: 2, color: C.textMuted, marginBottom: 10 };
+  const statLine = { fontFamily: FONT_BODY, fontSize: 13, color: C.textSec, lineHeight: 1.7 };
+  const emptyLine = { fontFamily: FONT_BODY, fontSize: 13, color: C.textMuted, fontStyle: "italic" };
 
   return (
     <div style={{ background:C.surface, borderRadius:14, border:`1px solid ${C.border}`,
       padding:16, margin:"12px 0" }}>
+
+      {/* Header */}
       <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:12 }}>
         <span style={{ fontSize:14 }}>🧭</span>
         <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:14, color:C.text }}>
           {t("myStance")}
         </span>
       </div>
-      <div style={{ fontFamily:FONT_BODY, fontSize:13, color:C.textSec, lineHeight:1.8 }}>
-        {STANCE_DOMAINS.map((d, i) => (
-          <span key={d}>
-            {t(d)}: <span style={{ color:C.text, fontWeight:700 }}>{latest.scores[d]}</span>
-            {i < STANCE_DOMAINS.length - 1 ? " · " : ""}
-          </span>
-        ))}
+
+      {/* Radar chart */}
+      <StanceRadarChart current={latest.scores} previous={previous?.scores || null} C={C}/>
+
+      {/* Last updated */}
+      <div style={{ textAlign:"center", fontSize:11, color:C.textMuted, fontFamily:FONT_BODY, marginTop:6, marginBottom:14 }}>
+        {t("lastUpdated")}: {latest.date}
       </div>
+
+      {/* First-time note */}
       {isFirst && (
         <div style={{ fontFamily:FONT_BODY, fontSize:12, color:C.textMuted, lineHeight:1.6,
-          marginTop:10, fontStyle:"italic" }}>
+          marginBottom:12, fontStyle:"italic", textAlign:"center" }}>
           {t("stanceFirstResult")}
         </div>
       )}
+
+      {/* Domain rows */}
+      <div style={{ marginBottom:14 }}>
+        {STANCE_DOMAINS.map(d => {
+          const cur = latest.scores[d];
+          const prev = previous?.scores?.[d];
+          let arrow = "→", arrowColor = C.textMuted;
+          if (prev != null) {
+            if (cur > prev) { arrow = "↑"; arrowColor = C.green; }
+            else if (cur < prev) { arrow = "↓"; arrowColor = C.red; }
+          }
+          return (
+            <div key={d} style={{ display:"flex", alignItems:"center", justifyContent:"space-between",
+              padding:"8px 0", borderBottom:`1px solid ${C.borderLight}` }}>
+              <span style={{ fontFamily:FONT_BODY, fontSize:13, color:C.textSec }}>{t(d)}</span>
+              <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:14, color:C.text }}>{cur}</span>
+                <span style={{ fontSize:13, color:arrowColor, fontWeight:700 }}>{arrow}</span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* ── STAMINA CARD ── */}
+      <div style={{ background:C.surfaceAlt, borderRadius:12, padding:16, marginTop:12 }}>
+        <div style={statLabel}>{t("stamina")}</div>
+        {stamina.empty ? (
+          <div style={emptyLine}>{t("noSparringYet")}</div>
+        ) : (
+          <div>
+            <div style={statLine}>{t("avgRounds")}: <span style={{ color:C.text, fontWeight:700 }}>{stamina.avgRounds}</span></div>
+            <div style={statLine}>{t("avgRoundLength")}: <span style={{ color:C.text, fontWeight:700 }}>{fmtSecs(stamina.avgRoundLen)}</span></div>
+            <div style={statLine}>
+              {t(stamina.consistency)} · {t(stamina.trend)}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* ── VOCABULARY CARD ── */}
+      <div style={{ background:C.surfaceAlt, borderRadius:12, padding:16, marginTop:12 }}>
+        <div style={statLabel}>{t("vocabularySize")}</div>
+        {!vocab.total ? (
+          <div style={emptyLine}>—</div>
+        ) : (
+          <div>
+            {/* Primary line */}
+            <div style={{ fontFamily:FONT_BODY, fontSize:15, color:C.text, fontWeight:700, marginBottom:6 }}>
+              {vocab.total} {t("moves") || "moves"} · <span style={{ color:C.accent }}>{vocab.creations} {t("originals")}</span>
+            </div>
+            {/* Origin breakdown */}
+            <div style={statLine}>
+              {vocab.learned} {t("learned")} · {vocab.versions} {t("yourVersions")} · {vocab.creations} {t("yourCreations")}
+            </div>
+            {/* Battle-ready and variations */}
+            <div style={statLine}>
+              {t("battleReady")}: {vocab.battleReady > 0
+                ? <span style={{ color:C.green, fontWeight:700 }}>{vocab.battleReady}</span>
+                : <span>0</span>}
+              {" · "}{t("variations")}: {vocab.variations}
+            </div>
+            {/* Deepest branch */}
+            <div style={statLine}>
+              {t("deepestBranch")}: {vocab.deepestBranch > 0 ? vocab.deepestBranch : t("noLineageYet")}
+            </div>
+            {/* Foundation coverage bar */}
+            <div style={{ marginTop:10 }}>
+              <div style={{ height:8, borderRadius:4, background:C.borderLight, overflow:"hidden" }}>
+                <div style={{ height:"100%", width:`${vocab.foundationPct}%`, background:C.blue, borderRadius:4, transition:"width 0.3s" }}/>
+              </div>
+              <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, color:C.textMuted, marginTop:4 }}>
+                {t("foundationCoverage")}: {vocab.foundationPct}%
+              </div>
+            </div>
+            {/* Average mastery */}
+            <div style={{ ...statLine, marginTop:6 }}>
+              {t("averageMastery")}: {vocab.avgMastery}%
+            </div>
+            {vocab.battleReady > 0 && (
+              <div style={{ fontFamily:FONT_BODY, fontSize:13, color:C.green, marginTop:2 }}>
+                {vocab.battleReady} {t("movesAtBattleReady")}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* ── TRAINING CONSISTENCY CARD ── */}
+      <div style={{ background:C.surfaceAlt, borderRadius:12, padding:16, marginTop:12 }}>
+        <div style={statLabel}>{t("trainingConsistency")}</div>
+        {consistency.empty ? (
+          <div style={emptyLine}>{t("noSessionsYet")}</div>
+        ) : (
+          <div>
+            <div style={statLine}>{t("avgSessionsWeek")}: <span style={{ color:C.text, fontWeight:700 }}>{consistency.avgPerWeek}</span></div>
+            <div style={statLine}>{t("currentStreak")}: <span style={{ color:C.text, fontWeight:700 }}>{consistency.streak} {consistency.streak === 1 ? "day" : "days"}</span></div>
+            <div style={statLine}>{t("longestGap")}: <span style={{ color:C.text, fontWeight:700 }}>{consistency.longestGap} {consistency.longestGap === 1 ? "day" : "days"}</span></div>
+          </div>
+        )}
+      </div>
+
+      {/* Update button */}
       <button onClick={onOpenAssessment}
-        style={{ marginTop:12, width:"100%", padding:"10px 0", background:"none",
+        style={{ marginTop:14, width:"100%", padding:"10px 0", background:"none",
           border:`1px solid ${C.accent}`, borderRadius:10, color:C.accent,
           fontSize:13, fontFamily:FONT_DISPLAY, fontWeight:700, letterSpacing:1,
           cursor:"pointer" }}>
