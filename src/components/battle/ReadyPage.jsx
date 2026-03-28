@@ -14,7 +14,7 @@ import { FreestylePage } from './FreestylePage';
 import { NewRoundModal } from './NewRoundModal';
 import { SectionBanner } from '../shared/SectionBanner';
 
-export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange }) => {
+export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, addToast, freestyle, onFreestyleChange }) => {
   const t = useT();
   const { moveCountStr, itemCountStr, roundCountStr, entryCountStr } = usePlural();
   const { C } = useSettings();
@@ -597,7 +597,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
       )}
 
       {/* FREESTYLE tab */}
-      {battleTab==="freestyle"&&<FreestylePage moves={moves} sets={sets} settings={settings} onAddTrigger={freestyleAddTick}/>}
+      {battleTab==="freestyle"&&<FreestylePage moves={moves} sets={sets} settings={settings} onAddTrigger={freestyleAddTick} addToast={addToast} freestyle={freestyle} onFreestyleChange={onFreestyleChange}/>}
 
       {/* Modals */}
       {addingRound&&<NewRoundModal onClose={()=>setAddingRound(false)}

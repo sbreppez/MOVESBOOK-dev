@@ -11,13 +11,59 @@ import { useT } from '../../hooks/useTranslation';
 import { usePlural } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
 
-export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger }) => {
+export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addToast, freestyle, onFreestyleChange }) => {
   const t = useT();
   const { moveCountStr } = usePlural();
   const { C } = useSettings();
   const showMastery   = settings.showMastery  !== false;
   const showMoveCount = settings.showMoveCount !== false;
   const [reorderMode, setReorderMode] = useState(false);
+
+  // ── Trust Mode ──
+  const trustMode = freestyle?.trustMode || false;
+  const [trustNote, setTrustNote] = useState("");
+  const [revealing, setRevealing] = useState(false);
+  const revealTimerRef = useRef(null);
+  const trustTouchRef = useRef(null);
+
+  useEffect(() => () => { if(revealTimerRef.current) clearTimeout(revealTimerRef.current); }, []);
+
+  const toggleTrust = () => {
+    const next = !trustMode;
+    if (onFreestyleChange) onFreestyleChange(prev => ({ ...prev, trustMode: next }));
+    if (next) {
+      try {
+        const rm = JSON.parse(localStorage.getItem("mb_reminders") || "{}");
+        if (rm.items?.length > 0) setTrustNote(rm.items[Math.floor(Math.random() * rm.items.length)].text);
+        else setTrustNote("");
+      } catch { setTrustNote(""); }
+    }
+    setRevealing(false);
+    if (revealTimerRef.current) clearTimeout(revealTimerRef.current);
+  };
+
+  const handleReveal = () => {
+    setRevealing(true);
+    if (addToast) addToast({ emoji: "🧘", title: t("trustYourPreparation") });
+    revealTimerRef.current = setTimeout(() => setRevealing(false), 5000);
+  };
+
+  const handleTrustTouchStart = (e) => {
+    trustTouchRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  };
+  const handleTrustTouchEnd = (e) => {
+    if (!trustTouchRef.current) return;
+    const dx = e.changedTouches[0].clientX - trustTouchRef.current.x;
+    const dy = e.changedTouches[0].clientY - trustTouchRef.current.y;
+    if (Math.abs(dx) > Math.abs(dy) && dx > 50) {
+      const first = toUse.find(i => !i.checked);
+      if (first) {
+        setToUse(p => p.map(i => i.id === first.id ? { ...i, checked: true } : i));
+        try { navigator.vibrate?.(10); } catch {}
+      }
+    }
+    trustTouchRef.current = null;
+  };
   const [toUse,        setToUse]        = useState(() => {
     try { const s = localStorage.getItem("mb_freestyle_list"); return s ? JSON.parse(s) : []; } catch { return []; }
   });
@@ -140,6 +186,15 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger }) => 
           {t("toUse")} <span style={{fontWeight:400, letterSpacing:0, fontSize:11}}>· {unchecked.length} left · {checked.length} used</span>
         </span>
         <div style={{ display:"flex", alignItems:"center", gap:5 }}>
+          {/* Trust Mode */}
+          <button onClick={toggleTrust}
+            style={{ background:"none", border:`1px solid ${trustMode?C.accent:C.border}`, borderRadius:6,
+              cursor:"pointer", color:trustMode?C.accent:C.textMuted, padding:"5px 8px",
+              fontSize:11, fontFamily:FONT_DISPLAY, fontWeight:700, letterSpacing:1,
+              display:"flex", alignItems:"center", gap:4 }}>
+            <Ic n={trustMode?"eyeOff":"eye"} s={13} c={trustMode?C.accent:C.textMuted}/>
+            {t("trustMode")}
+          </button>
           {/* Reset */}
           <button onClick={()=>setConfirmReset(true)} disabled={toUse.length===0}
             style={{ background:"none", border:`1px solid ${C.border}`, borderRadius:6, cursor:"pointer",
@@ -175,24 +230,74 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger }) => 
 
       {/* List */}
       <div style={{ flex:1, overflow:"auto", paddingBottom:80 }}
-        onDragOver={e=>{ e.preventDefault(); setDropping(true); }}
+        onDragOver={e=>{ if(!trustMode){ e.preventDefault(); setDropping(true); }}}
         onDragLeave={e=>{ if(!e.currentTarget.contains(e.relatedTarget)) setDropping(false); }}
         onDrop={e=>{ e.preventDefault(); setDropping(false); if(dragging) addToUse(dragging,"move"); setDragging(null); }}>
 
-        {dropping&&(
+        {/* ── Trust Mode ON view ── */}
+        {trustMode&&!revealing&&(
+          <div onTouchStart={handleTrustTouchStart} onTouchEnd={handleTrustTouchEnd}
+            style={{ display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
+              minHeight:"60vh", padding:"40px 20px", userSelect:"none" }}>
+            <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:48, color:C.text, lineHeight:1 }}>
+              {unchecked.length}
+            </div>
+            <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, color:C.textMuted,
+              letterSpacing:2, textTransform:"uppercase", marginTop:6 }}>
+              {t("movesReady")}
+            </div>
+            {trustNote&&(
+              <div style={{ fontFamily:FONT_BODY, fontSize:13, color:C.textMuted, fontStyle:"italic",
+                textAlign:"center", maxWidth:280, marginTop:20, lineHeight:1.5 }}>
+                {trustNote}
+              </div>
+            )}
+            <button onClick={handleReveal}
+              style={{ marginTop:32, background:C.surfaceAlt, border:`1px solid ${C.border}`, borderRadius:8,
+                padding:"10px 24px", color:C.text, fontSize:12, fontWeight:800, fontFamily:FONT_DISPLAY,
+                letterSpacing:2, cursor:"pointer" }}>
+              {t("reveal")}
+            </button>
+          </div>
+        )}
+
+        {/* ── Revealing list (5 sec peek) ── */}
+        {trustMode&&revealing&&(
+          <div style={{ animation:"trustRevealFade 5s ease-in forwards" }}>
+            <style>{`@keyframes trustRevealFade { 0%{opacity:1} 80%{opacity:1} 100%{opacity:0} }`}</style>
+            {unchecked.map((item)=>{
+              const isSet = item.type==="set";
+              const m = isSet ? getSetById(item.refId) : getMoveById(item.refId);
+              if(!m) return null;
+              const dotColor = isSet ? (m.color||C.accent) : masteryColor(m.mastery);
+              return (
+                <div key={item.id} style={{ display:"flex", alignItems:"center", gap:8, padding:"8px 12px",
+                  borderBottom:`1px solid ${C.borderLight}`, background:C.bg }}>
+                  <div style={{ width:7, height:7, borderRadius: isSet?"2px":"50%", background:dotColor, flexShrink:0 }}/>
+                  <span style={{ flex:1, fontSize:13, color:C.text, fontFamily:FONT_BODY }}>{m.name}</span>
+                  {isSet && <span style={{ fontSize:9, fontWeight:800, letterSpacing:1, color:C.textMuted, fontFamily:FONT_DISPLAY, background:C.surface, borderRadius:4, padding:"2px 5px" }}>SET</span>}
+                  {!isSet && showMastery&&<span style={{ fontSize:11, color:masteryColor(m.mastery), fontWeight:700, flexShrink:0 }}>{m.mastery}%</span>}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* ── Normal list (Trust Mode OFF) ── */}
+        {!trustMode&&dropping&&(
           <div style={{ margin:10, padding:14, border:`2px dashed ${C.accent}`, borderRadius:10, textAlign:"center", color:C.accent, fontSize:13, fontWeight:700 }}>
             Drop to add ↓
           </div>
         )}
 
-        {toUse.length===0&&!dropping&&(
+        {!trustMode&&toUse.length===0&&!dropping&&(
           <div style={{ textAlign:"center", padding:40, color:C.textMuted }}>
             <div style={{ fontSize:28, marginBottom:8 }}>🎯</div>
             <p style={{ fontSize:13 }}>Tap + below to build your freestyle list</p>
           </div>
         )}
 
-        <div>
+        {!trustMode&&<div>
           {unchecked.map((item,idx)=>{
             const isSet = item.type==="set";
             const m = isSet ? getSetById(item.refId) : getMoveById(item.refId);
@@ -228,9 +333,9 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger }) => 
               </div>
             );
           })}
-        </div>
+        </div>}
 
-        {checked.length>0&&(
+        {!trustMode&&checked.length>0&&(
           <div>
             <button onClick={()=>setUsedOpen(o=>!o)}
               style={{ width:"100%", background:C.surfaceAlt, border:"none", borderTop:`1px solid ${C.border}`,

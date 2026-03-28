@@ -138,6 +138,9 @@ export default function App() {
   const [musicflow, setMusicflow] = useState(() => {
     try { const s=localStorage.getItem("mb_musicflow"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { sessions:[] };
   });
+  const [freestyle, setFreestyle] = useState(() => {
+    try { const s=localStorage.getItem("mb_freestyle"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { trustMode:false };
+  });
 
   // ── Persist to localStorage on every change ────────────────────────────────
   useEffect(()=>{ saveLocal("mb_moves",   moves);   },[moves]);
@@ -162,6 +165,7 @@ export default function App() {
   useEffect(()=>{ saveLocal("mb_calendar", calendar); },[calendar]);
   useEffect(()=>{ saveLocal("mb_stance", stance); },[stance]);
   useEffect(()=>{ saveLocal("mb_musicflow", musicflow); },[musicflow]);
+  useEffect(()=>{ saveLocal("mb_freestyle", freestyle); },[freestyle]);
   useEffect(()=>{ saveLocal("mb_ideas",   ideas);
     const timer = setTimeout(() => {
       if (window.__MB_USER__?.uid && window.__MB_DB__) {
@@ -199,6 +203,7 @@ export default function App() {
       calendar:    save("calendar"),
       stance:      save("stance"),
       musicflow:   save("musicflow"),
+      freestyle:   save("freestyle"),
     };
   }, []);
 
@@ -220,6 +225,7 @@ export default function App() {
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.calendar?.(fbUser.uid, calendar); },[calendar, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.stance?.(fbUser.uid, stance); },[stance, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.musicflow?.(fbUser.uid, musicflow); },[musicflow, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.freestyle?.(fbUser.uid, freestyle); },[freestyle, fbUser]);
 
   // ── Auth resolution ────────────────────────────────────────────────────────
   useEffect(()=>{
@@ -261,6 +267,8 @@ export default function App() {
           if (stn) { try { const p=JSON.parse(stn); if(p&&typeof p==="object") setStance(p); } catch {} }
           const mf = localStorage.getItem("mb_musicflow");
           if (mf) { try { const p=JSON.parse(mf); if(p&&typeof p==="object") setMusicflow(p); } catch {} }
+          const fsl = localStorage.getItem("mb_freestyle");
+          if (fsl) { try { const p=JSON.parse(fsl); if(p&&typeof p==="object") setFreestyle(p); } catch {} }
           if (p) { try { const pp=JSON.parse(p); if(pp&&Object.values(pp).some(v=>v)) setProfile(pp); } catch{} }
           const st = localStorage.getItem("mb_settings");
           if (st) {
@@ -528,7 +536,7 @@ export default function App() {
           </TrainMenuCtx.Provider>
           </TrainModalCtx.Provider>
           {tab==="wip" && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} catDomains={catDomains} setCatDomains={setCatDomains} sets={sets} setSets={setSets} addToast={addToast} pendingDesc={ideaToMove} clearPendingDesc={()=>setIdeaToMove(null)} settings={appSettings} onSettingsChange={setAppSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} reminders={reminders} onRemindersChange={setReminders} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}} onOpenManageReminders={()=>setShowManageReminders(true)}/>}
-          {tab==="ready" && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab}/>}
+          {tab==="ready" && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} addToast={addToast} freestyle={freestyle} onFreestyleChange={setFreestyle}/>}
           {showCalendar&&<CalendarOverlay
             moves={moves} setMoves={setMovesGrad} reps={reps} sparring={sparring} habits={habits} ideas={ideas}
             calendar={calendar} setCalendar={setCalendar}

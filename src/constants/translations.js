@@ -752,6 +752,10 @@ export const TRANSLATIONS = {
     anyVibe:"Any Vibe",
     setGroovesBest:"This set grooves best at:",
     all:"All",
+    trustMode:"TRUST MODE",
+    movesReady:"moves ready",
+    reveal:"REVEAL",
+    trustYourPreparation:"Trust your preparation.",
   },
 
   it: {
@@ -1464,6 +1468,10 @@ export const TRANSLATIONS = {
     anyVibe:"Any Vibe",
     setGroovesBest:"Questo set groova meglio con:",
     all:"Tutti",
+    trustMode:"TRUST MODE",
+    movesReady:"mosse pronte",
+    reveal:"MOSTRA",
+    trustYourPreparation:"Fidati della tua preparazione.",
   },
 
   es: {
@@ -2160,6 +2168,10 @@ export const TRANSLATIONS = {
     anyVibe:"Any Vibe",
     setGroovesBest:"Este set groovea mejor con:",
     all:"Todos",
+    trustMode:"TRUST MODE",
+    movesReady:"movimientos listos",
+    reveal:"MOSTRAR",
+    trustYourPreparation:"Confía en tu preparación.",
   },
 
   fr: {
@@ -2856,6 +2868,10 @@ export const TRANSLATIONS = {
     anyVibe:"Any Vibe",
     setGroovesBest:"Ce set groove le mieux avec :",
     all:"Tous",
+    trustMode:"TRUST MODE",
+    movesReady:"mouvements prêts",
+    reveal:"RÉVÉLER",
+    trustYourPreparation:"Fais confiance à ta préparation.",
   },
 
   pt: {
@@ -3552,6 +3568,10 @@ export const TRANSLATIONS = {
     anyVibe:"Any Vibe",
     setGroovesBest:"Esse set groova melhor com:",
     all:"Todos",
+    trustMode:"TRUST MODE",
+    movesReady:"movimentos prontos",
+    reveal:"REVELAR",
+    trustYourPreparation:"Confia na tua preparação.",
   },
 
   de: {
@@ -4248,6 +4268,10 @@ export const TRANSLATIONS = {
     anyVibe:"Any Vibe",
     setGroovesBest:"Dieses Set groovt am besten mit:",
     all:"Alle",
+    trustMode:"TRUST MODE",
+    movesReady:"Moves bereit",
+    reveal:"ZEIGEN",
+    trustYourPreparation:"Vertrau deiner Vorbereitung.",
   },
 
   ja: {
@@ -4945,6 +4969,10 @@ export const TRANSLATIONS = {
     anyVibe:"Any Vibe",
     setGroovesBest:"このセットに最適：",
     all:"すべて",
+    trustMode:"TRUST MODE",
+    movesReady:"ムーブ準備完了",
+    reveal:"表示",
+    trustYourPreparation:"準備を信じろ。",
   },
 
   zh: {
@@ -5640,6 +5668,10 @@ export const TRANSLATIONS = {
     anyVibe:"Any Vibe",
     setGroovesBest:"这个组合最适合的节奏：",
     all:"全部",
+    trustMode:"TRUST MODE",
+    movesReady:"招式已就绪",
+    reveal:"显示",
+    trustYourPreparation:"相信你的准备。",
   },
 
   ru: {
@@ -6335,6 +6367,10 @@ export const TRANSLATIONS = {
     anyVibe:"Any Vibe",
     setGroovesBest:"Этот сет лучше всего звучит с:",
     all:"Все",
+    trustMode:"TRUST MODE",
+    movesReady:"движений готово",
+    reveal:"ПОКАЗАТЬ",
+    trustYourPreparation:"Доверяй своей подготовке.",
   },
 
   ko: {
@@ -7065,6 +7101,10 @@ export const TRANSLATIONS = {
     anyVibe:"Any Vibe",
     setGroovesBest:"이 세트에 가장 잘 어울리는 리듬:",
     all:"전체",
+    trustMode:"TRUST MODE",
+    movesReady:"무브 준비 완료",
+    reveal:"공개",
+    trustYourPreparation:"네 준비를 믿어.",
   },
 
   th: {
@@ -7782,6 +7822,10 @@ export const TRANSLATIONS = {
     anyVibe:"Any Vibe",
     setGroovesBest:"เซ็ตนี้เข้ากับจังหวะ:",
     all:"ทั้งหมด",
+    trustMode:"TRUST MODE",
+    movesReady:"ท่าพร้อมแล้ว",
+    reveal:"แสดง",
+    trustYourPreparation:"เชื่อมั่นในการเตรียมตัวของคุณ",
   },
 
   vi: {
@@ -8533,5 +8577,9 @@ export const TRANSLATIONS = {
     anyVibe:"Any Vibe",
     setGroovesBest:"Set này groove nhất với:",
     all:"Tất cả",
+    trustMode:"TRUST MODE",
+    movesReady:"động tác sẵn sàng",
+    reveal:"HIỆN",
+    trustYourPreparation:"Tin vào sự chuẩn bị của bạn.",
   },
 };
