@@ -11,17 +11,18 @@ import { Btn } from '../shared/Btn';
 import { NameModal } from '../shared/NameModal';
 import { EditRoundView } from './EditRoundView';
 import { FreestylePage } from './FreestylePage';
+import { RivalsPage } from './RivalsPage';
 import { NewRoundModal } from './NewRoundModal';
 import { SectionBanner } from '../shared/SectionBanner';
 
-export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, addToast, freestyle, onFreestyleChange }) => {
+export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, addToast, freestyle, onFreestyleChange, rivals, onRivalsChange }) => {
   const t = useT();
   const { moveCountStr, itemCountStr, roundCountStr, entryCountStr } = usePlural();
   const { C } = useSettings();
   const showMastery   = settings.showMastery  === true;
   const showMoveCount = settings.showMoveCount === true;
   const [battleTab, setBattleTab] = useState("plan");
-  const setBattleTabAndNotify = (t) => { setBattleTab(t); if(onSubTabChange) onSubTabChange(t==="freestyle"?"freestyle":"plan"); };
+  const setBattleTabAndNotify = (t) => { setBattleTab(t); if(onSubTabChange) onSubTabChange(t); };
   // Notify parent of initial sub-tab
   useEffect(()=>{ if(onSubTabChange) onSubTabChange("plan"); },[]);
 
@@ -86,9 +87,11 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
   };
 
   const [freestyleAddTick, setFreestyleAddTick] = useState(0);
+  const [rivalsAddTick, setRivalsAddTick] = useState(0);
   useEffect(()=>{
     if(!onAddTrigger) return;
     if(battleTab==="freestyle") setFreestyleAddTick(t=>t+1);
+    else if(battleTab==="rivals") setRivalsAddTick(t=>t+1);
     else setAddingRound(true);
   },[onAddTrigger]);
   // onAddTrigger2 in Battle: "Add Move" opens freestyle picker regardless of sub-tab
@@ -712,7 +715,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
 
 
   // ── Sub-tab bar ──────────────────────────────────────────────────────────────
-  const subTabs = [["plan",t("plan")],["freestyle",t("freestyle")]];
+  const subTabs = [["plan",t("plan")],["freestyle",t("freestyle")],["rivals",t("rivals")]];
 
   return (
     <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column", position:"relative" }}>
@@ -745,6 +748,9 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
 
       {/* FREESTYLE tab */}
       {battleTab==="freestyle"&&<FreestylePage moves={moves} sets={sets} settings={settings} onAddTrigger={freestyleAddTick} addToast={addToast} freestyle={freestyle} onFreestyleChange={onFreestyleChange}/>}
+
+      {/* RIVALS tab */}
+      {battleTab==="rivals"&&<RivalsPage rivals={rivals||[]} onRivalsChange={onRivalsChange} addToast={addToast} onAddTrigger={rivalsAddTick}/>}
 
       {/* Modals */}
       {addingRound&&<NewRoundModal onClose={()=>setAddingRound(false)}

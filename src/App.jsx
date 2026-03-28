@@ -144,6 +144,9 @@ export default function App() {
   const [reflections, setReflections] = useState(() => {
     try { const s=localStorage.getItem("mb_reflections"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { lastCategory:-1, lastDate:null };
   });
+  const [rivals, setRivals] = useState(() => {
+    try { const s=localStorage.getItem("mb_rivals"); if(s){const p=JSON.parse(s); if(Array.isArray(p)) return p;} } catch{} return [];
+  });
 
   // ── Persist to localStorage on every change ────────────────────────────────
   useEffect(()=>{ saveLocal("mb_moves",   moves);   },[moves]);
@@ -170,6 +173,7 @@ export default function App() {
   useEffect(()=>{ saveLocal("mb_musicflow", musicflow); },[musicflow]);
   useEffect(()=>{ saveLocal("mb_freestyle", freestyle); },[freestyle]);
   useEffect(()=>{ saveLocal("mb_reflections", reflections); },[reflections]);
+  useEffect(()=>{ saveLocal("mb_rivals", rivals); },[rivals]);
   useEffect(()=>{ saveLocal("mb_ideas",   ideas);
     const timer = setTimeout(() => {
       if (window.__MB_USER__?.uid && window.__MB_DB__) {
@@ -209,6 +213,7 @@ export default function App() {
       musicflow:   save("musicflow"),
       freestyle:   save("freestyle"),
       reflections: save("reflections"),
+      rivals:      save("rivals"),
     };
   }, []);
 
@@ -232,6 +237,7 @@ export default function App() {
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.musicflow?.(fbUser.uid, musicflow); },[musicflow, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.freestyle?.(fbUser.uid, freestyle); },[freestyle, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.reflections?.(fbUser.uid, reflections); },[reflections, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.rivals?.(fbUser.uid, rivals); },[rivals, fbUser]);
 
   // ── Auth resolution ────────────────────────────────────────────────────────
   useEffect(()=>{
@@ -277,6 +283,8 @@ export default function App() {
           if (fsl) { try { const p=JSON.parse(fsl); if(p&&typeof p==="object") setFreestyle(p); } catch {} }
           const ref = localStorage.getItem("mb_reflections");
           if (ref) { try { const p=JSON.parse(ref); if(p&&typeof p==="object") setReflections(p); } catch {} }
+          const rv = localStorage.getItem("mb_rivals");
+          if (rv) { try { const p=JSON.parse(rv); if(Array.isArray(p)) setRivals(p); } catch {} }
           if (p) { try { const pp=JSON.parse(p); if(pp&&Object.values(pp).some(v=>v)) setProfile(pp); } catch{} }
           const st = localStorage.getItem("mb_settings");
           if (st) {
@@ -313,6 +321,7 @@ export default function App() {
         setStance({ assessments:[] });
         setMusicflow({ sessions:[] });
         setReflections({ lastCategory:-1, lastDate:null });
+        setRivals([]);
       }
     }
     window.addEventListener("mb-auth-resolved", handleAuthResolved);
@@ -434,6 +443,7 @@ export default function App() {
       { label:tr("restoreRemixRebuild"), emoji:"🔄", action:()=>{ setAddMenu(false); setShowRRR(true); } },
     ];
     if (tab === "wip" && subTab === "sets") return null; // fires Add Set directly
+    if (tab === "ready" && subTab === "rivals") return null; // fires Add Rival directly
     if (tab === "ready" && subTab === "freestyle") return null; // fires picker directly
     if (tab === "ready") return null; // fires Create Round directly
     return null;
@@ -555,7 +565,7 @@ export default function App() {
           </TrainMenuCtx.Provider>
           </TrainModalCtx.Provider>
           {tab==="wip" && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} catDomains={catDomains} setCatDomains={setCatDomains} sets={sets} setSets={setSets} addToast={addToast} pendingDesc={ideaToMove} clearPendingDesc={()=>setIdeaToMove(null)} settings={appSettings} onSettingsChange={setAppSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} reminders={reminders} onRemindersChange={setReminders} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}} onOpenManageReminders={()=>setShowManageReminders(true)}/>}
-          {tab==="ready" && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} addToast={addToast} freestyle={freestyle} onFreestyleChange={setFreestyle}/>}
+          {tab==="ready" && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} addToast={addToast} freestyle={freestyle} onFreestyleChange={setFreestyle} rivals={rivals} onRivalsChange={setRivals}/>}
           {showCalendar&&<CalendarOverlay
             moves={moves} setMoves={setMovesGrad} reps={reps} sparring={sparring} musicflow={musicflow} habits={habits} ideas={ideas}
             calendar={calendar} setCalendar={setCalendar}
