@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { FONT_DISPLAY, FONT_BODY } from "../../constants/fonts";
 import { Ic } from "../shared/Ic";
 import { Btn } from "../shared/Btn";
@@ -7,7 +7,7 @@ import { useSettings } from "../../hooks/useSettings";
 
 import { MyStanceSection } from "../stance/MyStanceSection";
 
-export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersChange, addToast, onOpenManageReminders, moves, stance, sparring, calendar, onOpenStanceAssessment }) => {
+export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersChange, addToast, onOpenManageReminders, moves, stance, sparring, calendar, scrollToStance, onScrollToStanceDone, onOpenStanceAssessment }) => {
   const { C } = useSettings();
   const t = useT();
   const [f,setF]=useState({ nickname:"", age:"", gender:"", goals:"", years:"", startYear:"", startMonth:"", startDay:"", why:"", ...profile });
@@ -15,6 +15,18 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
   const [showNoteAdd, setShowNoteAdd] = useState(false);
   const [noteText, setNoteText] = useState("");
   const noteItems = reminders?.items || [];
+  const stanceRef = useRef(null);
+
+  useEffect(() => {
+    if (scrollToStance && stanceRef.current) {
+      const timer = setTimeout(() => {
+        stanceRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+        onScrollToStanceDone?.();
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [scrollToStance]);
+
   const handleNoteSave = () => {
     const text = noteText.trim();
     if (!text) return;
@@ -48,45 +60,34 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
           style={{ width:"100%", background:C.surface, border:`1px solid ${C.border}`, borderRadius:8, padding:"9px 12px", color:C.text, fontSize:14, outline:"none", boxSizing:"border-box", fontFamily:FONT_BODY }}/>
         {f.nickname&&<div style={{ fontSize:11, color:C.textMuted, marginTop:4 }}>{t("headerWillShow")} <span style={{color:C.accent}}>of {f.nickname}</span></div>}
       </div>
-      <div style={{ display:"flex", gap:10 }}>
-        <div style={{ flex:1, marginBottom:14 }}>
+      {/* Age + Breaking start date side by side */}
+      <div style={{ display:"flex", gap:12, marginBottom:14 }}>
+        <div style={{ flex:1 }}>
           <label style={lbl()}>{t("age")}</label>
           <input type="number" value={f.age} onChange={e=>set("age")(e.target.value)} placeholder="—"
             style={{ width:"100%", background:C.surface, border:`1px solid ${C.border}`, borderRadius:8, padding:"9px 12px", color:C.text, fontSize:14, outline:"none", boxSizing:"border-box", fontFamily:FONT_BODY }}/>
         </div>
-        <div style={{ flex:2, marginBottom:14 }}>
-          <label style={lbl()}>{t("gender")}</label>
-          <select value={f.gender} onChange={e=>set("gender")(e.target.value)}
-            style={{ width:"100%", background:C.surface, border:`1px solid ${C.border}`, borderRadius:8, padding:"9px 12px", color:f.gender?C.text:C.textMuted, fontSize:14, outline:"none", boxSizing:"border-box", fontFamily:FONT_BODY }}>
-            <option value="">{t("preferNotToSay")}</option>
-            <option value="male">{t("male")}</option>
-            <option value="female">{t("female")}</option>
-            <option value="non-binary">{t("nonBinary")}</option>
-            <option value="other">{t("otherGender")}</option>
-          </select>
-        </div>
-      </div>
-      <div style={{ marginBottom:14 }}>
-        <label style={lbl()}>{t("whenStartBreaking")}</label>
-        <div style={{ display:"flex", gap:8, alignItems:"center" }}>
-          <div style={{ flex:"0 0 90px" }}>
+        <div style={{ flex:1 }}>
+          <label style={lbl()}>{t("whenStartBreaking")}</label>
+          <div style={{ display:"flex", gap:4 }}>
             <input type="number" value={f.startYear} onChange={e=>set("startYear")(e.target.value)}
               placeholder="YYYY" min="1970" max={new Date().getFullYear()}
-              style={{ width:"100%", background:C.surface, border:`1px solid ${C.border}`, borderRadius:8, padding:"9px 10px", color:C.text, fontSize:14, outline:"none", boxSizing:"border-box", fontFamily:FONT_BODY, textAlign:"center" }}/>
-          </div>
-          <div style={{ flex:"0 0 62px" }}>
+              style={{ flex:1, minWidth:0, background:C.surface, border:`1px solid ${C.border}`, borderRadius:8, padding:"9px 6px", color:C.text, fontSize:13, outline:"none", boxSizing:"border-box", fontFamily:FONT_BODY, textAlign:"center" }}/>
             <input type="number" value={f.startMonth} onChange={e=>set("startMonth")(e.target.value)}
               placeholder="MM" min="1" max="12"
-              style={{ width:"100%", background:C.surface, border:`1px solid ${C.border}`, borderRadius:8, padding:"9px 10px", color:C.text, fontSize:14, outline:"none", boxSizing:"border-box", fontFamily:FONT_BODY, textAlign:"center" }}/>
-          </div>
-          <div style={{ flex:"0 0 62px" }}>
+              style={{ width:42, background:C.surface, border:`1px solid ${C.border}`, borderRadius:8, padding:"9px 4px", color:C.text, fontSize:13, outline:"none", boxSizing:"border-box", fontFamily:FONT_BODY, textAlign:"center" }}/>
             <input type="number" value={f.startDay} onChange={e=>set("startDay")(e.target.value)}
               placeholder="DD" min="1" max="31"
-              style={{ width:"100%", background:C.surface, border:`1px solid ${C.border}`, borderRadius:8, padding:"9px 10px", color:C.text, fontSize:14, outline:"none", boxSizing:"border-box", fontFamily:FONT_BODY, textAlign:"center" }}/>
+              style={{ width:42, background:C.surface, border:`1px solid ${C.border}`, borderRadius:8, padding:"9px 4px", color:C.text, fontSize:13, outline:"none", boxSizing:"border-box", fontFamily:FONT_BODY, textAlign:"center" }}/>
           </div>
-          <div style={{ fontSize:11, color:C.textMuted, lineHeight:1.3, flex:1 }}>{t("yearRequired")}<br/>{t("monthDayOptional")}</div>
         </div>
       </div>
+
+      {/* MyStance section — between identity and goals */}
+      <div ref={stanceRef}>
+        <MyStanceSection moves={moves||[]} stance={stance} sparring={sparring} calendar={calendar} onOpenAssessment={onOpenStanceAssessment}/>
+      </div>
+
       {sectionHdr(t("breakingGoals"),"target")}
       <div style={{ marginBottom:14 }}>
         <textarea value={f.goals} onChange={e=>set("goals")(e.target.value)} rows={3}
@@ -101,6 +102,7 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
           {!f.why&&<div style={{ position:"absolute", top:10, left:13, fontSize:13, color:C.textMuted, pointerEvents:"none", fontStyle:"italic", fontFamily:FONT_DISPLAY }}>{t("rememberWhy")}</div>}
         </div>
       </div>
+
       {/* My Notes card */}
       <div style={{ background: C.surface, borderRadius: 14, border: `1px solid ${C.border}`,
         padding: 16, margin: "12px 0" }}>
@@ -162,8 +164,6 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
           </div>
         )}
       </div>
-
-      <MyStanceSection moves={moves||[]} stance={stance} sparring={sparring} calendar={calendar} onOpenAssessment={onOpenStanceAssessment}/>
 
       <div style={{ marginTop:24, paddingTop:16, borderTop:`1px solid ${C.borderLight}` }}>
         <button onClick={()=>{ if(window.__MB_AUTH__) window.__MB_AUTH__.signOut(); onClose(); }}

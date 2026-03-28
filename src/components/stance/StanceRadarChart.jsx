@@ -2,8 +2,8 @@ import React from "react";
 import { FONT_DISPLAY } from "../../constants/fonts";
 import { useT } from "../../hooks/useTranslation";
 
-const CX = 155, CY = 155, R = 110;
-const VB = "0 0 310 310";
+const CX = 210, CY = 210, R = 150;
+const VB = "0 0 420 420";
 const DOMAINS = ["musicality","performance","technique","variety","creativity","personality"];
 const GRID_LEVELS = [2, 4, 6, 8, 10];
 
@@ -19,16 +19,16 @@ const polyPoints = (scores) =>
 
 // Label offsets to avoid overlapping the chart
 const labelPos = (index) => {
-  const [x, y] = pt(index, 11.8);
+  const [x, y] = pt(index, 12.2);
   const anchors = ["middle","end","end","middle","start","start"];
-  const dy = ["-4","2","2","12","2","2"];
+  const dy = ["-6","3","3","16","3","3"];
   return { x, y, anchor: anchors[index], dy: dy[index] };
 };
 
 export const StanceRadarChart = ({ current, previous, C }) => {
   const t = useT();
   return (
-    <svg viewBox={VB} style={{ width: "100%", maxWidth: 280, display: "block", margin: "0 auto" }}>
+    <svg viewBox={VB} style={{ width: "100%", maxWidth: 440, display: "block", margin: "0 auto" }}>
       {/* Grid hexagons */}
       {GRID_LEVELS.map(lv => (
         <polygon key={lv} points={hexPoints(lv)}
@@ -54,7 +54,7 @@ export const StanceRadarChart = ({ current, previous, C }) => {
         return (
           <text key={d} x={lp.x} y={lp.y} dy={lp.dy}
             textAnchor={lp.anchor}
-            style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, fill: C.textMuted }}>
+            style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 13, fill: C.textMuted }}>
             {t(d)}
           </text>
         );

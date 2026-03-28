@@ -316,6 +316,7 @@ export default function App() {
   const [showCalendar,setShowCalendar]=useState(false);
   const [calendarInitialDay,setCalendarInitialDay]=useState(null);
   const [showStanceAssessment,setShowStanceAssessment]=useState(false);
+  const [scrollToStance,setScrollToStance]=useState(false);
   const [appSettings,setAppSettings]=useState(()=>({
     ...{
       theme:"light", defaultTab:"wip", showMastery:false,
@@ -546,11 +547,12 @@ export default function App() {
             onRRRChange={setRRR} addToast={addToast} addCalendarEvent={addCalendarEvent}
             onClose={()=>setShowRRR(false)}/>}
           {showStanceAssessment&&<MyStanceAssessment stance={stance} onStanceChange={setStance}
-            addToast={addToast} onClose={()=>setShowStanceAssessment(false)}/>}
+            addToast={addToast} onClose={()=>{ setShowStanceAssessment(false); setShowProfile(true); setScrollToStance(true); }}/>}
           {showProfile&&<ProfileModal onClose={()=>setShowProfile(false)} profile={profile} onSave={setProfile}
             reminders={reminders} onRemindersChange={setReminders} addToast={addToast}
             onOpenManageReminders={()=>{ setShowProfile(false); setShowManageReminders(true); }}
             moves={moves} stance={stance} sparring={sparring} calendar={calendar}
+            scrollToStance={scrollToStance} onScrollToStanceDone={()=>setScrollToStance(false)}
             onOpenStanceAssessment={()=>{ setShowProfile(false); setShowStanceAssessment(true); }}/>}
           {showManual&&<ManualModal onClose={()=>setShowManual(false)}/>}
           {showFeedback&&<FeedbackModal onClose={()=>setShowFeedback(false)}/>}
