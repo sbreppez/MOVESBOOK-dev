@@ -150,7 +150,6 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
             </button>}
             {!catReorderMode&&<button onClick={()=>{ setShowSearch(s=>!s); setSearch(""); }} style={{ background:showSearch?C.surfaceAlt:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:showSearch?C.accent:C.textMuted }}><Ic n="search" s={16}/></button>}
             {!catReorderMode&&<button onClick={()=>setCatView(v=>v==="tiles"?"list":"tiles")} style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}><Ic n={catView==="tiles"?"list":"grid"} s={16}/></button>}
-            {!catReorderMode&&<button onClick={()=>setBulk(true)} style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}><Ic n="upload" s={16}/></button>}
             {allCatMoves.length>1&&<button onClick={()=>{ const next=!catReorderMode; setCatReorderMode(next); if(next){ const ids=allCatMoves.map(m=>m.id); setMoves(prev=>{ const rest=prev.filter(m=>!ids.includes(m.id)); const ordered=ids.map(id=>prev.find(m=>m.id===id)).filter(Boolean); return [...ordered,...rest]; }); } if(!next && onSortChange) onSortChange("sortMoves","custom"); }}
               style={{ background:catReorderMode?C.accent:"none", border:"none", cursor:"pointer", padding:"4px 8px", borderRadius:5,
                 color:catReorderMode?C.bg:C.textMuted, fontSize:13, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>
@@ -214,7 +213,6 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
         </div>
         {showAdd&&<MoveModal initialCat={openCat} cats={cats} initialDesc={ideaDesc} onClose={()=>{setShowAdd(false);setIdeaDesc(null);}} onSave={f=>saveMove(f)} customAttrs={customAttrs} onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])}/>}
         {editMove&&<MoveModal move={editMove} cats={cats} onClose={()=>setEditMove(null)} onSave={f=>{saveMove(f,editMove.id);setEditMove(null);}} customAttrs={customAttrs} onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])}/>}
-        {bulk&&<BulkModal onClose={()=>setBulk(false)} onImport={bulkImport} category={openCat}/>}
         {confirmDeleteMove&&(
           <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", zIndex:900, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
             <div style={{ background:C.bg, border:`1px solid ${C.border}`, borderRadius:14, width:"100%", maxWidth:320, padding:20, boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
@@ -275,6 +273,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
             </button>}
             <button onClick={()=>{ setShowSearch(s=>!s); setSearch(""); }} style={{ background:showSearch?C.surfaceAlt:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:showSearch?C.accent:C.textMuted }}><Ic n="search" s={16}/></button>
             <button onClick={()=>setView(v=>v==="tiles"?"list":"tiles")} style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}><Ic n={view==="tiles"?"list":"grid"} s={16}/></button>
+            <button onClick={()=>setBulk(true)} style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}><Ic n="upload" s={16}/></button>
             <button onClick={()=>{ const next=!reorderMode; setReorderMode(next); if(next) setCats(sortedCats); if(!next && onSortChange) onSortChange("categorySort","manual"); }}
               style={{ background:reorderMode?C.accent:"none", border:"none", cursor:"pointer", padding:"4px 8px", borderRadius:5,
                 color:reorderMode?C.bg:C.textMuted, fontSize:13, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>
@@ -576,6 +575,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
       {showAddCat&&<AddCategoryModal onClose={()=>setShowAddCat(false)} onAdd={addCategory} existingCats={cats} existingColors={catColors}/>}
       {/* MoveModal at root level — for "Add to Move" arriving from Ideas tab */}
       {showAdd&&<MoveModal initialCat={cats[0]||""} cats={cats} initialDesc={ideaDesc} onClose={()=>{setShowAdd(false);setIdeaDesc(null);}} onSave={f=>saveMove(f)} customAttrs={customAttrs} onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])}/>}
+      {bulk&&<BulkModal onClose={()=>setBulk(false)} onImport={bulkImport} cats={cats}/>}
     </div>
   );
 };

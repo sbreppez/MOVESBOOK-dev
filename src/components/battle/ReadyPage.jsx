@@ -12,6 +12,7 @@ import { NameModal } from '../shared/NameModal';
 import { EditRoundView } from './EditRoundView';
 import { FreestylePage } from './FreestylePage';
 import { NewRoundModal } from './NewRoundModal';
+import { SectionBanner } from '../shared/SectionBanner';
 
 export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange }) => {
   const t = useT();
@@ -568,6 +569,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
 
   return (
     <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column", position:"relative" }}>
+      <SectionBanner tab="ready"/>
       {/* Sub-tab bar */}
       <div style={{ display:"flex", borderBottom:`1px solid ${C.border}`, background:C.surface, flexShrink:0 }}>
         {subTabs.map(([id,label])=>(
