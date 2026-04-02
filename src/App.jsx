@@ -32,6 +32,7 @@ import { RestoreRemixRebuild } from './components/moves/RestoreRemixRebuild';
 import { CalendarOverlay } from './components/calendar/CalendarOverlay';
 import { ManageReminders } from './components/moves/ManageReminders';
 import { MyStanceAssessment } from './components/stance/MyStanceAssessment';
+import { CompetitionSimulator } from './components/battle/CompetitionSimulator';
 
 // ── Firebase stubs for preview ──
 if (typeof window !== "undefined") {
@@ -383,6 +384,7 @@ export default function App() {
   const [showCalendar,setShowCalendar]=useState(false);
   const [calendarInitialDay,setCalendarInitialDay]=useState(null);
   const [showStanceAssessment,setShowStanceAssessment]=useState(false);
+  const [showCompSim,setShowCompSim]=useState(false);
   const [showMusicFlow,setShowMusicFlow]=useState(false);
   const [scrollToStance,setScrollToStance]=useState(false);
   const [appSettings,setAppSettings]=useState(()=>({
@@ -579,7 +581,7 @@ export default function App() {
           </div>
         </div>
 
-        {!(showCalendar||showRepCounter||showSparring||showComboMachine||showManageReminders||showRRR||showLab||showProfile||showSettings||showManual||showFeedback||showBackup||showStanceAssessment||showMusicFlow)&&<TabBar active={tab} onChange={(t,sub)=>{ setTrainMenu(null); setTab(t); setAddTick(0); setAddTick2(0); setAddMenu(false); setSubTab(sub||"moves"); }} badges={{ wip: staleCount }}/>}
+        {!(showCalendar||showRepCounter||showSparring||showComboMachine||showManageReminders||showRRR||showLab||showProfile||showSettings||showManual||showFeedback||showBackup||showStanceAssessment||showMusicFlow||showCompSim)&&<TabBar active={tab} onChange={(t,sub)=>{ setTrainMenu(null); setTab(t); setAddTick(0); setAddTick2(0); setAddMenu(false); setSubTab(sub||"moves"); }} badges={{ wip: staleCount }}/>}
 
         <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column", position:"relative" }}>
           {/* Train modals + menu — inside position:relative so absolute children are scoped to app width */}
@@ -607,7 +609,7 @@ export default function App() {
           </TrainMenuCtx.Provider>
           </TrainModalCtx.Provider>
           {tab==="wip" && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} catDomains={catDomains} setCatDomains={setCatDomains} sets={sets} setSets={setSets} addToast={addToast} pendingDesc={ideaToMove} clearPendingDesc={()=>setIdeaToMove(null)} settings={appSettings} onSettingsChange={setAppSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} reminders={reminders} onRemindersChange={setReminders} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}} onOpenManageReminders={()=>setShowManageReminders(true)}/>}
-          {tab==="ready" && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} addToast={addToast} freestyle={freestyle} onFreestyleChange={setFreestyle} rivals={rivals} onRivalsChange={setRivals} addCalendarEvent={addCalendarEvent}/>}
+          {tab==="ready" && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} addToast={addToast} freestyle={freestyle} onFreestyleChange={setFreestyle} rivals={rivals} onRivalsChange={setRivals} addCalendarEvent={addCalendarEvent} onSimulate={()=>setShowCompSim(true)}/>}
           {showCalendar&&<CalendarOverlay
             moves={moves} setMoves={setMovesGrad} reps={reps} sparring={sparring} musicflow={musicflow} habits={habits} ideas={ideas}
             calendar={calendar} setCalendar={setCalendar}
@@ -647,6 +649,13 @@ export default function App() {
             onSettingsChange={setAppSettings}
             addCalendarEvent={addCalendarEvent}
             onClose={()=>setShowSparring(false)}/>}
+          {showCompSim&&<CompetitionSimulator rounds={rounds} moves={moves} catColors={catColors}
+            sparring={sparring} settings={appSettings}
+            onSaveSession={(session, updatedSparring)=>{ setSparring(updatedSparring); }}
+            reflections={reflections} onReflectionsChange={setReflections}
+            onSettingsChange={setAppSettings}
+            addCalendarEvent={addCalendarEvent}
+            onClose={()=>setShowCompSim(false)}/>}
           {showComboMachine&&<ComboMachine moves={moves} catColors={catColors} combos={combos}
             onCombosChange={setCombos}
             onSaveSet={(fields)=>{ setSets(p=>[...p,{id:Date.now(),...fields}]); }}

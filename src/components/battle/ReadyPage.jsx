@@ -15,7 +15,7 @@ import { RivalsPage } from './RivalsPage';
 import { NewRoundModal } from './NewRoundModal';
 import { SectionBanner } from '../shared/SectionBanner';
 
-export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, addToast, freestyle, onFreestyleChange, rivals, onRivalsChange, addCalendarEvent }) => {
+export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, addToast, freestyle, onFreestyleChange, rivals, onRivalsChange, addCalendarEvent, onSimulate }) => {
   const t = useT();
   const { moveCountStr, itemCountStr, roundCountStr, entryCountStr } = usePlural();
   const { C } = useSettings();
@@ -473,6 +473,24 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
               <Btn variant="danger" onClick={()=>deleteTemplate(confirmDeleteTpl.id)}>{t("delete")}</Btn>
             </div>
           </Modal>
+        )}
+
+        {/* Simulate Competition button */}
+        {rounds.length >= 2 && onSimulate && (
+          <div style={{ padding:"10px 12px 0", flexShrink:0 }}>
+            <button onClick={onSimulate}
+              style={{
+                width:"100%", padding:14, borderRadius:12,
+                border:`2px dashed ${C.accent}`, background:`${C.accent}0a`,
+                color:C.accent, cursor:"pointer",
+                fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:13,
+                letterSpacing:1,
+                display:"flex", alignItems:"center", justifyContent:"center",
+                gap:8, minHeight:44,
+              }}>
+              {"🎮"} {t("simulateCompetition")}
+            </button>
+          </div>
         )}
 
         {/* Rounds list */}

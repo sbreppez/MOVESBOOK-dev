@@ -5,7 +5,7 @@ export const TRANSLATIONS = {
     // Battle sub-tabs
     plan:"PLAN", freestyle:"FREESTYLE",
     // Common actions
-    save:"Save", cancel:"Cancel", delete:"Delete", done:"DONE", confirm:"Confirm",
+    save:"Save", cancel:"Cancel", delete:"Delete", done:"DONE", confirm:"Confirm", exit:"Exit",
     rename:"Rename", duplicate:"Duplicate", add:"ADD", edit:"Edit",
     search:"Search…", close:"Close",
     // Sections
@@ -758,6 +758,7 @@ export const TRANSLATIONS = {
     trustYourPreparation:"Trust your preparation.",
     trainingLog:"TRAINING LOG", aFewWords:"A few words is enough", reflectionSparring:"You just put in the work. Before you move on — anything worth remembering?", reflectionReps:"Reps build muscle memory. Did anything shift in how this move feels?", reflectionMusic:"You spent time with the music. Did anything click?",
     hint_body:"Did any movement feel different today — smoother, heavier, sharper?", hint_rhythm:"Were you moving with the music, or just moving near it?", hint_mental:"What was your headspace today — focused, distracted, calm?", hint_creative:"Did anything go wrong in an interesting way?", hint_performance:"If someone was watching, would this session have been interesting?",
+    simulateCompetition:"SIMULATE COMPETITION", competitionSetup:"COMPETITION SETUP", selectBrackets:"SELECT BRACKETS", customiseBrackets:"CUSTOMISE", startSimulation:"START SIMULATION", roundsPerBracket:"ROUNDS PER BRACKET", breakTimeBetween:"BREAK TIME", breakTimeMinutes:"min", estimatedTime:"est.", noBracketsSelected:"Select at least one bracket", totalRounds:"rounds", bracketProgress:"BRACKET", bracketOf:"of", currentMoves:"YOUR MOVES", bracketComplete:"BRACKET COMPLETE", bracketAvg:"Bracket avg", nextUp:"Next up", waitingPeriod:"REST PERIOD", minutesToGo:"minutes to go", startWarmingUp:"Start warming up", getReadyBracket:"Get ready", skipWait:"SKIP WAIT", preparingFor:"Preparing for", mentalRehearsal:"MENTAL REHEARSAL", competitionComplete:"COMPETITION COMPLETE", totalCompetitionTime:"Total Time", bracketsCompleted:"Brackets", performanceTrend:"PERFORMANCE TREND", bracketSummary:"BRACKET SUMMARY", competitionNotes:"Competition notes...", saveCompetition:"SAVE COMPETITION", discardCompetition:"DISCARD", reflectionCompetition:"You just ran a full competition simulation. How did your body and mind hold up across the brackets?", avgAcrossBrackets:"Avg round", consistentAcrossBrackets:"Consistent across brackets", roundsGotLonger:"Rounds got longer — endurance holding", roundsGotShorter:"Rounds got shorter — you warmed up", exitSimulationConfirm:"Exit simulation? Your progress won't be saved.",
     tensionLow:"Low", tensionMid:"Mid", tensionHigh:"High", tensionPeak:"Peak",
     arcBuild:"Your round builds to a clear peak.", arcFlat:"Every entry is the same level — no dynamics.", arcNoDynamics:"Every entry is the same level — no dynamics.", arcStrongCloser:"Ends on a high. Strong closer.", arcBackToBack:"Two peaks back to back — no breathing room between them.",
     tensionRole:"TENSION ROLE", whatRoleDoesThisMove:"What role does this move usually play in your rounds?",
@@ -1015,7 +1016,7 @@ export const TRANSLATIONS = {
   it: {
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE",
     plan:"PIANO", freestyle:"FREESTYLE",
-    save:"Salva", cancel:"Annulla", delete:"Elimina", done:"FATTO", confirm:"Conferma",
+    save:"Salva", cancel:"Annulla", delete:"Elimina", done:"FATTO", confirm:"Conferma", exit:"Esci",
     rename:"Rinomina", duplicate:"Duplica", add:"AGGIUNGI", edit:"Modifica",
     search:"Cerca…", close:"Chiudi",
     moves:"MOSSE", sets:"SET", rounds:"ROUND", categories:"CATEGORIE",
@@ -1728,6 +1729,7 @@ export const TRANSLATIONS = {
     trustYourPreparation:"Fidati della tua preparazione.",
     trainingLog:"TRAINING LOG", aFewWords:"Bastano poche parole", reflectionSparring:"Hai appena dato tutto. Prima di andare avanti — qualcosa da ricordare?", reflectionReps:"Le ripetizioni costruiscono la memoria muscolare. Qualcosa è cambiato nel modo in cui senti questo movimento?", reflectionMusic:"Hai passato del tempo con la musica. Qualcosa ha fatto click?",
     hint_body:"Qualche movimento ti è sembrato diverso oggi — più fluido, più pesante, più preciso?", hint_rhythm:"Ti muovevi con la musica, o solo vicino ad essa?", hint_mental:"Com'era la tua testa oggi — concentrato, distratto, calmo?", hint_creative:"Qualcosa è andato storto in modo interessante?", hint_performance:"Se qualcuno ti guardava, questa sessione sarebbe stata interessante?",
+    simulateCompetition:"SIMULA COMPETIZIONE", competitionSetup:"SETUP COMPETIZIONE", selectBrackets:"SELEZIONA TURNI", customiseBrackets:"PERSONALIZZA", startSimulation:"INIZIA SIMULAZIONE", roundsPerBracket:"ROUND PER TURNO", breakTimeBetween:"PAUSA", breakTimeMinutes:"min", estimatedTime:"stima", noBracketsSelected:"Seleziona almeno un turno", totalRounds:"round", bracketProgress:"TURNO", bracketOf:"di", currentMoves:"I TUOI MOVES", bracketComplete:"TURNO COMPLETATO", bracketAvg:"Media turno", nextUp:"Prossimo", waitingPeriod:"PERIODO DI RIPOSO", minutesToGo:"minuti mancanti", startWarmingUp:"Inizia a scaldarti", getReadyBracket:"Preparati", skipWait:"SALTA ATTESA", preparingFor:"Preparazione per", mentalRehearsal:"PREPARAZIONE MENTALE", competitionComplete:"COMPETIZIONE COMPLETATA", totalCompetitionTime:"Tempo totale", bracketsCompleted:"Turni", performanceTrend:"TREND PRESTAZIONI", bracketSummary:"RIEPILOGO TURNI", competitionNotes:"Note competizione...", saveCompetition:"SALVA COMPETIZIONE", discardCompetition:"SCARTA", reflectionCompetition:"Hai appena simulato una competizione completa. Come hanno retto corpo e mente durante i turni?", avgAcrossBrackets:"Media round", consistentAcrossBrackets:"Costante nei turni", roundsGotLonger:"Round più lunghi — resistenza stabile", roundsGotShorter:"Round più corti — ti sei scaldato", exitSimulationConfirm:"Uscire dalla simulazione? I progressi non verranno salvati.",
     tensionLow:"Basso", tensionMid:"Medio", tensionHigh:"Alto", tensionPeak:"Picco",
     arcBuild:"Il tuo round cresce verso un picco chiaro.", arcFlat:"Ogni entry è allo stesso livello — nessuna dinamica.", arcNoDynamics:"Ogni entry è allo stesso livello — nessuna dinamica.", arcStrongCloser:"Finisce in alto. Gran chiusura.", arcBackToBack:"Due picchi di fila — nessun respiro tra loro.",
     tensionRole:"RUOLO TENSIONE", whatRoleDoesThisMove:"Che ruolo ha di solito questo move nei tuoi round?",
@@ -1985,7 +1987,7 @@ export const TRANSLATIONS = {
   es: {
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE",
     plan:"PLAN", freestyle:"FREESTYLE",
-    save:"Guardar", cancel:"Cancelar", delete:"Eliminar", done:"LISTO", confirm:"Confirmar",
+    save:"Guardar", cancel:"Cancelar", delete:"Eliminar", done:"LISTO", confirm:"Confirmar", exit:"Salir",
     rename:"Renombrar", duplicate:"Duplicar", add:"AGREGAR", edit:"Editar",
     search:"Buscar…", close:"Cerrar",
     moves:"MOVIMIENTOS", sets:"SETS", rounds:"RONDAS", categories:"CATEGORÍAS",
@@ -2682,6 +2684,7 @@ export const TRANSLATIONS = {
     trustYourPreparation:"Confía en tu preparación.",
     trainingLog:"TRAINING LOG", aFewWords:"Unas pocas palabras bastan", reflectionSparring:"Acabas de trabajar duro. Antes de seguir — ¿algo que valga la pena recordar?", reflectionReps:"Las repeticiones construyen memoria muscular. ¿Algo cambió en cómo se siente este movimiento?", reflectionMusic:"Pasaste tiempo con la música. ¿Algo hizo click?",
     hint_body:"¿Algún movimiento se sintió diferente hoy — más suave, más pesado, más preciso?", hint_rhythm:"¿Te movías con la música, o solo cerca de ella?", hint_mental:"¿Cómo estaba tu cabeza hoy — enfocado, distraído, calmado?", hint_creative:"¿Algo salió mal de forma interesante?", hint_performance:"Si alguien te estuviera viendo, ¿esta sesión habría sido interesante?",
+    simulateCompetition:"SIMULAR COMPETENCIA", competitionSetup:"CONFIGURACIÓN", selectBrackets:"SELECCIONAR RONDAS", customiseBrackets:"PERSONALIZAR", startSimulation:"INICIAR SIMULACIÓN", roundsPerBracket:"ROUNDS POR RONDA", breakTimeBetween:"DESCANSO", breakTimeMinutes:"min", estimatedTime:"est.", noBracketsSelected:"Selecciona al menos una ronda", totalRounds:"rounds", bracketProgress:"RONDA", bracketOf:"de", currentMoves:"TUS MOVES", bracketComplete:"RONDA COMPLETADA", bracketAvg:"Promedio ronda", nextUp:"Siguiente", waitingPeriod:"PERÍODO DE DESCANSO", minutesToGo:"minutos restantes", startWarmingUp:"Empieza a calentar", getReadyBracket:"Prepárate", skipWait:"SALTAR ESPERA", preparingFor:"Preparando para", mentalRehearsal:"ENSAYO MENTAL", competitionComplete:"COMPETENCIA COMPLETA", totalCompetitionTime:"Tiempo total", bracketsCompleted:"Rondas", performanceTrend:"TENDENCIA", bracketSummary:"RESUMEN DE RONDAS", competitionNotes:"Notas de la competencia...", saveCompetition:"GUARDAR COMPETENCIA", discardCompetition:"DESCARTAR", reflectionCompetition:"Acabas de simular una competencia completa. ¿Cómo aguantaron tu cuerpo y mente durante las rondas?", avgAcrossBrackets:"Promedio round", consistentAcrossBrackets:"Consistente en todas las rondas", roundsGotLonger:"Rounds más largos — resistencia estable", roundsGotShorter:"Rounds más cortos — entraste en calor", exitSimulationConfirm:"¿Salir de la simulación? Tu progreso no se guardará.",
     tensionLow:"Bajo", tensionMid:"Medio", tensionHigh:"Alto", tensionPeak:"Pico",
     arcBuild:"Tu round crece hacia un pico claro.", arcFlat:"Todas las entries están al mismo nivel — sin dinámica.", arcNoDynamics:"Todas las entries están al mismo nivel — sin dinámica.", arcStrongCloser:"Termina arriba. Buen cierre.", arcBackToBack:"Dos picos seguidos — sin respiro entre ellos.",
     tensionRole:"ROL DE TENSIÓN", whatRoleDoesThisMove:"¿Qué rol suele tener este move en tus rounds?",
@@ -2939,7 +2942,7 @@ export const TRANSLATIONS = {
   fr: {
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE",
     plan:"PLAN", freestyle:"FREESTYLE",
-    save:"Enregistrer", cancel:"Annuler", delete:"Supprimer", done:"OK", confirm:"Confirmer",
+    save:"Enregistrer", cancel:"Annuler", delete:"Supprimer", done:"OK", confirm:"Confirmer", exit:"Quitter",
     rename:"Renommer", duplicate:"Dupliquer", add:"AJOUTER", edit:"Modifier",
     search:"Rechercher…", close:"Fermer",
     moves:"MOVES", sets:"SETS", rounds:"ROUNDS", categories:"CATÉGORIES",
@@ -3636,6 +3639,7 @@ export const TRANSLATIONS = {
     trustYourPreparation:"Fais confiance à ta préparation.",
     trainingLog:"TRAINING LOG", aFewWords:"Quelques mots suffisent", reflectionSparring:"Tu viens de bosser. Avant de passer à autre chose — quelque chose à retenir ?", reflectionReps:"Les répétitions construisent la mémoire musculaire. Quelque chose a changé dans la sensation de ce mouvement ?", reflectionMusic:"Tu as passé du temps avec la musique. Quelque chose a cliqué ?",
     hint_body:"Un mouvement t'a semblé différent aujourd'hui — plus fluide, plus lourd, plus précis ?", hint_rhythm:"Tu bougeais avec la musique, ou juste à côté ?", hint_mental:"Comment était ta tête aujourd'hui — concentré, distrait, calme ?", hint_creative:"Quelque chose a mal tourné de façon intéressante ?", hint_performance:"Si quelqu'un regardait, cette session aurait été intéressante ?",
+    simulateCompetition:"SIMULER COMPÉTITION", competitionSetup:"CONFIGURATION", selectBrackets:"SÉLECTIONNER TOURS", customiseBrackets:"PERSONNALISER", startSimulation:"LANCER SIMULATION", roundsPerBracket:"ROUNDS PAR TOUR", breakTimeBetween:"PAUSE", breakTimeMinutes:"min", estimatedTime:"est.", noBracketsSelected:"Sélectionne au moins un tour", totalRounds:"rounds", bracketProgress:"TOUR", bracketOf:"de", currentMoves:"TES MOVES", bracketComplete:"TOUR TERMINÉ", bracketAvg:"Moyenne du tour", nextUp:"Suivant", waitingPeriod:"PÉRIODE DE REPOS", minutesToGo:"minutes restantes", startWarmingUp:"Commence à t'échauffer", getReadyBracket:"Prépare-toi", skipWait:"PASSER L'ATTENTE", preparingFor:"Préparation pour", mentalRehearsal:"PRÉPARATION MENTALE", competitionComplete:"COMPÉTITION TERMINÉE", totalCompetitionTime:"Temps total", bracketsCompleted:"Tours", performanceTrend:"TENDANCE", bracketSummary:"RÉSUMÉ DES TOURS", competitionNotes:"Notes de compétition...", saveCompetition:"SAUVEGARDER", discardCompetition:"ANNULER", reflectionCompetition:"Tu viens de simuler une compétition complète. Comment ton corps et ton mental ont-ils tenu pendant les tours ?", avgAcrossBrackets:"Moyenne round", consistentAcrossBrackets:"Constant dans tous les tours", roundsGotLonger:"Rounds plus longs — endurance stable", roundsGotShorter:"Rounds plus courts — tu t'es échauffé", exitSimulationConfirm:"Quitter la simulation ? Votre progression ne sera pas sauvegardée.",
     tensionLow:"Bas", tensionMid:"Moyen", tensionHigh:"Haut", tensionPeak:"Pic",
     arcBuild:"Ton round monte vers un pic clair.", arcFlat:"Chaque entry est au même niveau — aucune dynamique.", arcNoDynamics:"Chaque entry est au même niveau — aucune dynamique.", arcStrongCloser:"Finit en haut. Belle fermeture.", arcBackToBack:"Deux pics à la suite — pas de respiration entre eux.",
     tensionRole:"RÔLE DE TENSION", whatRoleDoesThisMove:"Quel rôle joue habituellement ce move dans tes rounds ?",
@@ -3893,7 +3897,7 @@ export const TRANSLATIONS = {
   pt: {
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE",
     plan:"PLANO", freestyle:"FREESTYLE",
-    save:"Salvar", cancel:"Cancelar", delete:"Excluir", done:"PRONTO", confirm:"Confirmar",
+    save:"Salvar", cancel:"Cancelar", delete:"Excluir", done:"PRONTO", confirm:"Confirmar", exit:"Sair",
     rename:"Renomear", duplicate:"Duplicar", add:"ADICIONAR", edit:"Editar",
     search:"Buscar…", close:"Fechar",
     moves:"MOVES", sets:"SETS", rounds:"ROUNDS", categories:"CATEGORIAS",
@@ -4590,6 +4594,7 @@ export const TRANSLATIONS = {
     trustYourPreparation:"Confia na tua preparação.",
     trainingLog:"TRAINING LOG", aFewWords:"Poucas palavras bastam", reflectionSparring:"Você acabou de se dedicar. Antes de seguir — algo que vale lembrar?", reflectionReps:"Repetições constroem memória muscular. Algo mudou em como esse movimento se sente?", reflectionMusic:"Você passou um tempo com a música. Algo fez sentido?",
     hint_body:"Algum movimento pareceu diferente hoje — mais suave, mais pesado, mais preciso?", hint_rhythm:"Você se movia com a música, ou só perto dela?", hint_mental:"Como estava sua cabeça hoje — focado, distraído, calmo?", hint_creative:"Algo deu errado de forma interessante?", hint_performance:"Se alguém estivesse assistindo, essa sessão teria sido interessante?",
+    simulateCompetition:"SIMULAR COMPETIÇÃO", competitionSetup:"CONFIGURAÇÃO", selectBrackets:"SELECIONAR CHAVES", customiseBrackets:"PERSONALIZAR", startSimulation:"INICIAR SIMULAÇÃO", roundsPerBracket:"ROUNDS POR CHAVE", breakTimeBetween:"INTERVALO", breakTimeMinutes:"min", estimatedTime:"est.", noBracketsSelected:"Selecione pelo menos uma chave", totalRounds:"rounds", bracketProgress:"CHAVE", bracketOf:"de", currentMoves:"SEUS MOVES", bracketComplete:"CHAVE COMPLETA", bracketAvg:"Média da chave", nextUp:"Próximo", waitingPeriod:"PERÍODO DE DESCANSO", minutesToGo:"minutos restantes", startWarmingUp:"Comece a aquecer", getReadyBracket:"Prepare-se", skipWait:"PULAR ESPERA", preparingFor:"Preparando para", mentalRehearsal:"ENSAIO MENTAL", competitionComplete:"COMPETIÇÃO COMPLETA", totalCompetitionTime:"Tempo total", bracketsCompleted:"Chaves", performanceTrend:"TENDÊNCIA", bracketSummary:"RESUMO DAS CHAVES", competitionNotes:"Notas da competição...", saveCompetition:"SALVAR COMPETIÇÃO", discardCompetition:"DESCARTAR", reflectionCompetition:"Você acabou de simular uma competição completa. Como seu corpo e mente aguentaram nas chaves?", avgAcrossBrackets:"Média round", consistentAcrossBrackets:"Consistente nas chaves", roundsGotLonger:"Rounds mais longos — resistência estável", roundsGotShorter:"Rounds mais curtos — você aqueceu", exitSimulationConfirm:"Sair da simulação? Seu progresso não será salvo.",
     tensionLow:"Baixo", tensionMid:"Médio", tensionHigh:"Alto", tensionPeak:"Pico",
     arcBuild:"Seu round cresce até um pico claro.", arcFlat:"Todas as entries estão no mesmo nível — sem dinâmica.", arcNoDynamics:"Todas as entries estão no mesmo nível — sem dinâmica.", arcStrongCloser:"Termina em alta. Bom fechamento.", arcBackToBack:"Dois picos seguidos — sem respiro entre eles.",
     tensionRole:"PAPEL DE TENSÃO", whatRoleDoesThisMove:"Qual papel esse move costuma ter nos seus rounds?",
@@ -4847,7 +4852,7 @@ export const TRANSLATIONS = {
   de: {
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE",
     plan:"PLAN", freestyle:"FREESTYLE",
-    save:"Speichern", cancel:"Abbrechen", delete:"Löschen", done:"FERTIG", confirm:"Bestätigen",
+    save:"Speichern", cancel:"Abbrechen", delete:"Löschen", done:"FERTIG", confirm:"Bestätigen", exit:"Beenden",
     rename:"Umbenennen", duplicate:"Duplizieren", add:"HINZUFÜGEN", edit:"Bearbeiten",
     search:"Suchen…", close:"Schließen",
     moves:"MOVES", sets:"SETS", rounds:"RUNDEN", categories:"KATEGORIEN",
@@ -5544,6 +5549,7 @@ export const TRANSLATIONS = {
     trustYourPreparation:"Vertrau deiner Vorbereitung.",
     trainingLog:"TRAINING LOG", aFewWords:"Ein paar Worte reichen", reflectionSparring:"Du hast gerade trainiert. Bevor du weitergehst — etwas, das sich zu merken lohnt?", reflectionReps:"Wiederholungen bauen Muskelgedächtnis auf. Hat sich etwas verändert, wie sich diese Bewegung anfühlt?", reflectionMusic:"Du hast Zeit mit der Musik verbracht. Hat etwas geklickt?",
     hint_body:"Hat sich eine Bewegung heute anders angefühlt — geschmeidiger, schwerer, präziser?", hint_rhythm:"Hast du dich mit der Musik bewegt, oder nur in ihrer Nähe?", hint_mental:"Wie war dein Kopf heute — fokussiert, abgelenkt, ruhig?", hint_creative:"Ist etwas auf interessante Weise schiefgegangen?", hint_performance:"Wenn jemand zugeschaut hätte, wäre diese Session interessant gewesen?",
+    simulateCompetition:"WETTKAMPF SIMULIEREN", competitionSetup:"WETTKAMPF-SETUP", selectBrackets:"RUNDEN WÄHLEN", customiseBrackets:"ANPASSEN", startSimulation:"SIMULATION STARTEN", roundsPerBracket:"ROUNDS PRO RUNDE", breakTimeBetween:"PAUSE", breakTimeMinutes:"Min", estimatedTime:"ca.", noBracketsSelected:"Wähle mindestens eine Runde", totalRounds:"Rounds", bracketProgress:"RUNDE", bracketOf:"von", currentMoves:"DEINE MOVES", bracketComplete:"RUNDE ABGESCHLOSSEN", bracketAvg:"Runden-Durchschnitt", nextUp:"Als nächstes", waitingPeriod:"RUHEPHASE", minutesToGo:"Minuten übrig", startWarmingUp:"Fang an aufzuwärmen", getReadyBracket:"Mach dich bereit", skipWait:"PAUSE ÜBERSPRINGEN", preparingFor:"Vorbereitung auf", mentalRehearsal:"MENTALE VORBEREITUNG", competitionComplete:"WETTKAMPF ABGESCHLOSSEN", totalCompetitionTime:"Gesamtzeit", bracketsCompleted:"Runden", performanceTrend:"LEISTUNGSTREND", bracketSummary:"RUNDENÜBERSICHT", competitionNotes:"Wettkampfnotizen...", saveCompetition:"WETTKAMPF SPEICHERN", discardCompetition:"VERWERFEN", reflectionCompetition:"Du hast gerade einen kompletten Wettkampf simuliert. Wie haben Körper und Geist in den Runden gehalten?", avgAcrossBrackets:"Durchschn. Round", consistentAcrossBrackets:"Konstant über alle Runden", roundsGotLonger:"Rounds wurden länger — Ausdauer hält", roundsGotShorter:"Rounds wurden kürzer — du hast dich aufgewärmt", exitSimulationConfirm:"Simulation verlassen? Dein Fortschritt wird nicht gespeichert.",
     tensionLow:"Niedrig", tensionMid:"Mittel", tensionHigh:"Hoch", tensionPeak:"Höhepunkt",
     arcBuild:"Dein Round steigt zu einem klaren Höhepunkt.", arcFlat:"Jeder Entry ist auf dem gleichen Level — keine Dynamik.", arcNoDynamics:"Jeder Entry ist auf dem gleichen Level — keine Dynamik.", arcStrongCloser:"Endet hoch. Starker Abschluss.", arcBackToBack:"Zwei Höhepunkte direkt nacheinander — kein Durchatmen dazwischen.",
     tensionRole:"SPANNUNGSROLLE", whatRoleDoesThisMove:"Welche Rolle spielt dieser Move normalerweise in deinen Rounds?",
@@ -5801,7 +5807,7 @@ export const TRANSLATIONS = {
   ja: {
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE",
     plan:"プラン", freestyle:"フリースタイル",
-    save:"保存", cancel:"キャンセル", delete:"削除", done:"完了", confirm:"確認",
+    save:"保存", cancel:"キャンセル", delete:"削除", done:"完了", confirm:"確認", exit:"終了",
     rename:"名前変更", duplicate:"複製", add:"追加", edit:"編集",
     search:"検索…", close:"閉じる",
     moves:"ムーブ", sets:"セット", rounds:"ラウンド", categories:"カテゴリ",
@@ -6499,6 +6505,7 @@ export const TRANSLATIONS = {
     trustYourPreparation:"準備を信じろ。",
     trainingLog:"TRAINING LOG", aFewWords:"一言でも十分", reflectionSparring:"今、全力を出し切った。次に進む前に — 覚えておきたいことはある？", reflectionReps:"反復は体に記憶を刻む。この動きの感覚に変化はあった？", reflectionMusic:"音楽と過ごした時間。何かつかめた？",
     hint_body:"今日、動きに違いを感じた？ — より滑らかに、より重く、よりシャープに？", hint_rhythm:"音楽と一緒に動いてた？それとも音楽のそばで動いてただけ？", hint_mental:"今日の頭の状態は？ — 集中、散漫、穏やか？", hint_creative:"面白い失敗はあった？", hint_performance:"誰かが見ていたら、このセッションは面白かった？",
+    simulateCompetition:"コンペティション シミュレーション", competitionSetup:"セットアップ", selectBrackets:"トーナメント選択", customiseBrackets:"カスタマイズ", startSimulation:"シミュレーション開始", roundsPerBracket:"ラウンド数", breakTimeBetween:"休憩時間", breakTimeMinutes:"分", estimatedTime:"推定", noBracketsSelected:"少なくとも1つ選択してください", totalRounds:"ラウンド", bracketProgress:"トーナメント", bracketOf:"/", currentMoves:"あなたのMOVES", bracketComplete:"トーナメント完了", bracketAvg:"平均", nextUp:"次", waitingPeriod:"休憩期間", minutesToGo:"分残り", startWarmingUp:"ウォームアップ開始", getReadyBracket:"準備して", skipWait:"スキップ", preparingFor:"準備中", mentalRehearsal:"メンタルリハーサル", competitionComplete:"コンペティション完了", totalCompetitionTime:"合計時間", bracketsCompleted:"トーナメント数", performanceTrend:"パフォーマンス推移", bracketSummary:"トーナメントまとめ", competitionNotes:"コンペティションメモ...", saveCompetition:"保存", discardCompetition:"破棄", reflectionCompetition:"フルコンペティションシミュレーションを完了しました。トーナメントを通して体と心はどうでしたか？", avgAcrossBrackets:"平均ラウンド", consistentAcrossBrackets:"全トーナメントで安定", roundsGotLonger:"ラウンドが長くなった — 持久力あり", roundsGotShorter:"ラウンドが短くなった — 体が温まった", exitSimulationConfirm:"シミュレーションを終了しますか？進行状況は保存されません。",
     tensionLow:"低", tensionMid:"中", tensionHigh:"高", tensionPeak:"ピーク",
     arcBuild:"ラウンドが明確なピークに向かって盛り上がる。", arcFlat:"すべてのエントリーが同じレベル — 緩急がない。", arcNoDynamics:"すべてのエントリーが同じレベル — 緩急がない。", arcStrongCloser:"高い位置で終了。強いクローザー。", arcBackToBack:"ピークが連続 — 間に余裕がない。",
     tensionRole:"テンションロール", whatRoleDoesThisMove:"このムーブはラウンドでどんな役割を果たす？",
@@ -6756,7 +6763,7 @@ export const TRANSLATIONS = {
   zh: {
     train:"训练", vocab:"动作", battle:"对战",
     plan:"计划", freestyle:"FREESTYLE",
-    save:"保存", cancel:"取消", delete:"删除", done:"完成", confirm:"确认",
+    save:"保存", cancel:"取消", delete:"删除", done:"完成", confirm:"确认", exit:"退出",
     rename:"重命名", duplicate:"复制", add:"添加", edit:"编辑",
     search:"搜索…", close:"关闭",
     moves:"动作", sets:"组合", rounds:"回合", categories:"分类",
@@ -7452,6 +7459,7 @@ export const TRANSLATIONS = {
     trustYourPreparation:"相信你的准备。",
     trainingLog:"TRAINING LOG", aFewWords:"几个字就够了", reflectionSparring:"刚刚全力以赴了。继续之前 — 有什么值得记住的吗？", reflectionReps:"重复训练建立肌肉记忆。这个动作的感觉有什么变化吗？", reflectionMusic:"你花了时间和音乐相处。有什么领悟吗？",
     hint_body:"今天有什么动作感觉不同吗 — 更流畅、更沉重、更精准？", hint_rhythm:"你是跟着音乐在动，还是只是在音乐旁边动？", hint_mental:"今天的状态怎样 — 专注、分心、还是平静？", hint_creative:"有什么有趣的失误吗？", hint_performance:"如果有人在看，这次训练会有意思吗？",
+    simulateCompetition:"模拟比赛", competitionSetup:"比赛设置", selectBrackets:"选择赛段", customiseBrackets:"自定义", startSimulation:"开始模拟", roundsPerBracket:"每赛段回合数", breakTimeBetween:"休息时间", breakTimeMinutes:"分钟", estimatedTime:"预计", noBracketsSelected:"至少选择一个赛段", totalRounds:"回合", bracketProgress:"赛段", bracketOf:"/", currentMoves:"你的MOVES", bracketComplete:"赛段完成", bracketAvg:"赛段平均", nextUp:"下一个", waitingPeriod:"休息期", minutesToGo:"分钟剩余", startWarmingUp:"开始热身", getReadyBracket:"准备好", skipWait:"跳过等待", preparingFor:"准备", mentalRehearsal:"心理预演", competitionComplete:"比赛完成", totalCompetitionTime:"总时间", bracketsCompleted:"赛段数", performanceTrend:"表现趋势", bracketSummary:"赛段总结", competitionNotes:"比赛笔记...", saveCompetition:"保存比赛", discardCompetition:"放弃", reflectionCompetition:"你刚刚完成了一次完整的比赛模拟。在各赛段中你的身体和精神状态如何？", avgAcrossBrackets:"平均回合", consistentAcrossBrackets:"各赛段表现稳定", roundsGotLonger:"回合变长 — 耐力保持良好", roundsGotShorter:"回合变短 — 身体热开了", exitSimulationConfirm:"退出模拟？进度将不会保存。",
     tensionLow:"低", tensionMid:"中", tensionHigh:"高", tensionPeak:"顶峰",
     arcBuild:"你的回合逐步攀升到明确的高潮。", arcFlat:"每个段落都在同一水平 — 没有起伏。", arcNoDynamics:"每个段落都在同一水平 — 没有起伏。", arcStrongCloser:"高潮收尾。强力结束。", arcBackToBack:"两个高潮紧连 — 中间没有喘息。",
     tensionRole:"张力角色", whatRoleDoesThisMove:"这个动作在你的回合中通常扮演什么角色？",
@@ -7709,7 +7717,7 @@ export const TRANSLATIONS = {
   ru: {
     train:"ТРЕН", vocab:"МУВЫ", battle:"БАТТЛ",
     plan:"ПЛАН", freestyle:"ФРИСТАЙЛ",
-    save:"Сохранить", cancel:"Отмена", delete:"Удалить", done:"ГОТОВО", confirm:"Подтвердить",
+    save:"Сохранить", cancel:"Отмена", delete:"Удалить", done:"ГОТОВО", confirm:"Подтвердить", exit:"Выйти",
     rename:"Переименовать", duplicate:"Дублировать", add:"ДОБАВИТЬ", edit:"Редактировать",
     search:"Поиск…", close:"Закрыть",
     moves:"ДВИЖЕНИЯ", sets:"СЕТЫ", rounds:"РАУНДЫ", categories:"КАТЕГОРИИ",
@@ -8405,6 +8413,7 @@ export const TRANSLATIONS = {
     trustYourPreparation:"Доверяй своей подготовке.",
     trainingLog:"TRAINING LOG", aFewWords:"Пару слов достаточно", reflectionSparring:"Ты только что выложился. Прежде чем идти дальше — что-то стоит запомнить?", reflectionReps:"Повторения строят мышечную память. Что-то изменилось в ощущении этого движения?", reflectionMusic:"Ты провёл время с музыкой. Что-то щёлкнуло?",
     hint_body:"Какое-то движение ощущалось иначе сегодня — плавнее, тяжелее, острее?", hint_rhythm:"Ты двигался с музыкой или просто рядом с ней?", hint_mental:"Как была твоя голова сегодня — сфокусирован, рассеян, спокоен?", hint_creative:"Что-то пошло не так интересным образом?", hint_performance:"Если бы кто-то смотрел, эта тренировка была бы интересной?",
+    simulateCompetition:"СИМУЛЯЦИЯ БАТТЛА", competitionSetup:"НАСТРОЙКА", selectBrackets:"ВЫБРАТЬ ЭТАПЫ", customiseBrackets:"НАСТРОИТЬ", startSimulation:"НАЧАТЬ СИМУЛЯЦИЮ", roundsPerBracket:"РАУНДОВ НА ЭТАП", breakTimeBetween:"ПЕРЕРЫВ", breakTimeMinutes:"мин", estimatedTime:"прим.", noBracketsSelected:"Выберите хотя бы один этап", totalRounds:"раундов", bracketProgress:"ЭТАП", bracketOf:"из", currentMoves:"ВАШИ MOVES", bracketComplete:"ЭТАП ЗАВЕРШЁН", bracketAvg:"Средний по этапу", nextUp:"Далее", waitingPeriod:"ПЕРИОД ОТДЫХА", minutesToGo:"минут осталось", startWarmingUp:"Начинай разминку", getReadyBracket:"Приготовься", skipWait:"ПРОПУСТИТЬ", preparingFor:"Подготовка к", mentalRehearsal:"МЕНТАЛЬНАЯ ПОДГОТОВКА", competitionComplete:"СОРЕВНОВАНИЕ ЗАВЕРШЕНО", totalCompetitionTime:"Общее время", bracketsCompleted:"Этапов", performanceTrend:"ТРЕНД", bracketSummary:"ИТОГИ ЭТАПОВ", competitionNotes:"Заметки о соревновании...", saveCompetition:"СОХРАНИТЬ", discardCompetition:"ОТМЕНИТЬ", reflectionCompetition:"Вы только что прошли полную симуляцию соревнования. Как выдержали тело и разум на протяжении этапов?", avgAcrossBrackets:"Средний раунд", consistentAcrossBrackets:"Стабильно во всех этапах", roundsGotLonger:"Раунды стали длиннее — выносливость держится", roundsGotShorter:"Раунды стали короче — вы размялись", exitSimulationConfirm:"Выйти из симуляции? Прогресс не будет сохранён.",
     tensionLow:"Низкий", tensionMid:"Средний", tensionHigh:"Высокий", tensionPeak:"Пик",
     arcBuild:"Твой раунд нарастает к чёткому пику.", arcFlat:"Каждый выход на одном уровне — нет динамики.", arcNoDynamics:"Каждый выход на одном уровне — нет динамики.", arcStrongCloser:"Заканчивается на высоте. Сильная концовка.", arcBackToBack:"Два пика подряд — нет передышки между ними.",
     tensionRole:"РОЛЬ НАПРЯЖЕНИЯ", whatRoleDoesThisMove:"Какую роль этот мув обычно играет в твоих раундах?",
@@ -8665,7 +8674,7 @@ export const TRANSLATIONS = {
     // Battle sub-tabs
     plan:"플랜", freestyle:"FREESTYLE",
     // Common actions
-    save:"저장", cancel:"취소", delete:"삭제", done:"완료", confirm:"확인",
+    save:"저장", cancel:"취소", delete:"삭제", done:"완료", confirm:"확인", exit:"나가기",
     rename:"이름 변경", duplicate:"복제", add:"추가", edit:"편집",
     search:"검색…", close:"닫기",
     // Sections
@@ -9393,6 +9402,7 @@ export const TRANSLATIONS = {
     trustYourPreparation:"네 준비를 믿어.",
     trainingLog:"TRAINING LOG", aFewWords:"몇 마디면 충분해요", reflectionSparring:"방금 열심히 했어요. 넘어가기 전에 — 기억할 만한 게 있나요?", reflectionReps:"반복이 근육 기억을 만들어요. 이 동작의 느낌에 변화가 있었나요?", reflectionMusic:"음악과 시간을 보냈어요. 뭔가 느껴진 게 있나요?",
     hint_body:"오늘 어떤 동작이 다르게 느껴졌나요 — 더 부드럽게, 더 무겁게, 더 날카롭게?", hint_rhythm:"음악과 함께 움직였나요, 아니면 그냥 음악 옆에서 움직였나요?", hint_mental:"오늘 머릿속은 어땠나요 — 집중, 산만, 차분?", hint_creative:"흥미롭게 잘못된 게 있었나요?", hint_performance:"누군가 보고 있었다면, 이 세션은 흥미로웠을까요?",
+    simulateCompetition:"대회 시뮬레이션", competitionSetup:"대회 설정", selectBrackets:"토너먼트 선택", customiseBrackets:"맞춤 설정", startSimulation:"시뮬레이션 시작", roundsPerBracket:"토너먼트당 라운드", breakTimeBetween:"휴식 시간", breakTimeMinutes:"분", estimatedTime:"예상", noBracketsSelected:"최소 하나의 토너먼트를 선택하세요", totalRounds:"라운드", bracketProgress:"토너먼트", bracketOf:"/", currentMoves:"당신의 MOVES", bracketComplete:"토너먼트 완료", bracketAvg:"토너먼트 평균", nextUp:"다음", waitingPeriod:"휴식 기간", minutesToGo:"분 남음", startWarmingUp:"워밍업 시작", getReadyBracket:"준비하세요", skipWait:"건너뛰기", preparingFor:"준비 중", mentalRehearsal:"멘탈 리허설", competitionComplete:"대회 완료", totalCompetitionTime:"총 시간", bracketsCompleted:"토너먼트", performanceTrend:"퍼포먼스 추이", bracketSummary:"토너먼트 요약", competitionNotes:"대회 메모...", saveCompetition:"대회 저장", discardCompetition:"취소", reflectionCompetition:"방금 전체 대회 시뮬레이션을 마쳤습니다. 토너먼트를 거치며 몸과 마음은 어땠나요?", avgAcrossBrackets:"평균 라운드", consistentAcrossBrackets:"모든 토너먼트에서 일정", roundsGotLonger:"라운드가 길어짐 — 체력 유지", roundsGotShorter:"라운드가 짧아짐 — 몸이 풀림", exitSimulationConfirm:"시뮬레이션을 종료하시겠습니까? 진행 상황은 저장되지 않습니다.",
     tensionLow:"낮음", tensionMid:"중간", tensionHigh:"높음", tensionPeak:"절정",
     arcBuild:"라운드가 확실한 절정을 향해 올라간다.", arcFlat:"모든 엔트리가 같은 레벨 — 강약이 없다.", arcNoDynamics:"모든 엔트리가 같은 레벨 — 강약이 없다.", arcStrongCloser:"높게 마무리. 강한 클로저.", arcBackToBack:"절정이 연속 — 사이에 여유가 없다.",
     tensionRole:"텐션 역할", whatRoleDoesThisMove:"이 무브는 라운드에서 보통 어떤 역할을 하나요?",
@@ -9653,7 +9663,7 @@ export const TRANSLATIONS = {
     // Battle sub-tabs
     plan:"แพลน", freestyle:"FREESTYLE",
     // Common actions
-    save:"บันทึก", cancel:"ยกเลิก", delete:"ลบ", done:"เสร็จ", confirm:"ยืนยัน",
+    save:"บันทึก", cancel:"ยกเลิก", delete:"ลบ", done:"เสร็จ", confirm:"ยืนยัน", exit:"ออก",
     rename:"เปลี่ยนชื่อ", duplicate:"ทำซ้ำ", add:"เพิ่ม", edit:"แก้ไข",
     search:"ค้นหา…", close:"ปิด",
     // Sections
@@ -10368,6 +10378,7 @@ export const TRANSLATIONS = {
     trustYourPreparation:"เชื่อมั่นในการเตรียมตัวของคุณ",
     trainingLog:"TRAINING LOG", aFewWords:"แค่ไม่กี่คำก็พอ", reflectionSparring:"เพิ่งซ้อมหนักมา ก่อนไปต่อ — มีอะไรที่ควรจำไหม?", reflectionReps:"การซ้อมซ้ำสร้างความจำของกล้ามเนื้อ มีอะไรเปลี่ยนไปในความรู้สึกของท่านี้ไหม?", reflectionMusic:"คุณใช้เวลากับดนตรี มีอะไรที่เข้าใจขึ้นไหม?",
     hint_body:"มีท่าไหนที่รู้สึกต่างไปวันนี้ไหม — ลื่นขึ้น หนักขึ้น คมขึ้น?", hint_rhythm:"คุณเคลื่อนไหวไปกับดนตรี หรือแค่เคลื่อนไหวใกล้ๆ ดนตรี?", hint_mental:"หัวของคุณเป็นยังไงวันนี้ — โฟกัส วอกแวก สงบ?", hint_creative:"มีอะไรพลาดไปอย่างน่าสนใจไหม?", hint_performance:"ถ้ามีคนดูอยู่ เซสชันนี้จะน่าสนใจไหม?",
+    simulateCompetition:"จำลองการแข่งขัน", competitionSetup:"ตั้งค่าการแข่งขัน", selectBrackets:"เลือกรอบ", customiseBrackets:"ปรับแต่ง", startSimulation:"เริ่มจำลอง", roundsPerBracket:"รอบต่อสาย", breakTimeBetween:"เวลาพัก", breakTimeMinutes:"นาที", estimatedTime:"ประมาณ", noBracketsSelected:"เลือกอย่างน้อยหนึ่งรอบ", totalRounds:"รอบ", bracketProgress:"สาย", bracketOf:"จาก", currentMoves:"MOVES ของคุณ", bracketComplete:"จบรอบแล้ว", bracketAvg:"เฉลี่ยรอบ", nextUp:"ถัดไป", waitingPeriod:"ช่วงพัก", minutesToGo:"นาทีที่เหลือ", startWarmingUp:"เริ่มวอร์มอัพ", getReadyBracket:"เตรียมตัว", skipWait:"ข้ามการรอ", preparingFor:"เตรียมพร้อมสำหรับ", mentalRehearsal:"ซ้อมในใจ", competitionComplete:"การแข่งขันเสร็จสิ้น", totalCompetitionTime:"เวลารวม", bracketsCompleted:"รอบทั้งหมด", performanceTrend:"แนวโน้ม", bracketSummary:"สรุปรอบ", competitionNotes:"บันทึกการแข่งขัน...", saveCompetition:"บันทึก", discardCompetition:"ยกเลิก", reflectionCompetition:"คุณเพิ่งจำลองการแข่งขันเต็มรูปแบบ ร่างกายและจิตใจรับมือกับแต่ละรอบอย่างไร?", avgAcrossBrackets:"เฉลี่ยต่อรอบ", consistentAcrossBrackets:"สม่ำเสมอทุกรอบ", roundsGotLonger:"รอบยาวขึ้น — ทนทานดี", roundsGotShorter:"รอบสั้นลง — ร่างกายอุ่นขึ้น", exitSimulationConfirm:"ออกจากการจำลอง? ความคืบหน้าจะไม่ถูกบันทึก",
     tensionLow:"ต่ำ", tensionMid:"กลาง", tensionHigh:"สูง", tensionPeak:"จุดสูงสุด",
     arcBuild:"ราวด์ของคุณไต่ขึ้นสู่จุดสูงสุดอย่างชัดเจน", arcFlat:"ทุกเอนทรีอยู่ระดับเดียวกัน — ไม่มีไดนามิก", arcNoDynamics:"ทุกเอนทรีอยู่ระดับเดียวกัน — ไม่มีไดนามิก", arcStrongCloser:"จบที่จุดสูง ปิดได้แข็งแกร่ง", arcBackToBack:"สองจุดพีคติดกัน — ไม่มีจังหวะพัก",
     tensionRole:"บทบาทความตึงเครียด", whatRoleDoesThisMove:"มูฟนี้มักมีบทบาทอะไรในราวด์ของคุณ?",
@@ -10628,7 +10639,7 @@ export const TRANSLATIONS = {
     // Battle sub-tabs
     plan:"KẾ HOẠCH", freestyle:"FREESTYLE",
     // Common actions
-    save:"Lưu", cancel:"Hủy", delete:"Xóa", done:"XONG", confirm:"Xác nhận",
+    save:"Lưu", cancel:"Hủy", delete:"Xóa", done:"XONG", confirm:"Xác nhận", exit:"Thoát",
     rename:"Đổi tên", duplicate:"Nhân bản", add:"THÊM", edit:"Sửa",
     search:"Tìm kiếm…", close:"Đóng",
     // Sections
@@ -11377,6 +11388,7 @@ export const TRANSLATIONS = {
     trustYourPreparation:"Tin vào sự chuẩn bị của bạn.",
     trainingLog:"TRAINING LOG", aFewWords:"Vài từ là đủ", reflectionSparring:"Vừa tập xong. Trước khi đi tiếp — có gì đáng nhớ không?", reflectionReps:"Lặp lại xây dựng trí nhớ cơ bắp. Có gì thay đổi trong cảm giác của động tác này không?", reflectionMusic:"Bạn đã dành thời gian với âm nhạc. Có gì ngộ ra không?",
     hint_body:"Có động tác nào cảm thấy khác hôm nay không — mượt hơn, nặng hơn, sắc hơn?", hint_rhythm:"Bạn di chuyển theo nhạc, hay chỉ di chuyển gần nhạc?", hint_mental:"Đầu óc hôm nay thế nào — tập trung, phân tâm, bình tĩnh?", hint_creative:"Có gì sai một cách thú vị không?", hint_performance:"Nếu có người xem, buổi tập này có thú vị không?",
+    simulateCompetition:"MÔ PHỎNG THI ĐẤU", competitionSetup:"THIẾT LẬP", selectBrackets:"CHỌN VÒNG ĐẤU", customiseBrackets:"TÙY CHỈNH", startSimulation:"BẮT ĐẦU MÔ PHỎNG", roundsPerBracket:"HIỆP MỖI VÒNG", breakTimeBetween:"THỜI GIAN NGHỈ", breakTimeMinutes:"phút", estimatedTime:"ước tính", noBracketsSelected:"Chọn ít nhất một vòng đấu", totalRounds:"hiệp", bracketProgress:"VÒNG", bracketOf:"/", currentMoves:"MOVES CỦA BẠN", bracketComplete:"HOÀN THÀNH VÒNG", bracketAvg:"Trung bình vòng", nextUp:"Tiếp theo", waitingPeriod:"THỜI GIAN NGHỈ", minutesToGo:"phút còn lại", startWarmingUp:"Bắt đầu khởi động", getReadyBracket:"Sẵn sàng", skipWait:"BỎ QUA", preparingFor:"Chuẩn bị cho", mentalRehearsal:"LUYỆN TẬP TINH THẦN", competitionComplete:"THI ĐẤU HOÀN TẤT", totalCompetitionTime:"Tổng thời gian", bracketsCompleted:"Vòng đấu", performanceTrend:"XU HƯỚNG", bracketSummary:"TÓM TẮT VÒNG ĐẤU", competitionNotes:"Ghi chú thi đấu...", saveCompetition:"LƯU", discardCompetition:"HỦY", reflectionCompetition:"Bạn vừa hoàn thành mô phỏng thi đấu. Cơ thể và tinh thần của bạn đã chịu đựng qua các vòng như thế nào?", avgAcrossBrackets:"TB hiệp", consistentAcrossBrackets:"Ổn định qua các vòng", roundsGotLonger:"Hiệp dài hơn — sức bền tốt", roundsGotShorter:"Hiệp ngắn hơn — cơ thể đã nóng", exitSimulationConfirm:"Thoát mô phỏng? Tiến trình sẽ không được lưu.",
     tensionLow:"Thấp", tensionMid:"Trung bình", tensionHigh:"Cao", tensionPeak:"Đỉnh",
     arcBuild:"Round của bạn tăng dần đến đỉnh rõ ràng.", arcFlat:"Mọi entry đều cùng mức — không có biến động.", arcNoDynamics:"Mọi entry đều cùng mức — không có biến động.", arcStrongCloser:"Kết thúc ở mức cao. Đóng mạnh.", arcBackToBack:"Hai đỉnh liên tiếp — không có khoảng nghỉ.",
     tensionRole:"VAI TRÒ CĂNG THẲNG", whatRoleDoesThisMove:"Động tác này thường đóng vai trò gì trong round của bạn?",
