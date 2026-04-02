@@ -15,7 +15,7 @@ import { IdeaTile } from './IdeaTile';
 import { HabitsPage } from './HabitsPage';
 import { BattlePrepPage } from './BattlePrepPage';
 
-export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[], setHabits=()=>{}, calendar, onOpenCalendarJournal, battleprep, setBattleprep, moves, sets, addToast, externalTrainSubTab, onTrainSubTabUsed, battlePrepSeed, onBattlePrepSeedUsed, addCalendarEvent, onSubTabChange, onOpenSharedCalendar }) => {
+export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[], setHabits=()=>{}, calendar, onOpenCalendarJournal, battleprep, setBattleprep, moves, sets, addToast, externalTrainSubTab, onTrainSubTabUsed, battlePrepSeed, onBattlePrepSeedUsed, addCalendarEvent, removeCalendarEvent, onSubTabChange, onOpenSharedCalendar }) => {
   const t = useT();
   const { resultCountStr, dayCountStr } = usePlural();
   const { settings: ideaSettings } = useSettings();
@@ -288,7 +288,7 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
         </div>
       </div>}
       {trainTab==="habits" && <HabitsPage onAddTrigger={trainTab==="habits"?onAddTrigger:null} habits={habits} setHabits={setHabits}/>}
-      {trainTab==="prep" && <BattlePrepPage battleprep={battleprep} setBattleprep={setBattleprep} moves={moves} sets={sets} addToast={addToast} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={onBattlePrepSeedUsed} addCalendarEvent={addCalendarEvent} onAddTrigger={trainTab==="prep"?onAddTrigger:null} onOpenSharedCalendar={onOpenSharedCalendar}/>}
+      {trainTab==="prep" && <BattlePrepPage battleprep={battleprep} setBattleprep={setBattleprep} moves={moves} sets={sets} addToast={addToast} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={onBattlePrepSeedUsed} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onAddTrigger={trainTab==="prep"?onAddTrigger:null} onOpenSharedCalendar={onOpenSharedCalendar}/>}
       {(trainTab==="goals"||trainTab==="notes")&&showSearch&&(
         <div style={{ padding:"6px 14px", background:C.surface, borderBottom:`1px solid ${C.borderLight}` }}>
           <div style={{ display:"flex", alignItems:"center", background:C.bg, borderRadius:7, padding:"5px 10px", gap:6, border:`1px solid ${search?C.accent:C.border}` }}>

@@ -6,6 +6,8 @@ import { Modal } from '../shared/Modal';
 import { useT } from '../../hooks/useTranslation';
 import { PRESET_META, PRESET_CONFIGS, computeDayMap, computeAllDayMaps, getPlanStats, getTasksForDay, getPrevDayTasks, daysBetween, toYMD } from './battlePrepHelpers';
 import { BattlePrepSetup } from './BattlePrepSetup';
+import { BattleDayView } from './BattleDayView';
+import { BattleHistoryView } from './BattleHistoryView';
 
 const DAY_LABELS = ["S","M","T","W","T","F","S"];
 
@@ -18,7 +20,7 @@ const PHASE_CYCLE = [
 
 const PRESET_IDS = ["smoke", "prove", "mark", "custom"];
 
-export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToast, calendar, battlePrepSeed, onBattlePrepSeedUsed, addCalendarEvent, onAddTrigger, onOpenSharedCalendar }) => {
+export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToast, calendar, battlePrepSeed, onBattlePrepSeedUsed, addCalendarEvent, removeCalendarEvent, onAddTrigger, onOpenSharedCalendar }) => {
   const t = useT();
   const plans = battleprep?.plans || [];
   const today = toYMD(new Date());
@@ -30,6 +32,8 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
   const [editingPlanId, setEditingPlanId] = useState(null);
   const [selectedDayByPlan, setSelectedDayByPlan] = useState({});
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
+  const [confirmDeleteUnplanned, setConfirmDeleteUnplanned] = useState(null); // calendar event to delete
+  const [showHistory, setShowHistory] = useState(false);
 
   // Handle incoming seed from Calendar → Prep
   useEffect(() => {
@@ -113,6 +117,18 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
   // Compute sequential dayMaps for all plans (non-overlapping)
   const allDayMaps = useMemo(() => computeAllDayMaps(plans), [plans]);
 
+  // Auto-expand battle day card
+  useEffect(() => {
+    for (const plan of plans) {
+      const dmData = allDayMaps.find(d => d.planId === plan.id);
+      const todayInfo = dmData?.dayMap?.[today];
+      if (todayInfo?.type === "battle" && (plan.battles || []).some(b => b.date === today && !b.completed)) {
+        setExpandedPlanId(plan.id);
+        break;
+      }
+    }
+  }, [plans, allDayMaps, today]);
+
   // Find calendar battle events that don't have a corresponding prep plan
   const unplannedBattles = useMemo(() => {
     const calEvents = (calendar?.events || []).filter(e => e.type === "battle" && e.date >= today);
@@ -134,6 +150,14 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
       return aNext.date.localeCompare(bNext.date);
     });
   }, [plans, today]);
+
+  // ── HISTORY view ──
+  if (showHistory) {
+    return <BattleHistoryView
+      history={battleprep?.history || []}
+      onClose={() => setShowHistory(false)}
+      t={t} />;
+  }
 
   // ── SETUP overlay ──
   if (showSetup) {
@@ -164,7 +188,7 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
           </p>
         </div>
         {history.length > 0 && (
-          <button onClick={() => {}}
+          <button onClick={() => setShowHistory(true)}
             style={{ display: "block", margin: "8px auto 0", background: "none", border: "none",
               cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12,
               letterSpacing: 1, color: C.textMuted, padding: "8px 16px" }}>
@@ -220,6 +244,8 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
             addToast={addToast}
             t={t}
             today={today}
+            moves={moves}
+            sets={sets}
           />
           );
         })}
@@ -228,27 +254,32 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
           const dateLabel = new Date(evt.date + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" });
           const dLeft = daysBetween(today, evt.date);
           return (
-            <button key={`cal-${evt.id}`} onClick={() => { setSeedData({ date: evt.date, eventName: evt.title || "" }); setShowSetup(true); }}
-              style={{ background: C.surface, border: `1px dashed ${C.border}`, borderRadius: 14, padding: "14px 14px",
-                cursor: "pointer", textAlign: "left", display: "flex", alignItems: "center", gap: 10, width: "100%" }}>
-              <div style={{ width: 10, height: 10, borderRadius: "50%", background: C.textMuted, flexShrink: 0 }} />
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 2 }}>
-                  <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 15, letterSpacing: 0.5, color: C.text }}>{evt.title || "Battle"}</span>
-                  <span style={{ fontSize: 9, fontFamily: FONT_DISPLAY, fontWeight: 700, background: `${C.accent}15`, color: C.accent, borderRadius: 4, padding: "2px 6px" }}>{t("noplan") || "NO PLAN"}</span>
+            <div key={`cal-${evt.id}`} style={{ background: C.surface, border: `1px dashed ${C.border}`, borderRadius: 14, padding: "14px 14px",
+              display: "flex", alignItems: "center", gap: 10, width: "100%", boxSizing: "border-box" }}>
+              <button onClick={() => { setSeedData({ date: evt.date, eventName: evt.title || "" }); setShowSetup(true); }}
+                style={{ flex: 1, display: "flex", alignItems: "center", gap: 10, background: "none", border: "none", cursor: "pointer", textAlign: "left", padding: 0, minWidth: 0 }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 2 }}>
+                    <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 15, letterSpacing: 0.5, color: C.text }}>{evt.title || "Battle"}</span>
+                    <span style={{ fontSize: 9, fontFamily: FONT_DISPLAY, fontWeight: 700, background: `${C.accent}15`, color: C.accent, borderRadius: 4, padding: "2px 6px" }}>{t("noplan") || "NO PLAN"}</span>
+                  </div>
+                  <div style={{ fontSize: 12, fontFamily: FONT_BODY, color: C.textSec, marginBottom: 2 }}>{dateLabel}</div>
+                  <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: C.textMuted }}>{dLeft >= 0 ? `${dLeft} ${t("daysLeft")}` : ""} {"\u2014"} {t("tapToAddBattle")}</div>
                 </div>
-                <div style={{ fontSize: 12, fontFamily: FONT_BODY, color: C.textSec, marginBottom: 2 }}>{dateLabel}</div>
-                <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: C.textMuted }}>{dLeft} {t("daysLeft")} — {t("tapToAddBattle")}</div>
-              </div>
-              <Ic n="chevR" s={14} c={C.textMuted} />
-            </button>
+                <Ic n="chevR" s={14} c={C.textMuted} />
+              </button>
+              <button onClick={(e) => { e.stopPropagation(); setConfirmDeleteUnplanned(evt); }}
+                style={{ background: `${C.red}10`, border: `1px solid ${C.red}30`, borderRadius: 8, padding: "6px 8px", cursor: "pointer", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Ic n="trash" s={12} c={C.red} />
+              </button>
+            </div>
           );
         })}
       </div>
 
       {/* History link */}
       {(battleprep?.history || []).length > 0 && (
-        <button onClick={() => {}}
+        <button onClick={() => setShowHistory(true)}
           style={{ display: "block", margin: "16px auto 0", background: "none", border: "none",
             cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12,
             letterSpacing: 1, color: C.textMuted, padding: "8px 16px" }}>
@@ -256,7 +287,7 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
         </button>
       )}
 
-      {/* Delete confirmation modal */}
+      {/* Delete confirmation modal — plan */}
       {confirmDeleteId && (
         <Modal onClose={() => setConfirmDeleteId(null)}>
           <div style={{ padding: 20, textAlign: "center" }}>
@@ -270,12 +301,26 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
           </div>
         </Modal>
       )}
+      {/* Delete confirmation modal — unplanned calendar battle */}
+      {confirmDeleteUnplanned && (
+        <Modal onClose={() => setConfirmDeleteUnplanned(null)}>
+          <div style={{ padding: 20, textAlign: "center" }}>
+            <span style={{ fontSize: 32 }}>{"\u26A0\uFE0F"}</span>
+            <h3 style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 16, letterSpacing: 1, color: C.text, margin: "8px 0" }}>{t("delete")}</h3>
+            <p style={{ fontSize: 13, color: C.textSec, marginBottom: 16 }}>{(t("deleteBattle") || "Delete {name}?").replace("{name}", confirmDeleteUnplanned.title || "Battle")}</p>
+            <div style={{ display: "flex", gap: 8 }}>
+              <button onClick={() => setConfirmDeleteUnplanned(null)} style={{ flex: 1, padding: "10px", background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 8, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 13, color: C.text }}>{t("cancel")}</button>
+              <button onClick={() => { if (removeCalendarEvent) removeCalendarEvent(confirmDeleteUnplanned.id); setConfirmDeleteUnplanned(null); addToast({ emoji: "\u{1F5D1}\uFE0F", title: t("delete") || "Deleted" }); }} style={{ flex: 1, padding: "10px", background: C.red, border: "none", borderRadius: 8, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 13, color: "#fff" }}>{t("delete")}</button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };
 
 // ── Battle Card Component ──
-const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpanded, isEditing, selectedDay, onToggleExpand, onToggleEdit, onSelectDay, onToggleTask, onDelete, onOpenCalendar, updatePlan, setBattleprep, addToast, t, today }) => {
+const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpanded, isEditing, selectedDay, onToggleExpand, onToggleEdit, onSelectDay, onToggleTask, onDelete, onOpenCalendar, updatePlan, setBattleprep, addToast, t, today, moves, sets }) => {
   const meta = PRESET_META[plan.preset] || PRESET_META.smoke;
   const dayMap = precomputedDayMap || computeDayMap(plan).dayMap;
   const phaseSummary = precomputedPhaseSummary || computeDayMap(plan).phaseSummary;
@@ -283,6 +328,10 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
   const stats = useMemo(() => getPlanStats(plan, dayMap), [plan, dayMap]);
   const displayName = plan.eventName || plan.planName;
   const phaseColor = currentPhase?.phaseColor || C.textMuted;
+
+  // Battle day detection
+  const todayBattle = useMemo(() => (plan.battles || []).find(b => b.date === today && !b.completed), [plan.battles, today]);
+  const isBattleDay = currentPhase?.type === "battle" && !!todayBattle;
 
   // Edit state
   const [editEventName, setEditEventName] = useState(plan.eventName || "");
@@ -382,17 +431,21 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
       <button onClick={onToggleExpand}
         style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "14px 14px",
           background: "none", border: "none", cursor: "pointer", textAlign: "left" }}>
-        <div style={{ width: 10, height: 10, borderRadius: "50%", background: phaseColor, flexShrink: 0 }} />
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 2 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 2, flexWrap: "wrap" }}>
             <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 15, letterSpacing: 0.5, color: C.text,
               overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{displayName}</span>
             <span style={{ fontSize: 9, fontFamily: FONT_DISPLAY, fontWeight: 700, background: `${meta.color}20`, color: meta.color, borderRadius: 4, padding: "2px 6px", flexShrink: 0 }}>{meta.icon} {meta.label}</span>
+            {isBattleDay && <span style={{ fontSize: 9, fontFamily: FONT_DISPLAY, fontWeight: 900, background: `${meta.color}30`, color: meta.color, borderRadius: 4, padding: "2px 6px", flexShrink: 0, letterSpacing: 0.5 }}>{t("todayIsTheDay")}</span>}
           </div>
-          {battleDateStr && (
+          {battleDateStr && !isBattleDay && (
             <div style={{ fontSize: 12, fontFamily: FONT_BODY, color: C.textSec, marginBottom: 2 }}>{battleDateStr}</div>
           )}
-          {nextBattle ? (
+          {isBattleDay ? (
+            <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: meta.color, letterSpacing: 0.3 }}>
+              {"\u2694\uFE0F"} {t("battleDay")}
+            </div>
+          ) : nextBattle ? (
             <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, letterSpacing: 0.3 }}>
               <span style={{ color: C.text, fontWeight: 900 }}>{stats.daysLeft}</span>
               <span style={{ color: C.textSec }}> {t("daysLeft")} </span>
@@ -408,7 +461,16 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
       </button>
 
       {/* Expanded content */}
-      {isExpanded && (
+      {isExpanded && isBattleDay && todayBattle && (
+        <div style={{ borderTop: `1px solid ${C.border}`, padding: "10px 12px 14px" }}>
+          <BattleDayView
+            plan={plan} battle={todayBattle} dayMap={dayMap}
+            moves={moves || []} sets={sets || []}
+            updatePlan={updatePlan} setBattleprep={setBattleprep}
+            addToast={addToast} t={t} today={today} />
+        </div>
+      )}
+      {isExpanded && !isBattleDay && (
         <div style={{ borderTop: `1px solid ${C.border}`, padding: "0 12px 14px" }}>
           {/* Phase progress bar */}
           {phaseSummary.length > 0 && (

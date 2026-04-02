@@ -38,11 +38,64 @@ export const ADJUST_COLOR = "#9e9e9e";
 export const MAINTAIN_COLOR = "#42a5f5";
 export const STAY_READY_COLOR = "#66bb6a";
 
+// ── Battle Day constants ─────────────────────────────────────────────────────
+export const DEFAULT_CHECKLIST = [
+  { text: "checklistStretch", icon: "\u{1F9D8}", done: false },
+  { text: "checklistMentalRun", icon: "\u{1F9E0}", done: false },
+  { text: "checklistEatHydrate", icon: "\u{1F4A7}", done: false },
+  { text: "checklistChargePhone", icon: "\u{1F50B}", done: false },
+  { text: "checklistCheckVenue", icon: "\u{1F4CD}", done: false },
+  { text: "checklistWarmUp", icon: "\u{1F525}", done: false },
+];
+
+export const BATTLE_MOODS = [
+  { key: "crushed", emoji: "\u{1F525}", labelKey: "moodCrushed" },
+  { key: "allout", emoji: "\u{1F624}", labelKey: "moodAllOut" },
+  { key: "mixed", emoji: "\u{1F610}", labelKey: "moodMixed" },
+  { key: "tough", emoji: "\u{1F61E}", labelKey: "moodTough" },
+];
+
+export const BATTLE_RESULTS = [
+  { key: "prelims", labelKey: "resultPrelims", color: "#7a7a7a" },
+  { key: "top32", labelKey: "resultTop32", color: "#7a7a7a" },
+  { key: "top16", labelKey: "resultTop16", color: "#42a5f5" },
+  { key: "top8", labelKey: "resultTop8", color: "#42a5f5" },
+  { key: "quarter", labelKey: "resultQuarter", color: "#ffa726" },
+  { key: "semi", labelKey: "resultSemi", color: "#ffa726" },
+  { key: "final", labelKey: "resultFinal", color: "#e53935" },
+  { key: "won", labelKey: "resultWon", color: "#1db954" },
+];
+
+// ── Preparation stats helper ─────────────────────────────────────────────────
+export function getPreparationStats(plan, dayMap, battleDate) {
+  const completed = plan.completedTasks || {};
+  let totalSessions = 0, completedSessions = 0;
+  Object.entries(dayMap).forEach(([ds, info]) => {
+    if (ds >= battleDate || info.type !== "training") return;
+    totalSessions++;
+    const taskCount = info.phase === "STAY READY" ? 2 : (info.phase === "MAINTAIN" || info.phase === "ADJUST") ? 3 : 4;
+    let done = 0;
+    for (let i = 0; i < taskCount; i++) { if (completed[`${ds}-${i}`]) done++; }
+    if (done >= Math.ceil(taskCount / 2)) completedSessions++;
+  });
+  const prepWeeks = Math.max(1, Math.ceil(daysBetween(plan.createdDate || battleDate, battleDate) / 7));
+  return { totalSessions, completedSessions, prepWeeks };
+}
+
 // ── Date utilities ─────────────────────────────────────────────────────────
+// CRITICAL: Use local time, NOT toISOString() which converts to UTC and
+// shifts dates in positive-offset timezones (e.g. AEST = UTC+10).
+function localYMD(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
 export const toYMD = (d) => {
   if (!d) return null;
   if (typeof d === "string" && /^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
-  try { return new Date(d).toISOString().split("T")[0]; } catch { return null; }
+  try { return localYMD(new Date(d)); } catch { return null; }
 };
 
 export const addDays = (dateStr, n) => {
@@ -522,32 +575,137 @@ export function getPrevDayTasks(planId, dateStr, dayMap) {
 
 // ── Multi-plan helpers ──────────────────────────────────────────────────────
 
-// Compute dayMaps for all active plans — sequential, non-overlapping
+// Compute dayMaps for all active plans — strictly sequential, ZERO overlap.
+// Collects ALL battles across ALL plans, sorts by date, assigns each battle
+// a non-overlapping training window. No day appears in two battles' programs.
 export function computeAllDayMaps(plans) {
   if (!plans || !plans.length) return [];
 
-  // Sort plans by earliest battle date
-  const sorted = [...plans].sort((a, b) => {
+  const today = toYMD(new Date());
+
+  // 1. Collect every battle across all plans, tagged with its parent plan
+  const allBattles = [];
+  for (const plan of plans) {
+    for (const battle of (plan.battles || [])) {
+      allBattles.push({ ...battle, planId: plan.id, plan });
+    }
+  }
+  allBattles.sort((a, b) => a.date.localeCompare(b.date));
+
+  if (!allBattles.length) return [];
+
+  // 2. Build per-plan result containers
+  const planMap = {}; // planId -> { dayMap, phaseSummary, battleDates, plan }
+  for (const plan of plans) {
+    planMap[plan.id] = {
+      dayMap: {}, phaseSummary: [], battleDates: [],
+      plan, planName: plan.eventName || plan.planName,
+      preset: plan.preset, eventName: plan.eventName,
+    };
+  }
+
+  // 3. Sequential pass: each battle gets [nextAvailableStart .. battleDate]
+  let nextAvailableStart = today;
+  let sessionNum = 0;
+
+  for (const battle of allBattles) {
+    const plan = battle.plan;
+    const pm = planMap[plan.id];
+    const battleDate = battle.date;
+    const presetColor = PRESET_META[plan.preset]?.color || "#e53935";
+
+    // Get phase config for this plan's preset
+    let phaseConfig;
+    if (plan.preset === "custom" && plan.customPhases) {
+      const customColors = ["#1565c0", "#f57f17", "#e53935", "#2e7d32", "#ab47bc", "#ff7043"];
+      phaseConfig = plan.customPhases.map((p, i) => ({
+        name: p.name, pct: p.percentage / 100, color: customColors[i % customColors.length],
+      }));
+    } else {
+      phaseConfig = PRESET_CONFIGS[plan.preset]?.phases || PRESET_CONFIGS.smoke.phases;
+    }
+
+    const overrides = plan.customDayOverrides || {};
+    const trainingDaysOfWeek = (plan.trainingDays || []).map(Number);
+    const isTrainingDay = (dateStr) => {
+      if (overrides[dateStr] === "rest") return false;
+      if (overrides[dateStr] === "training") return true;
+      return trainingDaysOfWeek.includes(getDayOfWeek(dateStr));
+    };
+
+    // Window: nextAvailableStart to day before battle
+    const windowStart = nextAvailableStart <= battleDate ? nextAvailableStart : battleDate;
+    const dayBefore = addDays(battleDate, -1);
+
+    // Collect training days in this battle's window
+    const trainingDays = [];
+    if (windowStart <= dayBefore) {
+      for (const ds of enumDates(windowStart, dayBefore)) {
+        if (isTrainingDay(ds)) trainingDays.push(ds);
+      }
+    }
+
+    const availableDays = trainingDays.length;
+
+    // Distribute phases across available training days
+    if (availableDays > 0) {
+      const { assignments, summaryEntries, nextSession } = distributeTrainingPhases(trainingDays, phaseConfig, sessionNum);
+      sessionNum = nextSession;
+
+      for (const a of assignments) {
+        pm.dayMap[a.date] = { phase: a.phase, phaseColor: a.color, type: "training", session: a.session };
+      }
+      pm.phaseSummary.push(...summaryEntries);
+
+      // Fill rest days in window (non-training, non-battle days)
+      if (windowStart <= dayBefore) {
+        for (const ds of enumDates(windowStart, dayBefore)) {
+          if (pm.dayMap[ds]) continue;
+          // Match rest day to surrounding phase
+          let restPhase = summaryEntries[0]?.name || "REST";
+          let restColor = summaryEntries[0]?.color || "#999";
+          for (const ps of summaryEntries) {
+            if (ps.startDate && ds >= ps.startDate) { restPhase = ps.name; restColor = ps.color; }
+          }
+          pm.dayMap[ds] = { phase: restPhase, phaseColor: restColor, type: "rest", session: null };
+        }
+      }
+    }
+
+    // Battle day itself
+    pm.dayMap[battleDate] = {
+      phase: "BATTLE", phaseColor: presetColor,
+      type: "battle", session: null, battleId: battle.id, eventName: battle.eventName,
+    };
+    pm.battleDates.push(battleDate);
+
+    // Apply per-day phase overrides for this window
+    const phaseOverrides = plan.phaseOverrides || {};
+    const PHASE_MAP = { lockin: { phase: "LOCK IN", color: "#1565c0", type: "training" }, polish: { phase: "POLISH", color: "#f57f17", type: "training" }, rest: { phase: "REST", color: "#7a7a7a", type: "rest" } };
+    for (const [dateStr, phaseKey] of Object.entries(phaseOverrides)) {
+      if (dateStr === battleDate) continue;
+      if (dateStr < windowStart || dateStr > battleDate) continue;
+      const mapped = PHASE_MAP[phaseKey];
+      if (!mapped || !pm.dayMap[dateStr]) continue;
+      const existing = pm.dayMap[dateStr];
+      pm.dayMap[dateStr] = { ...existing, phase: mapped.phase, phaseColor: mapped.color, type: mapped.type, session: mapped.type === "training" ? existing.session : null };
+    }
+
+    // CRITICAL: next battle starts the day AFTER this battle date
+    nextAvailableStart = addDays(battleDate, 1);
+  }
+
+  // 4. Return results in plan order (sorted by earliest battle)
+  const sortedPlans = [...plans].sort((a, b) => {
     const aFirst = (a.battles || []).sort((x, y) => x.date.localeCompare(y.date))[0]?.date || "9999";
     const bFirst = (b.battles || []).sort((x, y) => x.date.localeCompare(y.date))[0]?.date || "9999";
     return aFirst.localeCompare(bFirst);
   });
 
-  let nextStart = null; // First plan starts from today (default)
-  const results = [];
-
-  for (const plan of sorted) {
-    const { dayMap, phaseSummary, battleDates } = computeDayMap(plan, nextStart);
-    results.push({ planId: plan.id, planName: plan.eventName || plan.planName, preset: plan.preset, eventName: plan.eventName, dayMap, phaseSummary, battleDates });
-
-    // Next plan starts the day after this plan's last battle
-    const lastBattle = (plan.battles || []).sort((a, b) => b.date.localeCompare(a.date))[0]?.date;
-    if (lastBattle) {
-      nextStart = addDays(lastBattle, 1);
-    }
-  }
-
-  return results;
+  return sortedPlans.map(plan => {
+    const pm = planMap[plan.id];
+    return { planId: plan.id, planName: pm.planName, preset: pm.preset, eventName: pm.eventName, dayMap: pm.dayMap, phaseSummary: pm.phaseSummary, battleDates: pm.battleDates };
+  });
 }
 
 // Get all plan entries active on a specific date

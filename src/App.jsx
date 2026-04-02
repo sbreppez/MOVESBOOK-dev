@@ -434,6 +434,10 @@ export default function App() {
     if (!silent) addToast({ emoji: "✅", title: tr("sessionLogged") });
   }, [setCalendar, addToast, tr]);
 
+  const removeCalendarEvent = useCallback((eventId) => {
+    setCalendar(prev => ({ ...prev, events: (prev.events || []).filter(e => e.id !== eventId) }));
+  }, [setCalendar]);
+
   const onUpdateRepSession = useCallback((sessionId, updates) => {
     setReps(prev => prev.map(s => s.id === sessionId ? {...s, ...updates} : s));
   }, []);
@@ -599,7 +603,7 @@ export default function App() {
           <IdeaMenu menu={trainMenu} onClose={()=>setTrainMenu(null)}/>
           <TrainModalCtx.Provider value={{ openModal:(type,idea,onSave)=>{ setTrainMenu(null); setTrainModal({type,idea,onSave}); } }}>
           <TrainMenuCtx.Provider value={{ openMenu:(m)=>setTrainMenu(m), closeMenu:()=>setTrainMenu(null) }}>
-            {tab==="ideas" && <IdeasPage onAddMove={handleAddMoveFromIdea} onAddTrigger={addTick} ideas={ideas} setIdeas={setIdeas} habits={habits} setHabits={setHabits} calendar={calendar} onOpenCalendarJournal={()=>{setCalendarInitialDay(new Date().toISOString().split("T")[0]);setShowCalendar(true);}} battleprep={battleprep} setBattleprep={setBattleprep} moves={moves} sets={sets} addToast={addToast} externalTrainSubTab={trainSubTab} onTrainSubTabUsed={()=>setTrainSubTab(null)} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={()=>setBattlePrepSeed(null)} addCalendarEvent={addCalendarEvent} onSubTabChange={setSubTab} onOpenSharedCalendar={(im)=>{setCalendarInitialMonth(im||null);setShowCalendar(true);}}/>}
+            {tab==="ideas" && <IdeasPage onAddMove={handleAddMoveFromIdea} onAddTrigger={addTick} ideas={ideas} setIdeas={setIdeas} habits={habits} setHabits={setHabits} calendar={calendar} onOpenCalendarJournal={()=>{setCalendarInitialDay(new Date().toISOString().split("T")[0]);setShowCalendar(true);}} battleprep={battleprep} setBattleprep={setBattleprep} moves={moves} sets={sets} addToast={addToast} externalTrainSubTab={trainSubTab} onTrainSubTabUsed={()=>setTrainSubTab(null)} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={()=>setBattlePrepSeed(null)} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onSubTabChange={setSubTab} onOpenSharedCalendar={(im)=>{setCalendarInitialMonth(im||null);setShowCalendar(true);}}/>}
           </TrainMenuCtx.Provider>
           </TrainModalCtx.Provider>
           {tab==="wip" && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} catDomains={catDomains} setCatDomains={setCatDomains} sets={sets} setSets={setSets} addToast={addToast} pendingDesc={ideaToMove} clearPendingDesc={()=>setIdeaToMove(null)} settings={appSettings} onSettingsChange={setAppSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} reminders={reminders} onRemindersChange={setReminders} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}} onOpenManageReminders={()=>setShowManageReminders(true)}/>}
