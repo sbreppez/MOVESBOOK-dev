@@ -108,5 +108,19 @@ export const usePlural = () => {
     if (lang==="ru") { const m=n%10,c=n%100; if(m===1&&c!==11) return n+" шаг"; if(m>=2&&m<=4&&(c<10||c>=20)) return n+" шага"; return n+" шагов"; }
     return n+" step"+(n!==1?"s":"");
   };
-  return { entryCountStr, moveCountStr, itemCountStr, dayCountStr, roundCountStr, resultCountStr, stepCountStr };
+  const sessionCountStr = (n) => {
+    if (lang==="zh") return n+" 次训练";
+    if (lang==="ja") return n+" セッション";
+    if (lang==="ko") return n+"회 세션";
+    if (lang==="th") return n+" เซสชัน";
+    if (lang==="vi") return n+" buổi tập";
+    if (lang==="it") return n===1?n+" sessione":n+" sessioni";
+    if (lang==="es") return n===1?n+" sesión":n+" sesiones";
+    if (lang==="fr") return n===1?n+" session":n+" sessions";
+    if (lang==="pt") return n===1?n+" sessão":n+" sessões";
+    if (lang==="de") return n===1?n+" Sitzung":n+" Sitzungen";
+    if (lang==="ru") { const m=n%10,c=n%100; if(m===1&&c!==11) return n+" сессия"; if(m>=2&&m<=4&&(c<10||c>=20)) return n+" сессии"; return n+" сессий"; }
+    return n===1?n+" session":n+" sessions";
+  };
+  return { entryCountStr, moveCountStr, itemCountStr, dayCountStr, roundCountStr, resultCountStr, stepCountStr, sessionCountStr };
 };

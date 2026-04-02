@@ -39,6 +39,13 @@ if (typeof window !== "undefined") {
   window.__MB_DB__   = window.__MB_DB__   || null;
 }
 
+function migrateBattlePrep(bp) {
+  if (!bp || typeof bp !== "object") return { plans: [], history: [] };
+  if (Array.isArray(bp.plans)) return bp;
+  if (bp.activePlan) return { plans: [bp.activePlan], history: bp.history || [] };
+  return { plans: [], history: bp.history || [] };
+}
+
 export default function App() {
   const initLang = (() => { try { return JSON.parse(localStorage.getItem("mb_settings"))?.language || "en"; } catch { return "en"; } })();
   const [tab,setTab]=useState(()=>{ try { const st=localStorage.getItem("mb_settings"); if(st){ const p=JSON.parse(st); if(p.defaultTab) return p.defaultTab; } } catch {} return "wip"; });
@@ -147,6 +154,9 @@ export default function App() {
   const [rivals, setRivals] = useState(() => {
     try { const s=localStorage.getItem("mb_rivals"); if(s){const p=JSON.parse(s); if(Array.isArray(p)) return p;} } catch{} return [];
   });
+  const [battleprep, setBattleprep] = useState(() => {
+    try { const s=localStorage.getItem("mb_battleprep"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return migrateBattlePrep(p);} } catch{} return { plans:[], history:[] };
+  });
 
   // ── Persist to localStorage on every change ────────────────────────────────
   useEffect(()=>{ saveLocal("mb_moves",   moves);   },[moves]);
@@ -174,6 +184,7 @@ export default function App() {
   useEffect(()=>{ saveLocal("mb_freestyle", freestyle); },[freestyle]);
   useEffect(()=>{ saveLocal("mb_reflections", reflections); },[reflections]);
   useEffect(()=>{ saveLocal("mb_rivals", rivals); },[rivals]);
+  useEffect(()=>{ saveLocal("mb_battleprep", battleprep); },[battleprep]);
   useEffect(()=>{ saveLocal("mb_ideas",   ideas);
     const timer = setTimeout(() => {
       if (window.__MB_USER__?.uid && window.__MB_DB__) {
@@ -214,6 +225,7 @@ export default function App() {
       freestyle:   save("freestyle"),
       reflections: save("reflections"),
       rivals:      save("rivals"),
+      battleprep:  save("battleprep"),
     };
   }, []);
 
@@ -238,6 +250,7 @@ export default function App() {
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.freestyle?.(fbUser.uid, freestyle); },[freestyle, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.reflections?.(fbUser.uid, reflections); },[reflections, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.rivals?.(fbUser.uid, rivals); },[rivals, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.battleprep?.(fbUser.uid, battleprep); },[battleprep, fbUser]);
 
   // ── Auth resolution ────────────────────────────────────────────────────────
   useEffect(()=>{
@@ -285,6 +298,8 @@ export default function App() {
           if (ref) { try { const p=JSON.parse(ref); if(p&&typeof p==="object") setReflections(p); } catch {} }
           const rv = localStorage.getItem("mb_rivals");
           if (rv) { try { const p=JSON.parse(rv); if(Array.isArray(p)) setRivals(p); } catch {} }
+          const bpp = localStorage.getItem("mb_battleprep");
+          if (bpp) { try { const p=JSON.parse(bpp); if(p&&typeof p==="object") setBattleprep(migrateBattlePrep(p)); } catch {} }
           if (p) { try { const pp=JSON.parse(p); if(pp&&Object.values(pp).some(v=>v)) setProfile(pp); } catch{} }
           const st = localStorage.getItem("mb_settings");
           if (st) {
@@ -322,6 +337,7 @@ export default function App() {
         setMusicflow({ sessions:[] });
         setReflections({ lastCategory:-1, lastDate:null });
         setRivals([]);
+        setBattleprep({ plans:[], history:[] });
       }
     }
     window.addEventListener("mb-auth-resolved", handleAuthResolved);
@@ -346,6 +362,9 @@ export default function App() {
   const zoomMin=0.6, zoomMax=1.4, zoomStep=0.1;
   const [addTick, setAddTick] = useState(0);
   const [subTab, setSubTab] = useState("moves"); // tracks active sub-tab across pages
+  const [trainSubTab, setTrainSubTab] = useState("goals"); // TRAIN sub-tab for external navigation
+  const [battlePrepSeed, setBattlePrepSeed] = useState(null); // { date, eventName } seed from Calendar
+  const [calendarInitialMonth, setCalendarInitialMonth] = useState(null); // { year, month } for shared calendar
   const [addMenu, setAddMenu] = useState(false); // contextual + menu
   const [trainModal,  setTrainModal]  = useState({});
   const [trainMenu,   setTrainMenu]   = useState(null);
@@ -372,12 +391,19 @@ export default function App() {
       compactCards:false, sortMoves:"custom", fontSize:"medium",
       showMoveCount:false, confirmDelete:true, practiceReminders:false,
       reminderTime:"18:00", streakTracking:true, showDeadlineIndicator:true,
-      categorySort:"manual", defaultView:"list", language:"en", linkOnCard:"inside", targetAutoLink:false, trainTabOrder:["goals","habits","notes"], trackMovesInSparring:true,
+      categorySort:"manual", defaultView:"list", language:"en", linkOnCard:"inside", targetAutoLink:false, trainTabOrder:["goals","habits","notes","prep"], trackMovesInSparring:true,
     },
     ...loadLocal("mb_settings", {}),
   }));
   useEffect(()=>{ saveLocal("mb_settings", appSettings); },[appSettings]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.settings?.(fbUser.uid, appSettings); },[appSettings, fbUser]);
+
+  // ── Migrate trainTabOrder: add "prep" if missing ──
+  useEffect(() => {
+    if (appSettings.trainTabOrder && !appSettings.trainTabOrder.includes("prep")) {
+      setAppSettings(p => ({...p, trainTabOrder: [...p.trainTabOrder, "prep"]}));
+    }
+  }, []);
 
   // ── Local translation function (App is above SettingsCtx.Provider, can't use useT) ──
   const _lang = appSettings.language || "en";
@@ -429,13 +455,25 @@ export default function App() {
 
   // Contextual + menu: null = no menu needed (Train handles its own), array = show menu
   const getAddMenuOptions = () => {
-    if (tab === "ideas") return [
-      { label:tr("addGoalOrNote"), emoji:"🎯", action:()=>{ setAddMenu(false); setAddTick(t=>t+1); } },
-      { label:tr("repCounter"),    emoji:"🔢", action:()=>{ setAddMenu(false); setShowRepCounter(true); } },
-      { label:tr("sparring"),      emoji:"🥊", action:()=>{ setAddMenu(false); setShowSparring(true); } },
-      { label:tr("comboMachine"),  emoji:"🎰", action:()=>{ setAddMenu(false); setShowComboMachine(true); } },
-      { label:tr("musicFlow"),     emoji:"🎵", action:()=>{ setAddMenu(false); setShowMusicFlow(true); } },
-    ];
+    if (tab === "ideas") {
+      let firstItem;
+      if (subTab === "habits") {
+        firstItem = { label:tr("addHabitMenu"), emoji:"🔁", action:()=>{ setAddMenu(false); setAddTick(t=>t+1); } };
+      } else if (subTab === "notes") {
+        firstItem = { label:tr("addNoteMenu"), emoji:"📝", action:()=>{ setAddMenu(false); setAddTick(t=>t+1); } };
+      } else if (subTab === "prep") {
+        firstItem = { label:tr("addBattleMenu"), emoji:"⚔️", action:()=>{ setAddMenu(false); setAddTick(t=>t+1); } };
+      } else {
+        firstItem = { label:tr("addGoalMenu"), emoji:"🎯", action:()=>{ setAddMenu(false); setAddTick(t=>t+1); } };
+      }
+      return [
+        firstItem,
+        { label:tr("repCounter"),    emoji:"🔢", action:()=>{ setAddMenu(false); setShowRepCounter(true); } },
+        { label:tr("sparring"),      emoji:"🥊", action:()=>{ setAddMenu(false); setShowSparring(true); } },
+        { label:tr("comboMachine"),  emoji:"🎰", action:()=>{ setAddMenu(false); setShowComboMachine(true); } },
+        { label:tr("musicFlow"),     emoji:"🎵", action:()=>{ setAddMenu(false); setShowMusicFlow(true); } },
+      ];
+    }
     if (tab === "wip" && (subTab === "moves" || subTab === "gap")) return [
       { label:tr("addMoveMenu"),     emoji:"🕺", action:()=>{ setAddMenu(false); setAddTick(t=>t+1); } },
       { label:tr("addCategoryMenu"), emoji:"📂", action:()=>{ setAddMenu(false); setAddTick2(t=>t+1); } },
@@ -561,7 +599,7 @@ export default function App() {
           <IdeaMenu menu={trainMenu} onClose={()=>setTrainMenu(null)}/>
           <TrainModalCtx.Provider value={{ openModal:(type,idea,onSave)=>{ setTrainMenu(null); setTrainModal({type,idea,onSave}); } }}>
           <TrainMenuCtx.Provider value={{ openMenu:(m)=>setTrainMenu(m), closeMenu:()=>setTrainMenu(null) }}>
-            {tab==="ideas" && <IdeasPage onAddMove={handleAddMoveFromIdea} onAddTrigger={addTick} ideas={ideas} setIdeas={setIdeas} habits={habits} setHabits={setHabits} calendar={calendar} onOpenCalendarJournal={()=>{setCalendarInitialDay(new Date().toISOString().split("T")[0]);setShowCalendar(true);}}/>}
+            {tab==="ideas" && <IdeasPage onAddMove={handleAddMoveFromIdea} onAddTrigger={addTick} ideas={ideas} setIdeas={setIdeas} habits={habits} setHabits={setHabits} calendar={calendar} onOpenCalendarJournal={()=>{setCalendarInitialDay(new Date().toISOString().split("T")[0]);setShowCalendar(true);}} battleprep={battleprep} setBattleprep={setBattleprep} moves={moves} sets={sets} addToast={addToast} externalTrainSubTab={trainSubTab} onTrainSubTabUsed={()=>setTrainSubTab(null)} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={()=>setBattlePrepSeed(null)} addCalendarEvent={addCalendarEvent} onSubTabChange={setSubTab} onOpenSharedCalendar={(im)=>{setCalendarInitialMonth(im||null);setShowCalendar(true);}}/>}
           </TrainMenuCtx.Provider>
           </TrainModalCtx.Provider>
           {tab==="wip" && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} catDomains={catDomains} setCatDomains={setCatDomains} sets={sets} setSets={setSets} addToast={addToast} pendingDesc={ideaToMove} clearPendingDesc={()=>setIdeaToMove(null)} settings={appSettings} onSettingsChange={setAppSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} reminders={reminders} onRemindersChange={setReminders} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}} onOpenManageReminders={()=>setShowManageReminders(true)}/>}
@@ -571,7 +609,19 @@ export default function App() {
             calendar={calendar} setCalendar={setCalendar}
             cats={cats} catColors={catColors} settings={appSettings} onSettingsChange={setAppSettings}
             addToast={addToast} initialDay={calendarInitialDay}
-            onClose={()=>setShowCalendar(false)}/>}
+            onClose={()=>{setShowCalendar(false);setCalendarInitialMonth(null);}}
+            onGoToPrep={(seed)=>{ setBattlePrepSeed(seed); setTrainSubTab("prep"); setTab("ideas"); setShowCalendar(false); }}
+            battleprep={battleprep} initialMonth={calendarInitialMonth}
+            onToggleBattlePrepTask={(planId,dateStr,taskIdx)=>{
+              setBattleprep(prev=>{
+                const plans=(prev.plans||[]).map(p=>{
+                  if(p.id!==planId) return p;
+                  const key=dateStr+"-"+taskIdx;
+                  return {...p, completedTasks:{...(p.completedTasks||{}), [key]:!(p.completedTasks||{})[key]}};
+                });
+                return {...prev, plans};
+              });
+            }}/>}
           {showRepCounter&&<RepCounter moves={moves} catColors={catColors} reps={reps}
             preselectedMove={repCounterPreselect}
             onSaveSession={(session)=>{

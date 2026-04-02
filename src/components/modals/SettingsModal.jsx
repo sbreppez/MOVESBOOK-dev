@@ -13,7 +13,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
     compactCards:false, sortMoves:"custom", fontSize:"medium",
     showMoveCount:false, confirmDelete:true, practiceReminders:false,
     reminderTime:"18:00", streakTracking:true, showDeadlineIndicator:true,
-    categorySort:"manual", showMoveCount:true, defaultView:"list", language:"en", linkOnCard:"inside", targetAutoLink:false, trainTabOrder:["goals","habits","notes"],
+    categorySort:"manual", showMoveCount:true, defaultView:"list", language:"en", linkOnCard:"inside", targetAutoLink:false, trainTabOrder:["goals","habits","notes","prep"],
     ...settings
   });
   const origSettings = useRef(settings);
@@ -196,8 +196,8 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
           )}
 
           {(()=>{
-            const order = s.trainTabOrder||["goals","habits","notes"];
-            const labels = { goals:"🎯 "+t("trainTabGoals"), habits:"🔥 "+t("trainTabHabits"), notes:"📝 "+t("trainTabNotes") };
+            const order = s.trainTabOrder||["goals","habits","notes","prep"];
+            const labels = { goals:"🎯 "+t("trainTabGoals"), habits:"🔥 "+t("trainTabHabits"), notes:"📝 "+t("trainTabNotes"), prep:"⚔️ PREP" };
             const move = (from, to) => {
               const next = [...order];
               const [item] = next.splice(from,1);

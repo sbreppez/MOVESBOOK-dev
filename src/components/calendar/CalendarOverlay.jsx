@@ -6,6 +6,7 @@ import { useT } from '../../hooks/useTranslation';
 import { Ic } from '../shared/Ic';
 import { EXERTION_OPTIONS, BODY_PARTS, BODY_STATES } from '../shared/BodyCheckIn';
 import { SessionJournal } from './SessionJournal';
+import { computeAllDayMaps, getTasksForDay, getPrevDayTasks } from '../train/battlePrepHelpers';
 
 const toYMD = (d) => {
   if (!d) return null;
@@ -21,12 +22,14 @@ export const CalendarOverlay = ({
   calendar, setCalendar,
   cats, catColors, settings, onSettingsChange,
   addToast, initialDay,
-  onClose,
+  onClose, onGoToPrep,
+  battleprep, onToggleBattlePrepTask, initialMonth,
 }) => {
   const t = useT();
   const today = new Date().toISOString().split("T")[0];
 
   const [viewDate, setViewDate] = useState(() => {
+    if (initialMonth) return new Date(initialMonth.year, initialMonth.month, 1);
     if (initialDay) return new Date(initialDay + "T00:00:00");
     return new Date();
   });
@@ -34,6 +37,7 @@ export const CalendarOverlay = ({
   const [showJournal, setShowJournal] = useState(!!initialDay);
   const [editEvent, setEditEvent] = useState(null);
   const [showTypePicker, setShowTypePicker] = useState(false);
+  const [battlePrepPrompt, setBattlePrepPrompt] = useState(null); // { date, eventName }
 
   const year = viewDate.getFullYear();
   const month = viewDate.getMonth();
@@ -42,6 +46,12 @@ export const CalendarOverlay = ({
 
   const prevMonth = () => setViewDate(new Date(year, month - 1, 1));
   const nextMonth = () => setViewDate(new Date(year, month + 1, 1));
+
+  // Compute all battle prep day maps
+  const allDayMaps = useMemo(() => {
+    if (!battleprep?.plans?.length) return [];
+    return computeAllDayMaps(battleprep.plans);
+  }, [battleprep?.plans]);
 
   // Build activity map
   const activityMap = useMemo(() => {
@@ -61,8 +71,17 @@ export const CalendarOverlay = ({
       if (e.type === "training") mark(e.date, "moves");
       else mark(e.date, "notes");
     });
+    // Add battle prep phase data
+    for (const dm of allDayMaps) {
+      for (const [dateStr, info] of Object.entries(dm.dayMap)) {
+        if (!map[dateStr]) map[dateStr] = {};
+        if (!map[dateStr].battlePrepPhases) map[dateStr].battlePrepPhases = [];
+        map[dateStr].battlePrepPhases.push({ planId: dm.planId, planName: dm.planName, preset: dm.preset, phase: info.phase, phaseColor: info.phaseColor, type: info.type, session: info.session, eventName: info.eventName });
+        if (info.type === "battle") map[dateStr].battleDay = true;
+      }
+    }
     return map;
-  }, [moves, reps, sparring, habits, ideas, calendar]);
+  }, [moves, reps, sparring, habits, ideas, calendar, allDayMaps]);
 
   // Day detail data
   const dayData = useMemo(() => {
@@ -96,7 +115,11 @@ export const CalendarOverlay = ({
     setShowJournal(false);
     setEditEvent(null);
     addToast({ emoji: "✅", title: t("sessionLogged"), msg: "" });
-  }, [setCalendar, setMoves, addToast, t]);
+    // Show "Go to Prep" prompt for new future battle events
+    if (eventObj.type === "battle" && eventObj.date >= today && onGoToPrep) {
+      setBattlePrepPrompt({ date: eventObj.date, eventName: eventObj.title || "" });
+    }
+  }, [setCalendar, setMoves, addToast, t, today, onGoToPrep]);
 
   const handleDeleteEvent = useCallback((id) => {
     setCalendar(prev => ({
@@ -183,6 +206,32 @@ export const CalendarOverlay = ({
         </button>
       </div>
 
+      {/* Battle Prep prompt — shown after saving a future battle event */}
+      {battlePrepPrompt && (
+        <div style={{ margin: "8px 12px", background: `${C.accent}10`, border: `1px solid ${C.accent}30`,
+          borderRadius: 12, padding: "12px 14px", display: "flex", flexDirection: "column", gap: 8, flexShrink: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <span style={{ fontSize: 16 }}>{"\u2694\uFE0F"}</span>
+            <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 13, color: C.text,
+              letterSpacing: 0.3, flex: 1 }}>{t("wantTrainingPlan")}</span>
+          </div>
+          <div style={{ display: "flex", gap: 8 }}>
+            <button onClick={() => { onGoToPrep(battlePrepPrompt); setBattlePrepPrompt(null); }}
+              style={{ flex: 1, padding: "8px 12px", background: C.accent, border: "none", borderRadius: 8,
+                cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 12,
+                letterSpacing: 1, color: "#fff" }}>
+              {t("goToPrep")} {"\u2192"}
+            </button>
+            <button onClick={() => setBattlePrepPrompt(null)}
+              style={{ flex: 1, padding: "8px 12px", background: C.surfaceAlt, border: `1px solid ${C.border}`,
+                borderRadius: 8, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700,
+                fontSize: 12, letterSpacing: 0.5, color: C.textMuted }}>
+              {t("notNow")}
+            </button>
+          </div>
+        </div>
+      )}
+
       <div style={{ flex: 1, minHeight: 0, overflowY: "auto", WebkitOverflowScrolling: "touch", padding: "0 12px 20px" }}>
         {/* Month navigation */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 4px 10px" }}>
@@ -222,6 +271,11 @@ export const CalendarOverlay = ({
             if (activity?.habits) dots.push(C.blue);
             if (activity?.notes) dots.push(C.yellow);
 
+            // Battle prep phase dots (unique colors, max 3)
+            const bpPhases = activity?.battlePrepPhases || [];
+            const bpColors = [...new Set(bpPhases.map(p => p.phaseColor))].slice(0, 3);
+            const isBattleDay = !!activity?.battleDay;
+
             return (
               <button
                 key={dateStr}
@@ -230,13 +284,13 @@ export const CalendarOverlay = ({
                   setShowTypePicker(false);
                 }}
                 style={{
-                  background: isSelected ? C.accent + "22" : hasActivity ? C.surfaceAlt : "transparent",
+                  background: isSelected ? C.accent + "22" : hasActivity || bpPhases.length ? C.surfaceAlt : "transparent",
                   border: isToday ? `2px solid ${C.accent}` : isSelected ? `1.5px solid ${C.accent}` : "1.5px solid transparent",
                   borderRadius: 8,
-                  padding: "8px 2px 4px",
+                  padding: "6px 2px 3px",
                   cursor: "pointer",
                   display: "flex", flexDirection: "column", alignItems: "center",
-                  minHeight: 44,
+                  minHeight: 50,
                   transition: "all 0.12s",
                 }}
               >
@@ -244,12 +298,20 @@ export const CalendarOverlay = ({
                   fontFamily: FONT_DISPLAY, fontWeight: isToday ? 900 : 600,
                   fontSize: 13, color: isToday ? C.accent : C.text, lineHeight: 1,
                 }}>
-                  {dayNum}
+                  {isBattleDay ? "\u2694\uFE0F" : dayNum}
                 </span>
+                {isBattleDay && <span style={{ fontSize: 8, fontFamily: FONT_DISPLAY, fontWeight: 700, color: C.text, lineHeight: 1 }}>{dayNum}</span>}
                 {dots.length > 0 && (
-                  <div style={{ display: "flex", gap: 3, marginTop: 4 }}>
+                  <div style={{ display: "flex", gap: 3, marginTop: 3 }}>
                     {dots.slice(0, 4).map((color, di) => (
                       <div key={di} style={{ width: 5, height: 5, borderRadius: "50%", background: color }} />
+                    ))}
+                  </div>
+                )}
+                {bpColors.length > 0 && (
+                  <div style={{ display: "flex", gap: 2, marginTop: 2 }}>
+                    {bpColors.map((color, di) => (
+                      <div key={di} style={{ width: 6, height: 6, borderRadius: "50%", background: color }} />
                     ))}
                   </div>
                 )}
@@ -257,6 +319,23 @@ export const CalendarOverlay = ({
             );
           })}
         </div>
+
+        {/* Battle prep phase legend */}
+        {allDayMaps.length > 0 && (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, padding: "8px 2px", marginTop: 6, borderTop: `1px solid ${C.borderLight}` }}>
+            {allDayMaps.map(dm => {
+              const currentInfo = dm.dayMap[today];
+              const dotColor = currentInfo?.phaseColor || C.textMuted;
+              return (
+                <div key={dm.planId} style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                  <div style={{ width: 7, height: 7, borderRadius: "50%", background: dotColor }} />
+                  <span style={{ fontSize: 10, fontFamily: FONT_DISPLAY, fontWeight: 700, color: C.textSec }}>{dm.planName}</span>
+                  {currentInfo && <span style={{ fontSize: 8, fontFamily: FONT_DISPLAY, fontWeight: 600, color: currentInfo.phaseColor }}>{currentInfo.phase}</span>}
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         {/* Day detail panel */}
         {selectedDay && dayData && (
@@ -302,11 +381,65 @@ export const CalendarOverlay = ({
               </div>
             )}
 
+            {/* Battle Prep Phases */}
+            {(()=>{
+              const bpPhases = activityMap[selectedDay]?.battlePrepPhases || [];
+              if (!bpPhases.length) return null;
+              // Group by plan
+              const byPlan = {};
+              bpPhases.forEach(p => { if (!byPlan[p.planId]) byPlan[p.planId] = p; });
+              return (
+                <div>
+                  <div style={sectionLabel}>{t("prepPhases") || "PREP PHASES"}</div>
+                  {Object.values(byPlan).map(entry => {
+                    const isBattle = entry.type === "battle";
+                    const plan = (battleprep?.plans || []).find(p => p.id === entry.planId);
+                    const dayMapInfo = plan ? (() => {
+                      const dm = allDayMaps.find(d => d.planId === plan.id);
+                      return dm?.dayMap?.[selectedDay];
+                    })() : null;
+                    const prevKeys = plan && dayMapInfo ? getPrevDayTasks(plan.id, selectedDay, allDayMaps.find(d => d.planId === plan.id)?.dayMap || {}) : [];
+                    const tasks = plan && dayMapInfo ? getTasksForDay(plan.id, selectedDay, dayMapInfo, prevKeys) : [];
+                    const completed = plan?.completedTasks || {};
+                    return (
+                      <div key={entry.planId} style={{ background: C.surfaceAlt, borderRadius: 10, padding: 10, marginBottom: 6 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: isBattle || !tasks.length ? 0 : 6 }}>
+                          <div style={{ width: 8, height: 8, borderRadius: "50%", background: entry.phaseColor, flexShrink: 0 }} />
+                          <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12, color: C.text, flex: 1 }}>{entry.planName}</span>
+                          <span style={{ fontSize: 9, fontFamily: FONT_DISPLAY, fontWeight: 700, background: `${entry.phaseColor}25`, color: entry.phaseColor, borderRadius: 4, padding: "1px 6px" }}>{entry.phase}</span>
+                        </div>
+                        {isBattle && (
+                          <div style={{ textAlign: "center", padding: "8px 0 4px" }}>
+                            <span style={{ fontSize: 20 }}>{"\u2694\uFE0F"}</span>
+                            <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 12, letterSpacing: 1, color: C.red, marginTop: 2 }}>{t("battleDay")}</div>
+                          </div>
+                        )}
+                        {!isBattle && tasks.map((task, i) => {
+                          const done = !!completed[`${selectedDay}-${i}`];
+                          return (
+                            <button key={i} onClick={() => onToggleBattlePrepTask && onToggleBattlePrepTask(entry.planId, selectedDay, i)}
+                              style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "6px 2px", background: "none", border: "none", cursor: "pointer", borderBottom: i < tasks.length - 1 ? `1px solid ${C.borderLight}` : "none", textAlign: "left" }}>
+                              <div style={{ width: 18, height: 18, borderRadius: 4, border: `2px solid ${done ? C.green : C.border}`, background: done ? C.green : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                                {done && <Ic n="check" s={11} c="#fff" />}
+                              </div>
+                              <span style={{ fontSize: 13, flexShrink: 0 }}>{task.emoji}</span>
+                              <span style={{ flex: 1, fontSize: 11, fontFamily: FONT_BODY, color: done ? C.textMuted : C.text, textDecoration: done ? "line-through" : "none", opacity: done ? 0.45 : 1 }}>{t(task.key)}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })()}
+
             {/* No activity */}
             {dayData.movesTrained.length === 0 && dayData.repSessions.length === 0 &&
              dayData.sparringSessions.length === 0 && dayData.musicflowSessions.length === 0 &&
              dayData.habitsCompleted.length === 0 &&
-             dayData.notesOnDay.length === 0 && dayData.calendarEvents.length === 0 && (
+             dayData.notesOnDay.length === 0 && dayData.calendarEvents.length === 0 &&
+             !(activityMap[selectedDay]?.battlePrepPhases?.length) && (
               <div style={{ color: C.textMuted, fontSize: 12, fontFamily: FONT_BODY, padding: "12px 0", textAlign: "center" }}>
                 {t("noActivity")}
               </div>

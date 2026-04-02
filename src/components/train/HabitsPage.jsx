@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, useRef } from 'react';
 import { C } from '../../constants/colors';
 import { FONT_DISPLAY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
@@ -23,14 +23,15 @@ export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
   const [openHabit,   setOpenHabit]   = useState(null);
   const [addingHabit, setAddingHabit] = useState(false);
   const [confirmDel,  setConfirmDel]  = useState(null);
-  const [habitNudge,  setHabitNudge]  = useState(false);
-
   const openAddHabit = () => {
-    if (habits.length >= 2) { setHabitNudge(true); }
-    else { setAddingHabit(true); }
+    setAddingHabit(true);
   };
 
-  useEffect(()=>{ if(onAddTrigger) openAddHabit(); },[onAddTrigger]);
+  const prevAddTrigger = useRef(onAddTrigger);
+  useEffect(()=>{
+    if(onAddTrigger !== prevAddTrigger.current && onAddTrigger > 0) openAddHabit();
+    prevAddTrigger.current = onAddTrigger;
+  },[onAddTrigger]);
 
   const addHabit = (fields) => setHabits(p=>[...p,{
     id:Date.now(), checkIns:[], createdDate:new Date().toISOString().split("T")[0], ...fields
@@ -268,23 +269,6 @@ export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
       </div>
 
       {/* Modals */}
-      {habitNudge&&(
-        <Modal title={t("headsUp")} onClose={()=>setHabitNudge(false)}>
-          <p style={{ color:C.textSec, marginBottom:16, fontSize:13, lineHeight:1.6 }}>
-            {t("habitProTip")}
-          </p>
-          <div style={{ display:"flex", gap:8 }}>
-            <button onClick={()=>{ setHabitNudge(false); setAddingHabit(true); }}
-              style={{ flex:1, padding:"10px 0", borderRadius:8, border:`1px solid ${C.border}`, background:C.surfaceAlt, color:C.textSec, fontSize:13, cursor:"pointer" }}>
-              {t("addAnyway")}
-            </button>
-            <button onClick={()=>setHabitNudge(false)}
-              style={{ flex:1, padding:"10px 0", borderRadius:8, border:"none", background:C.accent, color:C.bg, fontSize:13, fontWeight:600, cursor:"pointer" }}>
-              {t("goBack")}
-            </button>
-          </div>
-        </Modal>
-      )}
       {addingHabit&&<HabitModal onClose={()=>setAddingHabit(false)} onSave={addHabit}/>}
       {editHabit&&<HabitModal onClose={()=>setEditHabit(null)} onSave={f=>updateHabit(editHabit.id,f)} habit={editHabit}/>}
       {confirmDel&&(

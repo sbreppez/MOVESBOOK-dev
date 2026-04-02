@@ -13,8 +13,9 @@ import { ensureHttps } from './helpers';
 import { TypeChooserModal } from './TypeChooserModal';
 import { IdeaTile } from './IdeaTile';
 import { HabitsPage } from './HabitsPage';
+import { BattlePrepPage } from './BattlePrepPage';
 
-export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[], setHabits=()=>{}, calendar, onOpenCalendarJournal }) => {
+export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[], setHabits=()=>{}, calendar, onOpenCalendarJournal, battleprep, setBattleprep, moves, sets, addToast, externalTrainSubTab, onTrainSubTabUsed, battlePrepSeed, onBattlePrepSeedUsed, addCalendarEvent, onSubTabChange, onOpenSharedCalendar }) => {
   const t = useT();
   const { resultCountStr, dayCountStr } = usePlural();
   const { settings: ideaSettings } = useSettings();
@@ -22,14 +23,28 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
   useEffect(() => { setView("tiles"); }, []);
   const [editIdea,   setEditIdea]   = useState(null);
   const [typeChooser,setTypeChooser]= useState(false);
-  useEffect(()=>{ if(onAddTrigger){
-    if(trainTab==="habits") { /* handled by HabitsPage */ }
-    else if(trainTab==="notes") { openModal("note", null, addIdea); }
-    else { setTypeChooser(true); }
-  } },[onAddTrigger]);
+  const prevAddTrigger = useRef(onAddTrigger);
+  useEffect(()=>{
+    if(onAddTrigger !== prevAddTrigger.current && onAddTrigger > 0){
+      if(trainTab==="habits") { /* handled by HabitsPage */ }
+      else if(trainTab==="prep") { /* prep manages its own flow */ }
+      else if(trainTab==="notes") { openModal("note", null, addIdea); }
+      else { setTypeChooser(true); }
+    }
+    prevAddTrigger.current = onAddTrigger;
+  },[onAddTrigger]);
   const [newType,    setNewType]    = useState(null);
   const { openModal } = useTrainModal();
   const [trainTab,   setTrainTab]   = useState("goals");
+  // Report active sub-tab to parent for contextual + menu
+  useEffect(() => { if (onSubTabChange) onSubTabChange(trainTab); }, [trainTab]);
+  // External navigation: Calendar → PREP
+  useEffect(() => {
+    if (externalTrainSubTab) {
+      setTrainTab(externalTrainSubTab);
+      if (onTrainSubTabUsed) onTrainSubTabUsed();
+    }
+  }, [externalTrainSubTab]);
   // Auto-link: sync move count to target goals that have autoLink=true
   const { settings: ideaSettings2 } = useSettings();
   // We get moves count from localStorage as a proxy (no prop needed)
@@ -162,11 +177,54 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
           </div>
         );
       })()}
+      {/* Battle Prep countdown banner */}
+      {(()=>{
+        const plans = battleprep?.plans || [];
+        if (!plans.length) return null;
+        const todayStr = new Date().toISOString().split("T")[0];
+        // Find nearest future battle across all plans
+        let nearest = null, nearestPlan = null;
+        for (const plan of plans) {
+          const fb = (plan.battles||[]).filter(b=>b.date>=todayStr).sort((a,b)=>a.date.localeCompare(b.date));
+          if (fb.length && (!nearest || fb[0].date < nearest.date)) { nearest = fb[0]; nearestPlan = plan; }
+        }
+        if (!nearest || !nearestPlan) return null;
+        const daysLeft = Math.ceil((new Date(nearest.date+" 00:00:00") - new Date(todayStr+" 00:00:00")) / 86400000);
+        let sessionsLeft = 0;
+        const td = nearestPlan.trainingDays || [];
+        for (let d = new Date(todayStr); d <= new Date(nearest.date); d.setDate(d.getDate()+1)) {
+          const ds = d.toISOString().split("T")[0];
+          const override = (nearestPlan.customDayOverrides||{})[ds];
+          if (override === "rest") continue;
+          if (override === "training" || td.includes(d.getDay())) {
+            if (ds !== nearest.date) sessionsLeft++;
+          }
+        }
+        const presetColors = { smoke:"#e53935", prove:"#ffa726", mark:"#1db954", custom:"#7a7a7a" };
+        const pc = presetColors[nearestPlan.preset] || C.textMuted;
+        const displayName = nearestPlan.eventName || nearestPlan.planName;
+        return (
+          <button onClick={()=>{ setTrainTab("prep"); }}
+            style={{ margin:"0 12px 8px", display:"flex", alignItems:"center", gap:8,
+              background:`${pc}18`, border:`1px solid ${pc}40`, borderRadius:10, padding:"10px 14px",
+              cursor:"pointer", textAlign:"left", width:"calc(100% - 24px)" }}>
+            <span style={{ fontSize:16 }}>⚔️</span>
+            <span style={{ flex:1, fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, letterSpacing:0.5 }}>
+              <span style={{ color:C.text }}>{displayName}</span>
+              <span style={{ color:C.textSec }}> {"\u2014"} </span>
+              <span style={{ color:C.textSec }}><span style={{ color:C.text, fontWeight:900 }}>{daysLeft}</span> {t("daysLeft")} (<span style={{ color:C.red, fontWeight:900 }}>{sessionsLeft} {t("daysTraining")}</span>)</span>
+              {plans.length > 1 && <span style={{ color:C.textMuted, fontSize:10 }}> +{plans.length - 1}</span>}
+            </span>
+            <Ic n="chevR" s={14} c={C.textMuted}/>
+          </button>
+        );
+      })()}
       {/* Sub-tab nav */}
       <div style={{ display:"flex", background:C.surface, borderBottom:`2px solid ${C.border}`, flexShrink:0, alignItems:"stretch" }}>
         {(()=>{
-          const order = (ideaSettings.trainTabOrder||["goals","habits","notes"]);
-          const tabDefs = { goals:["goals","🎯 GOALS",goals.length], notes:["notes","📝 NOTES",notes.length], habits:["habits","🔥 HABITS",null] };
+          const order = (ideaSettings.trainTabOrder||["goals","habits","notes","prep"]);
+          const planCount = battleprep?.plans?.length || 0;
+          const tabDefs = { goals:["goals","🎯 GOALS",goals.length], notes:["notes","📝 NOTES",notes.length], habits:["habits","🔥 HABITS",null], prep:["prep","⚔️ PREP",planCount||null] };
           return order.map(tabId => tabDefs[tabId]||tabDefs.goals);
         })().map(([id,label,count])=>{
           const on = trainTab===id;
@@ -179,7 +237,8 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
                 fontSize:11, fontWeight:800, letterSpacing:1, fontFamily:FONT_DISPLAY,
                 display:"flex", alignItems:"center", justifyContent:"center", gap:4 }}>
               {label}
-              {count!==null&&<span style={{ fontSize:10, color:on?C.accent:C.textMuted,
+              {count==="active"&&<div style={{ width:6, height:6, borderRadius:"50%", background:C.accent, flexShrink:0 }}/>}
+              {count!==null&&count!=="active"&&<span style={{ fontSize:10, color:on?C.accent:C.textMuted,
                 background:C.surfaceAlt, borderRadius:10, padding:"0 5px" }}>{count}</span>}
             </button>
           );
@@ -208,7 +267,7 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
         })()}
       </div>
       {/* Search + view toggle (only for goals/notes) */}
-      {trainTab!=="habits"&&<div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"6px 14px", borderBottom:`1px solid ${C.borderLight}`, background:C.surface, flexShrink:0 }}>
+      {(trainTab==="goals"||trainTab==="notes")&&<div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"6px 14px", borderBottom:`1px solid ${C.borderLight}`, background:C.surface, flexShrink:0 }}>
         <span style={{ fontSize:12, fontWeight:700, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY }}>
           {trainTab==="goals"?"GOALS":"NOTES"} · {trainTab==="goals"?goals.length:notes.length}
         </span>
@@ -229,7 +288,8 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
         </div>
       </div>}
       {trainTab==="habits" && <HabitsPage onAddTrigger={trainTab==="habits"?onAddTrigger:null} habits={habits} setHabits={setHabits}/>}
-      {trainTab!=="habits"&&showSearch&&(
+      {trainTab==="prep" && <BattlePrepPage battleprep={battleprep} setBattleprep={setBattleprep} moves={moves} sets={sets} addToast={addToast} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={onBattlePrepSeedUsed} addCalendarEvent={addCalendarEvent} onAddTrigger={trainTab==="prep"?onAddTrigger:null} onOpenSharedCalendar={onOpenSharedCalendar}/>}
+      {(trainTab==="goals"||trainTab==="notes")&&showSearch&&(
         <div style={{ padding:"6px 14px", background:C.surface, borderBottom:`1px solid ${C.borderLight}` }}>
           <div style={{ display:"flex", alignItems:"center", background:C.bg, borderRadius:7, padding:"5px 10px", gap:6, border:`1px solid ${search?C.accent:C.border}` }}>
             <Ic n="search" s={13} c={C.textMuted}/>
@@ -240,7 +300,7 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
           {search&&<div style={{ fontSize:11, color:C.textMuted, marginTop:4 }}>{resultCountStr(filtered.length)}</div>}
         </div>
       )}
-      {trainTab!=="habits"&&<div style={{ flex:1, overflow:"auto", padding:10, paddingBottom:76 }}>
+      {(trainTab==="goals"||trainTab==="notes")&&<div style={{ flex:1, overflow:"auto", padding:10, paddingBottom:76 }}>
         <div
           style={view==="tiles"
             ? {display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,minWidth:0}
