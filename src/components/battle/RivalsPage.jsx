@@ -517,8 +517,14 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
   return (
     <div style={{ flex:1, overflow:"auto", display:"flex", flexDirection:"column" }}>
       {rivals.length === 0 ? (
-        <div style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"40px 24px", textAlign:"center" }}>
-          <p style={{ fontSize:14, color:C.textSec, lineHeight:1.7, maxWidth:320, fontFamily:FONT_BODY, margin:0 }}>{t("rivalsIntro")}</p>
+        <div style={{ textAlign:"center", padding:"48px 20px" }}>
+          <span style={{ fontSize:40 }}>{"⚔️"}</span>
+          <p style={{ fontFamily:FONT_BODY, fontSize:14, color:C.textMuted, margin:"12px 0 4px", lineHeight:1.5, maxWidth:320, marginLeft:"auto", marginRight:"auto" }}>
+            {t("rivalsIntro")}
+          </p>
+          <p style={{ fontFamily:FONT_BODY, fontSize:13, color:C.textMuted, margin:0 }}>
+            {t("tapToAddRival")}
+          </p>
         </div>
       ) : (
         <div style={{ padding:"12px 14px" }}>

@@ -64,7 +64,7 @@ export const SetDetailModal = ({ item, onClose, onSave, type="set", allMoves=[],
   const q = pickerQ.toLowerCase().trim();
 
   return (
-    <Modal title={isSet ? "EDIT SET" : "EDIT ROUND"} onClose={onClose} wide>
+    <Modal title={isSet ? (item.id ? "EDIT SET" : "ADD A SET") : "EDIT ROUND"} onClose={onClose}>
       {/* Color stripe */}
       <div style={{ height:5, borderRadius:4, background:`linear-gradient(90deg,${color},${color}55)`, marginBottom:16 }}/>
 
