@@ -24,6 +24,7 @@ export const CalendarOverlay = ({
   addToast, initialDay,
   onClose, onGoToPrep,
   battleprep, onToggleBattlePrepTask, initialMonth,
+  inline,
 }) => {
   const t = useT();
   const today = new Date().toISOString().split("T")[0];
@@ -176,7 +177,7 @@ export const CalendarOverlay = ({
   // Journal overlay
   if (showJournal) {
     return (
-      <div style={{ position: "absolute", inset: 0, zIndex: 500, background: C.bg, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+      <div style={ inline ? { flex:1, background: C.bg, display: "flex", flexDirection: "column", overflow: "hidden" } : { position: "absolute", inset: 0, zIndex: 500, background: C.bg, display: "flex", flexDirection: "column", overflow: "hidden" }}>
         <SessionJournal
           date={editEvent?.date || selectedDay || today}
           event={editEvent?.id ? editEvent : null}
@@ -194,9 +195,9 @@ export const CalendarOverlay = ({
   }
 
   return (
-    <div style={{ position: "absolute", inset: 0, zIndex: 500, background: C.bg, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-      {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between",
+    <div style={ inline ? { flex:1, background: C.bg, display: "flex", flexDirection: "column", overflow: "hidden" } : { position: "absolute", inset: 0, zIndex: 500, background: C.bg, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+      {/* Header — hidden in inline mode */}
+      {!inline && <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between",
         padding: "13px 18px", borderBottom: `1px solid ${C.border}`, flexShrink: 0 }}>
         <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 16, color: C.text, letterSpacing: 1 }}>
           {t("calendar")}
@@ -204,7 +205,7 @@ export const CalendarOverlay = ({
         <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex" }}>
           <Ic n="x" s={20} c={C.textMuted} />
         </button>
-      </div>
+      </div>}
 
       {/* Battle Prep prompt — shown after saving a future battle event */}
       {battlePrepPrompt && (

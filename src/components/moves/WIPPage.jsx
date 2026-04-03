@@ -321,7 +321,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"6px 14px", borderBottom:`1px solid ${C.borderLight}`, background:C.surface, flexShrink:0 }}>
         {/* MOVES / SETS sub-tabs */}
         <div style={{ display:"flex", gap:0 }}>
-          {[["moves","MOVES"],["sets","SETS"],["gap","GAP"]].map(([id,label])=>(
+          {[["moves",t("library")],["sets","SETS"],["gap","GAP"]].map(([id,label])=>(
             <button key={id} onClick={()=>setVocabTabAndNotify(id)}
               style={{ padding:"4px 10px", background:"none", border:"none", cursor:"pointer",
                 fontSize:10, fontWeight:800, letterSpacing:1.5, fontFamily:FONT_DISPLAY,

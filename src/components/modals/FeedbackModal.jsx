@@ -4,7 +4,7 @@ import { Ic } from "../shared/Ic";
 import { useT } from "../../hooks/useTranslation";
 import { useSettings } from "../../hooks/useSettings";
 
-export const FeedbackModal = ({ onClose }) => {
+export const FeedbackModal = ({ onClose, inline }) => {
   const { C } = useSettings();
   const t = useT();
 
@@ -115,11 +115,11 @@ export const FeedbackModal = ({ onClose }) => {
   );
 
   return (
-    <div style={{ position:"absolute", inset:0, zIndex:1000, background:C.bg,
+    <div style={ inline ? { background:C.bg } : { position:"absolute", inset:0, zIndex:1000, background:C.bg,
       display:"flex", flexDirection:"column", overflow:"hidden" }}>
 
-        {/* Header */}
-        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between",
+        {/* Header — hidden in inline mode */}
+        {!inline && <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between",
           padding:"14px 18px", borderBottom:`1px solid ${C.border}`, flexShrink:0,
           background:C.surface }}>
           <div>
@@ -133,7 +133,7 @@ export const FeedbackModal = ({ onClose }) => {
             padding:4, display:"flex" }}>
             <Ic n="x" s={18} c={C.textMuted}/>
           </button>
-        </div>
+        </div>}
 
         {/* Scrollable body */}
         <div style={{ flex:1, overflow:"auto", padding:"18px 18px 4px" }}>

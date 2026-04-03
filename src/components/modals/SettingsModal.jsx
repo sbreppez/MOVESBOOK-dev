@@ -6,10 +6,10 @@ import { useT } from "../../hooks/useTranslation";
 import { downloadBackup, restoreBackup } from "./BackupModal";
 import { AttributeModal } from "./AttributeModal";
 
-export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onRestoreRounds, onRestartTour, zoom=1, onZoomChange, customAttrs=[], setCustomAttrs }) => {
+export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onRestoreRounds, onRestartTour, zoom=1, onZoomChange, customAttrs=[], setCustomAttrs, inline }) => {
   const t = useT();
   const [s,setS]=useState({
-    theme:"light", defaultTab:"wip", showMastery:true, decaySensitivity:"normal",
+    theme:"light", defaultTab:"home", showMastery:true, decaySensitivity:"normal",
     compactCards:false, sortMoves:"custom", fontSize:"medium",
     showMoveCount:false, confirmDelete:true, practiceReminders:false,
     reminderTime:"18:00", streakTracking:true, showDeadlineIndicator:true,
@@ -87,22 +87,22 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
   const accent=C.accent;
 
   return (
-    <div style={{ position:"absolute", inset:0, zIndex:1000,
+    <div style={ inline ? { color:panelTxt } : { position:"absolute", inset:0, zIndex:1000,
       background:panelBg, display:"flex", flexDirection:"column", overflow:"hidden", color:panelTxt }}>
 
-        {/* Sticky header */}
-        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between",
+        {/* Sticky header — hidden in inline mode */}
+        {!inline && <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between",
           padding:"13px 18px", borderBottom:`1px solid ${panelBrd}`, flexShrink:0,
           background:panelBg, zIndex:10 }}>
-          <span style={{ fontWeight:800, fontSize:15, letterSpacing:2, color:panelTxt, fontFamily:FONT_DISPLAY }}>⚙️ SETTINGS</span>
+          <span style={{ fontWeight:800, fontSize:15, letterSpacing:2, color:panelTxt, fontFamily:FONT_DISPLAY }}>{"\u2699\uFE0F"} SETTINGS</span>
           <button onClick={onClose}
             style={{ background:panelSrf, border:`1px solid ${panelBrd}`, cursor:"pointer",
               color:panelMut, padding:5, borderRadius:7, display:"flex" }}>
             <Ic n="x" s={14} c={panelMut}/>
           </button>
-        </div>
+        </div>}
 
-        <div style={{ flex:1, overflow:"auto", zoom:zoom, WebkitTextSizeAdjust:"none" }}>
+        <div style={ inline ? { zoom:zoom, WebkitTextSizeAdjust:"none" } : { flex:1, overflow:"auto", zoom:zoom, WebkitTextSizeAdjust:"none" }}>
         <div style={{ padding:18 }}>
 
           {/* ── APPEARANCE ──────────────────────────────── */}
@@ -242,9 +242,10 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
               style={{ background:panelSrf, border:`1px solid ${panelBrd}`, borderRadius:7,
                 padding:"7px 10px", color:panelTxt, fontSize:12, fontFamily:FONT_DISPLAY,
                 fontWeight:700, outline:"none" }}>
-              <option value="ideas">🎯 {t("train")}</option>
-              <option value="wip">📜 {t("vocab")}</option>
-              <option value="ready">⚔️ {t("battle")}</option>
+              <option value="home">{t("home")}</option>
+              <option value="moves">{t("vocab")}</option>
+              <option value="battle">{t("battle")}</option>
+              <option value="reflect">{t("reflect")}</option>
             </select>
           )}
 

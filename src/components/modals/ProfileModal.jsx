@@ -7,12 +7,18 @@ import { useSettings } from "../../hooks/useSettings";
 
 import { MyStanceSection } from "../stance/MyStanceSection";
 import { DevelopmentStory } from "../stance/DevelopmentStory";
+import { SettingsModal } from "./SettingsModal";
+import { FeedbackModal } from "./FeedbackModal";
+import { downloadBackup, restoreBackup } from "./BackupModal";
 
-export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersChange, addToast, onOpenManageReminders, moves, stance, sparring, calendar, scrollToStance, onScrollToStanceDone, onOpenStanceAssessment }) => {
+export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersChange, addToast, onOpenManageReminders, moves, stance, sparring, calendar, scrollToStance, onScrollToStanceDone, onOpenStanceAssessment, settings, onSettingsChange, onClearMoves, onRestoreRounds, onRestartTour, zoom, onZoomChange, customAttrs, setCustomAttrs }) => {
   const { C } = useSettings();
   const t = useT();
   const [f,setF]=useState({ nickname:"", age:"", gender:"", goals:"", years:"", startYear:"", startMonth:"", startDay:"", why:"", ...profile });
   const set=k=>v=>setF(p=>({...p,[k]:v}));
+  const [showSettingsSection, setShowSettingsSection] = useState(false);
+  const [showFeedbackSection, setShowFeedbackSection] = useState(false);
+  const fileInputRef = useRef(null);
   const [showNoteAdd, setShowNoteAdd] = useState(false);
   const [noteText, setNoteText] = useState("");
   const noteItems = reminders?.items || [];
@@ -168,6 +174,54 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
         )}
       </div>
 
+      {/* ── Settings ── */}
+      {sectionHdr(t("settingsLabel") || "SETTINGS", "cog")}
+      <button onClick={() => setShowSettingsSection(s => !s)}
+        style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between",
+          background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 10,
+          padding: "10px 14px", cursor: "pointer", marginBottom: 4 }}>
+        <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12, color: C.text, letterSpacing: 0.5 }}>
+          {showSettingsSection ? "Hide settings" : "Show settings"}
+        </span>
+        <Ic n={showSettingsSection ? "chevD" : "chevR"} s={14} c={C.textMuted} />
+      </button>
+      {showSettingsSection && (
+        <SettingsModal inline settings={settings} onSave={onSettingsChange} onClearMoves={onClearMoves} onRestoreRounds={onRestoreRounds} onRestartTour={onRestartTour} zoom={zoom} onZoomChange={onZoomChange} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} />
+      )}
+
+      {/* ── Feedback ── */}
+      {sectionHdr(t("feedbackLabel") || "FEEDBACK", "edit")}
+      <button onClick={() => setShowFeedbackSection(s => !s)}
+        style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between",
+          background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 10,
+          padding: "10px 14px", cursor: "pointer", marginBottom: 4 }}>
+        <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12, color: C.text, letterSpacing: 0.5 }}>
+          {showFeedbackSection ? "Hide feedback" : "Show feedback form"}
+        </span>
+        <Ic n={showFeedbackSection ? "chevD" : "chevR"} s={14} c={C.textMuted} />
+      </button>
+      {showFeedbackSection && <FeedbackModal inline />}
+
+      {/* ── Backup ── */}
+      {sectionHdr("BACKUP", "download")}
+      <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
+        <button onClick={downloadBackup}
+          style={{ flex: 1, padding: "10px 12px", background: C.surfaceAlt, border: `1px solid ${C.border}`,
+            borderRadius: 10, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700,
+            fontSize: 12, color: C.text, letterSpacing: 0.5 }}>
+          {t("saveBackup")}
+        </button>
+        <button onClick={() => fileInputRef.current?.click()}
+          style={{ flex: 1, padding: "10px 12px", background: C.surfaceAlt, border: `1px solid ${C.border}`,
+            borderRadius: 10, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700,
+            fontSize: 12, color: C.text, letterSpacing: 0.5 }}>
+          {t("restoreBackup")}
+        </button>
+        <input ref={fileInputRef} type="file" accept=".json" style={{ display: "none" }}
+          onChange={e => { if (e.target.files[0]) restoreBackup(e.target.files[0]); }} />
+      </div>
+
+      {/* ── Sign Out ── */}
       <div style={{ marginTop:24, paddingTop:16, borderTop:`1px solid ${C.borderLight}` }}>
         <button onClick={()=>{ if(window.__MB_AUTH__) window.__MB_AUTH__.signOut(); onClose(); }}
           style={{ width:"100%", padding:"11px", background:"none", border:`1px solid ${C.accent}`,

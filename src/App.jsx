@@ -9,27 +9,23 @@ import { SCHEMA_VERSION, migrateMove, loadLocal, saveLocal, debounce } from './u
 import { migrateOldAttributes } from './utils/attributeHelpers';
 import { Ic } from './components/shared/Ic';
 import { Toast } from './components/shared/Toast';
-import { TabBar } from './components/shared/TabBar';
 import { NoteModal } from './components/train/NoteModal';
 import { GoalModal } from './components/train/GoalModal';
 import { TargetGoalModal } from './components/train/TargetGoalModal';
 import { IdeaMenu } from './components/train/IdeaMenu';
-import { IdeasPage } from './components/train/IdeasPage';
 import { WIPPage } from './components/moves/WIPPage';
 import { ReadyPage } from './components/battle/ReadyPage';
+import { HomePage } from './components/home/HomePage';
+import { ReflectPage } from './components/reflect/ReflectPage';
 import { ProfileModal } from './components/modals/ProfileModal';
 import { ManualModal } from './components/modals/ManualModal';
-import { FeedbackModal } from './components/modals/FeedbackModal';
-import { SettingsModal } from './components/modals/SettingsModal';
 import { Walkthrough } from './components/modals/Walkthrough';
-import { BackupModal } from './components/modals/BackupModal';
 import { RepCounter } from './components/train/RepCounter';
 import { Sparring } from './components/train/Sparring';
 import { ComboMachine } from './components/train/ComboMachine';
 import { MusicFlow } from './components/train/MusicFlow';
 import { Lab } from './components/moves/Lab';
 import { RestoreRemixRebuild } from './components/moves/RestoreRemixRebuild';
-import { CalendarOverlay } from './components/calendar/CalendarOverlay';
 import { ManageReminders } from './components/moves/ManageReminders';
 import { MyStanceAssessment } from './components/stance/MyStanceAssessment';
 import { CompetitionSimulator } from './components/battle/CompetitionSimulator';
@@ -50,7 +46,7 @@ function migrateBattlePrep(bp) {
 
 export default function App() {
   const initLang = (() => { try { return JSON.parse(localStorage.getItem("mb_settings"))?.language || "en"; } catch { return "en"; } })();
-  const [tab,setTab]=useState(()=>{ try { const st=localStorage.getItem("mb_settings"); if(st){ const p=JSON.parse(st); if(p.defaultTab) return p.defaultTab; } } catch {} return "wip"; });
+  const [tab,setTab]=useState(()=>{ try { const st=localStorage.getItem("mb_settings"); if(st){ const p=JSON.parse(st); if(p.defaultTab){ const m={"wip":"moves","ideas":"home","ready":"battle"}; return m[p.defaultTab]||p.defaultTab; } } } catch {} return "home"; });
 
   // ── Data state ─────────────────────────────────────────────────────────────
   const [moves,  setMoves]  = useState(() => {
@@ -390,7 +386,6 @@ export default function App() {
   },[]);
 
   const [toasts,setToasts]=useState([]);
-  const [ideaToMove,setIdeaToMove]=useState(null);
   const [showProfile,setShowProfile]=useState(false);
 
   const [zoom, setZoom] = useState(()=>{ try { const s=localStorage.getItem("mb_settings"); if(s){ const p=JSON.parse(s); if(p.zoom) return p.zoom; } } catch{} return 1; });
@@ -398,17 +393,13 @@ export default function App() {
   const zoomMin=0.6, zoomMax=1.4, zoomStep=0.1;
   const [addTick, setAddTick] = useState(0);
   const [subTab, setSubTab] = useState("moves"); // tracks active sub-tab across pages
-  const [trainSubTab, setTrainSubTab] = useState("goals"); // TRAIN sub-tab for external navigation
   const [battlePrepSeed, setBattlePrepSeed] = useState(null); // { date, eventName } seed from Calendar
   const [calendarInitialMonth, setCalendarInitialMonth] = useState(null); // { year, month } for shared calendar
-  const [addMenu, setAddMenu] = useState(false); // contextual + menu
+  const [calendarInitialDay,setCalendarInitialDay]=useState(null);
   const [trainModal,  setTrainModal]  = useState({});
   const [trainMenu,   setTrainMenu]   = useState(null);
-  const [showFeedback,setShowFeedback]=useState(false);
-  const [showSettings,setShowSettings]=useState(false);
   const [showManual,   setShowManual]   =useState(false);
   const [showTour,setShowTour]=useState(false);
-  const [showBackup,setShowBackup]=useState(false);
   const [showRepCounter,setShowRepCounter]=useState(false);
   const [repCounterPreselect,setRepCounterPreselect]=useState(null);
   const [showSparring,setShowSparring]=useState(false);
@@ -416,31 +407,23 @@ export default function App() {
   const [showManageReminders,setShowManageReminders]=useState(false);
   const [showLab,setShowLab]=useState(false);
   const [showRRR,setShowRRR]=useState(false);
-  const [showCalendar,setShowCalendar]=useState(false);
-  const [calendarInitialDay,setCalendarInitialDay]=useState(null);
   const [showStanceAssessment,setShowStanceAssessment]=useState(false);
   const [showCompSim,setShowCompSim]=useState(false);
   const [showMusicFlow,setShowMusicFlow]=useState(false);
   const [scrollToStance,setScrollToStance]=useState(false);
   const [appSettings,setAppSettings]=useState(()=>({
     ...{
-      theme:"light", defaultTab:"wip", showMastery:true, decaySensitivity:"normal",
+      theme:"light", defaultTab:"home", showMastery:true, decaySensitivity:"normal",
       compactCards:false, sortMoves:"custom", fontSize:"medium",
       showMoveCount:false, confirmDelete:true, practiceReminders:false,
       reminderTime:"18:00", streakTracking:true, showDeadlineIndicator:true,
-      categorySort:"manual", defaultView:"list", language:"en", linkOnCard:"inside", targetAutoLink:false, trainTabOrder:["goals","habits","notes","prep"], trackMovesInSparring:true,
+      categorySort:"manual", defaultView:"list", language:"en", linkOnCard:"inside", targetAutoLink:false, trackMovesInSparring:true,
     },
     ...loadLocal("mb_settings", {}),
   }));
   useEffect(()=>{ saveLocal("mb_settings", appSettings); },[appSettings]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.settings?.(fbUser.uid, appSettings); },[appSettings, fbUser]);
 
-  // ── Migrate trainTabOrder: add "prep" if missing ──
-  useEffect(() => {
-    if (appSettings.trainTabOrder && !appSettings.trainTabOrder.includes("prep")) {
-      setAppSettings(p => ({...p, trainTabOrder: [...p.trainTabOrder, "prep"]}));
-    }
-  }, []);
 
   // ── Local translation function (App is above SettingsCtx.Provider, can't use useT) ──
   const _lang = appSettings.language || "en";
@@ -489,70 +472,11 @@ export default function App() {
     setMoves(prev => typeof updater==="function" ? updater(prev) : updater);
   }, []);
 
-  const handleAddMoveFromIdea = (text) => { setIdeaToMove(text); setTab("wip"); };
-
   // Secondary add trigger — used for "Add Category" and "Create Round" from bottom menu
   const [addTick2, setAddTick2] = useState(0);
 
-  // Contextual + menu: null = no menu needed (Train handles its own), array = show menu
-  const getAddMenuOptions = () => {
-    if (tab === "ideas") {
-      let firstItem;
-      if (subTab === "habits") {
-        firstItem = { label:tr("addHabitMenu"), emoji:"🔁", action:()=>{ setAddMenu(false); setAddTick(t=>t+1); } };
-      } else if (subTab === "notes") {
-        firstItem = { label:tr("addNoteMenu"), emoji:"📝", action:()=>{ setAddMenu(false); setAddTick(t=>t+1); } };
-      } else if (subTab === "prep") {
-        firstItem = { label:tr("addBattleMenu"), emoji:"⚔️", action:()=>{ setAddMenu(false); setAddTick(t=>t+1); } };
-      } else {
-        firstItem = { label:tr("addGoalMenu"), emoji:"🎯", action:()=>{ setAddMenu(false); setAddTick(t=>t+1); } };
-      }
-      return [
-        firstItem,
-        { label:tr("repCounter"),    emoji:"🔢", action:()=>{ setAddMenu(false); setShowRepCounter(true); } },
-        { label:tr("sparring"),      emoji:"🥊", action:()=>{ setAddMenu(false); setShowSparring(true); } },
-        { label:tr("comboMachine"),  emoji:"🎰", action:()=>{ setAddMenu(false); setShowComboMachine(true); } },
-        { label:tr("musicFlow"),     emoji:"🎵", action:()=>{ setAddMenu(false); setShowMusicFlow(true); } },
-      ];
-    }
-    if (tab === "wip" && (subTab === "moves" || subTab === "gap")) return [
-      { label:tr("addMoveMenu"),     emoji:"🕺", action:()=>{ setAddMenu(false); setAddTick(t=>t+1); } },
-      { label:tr("addCategoryMenu"), emoji:"📂", action:()=>{ setAddMenu(false); setAddTick2(t=>t+1); } },
-      { label:tr("openLab"),         emoji:"🧪", action:()=>{ setAddMenu(false); setShowLab(true); } },
-      { label:tr("restoreRemixRebuild"), emoji:"🔄", action:()=>{ setAddMenu(false); setShowRRR(true); } },
-    ];
-    if (tab === "wip" && subTab === "sets") return null; // fires Add Set directly
-    if (tab === "ready" && subTab === "rivals") return null; // fires Add Rival directly
-    if (tab === "ready" && subTab === "freestyle") return null; // fires picker directly
-    if (tab === "ready") return [
-      { label:tr("addRound"),  emoji:"\ud83d\udfe6", action:()=>{ setAddMenu(false); setAddTick(t=>t+1); } },
-      { label:tr("flowMap"),   emoji:"\ud83d\uddfa\ufe0f", action:()=>{ setAddMenu(false); setShowFlowMap(true); } },
-    ];
-    return null;
-  };
-
-  const handlePlusPress = () => {
-    const opts = getAddMenuOptions();
-    if (!opts) {
-      // Sets sub-tab: fire Add Set (addTick2), everything else fires addTick
-      if (tab === "wip" && subTab === "sets") setAddTick2(t=>t+1);
-      else setAddTick(t=>t+1);
-    }
-    else { setAddMenu(m=>!m); }
-  };
-
-  // Close addMenu on outside click
-  useEffect(() => {
-    if (!addMenu) return;
-    const h = (e) => {
-      const el = e.target;
-      const inBtn = el.closest && el.closest('#tour-add-btn');
-      const inMenu = el.closest && el.closest('#add-menu-popup');
-      if (!inBtn && !inMenu) setAddMenu(false);
-    };
-    document.addEventListener('pointerdown', h);
-    return () => document.removeEventListener('pointerdown', h);
-  }, [addMenu]);
+  // + button always opens Add Move
+  const handlePlusPress = () => { setAddTick(t=>t+1); };
   const handleTourDone = () => {
     setShowTour(false);
     if (fbUser?.uid) localStorage.setItem('mb_toured_' + fbUser.uid, '1');
@@ -598,12 +522,6 @@ export default function App() {
             )}
           </div>
           <div style={{ display:"flex", gap:6, alignItems:"center" }}>
-            <button onClick={()=>setShowBackup(true)} style={{ background:"none", border:"none", cursor:"pointer", padding:5, display:"flex" }} title="Backup">
-              <Ic n="download" s={17} c={C.brownLight}/>
-            </button>
-            <button onClick={()=>{setCalendarInitialDay(null);setShowCalendar(true);}} style={{ background:"none", border:"none", cursor:"pointer", padding:5, display:"flex" }} title="Calendar">
-              <Ic n="calendarIc" s={17} c={C.brownLight}/>
-            </button>
             {fbUser?.photo
               ? <button id="tour-profile" onClick={()=>setShowProfile(true)} style={{ background:"none", border:"none", cursor:"pointer", padding:2, display:"flex", borderRadius:"50%", overflow:"hidden" }}>
                   <img src={fbUser.photo} alt={fbUser.name} style={{ width:26, height:26, borderRadius:"50%", objectFit:"cover", border:`1.5px solid ${C.border}` }}/>
@@ -619,7 +537,7 @@ export default function App() {
           </div>
         </div>
 
-        {!(showCalendar||showRepCounter||showSparring||showComboMachine||showManageReminders||showRRR||showLab||showProfile||showSettings||showManual||showFeedback||showBackup||showStanceAssessment||showMusicFlow||showCompSim)&&<TabBar active={tab} onChange={(t,sub)=>{ setTrainMenu(null); setTab(t); setAddTick(0); setAddTick2(0); setAddMenu(false); setSubTab(sub||"moves"); }} badges={{ wip: staleCount }}/>}
+        {/* Top TabBar removed — navigation is now in the bottom bar */}
 
         <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column", position:"relative" }}>
           {/* Train modals + menu — inside position:relative so absolute children are scoped to app width */}
@@ -643,29 +561,12 @@ export default function App() {
           <IdeaMenu menu={trainMenu} onClose={()=>setTrainMenu(null)}/>
           <TrainModalCtx.Provider value={{ openModal:(type,idea,onSave)=>{ setTrainMenu(null); setTrainModal({type,idea,onSave}); } }}>
           <TrainMenuCtx.Provider value={{ openMenu:(m)=>setTrainMenu(m), closeMenu:()=>setTrainMenu(null) }}>
-            {tab==="ideas" && <IdeasPage onAddMove={handleAddMoveFromIdea} onAddTrigger={addTick} ideas={ideas} setIdeas={setIdeas} habits={habits} setHabits={setHabits} calendar={calendar} onOpenCalendarJournal={()=>{setCalendarInitialDay(new Date().toISOString().split("T")[0]);setShowCalendar(true);}} battleprep={battleprep} setBattleprep={setBattleprep} moves={moves} sets={sets} addToast={addToast} externalTrainSubTab={trainSubTab} onTrainSubTabUsed={()=>setTrainSubTab(null)} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={()=>setBattlePrepSeed(null)} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onSubTabChange={setSubTab} onOpenSharedCalendar={(im)=>{setCalendarInitialMonth(im||null);setShowCalendar(true);}}/>}
+            {tab==="home" && <HomePage habits={habits} setHabits={setHabits} onAddTrigger={addTick}/>}
+            {tab==="moves" && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} catDomains={catDomains} setCatDomains={setCatDomains} sets={sets} setSets={setSets} addToast={addToast} settings={appSettings} onSettingsChange={setAppSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} reminders={reminders} onRemindersChange={setReminders} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}} onOpenManageReminders={()=>setShowManageReminders(true)}/>}
+            {tab==="battle" && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} addToast={addToast} freestyle={freestyle} onFreestyleChange={setFreestyle} rivals={rivals} onRivalsChange={setRivals} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onSimulate={()=>setShowCompSim(true)} battleprep={battleprep} setBattleprep={setBattleprep} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={()=>setBattlePrepSeed(null)} onOpenSharedCalendar={(im)=>{setCalendarInitialMonth(im||null);}}/>}
+            {tab==="reflect" && <ReflectPage ideas={ideas} setIdeas={setIdeas} moves={moves} setMoves={setMovesGrad} reps={reps} sparring={sparring} musicflow={musicflow} habits={habits} calendar={calendar} setCalendar={setCalendar} cats={cats} catColors={catColors} settings={appSettings} onSettingsChange={setAppSettings} addToast={addToast} stance={stance} battleprep={battleprep} onToggleBattlePrepTask={(planId,dateStr,taskIdx)=>{setBattleprep(prev=>{const plans=(prev.plans||[]).map(p=>{if(p.id!==planId) return p;const key=dateStr+"-"+taskIdx;return {...p, completedTasks:{...(p.completedTasks||{}), [key]:!(p.completedTasks||{})[key]}};});return {...prev, plans};});}} onOpenStanceAssessment={()=>setShowStanceAssessment(true)} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onSubTabChange={setSubTab} onGoToPrep={(seed)=>{setBattlePrepSeed(seed);setTab("battle");}} initialDay={calendarInitialDay} initialMonth={calendarInitialMonth} sets={sets} onAddTrigger={addTick}/>}
           </TrainMenuCtx.Provider>
           </TrainModalCtx.Provider>
-          {tab==="wip" && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} catDomains={catDomains} setCatDomains={setCatDomains} sets={sets} setSets={setSets} addToast={addToast} pendingDesc={ideaToMove} clearPendingDesc={()=>setIdeaToMove(null)} settings={appSettings} onSettingsChange={setAppSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} reminders={reminders} onRemindersChange={setReminders} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}} onOpenManageReminders={()=>setShowManageReminders(true)}/>}
-          {tab==="ready" && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} addToast={addToast} freestyle={freestyle} onFreestyleChange={setFreestyle} rivals={rivals} onRivalsChange={setRivals} addCalendarEvent={addCalendarEvent} onSimulate={()=>setShowCompSim(true)}/>}
-          {showCalendar&&<CalendarOverlay
-            moves={moves} setMoves={setMovesGrad} reps={reps} sparring={sparring} musicflow={musicflow} habits={habits} ideas={ideas}
-            calendar={calendar} setCalendar={setCalendar}
-            cats={cats} catColors={catColors} settings={appSettings} onSettingsChange={setAppSettings}
-            addToast={addToast} initialDay={calendarInitialDay}
-            onClose={()=>{setShowCalendar(false);setCalendarInitialMonth(null);}}
-            onGoToPrep={(seed)=>{ setBattlePrepSeed(seed); setTrainSubTab("prep"); setTab("ideas"); setShowCalendar(false); }}
-            battleprep={battleprep} initialMonth={calendarInitialMonth}
-            onToggleBattlePrepTask={(planId,dateStr,taskIdx)=>{
-              setBattleprep(prev=>{
-                const plans=(prev.plans||[]).map(p=>{
-                  if(p.id!==planId) return p;
-                  const key=dateStr+"-"+taskIdx;
-                  return {...p, completedTasks:{...(p.completedTasks||{}), [key]:!(p.completedTasks||{})[key]}};
-                });
-                return {...prev, plans};
-              });
-            }}/>}
           {showRepCounter&&<RepCounter moves={moves} catColors={catColors} reps={reps}
             preselectedMove={repCounterPreselect}
             onSaveSession={(session)=>{
@@ -730,74 +631,56 @@ export default function App() {
             onOpenManageReminders={()=>{ setShowProfile(false); setShowManageReminders(true); }}
             moves={moves} stance={stance} sparring={sparring} calendar={calendar}
             scrollToStance={scrollToStance} onScrollToStanceDone={()=>setScrollToStance(false)}
-            onOpenStanceAssessment={()=>{ setShowProfile(false); setShowStanceAssessment(true); }}/>}
+            onOpenStanceAssessment={()=>{ setShowProfile(false); setShowStanceAssessment(true); }}
+            settings={appSettings} onSettingsChange={setAppSettings} onClearMoves={()=>setMoves([])} onRestoreRounds={()=>setRounds(INIT_ROUNDS)} onRestartTour={()=>{setShowProfile(false);setShowTour(true);}} zoom={zoom} onZoomChange={handleZoomChange} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs}/>}
           {showManual&&<ManualModal onClose={()=>setShowManual(false)}/>}
-          {showFeedback&&<FeedbackModal onClose={()=>setShowFeedback(false)}/>}
-          {showSettings&&<SettingsModal onClose={()=>setShowSettings(false)} settings={appSettings} onSave={setAppSettings} onClearMoves={()=>setMoves([])} onRestoreRounds={()=>setRounds(INIT_ROUNDS)} onRestartTour={()=>setShowTour(true)} zoom={zoom} onZoomChange={handleZoomChange} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs}/>}
-          {showBackup&&<BackupModal onClose={()=>setShowBackup(false)}/>}
         </div>
 
         <Toast toasts={toasts} remove={removeToast}/>
         {showTour&&<Walkthrough onDone={handleTourDone}/>}
 
-        {/* ── Bottom Bar ── */}
-        {!showTour&&(
+        {/* ── Bottom Bar — 4 tabs + centre Add ── */}
+        {!showTour&&(()=>{
+          const anyOverlay = showRepCounter||showSparring||showComboMachine||showManageReminders||showRRR||showLab||showProfile||showManual||showStanceAssessment||showMusicFlow||showCompSim;
+          const tabs = [{id:"home",icon:"home",label:tr("home")},{id:"moves",icon:"book",label:tr("vocab")},null,{id:"battle",icon:"sword",label:tr("battle")},{id:"reflect",icon:"barChart",label:tr("reflect")}];
+          const handleTabChange = (t) => { setTrainMenu(null); setTab(t); setAddTick(0); setAddTick2(0); setSubTab(t==="moves"?"moves":t==="battle"?"plan":t==="reflect"?"calendar":""); };
+          return (
           <div style={{ display:"flex", alignItems:"stretch", borderTop:`2px solid ${C.border}`,
             background:C.bg, flexShrink:0, height:58, zIndex:100 }}>
-
-            {/* Feedback */}
-            <button onClick={()=>setShowFeedback(true)}
-              style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center",
-                justifyContent:"center", gap:3, background:"none", border:"none", cursor:"pointer",
-                color: showFeedback ? C.accent : C.textMuted, transition:"color 0.15s" }}>
-              <span style={{ fontSize:20, lineHeight:1 }}>{"💬"}</span>
-              <span style={{ fontSize:9, fontFamily:FONT_DISPLAY, fontWeight:800, letterSpacing:1.2 }}>{tr("feedbackLabel")}</span>
-            </button>
-
-            {/* ADD — centre, contextual menu */}
-            <div style={{ flex:"0 0 64px", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", position:"relative" }}>
-              {addMenu&&(
-                <div id="add-menu-popup" style={{ position:"absolute", bottom:62, left:"50%", transform:"translateX(-50%)",
-                  background:C.bg, border:`2px solid ${C.border}`, borderRadius:12,
-                  overflow:"hidden", zIndex:9999, minWidth:180,
-                  boxShadow:"0 -8px 32px rgba(0,0,0,0.25)" }}>
-                  {(getAddMenuOptions()||[]).map((opt,i)=>(
-                    <button key={i} onClick={opt.action}
-                      style={{ width:"100%", padding:"13px 16px", background:"none",
-                        border:"none", borderTop: i>0?`1px solid ${C.borderLight}`:"none",
-                        cursor:"pointer", display:"flex", alignItems:"center", gap:10,
-                        color:C.text, fontSize:13, fontFamily:FONT_DISPLAY, fontWeight:700,
-                        letterSpacing:0.5, textAlign:"left" }}>
-                      <span style={{ fontSize:16 }}>{opt.emoji}</span>{opt.label}
-                    </button>
-                  ))}
+            {tabs.map((tb,i)=>{
+              if(!tb) return (
+                <div key="plus" style={{ flex:"0 0 64px", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", position:"relative" }}>
+                  <button id="tour-add-btn" onClick={handlePlusPress}
+                    style={{ display:"flex", flexDirection:"column", alignItems:"center",
+                      justifyContent:"center", background:"none", border:"none", cursor:"pointer" }}>
+                    <div style={{ width:48, height:48, borderRadius:"50%", background:C.accent,
+                      display:"flex", alignItems:"center", justifyContent:"center",
+                      boxShadow:"0 4px 16px rgba(139,26,26,0.4)",
+                      transform:"translateY(-10px)", transition:"transform 0.15s" }}
+                      onMouseEnter={e=>e.currentTarget.style.transform="translateY(-13px) scale(1.07)"}
+                      onMouseLeave={e=>e.currentTarget.style.transform="translateY(-10px) scale(1)"}>
+                      <Ic n="plus" s={22} c={C.bg}/>
+                    </div>
+                  </button>
                 </div>
-              )}
-              <button id="tour-add-btn" onClick={handlePlusPress}
-                style={{ display:"flex", flexDirection:"column", alignItems:"center",
-                  justifyContent:"center", background:"none", border:"none", cursor:"pointer" }}>
-                <div style={{ width:48, height:48, borderRadius:"50%", background:C.accent,
-                  display:"flex", alignItems:"center", justifyContent:"center",
-                  boxShadow:`0 4px 16px rgba(139,26,26,0.4)`,
-                  transform:"translateY(-10px)", transition:"transform 0.15s" }}
-                  onMouseEnter={e=>e.currentTarget.style.transform="translateY(-13px) scale(1.07)"}
-                  onMouseLeave={e=>e.currentTarget.style.transform="translateY(-10px) scale(1)"}>
-                  <Ic n="plus" s={22} c={C.bg}/>
-                </div>
-              </button>
-            </div>
-
-            {/* Settings */}
-            <button onClick={()=>setShowSettings(true)}
-              style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center",
-                justifyContent:"center", gap:3, background:"none", border:"none", cursor:"pointer",
-                color: showSettings ? C.accent : C.textMuted, transition:"color 0.15s" }}>
-              <Ic n="cog" s={20} c={showSettings ? C.accent : C.textMuted}/>
-              <span style={{ fontSize:9, fontFamily:FONT_DISPLAY, fontWeight:800, letterSpacing:1.2 }}>{tr("settingsLabel")}</span>
-            </button>
-
+              );
+              const on = tab===tb.id && !anyOverlay;
+              const badge = tb.id==="moves" ? staleCount : 0;
+              return (
+                <button key={tb.id} onClick={()=>handleTabChange(tb.id)}
+                  style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center",
+                    justifyContent:"center", gap:3, background:on?`rgba(${C.accent==="#e53935"?"229,57,53":"207,0,0"},0.08)`:"none",
+                    border:"none", borderBottom:`3px solid ${on?C.accent:"transparent"}`,
+                    cursor:"pointer", color:on?C.accent:C.textMuted, transition:"all 0.15s", position:"relative", overflow:"visible" }}>
+                  <Ic n={tb.icon} s={18} c={on?C.accent:C.textMuted}/>
+                  <span style={{ fontSize:9, fontFamily:FONT_DISPLAY, fontWeight:800, letterSpacing:1.2 }}>{tb.label}</span>
+                  {badge>0&&<span onClick={e=>{e.stopPropagation();handleTabChange("moves");setSubTab("gap");}} style={{ position:"absolute", top:2, right:"calc(50% - 20px)", minWidth:16, height:16, borderRadius:8, background:C.red, color:"#fff", fontSize:9, fontWeight:900, display:"flex", alignItems:"center", justifyContent:"center", padding:"0 4px", lineHeight:1, cursor:"pointer" }}>{badge}</span>}
+                </button>
+              );
+            })}
           </div>
-        )}
+          );
+        })()}
       </div>
     </SettingsCtx.Provider>
   );

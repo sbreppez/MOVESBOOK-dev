@@ -14,9 +14,10 @@ import { FreestylePage } from './FreestylePage';
 import { RivalsPage } from './RivalsPage';
 import { NewRoundModal } from './NewRoundModal';
 import { SectionBanner } from '../shared/SectionBanner';
+import { BattlePrepPage } from '../train/BattlePrepPage';
 import { computeDecay } from '../../utils/masteryDecay';
 
-export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, addToast, freestyle, onFreestyleChange, rivals, onRivalsChange, addCalendarEvent, onSimulate }) => {
+export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, addToast, freestyle, onFreestyleChange, rivals, onRivalsChange, addCalendarEvent, removeCalendarEvent, onSimulate, battleprep, setBattleprep, calendar, battlePrepSeed, onBattlePrepSeedUsed, onOpenSharedCalendar }) => {
   const t = useT();
   const { moveCountStr, itemCountStr, roundCountStr, entryCountStr } = usePlural();
   const { C } = useSettings();
@@ -93,7 +94,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
     if(!onAddTrigger) return;
     if(battleTab==="freestyle") setFreestyleAddTick(t=>t+1);
     else if(battleTab==="rivals") setRivalsAddTick(t=>t+1);
-    else setAddingRound(true);
+    else if(battleTab==="plan") setAddingRound(true);
   },[onAddTrigger]);
   // onAddTrigger2 in Battle: "Add Move" opens freestyle picker regardless of sub-tab
   useEffect(()=>{
@@ -735,7 +736,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
 
 
   // ── Sub-tab bar ──────────────────────────────────────────────────────────────
-  const subTabs = [["plan",t("plan")],["freestyle",t("freestyle")],["rivals",t("rivals")]];
+  const subTabs = [["plan",t("plan")],["prep",t("prep")],["freestyle",t("freestyle")],["rivals",t("rivals")]];
 
   return (
     <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column", position:"relative" }}>
@@ -765,6 +766,9 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
           {pickerEntry&&<VocabPicker pickerState={pickerEntry}/>}
         </div>
       )}
+
+      {/* PREP tab */}
+      {battleTab==="prep"&&<BattlePrepPage battleprep={battleprep} setBattleprep={setBattleprep} moves={moves} sets={sets} addToast={addToast} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={onBattlePrepSeedUsed} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onAddTrigger={battleTab==="prep"?onAddTrigger:null} onOpenSharedCalendar={onOpenSharedCalendar}/>}
 
       {/* FREESTYLE tab */}
       {battleTab==="freestyle"&&<FreestylePage moves={moves} sets={sets} settings={settings} onAddTrigger={freestyleAddTick} addToast={addToast} freestyle={freestyle} onFreestyleChange={onFreestyleChange}/>}

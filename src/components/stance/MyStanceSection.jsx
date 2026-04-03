@@ -321,14 +321,6 @@ export const MyStanceSection = ({ moves, stance, sparring, calendar, onOpenAsses
         )}
       </div>
 
-      {/* Update button */}
-      <button onClick={onOpenAssessment}
-        style={{ marginTop:14, width:"100%", padding:"10px 0", background:"none",
-          border:`1px solid ${C.accent}`, borderRadius:10, color:C.accent,
-          fontSize:13, fontFamily:FONT_DISPLAY, fontWeight:700, letterSpacing:1,
-          cursor:"pointer" }}>
-        {t("updateMyStance")}
-      </button>
     </div>
   );
 };
