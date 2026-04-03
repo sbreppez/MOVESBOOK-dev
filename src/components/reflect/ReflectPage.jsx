@@ -26,6 +26,7 @@ export const ReflectPage = ({
   const { openModal } = useTrainModal();
   const [reflectTab, setReflectTab] = useState("calendar");
   const [showStanceConfirm, setShowStanceConfirm] = useState(false);
+  const [calendarAddTick, setCalendarAddTick] = useState(0);
 
   useEffect(() => { if (onSubTabChange) onSubTabChange(reflectTab); }, [reflectTab]);
 
@@ -51,6 +52,7 @@ export const ReflectPage = ({
       if (reflectTab === "notes") { openModal("note", null, addIdea); }
       else if (reflectTab === "goals") { setTypeChooser(true); }
       else if (reflectTab === "stance") { setShowStanceConfirm(true); }
+      else if (reflectTab === "calendar") { setCalendarAddTick(t => t + 1); }
     }
     prevAddTrigger.current = onAddTrigger;
   }, [onAddTrigger]);
@@ -227,7 +229,8 @@ export const ReflectPage = ({
           addToast={addToast} initialDay={initialDay}
           onGoToPrep={onGoToPrep}
           battleprep={battleprep} initialMonth={initialMonth}
-          onToggleBattlePrepTask={onToggleBattlePrepTask} />
+          onToggleBattlePrepTask={onToggleBattlePrepTask}
+          onAddTrigger={calendarAddTick} />
       )}
 
       {reflectTab === "stance" && (

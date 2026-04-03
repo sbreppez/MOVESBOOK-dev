@@ -34,7 +34,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   useEffect(()=>{ if(parentSubTab==="gap"&&vocabTab!=="gap") { setVocabTab("gap"); setOpenCat(null); } },[parentSubTab]);
   const [openCat,setOpenCat]=useState(null);
   const [showAdd,setShowAdd]=useState(false); const [bulk,setBulk]=useState(false);
-  useEffect(()=>{ if(onAddTrigger) setShowAdd(true); },[onAddTrigger]);
+  useEffect(()=>{ if(onAddTrigger) { if(vocabTab==="sets") setAddingSet(true); else setShowAdd(true); } },[onAddTrigger]);
   const [editMove,setEditMove]=useState(null);
   // cats/catColors are now lifted to App — received as props
   const [showAddCat,setShowAddCat]=useState(false);

@@ -226,7 +226,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
     // ── Battle Log form screen ──
     if (showBattleLog) {
       return (
-        <Modal title={t("battleLog")} onClose={() => setShowBattleLog(false)} wide>
+        <Modal title={t("battleLog")} onClose={() => setShowBattleLog(false)}>
           {/* Date */}
           <div style={{ marginBottom:14 }}>
             <label style={lbl()}>DATE</label>
@@ -305,7 +305,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
 
     // ── Main rival edit/add modal ──
     return (
-      <Modal title={isEdit ? t("editRival") : t("addRival")} onClose={onClose} wide>
+      <Modal title={isEdit ? t("editRival") : t("addRival")} onClose={onClose}>
         {/* Photo */}
         <div style={{ display:"flex", alignItems:"center", gap:14, marginBottom:18 }}>
           <div onClick={() => photoRef.current?.click()}

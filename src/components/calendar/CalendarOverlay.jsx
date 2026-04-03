@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { CAT_COLORS, CATEGORY_DOMAIN_MAP, DOMAIN_COLORS } from '../../constants/categories';
@@ -24,7 +24,7 @@ export const CalendarOverlay = ({
   addToast, initialDay,
   onClose, onGoToPrep,
   battleprep, onToggleBattlePrepTask, initialMonth,
-  inline,
+  inline, onAddTrigger,
 }) => {
   const t = useT();
   const today = new Date().toISOString().split("T")[0];
@@ -38,7 +38,11 @@ export const CalendarOverlay = ({
   const [showJournal, setShowJournal] = useState(!!initialDay);
   const [editEvent, setEditEvent] = useState(null);
   const [showTypePicker, setShowTypePicker] = useState(false);
-  const [battlePrepPrompt, setBattlePrepPrompt] = useState(null); // { date, eventName }
+  const [battlePrepPrompt, setBattlePrepPrompt] = useState(null);
+
+  useEffect(() => {
+    if (onAddTrigger) { setSelectedDay(today); setShowTypePicker(true); setShowJournal(false); }
+  }, [onAddTrigger]);
 
   const year = viewDate.getFullYear();
   const month = viewDate.getMonth();
