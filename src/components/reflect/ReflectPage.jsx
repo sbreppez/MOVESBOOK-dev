@@ -25,6 +25,7 @@ export const ReflectPage = ({
   const { C } = useSettings();
   const { openModal } = useTrainModal();
   const [reflectTab, setReflectTab] = useState("calendar");
+  const [showStanceConfirm, setShowStanceConfirm] = useState(false);
 
   useEffect(() => { if (onSubTabChange) onSubTabChange(reflectTab); }, [reflectTab]);
 
@@ -49,7 +50,7 @@ export const ReflectPage = ({
     if (onAddTrigger !== prevAddTrigger.current && onAddTrigger > 0) {
       if (reflectTab === "notes") { openModal("note", null, addIdea); }
       else if (reflectTab === "goals") { setTypeChooser(true); }
-      else if (reflectTab === "stance") { if (onOpenStanceAssessment) onOpenStanceAssessment(); }
+      else if (reflectTab === "stance") { setShowStanceConfirm(true); }
     }
     prevAddTrigger.current = onAddTrigger;
   }, [onAddTrigger]);
@@ -250,6 +251,20 @@ export const ReflectPage = ({
             <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
               <Btn variant="secondary" onClick={() => setConfirmDel(null)}>{t("cancel")}</Btn>
               <Btn variant="danger" onClick={() => { del(confirmDel.id); setConfirmDel(null); }}>{t("delete")}</Btn>
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      {/* Stance assessment confirmation */}
+      {showStanceConfirm && (
+        <Modal onClose={() => setShowStanceConfirm(false)}>
+          <div style={{ textAlign: "center", padding: "10px 0" }}>
+            <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 10, color: C.text, fontFamily: FONT_DISPLAY }}>{t("updateStance")}</div>
+            <div style={{ fontSize: 13, color: C.textSec, marginBottom: 18, lineHeight: 1.5 }}>{t("updateStanceConfirm")}</div>
+            <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
+              <Btn variant="secondary" onClick={() => setShowStanceConfirm(false)}>{t("cancel")}</Btn>
+              <Btn style={{ background: C.accent, color: "#fff" }} onClick={() => { setShowStanceConfirm(false); if (onOpenStanceAssessment) onOpenStanceAssessment(); }}>{t("confirm")}</Btn>
             </div>
           </div>
         </Modal>

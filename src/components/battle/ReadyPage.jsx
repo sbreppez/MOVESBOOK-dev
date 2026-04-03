@@ -90,10 +90,12 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
 
   const [freestyleAddTick, setFreestyleAddTick] = useState(0);
   const [rivalsAddTick, setRivalsAddTick] = useState(0);
+  const [prepAddTick, setPrepAddTick] = useState(0);
   useEffect(()=>{
     if(!onAddTrigger) return;
     if(battleTab==="freestyle") setFreestyleAddTick(t=>t+1);
     else if(battleTab==="rivals") setRivalsAddTick(t=>t+1);
+    else if(battleTab==="prep") setPrepAddTick(t=>t+1);
     else if(battleTab==="plan") setAddingRound(true);
   },[onAddTrigger]);
   // onAddTrigger2 in Battle: "Add Move" opens freestyle picker regardless of sub-tab
@@ -768,7 +770,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
       )}
 
       {/* PREP tab */}
-      {battleTab==="prep"&&<BattlePrepPage battleprep={battleprep} setBattleprep={setBattleprep} moves={moves} sets={sets} addToast={addToast} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={onBattlePrepSeedUsed} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onAddTrigger={battleTab==="prep"?onAddTrigger:null} onOpenSharedCalendar={onOpenSharedCalendar}/>}
+      {battleTab==="prep"&&<BattlePrepPage battleprep={battleprep} setBattleprep={setBattleprep} moves={moves} sets={sets} addToast={addToast} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={onBattlePrepSeedUsed} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onAddTrigger={prepAddTick} onOpenSharedCalendar={onOpenSharedCalendar}/>}
 
       {/* FREESTYLE tab */}
       {battleTab==="freestyle"&&<FreestylePage moves={moves} sets={sets} settings={settings} onAddTrigger={freestyleAddTick} addToast={addToast} freestyle={freestyle} onFreestyleChange={onFreestyleChange}/>}
