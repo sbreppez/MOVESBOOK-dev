@@ -33,6 +33,7 @@ import { CalendarOverlay } from './components/calendar/CalendarOverlay';
 import { ManageReminders } from './components/moves/ManageReminders';
 import { MyStanceAssessment } from './components/stance/MyStanceAssessment';
 import { CompetitionSimulator } from './components/battle/CompetitionSimulator';
+import { FlowMap } from './components/battle/FlowMap';
 
 // ── Firebase stubs for preview ──
 if (typeof window !== "undefined") {
@@ -158,6 +159,35 @@ export default function App() {
   const [battleprep, setBattleprep] = useState(() => {
     try { const s=localStorage.getItem("mb_battleprep"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return migrateBattlePrep(p);} } catch{} return { plans:[], history:[] };
   });
+  const [flowmap, setFlowmap] = useState(() => {
+    try {
+      const s=localStorage.getItem("mb_flowmap");
+      if(s){
+        const p=JSON.parse(s);
+        if(p&&typeof p==="object"){
+          // Migrate pairing keys: fix any literal backslash-u sequences and ensure → character
+          if(p.pairings){
+            const fixed={};
+            let changed=false;
+            Object.entries(p.pairings).forEach(([k,v])=>{
+              const nk=k.replace(/\\u2192/g,"→").replace(/\\u00b7/g,"·");
+              if(nk!==k) changed=true;
+              // Migrate single transition string to array
+              if(v&&v.transition&&!v.transitions){
+                v={...v, transitions:[v.transition]};
+                changed=true;
+              }
+              fixed[nk]=v;
+            });
+            if(changed) p.pairings=fixed;
+          }
+          return p;
+        }
+      }
+    } catch{}
+    return { pairings:{} };
+  });
+  const [showFlowMap, setShowFlowMap] = useState(false);
 
   // ── Persist to localStorage on every change ────────────────────────────────
   useEffect(()=>{ saveLocal("mb_moves",   moves);   },[moves]);
@@ -186,6 +216,7 @@ export default function App() {
   useEffect(()=>{ saveLocal("mb_reflections", reflections); },[reflections]);
   useEffect(()=>{ saveLocal("mb_rivals", rivals); },[rivals]);
   useEffect(()=>{ saveLocal("mb_battleprep", battleprep); },[battleprep]);
+  useEffect(()=>{ saveLocal("mb_flowmap", flowmap); },[flowmap]);
   useEffect(()=>{ saveLocal("mb_ideas",   ideas);
     const timer = setTimeout(() => {
       if (window.__MB_USER__?.uid && window.__MB_DB__) {
@@ -227,6 +258,7 @@ export default function App() {
       reflections: save("reflections"),
       rivals:      save("rivals"),
       battleprep:  save("battleprep"),
+      flowmap:     save("flowmap"),
     };
   }, []);
 
@@ -252,6 +284,7 @@ export default function App() {
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.reflections?.(fbUser.uid, reflections); },[reflections, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.rivals?.(fbUser.uid, rivals); },[rivals, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.battleprep?.(fbUser.uid, battleprep); },[battleprep, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.flowmap?.(fbUser.uid, flowmap); },[flowmap, fbUser]);
 
   // ── Auth resolution ────────────────────────────────────────────────────────
   useEffect(()=>{
@@ -301,6 +334,8 @@ export default function App() {
           if (rv) { try { const p=JSON.parse(rv); if(Array.isArray(p)) setRivals(p); } catch {} }
           const bpp = localStorage.getItem("mb_battleprep");
           if (bpp) { try { const p=JSON.parse(bpp); if(p&&typeof p==="object") setBattleprep(migrateBattlePrep(p)); } catch {} }
+          const fm = localStorage.getItem("mb_flowmap");
+          if (fm) { try { const p=JSON.parse(fm); if(p&&typeof p==="object") setFlowmap(p); } catch {} }
           if (p) { try { const pp=JSON.parse(p); if(pp&&Object.values(pp).some(v=>v)) setProfile(pp); } catch{} }
           const st = localStorage.getItem("mb_settings");
           if (st) {
@@ -489,7 +524,10 @@ export default function App() {
     if (tab === "wip" && subTab === "sets") return null; // fires Add Set directly
     if (tab === "ready" && subTab === "rivals") return null; // fires Add Rival directly
     if (tab === "ready" && subTab === "freestyle") return null; // fires picker directly
-    if (tab === "ready") return null; // fires Create Round directly
+    if (tab === "ready") return [
+      { label:tr("addRound"),  emoji:"\ud83d\udfe6", action:()=>{ setAddMenu(false); setAddTick(t=>t+1); } },
+      { label:tr("flowMap"),   emoji:"\ud83d\uddfa\ufe0f", action:()=>{ setAddMenu(false); setShowFlowMap(true); } },
+    ];
     return null;
   };
 
@@ -673,6 +711,13 @@ export default function App() {
           {showRRR&&<RestoreRemixRebuild moves={moves} catColors={catColors} rrr={rrr}
             onRRRChange={setRRR} addToast={addToast} addCalendarEvent={addCalendarEvent}
             onClose={()=>setShowRRR(false)}/>}
+          {showFlowMap&&<FlowMap moves={moves} cats={cats} catColors={catColors}
+            flowmap={flowmap} onFlowmapChange={setFlowmap}
+            combos={combos}
+            onSaveMove={(moveData)=>{ setMoves(prev=>[...prev,{...moveData, id:Date.now()}]); }}
+            onSaveSet={(fields)=>{ setSets(p=>[...p,{id:Date.now(),...fields}]); }}
+            addToast={addToast}
+            onClose={()=>setShowFlowMap(false)}/>}
           {showMusicFlow&&<MusicFlow musicflow={musicflow} onMusicflowChange={setMusicflow}
             onUpdateSession={onUpdateMusicflowSession}
             reflections={reflections} onReflectionsChange={setReflections}
