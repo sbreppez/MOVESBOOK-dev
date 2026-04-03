@@ -177,12 +177,61 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
           </div>
         );
       })()}
-      {/* Battle Prep countdown banner */}
+      {/* Battle Prep banners — reminder takes priority over countdown */}
       {(()=>{
         const plans = battleprep?.plans || [];
         if (!plans.length) return null;
         const todayStr = new Date().toISOString().split("T")[0];
-        // Find nearest future battle across all plans
+
+        // 1. Check for unreflected past battles (reminder banner)
+        let reminderBattle = null, reminderPlan = null;
+        for (const plan of plans) {
+          for (const b of (plan.battles || [])) {
+            if (b.date < todayStr && !b.reflectionLogged
+              && (b.reminderDismissCount || 0) < 3
+              && b.lastDismissDate !== todayStr) {
+              if (!reminderBattle || b.date > reminderBattle.date) {
+                reminderBattle = b; reminderPlan = plan;
+              }
+            }
+          }
+        }
+
+        if (reminderBattle && reminderPlan) {
+          const battleName = reminderBattle.eventName || reminderPlan.eventName || reminderPlan.planName;
+          const label = (t("howDidBattleGo") || "How did {name} go?").replace("{name}", battleName || t("yourBattle") || "your battle");
+          return (
+            <div style={{ margin:"0 12px 8px", display:"flex", alignItems:"center", gap:8,
+              background:`${C.accent}18`, border:`1px solid ${C.accent}40`, borderRadius:10, padding:"12px 14px",
+              width:"calc(100% - 24px)" }}>
+              <button onClick={()=>{ setTrainTab("prep"); }}
+                style={{ flex:1, display:"flex", alignItems:"center", gap:8, background:"none",
+                  border:"none", cursor:"pointer", padding:0, textAlign:"left" }}>
+                <span style={{ fontSize:16 }}>{"\u2694\uFE0F"}</span>
+                <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:13, color:C.text, letterSpacing:0.3 }}>
+                  {label}
+                </span>
+              </button>
+              <button onClick={()=>{
+                setBattleprep(prev => ({
+                  ...prev,
+                  plans: (prev.plans || []).map(p => {
+                    if (p.id !== reminderPlan.id) return p;
+                    return { ...p, battles: (p.battles || []).map(b => {
+                      if (b.id !== reminderBattle.id) return b;
+                      return { ...b, lastDismissDate: todayStr, reminderDismissCount: (b.reminderDismissCount || 0) + 1 };
+                    })};
+                  }),
+                }));
+              }}
+                style={{ background:"none", border:"none", cursor:"pointer", padding:2, display:"flex", flexShrink:0 }}>
+                <Ic n="x" s={14} c={C.textMuted}/>
+              </button>
+            </div>
+          );
+        }
+
+        // 2. Countdown banner (only if no reminder showing)
         let nearest = null, nearestPlan = null;
         for (const plan of plans) {
           const fb = (plan.battles||[]).filter(b=>b.date>=todayStr).sort((a,b)=>a.date.localeCompare(b.date));
@@ -208,7 +257,7 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
             style={{ margin:"0 12px 8px", display:"flex", alignItems:"center", gap:8,
               background:`${pc}18`, border:`1px solid ${pc}40`, borderRadius:10, padding:"10px 14px",
               cursor:"pointer", textAlign:"left", width:"calc(100% - 24px)" }}>
-            <span style={{ fontSize:16 }}>⚔️</span>
+            <span style={{ fontSize:16 }}>{"\u2694\uFE0F"}</span>
             <span style={{ flex:1, fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, letterSpacing:0.5 }}>
               <span style={{ color:C.text }}>{displayName}</span>
               <span style={{ color:C.textSec }}> {"\u2014"} </span>

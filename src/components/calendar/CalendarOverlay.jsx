@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
-import { CAT_COLORS } from '../../constants/categories';
+import { CAT_COLORS, CATEGORY_DOMAIN_MAP, DOMAIN_COLORS } from '../../constants/categories';
 import { useT } from '../../hooks/useTranslation';
 import { Ic } from '../shared/Ic';
 import { EXERTION_OPTIONS, BODY_PARTS, BODY_STATES } from '../shared/BodyCheckIn';
@@ -517,15 +517,21 @@ export const CalendarOverlay = ({
               <div>
                 <div style={sectionLabel}>{t("movesTrained")}</div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
-                  {dayData.movesTrained.map(m => (
-                    <span key={m.id} style={{ display: "inline-flex", alignItems: "center", gap: 4,
-                      fontSize: 11, fontFamily: FONT_BODY, color: C.text,
-                      background: C.surfaceAlt, borderRadius: 8, padding: "3px 8px" }}>
-                      <span style={{ width: 6, height: 6, borderRadius: "50%",
-                        background: catColors[m.category] || CAT_COLORS[m.category] || C.accent }} />
-                      {m.name}
-                    </span>
-                  ))}
+                  {dayData.movesTrained.map(m => {
+                    const domainKey = CATEGORY_DOMAIN_MAP[m.category]?.primary;
+                    const domainColor = domainKey ? DOMAIN_COLORS[domainKey] : null;
+                    return (
+                      <span key={m.id} style={{ display: "inline-flex", alignItems: "center", gap: 4,
+                        fontSize: 11, fontFamily: FONT_BODY, color: C.text,
+                        background: C.surfaceAlt, borderRadius: 8, padding: "3px 8px" }}>
+                        <span style={{ width: 6, height: 6, borderRadius: "50%",
+                          background: catColors[m.category] || CAT_COLORS[m.category] || C.accent }} />
+                        {domainColor && <span style={{ width: 4, height: 4, borderRadius: "50%",
+                          background: domainColor, marginLeft: -2 }} />}
+                        {m.name}
+                      </span>
+                    );
+                  })}
                 </div>
               </div>
             )}

@@ -6,9 +6,9 @@ import { CAT_COLORS } from '../../constants/categories';
 import { PRESET_META, DEFAULT_CHECKLIST, BATTLE_MOODS, BATTLE_RESULTS, getPreparationStats, toYMD } from './battlePrepHelpers';
 
 // ── Battle Day View ─────────────────────────────────────────────────────────
-// Three-phase flow: pre-battle → reflection → share card
+// Flow: pre-battle → reflection → share card → (plan complete if last battle) → done
 export const BattleDayView = ({ plan, battle, dayMap, moves, sets, updatePlan, setBattleprep, addToast, t, today }) => {
-  const [phase, setPhase] = useState("pre"); // "pre" | "reflection" | "shareCard"
+  const [phase, setPhase] = useState("pre"); // "pre" | "reflection" | "shareCard" | "planComplete" | "done"
   const meta = PRESET_META[plan.preset] || PRESET_META.smoke;
 
   // Reflection state
@@ -47,6 +47,20 @@ export const BattleDayView = ({ plan, battle, dayMap, moves, sets, updatePlan, s
     return <BattleShareCard
       plan={plan} battle={battle} meta={meta} prepStats={prepStats}
       reflection={savedReflection}
+      onClose={() => {
+        // If all battles now have reflections, show plan completion card
+        if (savedReflection?._allDone) {
+          setPhase("planComplete");
+        } else {
+          setPhase("done");
+        }
+      }} t={t} today={today} />;
+  }
+
+  if (phase === "planComplete") {
+    return <PlanCompletionCard
+      plan={plan} meta={meta} dayMap={dayMap}
+      setBattleprep={setBattleprep} addToast={addToast}
       onClose={() => setPhase("done")} t={t} today={today} />;
   }
 
@@ -260,6 +274,7 @@ const PostBattleReflection = ({ plan, battle, meta, prepStats, mood, setMood, re
 
     const reflection = { mood, result, takeaway, whatWorked, needsWork, changeTraining, date: today };
 
+    let allDone = false;
     setBattleprep(prev => {
       const updatedPlans = (prev.plans || []).map(p => {
         if (p.id !== plan.id) return p;
@@ -272,21 +287,14 @@ const PostBattleReflection = ({ plan, battle, meta, prepStats, mood, setMood, re
 
       // Check if all battles in plan are now completed
       const updatedPlan = updatedPlans.find(p => p.id === plan.id);
-      const allDone = updatedPlan && (updatedPlan.battles || []).every(b => b.completed);
+      allDone = updatedPlan && (updatedPlan.battles || []).every(b => b.completed);
 
-      if (allDone) {
-        return {
-          ...prev,
-          plans: updatedPlans.filter(p => p.id !== plan.id),
-          history: [...(prev.history || []), { ...updatedPlan, status: "completed", endDate: today }],
-        };
-      }
-
+      // Don't archive yet — if allDone, the completion card will handle it
       return { ...prev, plans: updatedPlans };
     });
 
     addToast({ emoji: "\u2694\uFE0F", title: t("reflectionSaved") });
-    onSaved(reflection);
+    onSaved({ ...reflection, _allDone: allDone });
   };
 
   const resultScrollRef = useRef(null);
@@ -594,6 +602,273 @@ const BattleShareCard = ({ plan, battle, meta, prepStats, reflection, onClose, t
         }}>
         {t("closeCard")}
       </button>
+    </div>
+  );
+};
+
+// ── Plan Completion Card ───────────────────────────────────────────────────
+const CLOSING_MESSAGES = {
+  smoke: "trainedLikeChampion",
+  prove: "showedUpPrepared",
+  mark: "madeYourMark",
+  custom: "yourPlanYourWay",
+};
+
+const PlanCompletionCard = ({ plan, meta, dayMap, setBattleprep, addToast, onClose, t, today }) => {
+  const canvasRef = useRef(null);
+  const [showShareCard, setShowShareCard] = useState(false);
+
+  const closingMsg = t(CLOSING_MESSAGES[plan.preset] || CLOSING_MESSAGES.custom);
+  const dateRange = `${plan.createdDate || plan.battles?.[0]?.date || today} \u2014 ${today}`;
+
+  // Compute stats
+  const stats = useMemo(() => {
+    const battles = plan.battles || [];
+    let completedSessions = 0, trainingDays = 0;
+    const completed = plan.completedTasks || {};
+    Object.entries(dayMap).forEach(([ds, info]) => {
+      if (info.type === "training") {
+        trainingDays++;
+        const taskCount = info.phase === "STAY READY" ? 2 : (info.phase === "MAINTAIN" || info.phase === "ADJUST") ? 3 : 4;
+        let done = 0;
+        for (let i = 0; i < taskCount; i++) { if (completed[`${ds}-${i}`]) done++; }
+        if (done >= Math.ceil(taskCount / 2)) completedSessions++;
+      }
+    });
+
+    // Results summary from battle reflections
+    const resultCounts = {};
+    battles.forEach(b => {
+      const rKey = b.reflection?.result;
+      if (rKey) resultCounts[rKey] = (resultCounts[rKey] || 0) + 1;
+    });
+    const resultEmojis = battles.map(b => {
+      const rKey = b.reflection?.result;
+      if (rKey === "won") return "\u{1F3C6}";
+      if (rKey === "final" || rKey === "semi" || rKey === "quarter") return "\u{1F525}";
+      if (rKey === "top8" || rKey === "top16") return "\u{1F4AA}";
+      return "\u2694\uFE0F";
+    }).join(" ");
+
+    return { completedSessions, battleCount: battles.length, trainingDays, resultEmojis };
+  }, [plan, dayMap]);
+
+  const handleDone = () => {
+    setBattleprep(prev => ({
+      ...prev,
+      plans: (prev.plans || []).filter(p => p.id !== plan.id),
+      history: [...(prev.history || []), { ...plan, status: "completed", endDate: today, completedDate: today }],
+    }));
+    addToast({ emoji: "\u{1F3C1}", title: t("planComplete") || "Plan complete" });
+    onClose();
+  };
+
+  // ── Share Card Canvas ──
+  const generateShareCard = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const W = 1080, H = 1080;
+    canvas.width = W; canvas.height = H;
+
+    // Background
+    ctx.fillStyle = "#0a0a0a";
+    ctx.fillRect(0, 0, W, H);
+
+    // MOVESBOOK branding
+    ctx.textAlign = "center";
+    ctx.font = `900 32px 'Barlow Condensed', sans-serif`;
+    ctx.fillStyle = "#cf0000";
+    ctx.fillText("MOVES", W / 2 - 40, 70);
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText("BOOK", W / 2 + 50, 70);
+
+    // Flag + PLAN COMPLETE
+    ctx.font = "48px serif";
+    ctx.fillText("\u{1F3C1}", W / 2, 150);
+    ctx.font = `900 44px 'Barlow Condensed', sans-serif`;
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText(t("planComplete") || "PLAN COMPLETE", W / 2, 210);
+
+    // Plan name + preset badge
+    ctx.font = `900 36px 'Barlow Condensed', sans-serif`;
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText(plan.eventName || plan.planName || "Battle Plan", W / 2, 290);
+
+    ctx.font = `700 20px 'Barlow Condensed', sans-serif`;
+    ctx.fillStyle = meta.color;
+    const badgeText = `${meta.icon} ${meta.label}`;
+    const bw = ctx.measureText(badgeText).width + 24;
+    ctx.globalAlpha = 0.2;
+    roundRect(ctx, (W - bw) / 2, 310, bw, 30, 6);
+    ctx.fill();
+    ctx.globalAlpha = 1.0;
+    ctx.fillStyle = meta.color;
+    ctx.fillText(badgeText, W / 2, 333);
+
+    // Date range
+    ctx.font = `700 22px 'Barlow', sans-serif`;
+    ctx.fillStyle = "#b3b3b3";
+    ctx.fillText(dateRange, W / 2, 385);
+
+    // Stats grid 2x2
+    const gridY = 460;
+    const gridData = [
+      { val: `${stats.completedSessions}`, label: t("sessionsCompleted") || "Sessions" },
+      { val: `${stats.battleCount}`, label: t("battlesFought") || "Battles" },
+      { val: `${stats.trainingDays}`, label: t("totalTrainingDays") || "Training days" },
+      { val: stats.resultEmojis || "\u2694\uFE0F", label: t("resultsLabel") || "Results" },
+    ];
+    const colW = W / 2;
+    gridData.forEach((s, i) => {
+      const col = i % 2;
+      const row = Math.floor(i / 2);
+      const cx = colW * col + colW / 2;
+      const cy = gridY + row * 100;
+      if (i === 3) {
+        // Results row uses emoji, smaller font
+        ctx.font = "36px serif";
+      } else {
+        ctx.font = `900 48px 'Barlow Condensed', sans-serif`;
+      }
+      ctx.fillStyle = "#ffffff";
+      ctx.fillText(s.val, cx, cy);
+      ctx.font = `700 18px 'Barlow', sans-serif`;
+      ctx.fillStyle = "#7a7a7a";
+      ctx.fillText(s.label, cx, cy + 30);
+    });
+
+    // Closing message
+    ctx.font = `italic 24px 'Barlow', sans-serif`;
+    ctx.fillStyle = "#b3b3b3";
+    wrapText(ctx, closingMsg, W / 2, 740, W - 120, 32);
+
+    // Footer
+    ctx.font = `700 20px 'Barlow', sans-serif`;
+    ctx.fillStyle = "#7a7a7a";
+    ctx.fillText("movesbook.vercel.app", W / 2, 1020);
+  }, [plan, meta, stats, dateRange, closingMsg, t]);
+
+  useEffect(() => {
+    if (showShareCard) generateShareCard();
+  }, [showShareCard, generateShareCard]);
+
+  const handleShare = async () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    try {
+      const blob = await new Promise(r => canvas.toBlob(r, "image/png"));
+      if (navigator.share && navigator.canShare) {
+        const file = new File([blob], "plan-complete.png", { type: "image/png" });
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({ files: [file], title: `${plan.eventName || "Plan Complete"} - MovesBook` });
+          return;
+        }
+      }
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = "plan-complete.png";
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) { /* User cancelled share */ }
+  };
+
+  if (showShareCard) {
+    return (
+      <div style={{ padding: "0 2px", textAlign: "center" }}>
+        <canvas ref={canvasRef}
+          style={{ width: "100%", maxWidth: 360, borderRadius: 14, border: `1px solid ${C.border}`, marginTop: 8 }} />
+        <div style={{ display: "flex", gap: 8, marginTop: 12, justifyContent: "center" }}>
+          <button onClick={handleShare}
+            style={{
+              padding: "10px 16px", background: meta.color, border: "none",
+              borderRadius: 8, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 900,
+              fontSize: 11, letterSpacing: 1, color: "#fff",
+              display: "flex", alignItems: "center", gap: 5,
+            }}>
+            <Ic n="share" s={14} c="#fff" /> {t("sharePlanCard") || "SHARE"}
+          </button>
+        </div>
+        <button onClick={() => setShowShareCard(false)}
+          style={{
+            marginTop: 12, marginBottom: 16, padding: "10px 24px",
+            background: "none", border: `1px solid ${C.border}`, borderRadius: 8,
+            cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700,
+            fontSize: 12, letterSpacing: 1, color: C.textSec,
+          }}>
+          {t("closeCard")}
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ padding: "0 2px", textAlign: "center" }}>
+      {/* Header */}
+      <div style={{ padding: "20px 12px 8px" }}>
+        <span style={{ fontSize: 36 }}>{"\u{1F3C1}"}</span>
+        <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 22, letterSpacing: 2, color: C.text, marginTop: 6 }}>
+          {t("planComplete") || "PLAN COMPLETE"}
+        </div>
+      </div>
+
+      {/* Plan name + preset badge */}
+      <div style={{ marginBottom: 4 }}>
+        <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 16, color: C.text }}>
+          {plan.eventName || plan.planName}
+        </span>
+        <span style={{ fontSize: 9, fontFamily: FONT_DISPLAY, fontWeight: 700, background: `${meta.color}20`, color: meta.color, borderRadius: 4, padding: "2px 6px", marginLeft: 6 }}>
+          {meta.icon} {meta.label}
+        </span>
+      </div>
+      <div style={{ fontFamily: FONT_BODY, fontSize: 12, color: C.textSec, marginBottom: 16 }}>
+        {dateRange}
+      </div>
+
+      {/* Stats grid 2x2 */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, margin: "0 8px 16px" }}>
+        {[
+          { val: stats.completedSessions, label: t("sessionsCompleted") || "Sessions" },
+          { val: stats.battleCount, label: t("battlesFought") || "Battles" },
+          { val: stats.trainingDays, label: t("totalTrainingDays") || "Training days" },
+          { val: stats.resultEmojis, label: t("resultsLabel") || "Results", isEmoji: true },
+        ].map((s, i) => (
+          <div key={i} style={{ background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 10, padding: "12px 8px" }}>
+            <div style={{ fontFamily: s.isEmoji ? undefined : FONT_DISPLAY, fontWeight: 900, fontSize: s.isEmoji ? 20 : 28, color: C.text }}>
+              {s.val}
+            </div>
+            <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 9, letterSpacing: 0.5, color: C.textMuted, marginTop: 2 }}>
+              {s.label}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Closing message */}
+      <div style={{ fontFamily: FONT_BODY, fontSize: 14, color: C.textSec, fontStyle: "italic", textAlign: "center", margin: "16px 12px", lineHeight: 1.5 }}>
+        {closingMsg}
+      </div>
+
+      {/* Action buttons */}
+      <div style={{ display: "flex", gap: 8, margin: "16px 8px", justifyContent: "center" }}>
+        <button onClick={() => setShowShareCard(true)}
+          style={{
+            flex: 1, padding: "12px 16px", background: C.surfaceAlt, border: `1px solid ${C.border}`,
+            borderRadius: 10, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 900,
+            fontSize: 12, letterSpacing: 1, color: C.text,
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 5,
+          }}>
+          <Ic n="share" s={14} c={C.text} /> {t("sharePlanCard") || "SHARE"}
+        </button>
+        <button onClick={handleDone}
+          style={{
+            flex: 1, padding: "12px 16px", background: C.accent, border: "none",
+            borderRadius: 10, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 900,
+            fontSize: 12, letterSpacing: 1, color: "#fff",
+          }}>
+          {t("planCompleteDone") || "DONE"}
+        </button>
+      </div>
     </div>
   );
 };

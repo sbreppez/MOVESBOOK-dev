@@ -24,6 +24,15 @@ export const CATEGORY_DOMAIN_MAP = {
   Blowups:       { primary: 'performance', secondary: 'creativity' },
 };
 
+export const DOMAIN_COLORS = {
+  musicality:  '#1a6a6a',
+  performance: '#e53935',
+  technique:   '#42a5f5',
+  variety:     '#ffa726',
+  creativity:  '#8b1a8a',
+  personality: '#2e7d32',
+};
+
 export const IDEA_COLORS = [
   "#c0391b","#8b1a1a","#2a5f8a","#2d6a4f","#b5850a","#6b3a8a",
   "#1a6a6a","#4a4a6a","#8a3a2a","#2a6a3a","#6a2a5a","#3a5a8a",

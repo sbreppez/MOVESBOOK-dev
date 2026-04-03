@@ -619,10 +619,11 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
       mastery: 0,
       difficulty: difficulty || null,
       origin: origin || "creation",
-      description: "",
+      description: state === "interesting" ? (t("discoveredInFlowMap") || "Discovered in Flow Map") : "",
       source: "flowmap",
       flowmapPairing: { moveA: a.name, moveB: b.name },
       arcTension: impact ? IMPACT_TENSION[impact] : null,
+      parentId: a.id,
       date: today,
     };
     onSaveMove(moveData);
@@ -794,6 +795,26 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
                 })}
               </div>
             </div>
+
+            {/* Turn this into a move? (for interesting transitions) */}
+            {state === "interesting" && !existing.savedToLibrary && (
+              <div onClick={() => {
+                setNewMoveName(`${a.name} → ${b.name} transition`);
+                setStep("addToLib");
+              }}
+                style={{
+                  background: `${C.yellow}15`, border: `1.5px solid ${C.yellow}40`, borderRadius: 12,
+                  padding: "12px 14px", marginBottom: 16, cursor: "pointer",
+                  display: "flex", alignItems: "center", gap: 10, transition: "border-color 0.15s",
+                }}
+                onPointerEnter={e => e.currentTarget.style.borderColor = C.yellow}
+                onPointerLeave={e => e.currentTarget.style.borderColor = C.yellow + "40"}>
+                <span style={{ fontSize: 18 }}>⭐</span>
+                <span style={{ fontFamily: FONT_BODY, fontSize: 13, color: C.text, fontWeight: 600 }}>
+                  {t("turnIntoMove")}
+                </span>
+              </div>
+            )}
 
             {/* ADD TO MOVE LIBRARY */}
             <button style={{

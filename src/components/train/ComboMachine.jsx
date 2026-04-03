@@ -29,6 +29,8 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
   const [visibleCards, setVisibleCards] = useState(new Set());
   const [saveModal, setSaveModal] = useState(false);
   const [saveName, setSaveName] = useState("");
+  const [drillMode, setDrillMode] = useState("random"); // "random" | "branch"
+  const [branchRoot, setBranchRoot] = useState(null);
   const timers = useRef([]);
 
   // Cleanup timers on unmount
@@ -40,10 +42,32 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
 
   const getCatColor = (cat) => catColors?.[cat] || CAT_COLORS[cat] || C.textMuted;
 
+  // ── Descendants helper ──────────────────────────────────────────────────
+  const getDescendants = (rootId) => {
+    const desc = [];
+    const queue = [rootId];
+    while (queue.length) {
+      const pid = queue.shift();
+      moves.forEach(m => {
+        if (m.parentId === pid && !desc.find(d => d.id === m.id)) {
+          desc.push(m);
+          queue.push(m.id);
+        }
+      });
+    }
+    return desc;
+  };
+
+  // ── Moves that have children (for branch root picker) ──
+  const movesWithChildren = moves.filter(m => moves.some(c => c.parentId === m.id));
+
   // ── Pool ────────────────────────────────────────────────────────────────
-  const pool = combos.selectedMoveIds
-    ? moves.filter(m => combos.selectedMoveIds.includes(m.id))
-    : moves;
+  const branchDescendants = drillMode === "branch" && branchRoot ? getDescendants(branchRoot.id) : [];
+  const pool = drillMode === "branch" && branchRoot
+    ? branchDescendants
+    : combos.selectedMoveIds
+      ? moves.filter(m => combos.selectedMoveIds.includes(m.id))
+      : moves;
   const transitions = combos.transitions?.length ? combos.transitions : DEFAULT_TRANSITIONS;
 
   // ── Spin ────────────────────────────────────────────────────────────────
@@ -220,6 +244,80 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
           </button>
         </div>
       </div>
+
+      {/* Mode toggle: RANDOM | BRANCH DRILL */}
+      <div style={{ display:"flex", gap:6, padding:"8px 16px", borderBottom:`1px solid ${C.borderLight}`, flexShrink:0 }}>
+        {["random","branch"].map(dm => {
+          const active = drillMode === dm;
+          return (
+            <button key={dm} onClick={() => {
+              setDrillMode(dm);
+              if (dm === "random") { setBranchRoot(null); }
+              setSlots([]); setHasSpun(false); setVisibleCards(new Set());
+            }}
+              style={{
+                flex:1, padding:"7px 0", borderRadius:20,
+                border:`1.5px solid ${active ? C.accent : C.border}`,
+                background: active ? `${C.accent}18` : C.surface,
+                color: active ? C.accent : C.textSec,
+                fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, letterSpacing:0.8,
+                cursor:"pointer",
+              }}>
+              {dm === "random" ? t("random") : t("branchDrill")}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Branch root picker / message */}
+      {drillMode === "branch" && !branchRoot && (
+        <div style={{ padding:"12px 16px", maxHeight:200, overflowY:"auto", borderBottom:`1px solid ${C.borderLight}` }}>
+          <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, color:C.textMuted, letterSpacing:0.5, marginBottom:8 }}>
+            {t("pickRootMove")}
+          </div>
+          {movesWithChildren.length === 0 ? (
+            <div style={{ fontSize:12, color:C.textMuted, fontFamily:FONT_BODY, padding:"8px 0" }}>
+              {t("branchTooSmall")}
+            </div>
+          ) : (
+            <div style={{ display:"flex", flexDirection:"column", gap:4 }}>
+              {movesWithChildren.map(m => (
+                <button key={m.id} onClick={() => { setBranchRoot(m); setSlots([]); setHasSpun(false); setVisibleCards(new Set()); }}
+                  style={{
+                    background:C.surface, border:`1.5px solid ${C.border}`, borderRadius:8,
+                    padding:"8px 12px", cursor:"pointer", textAlign:"left",
+                    display:"flex", alignItems:"center", justifyContent:"space-between",
+                  }}>
+                  <span style={{ fontFamily:FONT_BODY, fontSize:12, color:C.text }}>{m.name}</span>
+                  <span style={{ fontFamily:FONT_DISPLAY, fontSize:10, color:C.textMuted }}>
+                    {getDescendants(m.id).length} {t("descendants")}
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Branch root selected info + too small warning */}
+      {drillMode === "branch" && branchRoot && (
+        <div style={{ padding:"8px 16px", borderBottom:`1px solid ${C.borderLight}`, display:"flex", alignItems:"center", gap:8, flexShrink:0 }}>
+          <span style={{ fontSize:14 }}>🌳</span>
+          <span style={{ fontFamily:FONT_BODY, fontSize:12, color:C.text, fontWeight:600 }}>{branchRoot.name}</span>
+          <span style={{ fontFamily:FONT_DISPLAY, fontSize:10, color:C.textMuted }}>
+            ({branchDescendants.length} {t("descendants")})
+          </span>
+          <button onClick={() => { setBranchRoot(null); setSlots([]); setHasSpun(false); }}
+            style={{ marginLeft:"auto", background:"none", border:"none", cursor:"pointer", padding:4 }}>
+            <Ic n="x" s={14} c={C.textMuted}/>
+          </button>
+        </div>
+      )}
+      {drillMode === "branch" && branchRoot && branchDescendants.length < 3 && (
+        <div style={{ padding:"8px 16px", background:`${C.yellow}15`, fontSize:12, color:C.yellow, fontFamily:FONT_BODY }}>
+          {t("branchTooSmall")}
+        </div>
+      )}
 
       {/* Scrollable card list */}
       <div style={{ flex:1, overflowY:"auto", padding:"12px 16px", WebkitOverflowScrolling:"touch" }}>

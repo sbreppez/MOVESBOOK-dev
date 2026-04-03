@@ -58,9 +58,10 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
   const t = useT();
 
   // ── State ──
-  const [screen, setScreen] = useState("select"); // "select" | "workspace"
-  const [mode, setMode] = useState(null); // "technical" | "conceptual" | "collide"
+  const [screen, setScreen] = useState("select"); // "select" | "workspace" | "pickSeed"
+  const [mode, setMode] = useState(null); // "technical" | "conceptual" | "collide" | "grow"
   const [baseName, setBaseName] = useState("");
+  const [seedMove, setSeedMove] = useState(null);
   const [techSel, setTechSel] = useState(emptyTech);
   const [conceptSel, setConceptSel] = useState({ category: null, value: null });
   const [tipIdx, setTipIdx] = useState(() => Math.floor(Math.random() * TIP_KEYS.length));
@@ -181,7 +182,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
   const handleRandomise = () => {
     if (mode === "technical") randomiseTech();
     else if (mode === "conceptual") randomiseConcept();
-    else if (mode === "collide") { randomiseTech(); randomiseConcept(); }
+    else if (mode === "collide" || mode === "grow") { randomiseTech(); randomiseConcept(); }
   };
 
   // ── Reset ──
@@ -189,6 +190,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
     setTechSel(emptyTech());
     setConceptSel({ category: null, value: null });
     setBaseName("");
+    setSeedMove(null);
     if (timerRef.current) clearInterval(timerRef.current);
     setTimerState("idle");
     setTimerDuration(0);
@@ -197,7 +199,17 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
 
   // ── Live preview text ──
   const buildPreview = () => {
-    const base = baseName.trim() || t("freestyleExploration");
+    const base = mode === "grow" && seedMove ? seedMove.name : (baseName.trim() || t("freestyleExploration"));
+    if (mode === "grow") {
+      const techParts = TECH_CATS
+        .filter(cat => techSel[cat])
+        .map(cat => { const k = techSel[cat]; return k.startsWith("chip") ? t(k) : k; });
+      const conceptPart = conceptSel.value
+        ? (conceptSel.value.startsWith("chip") ? t(conceptSel.value) : conceptSel.value) : null;
+      const parts = [...techParts];
+      if (conceptPart) parts.push(conceptPart);
+      return parts.length ? `${t("growSeedLabel")} ${base} — ${parts.join(" + ")}` : `${t("growSeedLabel")} ${base}`;
+    }
     if (mode === "technical" || mode === "collide") {
       const techParts = TECH_CATS
         .filter(cat => techSel[cat])
@@ -228,19 +240,25 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
 
   // ── Save to library ──
   const handleSaveOpen = () => {
-    const defaultName = baseName.trim()
-      ? `${baseName.trim()} (${t("variation")})`
-      : `${t("lab")} ${t("variation")} ${new Date().toISOString().split("T")[0]}`;
+    let defaultName, defaultCat;
+    if (mode === "grow" && seedMove) {
+      defaultName = `${seedMove.name} (${t("variation")})`;
+      defaultCat = seedMove.category;
+    } else {
+      defaultName = baseName.trim()
+        ? `${baseName.trim()} (${t("variation")})`
+        : `${t("lab")} ${t("variation")} ${new Date().toISOString().split("T")[0]}`;
+      const matchedMove = baseName.trim() ? moves.find(m => m.name.toLowerCase() === baseName.trim().toLowerCase()) : null;
+      defaultCat = matchedMove?.category || (cats.length ? cats[0] : "Footworks");
+    }
     setSaveName(defaultName);
-    // Try to match base move category
-    const matchedMove = baseName.trim() ? moves.find(m => m.name.toLowerCase() === baseName.trim().toLowerCase()) : null;
-    setSaveCat(matchedMove?.category || (cats.length ? cats[0] : "Footworks"));
+    setSaveCat(defaultCat);
     setSaveModal(true);
   };
 
   const handleSave = () => {
     const preview = buildPreview();
-    onSaveMove({
+    const moveData = {
       name: saveName.trim() || `${t("lab")} ${t("variation")}`,
       category: saveCat,
       description: preview,
@@ -249,7 +267,11 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
       status: "wip",
       attrs: {},
       origin: "creation",
-    });
+    };
+    if (mode === "grow" && seedMove) {
+      moveData.parentId = seedMove.id;
+    }
+    onSaveMove(moveData);
     setSaveModal(false);
     setSavedFlash(true);
     if (savedTimer.current) clearTimeout(savedTimer.current);
@@ -374,12 +396,16 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
       { key: "technical",  emoji: "🔧", color: C.blue,   desc: "technicalDesc" },
       { key: "conceptual", emoji: "🎨", color: C.yellow, desc: "conceptualDesc" },
       { key: "collide",    emoji: "💥", color: C.red,    desc: "collideDesc" },
+      { key: "grow",       emoji: "🌱", color: C.green,  desc: "growDesc" },
     ];
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: 14, padding: "20px 0" }}>
         {modes.map(m => (
           <button key={m.key}
-            onClick={() => { setMode(m.key); setScreen("workspace"); }}
+            onClick={() => {
+              if (m.key === "grow") { setMode("grow"); setScreen("pickSeed"); }
+              else { setMode(m.key); setScreen("workspace"); }
+            }}
             style={{
               background: C.surface, border: `2px solid ${m.color}30`, borderRadius: 16,
               padding: "22px 20px", cursor: "pointer", textAlign: "left",
@@ -402,11 +428,85 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
     );
   };
 
+  // ── Render: Seed Picker (Grow mode) ────────────────────────────────────────
+  const renderSeedPicker = () => {
+    const eligible = moves.filter(m => m.mastery >= 50);
+    const grouped = {};
+    eligible.forEach(m => {
+      if (!grouped[m.category]) grouped[m.category] = [];
+      grouped[m.category].push(m);
+    });
+    const catKeys = Object.keys(grouped);
+
+    return (
+      <div style={{ padding: "20px 0" }}>
+        <button onClick={() => { setScreen("select"); setMode(null); }}
+          style={{
+            background: "none", border: "none", cursor: "pointer", display: "flex",
+            alignItems: "center", gap: 6, padding: "8px 0", color: C.textMuted, marginBottom: 12,
+          }}>
+          <span style={{ fontSize: 14 }}>←</span>
+          <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12, letterSpacing: 0.5 }}>
+            {t("grow").toUpperCase()}
+          </span>
+        </button>
+
+        <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 14, color: C.green, letterSpacing: 1, marginBottom: 16 }}>
+          🌱 {t("pickSeedMove")}
+        </div>
+
+        {catKeys.length === 0 ? (
+          <div style={{
+            textAlign: "center", padding: "40px 20px", color: C.textMuted,
+          }}>
+            <div style={{ fontSize: 40, marginBottom: 12 }}>🌱</div>
+            <div style={{ fontFamily: FONT_BODY, fontSize: 13, lineHeight: 1.5 }}>
+              {t("noEligibleMoves")}
+            </div>
+          </div>
+        ) : (
+          catKeys.map(cat => (
+            <div key={cat} style={{ marginBottom: 16 }}>
+              <div style={{
+                fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: catColors?.[cat] || CAT_COLORS[cat] || C.textMuted,
+                letterSpacing: 0.5, marginBottom: 6, textTransform: "uppercase",
+              }}>
+                {cat}
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                {grouped[cat].map(m => (
+                  <button key={m.id} onClick={() => {
+                    setSeedMove(m);
+                    setBaseName(m.name);
+                    setScreen("workspace");
+                  }}
+                    style={{
+                      background: C.surface, border: `1.5px solid ${C.border}`, borderRadius: 10,
+                      padding: "10px 14px", cursor: "pointer", textAlign: "left",
+                      display: "flex", alignItems: "center", justifyContent: "space-between",
+                      transition: "border-color 0.15s",
+                    }}
+                    onPointerEnter={e => e.currentTarget.style.borderColor = C.green}
+                    onPointerLeave={e => e.currentTarget.style.borderColor = C.border}>
+                    <span style={{ fontFamily: FONT_BODY, fontSize: 13, color: C.text }}>{m.name}</span>
+                    <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: C.green }}>
+                      {m.mastery}%
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    );
+  };
+
   // ── Render: Workspace ─────────────────────────────────────────────────────
   const renderWorkspace = () => {
-    const isTech = mode === "technical" || mode === "collide";
-    const isConcept = mode === "conceptual" || mode === "collide";
-    const modeColor = mode === "technical" ? C.blue : mode === "conceptual" ? C.yellow : C.red;
+    const isTech = mode === "technical" || mode === "collide" || mode === "grow";
+    const isConcept = mode === "conceptual" || mode === "collide" || mode === "grow";
+    const modeColor = mode === "technical" ? C.blue : mode === "conceptual" ? C.yellow : mode === "grow" ? C.green : C.red;
 
     return (
       <div style={{ paddingBottom: 24 }}>
@@ -422,21 +522,45 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
           </span>
         </button>
 
-        {/* Base move input */}
-        <div style={{ marginBottom: 20 }}>
-          <input
-            value={baseName}
-            onChange={e => setBaseName(e.target.value)}
-            placeholder={t("baseMoveOptional")}
-            style={{
-              width: "100%", padding: "12px 14px", borderRadius: 10, border: `1.5px solid ${C.border}`,
-              background: C.surface, color: C.text, fontFamily: FONT_BODY, fontSize: 14,
-              outline: "none", transition: "border-color 0.15s",
-            }}
-            onFocus={e => e.target.style.borderColor = modeColor}
-            onBlur={e => e.target.style.borderColor = C.border}
-          />
-        </div>
+        {/* Seed move banner (grow mode) */}
+        {mode === "grow" && seedMove && (
+          <div style={{
+            display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", marginBottom: 16,
+            background: `${C.green}15`, border: `1.5px solid ${C.green}40`, borderRadius: 12,
+          }}>
+            <span style={{ fontSize: 20 }}>🌱</span>
+            <div>
+              <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, color: C.green, letterSpacing: 0.5 }}>
+                {t("growSeedLabel").toUpperCase()}
+              </div>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 14, color: C.text, fontWeight: 600 }}>
+                {seedMove.name}
+              </div>
+            </div>
+            <button onClick={() => { setScreen("pickSeed"); setSeedMove(null); setBaseName(""); }}
+              style={{ marginLeft: "auto", background: "none", border: "none", cursor: "pointer", padding: 4 }}>
+              <Ic n="edit" s={14} c={C.green} />
+            </button>
+          </div>
+        )}
+
+        {/* Base move input (hidden in grow mode) */}
+        {mode !== "grow" && (
+          <div style={{ marginBottom: 20 }}>
+            <input
+              value={baseName}
+              onChange={e => setBaseName(e.target.value)}
+              placeholder={t("baseMoveOptional")}
+              style={{
+                width: "100%", padding: "12px 14px", borderRadius: 10, border: `1.5px solid ${C.border}`,
+                background: C.surface, color: C.text, fontFamily: FONT_BODY, fontSize: 14,
+                outline: "none", transition: "border-color 0.15s",
+              }}
+              onFocus={e => e.target.style.borderColor = modeColor}
+              onBlur={e => e.target.style.borderColor = C.border}
+            />
+          </div>
+        )}
 
         {/* Technical chips */}
         {isTech && (
@@ -647,6 +771,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
         </div>
 
         {screen === "select" && renderModeSelect()}
+        {screen === "pickSeed" && renderSeedPicker()}
         {screen === "workspace" && renderWorkspace()}
       </div>
 
