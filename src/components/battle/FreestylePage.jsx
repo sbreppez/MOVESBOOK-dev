@@ -3,6 +3,7 @@ import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { PRESET_COLORS } from '../../constants/colors';
 import { CAT_COLORS } from '../../constants/categories';
 import { masteryColor } from '../../constants/styles';
+import { computeDecay } from '../../utils/masteryDecay';
 import { lbl } from '../../constants/styles';
 import { Ic } from '../shared/Ic';
 import { Btn } from '../shared/Btn';
@@ -17,6 +18,7 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
   const { C } = useSettings();
   const showMastery   = settings.showMastery  !== false;
   const showMoveCount = settings.showMoveCount !== false;
+  const dm = m => computeDecay(m, settings.decaySensitivity).displayMastery;
   const [reorderMode, setReorderMode] = useState(false);
 
   // ── Trust Mode ──
@@ -269,14 +271,14 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
               const isSet = item.type==="set";
               const m = isSet ? getSetById(item.refId) : getMoveById(item.refId);
               if(!m) return null;
-              const dotColor = isSet ? (m.color||C.accent) : masteryColor(m.mastery);
+              const dotColor = isSet ? (m.color||C.accent) : masteryColor(dm(m));
               return (
                 <div key={item.id} style={{ display:"flex", alignItems:"center", gap:8, padding:"8px 12px",
                   borderBottom:`1px solid ${C.borderLight}`, background:C.bg }}>
                   <div style={{ width:7, height:7, borderRadius: isSet?"2px":"50%", background:dotColor, flexShrink:0 }}/>
                   <span style={{ flex:1, fontSize:13, color:C.text, fontFamily:FONT_BODY }}>{m.name}</span>
                   {isSet && <span style={{ fontSize:9, fontWeight:800, letterSpacing:1, color:C.textMuted, fontFamily:FONT_DISPLAY, background:C.surface, borderRadius:4, padding:"2px 5px" }}>SET</span>}
-                  {!isSet && showMastery&&<span style={{ fontSize:11, color:masteryColor(m.mastery), fontWeight:700, flexShrink:0 }}>{m.mastery}%</span>}
+                  {!isSet && showMastery&&<span style={{ fontSize:11, color:masteryColor(dm(m)), fontWeight:700, flexShrink:0 }}>{dm(m)}%</span>}
                 </div>
               );
             })}
@@ -302,7 +304,7 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
             const isSet = item.type==="set";
             const m = isSet ? getSetById(item.refId) : getMoveById(item.refId);
             if(!m) return null;
-            const dotColor = isSet ? (m.color||C.accent) : masteryColor(m.mastery);
+            const dotColor = isSet ? (m.color||C.accent) : masteryColor(dm(m));
             return (
               <div key={item.id}
                 style={{ display:"flex", alignItems:"center", gap:8, padding:"8px 12px",
@@ -315,7 +317,7 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
                 <div style={{ width:7, height:7, borderRadius: isSet?"2px":"50%", background:dotColor, flexShrink:0 }}/>
                 <span style={{ flex:1, fontSize:13, color:C.text, fontFamily:FONT_BODY }}>{m.name}</span>
                 {isSet && <span style={{ fontSize:9, fontWeight:800, letterSpacing:1, color:C.textMuted, fontFamily:FONT_DISPLAY, background:C.surface, borderRadius:4, padding:"2px 5px" }}>SET</span>}
-                {!isSet && showMastery&&<span style={{ fontSize:11, color:masteryColor(m.mastery), fontWeight:700, flexShrink:0 }}>{m.mastery}%</span>}
+                {!isSet && showMastery&&<span style={{ fontSize:11, color:masteryColor(dm(m)), fontWeight:700, flexShrink:0 }}>{dm(m)}%</span>}
                 {!reorderMode&&<button onClick={()=>removeItem(item.id)}
                   style={{ background:"none", border:"none", cursor:"pointer", padding:2, display:"flex", flexShrink:0 }}>
                   <Ic n="x" s={11} c={C.textMuted}/>
@@ -348,7 +350,7 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
               const isSet = item.type==="set";
               const m = isSet ? getSetById(item.refId) : getMoveById(item.refId);
               if(!m) return null;
-              const dotColor = isSet ? (m.color||C.accent) : masteryColor(m.mastery);
+              const dotColor = isSet ? (m.color||C.accent) : masteryColor(dm(m));
               return (
                 <div key={item.id} style={{ display:"flex", alignItems:"center", gap:8, padding:"8px 12px",
                   borderBottom:`1px solid ${C.borderLight}`, background:C.surfaceAlt, opacity:0.6 }}>
@@ -361,7 +363,7 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
                   <div style={{ width:7, height:7, borderRadius: isSet?"2px":"50%", background:dotColor, flexShrink:0 }}/>
                   <span style={{ flex:1, fontSize:13, color:C.textMuted, fontFamily:FONT_BODY, textDecoration:"line-through" }}>{m.name}</span>
                   {isSet && <span style={{ fontSize:9, fontWeight:800, letterSpacing:1, color:C.textMuted, fontFamily:FONT_DISPLAY, background:C.surface, borderRadius:4, padding:"2px 5px" }}>SET</span>}
-                  {!isSet && showMastery&&<span style={{ fontSize:11, color:masteryColor(m.mastery), fontWeight:700, flexShrink:0 }}>{m.mastery}%</span>}
+                  {!isSet && showMastery&&<span style={{ fontSize:11, color:masteryColor(dm(m)), fontWeight:700, flexShrink:0 }}>{dm(m)}%</span>}
                   <button onClick={()=>removeItem(item.id)}
                     style={{ background:"none", border:"none", cursor:"pointer", padding:2, display:"flex", flexShrink:0 }}>
                     <Ic n="x" s={11} c={C.textMuted}/>
@@ -434,10 +436,10 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
                       {selected&&<Ic n="check" s={11} c="#fff"/>}
                       {inList&&!selected&&<Ic n="check" s={11} c={C.textMuted}/>}
                     </div>
-                    <div style={{ width:7, height:7, borderRadius:"50%", background:masteryColor(m.mastery), flexShrink:0 }}/>
+                    <div style={{ width:7, height:7, borderRadius:"50%", background:masteryColor(dm(m)), flexShrink:0 }}/>
                     <span style={{ flex:1, fontSize:13, color:C.text, fontFamily:FONT_BODY }}>{m.name}</span>
                     <span style={{ fontSize:10, color:C.textMuted, fontFamily:FONT_DISPLAY }}>{m.category}</span>
-                    {showMastery&&<span style={{ fontSize:11, color:masteryColor(m.mastery), fontWeight:700 }}>{m.mastery}%</span>}
+                    {showMastery&&<span style={{ fontSize:11, color:masteryColor(dm(m)), fontWeight:700 }}>{dm(m)}%</span>}
                   </div>
                 );
               })
@@ -488,9 +490,9 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
                             {selected&&<Ic n="check" s={11} c="#fff"/>}
                             {inList&&!selected&&<Ic n="check" s={11} c={C.textMuted}/>}
                           </div>
-                          <div style={{ width:7, height:7, borderRadius:"50%", background:masteryColor(m.mastery), flexShrink:0 }}/>
+                          <div style={{ width:7, height:7, borderRadius:"50%", background:masteryColor(dm(m)), flexShrink:0 }}/>
                           <span style={{ flex:1, fontSize:13, color:C.text, fontFamily:FONT_BODY }}>{m.name}</span>
-                          {showMastery&&<span style={{ fontSize:11, color:masteryColor(m.mastery), fontWeight:700 }}>{m.mastery}%</span>}
+                          {showMastery&&<span style={{ fontSize:11, color:masteryColor(dm(m)), fontWeight:700 }}>{dm(m)}%</span>}
                         </div>
                       );
                     })}

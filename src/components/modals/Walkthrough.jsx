@@ -25,35 +25,9 @@ const getTourSteps = (t) => [
     body:t("tourTrainBody"),
     cta:t("tourNextCta")+" →" },
 
-  { type:"center",
-    emoji:"🎯", title:t("tourTwoGoalsTitle"),
-    cards:[
-      { emoji:"🎯", label:t("tourJourneyGoalLabel"), desc:t("tourJourneyGoalDesc") },
-      { emoji:"🏹", label:t("tourTargetGoalLabel"),  desc:t("tourTargetGoalDesc") },
-    ],
-    sub:t("tourGoalsSub"),
-    cta:t("tourNextCta")+" →" },
-
-  { type:"center",
-    emoji:"🔥", title:t("tourHabitsTitle"),
-    body:t("tourHabitsBody"),
-    cta:t("tourNextCta")+" →" },
-
   { type:"spotlight", target:"tour-tab-wip",
     emoji:"📜", title:"MOVES",
     body:t("tourMovesBody"),
-    cta:t("tourNextCta")+" →" },
-
-  { type:"center",
-    emoji:"📈", title:t("tourMasteryTitle"),
-    body:t("tourMasteryBody"),
-    cards:[
-      { emoji:"🔴", label:"0–30%",  desc:t("tourMasteryL1") },
-      { emoji:"🟠", label:"30–60%", desc:t("tourMasteryL2") },
-      { emoji:"🟡", label:"60–80%", desc:t("tourMasteryL3") },
-      { emoji:"🟢", label:"80%+",   desc:t("tourMasteryL4") },
-    ],
-    sub:t("tourMasterySub"),
     cta:t("tourNextCta")+" →" },
 
   { type:"spotlight", target:"tour-tab-ready",
@@ -61,25 +35,10 @@ const getTourSteps = (t) => [
     body:t("tourBattleBody"),
     cta:t("tourNextCta")+" →" },
 
-  { type:"center",
-    emoji:"➕", title:t("tourPlusTitle"),
-    body:t("tourPlusBody"),
-    cta:t("tourNextCta")+" →" },
-
-  { type:"spotlight", target:"tour-manual-btn",
-    emoji:"❓", title:t("tourManualTitle"),
-    body:t("tourManualBody"),
-    cta:t("tourNextCta")+" →" },
-
-  { type:"spotlight", target:"tour-profile",
-    emoji:"👤", title:t("tourProfileTitle"),
-    body:t("tourProfileBody"),
-    cta:t("tourNextCta")+" →" },
-
   { type:"center", skippable:false,
-    emoji:"🔥", title:t("tourReadyTitle"),
-    body:t("tourReadyBody"),
-    cta:t("tourReadyCta")+" 🔥" },
+    emoji:"➕", title:t("tourAddMoveTitle"),
+    body:t("tourAddMoveBody"),
+    cta:t("tourAddMoveCta")+" ➕" },
 ];
 
 export const Walkthrough = ({ onDone }) => {

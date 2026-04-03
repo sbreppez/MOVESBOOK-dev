@@ -14,6 +14,7 @@ import { FreestylePage } from './FreestylePage';
 import { RivalsPage } from './RivalsPage';
 import { NewRoundModal } from './NewRoundModal';
 import { SectionBanner } from '../shared/SectionBanner';
+import { computeDecay } from '../../utils/masteryDecay';
 
 export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, addToast, freestyle, onFreestyleChange, rivals, onRivalsChange, addCalendarEvent, onSimulate }) => {
   const t = useT();
@@ -177,6 +178,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
   const updateSet = (sid, fields) => setSets(p => p.map(s => s.id === sid ? {...s,...fields} : s));
 
   const masteryColorLocal = p => p < 30 ? C.red : p < 60 ? C.yellow : p < 80 ? C.blue : C.green;
+  const dm = m => computeDecay(m, settings.decaySensitivity).displayMastery;
 
   // ── PLAN layout ─────────────────────────────────────────────────────────────
   // ── Tension Role mapping ────────────────────────────────────────────────────
@@ -641,7 +643,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
                     <div style={{ width:8, height:8, borderRadius:"50%", background:s.color||C.blue, flexShrink:0 }}/>
                     <span style={{ flex:1, fontSize:13, color:C.text }}>{s.name}</span>
                     <span style={{ fontSize:9, background:`${C.blue}22`, color:C.blue, padding:"1px 5px", borderRadius:4, fontFamily:FONT_DISPLAY, fontWeight:700 }}>SET</span>
-                    {showMastery&&<span style={{ fontSize:11, color:masteryColorLocal(s.mastery||0), fontWeight:700 }}>{s.mastery||0}%</span>}
+                    {showMastery&&<span style={{ fontSize:11, color:masteryColorLocal(dm(s)), fontWeight:700 }}>{dm(s)}%</span>}
                   </button>
                 );
               })}
@@ -667,9 +669,9 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
                         background:sel?C.accent:"transparent", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
                         {sel&&<Ic n="check" s={10} c="#fff"/>}
                       </div>
-                      <div style={{ width:8, height:8, borderRadius:"50%", background:masteryColorLocal(m.mastery), flexShrink:0 }}/>
+                      <div style={{ width:8, height:8, borderRadius:"50%", background:masteryColorLocal(dm(m)), flexShrink:0 }}/>
                       <span style={{ flex:1, fontSize:13, color:C.text }}>{m.name}</span>
-                      {showMastery&&<span style={{ fontSize:11, color:masteryColorLocal(m.mastery), fontWeight:700 }}>{m.mastery}%</span>}
+                      {showMastery&&<span style={{ fontSize:11, color:masteryColorLocal(dm(m)), fontWeight:700 }}>{dm(m)}%</span>}
                     </button>
                   );
                 })}

@@ -9,7 +9,7 @@ import { AttributeModal } from "./AttributeModal";
 export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onRestoreRounds, onRestartTour, zoom=1, onZoomChange, customAttrs=[], setCustomAttrs }) => {
   const t = useT();
   const [s,setS]=useState({
-    theme:"light", defaultTab:"wip", showMastery:false,
+    theme:"light", defaultTab:"wip", showMastery:true, decaySensitivity:"normal",
     compactCards:false, sortMoves:"custom", fontSize:"medium",
     showMoveCount:false, confirmDelete:true, practiceReminders:false,
     reminderTime:"18:00", streakTracking:true, showDeadlineIndicator:true,
@@ -167,6 +167,16 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
           {row(t("showMastery"),
             t("showMasteryDesc"),
             toggle("showMastery")
+          )}
+
+          {row(t("decaySensitivity"),
+            t("decaySensitivityDesc"),
+            segmented("decaySensitivity",[
+              {value:"off",label:t("decayOff")},
+              {value:"gentle",label:t("decayGentle")},
+              {value:"normal",label:t("decayNormal")},
+              {value:"aggressive",label:t("decayAggressive")},
+            ])
           )}
 
           {row(t("showMoveCount"),
@@ -352,140 +362,6 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
                 };
                 reader.readAsText(file);
                 e.target.value="";
-              }}/>
-            </label>
-          )}
-
-          {row(t("exportAllData"),
-            t("exportAllDataDesc"),
-            <button onClick={()=>{
-              try {
-                const escape = v => {
-                  if (v===undefined||v===null) return "";
-                  const str = String(v).replace(/"/g,'""');
-                  return str.includes(",") || str.includes('"') || str.includes("\n") ? `"${str}"` : str;
-                };
-                const row2 = arr => arr.map(escape).join(",");
-                const sections = [];
-
-                // MOVES
-                const moves = JSON.parse(localStorage.getItem("mb_moves")||"[]");
-                if (moves.length) {
-                  sections.push("TYPE,Name,Category,Mastery (%),Description,Notes,Link,Date Added");
-                  moves.forEach(m => sections.push(row2(["move",m.name,m.category,m.mastery||0,m.description||"",m.notes||"",m.link||"",m.date||""])));
-                  sections.push("");
-                }
-
-                // HABITS
-                const habits = JSON.parse(localStorage.getItem("mb_habits")||"[]");
-                if (habits.length) {
-                  sections.push("TYPE,Name,Frequency,Color,Notes,Check-ins");
-                  habits.forEach(h => sections.push(row2(["habit",h.name,h.frequency||"daily",h.color||"",h.notes||"",(h.checkIns||[]).join("|")])));
-                  sections.push("");
-                }
-
-                // GOALS & NOTES (ideas)
-                const ideas = JSON.parse(localStorage.getItem("mb_ideas")||"[]");
-                const goals = ideas.filter(i=>i.type==="goal");
-                const targets = ideas.filter(i=>i.type==="target");
-                const notes = ideas.filter(i=>i.type==="note");
-                if (goals.length) {
-                  sections.push("TYPE,Title,Why,Deadline,Steps,Commitments,Obstacles");
-                  goals.forEach(g => sections.push(row2(["goal",g.title||"",g.why||"",g.byWhen||"",(g.steps||[]).filter(Boolean).join(" | "),[g.daysPerWeek,g.sessionLength,g.trainWhere].filter(Boolean).join(" · "),g.obstacles||""])));
-                  sections.push("");
-                }
-                if (targets.length) {
-                  sections.push("TYPE,Title,Current,Target,Unit,Deadline");
-                  targets.forEach(g => sections.push(row2(["target",g.title||"",g.current||0,g.target||0,g.unit||"",g.byWhen||""])));
-                  sections.push("");
-                }
-                if (notes.length) {
-                  sections.push("TYPE,Title,Text,Link");
-                  notes.forEach(n => sections.push(row2(["note",n.title||"",n.text||"",n.link||""])));
-                  sections.push("");
-                }
-
-                // SETS
-                const sets = JSON.parse(localStorage.getItem("mb_sets")||"[]");
-                if (sets.length) {
-                  sections.push("TYPE,Name,Details,Color,Mastery (%)");
-                  sets.forEach(s => sections.push(row2(["set",s.name,s.details||"",s.color||"",s.mastery||0])));
-                  sections.push("");
-                }
-
-                if (!sections.length) { alert(t("noDataToExport")); return; }
-                const csv = sections.join("\n");
-                const blob = new Blob([csv], {type:"text/csv;charset=utf-8;"});
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement("a");
-                a.href=url; a.download=`movesbook-export-${new Date().toISOString().split("T")[0]}.csv`; a.click();
-                URL.revokeObjectURL(url);
-              } catch(e) { alert(t("exportFailed")); }
-            }}
-              style={{ padding:"7px 14px", borderRadius:7, border:`1px solid ${panelBrd}`,
-                background:panelSrf, color:panelTxt, cursor:"pointer", fontSize:12,
-                fontWeight:700, fontFamily:FONT_DISPLAY, whiteSpace:"nowrap" }}>
-              {"⬇ "+t("exportCsvBtn")}
-            </button>
-          )}
-
-          {row(t("importMovesFromCsv"),
-            t("importMovesFromCsvDesc"),
-            <label style={{ padding:"7px 14px", borderRadius:7, border:`1px solid ${panelBrd}`,
-              background:panelSrf, color:panelTxt, cursor:"pointer", fontSize:12,
-              fontWeight:700, fontFamily:FONT_DISPLAY, whiteSpace:"nowrap", display:"inline-block" }}>
-              {"⬆ "+t("importCsvBtn")}
-              <input type="file" accept=".csv" style={{ display:"none" }} onChange={e=>{
-                const file = e.target.files?.[0]; if(!file) return;
-                const reader = new FileReader();
-                reader.onload = ev => {
-                  try {
-                    const lines = ev.target.result.split("\n").map(l=>l.trim()).filter(Boolean);
-                    const parseRow = line => {
-                      const cols = []; let cur="", inQ=false;
-                      for (let i=0; i<line.length; i++) {
-                        const ch = line[i];
-                        if (ch==='"' && !inQ) { inQ=true; }
-                        else if (ch==='"' && inQ && line[i+1]==='"') { cur+='"'; i++; }
-                        else if (ch==='"' && inQ) { inQ=false; }
-                        else if (ch===',' && !inQ) { cols.push(cur); cur=""; }
-                        else { cur+=ch; }
-                      }
-                      cols.push(cur);
-                      return cols;
-                    };
-                    const existing = JSON.parse(localStorage.getItem("mb_moves")||"[]");
-                    const existingKeys = new Set(existing.map(m=>(m.name+"|"+m.category).toLowerCase()));
-                    const toAdd = [];
-                    let skipped = 0, headerSeen = false;
-                    for (const line of lines) {
-                      const cols = parseRow(line);
-                      if (!cols[0]) continue;
-                      if (cols[0].toLowerCase()==="type" || cols[0].toLowerCase()==="name") { headerSeen=true; continue; }
-                      if (cols[0].toLowerCase()!=="move") continue;
-                      const [,name,category,mastery,description,notes,link,date] = cols;
-                      if (!name?.trim()) continue;
-                      const key = (name.trim()+"|"+(category?.trim()||"Footworks")).toLowerCase();
-                      if (existingKeys.has(key)) { skipped++; continue; }
-                      existingKeys.add(key);
-                      toAdd.push({ id:Date.now()+Math.random(), name:name.trim(),
-                        category:category?.trim()||"Footworks", mastery:parseInt(mastery)||0,
-                        description:description?.trim()||"", notes:notes?.trim()||"",
-                        link:link?.trim()||"", date:date?.trim()||new Date().toISOString().split("T")[0],
-                        status:"wip" });
-                    }
-                    if (!toAdd.length && !skipped) { alert(t("noMoveRowsFound")); return; }
-                    if (toAdd.length) {
-                      const updated = [...existing, ...toAdd];
-                      localStorage.setItem("mb_moves", JSON.stringify(updated));
-                    }
-                    const msg = `Import complete.\n✅ ${toAdd.length} move${toAdd.length!==1?"s":""} added${skipped?`\n⏭ ${skipped} duplicate${skipped!==1?"s":""} skipped`:""}.`;
-                    alert(msg);
-                    if (toAdd.length) window.location.reload();
-                    e.target.value="";
-                  } catch(err) { alert(t("importFailedCheck")); }
-                };
-                reader.readAsText(file);
               }}/>
             </label>
           )}

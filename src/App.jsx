@@ -58,7 +58,7 @@ export default function App() {
       const s = localStorage.getItem("mb_moves");
       if (s) { const p = JSON.parse(s); if (Array.isArray(p) && p.length > 0) return p.map(migrateMove); }
     } catch {}
-    return INIT_MOVES;
+    return [];
   });
   const [cats, setCats] = useState(() => {
     try {
@@ -86,21 +86,21 @@ export default function App() {
       const s = localStorage.getItem("mb_sets");
       if (s) { const p = JSON.parse(s); if (Array.isArray(p) && p.length > 0) return p; }
     } catch {}
-    return getInitSets(initLang);
+    return [];
   });
   const [rounds, setRounds] = useState(() => {
     try {
       const s = localStorage.getItem("mb_rounds");
       if (s) { const p = JSON.parse(s); if (Array.isArray(p) && p.length > 0) return p; }
     } catch {}
-    return INIT_ROUNDS;
+    return [];
   });
   const [habits, setHabits] = useState(() => {
     try {
       const s = localStorage.getItem("mb_habits");
       if (s) { const p = JSON.parse(s); if (Array.isArray(p) && p.length > 0) return p; }
     } catch {}
-    return getInitHabits(initLang);
+    return [];
   });
   const [profile, setProfile] = useState(() => {
     try {
@@ -114,7 +114,7 @@ export default function App() {
       const s = localStorage.getItem("mb_ideas");
       if (s) { const p = JSON.parse(s); if (Array.isArray(p) && p.length > 0) return p; }
     } catch {}
-    return getInitIdeas(initLang);
+    return [];
   });
   const [customAttrs, setCustomAttrs] = useState(() => {
     try { const s=localStorage.getItem("mb_custom_attrs"); if(s){const p=JSON.parse(s); if(Array.isArray(p)) return p;} } catch{} return [];
@@ -424,7 +424,7 @@ export default function App() {
   const [scrollToStance,setScrollToStance]=useState(false);
   const [appSettings,setAppSettings]=useState(()=>({
     ...{
-      theme:"light", defaultTab:"wip", showMastery:false,
+      theme:"light", defaultTab:"wip", showMastery:true, decaySensitivity:"normal",
       compactCards:false, sortMoves:"custom", fontSize:"medium",
       showMoveCount:false, confirmDelete:true, practiceReminders:false,
       reminderTime:"18:00", streakTracking:true, showDeadlineIndicator:true,

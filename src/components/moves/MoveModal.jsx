@@ -176,7 +176,7 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
         )}
       </div>
 
-      <MasterySlider value={f.mastery} onChange={set("mastery")}/>
+      <MasterySlider value={f.mastery} onChange={set("mastery")} moveDate={f.date} moveDifficulty={f.difficulty}/>
 
       {/* ── Difficulty ── */}
       <div style={{ marginTop:8, marginBottom:4 }}>
