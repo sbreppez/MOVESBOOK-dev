@@ -1,17 +1,15 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { FONT_DISPLAY, FONT_BODY } from "../../constants/fonts";
 import { Ic } from "../shared/Ic";
 import { Btn } from "../shared/Btn";
 import { useT } from "../../hooks/useTranslation";
 import { useSettings } from "../../hooks/useSettings";
 
-import { MyStanceSection } from "../stance/MyStanceSection";
-import { DevelopmentStory } from "../stance/DevelopmentStory";
 import { SettingsModal } from "./SettingsModal";
 import { FeedbackModal } from "./FeedbackModal";
 import { downloadBackup, restoreBackup } from "./BackupModal";
 
-export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersChange, addToast, onOpenManageReminders, moves, stance, sparring, calendar, scrollToStance, onScrollToStanceDone, onOpenStanceAssessment, settings, onSettingsChange, onClearMoves, onRestoreRounds, onRestartTour, zoom, onZoomChange, customAttrs, setCustomAttrs }) => {
+export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersChange, addToast, onOpenManageReminders, onNavigateToStance, settings, onSettingsChange, onClearMoves, onRestoreRounds, onRestartTour, zoom, onZoomChange, customAttrs, setCustomAttrs }) => {
   const { C } = useSettings();
   const t = useT();
   const [f,setF]=useState({ nickname:"", age:"", gender:"", goals:"", years:"", startYear:"", startMonth:"", startDay:"", why:"", ...profile });
@@ -22,17 +20,7 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
   const [showNoteAdd, setShowNoteAdd] = useState(false);
   const [noteText, setNoteText] = useState("");
   const noteItems = reminders?.items || [];
-  const stanceRef = useRef(null);
-
-  useEffect(() => {
-    if (scrollToStance && stanceRef.current) {
-      const timer = setTimeout(() => {
-        stanceRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-        onScrollToStanceDone?.();
-      }, 300);
-      return () => clearTimeout(timer);
-    }
-  }, [scrollToStance]);
+  const settingsSnapshot = useRef(settings);
 
   const handleNoteSave = () => {
     const text = noteText.trim();
@@ -44,6 +32,7 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
     setShowNoteAdd(false);
   };
   const handleSaveAndClose = () => { onSave(f); onClose(); };
+  const handleCancel = () => { onSettingsChange(settingsSnapshot.current); onClose(); };
   const lbl = () => ({ display:"block", fontSize:11, fontWeight:800, letterSpacing:1.5, color:C.textSec, fontFamily:FONT_DISPLAY, marginBottom:6 });
   const sectionHdr = (label, icon) => (
     <div style={{ display:"flex", alignItems:"center", gap:7, margin:"20px 0 10px", paddingBottom:6, borderBottom:`1px solid ${C.borderLight}` }}>
@@ -90,12 +79,24 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
         </div>
       </div>
 
-      {/* MyStance section — between identity and goals */}
-      <div ref={stanceRef}>
-        <MyStanceSection moves={moves||[]} stance={stance} sparring={sparring} calendar={calendar} onOpenAssessment={onOpenStanceAssessment}/>
-      </div>
-
-      <DevelopmentStory moves={moves||[]} sparring={sparring} calendar={calendar}/>
+      {/* MyStance link — navigates to REFLECT > STANCE */}
+      <button onClick={() => { if (onNavigateToStance) { onSave(f); onNavigateToStance(); } }}
+        style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between",
+          background: C.surface, border: `1px solid ${C.border}`, borderRadius: 14,
+          padding: "14px 16px", cursor: "pointer", margin: "12px 0" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <Ic n="barChart" s={16} c={C.accent} />
+          <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 13, color: C.text, letterSpacing: 0.5 }}>
+            {t("stance")}
+          </span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+          <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: C.accent, letterSpacing: 0.5 }}>
+            {t("viewFullStance")}
+          </span>
+          <Ic n="chevR" s={14} c={C.accent} />
+        </div>
+      </button>
 
       {sectionHdr(t("breakingGoals"),"target")}
       <div style={{ marginBottom:14 }}>
@@ -231,7 +232,7 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
         </button>
       </div>
       <div style={{ display:"flex", gap:8, justifyContent:"flex-end", marginTop:12, paddingBottom:16 }}>
-        <Btn variant="secondary" onClick={onClose}>{t("cancel")}</Btn>
+        <Btn variant="secondary" onClick={handleCancel}>{t("cancel")}</Btn>
         <Btn onClick={handleSaveAndClose}>{t("saveProfileBtn")}</Btn>
       </div>
       </div>

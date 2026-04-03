@@ -18,7 +18,7 @@ export const ReflectPage = ({
   calendar, setCalendar, cats, catColors, settings, onSettingsChange,
   addToast, stance, battleprep, onToggleBattlePrepTask,
   onOpenStanceAssessment, addCalendarEvent, removeCalendarEvent,
-  onSubTabChange, onGoToPrep, initialDay, initialMonth, sets, onAddTrigger
+  onSubTabChange, onGoToPrep, initialDay, initialMonth, sets, onAddTrigger, parentSubTab
 }) => {
   const t = useT();
   const { resultCountStr } = usePlural();
@@ -29,6 +29,13 @@ export const ReflectPage = ({
   const [calendarAddTick, setCalendarAddTick] = useState(0);
 
   useEffect(() => { if (onSubTabChange) onSubTabChange(reflectTab); }, [reflectTab]);
+
+  // Sync external sub-tab navigation (e.g. from Profile "View Stance" link)
+  useEffect(() => {
+    if (parentSubTab && ["calendar","stance","goals","notes"].includes(parentSubTab) && parentSubTab !== reflectTab) {
+      setReflectTab(parentSubTab);
+    }
+  }, [parentSubTab]);
 
   // ── Goals/Notes state (replicated from IdeasPage) ──
   const [view, setView] = useState("tiles");

@@ -39,6 +39,7 @@ export const CalendarOverlay = ({
   const [editEvent, setEditEvent] = useState(null);
   const [showTypePicker, setShowTypePicker] = useState(false);
   const [battlePrepPrompt, setBattlePrepPrompt] = useState(null);
+  const [calView, setCalView] = useState("days");
 
   useEffect(() => {
     if (onAddTrigger) { setSelectedDay(today); setShowTypePicker(true); setShowJournal(false); }
@@ -211,6 +212,26 @@ export const CalendarOverlay = ({
         </button>
       </div>}
 
+      {/* Days / Reports toggle — inline mode only */}
+      {inline && (
+        <div style={{ display: "flex", gap: 6, padding: "10px 14px", flexShrink: 0, background: C.bg }}>
+          {[["days", t("calDays")], ["reports", t("calReports")]].map(([id, label]) => {
+            const on = calView === id;
+            return (
+              <button key={id} onClick={() => setCalView(id)}
+                style={{ padding: "6px 14px", borderRadius: 20, border: `1.5px solid ${on ? C.accent : C.border}`,
+                  background: on ? C.accent + "22" : C.surface, color: on ? C.accent : C.textSec,
+                  fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12, letterSpacing: 0.5,
+                  cursor: "pointer" }}>
+                {label}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Days view */}
+      {(!inline || calView === "days") && <>
       {/* Battle Prep prompt — shown after saving a future battle event */}
       {battlePrepPrompt && (
         <div style={{ margin: "8px 12px", background: `${C.accent}10`, border: `1px solid ${C.accent}30`,
@@ -663,6 +684,18 @@ export const CalendarOverlay = ({
           </div>
         )}
       </div>
+      </>}
+
+      {/* Reports view — placeholder for Session R3b */}
+      {inline && calView === "reports" && (
+        <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: 40 }}>
+          <div style={{ textAlign: "center", color: C.textMuted }}>
+            <Ic n="barChart" s={36} c={C.textMuted} />
+            <p style={{ fontSize: 13, fontFamily: FONT_DISPLAY, fontWeight: 700, letterSpacing: 1, marginTop: 12 }}>{t("calReports")}</p>
+            <p style={{ fontSize: 12, marginTop: 6 }}>{t("comingSoon")}</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

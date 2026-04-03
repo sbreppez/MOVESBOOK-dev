@@ -97,7 +97,7 @@ export const TRANSLATIONS = {
     daysPerWeek:"How many days per week?", sessionLength:"Session length?",
     whereTrain:"Where do you train?", travelling:"TRAVELLING",
     // Misc
-    version:"Version", comingSoon:"COMING SOON", preview:"PREVIEW",
+    version:"Version", comingSoon:"COMING SOON", calDays:"DAYS", calReports:"REPORTS", viewFullStance:"VIEW STANCE", preview:"PREVIEW",
     welcome:"WELCOME TO MOVESBOOK", doubleTapRename:"Double-tap to rename",
     addItAnyway:"Add it anyway?", moveTo:"Move to…",
     used:"USED", remaining:"remaining", selectedCount:"selected",
@@ -412,6 +412,7 @@ export const TRANSLATIONS = {
     mfPrompt11:"Add a pause. Let the silence do the talking.",
     mfPrompt12:"Find a loop in the music. Build a movement loop that matches it.",
     // Lab
+    explore:"EXPLORE", combine:"COMBINE", spar:"SPAR", flow:"FLOW", map:"MAP",
     openLab:"Open Lab", lab:"LAB", technical:"TECHNICAL", conceptual:"CONCEPTUAL", collide:"COLLIDE",
     technicalDesc:"Pick a move and stack physical modifiers",
     conceptualDesc:"Draw inspiration from nature, animals, emotions",
@@ -1163,7 +1164,7 @@ export const TRANSLATIONS = {
     thisGoalMatters:"Questo obiettivo è importante perché…",
     daysPerWeek:"Quanti giorni a settimana?", sessionLength:"Durata sessione?",
     whereTrain:"Dove ti alleni?", travelling:"IN VIAGGIO",
-    version:"Versione", comingSoon:"PROSSIMAMENTE", preview:"ANTEPRIMA",
+    version:"Versione", comingSoon:"PROSSIMAMENTE", calDays:"GIORNI", calReports:"REPORT", viewFullStance:"VEDI STANCE", preview:"ANTEPRIMA",
     welcome:"BENVENUTO SU MOVESBOOK", doubleTapRename:"Doppio tap per rinominare",
     addItAnyway:"Aggiungi comunque?", moveTo:"Sposta a…",
     used:"USATE", remaining:"rimanenti", selectedCount:"selezionate",
@@ -1456,6 +1457,7 @@ export const TRANSLATIONS = {
     mfPrompt11:"Aggiungi una pausa. Lascia che il silenzio parli.",
     mfPrompt12:"Trova un loop nella musica. Costruisci un movimento che lo segua.",
     // Lab
+    explore:"ESPLORA", combine:"COMBINA", spar:"SPARRING", flow:"FLUSSO", map:"MAPPA",
     openLab:"Apri Lab", lab:"LAB", technical:"TECNICO", conceptual:"CONCETTUALE", collide:"COLLISIONE",
     technicalDesc:"Scegli una mossa e aggiungi modificatori fisici",
     conceptualDesc:"Trai ispirazione dalla natura, animali, emozioni",
@@ -2202,7 +2204,7 @@ export const TRANSLATIONS = {
     thisGoalMatters:"Este objetivo importa porque…",
     daysPerWeek:"¿Cuántos días a la semana?", sessionLength:"¿Duración de sesión?",
     whereTrain:"¿Dónde entrenas?", travelling:"DE VIAJE",
-    version:"Versión", comingSoon:"PRÓXIMAMENTE", preview:"VISTA PREVIA",
+    version:"Versión", comingSoon:"PRÓXIMAMENTE", calDays:"DÍAS", calReports:"INFORMES", viewFullStance:"VER STANCE", preview:"VISTA PREVIA",
     welcome:"BIENVENIDO A MOVESBOOK", doubleTapRename:"Doble toque para renombrar",
     addItAnyway:"¿Agregar de todos modos?", moveTo:"Mover a…",
     used:"USADOS", remaining:"restantes", selectedCount:"seleccionados",
@@ -2480,6 +2482,7 @@ export const TRANSLATIONS = {
     mfPrompt11:"Añade una pausa. Deja que el silencio hable.",
     mfPrompt12:"Encuentra un loop en la música. Construye un movimiento que lo siga.",
     // Lab
+    explore:"EXPLORAR", combine:"COMBINAR", spar:"SPARRING", flow:"FLUJO", map:"MAPA",
     openLab:"Abrir Lab", lab:"LAB", technical:"TÉCNICO", conceptual:"CONCEPTUAL", collide:"COLISIÓN",
     technicalDesc:"Elige un movimiento y apila modificadores físicos",
     conceptualDesc:"Inspírate en la naturaleza, animales, emociones",
@@ -3226,7 +3229,7 @@ export const TRANSLATIONS = {
     thisGoalMatters:"Cet objectif compte parce que…",
     daysPerWeek:"Combien de jours par semaine ?", sessionLength:"Durée de la session ?",
     whereTrain:"Où vous entraînez-vous ?", travelling:"EN DÉPLACEMENT",
-    version:"Version", comingSoon:"BIENTÔT DISPONIBLE", preview:"APERÇU",
+    version:"Version", comingSoon:"BIENTÔT DISPONIBLE", calDays:"JOURS", calReports:"RAPPORTS", viewFullStance:"VOIR STANCE", preview:"APERÇU",
     welcome:"BIENVENUE SUR MOVESBOOK", doubleTapRename:"Double tap pour renommer",
     addItAnyway:"Ajouter quand même ?", moveTo:"Déplacer vers…",
     used:"UTILISÉS", remaining:"restants", selectedCount:"sélectionnés",
@@ -3504,6 +3507,7 @@ export const TRANSLATIONS = {
     mfPrompt11:"Ajoute une pause. Laisse le silence parler.",
     mfPrompt12:"Trouve une boucle dans la musique. Construis un mouvement qui la suit.",
     // Lab
+    explore:"EXPLORER", combine:"COMBINER", spar:"SPARRING", flow:"FLUX", map:"CARTE",
     openLab:"Ouvrir Lab", lab:"LAB", technical:"TECHNIQUE", conceptual:"CONCEPTUEL", collide:"COLLISION",
     technicalDesc:"Choisis un move et empile les modificateurs physiques",
     conceptualDesc:"Inspire-toi de la nature, des animaux, des émotions",
@@ -4250,7 +4254,7 @@ export const TRANSLATIONS = {
     thisGoalMatters:"Este objetivo importa porque…",
     daysPerWeek:"Quantos dias por semana?", sessionLength:"Duração da sessão?",
     whereTrain:"Onde você treina?", travelling:"VIAJANDO",
-    version:"Versão", comingSoon:"EM BREVE", preview:"PRÉVIA",
+    version:"Versão", comingSoon:"EM BREVE", calDays:"DIAS", calReports:"RELATÓRIOS", viewFullStance:"VER STANCE", preview:"PRÉVIA",
     welcome:"BEM-VINDO AO MOVESBOOK", doubleTapRename:"Toque duplo para renomear",
     addItAnyway:"Adicionar mesmo assim?", moveTo:"Mover para…",
     used:"USADOS", remaining:"restantes", selectedCount:"selecionados",
@@ -4528,6 +4532,7 @@ export const TRANSLATIONS = {
     mfPrompt11:"Adicione uma pausa. Deixe o silêncio falar.",
     mfPrompt12:"Encontre um loop na música. Construa um movimento que o siga.",
     // Lab
+    explore:"EXPLORAR", combine:"COMBINAR", spar:"SPARRING", flow:"FLUXO", map:"MAPA",
     openLab:"Abrir Lab", lab:"LAB", technical:"TÉCNICO", conceptual:"CONCEPTUAL", collide:"COLISÃO",
     technicalDesc:"Escolhe um movimento e empilha modificadores físicos",
     conceptualDesc:"Inspira-te na natureza, animais, emoções",
@@ -5274,7 +5279,7 @@ export const TRANSLATIONS = {
     thisGoalMatters:"Dieses Ziel ist wichtig weil…",
     daysPerWeek:"Wie viele Tage pro Woche?", sessionLength:"Sessionlänge?",
     whereTrain:"Wo trainierst du?", travelling:"UNTERWEGS",
-    version:"Version", comingSoon:"DEMNÄCHST", preview:"VORSCHAU",
+    version:"Version", comingSoon:"DEMNÄCHST", calDays:"TAGE", calReports:"BERICHTE", viewFullStance:"STANCE ANSEHEN", preview:"VORSCHAU",
     welcome:"WILLKOMMEN BEI MOVESBOOK", doubleTapRename:"Doppeltippen zum Umbenennen",
     addItAnyway:"Trotzdem hinzufügen?", moveTo:"Verschieben nach…",
     used:"VERWENDET", remaining:"verbleibend", selectedCount:"ausgewählt",
@@ -5552,6 +5557,7 @@ export const TRANSLATIONS = {
     mfPrompt11:"Füge eine Pause ein. Lass die Stille sprechen.",
     mfPrompt12:"Finde einen Loop in der Musik. Baue eine Bewegungsschleife, die dazu passt.",
     // Lab
+    explore:"ERKUNDEN", combine:"KOMBINIEREN", spar:"SPARRING", flow:"FLOW", map:"KARTE",
     openLab:"Lab öffnen", lab:"LAB", technical:"TECHNISCH", conceptual:"KONZEPTIONELL", collide:"KOLLISION",
     technicalDesc:"Wähle einen Move und stapel physische Modifikatoren",
     conceptualDesc:"Lass dich von Natur, Tieren und Emotionen inspirieren",
@@ -6298,7 +6304,7 @@ export const TRANSLATIONS = {
     thisGoalMatters:"この目標が重要な理由は…",
     daysPerWeek:"週何日？", sessionLength:"セッションの長さ？",
     whereTrain:"どこで練習しますか？", travelling:"移動中",
-    version:"バージョン", comingSoon:"近日公開", preview:"プレビュー",
+    version:"バージョン", comingSoon:"近日公開", calDays:"日表示", calReports:"レポート", viewFullStance:"STANCEを見る", preview:"プレビュー",
     welcome:"MOVESBOOKへようこそ", doubleTapRename:"ダブルタップで名前変更",
     addItAnyway:"とにかく追加しますか？", moveTo:"移動先…",
     used:"使用済み", remaining:"残り", selectedCount:"選択中",
@@ -6577,6 +6583,7 @@ export const TRANSLATIONS = {
     mfPrompt11:"間を入れて。沈黙に語らせて。",
     mfPrompt12:"音楽のループを見つけて。それに合う動きのループを作って。",
     // Lab
+    explore:"探索", combine:"コンバイン", spar:"スパー", flow:"フロー", map:"マップ",
     openLab:"ラボを開く", lab:"ラボ", technical:"テクニカル", conceptual:"コンセプト", collide:"コライド",
     technicalDesc:"ムーブを選んで物理的な修飾子を重ねる",
     conceptualDesc:"自然、動物、感情からインスピレーションを得る",
@@ -7325,7 +7332,7 @@ export const TRANSLATIONS = {
     thisGoalMatters:"这个目标很重要因为…",
     daysPerWeek:"每周几天？", sessionLength:"每次时长？",
     whereTrain:"在哪里训练？", travelling:"旅途中",
-    version:"版本", comingSoon:"即将推出", preview:"预览",
+    version:"版本", comingSoon:"即将推出", calDays:"日视图", calReports:"报告", viewFullStance:"查看STANCE", preview:"预览",
     welcome:"欢迎来到MOVESBOOK", doubleTapRename:"双击重命名",
     addItAnyway:"仍然添加？", moveTo:"移动到…",
     used:"已使用", remaining:"剩余", selectedCount:"已选择",
@@ -7600,6 +7607,7 @@ export const TRANSLATIONS = {
     mfPrompt11:"加一个停顿，让沉默说话。",
     mfPrompt12:"找到音乐中的循环，创造一个匹配的动作循环。",
     // Lab
+    explore:"探索", combine:"组合", spar:"对练", flow:"律动", map:"地图",
     openLab:"打开实验室", lab:"实验室", technical:"技术", conceptual:"概念", collide:"碰撞",
     technicalDesc:"选择一个动作并叠加物理修饰",
     conceptualDesc:"从自然、动物、情感中获取灵感",
@@ -8348,7 +8356,7 @@ export const TRANSLATIONS = {
     thisGoalMatters:"Эта цель важна, потому что…",
     daysPerWeek:"Сколько дней в неделю?", sessionLength:"Длительность занятия?",
     whereTrain:"Где ты тренируешься?", travelling:"В ПУТИ",
-    version:"Версия", comingSoon:"СКОРО", preview:"ПРЕДПРОСМОТР",
+    version:"Версия", comingSoon:"СКОРО", calDays:"ДНИ", calReports:"ОТЧЁТЫ", viewFullStance:"СМОТРЕТЬ STANCE", preview:"ПРЕДПРОСМОТР",
     welcome:"ДОБРО ПОЖАЛОВАТЬ В MOVESBOOK", doubleTapRename:"Двойное нажатие для переименования",
     addItAnyway:"Всё равно добавить?", moveTo:"Переместить в…",
     used:"ИСПОЛЬЗОВАНО", remaining:"осталось", selectedCount:"выбрано",
@@ -8623,6 +8631,7 @@ export const TRANSLATIONS = {
     mfPrompt11:"Добавь паузу. Пусть тишина говорит.",
     mfPrompt12:"Найди петлю в музыке. Построй движение, которое ей соответствует.",
     // Lab
+    explore:"ИССЛЕДОВАТЬ", combine:"КОМБИНИРОВАТЬ", spar:"СПАРРИНГ", flow:"ПОТОК", map:"КАРТА",
     openLab:"Открыть Лабораторию", lab:"ЛАБОРАТОРИЯ", technical:"ТЕХНИКА", conceptual:"КОНЦЕПТ", collide:"СТОЛКНОВЕНИЕ",
     technicalDesc:"Выбери движение и добавь физические модификаторы",
     conceptualDesc:"Черпай вдохновение из природы, животных, эмоций",
@@ -9386,7 +9395,7 @@ export const TRANSLATIONS = {
     daysPerWeek:"일주일에 며칠?", sessionLength:"연습 시간?",
     whereTrain:"어디서 연습해?", travelling:"이동 중",
     // Misc
-    version:"버전", comingSoon:"곧 추가 예정", preview:"미리보기",
+    version:"버전", comingSoon:"곧 추가 예정", calDays:"일별", calReports:"리포트", viewFullStance:"STANCE 보기", preview:"미리보기",
     welcome:"MOVESBOOK에 온 걸 환영해", doubleTapRename:"두 번 탭해서 이름 변경",
     addItAnyway:"그래도 추가할래?", moveTo:"이동…",
     used:"사용됨", remaining:"남음", selectedCount:"선택됨",
@@ -9681,6 +9690,7 @@ export const TRANSLATIONS = {
     mfPrompt11:"멈춤을 넣어. 침묵이 말하게 해.",
     mfPrompt12:"음악에서 루프를 찾아. 그에 맞는 움직임 루프를 만들어.",
     // Lab
+    explore:"탐색", combine:"결합", spar:"스파링", flow:"플로우", map:"맵",
     openLab:"랩 열기", lab:"랩", technical:"테크니컬", conceptual:"컨셉", collide:"콜라이드",
     technicalDesc:"무브를 선택하고 물리적 수정자를 쌓으세요",
     conceptualDesc:"자연, 동물, 감정에서 영감을 얻으세요",
@@ -10444,7 +10454,7 @@ export const TRANSLATIONS = {
     daysPerWeek:"กี่วันต่อสัปดาห์?", sessionLength:"ความยาวเซสชัน?",
     whereTrain:"ฝึกที่ไหน?", travelling:"เคลื่อนที่",
     // Misc
-    version:"เวอร์ชัน", comingSoon:"เร็วๆ นี้", preview:"ตัวอย่าง",
+    version:"เวอร์ชัน", comingSoon:"เร็วๆ นี้", calDays:"วัน", calReports:"รายงาน", viewFullStance:"ดู STANCE", preview:"ตัวอย่าง",
     welcome:"ยินดีต้อนรับสู่ MOVESBOOK", doubleTapRename:"แตะสองครั้งเพื่อเปลี่ยนชื่อ",
     addItAnyway:"เพิ่มอยู่ดีไหม?", moveTo:"ย้ายไปที่…",
     used:"ใช้แล้ว", remaining:"เหลือ", selectedCount:"ที่เลือก",
@@ -10759,6 +10769,7 @@ export const TRANSLATIONS = {
     mfPrompt11:"เพิ่มการหยุด ให้ความเงียบพูดแทน",
     mfPrompt12:"หาลูปในเพลง สร้างลูปการเคลื่อนไหวที่เข้ากัน",
     // Lab
+    explore:"สำรวจ", combine:"ผสม", spar:"สปาร์", flow:"โฟลว์", map:"แผนที่",
     openLab:"เปิดแล็บ", lab:"แล็บ", technical:"เทคนิค", conceptual:"แนวคิด", collide:"ชน",
     technicalDesc:"เลือกท่าเต้นและเพิ่มตัวปรับเปลี่ยนทางกายภาพ",
     conceptualDesc:"สร้างแรงบันดาลใจจากธรรมชาติ สัตว์ อารมณ์",
@@ -11488,7 +11499,7 @@ export const TRANSLATIONS = {
     daysPerWeek:"Bao nhiêu ngày mỗi tuần?", sessionLength:"Thời lượng buổi tập?",
     whereTrain:"Bạn tập ở đâu?", travelling:"DI CHUYỂN",
     // Misc
-    version:"Phiên bản", comingSoon:"SẮP RA MẮT", preview:"XEM TRƯỚC",
+    version:"Phiên bản", comingSoon:"SẮP RA MẮT", calDays:"NGÀY", calReports:"BÁO CÁO", viewFullStance:"XEM STANCE", preview:"XEM TRƯỚC",
     welcome:"CHÀO MỪNG ĐẾN MOVESBOOK", doubleTapRename:"Chạm đúp để đổi tên",
     addItAnyway:"Vẫn thêm?", moveTo:"Chuyển đến…",
     used:"ĐÃ DÙNG", remaining:"còn lại", selectedCount:"đã chọn",
@@ -11803,6 +11814,7 @@ export const TRANSLATIONS = {
     mfPrompt11:"Thêm một khoảng dừng. Để sự im lặng lên tiếng.",
     mfPrompt12:"Tìm một vòng lặp trong nhạc. Tạo vòng lặp chuyển động phù hợp.",
     // Lab
+    explore:"KHÁM PHÁ", combine:"KẾT HỢP", spar:"ĐẤU TẬP", flow:"DÒNG CHẢY", map:"BẢN ĐỒ",
     openLab:"Mở Lab", lab:"PHÒNG THÍ NGHIỆM", technical:"KỸ THUẬT", conceptual:"Ý TƯỞNG", collide:"VA CHẠM",
     technicalDesc:"Chọn một động tác và chồng các bộ điều chỉnh vật lý",
     conceptualDesc:"Lấy cảm hứng từ thiên nhiên, động vật, cảm xúc",
