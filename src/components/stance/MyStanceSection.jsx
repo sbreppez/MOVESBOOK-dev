@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { FONT_DISPLAY, FONT_BODY } from "../../constants/fonts";
+import { Ic } from "../shared/Ic";
 import { useT } from "../../hooks/useTranslation";
 import { useSettings } from "../../hooks/useSettings";
 import { StanceRadarChart } from "./StanceRadarChart";
+import { ShareCardOverlay } from "../shared/ShareCardOverlay";
 
 export const STANCE_DOMAINS = ["musicality","performance","technique","variety","creativity","personality"];
 
@@ -130,6 +132,7 @@ const fmtSecs = (s) => {
 export const MyStanceSection = ({ moves, stance, sparring, calendar, onOpenAssessment }) => {
   const { C } = useSettings();
   const t = useT();
+  const [showShare, setShowShare] = useState(false);
   const assessments = stance?.assessments || [];
   const hasAssessment = assessments.length > 0;
   const moveCount = moves?.length || 0;
@@ -185,10 +188,29 @@ export const MyStanceSection = ({ moves, stance, sparring, calendar, onOpenAsses
       {/* Radar chart */}
       <StanceRadarChart current={latest.scores} previous={previous?.scores || null} C={C}/>
 
-      {/* Last updated */}
-      <div style={{ textAlign:"center", fontSize:11, color:C.textMuted, fontFamily:FONT_BODY, marginTop:6, marginBottom:14 }}>
-        {t("lastUpdated")}: {latest.date}
+      {/* Last updated + share */}
+      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginTop:6, marginBottom:14 }}>
+        <div style={{ fontSize:11, color:C.textMuted, fontFamily:FONT_BODY }}>
+          {t("lastUpdated")}: {latest.date}
+        </div>
+        <button onClick={() => setShowShare(true)}
+          style={{ display:"flex", alignItems:"center", gap:5, background:"none", border:"none",
+            cursor:"pointer", padding:0, fontFamily:FONT_DISPLAY, fontWeight:700,
+            fontSize:11, color:C.textMuted }}>
+          <Ic n="share2" s={14} c={C.textMuted}/>
+          {t("shareCard")}
+        </button>
       </div>
+
+      {/* Share overlay */}
+      {showShare && (
+        <ShareCardOverlay
+          type="stance"
+          data={{ domains: latest.scores, date: latest.date }}
+          onClose={() => setShowShare(false)}
+          t={t}
+        />
+      )}
 
       {/* First-time note */}
       {isFirst && (

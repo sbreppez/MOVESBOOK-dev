@@ -6,6 +6,7 @@ import { useT } from "../../hooks/useTranslation";
 import { useSettings } from "../../hooks/useSettings";
 
 import { MyStanceSection } from "../stance/MyStanceSection";
+import { DevelopmentStory } from "../stance/DevelopmentStory";
 
 export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersChange, addToast, onOpenManageReminders, moves, stance, sparring, calendar, scrollToStance, onScrollToStanceDone, onOpenStanceAssessment }) => {
   const { C } = useSettings();
@@ -87,6 +88,8 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
       <div ref={stanceRef}>
         <MyStanceSection moves={moves||[]} stance={stance} sparring={sparring} calendar={calendar} onOpenAssessment={onOpenStanceAssessment}/>
       </div>
+
+      <DevelopmentStory moves={moves||[]} sparring={sparring} calendar={calendar}/>
 
       {sectionHdr(t("breakingGoals"),"target")}
       <div style={{ marginBottom:14 }}>
