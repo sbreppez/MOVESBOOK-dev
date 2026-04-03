@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>MovesBook [DEV]</title>
+  <meta name="description" content="Your personal breaking trainer — moves, goals, habits and battle planning in one place."/>
+  <meta name="theme-color" content="#0d0d0d"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="MovesBook"/>
+  <link rel="manifest" href="/manifest.json"/>
+  <link rel="apple-touch-icon" href="/icons/icon-192.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;width:100%;overflow:hidden;background:#0d0d0d}
+    body{display:flex;justify-content:center;align-items:center;flex-direction:column}
+    #root{height:100%;width:100%;max-width:480px;display:none;flex-direction:column}
+    #splash{display:flex;flex-direction:column;align-items:center;gap:18px;padding:40px;text-align:center}
+    .logo{font-size:34px;font-weight:900;letter-spacing:6px;color:#cf0000;font-family:'Barlow Condensed',sans-serif}
+    .logo b{color:#e8d5b0;font-weight:900}
+    .bar-wrap{width:220px;height:4px;background:#1c1008;border-radius:2px;overflow:hidden;border:1px solid #2a1a0a}
+    .bar-fill{height:100%;background:linear-gradient(90deg,#8b0000,#cf0000,#ff5555);border-radius:2px;animation:ld 6s ease-in-out forwards}
+    .msg{font-size:11px;color:#9a8a7a;letter-spacing:2px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
+    @keyframes ld{0%{width:3%}30%{width:35%}60%{width:65%}85%{width:88%}100%{width:96%}}
+    input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(0.5);cursor:pointer}
+  </style>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script>
+    // ╔══════════════════════════════════════════════════════════════╗
+    // ║  DEV FIREBASE CONFIG — replace with your dev project values ║
+    // ║  Get these from: Firebase Console → Project Settings → Web  ║
+    // ╚══════════════════════════════════════════════════════════════╝
+firebase.initializeApp({
+  apiKey: "AIzaSyBvvp3Uo2lt1CgngXD2WFL4VzPGJN26tsQ",
+  authDomain: "movesbook-dev.firebaseapp.com",
+  projectId: "movesbook-dev",
+  storageBucket: "movesbook-dev.firebasestorage.app",
+  messagingSenderId: "466420149799",
+  appId: "1:466420149799:web:953823a2bbe9e7958f2802",
+  measurementId: "G-SB46GKFY9P"
+    });
+    var _fbAuth     = firebase.auth();
+    var _fbDb       = firebase.firestore();
+    var _fbProvider = new firebase.auth.GoogleAuthProvider();
+
+    // Handle redirect result on page load (in case popup was blocked and fell back to redirect)
+    _fbAuth.getRedirectResult().catch(function(e){ console.warn('[MB] getRedirectResult error', e); });
+
+    window.__MB_AUTH__ = {
+      signIn: function() {
+        return _fbAuth.signInWithPopup(_fbProvider).catch(function(e) {
+          // If popup blocked, fall back to redirect
+          if (e.code === 'auth/popup-blocked' || e.code === 'auth/popup-closed-by-user') {
+            return _fbAuth.signInWithRedirect(_fbProvider);
+          }
+          throw e;
+        });
+      },
+      signOut:       function() { return _fbAuth.signOut(); },
+      signInEmail:   function(e,p) { return _fbAuth.signInWithEmailAndPassword(e,p); },
+      signUpEmail:   function(e,p) { return _fbAuth.createUserWithEmailAndPassword(e,p); },
+      resetPassword: function(e)   { return _fbAuth.sendPasswordResetEmail(e); }
+    };
+
+    window.__MB_DB__ = {
+      load: function(uid) {
+        return _fbDb.collection('users').doc(uid).get().then(function(s){ return s.exists ? s.data() : null; });
+      },
+      save: function(uid, key, val) {
+        var obj = {}; obj[key] = JSON.stringify(val);
+        return _fbDb.collection('users').doc(uid).set(obj, { merge: true });
+      },
+      subscribe: function(uid, cb) {
+        return _fbDb.collection('users').doc(uid).onSnapshot(function(s){ if(s.exists) cb(s.data()); });
+      }
+    };
+
+    var loginDiv = null;
+    var _unsubSnap = null;
+
+    function _buildLoginWall() {
+      var style = document.createElement('style');
+      style.textContent = '#mb-login{position:fixed;inset:0;background:#1a0f08;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:"Barlow Condensed",sans-serif;z-index:99999;padding:24px;overflow-y:auto;transition:opacity 0.3s}' +
+        '#mb-login h1{font-size:34px;font-weight:900;letter-spacing:6px;margin-bottom:4px;color:#e8d5b0}' +
+        '#mb-login h1 span{color:#cf0000}' +
+        '#mb-login .sub{color:#9a8a7a;font-size:11px;margin-bottom:24px;letter-spacing:2px;text-transform:uppercase}' +
+        '#mb-login .card{background:#221408;border:1px solid #3a2a1a;border-radius:16px;padding:24px;width:100%;max-width:340px;box-shadow:0 8px 40px rgba(0,0,0,.6)}' +
+        '#mb-login .gbtn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:#fff;color:#1a1a1a;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:"Barlow Condensed",sans-serif;letter-spacing:1px;box-shadow:0 2px 8px rgba(0,0,0,.3);margin-bottom:18px}' +
+        '#mb-login .gbtn img{width:20px;height:20px}' +
+        '#mb-login .divrow{display:flex;align-items:center;gap:10px;margin-bottom:16px}' +
+        '#mb-login .divrow span{color:#4a3a2a;font-size:11px;letter-spacing:1px}' +
+        '#mb-login .divrow:before,#mb-login .divrow:after{content:"";flex:1;height:1px;background:#3a2a1a}' +
+        '#mb-login input{width:100%;background:#0f0a06;border:1px solid #3a2a1a;border-radius:8px;padding:11px 14px;color:#e8d5b0;font-size:14px;font-family:"Barlow Condensed",sans-serif;outline:none;margin-bottom:10px;box-sizing:border-box}' +
+        '#mb-login input:focus{border-color:#8b1a1a}' +
+        '#mb-login input::placeholder{color:#4a3a2a}' +
+        '#mb-login .ebtn{width:100%;background:#8b1a1a;color:#fff;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:900;cursor:pointer;font-family:"Barlow Condensed",sans-serif;letter-spacing:2px;margin-top:4px}' +
+        '#mb-login .trow{display:flex;justify-content:center;align-items:center;gap:6px;margin-top:14px;font-size:12px;color:#6a5a4a}' +
+        '#mb-login .trow button{background:none;border:none;color:#c0a080;cursor:pointer;font-family:"Barlow Condensed",sans-serif;font-size:12px;font-weight:700;text-decoration:underline;padding:0}' +
+        '#mb-login .fgt{background:none;border:none;color:#4a3a2a;cursor:pointer;font-family:"Barlow Condensed",sans-serif;font-size:11px;display:block;margin:8px auto 0;padding:0}' +
+        '#mb-login .err{color:#cf0000;font-size:12px;margin-top:10px;text-align:center;min-height:16px}' +
+        '#mb-login .ok{color:#2d6a4f;font-size:12px;margin-top:10px;text-align:center;min-height:16px}';
+      document.head.appendChild(style);
+
+      loginDiv = document.createElement('div');
+      loginDiv.id = 'mb-login';
+      loginDiv.innerHTML =
+        '<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&display=swap" rel="stylesheet"/>' +
+        '<h1><span>MOVES</span>BOOK</h1>' +
+        '<p class="sub">FOR BREAKING NERDS ONLY</p>' +
+        '<div class="card">' +
+          '<button class="gbtn" id="mb-gbtn"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"/>Continue with Google</button>' +
+          '<div class="divrow"><span>OR</span></div>' +
+          '<input type="email"    id="mb-em"  placeholder="Email address"    autocomplete="email"/>' +
+          '<input type="password" id="mb-pw"  placeholder="Password"         autocomplete="current-password"/>' +
+          '<input type="password" id="mb-pw2" placeholder="Confirm password" autocomplete="new-password" style="display:none"/>' +
+          '<button class="ebtn" id="mb-ebtn">SIGN IN</button>' +
+          '<button class="fgt"  id="mb-fgt">Forgot password?</button>' +
+          '<p class="err" id="mb-err"></p>' +
+          '<p class="ok"  id="mb-ok"></p>' +
+          '<div class="trow"><span id="mb-tlbl">Don&#39;t have an account?</span><button id="mb-tgl">Sign Up</button></div>' +
+        '</div>' +
+        '<p style="color:#3a2a1a;font-size:10px;margin-top:16px;letter-spacing:1px">Your moves. Your progress. Your story.</p>';
+      document.body.appendChild(loginDiv);
+
+      var mode = 'signin';
+      function setErr(m) { document.getElementById('mb-err').textContent=m; document.getElementById('mb-ok').textContent=''; }
+      function setOk(m)  { document.getElementById('mb-ok').textContent=m;  document.getElementById('mb-err').textContent=''; }
+
+      document.getElementById('mb-gbtn').onclick = function() {
+        setErr('');
+        window.__MB_AUTH__.signIn();
+      };
+
+      document.getElementById('mb-tgl').onclick = function() {
+        mode = mode === 'signin' ? 'signup' : 'signin';
+        var s = mode === 'signup';
+        document.getElementById('mb-ebtn').textContent  = s ? 'CREATE ACCOUNT' : 'SIGN IN';
+        document.getElementById('mb-tlbl').textContent  = s ? 'Already have an account?' : "Don't have an account?";
+        document.getElementById('mb-tgl').textContent   = s ? 'Sign In' : 'Sign Up';
+        document.getElementById('mb-pw2').style.display = s ? 'block' : 'none';
+        document.getElementById('mb-pw').placeholder    = s ? 'Password (min 6 chars)' : 'Password';
+        document.getElementById('mb-fgt').style.display = s ? 'none' : 'block';
+        setErr('');
+      };
+
+      document.getElementById('mb-ebtn').onclick = function() {
+        var email = document.getElementById('mb-em').value.trim();
+        var pass  = document.getElementById('mb-pw').value;
+        var pass2 = document.getElementById('mb-pw2').value;
+        setErr('');
+        if (!email || !pass) { setErr('Please enter your email and password.'); return; }
+        if (mode === 'signup') {
+          if (pass.length < 6) { setErr('Password must be at least 6 characters.'); return; }
+          if (pass !== pass2)  { setErr('Passwords do not match.'); return; }
+          window.__MB_AUTH__.signUpEmail(email, pass).catch(function(e){
+            setErr(e.code === 'auth/email-already-in-use' ? 'Email already in use.' : 'Sign-up failed.');
+          });
+        } else {
+          window.__MB_AUTH__.signInEmail(email, pass).catch(function(e){
+            setErr(['auth/wrong-password','auth/user-not-found','auth/invalid-credential'].indexOf(e.code)>=0
+              ? 'Incorrect email or password.' : 'Sign-in failed.');
+          });
+        }
+      };
+
+      document.getElementById('mb-fgt').onclick = function() {
+        var email = document.getElementById('mb-em').value.trim();
+        if (!email) { setErr('Enter your email above first.'); return; }
+        window.__MB_AUTH__.resetPassword(email)
+          .then(function(){ setOk('Reset email sent.'); })
+          .catch(function(){ setErr('Could not send reset email.'); });
+      };
+
+      document.addEventListener('keydown', function(e){
+        if (e.key === 'Enter' && loginDiv && loginDiv.style.display !== 'none') {
+          document.getElementById('mb-ebtn').click();
+        }
+      });
+    }
+
+    _fbAuth.onAuthStateChanged(function(user) {
+      if (user) {
+        window.__MB_USER__ = { uid:user.uid, name:user.displayName, email:user.email, photo:user.photoURL };
+        window.__MB_DB__.load(user.uid).then(function(data) {
+          localStorage.setItem('mb_data_version','5');
+          if (data) {
+            if (data.moves)    { try { const p=JSON.parse(data.moves);    if(Array.isArray(p)&&p.length>0)    localStorage.setItem('mb_moves',    data.moves);    } catch{} }
+            if (data.sets)     { try { const p=JSON.parse(data.sets);     if(Array.isArray(p)&&p.length>0)    localStorage.setItem('mb_sets',     data.sets);     } catch{} }
+            if (data.rounds)   { try { const p=JSON.parse(data.rounds);   if(Array.isArray(p)&&p.length>0)    localStorage.setItem('mb_rounds',   data.rounds);   } catch{} }
+            if (data.ideas)    { try { const p=JSON.parse(data.ideas);    if(Array.isArray(p)&&p.length>0)    localStorage.setItem('mb_ideas',    data.ideas);    } catch{} }
+            if (data.habits)   { try { const p=JSON.parse(data.habits);   if(Array.isArray(p)&&p.length>0)    localStorage.setItem('mb_habits',   data.habits);   } catch{} }
+            if (data.cats)     { try { const p=JSON.parse(data.cats);     if(Array.isArray(p)&&p.length>0)    localStorage.setItem('mb_cats',     data.cats);     } catch{} }
+            if (data.profile)  { try { const pp=JSON.parse(data.profile); if(pp&&Object.values(pp).some(v=>v)) localStorage.setItem('mb_profile',  data.profile);  } catch{} }
+            if (data.settings)   localStorage.setItem('mb_settings',   data.settings);
+            if (data.templates)  localStorage.setItem('mb_templates',  data.templates);
+            if (data.catColors)  localStorage.setItem('mb_cat_colors', data.catColors);
+            if (data.customAttrs) { try { var _ca=JSON.parse(data.customAttrs); if(Array.isArray(_ca)) localStorage.setItem('mb_custom_attrs', data.customAttrs); } catch(e){} }
+          }
+          if (loginDiv) { loginDiv.style.opacity='0'; setTimeout(function(){ loginDiv.style.display='none'; },300); }
+          window.dispatchEvent(new Event('mb-auth-resolved'));
+        }).catch(function(){
+          localStorage.setItem('mb_data_version','5');
+          if (loginDiv) { loginDiv.style.opacity='0'; setTimeout(function(){ loginDiv.style.display='none'; },300); }
+          window.dispatchEvent(new Event('mb-auth-resolved'));
+        });
+
+        if (_unsubSnap) _unsubSnap();
+        _unsubSnap = window.__MB_DB__.subscribe(user.uid, function(d){
+          try {
+            if (d.moves)    localStorage.setItem('mb_moves',    d.moves);
+            if (d.sets)     localStorage.setItem('mb_sets',     d.sets);
+            if (d.rounds) { try { const pr=JSON.parse(d.rounds); if(pr.length>0) localStorage.setItem('mb_rounds', d.rounds); } catch{} }
+            if (d.ideas)    localStorage.setItem('mb_ideas',    d.ideas);
+            if (d.profile)  { try { const pp=JSON.parse(d.profile); if(pp&&Object.values(pp).some(v=>v)) localStorage.setItem('mb_profile', d.profile); } catch{} }
+            if (d.settings) localStorage.setItem('mb_settings', d.settings);
+            if (d.habits)     localStorage.setItem('mb_habits',     d.habits);
+            if (d.templates)  localStorage.setItem('mb_templates',  d.templates);
+            if (d.catColors)  localStorage.setItem('mb_cat_colors', d.catColors);
+            if (d.customAttrs) localStorage.setItem('mb_custom_attrs', d.customAttrs);
+          } catch(e){}
+        });
+      } else {
+        window.__MB_USER__ = null;
+        ['mb_moves','mb_sets','mb_rounds','mb_ideas','mb_profile','mb_settings',
+         'mb_habits','mb_templates','mb_cats','mb_cat_colors','mb_custom_attrs','mb_data_version'].forEach(function(k){ localStorage.removeItem(k); });
+        if (loginDiv) { loginDiv.style.display='flex'; loginDiv.style.opacity='1'; }
+        if (_unsubSnap) { _unsubSnap(); _unsubSnap=null; }
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', _buildLoginWall);
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>emailjs.init("0ooV7LLWpYQPKlY6d");</script>
+</head>
+<body>
+  <div id="splash">
+    <div class="logo">MOVES<b>BOOK</b></div>
+    <div class="bar-wrap"><div class="bar-fill"></div></div>
+    <div class="msg">LOADING YOUR ARSENAL...</div>
+  </div>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+  <script>
+    (function() {
+      var splash = document.getElementById('splash');
+      var root   = document.getElementById('root');
+      var reactReady = false;
+      var authReady  = false;
+
+      function tryReveal() {
+        if (reactReady && authReady) {
+          splash.style.display = 'none';
+          root.style.display = 'flex';
+        }
+      }
+
+      var t = setInterval(function() {
+        if (root.children.length > 0) {
+          clearInterval(t);
+          reactReady = true;
+          tryReveal();
+        }
+      }, 100);
+
+      window.addEventListener('mb-auth-resolved', function() {
+        authReady = true;
+        tryReveal();
+      });
+    })();
+  </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js')
+          .then(function(reg) { console.log('MovesBook SW registered:', reg.scope); })
+          .catch(function(err) { console.log('SW registration failed:', err); });
+      });
+    }
+  </script>
+</body>
+</html>

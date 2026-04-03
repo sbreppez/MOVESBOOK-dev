@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>MovesBook — Layout Test</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;600&display=swap" rel="stylesheet"/>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.23.10/babel.min.js"></script>
+  <!-- Foundation files -->
+  <script src="../shared/mb-design-system.js"></script>
+  <script src="../shared/mb-layout.js"></script>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" data-presets="env,react">
+const { useState } = React;
+const { AppShell, SectionHeader, SearchBar, Btn, Ic, EmptyState, MasteryBar, useToasts, Toast } = MB;
+
+// ── Fake placeholder page content ──────────────────────────────────────────
+function PlaceholderContent({ tab }) {
+  const descriptions = {
+    ideas:  { title:"TRAIN", sub:"Set goals, capture ideas, track habits", emoji:"🎯" },
+    wip:    { title:"MOVES", sub:"Your full moves library", emoji:"🕺" },
+    ready:  { title:"BATTLE", sub:"Plan rounds and sets", emoji:"⚔️" },
+  };
+  const d = descriptions[tab] || descriptions.wip;
+
+  return (
+    <div style={{ flex:1, display:"flex", flexDirection:"column", overflow:"hidden" }}>
+      <SectionHeader
+        title={d.title}
+        subtitle={d.sub}
+        right={<Btn variant="primary" small><Ic n="plus" s={12} c="#fff"/> Add</Btn>}
+      />
+      <SearchBar value="" onChange={()=>{}} placeholder={`Search ${d.title.toLowerCase()}…`}/>
+      <div style={{ flex:1, overflowY:"auto", padding:16, display:"flex", flexDirection:"column", gap:12 }}>
+        {/* Sample cards */}
+        {["Indian Step","Six Steps","Baby Freeze","Backspin","Knee Drop"].map((name,i) => (
+          <div key={i} style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:10, padding:14, display:"flex", alignItems:"center", gap:12 }}>
+            <div style={{ width:6, alignSelf:"stretch", borderRadius:3, background:["#8b1a1a","#2a5f8a","#2d6a4f","#b5850a","#6b3a8a"][i], flexShrink:0 }}/>
+            <div style={{ flex:1, minWidth:0 }}>
+              <div style={{ fontFamily:FONT_DISPLAY, fontWeight:800, fontSize:14, color:C.text, letterSpacing:1 }}>{name}</div>
+              <div style={{ fontSize:11, color:C.textMuted, marginTop:2 }}>Category · {["Toprocks","Footworks","Freezes","Power Moves","Godowns"][i]}</div>
+              <div style={{ marginTop:8 }}>
+                <MasteryBar value={[78,62,91,22,45][i]}/>
+              </div>
+            </div>
+            <Ic n="chevR" s={16} c={C.textMuted}/>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── Main test app ───────────────────────────────────────────────────────────
+function TestApp() {
+  const [tab, setTab]         = useState("wip");
+  const [theme, setTheme]     = useState("light");
+  const [showSettings, setShowSettings] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [toasts, addToast, removeToast] = useToasts();
+
+  const profile = { nickname:"B-Boy Test" };
+  const user    = { name:"Test User", photo:null };
+
+  const addMenuOptions = tab === "wip" ? [
+    { label:"Add Move",     emoji:"🕺", action:()=>addToast({ title:"Add Move",     msg:"Move modal would open", emoji:"🕺" }) },
+    { label:"Add Category", emoji:"📂", action:()=>addToast({ title:"Add Category", msg:"Category modal would open", emoji:"📂" }) },
+  ] : null;
+
+  const handleTabChange = (newTab) => {
+    setTab(newTab);
+    addToast({ title:`Switched to ${newTab.toUpperCase()}`, msg:"Tab navigation works ✓", emoji:"✅" });
+  };
+
+  // Theme toggle (just for testing)
+  const toggleTheme = () => {
+    const next = theme === "light" ? "dark" : "light";
+    setTheme(next);
+    MB.setTheme(next);
+    addToast({ title:"Theme changed", msg:`Switched to ${next} mode`, emoji: next==="dark"?"🌙":"☀️" });
+  };
+
+  return (
+    <AppShell
+      tab={tab}
+      onTabChange={handleTabChange}
+      onAdd={()=>addToast({ title:"ADD pressed", msg:"Your section add handler fires here", emoji:"➕" })}
+      addMenuOptions={addMenuOptions}
+      profile={profile}
+      user={user}
+      onProfile={()=>addToast({ title:"Profile", msg:"Profile modal would open", emoji:"👤" })}
+      onSettings={()=>{ setShowSettings(s=>!s); addToast({ title:"Settings", msg:"Settings modal would open", emoji:"⚙️" }); }}
+      onFeedback={()=>{ setShowFeedback(f=>!f); addToast({ title:"Feedback", msg:"Feedback modal would open", emoji:"💬" }); }}
+      onManual={()=>addToast({ title:"Manual", msg:"Manual modal would open", emoji:"📖" })}
+      showSettings={showSettings}
+      showFeedback={showFeedback}
+      theme={theme}
+    >
+      <PlaceholderContent tab={tab}/>
+
+      {/* Theme toggle — just for this test file, won't be in real sections */}
+      <button
+        onClick={toggleTheme}
+        style={{
+          position:"fixed", bottom:72, right:12, zIndex:9999,
+          background:C.accent, color:"#fff", border:"none", borderRadius:8,
+          padding:"8px 14px", cursor:"pointer", fontFamily:FONT_DISPLAY,
+          fontWeight:700, fontSize:12, letterSpacing:1, boxShadow:"0 4px 16px rgba(0,0,0,0.3)"
+        }}
+      >
+        {theme === "light" ? "🌙 Dark" : "☀️ Light"}
+      </button>
+
+      <Toast toasts={toasts} remove={removeToast}/>
+    </AppShell>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<TestApp/>);
+</script>
+</body>
+</html>
