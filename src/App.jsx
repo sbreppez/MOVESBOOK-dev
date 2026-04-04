@@ -30,7 +30,6 @@ import { ManageReminders } from './components/moves/ManageReminders';
 import { MyStanceAssessment } from './components/stance/MyStanceAssessment';
 import { CompetitionSimulator } from './components/battle/CompetitionSimulator';
 import { FlowMap } from './components/battle/FlowMap';
-import { BlockLibrary } from './components/home/BlockLibrary';
 import { PostSessionPrompt } from './components/home/PostSessionPrompt';
 import { detectMilestones } from './utils/reportEngine';
 
@@ -222,8 +221,20 @@ export default function App() {
     try { const s=localStorage.getItem("mb_injuries"); if(s){const p=JSON.parse(s); if(Array.isArray(p)) return p;} } catch{}
     return [];
   });
+  const [homeStack, setHomeStack] = useState(() => {
+    try { const s=localStorage.getItem("mb_home_stack"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{}
+    return { defaultStack:[], overrides:{} };
+  });
+  const [homeIdeas, setHomeIdeas] = useState(() => {
+    try { const s=localStorage.getItem("mb_home_ideas"); if(s){const p=JSON.parse(s); if(Array.isArray(p)) return p;} } catch{}
+    return [];
+  });
+  const [homeChecks, setHomeChecks] = useState(() => {
+    try { const s=localStorage.getItem("mb_home_checks"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{}
+    return {};
+  });
   const [showFlowMap, setShowFlowMap] = useState(false);
-  const [showBlockLibrary, setShowBlockLibrary] = useState(false);
+  const [showBlockLibrary] = useState(false); // kept for overlay detection
   const [showPostSessionPrompt, setShowPostSessionPrompt] = useState(false);
   const lastSessionSaved = useRef(false);
 
@@ -261,6 +272,9 @@ export default function App() {
   useEffect(()=>{ saveLocal("mb_schedule", schedule); },[schedule]);
   useEffect(()=>{ saveLocal("mb_presession", presession); },[presession]);
   useEffect(()=>{ saveLocal("mb_injuries", injuries); },[injuries]);
+  useEffect(()=>{ saveLocal("mb_home_stack", homeStack); },[homeStack]);
+  useEffect(()=>{ saveLocal("mb_home_ideas", homeIdeas); },[homeIdeas]);
+  useEffect(()=>{ saveLocal("mb_home_checks", homeChecks); },[homeChecks]);
   useEffect(()=>{ saveLocal("mb_ideas",   ideas);
     const timer = setTimeout(() => {
       if (window.__MB_USER__?.uid && window.__MB_DB__) {
@@ -309,6 +323,9 @@ export default function App() {
       schedule:    save("schedule"),
       presession:  save("presession"),
       injuries:    save("injuries"),
+      homeStack:   save("homeStack"),
+      homeIdeas:   save("homeIdeas"),
+      homeChecks:  save("homeChecks"),
     };
   }, []);
 
@@ -341,6 +358,9 @@ export default function App() {
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.schedule?.(fbUser.uid, schedule); },[schedule, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.presession?.(fbUser.uid, presession); },[presession, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.injuries?.(fbUser.uid, injuries); },[injuries, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.homeStack?.(fbUser.uid, homeStack); },[homeStack, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.homeIdeas?.(fbUser.uid, homeIdeas); },[homeIdeas, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.homeChecks?.(fbUser.uid, homeChecks); },[homeChecks, fbUser]);
 
   // ── Auth resolution ────────────────────────────────────────────────────────
   useEffect(()=>{
@@ -404,6 +424,12 @@ export default function App() {
           if (prs) { try { const p=JSON.parse(prs); if(p&&typeof p==="object") setPresession(p); } catch {} }
           const inj = localStorage.getItem("mb_injuries");
           if (inj) { try { const p=JSON.parse(inj); if(Array.isArray(p)) setInjuries(p); } catch {} }
+          const hs = localStorage.getItem("mb_home_stack");
+          if (hs) { try { const p=JSON.parse(hs); if(p&&typeof p==="object") setHomeStack(p); } catch {} }
+          const hi = localStorage.getItem("mb_home_ideas");
+          if (hi) { try { const p=JSON.parse(hi); if(Array.isArray(p)) setHomeIdeas(p); } catch {} }
+          const hc = localStorage.getItem("mb_home_checks");
+          if (hc) { try { const p=JSON.parse(hc); if(p&&typeof p==="object") setHomeChecks(p); } catch {} }
           if (p) { try { const pp=JSON.parse(p); if(pp&&Object.values(pp).some(v=>v)) setProfile(pp); } catch{} }
           const st = localStorage.getItem("mb_settings");
           if (st) {
@@ -447,6 +473,9 @@ export default function App() {
         milestonesInitRef.current = false;
         setBlocks(STARTER_BLOCKS);
         setSchedule({});
+        setHomeStack({ defaultStack:[], overrides:{} });
+        setHomeIdeas([]);
+        setHomeChecks({});
       }
     }
     window.addEventListener("mb-auth-resolved", handleAuthResolved);
@@ -663,7 +692,7 @@ export default function App() {
           <IdeaMenu menu={trainMenu} onClose={()=>setTrainMenu(null)}/>
           <TrainModalCtx.Provider value={{ openModal:(type,idea,onSave)=>{ setTrainMenu(null); setTrainModal({type,idea,onSave}); } }}>
           <TrainMenuCtx.Provider value={{ openMenu:(m)=>setTrainMenu(m), closeMenu:()=>setTrainMenu(null) }}>
-            {tab==="home" && <HomePage habits={habits} setHabits={setHabits} onAddTrigger={addTick} moves={moves} reps={reps} sparring={sparring} musicflow={musicflow} calendar={calendar} cats={cats} catColors={catColors} reports={reports} setReports={setReports} blocks={blocks} setBlocks={setBlocks} schedule={schedule} setSchedule={setSchedule} onOpenBlockLibrary={()=>setShowBlockLibrary(true)} injuries={injuries} setInjuries={setInjuries} presession={presession} setPresession={setPresession} ideas={ideas} reminders={reminders} battleprep={battleprep} settings={appSettings} onSettingsChange={setAppSettings} onNavigate={(t,s)=>{setTab(t);setSubTab(s||"");}}/>}
+            {tab==="home" && <HomePage habits={habits} setHabits={setHabits} moves={moves} reps={reps} sparring={sparring} musicflow={musicflow} calendar={calendar} cats={cats} catColors={catColors} reports={reports} setReports={setReports} injuries={injuries} setInjuries={setInjuries} presession={presession} setPresession={setPresession} ideas={ideas} reminders={reminders} battleprep={battleprep} settings={appSettings} onSettingsChange={setAppSettings} onNavigate={(t,s)=>{setTab(t);setSubTab(s||"");}} homeStack={homeStack} setHomeStack={setHomeStack} homeIdeas={homeIdeas} setHomeIdeas={setHomeIdeas} homeChecks={homeChecks} setHomeChecks={setHomeChecks}/>}
             {tab==="moves" && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} catDomains={catDomains} setCatDomains={setCatDomains} sets={sets} setSets={setSets} addToast={addToast} settings={appSettings} onSettingsChange={setAppSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} reminders={reminders} onRemindersChange={setReminders} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}} onOpenManageReminders={()=>setShowManageReminders(true)} onOpenExplore={()=>setShowLab(true)} onOpenRRR={()=>setShowRRR(true)} onOpenCombine={()=>setShowComboMachine(true)} onOpenMap={()=>setShowFlowMap(true)}/>}
             {tab==="battle" && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} addToast={addToast} freestyle={freestyle} onFreestyleChange={setFreestyle} rivals={rivals} onRivalsChange={setRivals} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onSimulate={()=>setShowCompSim(true)} battleprep={battleprep} setBattleprep={setBattleprep} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={()=>setBattlePrepSeed(null)} onOpenSharedCalendar={(im)=>{setCalendarInitialMonth(im||null);}}/>}
             {tab==="reflect" && <ReflectPage ideas={ideas} setIdeas={setIdeas} moves={moves} setMoves={setMovesGrad} reps={reps} sparring={sparring} musicflow={musicflow} habits={habits} calendar={calendar} setCalendar={setCalendar} cats={cats} catColors={catColors} settings={appSettings} onSettingsChange={setAppSettings} addToast={addToast} stance={stance} battleprep={battleprep} onToggleBattlePrepTask={(planId,dateStr,taskIdx)=>{setBattleprep(prev=>{const plans=(prev.plans||[]).map(p=>{if(p.id!==planId) return p;const key=dateStr+"-"+taskIdx;return {...p, completedTasks:{...(p.completedTasks||{}), [key]:!(p.completedTasks||{})[key]}};});return {...prev, plans};});}} onOpenStanceAssessment={()=>setShowStanceAssessment(true)} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onSubTabChange={setSubTab} onGoToPrep={(seed)=>{setBattlePrepSeed(seed);setTab("battle");}} initialDay={calendarInitialDay} initialMonth={calendarInitialMonth} sets={sets} onAddTrigger={addTick} parentSubTab={subTab} reports={reports} injuries={injuries}/>}
@@ -728,7 +757,6 @@ export default function App() {
             reflections={reflections} onReflectionsChange={setReflections}
             addToast={addToast} addCalendarEvent={addCalendarEvent}
             onClose={()=>{setShowMusicFlow(false);if(lastSessionSaved.current){lastSessionSaved.current=false;setShowPostSessionPrompt(true);}}}/>}
-          {showBlockLibrary&&<BlockLibrary blocks={blocks} setBlocks={setBlocks} onClose={()=>setShowBlockLibrary(false)}/>}
           {showPostSessionPrompt&&<PostSessionPrompt presession={presession} setPresession={setPresession} onClose={()=>setShowPostSessionPrompt(false)}/>}
           {showStanceAssessment&&<MyStanceAssessment stance={stance} onStanceChange={setStance}
             addToast={addToast} onClose={()=>{ setShowStanceAssessment(false); setTab("reflect"); setSubTab("stance"); }}/>}
@@ -736,7 +764,6 @@ export default function App() {
             reminders={reminders} onRemindersChange={setReminders} addToast={addToast}
             onOpenManageReminders={()=>{ setShowProfile(false); setShowManageReminders(true); }}
             onNavigateToStance={()=>{ setShowProfile(false); setTab("reflect"); setSubTab("stance"); }}
-            onOpenBlockLibrary={()=>{ setShowProfile(false); setShowBlockLibrary(true); }}
             settings={appSettings} onSettingsChange={setAppSettings} onClearMoves={()=>setMoves([])} onRestoreRounds={()=>setRounds(INIT_ROUNDS)} onRestartTour={()=>{setShowProfile(false);setShowTour(true);}} zoom={zoom} onZoomChange={handleZoomChange} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs}/>}
           {showManual&&<ManualModal onClose={()=>setShowManual(false)}/>}
         </div>

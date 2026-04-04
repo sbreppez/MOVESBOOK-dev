@@ -1,151 +1,191 @@
 import React, { useState, useMemo } from 'react';
-import { HabitsPage } from '../train/HabitsPage';
 import { WeeklyReportCard } from './WeeklyReportCard';
 import { WeekStrip } from './WeekStrip';
-import { BlockCard } from './BlockCard';
-import { BlockModal } from './BlockModal';
-import { BlockLibrary } from './BlockLibrary';
-import { BlockPicker } from './BlockPicker';
+import { HomeTile } from './HomeTile';
+import { HomeAddPicker } from './HomeAddPicker';
 import { HomeCardsContainer } from './HomeCardsContainer';
 import { PreSessionIntel } from './PreSessionIntel';
+import { RoutineForm } from './RoutineForm';
+import { IdeaForm } from './IdeaForm';
+import { BottomSheet } from '../shared/BottomSheet';
 import { FONT_DISPLAY } from '../../constants/fonts';
 import { useSettings } from '../../hooks/useSettings';
 import { useT } from '../../hooks/useTranslation';
 import { Ic } from '../shared/Ic';
-import { Btn } from '../shared/Btn';
 import { Modal } from '../shared/Modal';
+import { Btn } from '../shared/Btn';
 
-const TOD_ORDER = { morning:0, midday:1, afternoon:2, evening:3 };
-const TOD_KEYS = ["morning","midday","afternoon","evening"];
-const TOD_LABELS = { morning:"todMorning", midday:"todMidday", afternoon:"todAfternoon", evening:"todEvening" };
+function getTilesForDate(homeStack, selectedDate) {
+  if (!homeStack) return [];
+  const dow = new Date(selectedDate + "T12:00:00").getDay();
+  const overrides = homeStack.overrides?.[selectedDate] || {};
+  const removed = overrides.removed || [];
 
-function getBlocksForDate(blocks, schedule, dateStr) {
-  const d = new Date(dateStr + "T12:00:00");
-  const dow = d.getDay();
-  const daySched = schedule[dateStr] || {};
-  const hidden = daySched.hidden || [];
-  const added = daySched.added || [];
-
-  const repeating = blocks.filter(b => {
-    if (hidden.includes(b.id)) return false;
-    const r = b.repeat || { type:"daily", days:[] };
+  // Filter defaultStack by repeat rule and remove overridden
+  const base = (homeStack.defaultStack || []).filter(tile => {
+    if (removed.includes(tile.id)) return false;
+    // Ideas have no repeat — always show
+    if (tile.type === 'idea' || tile.type === 'goalhabit') return true;
+    // Routines: check repeat
+    const r = tile.repeat || { type: "daily", days: [] };
     if (r.type === "daily") return true;
     if (r.type === "workdays") return dow >= 1 && dow <= 5;
     if (r.type === "specificDays") return (r.days || []).includes(dow);
-    return false;
+    if (r.type === "none") return false;
+    return true;
   });
 
-  const addedBlocks = blocks.filter(b =>
-    added.includes(b.id) && !repeating.find(r => r.id === b.id) && !hidden.includes(b.id)
-  );
-
-  return [...repeating, ...addedBlocks].sort((a, b) =>
-    (TOD_ORDER[a.timeOfDay] || 0) - (TOD_ORDER[b.timeOfDay] || 0)
-  );
+  // Add day-specific additions
+  const added = overrides.added || [];
+  return [...base, ...added];
 }
 
 export const HomePage = ({
-  habits, setHabits, onAddTrigger, moves, reps, sparring, musicflow,
+  habits, setHabits, moves, reps, sparring, musicflow,
   calendar, cats, catColors, reports, setReports,
-  blocks, setBlocks, schedule, setSchedule, onOpenBlockLibrary,
   injuries, setInjuries, presession, setPresession,
   ideas, reminders, battleprep, settings, onSettingsChange, onNavigate,
+  homeStack, setHomeStack, homeIdeas, setHomeIdeas, homeChecks, setHomeChecks,
 }) => {
   const { C } = useSettings();
   const t = useT();
   const todayStr = new Date().toISOString().split("T")[0];
   const [selectedDate, setSelectedDate] = useState(todayStr);
-  const [showLibrary, setShowLibrary] = useState(false);
-  const [showPicker, setShowPicker] = useState(false);
-  const [editBlock, setEditBlock] = useState(null);
-  const [confirmReset, setConfirmReset] = useState(false);
+  const [showAddPicker, setShowAddPicker] = useState(false);
+  const [showGearMenu, setShowGearMenu] = useState(false);
+  const [editTile, setEditTile] = useState(null);
+  const [confirmRemove, setConfirmRemove] = useState(null);
 
-  const dayBlocks = useMemo(
-    () => getBlocksForDate(blocks, schedule, selectedDate),
-    [blocks, schedule, selectedDate]
+  const todayTiles = useMemo(
+    () => getTilesForDate(homeStack, selectedDate),
+    [homeStack, selectedDate]
   );
 
-  const daySched = schedule[selectedDate] || {};
-  const checked = daySched.checked || [];
-  const hasOverrides = (daySched.hidden?.length > 0) || (daySched.added?.length > 0);
+  const dayChecks = homeChecks?.[selectedDate] || {};
+  const isToday = selectedDate === todayStr;
 
-  const updateDaySched = (dateStr, updater) => {
-    setSchedule(prev => {
-      const current = prev[dateStr] || {};
-      const updated = updater(current);
-      return { ...prev, [dateStr]: updated };
+  // Format date as "Month Year" localized
+  const dateLabel = useMemo(() => {
+    const d = new Date(selectedDate + "T12:00:00");
+    const lang = settings?.language || "en";
+    const month = d.toLocaleString(lang, { month: "long" });
+    return `${month.toUpperCase()} ${d.getFullYear()}`;
+  }, [selectedDate, settings?.language]);
+
+  const isBreakingDay = isToday && todayTiles.some(tile =>
+    tile.type === 'routine' && (/break/i.test(tile.name))
+  );
+  const weeklyReportPinned = settings?.homeCards?.some(c => c.id === "weeklyReport" && c.visible);
+
+  // ── Handlers ──────────────────────────────────────────────────────────────
+
+  const handleTileCheck = (tile) => {
+    const tileId = tile.id;
+    const wasChecked = !!dayChecks[tileId];
+
+    // Update homeChecks
+    setHomeChecks(prev => {
+      const day = { ...(prev[selectedDate] || {}) };
+      if (wasChecked) { delete day[tileId]; } else { day[tileId] = true; }
+      return { ...prev, [selectedDate]: day };
     });
+
+    // For goalhabit habits, also toggle habit checkIns
+    if (tile.type === 'goalhabit' && tile.refId) {
+      const habit = habits?.find(h => String(h.id) === String(tile.refId));
+      if (habit) {
+        setHabits(prev => prev.map(h => {
+          if (String(h.id) !== String(tile.refId)) return h;
+          const checks = h.checkIns || [];
+          if (wasChecked) {
+            return { ...h, checkIns: checks.filter(d => d !== selectedDate) };
+          } else {
+            return { ...h, checkIns: [...checks, selectedDate] };
+          }
+        }));
+      }
+    }
   };
 
-  const handleCheck = (blockId) => {
-    updateDaySched(selectedDate, s => {
-      const arr = s.checked || [];
-      const isChecked = arr.includes(blockId);
-      return { ...s, checked: isChecked ? arr.filter(id => id !== blockId) : [...arr, blockId] };
-    });
+  const handleTileRemove = (tile) => {
+    setConfirmRemove(tile);
   };
 
-  const handleDismiss = (blockId) => {
-    updateDaySched(selectedDate, s => ({
-      ...s,
-      hidden: [...(s.hidden || []), blockId],
-      added: (s.added || []).filter(id => id !== blockId),
-    }));
+  const doRemove = (mode) => {
+    const tile = confirmRemove;
+    if (!tile) return;
+
+    if (mode === "justToday") {
+      // Add to today's removed override
+      setHomeStack(prev => {
+        const overrides = { ...(prev.overrides || {}) };
+        const dayOvr = { ...(overrides[selectedDate] || {}) };
+        dayOvr.removed = [...(dayOvr.removed || []), tile.id];
+        overrides[selectedDate] = dayOvr;
+        return { ...prev, overrides };
+      });
+    } else {
+      // Remove from defaultStack entirely
+      setHomeStack(prev => ({
+        ...prev,
+        defaultStack: prev.defaultStack.filter(t => t.id !== tile.id),
+      }));
+
+      // If idea, also remove from homeIdeas
+      if (tile.type === 'idea') {
+        setHomeIdeas(prev => prev.filter(i => i.id !== tile.id));
+      }
+    }
+    setConfirmRemove(null);
   };
 
-  const handleAddForDay = (blockId) => {
-    updateDaySched(selectedDate, s => ({
-      ...s,
-      added: [...(s.added || []), blockId],
-    }));
+  const handleTileEdit = (tile) => {
+    if (tile.type === 'routine' || tile.type === 'idea') {
+      setEditTile(tile);
+    }
+  };
+
+  const handleEditSave = (fields) => {
+    if (!editTile) return;
+    if (editTile.type === 'routine') {
+      setHomeStack(prev => ({
+        ...prev,
+        defaultStack: prev.defaultStack.map(t =>
+          t.id === editTile.id ? { ...t, ...fields } : t
+        ),
+      }));
+    } else if (editTile.type === 'idea') {
+      setHomeIdeas(prev => prev.map(i =>
+        i.id === editTile.id ? { ...i, ...fields } : i
+      ));
+    }
+    setEditTile(null);
   };
 
   const handleResetDay = () => {
-    setSchedule(prev => {
+    setHomeStack(prev => {
+      const overrides = { ...(prev.overrides || {}) };
+      delete overrides[selectedDate];
+      return { ...prev, overrides };
+    });
+    setHomeChecks(prev => {
       const next = { ...prev };
       delete next[selectedDate];
       return next;
     });
-    setConfirmReset(false);
+    setShowGearMenu(false);
   };
-
-  const handleBlockEdit = (fields) => {
-    if (editBlock) {
-      setBlocks(prev => prev.map(b => b.id === editBlock.id ? { ...b, ...fields } : b));
-    }
-  };
-
-  const handleBlockDelete = () => {
-    if (editBlock) {
-      setBlocks(prev => prev.filter(b => b.id !== editBlock.id));
-    }
-  };
-
-  const scheduledIds = dayBlocks.map(b => b.id);
-
-  // Group blocks by time of day
-  const grouped = {};
-  TOD_KEYS.forEach(tod => { grouped[tod] = []; });
-  dayBlocks.forEach(b => {
-    const tod = b.timeOfDay || "morning";
-    if (grouped[tod]) grouped[tod].push(b);
-    else grouped.morning.push(b);
-  });
-
-  const isToday = selectedDate === todayStr;
-  const isBreakingDay = isToday && dayBlocks.some(b => b.tag === "breaking" || /break/i.test(b.name));
-  const weeklyReportPinned = settings?.homeCards?.some(c => c.id === "weeklyReport" && c.visible);
 
   return (
-    <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column" }}>
-      {/* Header row with gear */}
-      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between",
-        padding:"8px 14px", flexShrink:0 }}>
-        <span style={{ fontSize:12, fontWeight:700, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY }}>
-          {isToday ? t("today").toUpperCase() : selectedDate}
+    <div style={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column" }}>
+      {/* Header row */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between",
+        padding: "8px 14px", flexShrink: 0 }}>
+        <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1.5, color: C.textMuted, fontFamily: FONT_DISPLAY }}>
+          {dateLabel}
         </span>
-        <button onClick={onOpenBlockLibrary || (() => setShowLibrary(true))}
-          style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}>
+        <button onClick={() => setShowGearMenu(true)}
+          style={{ background: "none", border: "none", cursor: "pointer", padding: 5, borderRadius: 5, color: C.textMuted }}>
           <Ic n="cog" s={16} c={C.textMuted}/>
         </button>
       </div>
@@ -154,84 +194,55 @@ export const HomePage = ({
       <WeekStrip selectedDate={selectedDate} onSelectDate={setSelectedDate}/>
 
       {/* Scrollable content */}
-      <div style={{ flex:1, overflow:"auto", paddingBottom:76 }}>
-        {/* Weekly Report (auto-dismiss version — hidden if pinned card is on) */}
+      <div style={{ flex: 1, overflow: "auto", paddingBottom: 76 }}>
+        {/* Weekly Report (auto-dismiss version) */}
         {!weeklyReportPinned && (
           <WeeklyReportCard moves={moves} reps={reps} sparring={sparring} musicflow={musicflow}
             calendar={calendar} cats={cats} catColors={catColors} reports={reports} setReports={setReports}/>
         )}
 
-        {/* Pre-session intelligence — on breaking days only */}
+        {/* Pre-session intelligence */}
         {isBreakingDay && presession && (
           <PreSessionIntel presession={presession} setPresession={setPresession}/>
         )}
 
-        {/* Block schedule */}
-        <div style={{ padding:"6px 12px" }}>
-          {dayBlocks.length === 0 && (
-            <div style={{ textAlign:"center", padding:"30px 20px", color:C.textMuted }}>
-              <div style={{ fontSize:28, marginBottom:8 }}>📋</div>
-              <div style={{ fontSize:13, fontWeight:700, fontFamily:FONT_DISPLAY, marginBottom:6 }}>{t("noBlocksYet")}</div>
-              <div style={{ fontSize:12, lineHeight:1.5 }}>{t("noBlocksHint")}</div>
+        {/* Tile stack */}
+        <div style={{ padding: "6px 12px" }}>
+          {todayTiles.length === 0 && (
+            <div style={{ textAlign: "center", padding: "40px 20px", color: C.textMuted }}>
+              <div style={{ fontSize: 32, marginBottom: 10 }}>🌅</div>
+              <div style={{ fontSize: 14, fontWeight: 800, fontFamily: FONT_DISPLAY, marginBottom: 6, textTransform: "uppercase" }}>
+                {t("dayStartsHere")}
+              </div>
+              <div style={{ fontSize: 12, lineHeight: 1.5 }}>{t("dayStartsHereHint")}</div>
             </div>
           )}
 
-          {TOD_KEYS.map(tod => {
-            const todBlocks = grouped[tod];
-            if (!todBlocks || todBlocks.length === 0) return null;
-            return (
-              <div key={tod} style={{ marginBottom:8 }}>
-                {/* Time of day header */}
-                <div style={{
-                  display:"flex", alignItems:"center", gap:8, padding:"8px 2px 4px",
-                }}>
-                  <span style={{
-                    fontSize:11, fontWeight:800, letterSpacing:1.5, color:C.textMuted,
-                    fontFamily:FONT_DISPLAY,
-                  }}>
-                    {t(TOD_LABELS[tod])}
-                  </span>
-                  <div style={{ flex:1, height:1, background:C.borderLight }}/>
-                </div>
+          {todayTiles.map(tile => (
+            <HomeTile key={tile.id} tile={tile}
+              isChecked={!!dayChecks[tile.id]}
+              onCheck={handleTileCheck}
+              onRemove={handleTileRemove}
+              onEdit={handleTileEdit}
+              habits={habits} ideas={ideas} homeIdeas={homeIdeas}
+            />
+          ))}
 
-                {/* Block cards */}
-                {todBlocks.map(b => (
-                  <BlockCard key={b.id} block={b}
-                    isChecked={checked.includes(b.id)}
-                    onCheck={() => handleCheck(b.id)}
-                    onDismiss={() => handleDismiss(b.id)}
-                    onEdit={() => setEditBlock(b)}/>
-                ))}
-              </div>
-            );
-          })}
-
-          {/* Add block for today + Reset */}
-          <div style={{ marginTop:12, display:"flex", flexDirection:"column", gap:8 }}>
-            <button onClick={() => setShowPicker(true)}
+          {/* Add to today button */}
+          <div style={{ marginTop: 12 }}>
+            <button onClick={() => setShowAddPicker(true)}
               style={{
-                width:"100%", padding:"12px 0", borderRadius:10, cursor:"pointer",
-                background:"transparent", border:`1.5px dashed ${C.border}`,
-                color:C.accent, fontSize:13, fontWeight:800, fontFamily:FONT_DISPLAY,
-                letterSpacing:0.5, transition:"all 0.15s",
+                width: "100%", padding: "12px 0", borderRadius: 10, cursor: "pointer",
+                background: "transparent", border: `1.5px dashed ${C.border}`,
+                color: C.accent, fontSize: 13, fontWeight: 800, fontFamily: FONT_DISPLAY,
+                letterSpacing: 0.5, transition: "all 0.15s",
               }}>
-              {t("addBlockForToday")}
+              {t("addToToday")}
             </button>
-
-            {hasOverrides && (
-              <button onClick={() => setConfirmReset(true)}
-                style={{
-                  background:"none", border:"none", cursor:"pointer",
-                  color:C.textMuted, fontSize:11, fontWeight:700, fontFamily:FONT_DISPLAY,
-                  letterSpacing:0.5, textAlign:"center", padding:6,
-                }}>
-                {t("resetToDefault")}
-              </button>
-            )}
           </div>
         </div>
 
-        {/* HOME cards */}
+        {/* HOME cards (simplified) */}
         <HomeCardsContainer
           moves={moves} reps={reps} sparring={sparring} musicflow={musicflow}
           calendar={calendar} cats={cats} catColors={catColors}
@@ -240,41 +251,69 @@ export const HomePage = ({
           reports={reports} setReports={setReports}
           settings={settings} onSettingsChange={onSettingsChange} onNavigate={onNavigate}
         />
-
-        {/* Habits section below */}
-        <div style={{ borderTop:`1px solid ${C.borderLight}`, marginTop:12 }}>
-          <HabitsPage onAddTrigger={onAddTrigger} habits={habits} setHabits={setHabits}/>
-        </div>
       </div>
 
-      {/* Block Library overlay (from gear in header) */}
-      {showLibrary && (
-        <BlockLibrary blocks={blocks} setBlocks={setBlocks} onClose={() => setShowLibrary(false)}/>
-      )}
+      {/* Add Picker */}
+      <HomeAddPicker open={showAddPicker} onClose={() => setShowAddPicker(false)}
+        homeStack={homeStack} setHomeStack={setHomeStack}
+        homeIdeas={homeIdeas} setHomeIdeas={setHomeIdeas}
+        habits={habits} ideas={ideas} selectedDate={selectedDate}
+      />
 
-      {/* Block Picker bottom sheet */}
-      {showPicker && (
-        <BlockPicker blocks={blocks} scheduledIds={scheduledIds}
-          onPick={handleAddForDay} onClose={() => setShowPicker(false)}/>
-      )}
+      {/* Gear Menu */}
+      <BottomSheet open={showGearMenu} onClose={() => setShowGearMenu(false)} title={t("home")}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+          {[
+            { icon: "list", label: t("manageRoutines"), action: () => { /* future */ setShowGearMenu(false); } },
+            { icon: "rotateCcw", label: t("resetToDefault") || "Reset today", action: handleResetDay },
+          ].map((item, i) => (
+            <button key={i} onClick={item.action}
+              style={{
+                display: "flex", alignItems: "center", gap: 12, width: "100%",
+                padding: "14px 12px", borderRadius: 10, cursor: "pointer",
+                background: C.surface, border: `1px solid ${C.border}`,
+                color: C.text, fontSize: 13, fontWeight: 700, fontFamily: FONT_DISPLAY,
+                textAlign: "left", letterSpacing: 0.3,
+              }}>
+              <Ic n={item.icon} s={16} c={C.textMuted}/>
+              {item.label}
+            </button>
+          ))}
+        </div>
+      </BottomSheet>
 
-      {/* Edit block modal */}
-      {editBlock && (
-        <BlockModal block={editBlock} onClose={() => setEditBlock(null)}
-          onSave={handleBlockEdit} onDelete={handleBlockDelete}/>
-      )}
-
-      {/* Reset confirm */}
-      {confirmReset && (
-        <Modal title={t("resetToDefault")} onClose={() => setConfirmReset(false)}>
-          <p style={{ color:C.textSec, fontSize:13, lineHeight:1.6, marginBottom:16 }}>
-            {t("resetDayConfirm")}
+      {/* Remove confirmation */}
+      {confirmRemove && (
+        <Modal title={t("confirm")} onClose={() => setConfirmRemove(null)}>
+          <p style={{ color: C.textSec, fontSize: 13, lineHeight: 1.6, marginBottom: 16 }}>
+            {confirmRemove.type === 'goalhabit'
+              ? t("removeFromHome")
+              : confirmRemove.type === 'routine'
+              ? confirmRemove.name || t("editRoutine")
+              : homeIdeas?.find(i => i.id === confirmRemove.id)?.title || homeIdeas?.find(i => i.id === confirmRemove.id)?.text?.slice(0, 40) || t("editIdea")}
           </p>
-          <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
-            <Btn variant="secondary" onClick={() => setConfirmReset(false)}>{t("cancel")}</Btn>
-            <Btn variant="primary" onClick={handleResetDay}>{t("confirm")}</Btn>
+          <div style={{ display: "flex", gap: 8, flexDirection: "column" }}>
+            {confirmRemove.type === 'routine' && confirmRemove.repeat?.type !== 'none' && (
+              <Btn variant="secondary" onClick={() => doRemove("justToday")}>{t("justToday")}</Btn>
+            )}
+            <Btn variant="primary" onClick={() => doRemove("allDays")}>
+              {confirmRemove.type === 'goalhabit' ? t("removeFromHome") : t("deletePermanently")}
+            </Btn>
+            <Btn variant="secondary" onClick={() => setConfirmRemove(null)}>{t("cancel")}</Btn>
           </div>
         </Modal>
+      )}
+
+      {/* Edit tile */}
+      {editTile && editTile.type === 'routine' && (
+        <BottomSheet open={true} onClose={() => setEditTile(null)} title={t("editRoutine")}>
+          <RoutineForm routine={editTile} onSave={handleEditSave} onCancel={() => setEditTile(null)}/>
+        </BottomSheet>
+      )}
+      {editTile && editTile.type === 'idea' && (
+        <BottomSheet open={true} onClose={() => setEditTile(null)} title={t("editIdea")}>
+          <IdeaForm idea={homeIdeas?.find(i => i.id === editTile.id)} onSave={handleEditSave} onCancel={() => setEditTile(null)}/>
+        </BottomSheet>
       )}
     </div>
   );
