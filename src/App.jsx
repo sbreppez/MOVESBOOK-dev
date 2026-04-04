@@ -30,6 +30,24 @@ import { ManageReminders } from './components/moves/ManageReminders';
 import { MyStanceAssessment } from './components/stance/MyStanceAssessment';
 import { CompetitionSimulator } from './components/battle/CompetitionSimulator';
 import { FlowMap } from './components/battle/FlowMap';
+import { BlockLibrary } from './components/home/BlockLibrary';
+import { PostSessionPrompt } from './components/home/PostSessionPrompt';
+import { detectMilestones } from './utils/reportEngine';
+
+const STARTER_BLOCKS = [
+  { id:1, emoji:"🌅", name:"Morning Stretch", duration:10, description:"", checkable:true, repeat:{ type:"daily", days:[] }, timeOfDay:"morning" },
+  { id:2, emoji:"🤸", name:"Breaking Session", duration:60, description:"", checkable:true, repeat:{ type:"daily", days:[] }, timeOfDay:"afternoon" },
+  { id:3, emoji:"🧘", name:"Cooldown", duration:10, description:"", checkable:true, repeat:{ type:"daily", days:[] }, timeOfDay:"evening" },
+];
+
+function cleanOldSchedule(sched) {
+  if (!sched || typeof sched !== "object") return {};
+  const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - 30);
+  const cutoffStr = cutoff.toISOString().split("T")[0];
+  const cleaned = {};
+  Object.entries(sched).forEach(([date, val]) => { if (date >= cutoffStr) cleaned[date] = val; });
+  return cleaned;
+}
 
 // ── Firebase stubs for preview ──
 if (typeof window !== "undefined") {
@@ -183,7 +201,31 @@ export default function App() {
     } catch{}
     return { pairings:{} };
   });
+  const [reports, setReports] = useState(() => {
+    try { const s=localStorage.getItem("mb_reports"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { milestones:[], weeklyDismissed:null };
+  });
+  const [milestonesShown, setMilestonesShown] = useState(() => {
+    try { const s=localStorage.getItem("mb_milestones_shown"); if(s){const p=JSON.parse(s); if(Array.isArray(p)) return p;} } catch{} return [];
+  });
+  const milestonesInitRef = useRef(false);
+  const [blocks, setBlocks] = useState(() => {
+    try { const s=localStorage.getItem("mb_blocks"); if(s){const p=JSON.parse(s); if(Array.isArray(p)) return p;} } catch{} return STARTER_BLOCKS;
+  });
+  const [schedule, setSchedule] = useState(() => {
+    try { const s=localStorage.getItem("mb_schedule"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return cleanOldSchedule(p);} } catch{} return {};
+  });
+  const [presession, setPresession] = useState(() => {
+    try { const s=localStorage.getItem("mb_presession"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{}
+    return { fromLastSession:null, fromFootage:null, wantToTry:[] };
+  });
+  const [injuries, setInjuries] = useState(() => {
+    try { const s=localStorage.getItem("mb_injuries"); if(s){const p=JSON.parse(s); if(Array.isArray(p)) return p;} } catch{}
+    return [];
+  });
   const [showFlowMap, setShowFlowMap] = useState(false);
+  const [showBlockLibrary, setShowBlockLibrary] = useState(false);
+  const [showPostSessionPrompt, setShowPostSessionPrompt] = useState(false);
+  const lastSessionSaved = useRef(false);
 
   // ── Persist to localStorage on every change ────────────────────────────────
   useEffect(()=>{ saveLocal("mb_moves",   moves);   },[moves]);
@@ -213,6 +255,12 @@ export default function App() {
   useEffect(()=>{ saveLocal("mb_rivals", rivals); },[rivals]);
   useEffect(()=>{ saveLocal("mb_battleprep", battleprep); },[battleprep]);
   useEffect(()=>{ saveLocal("mb_flowmap", flowmap); },[flowmap]);
+  useEffect(()=>{ saveLocal("mb_reports", reports); },[reports]);
+  useEffect(()=>{ saveLocal("mb_milestones_shown", milestonesShown); },[milestonesShown]);
+  useEffect(()=>{ saveLocal("mb_blocks", blocks); },[blocks]);
+  useEffect(()=>{ saveLocal("mb_schedule", schedule); },[schedule]);
+  useEffect(()=>{ saveLocal("mb_presession", presession); },[presession]);
+  useEffect(()=>{ saveLocal("mb_injuries", injuries); },[injuries]);
   useEffect(()=>{ saveLocal("mb_ideas",   ideas);
     const timer = setTimeout(() => {
       if (window.__MB_USER__?.uid && window.__MB_DB__) {
@@ -255,6 +303,12 @@ export default function App() {
       rivals:      save("rivals"),
       battleprep:  save("battleprep"),
       flowmap:     save("flowmap"),
+      reports:     save("reports"),
+      milestonesShown: save("milestonesShown"),
+      blocks:      save("blocks"),
+      schedule:    save("schedule"),
+      presession:  save("presession"),
+      injuries:    save("injuries"),
     };
   }, []);
 
@@ -281,6 +335,12 @@ export default function App() {
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.rivals?.(fbUser.uid, rivals); },[rivals, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.battleprep?.(fbUser.uid, battleprep); },[battleprep, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.flowmap?.(fbUser.uid, flowmap); },[flowmap, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.reports?.(fbUser.uid, reports); },[reports, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.milestonesShown?.(fbUser.uid, milestonesShown); },[milestonesShown, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.blocks?.(fbUser.uid, blocks); },[blocks, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.schedule?.(fbUser.uid, schedule); },[schedule, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.presession?.(fbUser.uid, presession); },[presession, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.injuries?.(fbUser.uid, injuries); },[injuries, fbUser]);
 
   // ── Auth resolution ────────────────────────────────────────────────────────
   useEffect(()=>{
@@ -332,6 +392,18 @@ export default function App() {
           if (bpp) { try { const p=JSON.parse(bpp); if(p&&typeof p==="object") setBattleprep(migrateBattlePrep(p)); } catch {} }
           const fm = localStorage.getItem("mb_flowmap");
           if (fm) { try { const p=JSON.parse(fm); if(p&&typeof p==="object") setFlowmap(p); } catch {} }
+          const rpt = localStorage.getItem("mb_reports");
+          if (rpt) { try { const p=JSON.parse(rpt); if(p&&typeof p==="object") setReports(p); } catch {} }
+          const msShown = localStorage.getItem("mb_milestones_shown");
+          if (msShown) { try { const p=JSON.parse(msShown); if(Array.isArray(p)) setMilestonesShown(p); } catch {} }
+          const blk = localStorage.getItem("mb_blocks");
+          if (blk) { try { const p=JSON.parse(blk); if(Array.isArray(p)) setBlocks(p); } catch {} }
+          const sch = localStorage.getItem("mb_schedule");
+          if (sch) { try { const p=JSON.parse(sch); if(p&&typeof p==="object") setSchedule(cleanOldSchedule(p)); } catch {} }
+          const prs = localStorage.getItem("mb_presession");
+          if (prs) { try { const p=JSON.parse(prs); if(p&&typeof p==="object") setPresession(p); } catch {} }
+          const inj = localStorage.getItem("mb_injuries");
+          if (inj) { try { const p=JSON.parse(inj); if(Array.isArray(p)) setInjuries(p); } catch {} }
           if (p) { try { const pp=JSON.parse(p); if(pp&&Object.values(pp).some(v=>v)) setProfile(pp); } catch{} }
           const st = localStorage.getItem("mb_settings");
           if (st) {
@@ -370,6 +442,11 @@ export default function App() {
         setReflections({ lastCategory:-1, lastDate:null });
         setRivals([]);
         setBattleprep({ plans:[], history:[] });
+        setReports({ milestones:[], weeklyDismissed:null });
+        setMilestonesShown([]);
+        milestonesInitRef.current = false;
+        setBlocks(STARTER_BLOCKS);
+        setSchedule({});
       }
     }
     window.addEventListener("mb-auth-resolved", handleAuthResolved);
@@ -441,6 +518,32 @@ export default function App() {
 
   const addToast=useCallback(t=>{ const id=Date.now(); setToasts(prev=>[...prev,{...t,id}]); setTimeout(()=>setToasts(prev=>prev.filter(x=>x.id!==id)),5500); },[]);
   const removeToast=id=>setToasts(prev=>prev.filter(t=>t.id!==id));
+
+  // ── Milestone detection ──
+  const milestoneT = useCallback((key) => (TRANSLATIONS[appSettings.language||"en"]||TRANSLATIONS.en)[key] || TRANSLATIONS.en[key] || key, [appSettings.language]);
+  useEffect(() => {
+    if (!fbUser) return; // Don't run before auth/data load
+    const newMs = detectMilestones(
+      { moves, sparring, battleprep, reps, musicflow, cats, calendar },
+      milestonesShown.map(id => ({ id }))
+    );
+    if (newMs.length > 0) {
+      const newIds = newMs.map(m => m.id);
+      if (milestonesInitRef.current) {
+        // Live detection — show toasts for newly-earned milestones
+        newMs.forEach(m => {
+          const label = m.val
+            ? `${m.val} ${milestoneT("movesInVocab")}`
+            : milestoneT(m.label);
+          addToast({ emoji:"🏁", title:milestoneT("milestoneReached"), msg:label });
+        });
+      }
+      // Silent or live — always persist
+      setMilestonesShown(prev => [...prev, ...newIds]);
+      setReports(prev => ({ ...prev, milestones:[...prev.milestones, ...newMs] }));
+    }
+    milestonesInitRef.current = true;
+  }, [moves.length, sparring?.sessions?.length, battleprep?.history?.length, reps.length, musicflow?.sessions?.length, fbUser]);
 
   const addCalendarEvent = useCallback((eventData, { silent = false } = {}) => {
     setCalendar(prev => {
@@ -560,10 +663,10 @@ export default function App() {
           <IdeaMenu menu={trainMenu} onClose={()=>setTrainMenu(null)}/>
           <TrainModalCtx.Provider value={{ openModal:(type,idea,onSave)=>{ setTrainMenu(null); setTrainModal({type,idea,onSave}); } }}>
           <TrainMenuCtx.Provider value={{ openMenu:(m)=>setTrainMenu(m), closeMenu:()=>setTrainMenu(null) }}>
-            {tab==="home" && <HomePage habits={habits} setHabits={setHabits} onAddTrigger={addTick}/>}
+            {tab==="home" && <HomePage habits={habits} setHabits={setHabits} onAddTrigger={addTick} moves={moves} reps={reps} sparring={sparring} musicflow={musicflow} calendar={calendar} cats={cats} catColors={catColors} reports={reports} setReports={setReports} blocks={blocks} setBlocks={setBlocks} schedule={schedule} setSchedule={setSchedule} onOpenBlockLibrary={()=>setShowBlockLibrary(true)} injuries={injuries} setInjuries={setInjuries} presession={presession} setPresession={setPresession} ideas={ideas} reminders={reminders} battleprep={battleprep} settings={appSettings} onSettingsChange={setAppSettings} onNavigate={(t,s)=>{setTab(t);setSubTab(s||"");}}/>}
             {tab==="moves" && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} catDomains={catDomains} setCatDomains={setCatDomains} sets={sets} setSets={setSets} addToast={addToast} settings={appSettings} onSettingsChange={setAppSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} reminders={reminders} onRemindersChange={setReminders} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}} onOpenManageReminders={()=>setShowManageReminders(true)} onOpenExplore={()=>setShowLab(true)} onOpenRRR={()=>setShowRRR(true)} onOpenCombine={()=>setShowComboMachine(true)} onOpenMap={()=>setShowFlowMap(true)}/>}
             {tab==="battle" && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} addToast={addToast} freestyle={freestyle} onFreestyleChange={setFreestyle} rivals={rivals} onRivalsChange={setRivals} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onSimulate={()=>setShowCompSim(true)} battleprep={battleprep} setBattleprep={setBattleprep} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={()=>setBattlePrepSeed(null)} onOpenSharedCalendar={(im)=>{setCalendarInitialMonth(im||null);}}/>}
-            {tab==="reflect" && <ReflectPage ideas={ideas} setIdeas={setIdeas} moves={moves} setMoves={setMovesGrad} reps={reps} sparring={sparring} musicflow={musicflow} habits={habits} calendar={calendar} setCalendar={setCalendar} cats={cats} catColors={catColors} settings={appSettings} onSettingsChange={setAppSettings} addToast={addToast} stance={stance} battleprep={battleprep} onToggleBattlePrepTask={(planId,dateStr,taskIdx)=>{setBattleprep(prev=>{const plans=(prev.plans||[]).map(p=>{if(p.id!==planId) return p;const key=dateStr+"-"+taskIdx;return {...p, completedTasks:{...(p.completedTasks||{}), [key]:!(p.completedTasks||{})[key]}};});return {...prev, plans};});}} onOpenStanceAssessment={()=>setShowStanceAssessment(true)} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onSubTabChange={setSubTab} onGoToPrep={(seed)=>{setBattlePrepSeed(seed);setTab("battle");}} initialDay={calendarInitialDay} initialMonth={calendarInitialMonth} sets={sets} onAddTrigger={addTick} parentSubTab={subTab}/>}
+            {tab==="reflect" && <ReflectPage ideas={ideas} setIdeas={setIdeas} moves={moves} setMoves={setMovesGrad} reps={reps} sparring={sparring} musicflow={musicflow} habits={habits} calendar={calendar} setCalendar={setCalendar} cats={cats} catColors={catColors} settings={appSettings} onSettingsChange={setAppSettings} addToast={addToast} stance={stance} battleprep={battleprep} onToggleBattlePrepTask={(planId,dateStr,taskIdx)=>{setBattleprep(prev=>{const plans=(prev.plans||[]).map(p=>{if(p.id!==planId) return p;const key=dateStr+"-"+taskIdx;return {...p, completedTasks:{...(p.completedTasks||{}), [key]:!(p.completedTasks||{})[key]}};});return {...prev, plans};});}} onOpenStanceAssessment={()=>setShowStanceAssessment(true)} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onSubTabChange={setSubTab} onGoToPrep={(seed)=>{setBattlePrepSeed(seed);setTab("battle");}} initialDay={calendarInitialDay} initialMonth={calendarInitialMonth} sets={sets} onAddTrigger={addTick} parentSubTab={subTab} reports={reports}/>}
           </TrainMenuCtx.Provider>
           </TrainModalCtx.Provider>
           {showRepCounter&&<RepCounter moves={moves} catColors={catColors} reps={reps}
@@ -571,22 +674,24 @@ export default function App() {
             onSaveSession={(session)=>{
               setReps(prev=>[session,...prev]);
               setMoves(prev=>prev.map(m=>m.id===session.moveId?{...m,date:new Date().toISOString().split("T")[0]}:m));
+              lastSessionSaved.current=true;
             }}
             onUpdateSession={onUpdateRepSession}
             reflections={reflections} onReflectionsChange={setReflections}
             addCalendarEvent={addCalendarEvent}
-            onClose={()=>{setShowRepCounter(false);setRepCounterPreselect(null);}}/>}
+            onClose={()=>{setShowRepCounter(false);setRepCounterPreselect(null);if(lastSessionSaved.current){lastSessionSaved.current=false;setShowPostSessionPrompt(true);}}}/>}
           {showSparring&&<Sparring moves={moves} catColors={catColors} sparring={sparring} settings={appSettings}
             onSaveSession={(session, updatedSparring)=>{
               setSparring(updatedSparring);
               if(session.movesTrained?.length){
                 setMoves(prev=>prev.map(m=>session.movesTrained.includes(m.id)?{...m,date:new Date().toISOString().split("T")[0]}:m));
               }
+              lastSessionSaved.current=true;
             }}
             reflections={reflections} onReflectionsChange={setReflections}
             onSettingsChange={setAppSettings}
             addCalendarEvent={addCalendarEvent}
-            onClose={()=>setShowSparring(false)}/>}
+            onClose={()=>{setShowSparring(false);if(lastSessionSaved.current){lastSessionSaved.current=false;setShowPostSessionPrompt(true);}}}/>}
           {showCompSim&&<CompetitionSimulator rounds={rounds} moves={moves} catColors={catColors}
             sparring={sparring} settings={appSettings}
             onSaveSession={(session, updatedSparring)=>{ setSparring(updatedSparring); }}
@@ -618,17 +723,20 @@ export default function App() {
             onSaveSet={(fields)=>{ setSets(p=>[...p,{id:Date.now(),...fields}]); }}
             addToast={addToast}
             onClose={()=>setShowFlowMap(false)}/>}
-          {showMusicFlow&&<MusicFlow musicflow={musicflow} onMusicflowChange={setMusicflow}
+          {showMusicFlow&&<MusicFlow musicflow={musicflow} onMusicflowChange={(updater)=>{lastSessionSaved.current=true;setMusicflow(updater);}}
             onUpdateSession={onUpdateMusicflowSession}
             reflections={reflections} onReflectionsChange={setReflections}
             addToast={addToast} addCalendarEvent={addCalendarEvent}
-            onClose={()=>setShowMusicFlow(false)}/>}
+            onClose={()=>{setShowMusicFlow(false);if(lastSessionSaved.current){lastSessionSaved.current=false;setShowPostSessionPrompt(true);}}}/>}
+          {showBlockLibrary&&<BlockLibrary blocks={blocks} setBlocks={setBlocks} onClose={()=>setShowBlockLibrary(false)}/>}
+          {showPostSessionPrompt&&<PostSessionPrompt presession={presession} setPresession={setPresession} onClose={()=>setShowPostSessionPrompt(false)}/>}
           {showStanceAssessment&&<MyStanceAssessment stance={stance} onStanceChange={setStance}
             addToast={addToast} onClose={()=>{ setShowStanceAssessment(false); setTab("reflect"); setSubTab("stance"); }}/>}
           {showProfile&&<ProfileModal onClose={()=>setShowProfile(false)} profile={profile} onSave={setProfile}
             reminders={reminders} onRemindersChange={setReminders} addToast={addToast}
             onOpenManageReminders={()=>{ setShowProfile(false); setShowManageReminders(true); }}
             onNavigateToStance={()=>{ setShowProfile(false); setTab("reflect"); setSubTab("stance"); }}
+            onOpenBlockLibrary={()=>{ setShowProfile(false); setShowBlockLibrary(true); }}
             settings={appSettings} onSettingsChange={setAppSettings} onClearMoves={()=>setMoves([])} onRestoreRounds={()=>setRounds(INIT_ROUNDS)} onRestartTour={()=>{setShowProfile(false);setShowTour(true);}} zoom={zoom} onZoomChange={handleZoomChange} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs}/>}
           {showManual&&<ManualModal onClose={()=>setShowManual(false)}/>}
         </div>
@@ -638,7 +746,7 @@ export default function App() {
 
         {/* ── Bottom Bar — 4 tabs + centre Add ── */}
         {!showTour&&(()=>{
-          const anyOverlay = showRepCounter||showSparring||showComboMachine||showManageReminders||showRRR||showLab||showProfile||showManual||showStanceAssessment||showMusicFlow||showCompSim;
+          const anyOverlay = showRepCounter||showSparring||showComboMachine||showManageReminders||showRRR||showLab||showProfile||showManual||showStanceAssessment||showMusicFlow||showCompSim||showBlockLibrary||showPostSessionPrompt;
           const tabs = [{id:"home",icon:"home",label:tr("home")},{id:"moves",icon:"book",label:tr("vocab")},null,{id:"battle",icon:"sword",label:tr("battle")},{id:"reflect",icon:"barChart",label:tr("reflect")}];
           const handleTabChange = (t) => { setTrainMenu(null); setTab(t); setAddTick(0); setAddTick2(0); setSubTab(t==="moves"?"moves":t==="battle"?"plan":t==="reflect"?"calendar":""); };
           return (
