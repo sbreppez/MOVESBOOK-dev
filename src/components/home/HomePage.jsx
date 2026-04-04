@@ -21,12 +21,9 @@ function getTilesForDate(homeStack, selectedDate) {
   const overrides = homeStack.overrides?.[selectedDate] || {};
   const removed = overrides.removed || [];
 
-  // Filter defaultStack by repeat rule and remove overridden
   const base = (homeStack.defaultStack || []).filter(tile => {
     if (removed.includes(tile.id)) return false;
-    // Ideas have no repeat — always show
     if (tile.type === 'idea' || tile.type === 'goalhabit') return true;
-    // Routines: check repeat
     const r = tile.repeat || { type: "daily", days: [] };
     if (r.type === "daily") return true;
     if (r.type === "workdays") return dow >= 1 && dow <= 5;
@@ -35,16 +32,31 @@ function getTilesForDate(homeStack, selectedDate) {
     return true;
   });
 
-  // Add day-specific additions
   const added = overrides.added || [];
   return [...base, ...added];
+}
+
+// Resolve a tile's display name for confirmations
+function resolveTileName(tile, homeIdeas, habits, ideas) {
+  if (tile.type === 'routine') return tile.name || "";
+  if (tile.type === 'idea') {
+    const idea = homeIdeas?.find(i => i.id === tile.id);
+    return idea?.title || idea?.text?.slice(0, 60) || "";
+  }
+  if (tile.type === 'goalhabit') {
+    const habit = habits?.find(h => String(h.id) === String(tile.refId));
+    if (habit) return habit.name || "";
+    const goal = ideas?.find(i => String(i.id) === String(tile.refId));
+    return goal?.title || "";
+  }
+  return "";
 }
 
 export const HomePage = ({
   habits, setHabits, moves, reps, sparring, musicflow,
   calendar, cats, catColors, reports, setReports,
   injuries, setInjuries, presession, setPresession,
-  ideas, reminders, battleprep, settings, onSettingsChange, onNavigate,
+  ideas, setIdeas, reminders, battleprep, settings, onSettingsChange, onNavigate,
   homeStack, setHomeStack, homeIdeas, setHomeIdeas, homeChecks, setHomeChecks,
 }) => {
   const { C } = useSettings();
@@ -56,6 +68,16 @@ export const HomePage = ({
   const [editTile, setEditTile] = useState(null);
   const [confirmRemove, setConfirmRemove] = useState(null);
 
+  // Feature 2: edit scope
+  const [pendingEdit, setPendingEdit] = useState(null);
+
+  // Feature 3: reorder
+  const [showReorder, setShowReorder] = useState(false);
+
+  // Feature 4: manage routines + reset confirm
+  const [showManageRoutines, setShowManageRoutines] = useState(false);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
+
   const todayTiles = useMemo(
     () => getTilesForDate(homeStack, selectedDate),
     [homeStack, selectedDate]
@@ -64,7 +86,6 @@ export const HomePage = ({
   const dayChecks = homeChecks?.[selectedDate] || {};
   const isToday = selectedDate === todayStr;
 
-  // Format date as "Month Year" localized
   const dateLabel = useMemo(() => {
     const d = new Date(selectedDate + "T12:00:00");
     const lang = settings?.language || "en";
@@ -83,14 +104,12 @@ export const HomePage = ({
     const tileId = tile.id;
     const wasChecked = !!dayChecks[tileId];
 
-    // Update homeChecks
     setHomeChecks(prev => {
       const day = { ...(prev[selectedDate] || {}) };
       if (wasChecked) { delete day[tileId]; } else { day[tileId] = true; }
       return { ...prev, [selectedDate]: day };
     });
 
-    // For goalhabit habits, also toggle habit checkIns
     if (tile.type === 'goalhabit' && tile.refId) {
       const habit = habits?.find(h => String(h.id) === String(tile.refId));
       if (habit) {
@@ -111,12 +130,13 @@ export const HomePage = ({
     setConfirmRemove(tile);
   };
 
+  // ── Feature 1: Smart remove ──────────────────────────────────────────────
+
   const doRemove = (mode) => {
     const tile = confirmRemove;
     if (!tile) return;
 
     if (mode === "justToday") {
-      // Add to today's removed override
       setHomeStack(prev => {
         const overrides = { ...(prev.overrides || {}) };
         const dayOvr = { ...(overrides[selectedDate] || {}) };
@@ -124,14 +144,27 @@ export const HomePage = ({
         overrides[selectedDate] = dayOvr;
         return { ...prev, overrides };
       });
-    } else {
-      // Remove from defaultStack entirely
+    } else if (mode === "deleteEntirely") {
+      // Remove tile from HOME
       setHomeStack(prev => ({
         ...prev,
         defaultStack: prev.defaultStack.filter(t => t.id !== tile.id),
       }));
-
-      // If idea, also remove from homeIdeas
+      // Delete underlying data
+      if (tile.refId) {
+        const isHabit = habits?.some(h => String(h.id) === String(tile.refId));
+        if (isHabit) {
+          setHabits(prev => prev.filter(h => String(h.id) !== String(tile.refId)));
+        } else if (setIdeas) {
+          setIdeas(prev => prev.filter(i => String(i.id) !== String(tile.refId)));
+        }
+      }
+    } else {
+      // "allDays" — remove from defaultStack permanently
+      setHomeStack(prev => ({
+        ...prev,
+        defaultStack: prev.defaultStack.filter(t => t.id !== tile.id),
+      }));
       if (tile.type === 'idea') {
         setHomeIdeas(prev => prev.filter(i => i.id !== tile.id));
       }
@@ -139,21 +172,50 @@ export const HomePage = ({
     setConfirmRemove(null);
   };
 
+  // ── Edit ──────────────────────────────────────────────────────────────────
+
   const handleTileEdit = (tile) => {
     if (tile.type === 'routine' || tile.type === 'idea') {
       setEditTile(tile);
     }
   };
 
+  // Feature 2: intercept save for recurring routines
   const handleEditSave = (fields) => {
     if (!editTile) return;
+
     if (editTile.type === 'routine') {
-      setHomeStack(prev => ({
-        ...prev,
-        defaultStack: prev.defaultStack.map(t =>
-          t.id === editTile.id ? { ...t, ...fields } : t
-        ),
-      }));
+      const isRecurring = editTile.repeat && editTile.repeat.type !== 'none';
+      // Check if tile is from overrides.added (not defaultStack)
+      const isOverrideTile = !(homeStack.defaultStack || []).some(t => t.id === editTile.id);
+
+      if (isRecurring && !isOverrideTile) {
+        // Stash for scope prompt
+        setPendingEdit({ tile: editTile, fields });
+        setEditTile(null);
+        return;
+      }
+
+      if (isOverrideTile) {
+        // Save directly to override
+        setHomeStack(prev => {
+          const overrides = { ...(prev.overrides || {}) };
+          const dayOvr = { ...(overrides[selectedDate] || {}) };
+          dayOvr.added = (dayOvr.added || []).map(t =>
+            t.id === editTile.id ? { ...t, ...fields } : t
+          );
+          overrides[selectedDate] = dayOvr;
+          return { ...prev, overrides };
+        });
+      } else {
+        // Non-recurring or direct save
+        setHomeStack(prev => ({
+          ...prev,
+          defaultStack: prev.defaultStack.map(t =>
+            t.id === editTile.id ? { ...t, ...fields } : t
+          ),
+        }));
+      }
     } else if (editTile.type === 'idea') {
       setHomeIdeas(prev => prev.map(i =>
         i.id === editTile.id ? { ...i, ...fields } : i
@@ -161,6 +223,35 @@ export const HomePage = ({
     }
     setEditTile(null);
   };
+
+  // Feature 2: scope handlers
+  const handleEditScopeJustToday = () => {
+    if (!pendingEdit) return;
+    const { tile, fields } = pendingEdit;
+    setHomeStack(prev => {
+      const overrides = { ...(prev.overrides || {}) };
+      const dayOvr = { ...(overrides[selectedDate] || {}) };
+      dayOvr.removed = [...(dayOvr.removed || []), tile.id];
+      dayOvr.added = [...(dayOvr.added || []), { ...tile, ...fields, id: tile.id + '_ovr_' + selectedDate }];
+      overrides[selectedDate] = dayOvr;
+      return { ...prev, overrides };
+    });
+    setPendingEdit(null);
+  };
+
+  const handleEditScopeAllDays = () => {
+    if (!pendingEdit) return;
+    const { tile, fields } = pendingEdit;
+    setHomeStack(prev => ({
+      ...prev,
+      defaultStack: prev.defaultStack.map(t =>
+        t.id === tile.id ? { ...t, ...fields } : t
+      ),
+    }));
+    setPendingEdit(null);
+  };
+
+  // ── Feature 4: Reset today with confirm ──────────────────────────────────
 
   const handleResetDay = () => {
     setHomeStack(prev => {
@@ -173,7 +264,59 @@ export const HomePage = ({
       delete next[selectedDate];
       return next;
     });
+    setShowResetConfirm(false);
     setShowGearMenu(false);
+  };
+
+  // ── Feature 3: Reorder handlers ─────────────────────────────────────────
+
+  const moveTileUp = (idx) => {
+    if (idx === 0) return;
+    setHomeStack(prev => {
+      const arr = [...(prev.defaultStack || [])];
+      [arr[idx - 1], arr[idx]] = [arr[idx], arr[idx - 1]];
+      return { ...prev, defaultStack: arr };
+    });
+  };
+
+  const moveTileDown = (idx) => {
+    const stack = homeStack.defaultStack || [];
+    if (idx >= stack.length - 1) return;
+    setHomeStack(prev => {
+      const arr = [...(prev.defaultStack || [])];
+      [arr[idx], arr[idx + 1]] = [arr[idx + 1], arr[idx]];
+      return { ...prev, defaultStack: arr };
+    });
+  };
+
+  // Helper: resolve emoji for reorder/manage rows
+  const resolveEmoji = (tile) => {
+    if (tile.type === 'routine') return tile.emoji || "🏋️";
+    if (tile.type === 'idea') {
+      const idea = homeIdeas?.find(i => i.id === tile.id);
+      return idea?.emoji || "💡";
+    }
+    if (tile.type === 'goalhabit') {
+      const habit = habits?.find(h => String(h.id) === String(tile.refId));
+      return habit?.emoji || "🎯";
+    }
+    return "📋";
+  };
+
+  // Helper: resolve name for reorder/manage rows
+  const resolveName = (tile) => resolveTileName(tile, homeIdeas, habits, ideas);
+
+  // All routines from defaultStack (for manage routines)
+  const allRoutines = (homeStack.defaultStack || []).filter(t => t.type === 'routine');
+
+  // Repeat label helper
+  const repeatLabel = (tile) => {
+    const r = tile.repeat || { type: "daily" };
+    if (r.type === "daily") return t("repeatEveryDay");
+    if (r.type === "workdays") return t("repeatWorkdays");
+    if (r.type === "specificDays") return t("repeatSpecificDays");
+    if (r.type === "none") return t("repeatNone");
+    return "";
   };
 
   return (
@@ -260,12 +403,13 @@ export const HomePage = ({
         habits={habits} ideas={ideas} selectedDate={selectedDate}
       />
 
-      {/* Gear Menu */}
+      {/* ── Feature 4: Gear Menu ── */}
       <BottomSheet open={showGearMenu} onClose={() => setShowGearMenu(false)} title={t("home")}>
         <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
           {[
-            { icon: "list", label: t("manageRoutines"), action: () => { /* future */ setShowGearMenu(false); } },
-            { icon: "rotateCcw", label: t("resetToDefault") || "Reset today", action: handleResetDay },
+            { icon: "grip", label: t("reorderTiles"), action: () => { setShowGearMenu(false); setShowReorder(true); } },
+            { icon: "list", label: t("manageRoutines"), action: () => { setShowGearMenu(false); setShowManageRoutines(true); } },
+            { icon: "refresh", label: t("resetToDefault") || "Reset today", action: () => { setShowGearMenu(false); setShowResetConfirm(true); } },
           ].map((item, i) => (
             <button key={i} onClick={item.action}
               style={{
@@ -282,24 +426,146 @@ export const HomePage = ({
         </div>
       </BottomSheet>
 
-      {/* Remove confirmation */}
+      {/* ── Feature 4: Reset today confirmation ── */}
+      {showResetConfirm && (
+        <Modal title={t("confirm")} onClose={() => setShowResetConfirm(false)}>
+          <p style={{ color: C.textSec, fontSize: 13, lineHeight: 1.6, marginBottom: 16 }}>
+            {t("resetDayConfirm")}
+          </p>
+          <div style={{ display: "flex", gap: 8, flexDirection: "column" }}>
+            <Btn variant="primary" onClick={handleResetDay}>{t("resetToDefault")}</Btn>
+            <Btn variant="secondary" onClick={() => setShowResetConfirm(false)}>{t("cancel")}</Btn>
+          </div>
+        </Modal>
+      )}
+
+      {/* ── Feature 4: Manage Routines ── */}
+      <BottomSheet open={showManageRoutines} onClose={() => setShowManageRoutines(false)} title={t("manageRoutines")}>
+        {allRoutines.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "30px 20px", color: C.textMuted, fontSize: 13 }}>
+            {t("noRoutinesAvailable")}
+          </div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            {allRoutines.map(tile => (
+              <div key={tile.id} style={{
+                display: "flex", alignItems: "center", gap: 10, padding: "10px 12px",
+                borderRadius: 10, background: C.surface, border: `1px solid ${C.border}`,
+              }}>
+                <span style={{ fontSize: 18, flexShrink: 0 }}>{tile.emoji || "🏋️"}</span>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 800, fontSize: 13, fontFamily: FONT_DISPLAY, color: C.text,
+                    overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    {tile.name}
+                  </div>
+                  <div style={{ fontSize: 10, color: C.textMuted, fontFamily: FONT_DISPLAY, marginTop: 2,
+                    textTransform: "uppercase", letterSpacing: 0.5 }}>
+                    {repeatLabel(tile)}
+                  </div>
+                </div>
+                <button onClick={() => { setShowManageRoutines(false); setEditTile(tile); }}
+                  style={{ width: 32, height: 32, borderRadius: 8, border: `1px solid ${C.border}`,
+                    background: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <Ic n="edit" s={14} c={C.textMuted}/>
+                </button>
+                <button onClick={() => { setShowManageRoutines(false); setConfirmRemove(tile); }}
+                  style={{ width: 32, height: 32, borderRadius: 8, border: `1px solid ${C.border}`,
+                    background: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <Ic n="trash" s={14} c={C.accent}/>
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </BottomSheet>
+
+      {/* ── Feature 3: Reorder Tiles ── */}
+      <BottomSheet open={showReorder} onClose={() => setShowReorder(false)} title={t("reorderTiles")}>
+        {(homeStack.defaultStack || []).length === 0 ? (
+          <div style={{ textAlign: "center", padding: "30px 20px", color: C.textMuted, fontSize: 13 }}>
+            {t("dayStartsHereHint")}
+          </div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            {(homeStack.defaultStack || []).map((tile, idx) => (
+              <div key={tile.id} style={{
+                display: "flex", alignItems: "center", gap: 10, padding: "10px 12px",
+                borderRadius: 10, background: C.surface, border: `1px solid ${C.border}`,
+              }}>
+                <span style={{ fontSize: 18, flexShrink: 0 }}>{resolveEmoji(tile)}</span>
+                <div style={{ flex: 1, minWidth: 0, fontWeight: 800, fontSize: 13, fontFamily: FONT_DISPLAY,
+                  color: C.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  {resolveName(tile)}
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 2, flexShrink: 0 }}>
+                  <button onClick={() => moveTileUp(idx)} disabled={idx === 0}
+                    style={{
+                      width: 26, height: 26, borderRadius: 6, border: `1px solid ${C.border}`,
+                      background: C.bg, cursor: idx === 0 ? "default" : "pointer",
+                      color: idx === 0 ? C.border : C.accent,
+                      fontSize: 14, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center",
+                    }}>▲</button>
+                  <button onClick={() => moveTileDown(idx)} disabled={idx === (homeStack.defaultStack || []).length - 1}
+                    style={{
+                      width: 26, height: 26, borderRadius: 6, border: `1px solid ${C.border}`,
+                      background: C.bg, cursor: idx === (homeStack.defaultStack || []).length - 1 ? "default" : "pointer",
+                      color: idx === (homeStack.defaultStack || []).length - 1 ? C.border : C.accent,
+                      fontSize: 14, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center",
+                    }}>▼</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </BottomSheet>
+
+      {/* ── Feature 1: Smart remove confirmation ── */}
       {confirmRemove && (
         <Modal title={t("confirm")} onClose={() => setConfirmRemove(null)}>
           <p style={{ color: C.textSec, fontSize: 13, lineHeight: 1.6, marginBottom: 16 }}>
-            {confirmRemove.type === 'goalhabit'
-              ? t("removeFromHome")
-              : confirmRemove.type === 'routine'
-              ? confirmRemove.name || t("editRoutine")
-              : homeIdeas?.find(i => i.id === confirmRemove.id)?.title || homeIdeas?.find(i => i.id === confirmRemove.id)?.text?.slice(0, 40) || t("editIdea")}
+            <span style={{ fontWeight: 700, color: C.text }}>
+              {resolveTileName(confirmRemove, homeIdeas, habits, ideas)}
+            </span>
           </p>
           <div style={{ display: "flex", gap: 8, flexDirection: "column" }}>
-            {confirmRemove.type === 'routine' && confirmRemove.repeat?.type !== 'none' && (
+            {/* Recurring routine: Just today + All days */}
+            {confirmRemove.type === 'routine' && confirmRemove.repeat?.type !== 'none' && (<>
               <Btn variant="secondary" onClick={() => doRemove("justToday")}>{t("justToday")}</Btn>
+              <Btn variant="primary" onClick={() => doRemove("allDays")}>{t("deletePermanently")}</Btn>
+            </>)}
+
+            {/* Non-recurring routine: Delete permanently only */}
+            {confirmRemove.type === 'routine' && (confirmRemove.repeat?.type === 'none' || !confirmRemove.repeat) && (
+              <Btn variant="primary" onClick={() => doRemove("allDays")}>{t("deletePermanently")}</Btn>
             )}
-            <Btn variant="primary" onClick={() => doRemove("allDays")}>
-              {confirmRemove.type === 'goalhabit' ? t("removeFromHome") : t("deletePermanently")}
-            </Btn>
+
+            {/* Idea: Just today + Delete permanently */}
+            {confirmRemove.type === 'idea' && (<>
+              <Btn variant="secondary" onClick={() => doRemove("justToday")}>{t("justToday")}</Btn>
+              <Btn variant="primary" onClick={() => doRemove("allDays")}>{t("deletePermanently")}</Btn>
+            </>)}
+
+            {/* Goal/Habit: Remove from HOME + Delete entirely */}
+            {confirmRemove.type === 'goalhabit' && (<>
+              <Btn variant="secondary" onClick={() => doRemove("allDays")}>{t("removeFromHome")}</Btn>
+              <Btn variant="primary" onClick={() => doRemove("deleteEntirely")}>{t("deleteEntirely")}</Btn>
+            </>)}
+
             <Btn variant="secondary" onClick={() => setConfirmRemove(null)}>{t("cancel")}</Btn>
+          </div>
+        </Modal>
+      )}
+
+      {/* ── Feature 2: Edit scope modal ── */}
+      {pendingEdit && (
+        <Modal title={t("applyChanges")} onClose={() => setPendingEdit(null)}>
+          <p style={{ color: C.textSec, fontSize: 13, lineHeight: 1.6, marginBottom: 16 }}>
+            <span style={{ fontWeight: 700, color: C.text }}>{pendingEdit.tile.name}</span>
+          </p>
+          <div style={{ display: "flex", gap: 8, flexDirection: "column" }}>
+            <Btn variant="secondary" onClick={handleEditScopeJustToday}>{t("justToday")}</Btn>
+            <Btn variant="primary" onClick={handleEditScopeAllDays}>{t("allDays")}</Btn>
+            <Btn variant="secondary" onClick={() => setPendingEdit(null)}>{t("cancel")}</Btn>
           </div>
         </Modal>
       )}
