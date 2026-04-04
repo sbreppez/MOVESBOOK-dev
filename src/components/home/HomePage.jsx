@@ -1,9 +1,7 @@
 import React, { useState, useMemo } from 'react';
-import { WeeklyReportCard } from './WeeklyReportCard';
 import { WeekStrip } from './WeekStrip';
 import { HomeTile } from './HomeTile';
 import { HomeAddPicker } from './HomeAddPicker';
-import { HomeCardsContainer } from './HomeCardsContainer';
 import { PreSessionIntel } from './PreSessionIntel';
 import { RoutineForm } from './RoutineForm';
 import { IdeaForm } from './IdeaForm';
@@ -53,10 +51,9 @@ function resolveTileName(tile, homeIdeas, habits, ideas) {
 }
 
 export const HomePage = ({
-  habits, setHabits, moves, reps, sparring, musicflow,
-  calendar, cats, catColors, reports, setReports,
+  habits, setHabits,
   injuries, setInjuries, presession, setPresession,
-  ideas, setIdeas, reminders, battleprep, settings, onSettingsChange, onNavigate,
+  ideas, setIdeas, settings, onSettingsChange,
   homeStack, setHomeStack, homeIdeas, setHomeIdeas, homeChecks, setHomeChecks,
 }) => {
   const { C } = useSettings();
@@ -96,7 +93,6 @@ export const HomePage = ({
   const isBreakingDay = isToday && todayTiles.some(tile =>
     tile.type === 'routine' && (/break/i.test(tile.name))
   );
-  const weeklyReportPinned = settings?.homeCards?.some(c => c.id === "weeklyReport" && c.visible);
 
   // ── Handlers ──────────────────────────────────────────────────────────────
 
@@ -175,6 +171,18 @@ export const HomePage = ({
   // ── Edit ──────────────────────────────────────────────────────────────────
 
   const handleTileEdit = (tile) => {
+    // Orphan goalhabit: referenced item was deleted — auto-remove
+    if (tile.type === 'goalhabit') {
+      const habit = habits?.find(h => String(h.id) === String(tile.refId));
+      const goal = ideas?.find(i => String(i.id) === String(tile.refId));
+      if (!habit && !goal) {
+        setHomeStack(prev => ({
+          ...prev,
+          defaultStack: prev.defaultStack.filter(t => t.id !== tile.id),
+        }));
+        return;
+      }
+    }
     if (tile.type === 'routine' || tile.type === 'idea') {
       setEditTile(tile);
     }
@@ -338,12 +346,6 @@ export const HomePage = ({
 
       {/* Scrollable content */}
       <div style={{ flex: 1, overflow: "auto", paddingBottom: 76 }}>
-        {/* Weekly Report (auto-dismiss version) */}
-        {!weeklyReportPinned && (
-          <WeeklyReportCard moves={moves} reps={reps} sparring={sparring} musicflow={musicflow}
-            calendar={calendar} cats={cats} catColors={catColors} reports={reports} setReports={setReports}/>
-        )}
-
         {/* Pre-session intelligence */}
         {isBreakingDay && presession && (
           <PreSessionIntel presession={presession} setPresession={setPresession}/>
@@ -384,16 +386,6 @@ export const HomePage = ({
             </button>
           </div>
         </div>
-
-        {/* HOME cards (simplified) */}
-        <HomeCardsContainer
-          moves={moves} reps={reps} sparring={sparring} musicflow={musicflow}
-          calendar={calendar} cats={cats} catColors={catColors}
-          injuries={injuries} setInjuries={setInjuries}
-          battleprep={battleprep} reminders={reminders} ideas={ideas}
-          reports={reports} setReports={setReports}
-          settings={settings} onSettingsChange={onSettingsChange} onNavigate={onNavigate}
-        />
       </div>
 
       {/* Add Picker */}

@@ -11,7 +11,7 @@ export const HomeTile = ({ tile, isChecked, onCheck, onRemove, onEdit, habits, i
   const [expanded, setExpanded] = useState(false);
 
   // Resolve data based on tile type
-  let emoji, name, description, showCheckbox = false, extraInfo = null;
+  let emoji, name, description, showCheckbox = false, extraInfo = null, isOrphan = false;
 
   if (tile.type === 'routine') {
     emoji = tile.emoji || "🏋️";
@@ -47,8 +47,10 @@ export const HomeTile = ({ tile, isChecked, onCheck, onRemove, onEdit, habits, i
           extraInfo = d.toLocaleDateString();
         }
       } else {
+        // Orphan: referenced habit/goal was deleted
+        isOrphan = true;
         emoji = "❓";
-        name = t("delete") || "Removed";
+        name = t("deleted") || "Deleted";
         description = "";
       }
     }
@@ -60,12 +62,12 @@ export const HomeTile = ({ tile, isChecked, onCheck, onRemove, onEdit, habits, i
       style={{
         display: "flex", alignItems: "flex-start", gap: 10,
         padding: "10px 12px", marginBottom: 6, borderRadius: 10, cursor: "pointer",
-        background: isChecked ? `${C.green}0a` : C.surface,
-        borderTop: `1px solid ${isChecked ? `${C.green}30` : C.border}`,
-        borderRight: `1px solid ${isChecked ? `${C.green}30` : C.border}`,
-        borderBottom: `1px solid ${isChecked ? `${C.green}30` : C.border}`,
-        borderLeft: `3px solid ${isChecked ? C.green : C.border}`,
-        opacity: isChecked ? 0.65 : 1,
+        background: isOrphan ? "transparent" : isChecked ? `${C.green}0a` : C.surface,
+        borderTop: `1px ${isOrphan ? "dashed" : "solid"} ${isChecked ? `${C.green}30` : C.border}`,
+        borderRight: `1px ${isOrphan ? "dashed" : "solid"} ${isChecked ? `${C.green}30` : C.border}`,
+        borderBottom: `1px ${isOrphan ? "dashed" : "solid"} ${isChecked ? `${C.green}30` : C.border}`,
+        borderLeft: `3px ${isOrphan ? "dashed" : "solid"} ${isChecked ? C.green : C.border}`,
+        opacity: isOrphan ? 0.45 : isChecked ? 0.65 : 1,
         transition: "all 0.2s",
       }}>
       {/* Emoji */}

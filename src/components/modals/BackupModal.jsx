@@ -12,8 +12,9 @@ const BACKUP_KEYS = {
   customAttrs: "mb_custom_attrs",
   constraint: "mb_constraint",
   reports: "mb_reports",
-  blocks: "mb_blocks",
-  schedule: "mb_schedule",
+  homeStack: "mb_home_stack",
+  homeIdeas: "mb_home_ideas",
+  homeChecks: "mb_home_checks",
 };
 
 export const downloadBackup = () => {
