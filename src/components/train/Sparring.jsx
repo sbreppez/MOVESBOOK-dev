@@ -436,7 +436,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
       <div style={{ position:"absolute", inset:0, zIndex:500, background:C.bg, display:"flex", flexDirection:"column" }}>
         {/* Header */}
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"13px 18px", borderBottom:`1px solid ${C.border}`, flexShrink:0 }}>
-          <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:2, color:C.brown }}>{t("sparring")}</span>
+          <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:2, color:C.brown }}>{t("spar")}</span>
           <div style={{ display:"flex", gap:8 }}>
             <button onClick={() => setScreen("history")}
               style={{ background:C.surfaceAlt, border:`1px solid ${C.border}`, cursor:"pointer", color:C.textSec, padding:"5px 10px", borderRadius:7, fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, letterSpacing:0.5 }}>

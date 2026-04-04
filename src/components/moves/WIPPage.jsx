@@ -22,7 +22,7 @@ import { ReminderBlock } from './ReminderBlock';
 import { GAPTab } from './GAPTab';
 import { MoveTree } from './MoveTree';
 
-export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains={}, setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders }) => {
+export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains={}, setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore, onOpenRRR, onOpenCombine, onOpenMap }) => {
   const t = useT();
   const { moveCountStr, resultCountStr } = usePlural();
   const { settings:ctxSettings } = useSettings();
@@ -339,7 +339,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
               {hasActiveFilters&&<div style={{ position:"absolute", top:2, right:2, width:6, height:6, borderRadius:"50%", background:C.accent }}/>}
             </button>}
             <button onClick={()=>{ setShowSearch(s=>!s); setSearch(""); }} style={{ background:showSearch?C.surfaceAlt:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:showSearch?C.accent:C.textMuted }}><Ic n="search" s={16}/></button>
-            {[{v:"tiles",ic:"grid"},{v:"list",ic:"list"},{v:"tree",ic:"tree"}].map(({v,ic})=>(
+            {[{v:"tiles",ic:"grid"},{v:"list",ic:"list"},{v:"tree",ic:"gitFork"}].map(({v,ic})=>(
               <button key={v} onClick={()=>setView(v)} style={{ background:view===v?C.surfaceAlt:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:view===v?C.accent:C.textMuted }}><Ic n={ic} s={16}/></button>
             ))}
             <button onClick={()=>setBulk(true)} style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}><Ic n="upload" s={16}/></button>
@@ -359,6 +359,28 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
           </Fragment>}
         </div>
       </div>
+
+      {vocabTab==="moves"&&(
+        <div style={{ display:"flex", gap:8, padding:"8px 14px", borderBottom:`1px solid ${C.borderLight}`, background:C.surface }}>
+          {[
+            { icon:"compass", label:t("explore"), action:onOpenExplore },
+            { icon:"sparkles", label:"R/R/R", action:onOpenRRR },
+            { icon:"puzzle", label:t("combine"), action:onOpenCombine },
+            { icon:"network", label:t("map"), action:onOpenMap },
+          ].map(({ icon, label, action })=>(
+            <button key={icon} onClick={action}
+              style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center",
+                gap:6, background:C.surfaceAlt, border:`1px solid ${C.border}`,
+                borderRadius:10, padding:"10px 14px", cursor:"pointer" }}>
+              <Ic n={icon} s={20} c={C.textMuted}/>
+              <span style={{ fontSize:9, fontWeight:800, fontFamily:FONT_DISPLAY,
+                letterSpacing:1.2, color:C.textMuted, textTransform:"uppercase" }}>
+                {label}
+              </span>
+            </button>
+          ))}
+        </div>
+      )}
 
       {showSearch&&(
         <div style={{ padding:"6px 14px", background:C.surface, borderBottom:`1px solid ${C.borderLight}` }}>

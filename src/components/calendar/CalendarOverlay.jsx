@@ -7,6 +7,7 @@ import { Ic } from '../shared/Ic';
 import { EXERTION_OPTIONS, BODY_PARTS, BODY_STATES } from '../shared/BodyCheckIn';
 import { SessionJournal } from './SessionJournal';
 import { computeAllDayMaps, getTasksForDay, getPrevDayTasks } from '../train/battlePrepHelpers';
+import { ReportsTimeline } from './ReportsTimeline';
 
 const toYMD = (d) => {
   if (!d) return null;
@@ -24,7 +25,7 @@ export const CalendarOverlay = ({
   addToast, initialDay,
   onClose, onGoToPrep,
   battleprep, onToggleBattlePrepTask, initialMonth,
-  inline, onAddTrigger,
+  inline, onAddTrigger, reports,
 }) => {
   const t = useT();
   const today = new Date().toISOString().split("T")[0];
@@ -686,15 +687,12 @@ export const CalendarOverlay = ({
       </div>
       </>}
 
-      {/* Reports view — placeholder for Session R3b */}
+      {/* Reports timeline */}
       {inline && calView === "reports" && (
-        <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: 40 }}>
-          <div style={{ textAlign: "center", color: C.textMuted }}>
-            <Ic n="barChart" s={36} c={C.textMuted} />
-            <p style={{ fontSize: 13, fontFamily: FONT_DISPLAY, fontWeight: 700, letterSpacing: 1, marginTop: 12 }}>{t("calReports")}</p>
-            <p style={{ fontSize: 12, marginTop: 6 }}>{t("comingSoon")}</p>
-          </div>
-        </div>
+        <ReportsTimeline
+          moves={moves} reps={reps} sparring={sparring} musicflow={musicflow}
+          calendar={calendar} cats={cats} catColors={catColors}
+          battleprep={battleprep} rivals={null} reports={reports}/>
       )}
     </div>
   );

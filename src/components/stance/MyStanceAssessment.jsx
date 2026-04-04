@@ -6,12 +6,12 @@ import { useSettings } from "../../hooks/useSettings";
 import { STANCE_DOMAINS } from "./MyStanceSection";
 
 const SCREEN_CONTENT = [
-  { key:"musicality",   descKey:"musicality_desc", qKeys:["musicality_q1","musicality_q2","musicality_q3"] },
-  { key:"performance",  descKey:"performance_desc", qKeys:["performance_q1","performance_q2","performance_q3"] },
-  { key:"technique",    descKey:"technique_desc",   qKeys:["technique_q1","technique_q2","technique_q3"] },
-  { key:"variety",      descKey:"variety_desc",     qKeys:["variety_q1","variety_q2","variety_q3"] },
-  { key:"creativity",   descKey:"creativity_desc",  qKeys:["creativity_q1","creativity_q2","creativity_q3"] },
-  { key:"personality",  descKey:"personality_desc",  qKeys:["personality_q1","personality_q2","personality_q3"] },
+  { key:"musicality",   descKey:"musicality_desc", qKeys:["musicality_s1","musicality_s2","musicality_s3","musicality_s4","musicality_s5","musicality_s6","musicality_s7","musicality_s8","musicality_s9","musicality_s10"] },
+  { key:"performance",  descKey:"performance_desc", qKeys:["performance_s1","performance_s2","performance_s3","performance_s4","performance_s5","performance_s6","performance_s7","performance_s8","performance_s9","performance_s10"] },
+  { key:"technique",    descKey:"technique_desc",   qKeys:["technique_s1","technique_s2","technique_s3","technique_s4","technique_s5","technique_s6","technique_s7","technique_s8","technique_s9","technique_s10"] },
+  { key:"variety",      descKey:"variety_desc",     qKeys:["variety_s1","variety_s2","variety_s3","variety_s4","variety_s5","variety_s6","variety_s7","variety_s8","variety_s9","variety_s10"] },
+  { key:"creativity",   descKey:"creativity_desc",  qKeys:["creativity_s1","creativity_s2","creativity_s3","creativity_s4","creativity_s5","creativity_s6","creativity_s7","creativity_s8","creativity_s9","creativity_s10"] },
+  { key:"personality",  descKey:"personality_desc",  qKeys:["personality_s1","personality_s2","personality_s3","personality_s4","personality_s5","personality_s6","personality_s7","personality_s8","personality_s9","personality_s10"] },
 ];
 
 export const MyStanceAssessment = ({ stance, onStanceChange, addToast, onClose }) => {
@@ -103,8 +103,8 @@ export const MyStanceAssessment = ({ stance, onStanceChange, addToast, onClose }
         {/* Sub-questions */}
         <div style={{ marginTop:24, maxWidth:340, width:"100%" }}>
           {current.qKeys.map((qk, i) => (
-            <div key={i} style={{ fontFamily:FONT_BODY, fontSize:13, color:C.textMuted,
-              textAlign:"center", lineHeight:1.7, marginBottom:4 }}>
+            <div key={i} style={{ fontFamily:FONT_BODY, fontSize:12, color:C.textMuted,
+              textAlign:"center", lineHeight:1.6, marginBottom:2 }}>
               {t(qk)}
             </div>
           ))}

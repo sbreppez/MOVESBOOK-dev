@@ -4,16 +4,15 @@ import { FONT_DISPLAY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
 import { Modal } from '../shared/Modal';
 import { Btn } from '../shared/Btn';
-import { useT, usePlural } from '../../hooks/useTranslation';
+import { useT } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
-import { habitStreak, freqDaysPerWeek, habitDoneToday } from './helpers';
+import { freqDaysPerWeek, habitDoneToday } from './helpers';
 import { HabitModal } from './HabitModal';
 import { HabitCard } from './HabitCard';
 
 export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
   const { C } = useSettings();
   const t = useT();
-  const { dayCountStr } = usePlural();
   const [reorderMode, setReorderMode] = useState(false);
   const [view, setView] = useState("tiles");
   const moveHabitUp   = (idx) => { if(idx===0) return; setHabits(prev=>{ const n=[...prev]; [n[idx],n[idx-1]]=[n[idx-1],n[idx]]; return n; }); };
@@ -100,7 +99,7 @@ export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
       <div style={{ flex:1, overflow:"auto", padding:"10px 12px", paddingBottom:76 }}>
         {habits.length===0&&(
           <div style={{ textAlign:"center", padding:"40px 20px", color:C.textMuted }}>
-            <div style={{ fontSize:32, marginBottom:8 }}>🔥</div>
+            <div style={{ fontSize:32, marginBottom:8 }}>✊</div>
             <div style={{ fontSize:13, fontWeight:700, fontFamily:FONT_DISPLAY, marginBottom:6 }}>{t("noHabitsYet")}</div>
             <div style={{ fontSize:12 }}>{t("buildRoutine")}</div>
           </div>
@@ -112,7 +111,6 @@ export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
               const checkIns = h.checkIns||[];
               const doneToday = checkIns.includes(today);
               const color = h.color || C.accent;
-              const streak = habitStreak(checkIns, h.frequency);
               const dpw = freqDaysPerWeek(h.frequency);
               const freqLabel = { daily:t("everyDay"),"2x":t("freq2xShort"),"3x":t("freq3xShort"),"4x":t("freq4xShort"),"5x":t("freq5xShort"),"6x":t("freq6xShort"),weekdays:t("freqWeekdays") }[h.frequency]||t("everyDay");
               const weekStart = (()=>{ const d=new Date(); d.setDate(d.getDate()-d.getDay()); return d.toISOString().split("T")[0]; })();
@@ -185,22 +183,10 @@ export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
                       </div>
                     </div>
 
-                    {/* Streak + Best side by side */}
+                    {/* Status */}
                     <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:10 }}>
-                      <div style={{ fontSize:12, color:streak>0?color:C.textMuted, fontWeight:800, fontFamily:FONT_DISPLAY }}>
-                        {streak>0?`🔥 ${dayCountStr(streak)}`:doneToday?`✓ ${t("doneToday")}`:t("noStreakYet")}
-                      </div>
-                      <div style={{ fontSize:10, color:C.textMuted, fontFamily:FONT_DISPLAY }}>
-                        {t("bestColon")} <span style={{ fontWeight:700, color:C.textSec }}>{(()=>{
-                          let best=0,cur=0;
-                          [...checkIns].sort().forEach((d,i,arr)=>{
-                            if(i===0){cur=1;best=1;return;}
-                            const diff=(new Date(d)-new Date(arr[i-1]))/(86400000);
-                            if(diff<=1.5){cur++;best=Math.max(best,cur);}else cur=1;
-                          });
-                          const b=Math.max(best,streak);
-                          return dayCountStr(b);
-                        })()}</span>
+                      <div style={{ fontSize:12, color:doneToday?C.green:C.textMuted, fontWeight:800, fontFamily:FONT_DISPLAY }}>
+                        {doneToday?`✓ ${t("doneToday")}`:`${weekDone}/${weekTarget} ${t("thisWeek").toLowerCase()}`}
                       </div>
                     </div>
 

@@ -45,39 +45,6 @@ export const freqDaysPerWeek = (freq) => {
   return m ? parseInt(m[1]) : 7;
 };
 
-export const habitStreak = (checkIns, frequency="daily") => {
-  if (!checkIns || checkIns.length === 0) return 0;
-  const dpw = freqDaysPerWeek(frequency);
-  if (dpw >= 7) {
-    // daily streak — must check in every day
-    const today = new Date(); today.setHours(0,0,0,0);
-    let streak = 0, check = new Date(today);
-    while (true) {
-      const ds = check.toISOString().split("T")[0];
-      if (checkIns.includes(ds)) { streak++; check.setDate(check.getDate()-1); } else break;
-    }
-    return streak;
-  } else {
-    // weekly streak — count consecutive weeks meeting the target
-    const today = new Date(); today.setHours(0,0,0,0);
-    let streak = 0;
-    let weekStart = new Date(today);
-    // go to start of current week (Monday)
-    weekStart.setDate(weekStart.getDate() - ((weekStart.getDay()+6)%7));
-    for (let w=0; w<52; w++) {
-      const days = [];
-      for (let d=0; d<7; d++) {
-        const dd = new Date(weekStart); dd.setDate(dd.getDate()+d);
-        if (dd <= today) days.push(dd.toISOString().split("T")[0]);
-      }
-      const done = days.filter(ds=>checkIns.includes(ds)).length;
-      if (done >= dpw) { streak++; weekStart.setDate(weekStart.getDate()-7); }
-      else { break; }
-    }
-    return streak;
-  }
-};
-
 export const habitDoneToday = (checkIns) => {
   const today = new Date().toISOString().split("T")[0];
   return (checkIns||[]).includes(today);

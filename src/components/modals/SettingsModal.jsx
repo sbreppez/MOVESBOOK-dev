@@ -11,9 +11,9 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
   const [s,setS]=useState({
     theme:"light", defaultTab:"home", showMastery:true, decaySensitivity:"normal",
     compactCards:false, sortMoves:"custom", fontSize:"medium",
-    showMoveCount:false, confirmDelete:true, practiceReminders:false,
-    reminderTime:"18:00", streakTracking:true, showDeadlineIndicator:true,
-    categorySort:"manual", showMoveCount:true, defaultView:"list", language:"en", linkOnCard:"inside", targetAutoLink:false, trainTabOrder:["goals","habits","notes","prep"],
+    showMoveCount:true, confirmDelete:true, practiceReminders:false,
+    reminderTime:"18:00", showDeadlineIndicator:true,
+    categorySort:"manual", defaultView:"list", language:"en", linkOnCard:"inside", targetAutoLink:false, trainTabOrder:["goals","habits","notes","prep"],
     ...settings
   });
   const origSettings = useRef(settings);
@@ -205,6 +205,15 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
             toggle("trackMovesInSparring")
           )}
 
+          {row(t("sparringGapThreshold"),
+            t("sparringGapThresholdDesc"),
+            <input type="number" min={1} max={90} value={s.sparringGapThreshold||14}
+              onChange={e => { const v = Math.max(1, Math.min(90, +e.target.value || 14)); set("sparringGapThreshold")(v); }}
+              style={{ width:60, background:panelSrf, border:`1px solid ${panelBrd}`, borderRadius:7,
+                padding:"7px 10px", color:panelTxt, fontSize:12, fontFamily:FONT_DISPLAY,
+                fontWeight:700, outline:"none", textAlign:"center" }}/>
+          )}
+
           {(()=>{
             const order = s.trainTabOrder||["goals","habits","notes","prep"];
             const labels = { goals:"🎯 "+t("trainTabGoals"), habits:"🔥 "+t("trainTabHabits"), notes:"📝 "+t("trainTabNotes"), prep:"⚔️ PREP" };
@@ -311,26 +320,6 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
               fontSize:12, fontFamily:FONT_DISPLAY, fontWeight:700, letterSpacing:1 }}>
             + {t("addAttribute")}
           </button>
-
-          {/* ── PRACTICE ────────────────────────────────── */}
-          {sectionHdr(t("practiceTracking"),"🏆")}
-          <div style={{ position:"relative", pointerEvents:"none" }}>
-            <div style={{ opacity:0.38, userSelect:"none" }}>
-              {row(t("streakTracking"),
-                t("streakDesc"),
-                toggle("streakTracking")
-              )}
-              {row(t("practiceReminders"),
-                t("remindersDesc"),
-                toggle("practiceReminders")
-              )}
-            </div>
-            <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
-              <span style={{ background:panelSrf, border:`1px solid ${panelBrd}`, borderRadius:8,
-                padding:"5px 12px", fontSize:11, fontWeight:800, letterSpacing:1.5,
-                color:panelMut, fontFamily:FONT_DISPLAY }}>{t("comingSoon")}</span>
-            </div>
-          </div>
 
           {/* ── DATA ────────────────────────────────────── */}
           {sectionHdr(t("dataPrivacy"),"🔒")}
@@ -441,7 +430,8 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
         </div>
         </div>{/* end zoom+scroll */}
 
-        {/* Footer — outside zoom so always fully visible */}
+        {/* Footer — outside zoom so always fully visible; hidden when inline (ProfileModal has its own buttons) */}
+        {!inline && (
         <div style={{ display:"flex", gap:8, justifyContent:"flex-end",
           padding:"12px 18px", borderTop:`1px solid ${panelBrd}`, flexShrink:0, background:panelBg }}>
           <button onClick={()=>{ onSave(origSettings.current); onClose(); }}
@@ -453,6 +443,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
               background:accent, color:C.bg, cursor:"pointer", fontSize:14,
               fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:0.8 }}>{t("saveSettings")}</button>
         </div>
+        )}
       {(showAddAttr||editAttr)&&(
         <AttributeModal
           attr={editAttr}

@@ -11,6 +11,9 @@ const BACKUP_KEYS = {
   categories: "mb_cats", catColors: "mb_cat_colors", catDomains: "mb_cat_domains",
   customAttrs: "mb_custom_attrs",
   constraint: "mb_constraint",
+  reports: "mb_reports",
+  blocks: "mb_blocks",
+  schedule: "mb_schedule",
 };
 
 export const downloadBackup = () => {

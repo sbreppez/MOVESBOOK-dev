@@ -210,7 +210,7 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
 
       {/* Header */}
       <div style={{ display:"flex", alignItems:"center", padding:"14px 16px", borderBottom:`1px solid ${C.border}`, background:C.header, flexShrink:0 }}>
-        <span style={{ flex:1, fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:1.5, color:C.headerText }}>{t("comboMachine")}</span>
+        <span style={{ flex:1, fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:1.5, color:C.headerText }}>{t("combine")}</span>
         <button onClick={() => setScreen("transitionManager")} style={{ background:"none", border:"none", cursor:"pointer", padding:6, marginRight:6 }}>
           <Ic n="list" s={20} c={C.headerText}/>
         </button>

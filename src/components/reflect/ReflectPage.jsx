@@ -18,7 +18,7 @@ export const ReflectPage = ({
   calendar, setCalendar, cats, catColors, settings, onSettingsChange,
   addToast, stance, battleprep, onToggleBattlePrepTask,
   onOpenStanceAssessment, addCalendarEvent, removeCalendarEvent,
-  onSubTabChange, onGoToPrep, initialDay, initialMonth, sets, onAddTrigger, parentSubTab
+  onSubTabChange, onGoToPrep, initialDay, initialMonth, sets, onAddTrigger, parentSubTab, reports, injuries
 }) => {
   const t = useT();
   const { resultCountStr } = usePlural();
@@ -27,6 +27,7 @@ export const ReflectPage = ({
   const [reflectTab, setReflectTab] = useState("calendar");
   const [showStanceConfirm, setShowStanceConfirm] = useState(false);
   const [calendarAddTick, setCalendarAddTick] = useState(0);
+  const [showInjuryHistory, setShowInjuryHistory] = useState(false);
 
   useEffect(() => { if (onSubTabChange) onSubTabChange(reflectTab); }, [reflectTab]);
 
@@ -237,7 +238,7 @@ export const ReflectPage = ({
           onGoToPrep={onGoToPrep}
           battleprep={battleprep} initialMonth={initialMonth}
           onToggleBattlePrepTask={onToggleBattlePrepTask}
-          onAddTrigger={calendarAddTick} />
+          onAddTrigger={calendarAddTick} reports={reports} />
       )}
 
       {reflectTab === "stance" && (
@@ -248,7 +249,66 @@ export const ReflectPage = ({
       )}
 
       {reflectTab === "goals" && renderIdeasList("goals")}
-      {reflectTab === "notes" && renderIdeasList("notes")}
+      {reflectTab === "notes" && (
+        <>
+          {/* Injury History accordion */}
+          {(() => {
+            const resolved = (injuries || []).filter(i => i.resolved).sort((a, b) => (b.resolvedDate || b.date || b.startDate || "").localeCompare(a.resolvedDate || a.date || a.startDate || ""));
+            if (resolved.length === 0) return null;
+            const sevColors = { 1:C.green, 2:C.yellow, 3:C.accent };
+            const sevLabels = { 1:"severityMild", 2:"severityModerate", 3:"severitySevere" };
+            const daysBetween = (d1, d2) => { if(!d1||!d2) return null; return Math.max(1, Math.floor((new Date(d2+"T12:00:00") - new Date(d1+"T12:00:00")) / 86400000)); };
+            return (
+              <div style={{ margin:"0 16px 12px", background:C.surface, borderRadius:14, border:`1.5px solid ${C.border}`, overflow:"hidden" }}>
+                <button onClick={() => setShowInjuryHistory(p => !p)}
+                  style={{ display:"flex", alignItems:"center", justifyContent:"space-between", width:"100%",
+                    padding:"12px 14px", background:"none", border:"none", cursor:"pointer" }}>
+                  <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                    <span style={{ fontSize:11, fontWeight:800, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY }}>
+                      {t("injuryHistory")}
+                    </span>
+                    <span style={{ fontSize:10, fontWeight:800, color:C.accent, background:`${C.accent}18`, borderRadius:10, padding:"2px 7px", fontFamily:FONT_DISPLAY }}>
+                      {resolved.length}
+                    </span>
+                  </div>
+                  <Ic n={showInjuryHistory ? "chevU" : "chevD"} s={14} c={C.textMuted}/>
+                </button>
+                {showInjuryHistory && (
+                  <div style={{ padding:"0 14px 12px" }}>
+                    {resolved.map(inj => {
+                      const dateStart = inj.date || inj.startDate;
+                      const dur = daysBetween(dateStart, inj.resolvedDate);
+                      return (
+                        <div key={inj.id} style={{ padding:"10px 0", borderTop:`1px solid ${C.borderLight}` }}>
+                          <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:4 }}>
+                            {inj.severity && <div style={{ width:8, height:8, borderRadius:4, background:sevColors[inj.severity], flexShrink:0 }}/>}
+                            <span style={{ fontSize:13, fontWeight:700, color:C.text, fontFamily:FONT_BODY }}>
+                              {inj.side ? `${t(inj.side === "left" ? "leftSide" : "rightSide")} ` : ""}{inj.bodyPart}
+                            </span>
+                            {inj.severity && <span style={{ fontSize:10, fontWeight:700, color:sevColors[inj.severity], fontFamily:FONT_DISPLAY }}>{t(sevLabels[inj.severity])}</span>}
+                          </div>
+                          <div style={{ fontSize:11, color:C.textMuted, fontFamily:FONT_BODY, marginBottom:4 }}>
+                            {dateStart}{inj.resolvedDate ? ` → ${inj.resolvedDate}` : ""}{dur ? ` (${dur} ${t("daysInjured")})` : ""}
+                          </div>
+                          {inj.preventionNote && (
+                            <div style={{ fontSize:12, color:C.yellow, fontFamily:FONT_BODY, fontStyle:"italic", marginBottom:4, lineHeight:1.5 }}>
+                              {inj.preventionNote}
+                            </div>
+                          )}
+                          {inj.description && <div style={{ fontSize:11, color:C.textSec, fontFamily:FONT_BODY, lineHeight:1.4 }}>{inj.description}</div>}
+                          {inj.cause && <div style={{ fontSize:11, color:C.textMuted, fontFamily:FONT_BODY, marginTop:2 }}>{t("whatCausedIt")}: {inj.cause}</div>}
+                          {inj.treatment && <div style={{ fontSize:11, color:C.textMuted, fontFamily:FONT_BODY, marginTop:2 }}>{t("treatmentPlan")}: {inj.treatment}</div>}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+          {renderIdeasList("notes")}
+        </>
+      )}
 
       {/* Type chooser for adding goals */}
       {typeChooser && <TypeChooserModal onClose={() => setTypeChooser(false)} onChoose={tp => { setTypeChooser(false); openModal(tp, null, addIdea); }} />}

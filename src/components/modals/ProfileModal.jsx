@@ -9,7 +9,7 @@ import { SettingsModal } from "./SettingsModal";
 import { FeedbackModal } from "./FeedbackModal";
 import { downloadBackup, restoreBackup } from "./BackupModal";
 
-export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersChange, addToast, onOpenManageReminders, onNavigateToStance, settings, onSettingsChange, onClearMoves, onRestoreRounds, onRestartTour, zoom, onZoomChange, customAttrs, setCustomAttrs }) => {
+export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersChange, addToast, onOpenManageReminders, onNavigateToStance, onOpenBlockLibrary, settings, onSettingsChange, onClearMoves, onRestoreRounds, onRestartTour, zoom, onZoomChange, customAttrs, setCustomAttrs }) => {
   const { C } = useSettings();
   const t = useT();
   const [f,setF]=useState({ nickname:"", age:"", gender:"", goals:"", years:"", startYear:"", startMonth:"", startDay:"", why:"", ...profile });
@@ -96,6 +96,20 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
           </span>
           <Ic n="chevR" s={14} c={C.accent} />
         </div>
+      </button>
+
+      {/* Block Library link */}
+      <button onClick={() => { if (onOpenBlockLibrary) { onSave(f); onOpenBlockLibrary(); } }}
+        style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between",
+          background: C.surface, border: `1px solid ${C.border}`, borderRadius: 14,
+          padding: "14px 16px", cursor: "pointer", marginBottom: 12 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <span style={{ fontSize: 18 }}>📋</span>
+          <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 800, fontSize: 13, color: C.text, letterSpacing: 0.5 }}>
+            {t("blockLibrary")}
+          </span>
+        </div>
+        <Ic n="chevR" s={14} c={C.accent} />
       </button>
 
       {sectionHdr(t("breakingGoals"),"target")}

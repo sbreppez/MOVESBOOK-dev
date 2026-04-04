@@ -292,7 +292,7 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
             </button>
           );
         })}
-        {/* 🔥 Flame pulse — habits done today / total */}
+        {/* Habit completion indicator — done today / total */}
         {(()=>{
           if (!habits.length) return null;
           const today = new Date().toISOString().split("T")[0];
@@ -306,9 +306,9 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
                 borderBottom:`3px solid transparent` }}
               title={`${doneToday} of ${habits.length} habits done today`}>
               <span style={{ fontSize: allOn ? 18 : 15,
-                opacity: someOn ? 1 : 0.35, lineHeight:1 }}>🔥</span>
+                opacity: someOn ? 1 : 0.35, lineHeight:1 }}>{allOn?"✅":"✓"}</span>
               <span style={{ fontSize:12, fontWeight:900, fontFamily:FONT_DISPLAY,
-                color: allOn ? "#ffa726" : someOn ? C.textSec : C.textMuted }}>
+                color: allOn ? C.green : someOn ? C.textSec : C.textMuted }}>
                 {doneToday}/{habits.length}
               </span>
             </button>

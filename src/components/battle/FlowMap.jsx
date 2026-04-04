@@ -185,7 +185,7 @@ export const FlowMap = ({ moves, cats, catColors, flowmap, onFlowmapChange, comb
     const stColors = STATE_COLORS(C);
     return (
       <div style={overlay}>
-        <Header title={t("flowMap")} onBack={onClose} />
+        <Header title={t("map")} onBack={onClose} />
         <div style={scrollArea}>
           {/* Description */}
           <p style={{ color: C.textMuted, fontSize: 13, marginTop: 0, marginBottom: 12, fontFamily: FONT_BODY }}>{t("flowMapDesc")}</p>
@@ -382,7 +382,7 @@ export const FlowMap = ({ moves, cats, catColors, flowmap, onFlowmapChange, comb
 
     return (
       <div style={overlay}>
-        <Header title={t("flowMap")} onBack={() => setScreen("home")} />
+        <Header title={t("map")} onBack={() => setScreen("home")} />
 
         {/* View toggle */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "8px 16px", borderBottom: `1px solid ${C.border}`, flexShrink: 0 }}>

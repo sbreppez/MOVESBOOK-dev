@@ -247,7 +247,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
     } else {
       defaultName = baseName.trim()
         ? `${baseName.trim()} (${t("variation")})`
-        : `${t("lab")} ${t("variation")} ${new Date().toISOString().split("T")[0]}`;
+        : `${t("explore")} ${t("variation")} ${new Date().toISOString().split("T")[0]}`;
       const matchedMove = baseName.trim() ? moves.find(m => m.name.toLowerCase() === baseName.trim().toLowerCase()) : null;
       defaultCat = matchedMove?.category || (cats.length ? cats[0] : "Footworks");
     }
@@ -259,7 +259,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
   const handleSave = () => {
     const preview = buildPreview();
     const moveData = {
-      name: saveName.trim() || `${t("lab")} ${t("variation")}`,
+      name: saveName.trim() || `${t("explore")} ${t("variation")}`,
       category: saveCat,
       description: preview,
       mastery: 0,
@@ -731,7 +731,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
         padding: "13px 18px", borderBottom: `1px solid ${C.border}`, background: C.header, flexShrink: 0,
       }}>
         <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 16, color: C.brown, letterSpacing: 1 }}>
-          {t("lab")}
+          {t("explore")}
         </span>
         <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex" }}>
           <Ic n="x" s={20} c={C.textMuted} />
