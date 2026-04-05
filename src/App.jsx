@@ -51,7 +51,7 @@ function migrateBattlePrep(bp) {
 
 export default function App() {
   const initLang = (() => { try { return JSON.parse(localStorage.getItem("mb_settings"))?.language || "en"; } catch { return "en"; } })();
-  const [tab,setTab]=useState(()=>{ try { const st=localStorage.getItem("mb_settings"); if(st){ const p=JSON.parse(st); if(p.defaultTab){ const m={"wip":"moves","ideas":"home","ready":"battle"}; return m[p.defaultTab]||p.defaultTab; } } } catch {} return "home"; });
+  const [tab,setTab]=useState(()=>{ try { const st=localStorage.getItem("mb_settings"); if(st){ const p=JSON.parse(st); if(p.defaultTab){ const m={"wip":"moves","ideas":"home","ready":"battle","train":"home","vocab":"moves"}; const mapped=m[p.defaultTab]||p.defaultTab; const valid=["home","moves","battle","reflect"]; return valid.includes(mapped)?mapped:"home"; } } } catch {} return "home"; });
 
   // ── Data state ─────────────────────────────────────────────────────────────
   const [moves,  setMoves]  = useState(() => {
@@ -424,7 +424,7 @@ export default function App() {
           if (st) {
             const parsed = JSON.parse(st);
             setAppSettings(prev=>({...prev,...parsed}));
-            if (parsed.defaultTab) setTab(parsed.defaultTab);
+            if (parsed.defaultTab) { const dtm={"wip":"moves","ideas":"home","ready":"battle","train":"home","vocab":"moves"}; const dtv=dtm[parsed.defaultTab]||parsed.defaultTab; const validTabs=["home","moves","battle","reflect"]; setTab(validTabs.includes(dtv)?dtv:"home"); }
             if (parsed.zoom) setZoom(parsed.zoom);
           }
           localStorage.setItem("mb_data_version", SCHEMA_VERSION);
@@ -725,6 +725,7 @@ export default function App() {
             reflections={reflections} onReflectionsChange={setReflections}
             onSettingsChange={setAppSettings}
             addCalendarEvent={addCalendarEvent}
+            rivals={rivals} onRivalsChange={setRivals} addToast={addToast}
             onClose={()=>{setShowSparring(false);if(lastSessionSaved.current){lastSessionSaved.current=false;setShowPostSessionPrompt(true);}}}/>}
           {showCompSim&&<CompetitionSimulator rounds={rounds} moves={moves} catColors={catColors}
             sparring={sparring} settings={appSettings}

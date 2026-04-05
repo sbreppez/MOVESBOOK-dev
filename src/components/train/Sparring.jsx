@@ -6,6 +6,7 @@ import { useT } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
 import { BodyCheckIn } from '../shared/BodyCheckIn';
 import { TrainingLog } from '../shared/TrainingLog';
+import { Spar1v1 } from './Spar1v1';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -60,10 +61,13 @@ const haptic = (pattern) => {
 
 // ── Main Component ───────────────────────────────────────────────────────────
 
-export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, onSettingsChange, reflections, onReflectionsChange, onClose, addCalendarEvent }) => {
+export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, onSettingsChange, reflections, onReflectionsChange, onClose, addCalendarEvent, rivals, onRivalsChange, addToast }) => {
   const t = useT();
   const { settings: appSettings } = useSettings();
   const isDark = (appSettings.theme || settings.theme) === "dark";
+
+  // ── Spar mode chooser ──
+  const [sparMode, setSparMode] = useState(null); // null | 'solo' | '1v1'
 
   // ── Screen state ──
   const [screen, setScreen] = useState("setup");
@@ -373,6 +377,47 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
   };
 
   const catColor = (cat) => catColors[cat] || C.textMuted;
+
+  // ── Chooser screen ──
+  if (sparMode === null) {
+    return (
+      <div style={{ position:"absolute", inset:0, zIndex:500, background:C.bg, display:"flex", flexDirection:"column" }}>
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"13px 18px", borderBottom:`1px solid ${C.border}`, flexShrink:0 }}>
+          <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:2, color:C.text, textTransform:"uppercase" }}>{t("spar")}</span>
+          <button onClick={onClose} style={{ background:C.surfaceAlt, border:`1px solid ${C.border}`, cursor:"pointer", color:C.textSec, padding:5, borderRadius:7, display:"flex" }}>
+            <Ic n="x" s={14}/>
+          </button>
+        </div>
+        <div style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:24, gap:16 }}>
+          <button onClick={() => setSparMode("solo")}
+            style={{ width:"100%", maxWidth:320, padding:"28px 20px", borderRadius:16, border:`2px solid ${C.border}`, background:C.surface, cursor:"pointer", textAlign:"center", transition:"all 0.15s" }}>
+            <div style={{ fontSize:36, marginBottom:8 }}>🥊</div>
+            <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:20, color:C.text, letterSpacing:1, textTransform:"uppercase" }}>{t("soloSpar")}</div>
+            <div style={{ fontSize:13, color:C.textMuted, marginTop:6 }}>{t("soloSparDesc")}</div>
+          </button>
+          <button onClick={() => setSparMode("1v1")}
+            style={{ width:"100%", maxWidth:320, padding:"28px 20px", borderRadius:16, border:`2px solid ${C.accent}44`, background:C.accent + "0a", cursor:"pointer", textAlign:"center", transition:"all 0.15s" }}>
+            <div style={{ fontSize:36, marginBottom:8 }}>⚔️</div>
+            <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:20, color:C.accent, letterSpacing:1, textTransform:"uppercase" }}>{t("oneVsOne")}</div>
+            <div style={{ fontSize:13, color:C.textMuted, marginTop:6 }}>{t("oneVsOneDesc")}</div>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // ── 1v1 mode ──
+  if (sparMode === "1v1") {
+    return <Spar1v1
+      sparring={sparring}
+      onSaveSession={onSaveSession}
+      addCalendarEvent={addCalendarEvent}
+      rivals={rivals}
+      onRivalsChange={onRivalsChange}
+      addToast={addToast}
+      onClose={() => { setSparMode(null); onClose(); }}
+    />;
+  }
 
   // ── PR Celebration Screen ──
   if (prBroken) {

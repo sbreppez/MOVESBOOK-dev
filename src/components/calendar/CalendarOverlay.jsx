@@ -72,6 +72,7 @@ export const CalendarOverlay = ({
     (moves || []).forEach(m => mark(m.date, "moves"));
     (reps || []).forEach(r => mark(r.date, "moves"));
     (sparring?.sessions || []).forEach(s => mark(s.date, "sparring"));
+    (sparring?.sessions1v1 || []).forEach(s => mark(s.date, "sparring"));
     (habits || []).forEach(h => (h.checkIns || []).forEach(d => mark(d, "habits")));
     (ideas || []).forEach(i => (i.journal || []).forEach(j => mark(j.date, "notes")));
     (calendar?.events || []).forEach(e => {
@@ -518,6 +519,7 @@ export const CalendarOverlay = ({
                           fontWeight: 600, letterSpacing: 0.3, fontStyle: "italic" }}>
                           {e.source === "rep_counter" ? t("viaRepCounter") :
                            e.source === "sparring" ? t("viaSparring") :
+                           e.source === "spar-1v1" ? t("via1v1Spar") :
                            e.source === "combo_machine" ? t("viaComboMachine") :
                            e.source === "lab" ? t("viaLab") :
                            e.source === "rrr" ? t("viaRRR") : ""}
