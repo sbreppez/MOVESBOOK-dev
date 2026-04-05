@@ -336,6 +336,8 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
   // Edit state
   const [editEventName, setEditEventName] = useState(plan.eventName || "");
   const [editPlanName, setEditPlanName] = useState(plan.planName || "");
+  const [editEventUrl, setEditEventUrl] = useState(plan.eventUrl || "");
+  const [editLocation, setEditLocation] = useState(plan.location || "");
   const [editTrainingDays, setEditTrainingDays] = useState([...(plan.trainingDays || [])]);
   const [confirmPreset, setConfirmPreset] = useState(null); // preset id pending confirmation
   const [confirmReset, setConfirmReset] = useState(false);
@@ -343,6 +345,8 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
   useEffect(() => {
     setEditEventName(plan.eventName || "");
     setEditPlanName(plan.planName || "");
+    setEditEventUrl(plan.eventUrl || "");
+    setEditLocation(plan.location || "");
     setEditTrainingDays([...(plan.trainingDays || [])]);
   }, [plan.id, plan.eventName, plan.planName]);
 
@@ -353,6 +357,8 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
         ...p,
         eventName: editEventName.trim() || p.eventName,
         planName: editPlanName.trim() || editEventName.trim() || p.planName,
+        eventUrl: editEventUrl.trim() || null,
+        location: editLocation.trim() || null,
         trainingDays: editTrainingDays,
       }),
     }));
@@ -438,6 +444,12 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
             <span style={{ fontSize: 9, fontFamily: FONT_DISPLAY, fontWeight: 700, background: `${meta.color}20`, color: meta.color, borderRadius: 4, padding: "2px 6px", flexShrink: 0 }}>{meta.icon} {meta.label}</span>
             {isBattleDay && <span style={{ fontSize: 9, fontFamily: FONT_DISPLAY, fontWeight: 900, background: `${meta.color}30`, color: meta.color, borderRadius: 4, padding: "2px 6px", flexShrink: 0, letterSpacing: 0.5 }}>{t("todayIsTheDay")}</span>}
           </div>
+          {plan.location && (
+            <div style={{ display:"flex", alignItems:"center", gap:4, marginBottom:2 }}>
+              <Ic n="mapPin" s={11} c={C.textMuted}/>
+              <span style={{ fontSize:11, fontFamily:FONT_BODY, color:C.textMuted }}>{plan.location}</span>
+            </div>
+          )}
           {battleDateStr && !isBattleDay && (
             <div style={{ fontSize: 12, fontFamily: FONT_BODY, color: C.textSec, marginBottom: 2 }}>{battleDateStr}</div>
           )}
@@ -479,6 +491,27 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
                 const total = phaseSummary.reduce((s, x) => s + x.trainingDayCount, 0);
                 return <div key={i} style={{ width: `${(p.trainingDayCount / (total || 1)) * 100}%`, background: p.color, opacity: today >= (p.startDate || "") && today <= (p.endDate || "9999") ? 1 : 0.4 }} />;
               })}
+            </div>
+          )}
+
+          {/* Event URL + Google Maps links */}
+          {(plan.eventUrl || plan.location) && (
+            <div style={{ display:"flex", flexDirection:"column", gap:6, marginBottom:10 }}>
+              {plan.eventUrl && (
+                <button onClick={() => { const url = plan.eventUrl.match(/^https?:\/\//) ? plan.eventUrl : `https://${plan.eventUrl}`; window.open(url, "_blank", "noopener"); }}
+                  style={{ display:"flex", alignItems:"center", gap:6, padding:"8px 12px", background:C.surfaceAlt, border:`1px solid ${C.border}`, borderRadius:8, cursor:"pointer", textAlign:"left", width:"100%" }}>
+                  <Ic n="extLink" s={14} c={C.accent}/>
+                  <span style={{ fontFamily:FONT_BODY, fontSize:12, color:C.accent, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", flex:1 }}>{plan.eventUrl}</span>
+                </button>
+              )}
+              {plan.location && (
+                <button onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(plan.location)}`, "_blank", "noopener")}
+                  style={{ display:"flex", alignItems:"center", gap:6, padding:"8px 12px", background:C.surfaceAlt, border:`1px solid ${C.border}`, borderRadius:8, cursor:"pointer", textAlign:"left", width:"100%" }}>
+                  <Ic n="mapPin" s={14} c={C.accent}/>
+                  <span style={{ fontFamily:FONT_BODY, fontSize:12, color:C.accent }}>{t("openInMaps")}</span>
+                  <span style={{ fontFamily:FONT_BODY, fontSize:11, color:C.textMuted, marginLeft:4 }}>{plan.location}</span>
+                </button>
+              )}
             </div>
           )}
 
@@ -528,6 +561,16 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
               {/* Plan name */}
               <label style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, letterSpacing: 1, color: C.textMuted, display: "block", marginBottom: 3 }}>{t("detailLabel")}</label>
               <input value={editPlanName} onChange={e => setEditPlanName(e.target.value)}
+                style={{ width: "100%", background: C.surface, border: `1px solid ${C.border}`, borderRadius: 7, padding: "8px 10px", color: C.text, fontSize: 13, fontFamily: FONT_BODY, outline: "none", marginBottom: 10, boxSizing: "border-box" }} />
+
+              {/* Event link */}
+              <label style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, letterSpacing: 1, color: C.textMuted, display: "block", marginBottom: 3 }}>{t("eventLink")}</label>
+              <input value={editEventUrl} onChange={e => setEditEventUrl(e.target.value)} placeholder={t("addEventLinkHint")}
+                style={{ width: "100%", background: C.surface, border: `1px solid ${C.border}`, borderRadius: 7, padding: "8px 10px", color: C.text, fontSize: 13, fontFamily: FONT_BODY, outline: "none", marginBottom: 10, boxSizing: "border-box" }} />
+
+              {/* Location */}
+              <label style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, letterSpacing: 1, color: C.textMuted, display: "block", marginBottom: 3 }}>{t("locationLabel")}</label>
+              <input value={editLocation} onChange={e => setEditLocation(e.target.value)} placeholder={t("battleLocationPlaceholder")}
                 style={{ width: "100%", background: C.surface, border: `1px solid ${C.border}`, borderRadius: 7, padding: "8px 10px", color: C.text, fontSize: 13, fontFamily: FONT_BODY, outline: "none", marginBottom: 10, boxSizing: "border-box" }} />
 
               {/* Training days */}

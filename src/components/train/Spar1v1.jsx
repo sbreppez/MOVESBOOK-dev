@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
@@ -106,6 +106,26 @@ export const Spar1v1 = ({ sparring, onSaveSession, addCalendarEvent, rivals, onR
   // ── After-save state ──
   const [showAddPerson, setShowAddPerson] = useState(false);
   const [savedSession, setSavedSession] = useState(null);
+
+  // ── Pending PR detection (shown on summary screen before save) ──
+  const pendingPRs = useMemo(() => {
+    if (!completedSession) return [];
+    const records = sparring.records1v1 || {};
+    const prs = [];
+    const totalRounds = completedSession.roundLog.length;
+    const longestRoundSec = Math.round(Math.max(...completedSession.roundLog.map(r => r.durationMs)) / 1000);
+    const totalSec = Math.round(completedSession.totalDuration / 1000);
+    if (!records.mostRounds || totalRounds > records.mostRounds.value) {
+      prs.push({ type: "mostRounds", value: totalRounds });
+    }
+    if (!records.longestRound || longestRoundSec > records.longestRound.value) {
+      prs.push({ type: "longestRound", value: longestRoundSec });
+    }
+    if (!records.longestSession || totalSec > records.longestSession.value) {
+      prs.push({ type: "longestSession", value: totalSec });
+    }
+    return prs;
+  }, [completedSession, sparring.records1v1]);
 
   // ── People for autocomplete ──
   const allPeople = (rivals || []).map(r => ({ id: r.id, name: r.name, type: r.type || "rival" }));
@@ -748,6 +768,20 @@ export const Spar1v1 = ({ sparring, onSaveSession, addCalendarEvent, rivals, onR
         </div>
 
         <div style={{ flex:1, overflow:"auto", padding:18 }}>
+          {/* PR badge */}
+          {pendingPRs.length > 0 && (<>
+            <style>{`@keyframes mb-pr-pop { 0% { transform:scale(0.5); opacity:0; } 50% { transform:scale(1.1); } 100% { transform:scale(1); opacity:1; } }`}</style>
+            <div style={{ background:`${C.accent}14`, border:`1.5px solid ${C.accent}40`, borderRadius:12, padding:"10px 14px", marginBottom:14, display:"flex", alignItems:"center", gap:10, animation:"mb-pr-pop 0.5s ease-out" }}>
+              <span style={{ fontSize:22 }}>🔥</span>
+              <div>
+                <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:12, color:C.accent, letterSpacing:1.5 }}>{t("newPersonalRecord")}</div>
+                <div style={{ fontFamily:FONT_BODY, fontSize:11, color:C.textSec, marginTop:2 }}>
+                  {pendingPRs.map(pr => pr.type === "mostRounds" ? `${pr.value} ${t("roundsMode") || "rounds"}` : pr.type === "longestRound" ? `${pr.value}s` : fmtDuration(pr.value * 1000)).join(" · ")}
+                </div>
+              </div>
+            </div>
+          </>)}
+
           {/* Editable opponent + location */}
           <div style={{ display:"flex", gap:10, marginBottom:16 }}>
             <div style={{ flex:1 }}>

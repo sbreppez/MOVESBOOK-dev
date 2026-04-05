@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
@@ -110,6 +110,29 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
   const canvasRef = useRef(null);
   const photoInputRef = useRef(null);
   const [completedSession, setCompletedSession] = useState(null);
+
+  // ── Pending PR detection (shown on done screen before save) ──
+  const pendingPRs = useMemo(() => {
+    if (!completedSession) return [];
+    const records = sparring.records || {};
+    const prs = [];
+    if (!records.mostRounds || completedSession.rounds > records.mostRounds.value) {
+      prs.push({ type: "mostRounds", value: completedSession.rounds });
+    }
+    if (!records.longestRound || completedSession.longestRound > records.longestRound.value) {
+      prs.push({ type: "longestRound", value: completedSession.longestRound });
+    }
+    const totalSec = Math.round(completedSession.totalDuration / 1000);
+    if (!records.longestSession || totalSec > records.longestSession.value) {
+      prs.push({ type: "longestSession", value: totalSec });
+    }
+    if (mode === "death") {
+      if (!records.longestDeathSession || totalSec > records.longestDeathSession.value) {
+        prs.push({ type: "longestDeath", value: totalSec });
+      }
+    }
+    return prs;
+  }, [completedSession, sparring.records, mode]);
 
   // ── Cleanup timers on unmount ──
   useEffect(() => () => {
@@ -812,6 +835,20 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
         </div>
 
         <div style={{ flex:1, overflow:"auto", padding:18 }}>
+          {/* PR badge */}
+          {pendingPRs.length > 0 && (<>
+            <style>{`@keyframes mb-pr-pop { 0% { transform:scale(0.5); opacity:0; } 50% { transform:scale(1.1); } 100% { transform:scale(1); opacity:1; } }`}</style>
+            <div style={{ background:`${C.accent}14`, border:`1.5px solid ${C.accent}40`, borderRadius:12, padding:"10px 14px", marginBottom:14, display:"flex", alignItems:"center", gap:10, animation:"mb-pr-pop 0.5s ease-out" }}>
+              <span style={{ fontSize:22 }}>🔥</span>
+              <div>
+                <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:12, color:C.accent, letterSpacing:1.5 }}>{t("newPersonalRecord")}</div>
+                <div style={{ fontFamily:FONT_BODY, fontSize:11, color:C.textSec, marginTop:2 }}>
+                  {pendingPRs.map(pr => pr.type === "mostRounds" ? `${pr.value} ${t("roundsMode").toLowerCase()}` : pr.type === "longestRound" ? `${pr.value}s ${t("longestRoundLabel").toLowerCase()}` : pr.type === "longestSession" ? fmtDuration(pr.value * 1000) : fmtDuration(pr.value * 1000)).join(" · ")}
+                </div>
+              </div>
+            </div>
+          </>)}
+
           {/* Mode badge */}
           <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:16 }}>
             <span style={{ fontSize:18 }}>{modeEmoji}</span>
