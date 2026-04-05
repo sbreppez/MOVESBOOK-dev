@@ -19,6 +19,7 @@ import { HomePage } from './components/home/HomePage';
 import { ReflectPage } from './components/reflect/ReflectPage';
 import { ProfileModal } from './components/modals/ProfileModal';
 import { ManualModal } from './components/modals/ManualModal';
+import { SettingsModal } from './components/modals/SettingsModal';
 import { Walkthrough } from './components/modals/Walkthrough';
 import { RepCounter } from './components/train/RepCounter';
 import { Sparring } from './components/train/Sparring';
@@ -495,6 +496,7 @@ export default function App() {
   const [trainModal,  setTrainModal]  = useState({});
   const [trainMenu,   setTrainMenu]   = useState(null);
   const [showManual,   setShowManual]   =useState(false);
+  const [showSettings, setShowSettings] =useState(false);
   const [showTour,setShowTour]=useState(false);
   const [showRepCounter,setShowRepCounter]=useState(false);
   const [repCounterPreselect,setRepCounterPreselect]=useState(null);
@@ -643,6 +645,11 @@ export default function App() {
             )}
           </div>
           <div style={{ display:"flex", gap:6, alignItems:"center" }}>
+            <button onClick={()=>setShowSettings(true)}
+              style={{ background:"none", border:"none", cursor:"pointer", padding:5 }}
+              title="Settings">
+              <Ic n="cog" s={18} c={C.brownLight}/>
+            </button>
             {fbUser?.photo
               ? <button id="tour-profile" onClick={()=>setShowProfile(true)} style={{ background:"none", border:"none", cursor:"pointer", padding:2, display:"flex", borderRadius:"50%", overflow:"hidden" }}>
                   <img src={fbUser.photo} alt={fbUser.name} style={{ width:26, height:26, borderRadius:"50%", objectFit:"cover", border:`1.5px solid ${C.border}` }}/>
@@ -754,8 +761,19 @@ export default function App() {
             reminders={reminders} onRemindersChange={setReminders} addToast={addToast}
             onOpenManageReminders={()=>{ setShowProfile(false); setShowManageReminders(true); }}
             onNavigateToStance={()=>{ setShowProfile(false); setTab("reflect"); setSubTab("stance"); }}
-            settings={appSettings} onSettingsChange={setAppSettings} onClearMoves={()=>setMoves([])} onRestoreRounds={()=>setRounds(INIT_ROUNDS)} onRestartTour={()=>{setShowProfile(false);setShowTour(true);}} zoom={zoom} onZoomChange={handleZoomChange} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs}/>}
+            settings={appSettings} onSettingsChange={setAppSettings} onClearMoves={()=>setMoves([])} onRestoreRounds={()=>setRounds(INIT_ROUNDS)} onRestartTour={()=>{setShowProfile(false);setShowTour(true);}} zoom={zoom} onZoomChange={handleZoomChange} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs}
+            onOpenManual={()=>{setShowProfile(false);setShowManual(true);}}/>}
           {showManual&&<ManualModal onClose={()=>setShowManual(false)}/>}
+          {showSettings&&<SettingsModal
+            onClose={()=>setShowSettings(false)}
+            settings={appSettings} onSave={setAppSettings}
+            onClearMoves={()=>setMoves([])}
+            onRestoreRounds={()=>setRounds(INIT_ROUNDS)}
+            onRestartTour={()=>{setShowSettings(false);setShowTour(true);}}
+            zoom={zoom} onZoomChange={handleZoomChange}
+            customAttrs={customAttrs} setCustomAttrs={setCustomAttrs}
+            onOpenManual={()=>{setShowSettings(false);setShowManual(true);}}
+          />}
         </div>
 
         <Toast toasts={toasts} remove={removeToast}/>
@@ -763,7 +781,7 @@ export default function App() {
 
         {/* ── Bottom Bar — 4 tabs + centre Add ── */}
         {!showTour&&(()=>{
-          const anyOverlay = showRepCounter||showSparring||showComboMachine||showManageReminders||showRRR||showLab||showProfile||showManual||showStanceAssessment||showMusicFlow||showCompSim||showPostSessionPrompt;
+          const anyOverlay = showRepCounter||showSparring||showComboMachine||showManageReminders||showRRR||showLab||showProfile||showManual||showSettings||showStanceAssessment||showMusicFlow||showCompSim||showPostSessionPrompt;
           const tabs = [{id:"home",icon:"home",label:tr("home")},{id:"moves",icon:"book",label:tr("vocab")},null,{id:"battle",icon:"sword",label:tr("battle")},{id:"reflect",icon:"barChart",label:tr("reflect")}];
           const handleTabChange = (t) => { setTrainMenu(null); setTab(t); setAddTick(0); setAddTick2(0); setSubTab(t==="moves"?"moves":t==="battle"?"plan":t==="reflect"?"calendar":""); };
           return (

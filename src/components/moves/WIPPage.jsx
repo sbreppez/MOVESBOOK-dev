@@ -21,6 +21,7 @@ import { filterMovesByAttrs } from '../../utils/attributeHelpers';
 import { ReminderBlock } from './ReminderBlock';
 import { GAPTab } from './GAPTab';
 import { MoveTree } from './MoveTree';
+import { downloadBackup, restoreBackup } from '../modals/BackupModal';
 
 export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains={}, setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore, onOpenRRR, onOpenCombine, onOpenMap }) => {
   const t = useT();
@@ -62,7 +63,26 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   const [attrFilters, setAttrFilters] = useState({});
   const setDragItem=useRef(null);
   const [setDragOver,setSetDragOver]=useState(null);
+  const backupFileRef=useRef(null);
   const masteryColorWip = p => p<30?C.red:p<60?C.yellow:p<80?C.blue:C.green;
+
+  const handleRestoreFile = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const parsed = JSON.parse(ev.target.result);
+        if (parsed._format !== "movesbook-backup-v1") {
+          addToast({ emoji:"⚠️", title:t("invalidBackupFile")||"Invalid backup file" });
+          return;
+        }
+        restoreBackup(parsed);
+      } catch { addToast({ emoji:"⚠️", title:"Could not read backup file" }); }
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  };
 
   // When an idea is pushed in from the Ideas tab, open the add modal with its text
   useEffect(()=>{
@@ -324,7 +344,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
           {[["moves",t("library")],["sets","SETS"],["gap","GAP"]].map(([id,label])=>(
             <button key={id} onClick={()=>setVocabTabAndNotify(id)}
               style={{ padding:"4px 10px", background:"none", border:"none", cursor:"pointer",
-                fontSize:10, fontWeight:800, letterSpacing:1.5, fontFamily:FONT_DISPLAY,
+                fontSize:10, fontWeight:800, letterSpacing:1.5, fontFamily:FONT_DISPLAY, textTransform:"uppercase",
                 color: vocabTab===id ? C.accent : C.textMuted,
                 borderBottom: vocabTab===id ? `2px solid ${C.accent}` : "2px solid transparent" }}>
               {label}
@@ -379,6 +399,28 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
               </span>
             </button>
           ))}
+          {/* Save/Load backup buttons */}
+          <div style={{ display:"flex", flexDirection:"column", gap:6, justifyContent:"center" }}>
+            <button onClick={()=>downloadBackup()}
+              style={{ display:"flex", alignItems:"center", gap:4, background:"none",
+                border:`1px solid ${C.borderLight}`, borderRadius:8, padding:"6px 10px",
+                cursor:"pointer", color:C.textMuted }}>
+              <Ic n="download" s={13} c={C.textMuted}/>
+              <span style={{ fontSize:8, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:1, textTransform:"uppercase" }}>
+                {t("saveBackupBtn")}
+              </span>
+            </button>
+            <button onClick={()=>backupFileRef.current?.click()}
+              style={{ display:"flex", alignItems:"center", gap:4, background:"none",
+                border:`1px solid ${C.borderLight}`, borderRadius:8, padding:"6px 10px",
+                cursor:"pointer", color:C.textMuted }}>
+              <Ic n="upload" s={13} c={C.textMuted}/>
+              <span style={{ fontSize:8, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:1, textTransform:"uppercase" }}>
+                {t("restoreBackupBtn")}
+              </span>
+            </button>
+            <input ref={backupFileRef} type="file" accept=".json" onChange={handleRestoreFile} style={{ display:"none" }}/>
+          </div>
         </div>
       )}
 

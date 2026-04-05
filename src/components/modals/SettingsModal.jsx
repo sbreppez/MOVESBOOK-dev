@@ -6,7 +6,7 @@ import { useT } from "../../hooks/useTranslation";
 import { downloadBackup, restoreBackup } from "./BackupModal";
 import { AttributeModal } from "./AttributeModal";
 
-export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onRestoreRounds, onRestartTour, zoom=1, onZoomChange, customAttrs=[], setCustomAttrs, inline }) => {
+export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onRestoreRounds, onRestartTour, zoom=1, onZoomChange, customAttrs=[], setCustomAttrs, inline, onOpenManual }) => {
   const t = useT();
   const [s,setS]=useState({
     theme:"light", defaultTab:"home", showMastery:true, decaySensitivity:"normal",
@@ -80,7 +80,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
     <div style={{ display:"flex", alignItems:"center", gap:7, margin:"22px 0 6px",
       paddingBottom:7, borderBottom:`2px solid ${panelBrd}` }}>
       {emoji&&<span style={{fontSize:14}}>{emoji}</span>}
-      <span style={{ fontSize:11, fontWeight:800, letterSpacing:2.5, color:panelMut, fontFamily:FONT_DISPLAY }}>{label}</span>
+      <span style={{ fontSize:11, fontWeight:800, letterSpacing:2.5, color:panelMut, fontFamily:FONT_DISPLAY, textTransform:"uppercase" }}>{label}</span>
     </div>
   );
 
@@ -418,8 +418,13 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
             </div>
           </div>
 
-          {/* Save button */}
-          <div style={{ marginTop:24, paddingTop:16, borderTop:`1px solid ${C.borderLight}` }}>
+          {/* User Manual + Restart */}
+          <div style={{ marginTop:24, paddingTop:16, borderTop:`1px solid ${C.borderLight}`, display:"flex", flexDirection:"column", gap:8 }}>
+        {onOpenManual && <button onClick={onOpenManual}
+          style={{ background:"none", border:`1px solid ${C.borderLight}`, borderRadius:8, padding:"9px 14px",
+            color:panelTxt, fontSize:12, cursor:"pointer", fontFamily:FONT_DISPLAY, letterSpacing:1, width:"100%" }}>
+          {"📖 "+t("userManual")}
+        </button>}
         <button onClick={()=>{ onClose(); setTimeout(()=>{ if(typeof onRestartTour==="function") onRestartTour(); },200); }}
           style={{ background:"none", border:`1px solid ${C.borderLight}`, borderRadius:8, padding:"9px 14px",
             color:C.textMuted, fontSize:12, cursor:"pointer", fontFamily:FONT_DISPLAY, letterSpacing:1, width:"100%" }}>

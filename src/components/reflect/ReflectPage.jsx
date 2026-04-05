@@ -219,7 +219,7 @@ export const ReflectPage = ({
               style={{ flex: 1, padding: "9px 4px", border: "none", cursor: "pointer",
                 background: on ? C.bg : "transparent", color: on ? C.accent : C.textSec,
                 borderBottom: `3px solid ${on ? C.accent : "transparent"}`,
-                fontSize: 11, fontWeight: 800, letterSpacing: 1, fontFamily: FONT_DISPLAY,
+                fontSize: 11, fontWeight: 800, letterSpacing: 1, fontFamily: FONT_DISPLAY, textTransform: "uppercase",
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
               {label}
               {count !== null && count > 0 && <span style={{ fontSize: 10, color: on ? C.accent : C.textMuted, background: C.surfaceAlt, borderRadius: 10, padding: "0 5px" }}>{count}</span>}

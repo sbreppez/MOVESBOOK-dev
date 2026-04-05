@@ -9,7 +9,7 @@ import { SettingsModal } from "./SettingsModal";
 import { FeedbackModal } from "./FeedbackModal";
 import { downloadBackup, restoreBackup } from "./BackupModal";
 
-export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersChange, addToast, onOpenManageReminders, onNavigateToStance, settings, onSettingsChange, onClearMoves, onRestoreRounds, onRestartTour, zoom, onZoomChange, customAttrs, setCustomAttrs }) => {
+export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersChange, addToast, onOpenManageReminders, onNavigateToStance, settings, onSettingsChange, onClearMoves, onRestoreRounds, onRestartTour, zoom, onZoomChange, customAttrs, setCustomAttrs, onOpenManual }) => {
   const { C } = useSettings();
   const t = useT();
   const [f,setF]=useState({ nickname:"", age:"", gender:"", goals:"", years:"", startYear:"", startMonth:"", startDay:"", why:"", ...profile });
@@ -187,7 +187,7 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
         <Ic n={showSettingsSection ? "chevD" : "chevR"} s={14} c={C.textMuted} />
       </button>
       {showSettingsSection && (
-        <SettingsModal inline settings={settings} onSave={onSettingsChange} onClearMoves={onClearMoves} onRestoreRounds={onRestoreRounds} onRestartTour={onRestartTour} zoom={zoom} onZoomChange={onZoomChange} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} />
+        <SettingsModal inline settings={settings} onSave={onSettingsChange} onClearMoves={onClearMoves} onRestoreRounds={onRestoreRounds} onRestartTour={onRestartTour} zoom={zoom} onZoomChange={onZoomChange} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} onOpenManual={onOpenManual} />
       )}
 
       {/* ── Feedback ── */}

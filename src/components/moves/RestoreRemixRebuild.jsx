@@ -101,6 +101,8 @@ const TIMER_OPTIONS = [
   { label: "3 MIN",  seconds: 180 },
   { label: "5 MIN",  seconds: 300 },
   { label: "10 MIN", seconds: 600 },
+  { label: "custom",  seconds: "custom" },
+  { label: "noLimit", seconds: -1 },
 ];
 
 // ── Component ───────────────────────────────────────────────────────────────
@@ -134,6 +136,8 @@ export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToa
   const [timerDuration, setTimerDuration] = useState(0);
   const [timerRemaining, setTimerRemaining] = useState(0);
   const timerRef = useRef(null);
+  const [customMinutes, setCustomMinutes] = useState("");
+  const [showCustomInput, setShowCustomInput] = useState(false);
 
   // ── Tree-aware eligibility ──
   const treeEligible = moves.filter(m => m.parentId).length >= 5;
@@ -182,19 +186,24 @@ export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToa
   useEffect(() => {
     if (timerState !== "running") return;
     timerRef.current = setInterval(() => {
-      setTimerRemaining(prev => {
-        if (prev <= 1) {
-          clearInterval(timerRef.current);
-          setTimerState("done");
-          beep(1100, 300, 0.4);
-          try { navigator.vibrate?.([80, 40, 80]); } catch {}
-          return 0;
-        }
-        return prev - 1;
-      });
+      if (timerDuration === -1) {
+        // No limit — count UP
+        setTimerRemaining(prev => prev + 1);
+      } else {
+        setTimerRemaining(prev => {
+          if (prev <= 1) {
+            clearInterval(timerRef.current);
+            setTimerState("done");
+            beep(1100, 300, 0.4);
+            try { navigator.vibrate?.([80, 40, 80]); } catch {}
+            return 0;
+          }
+          return prev - 1;
+        });
+      }
     }, 1000);
     return () => clearInterval(timerRef.current);
-  }, [timerState]);
+  }, [timerState, timerDuration]);
 
   // ── Cleanup timer on unmount ──
   useEffect(() => () => clearInterval(timerRef.current), []);
@@ -234,6 +243,8 @@ export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToa
     setTimerState("idle");
     setTimerDuration(0);
     setTimerRemaining(0);
+    setShowCustomInput(false);
+    setCustomMinutes("");
     setScreen("prompt");
   };
 
@@ -241,7 +252,7 @@ export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToa
     clearInterval(timerRef.current);
     // Capture before reset
     setLastPromptText(getPromptText());
-    setLastTimerDuration(timerDuration);
+    setLastTimerDuration(timerDuration === -1 ? timerRemaining : timerDuration);
     // Save last used
     onRRRChange({
       lastUsed: {
@@ -284,6 +295,8 @@ export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToa
       setTimerState("idle");
       setTimerDuration(0);
       setTimerRemaining(0);
+      setShowCustomInput(false);
+      setCustomMinutes("");
       setScreen("picker");
     } else if (screen === "picker") {
       setScreen("modes");
@@ -498,16 +511,55 @@ export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToa
             {timerState === "picking" && (
               <div style={{ display:"flex", gap:8, marginBottom:16, flexWrap:"wrap", justifyContent:"center" }}>
                 {TIMER_OPTIONS.map(opt => (
-                  <button key={opt.seconds}
-                    onClick={() => { setTimerDuration(opt.seconds); setTimerRemaining(opt.seconds); setTimerState("running"); }}
+                  <button key={opt.label}
+                    onClick={() => {
+                      if (opt.seconds === "custom") {
+                        setShowCustomInput(true);
+                      } else if (opt.seconds === -1) {
+                        setShowCustomInput(false); setTimerDuration(-1); setTimerRemaining(0); setTimerState("running");
+                      } else {
+                        setShowCustomInput(false); setTimerDuration(opt.seconds); setTimerRemaining(opt.seconds); setTimerState("running");
+                      }
+                    }}
                     style={{
-                      background:C.surface, border:`1.5px solid ${mc}`, borderRadius:20,
+                      background: (opt.seconds === "custom" && showCustomInput) ? mc + "22" : C.surface,
+                      border:`1.5px solid ${mc}`, borderRadius:20,
                       padding:"6px 14px", cursor:"pointer", fontFamily:FONT_DISPLAY,
                       fontWeight:700, fontSize:12, color:mc, letterSpacing:0.5,
                     }}>
-                    {opt.label}
+                    {opt.seconds === "custom" ? t("customTimer") : opt.seconds === -1 ? t("noLimitTimer") : opt.label}
                   </button>
                 ))}
+              </div>
+            )}
+
+            {/* Custom timer input */}
+            {timerState === "picking" && showCustomInput && (
+              <div style={{ display:"flex", gap:8, marginBottom:16, justifyContent:"center", alignItems:"center" }}>
+                <input type="number" min="1" max="120" value={customMinutes}
+                  onChange={e => setCustomMinutes(e.target.value)}
+                  placeholder="min"
+                  style={{
+                    width:60, textAlign:"center", padding:"8px 6px", borderRadius:10,
+                    border:`1.5px solid ${mc}`, background:C.surface, color:C.text,
+                    fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:14, outline:"none",
+                  }}/>
+                <button
+                  onClick={() => {
+                    const mins = parseInt(customMinutes, 10);
+                    if (mins > 0) {
+                      setTimerDuration(mins * 60); setTimerRemaining(mins * 60);
+                      setTimerState("running"); setShowCustomInput(false);
+                    }
+                  }}
+                  style={{
+                    padding:"8px 18px", borderRadius:10, border:"none",
+                    background:mc, color:"#fff", fontFamily:FONT_DISPLAY,
+                    fontWeight:700, fontSize:12, letterSpacing:1, cursor:"pointer",
+                    opacity: parseInt(customMinutes, 10) > 0 ? 1 : 0.4,
+                  }}>
+                  {t("go")}
+                </button>
               </div>
             )}
 
@@ -515,19 +567,25 @@ export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToa
             {(timerState === "running" || timerState === "done") && (
               <div style={{ width:"100%", marginBottom:16 }}>
                 <div style={{ textAlign:"center", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:24, color: timerState === "done" ? C.green : mc, marginBottom:8 }}>
-                  {timerState === "done" ? "TIME'S UP" : fmt(timerRemaining)}
+                  {timerState === "done" && timerDuration !== -1 ? "TIME'S UP" : fmt(timerRemaining)}
                 </div>
-                {/* Progress bar */}
-                <div style={{ height:4, borderRadius:2, background:C.surfaceAlt, overflow:"hidden" }}>
+                {/* Progress bar — hidden for no-limit mode */}
+                {timerDuration > 0 && <div style={{ height:4, borderRadius:2, background:C.surfaceAlt, overflow:"hidden" }}>
                   <div style={{
                     height:"100%", borderRadius:2,
                     background: timerState === "done" ? C.green : mc,
-                    width: timerDuration > 0 ? `${((timerDuration - timerRemaining) / timerDuration) * 100}%` : "0%",
+                    width: `${((timerDuration - timerRemaining) / timerDuration) * 100}%`,
                     transition:"width 1s linear",
                   }}/>
-                </div>
+                </div>}
               </div>
             )}
+
+            {/* Hint line */}
+            <div style={{ textAlign:"center", fontSize:11, color:C.textMuted, lineHeight:1.5,
+              padding:"0 16px", marginBottom:8, fontStyle:"italic" }}>
+              {t("rrrHint")}
+            </div>
 
             {/* DONE button */}
             <button onClick={handleDone}
