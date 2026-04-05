@@ -28,6 +28,7 @@ import { MusicFlow } from './components/train/MusicFlow';
 import { Lab } from './components/moves/Lab';
 import { RestoreRemixRebuild } from './components/moves/RestoreRemixRebuild';
 import { ManageReminders } from './components/moves/ManageReminders';
+import { FlashCards } from './components/moves/FlashCards';
 import { MyStanceAssessment } from './components/stance/MyStanceAssessment';
 import { CompetitionSimulator } from './components/battle/CompetitionSimulator';
 import { FlowMap } from './components/battle/FlowMap';
@@ -135,6 +136,9 @@ export default function App() {
   const [rrr, setRRR] = useState(() => {
     try { const s=localStorage.getItem("mb_rrr"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { lastUsed:{ mode:null, moveId:null, moveName:null, date:null } };
   });
+  const [flashcards, setFlashcards] = useState(() => {
+    try { const s=localStorage.getItem("mb_flashcards"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { bestScore:null };
+  });
   const [reminders, setReminders] = useState(() => {
     try { const s=localStorage.getItem("mb_reminders"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { items:[] };
   });
@@ -237,6 +241,7 @@ export default function App() {
   useEffect(()=>{ saveLocal("mb_combos", combos); },[combos]);
   useEffect(()=>{ saveLocal("mb_lab", lab); },[lab]);
   useEffect(()=>{ saveLocal("mb_rrr", rrr); },[rrr]);
+  useEffect(()=>{ saveLocal("mb_flashcards", flashcards); },[flashcards]);
   useEffect(()=>{ saveLocal("mb_reminders", reminders); },[reminders]);
   useEffect(()=>{ saveLocal("mb_calendar", calendar); },[calendar]);
   useEffect(()=>{ saveLocal("mb_stance", stance); },[stance]);
@@ -286,6 +291,7 @@ export default function App() {
       combos:      save("combos"),
       lab:         save("lab"),
       rrr:         save("rrr"),
+      flashcards:  save("flashcards"),
       reminders:   save("reminders"),
       calendar:    save("calendar"),
       stance:      save("stance"),
@@ -319,6 +325,7 @@ export default function App() {
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.combos?.(fbUser.uid, combos); },[combos, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.lab?.(fbUser.uid, lab); },[lab, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.rrr?.(fbUser.uid, rrr); },[rrr, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.flashcards?.(fbUser.uid, flashcards); },[flashcards, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.reminders?.(fbUser.uid, reminders); },[reminders, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.calendar?.(fbUser.uid, calendar); },[calendar, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.stance?.(fbUser.uid, stance); },[stance, fbUser]);
@@ -505,6 +512,7 @@ export default function App() {
   const [showManageReminders,setShowManageReminders]=useState(false);
   const [showLab,setShowLab]=useState(false);
   const [showRRR,setShowRRR]=useState(false);
+  const [showFlashCards,setShowFlashCards]=useState(false);
   const [showStanceAssessment,setShowStanceAssessment]=useState(false);
   const [showCompSim,setShowCompSim]=useState(false);
   const [showMusicFlow,setShowMusicFlow]=useState(false);
@@ -690,7 +698,7 @@ export default function App() {
           <TrainModalCtx.Provider value={{ openModal:(type,idea,onSave)=>{ setTrainMenu(null); setTrainModal({type,idea,onSave}); } }}>
           <TrainMenuCtx.Provider value={{ openMenu:(m)=>setTrainMenu(m), closeMenu:()=>setTrainMenu(null) }}>
             {tab==="home" && <HomePage habits={habits} setHabits={setHabits} injuries={injuries} setInjuries={setInjuries} presession={presession} setPresession={setPresession} ideas={ideas} setIdeas={setIdeas} settings={appSettings} onSettingsChange={setAppSettings} homeStack={homeStack} setHomeStack={setHomeStack} homeIdeas={homeIdeas} setHomeIdeas={setHomeIdeas} homeChecks={homeChecks} setHomeChecks={setHomeChecks}/>}
-            {tab==="moves" && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} catDomains={catDomains} setCatDomains={setCatDomains} sets={sets} setSets={setSets} addToast={addToast} settings={appSettings} onSettingsChange={setAppSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} reminders={reminders} onRemindersChange={setReminders} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}} onOpenManageReminders={()=>setShowManageReminders(true)} onOpenExplore={()=>setShowLab(true)} onOpenRRR={()=>setShowRRR(true)} onOpenCombine={()=>setShowComboMachine(true)} onOpenMap={()=>setShowFlowMap(true)}/>}
+            {tab==="moves" && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} catDomains={catDomains} setCatDomains={setCatDomains} sets={sets} setSets={setSets} addToast={addToast} settings={appSettings} onSettingsChange={setAppSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} reminders={reminders} onRemindersChange={setReminders} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}} onOpenManageReminders={()=>setShowManageReminders(true)} onOpenExplore={()=>setShowLab(true)} onOpenRRR={()=>setShowRRR(true)} onOpenCombine={()=>setShowComboMachine(true)} onOpenMap={()=>setShowFlowMap(true)} onOpenFlashCards={()=>setShowFlashCards(true)}/>}
             {tab==="battle" && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} addToast={addToast} freestyle={freestyle} onFreestyleChange={setFreestyle} rivals={rivals} onRivalsChange={setRivals} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onSimulate={()=>setShowCompSim(true)} battleprep={battleprep} setBattleprep={setBattleprep} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={()=>setBattlePrepSeed(null)} onOpenSharedCalendar={(im)=>{setCalendarInitialMonth(im||null);}}/>}
             {tab==="reflect" && <ReflectPage ideas={ideas} setIdeas={setIdeas} moves={moves} setMoves={setMovesGrad} reps={reps} sparring={sparring} musicflow={musicflow} habits={habits} calendar={calendar} setCalendar={setCalendar} cats={cats} catColors={catColors} settings={appSettings} onSettingsChange={setAppSettings} addToast={addToast} stance={stance} battleprep={battleprep} onToggleBattlePrepTask={(planId,dateStr,taskIdx)=>{setBattleprep(prev=>{const plans=(prev.plans||[]).map(p=>{if(p.id!==planId) return p;const key=dateStr+"-"+taskIdx;return {...p, completedTasks:{...(p.completedTasks||{}), [key]:!(p.completedTasks||{})[key]}};});return {...prev, plans};});}} onOpenStanceAssessment={()=>setShowStanceAssessment(true)} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onSubTabChange={setSubTab} onGoToPrep={(seed)=>{setBattlePrepSeed(seed);setTab("battle");}} initialDay={calendarInitialDay} initialMonth={calendarInitialMonth} sets={sets} onAddTrigger={addTick} parentSubTab={subTab} reports={reports} injuries={injuries}/>}
           </TrainMenuCtx.Provider>
@@ -742,6 +750,9 @@ export default function App() {
           {showRRR&&<RestoreRemixRebuild moves={moves} catColors={catColors} rrr={rrr}
             onRRRChange={setRRR} addToast={addToast} addCalendarEvent={addCalendarEvent}
             onClose={()=>setShowRRR(false)}/>}
+          {showFlashCards&&<FlashCards sets={sets} moves={moves} flashcards={flashcards}
+            onFlashcardsChange={setFlashcards} addCalendarEvent={addCalendarEvent} addToast={addToast}
+            onClose={()=>setShowFlashCards(false)}/>}
           {showFlowMap&&<FlowMap moves={moves} cats={cats} catColors={catColors}
             flowmap={flowmap} onFlowmapChange={setFlowmap}
             combos={combos}
@@ -781,7 +792,7 @@ export default function App() {
 
         {/* ── Bottom Bar — 4 tabs + centre Add ── */}
         {!showTour&&(()=>{
-          const anyOverlay = showRepCounter||showSparring||showComboMachine||showManageReminders||showRRR||showLab||showProfile||showManual||showSettings||showStanceAssessment||showMusicFlow||showCompSim||showPostSessionPrompt;
+          const anyOverlay = showRepCounter||showSparring||showComboMachine||showManageReminders||showRRR||showFlashCards||showLab||showProfile||showManual||showSettings||showStanceAssessment||showMusicFlow||showCompSim||showPostSessionPrompt;
           const tabs = [{id:"home",icon:"home",label:tr("home")},{id:"moves",icon:"book",label:tr("vocab")},null,{id:"battle",icon:"sword",label:tr("battle")},{id:"reflect",icon:"barChart",label:tr("reflect")}];
           const handleTabChange = (t) => { setTrainMenu(null); setTab(t); setAddTick(0); setAddTick2(0); setSubTab(t==="moves"?"moves":t==="battle"?"plan":t==="reflect"?"calendar":""); };
           return (

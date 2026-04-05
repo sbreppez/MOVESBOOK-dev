@@ -23,7 +23,7 @@ import { GAPTab } from './GAPTab';
 import { MoveTree } from './MoveTree';
 import { downloadBackup, restoreBackup } from '../modals/BackupModal';
 
-export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains={}, setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore, onOpenRRR, onOpenCombine, onOpenMap }) => {
+export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains={}, setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore, onOpenRRR, onOpenCombine, onOpenMap, onOpenFlashCards }) => {
   const t = useT();
   const { moveCountStr, resultCountStr } = usePlural();
   const { settings:ctxSettings } = useSettings();
@@ -370,6 +370,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
             </button>}
           </Fragment>}
           {vocabTab==="sets"&&<Fragment>
+            {sets.filter(s=>(s.moveIds?.length||0)>0).length>=1&&onOpenFlashCards&&<button onClick={onOpenFlashCards} style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}><Ic n="cards" s={16}/></button>}
             <button onClick={()=>setSetsView(v=>v==="list"?"tiles":"list")} style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}><Ic n={setsView==="list"?"grid":"list"} s={16}/></button>
             <button onClick={()=>setReorderMode(r=>!r)}
               style={{ background:reorderMode?C.accent:"none", border:"none", cursor:"pointer", padding:"4px 8px", borderRadius:5,
