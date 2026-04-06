@@ -53,7 +53,7 @@ export const HabitCard = ({ habit, onCheckIn, onEdit, onDelete }) => {
             display:"flex", alignItems:"center", justifyContent:"center",
             fontSize:doneToday?20:18, transition:"all 0.18s",
             boxShadow:doneToday?`0 2px 10px ${color}55`:"none" }}>
-          {doneToday?"✓":(habit.emoji||"🎯")}
+          {doneToday?"✓":(habit.emoji||<Ic n="target" s={16}/>)}
         </button>
 
         {/* Name + info — tap to expand */}

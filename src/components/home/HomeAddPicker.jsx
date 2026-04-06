@@ -96,14 +96,14 @@ export const HomeAddPicker = ({ open, onClose, homeStack, setHomeStack, homeIdea
     </button>
   );
 
-  const itemRow = (emoji, name, subtitle, onClick) => (
+  const itemRow = (emojiOrIcon, name, subtitle, onClick) => (
     <button onClick={onClick}
       style={{
         display: "flex", alignItems: "center", gap: 10, width: "100%", textAlign: "left",
         padding: "10px 12px", marginBottom: 4, borderRadius: 10, cursor: "pointer",
         background: C.surface, border: `1px solid ${C.border}`, transition: "background 0.15s",
       }}>
-      <span style={{ fontSize: 16, flexShrink: 0 }}>{emoji}</span>
+      <span style={{ fontSize: 16, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>{emojiOrIcon}</span>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontWeight: 800, fontSize: 13, fontFamily: FONT_DISPLAY, color: C.text,
           overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
@@ -141,10 +141,10 @@ export const HomeAddPicker = ({ open, onClose, homeStack, setHomeStack, homeIdea
             </div>
           )}
           {availableHabits.map(h => (
-            itemRow(h.emoji || "✅", h.name, h.frequency, () => handleAddGoalHabit(h.id))
+            itemRow(h.emoji || <Ic n="check" s={16}/>, h.name, h.frequency, () => handleAddGoalHabit(h.id))
           ))}
           {availableGoals.map(g => (
-            itemRow("🎯", g.title, g.byWhen ? `by ${g.byWhen}` : "", () => handleAddGoalHabit(g.id))
+            itemRow(<Ic n="target" s={16}/>, g.title, g.byWhen ? `by ${g.byWhen}` : "", () => handleAddGoalHabit(g.id))
           ))}
         </div>
       )}

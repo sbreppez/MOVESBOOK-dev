@@ -26,9 +26,9 @@ const beep = (freq, dur, vol) => {
 
 // ── Mode definitions ────────────────────────────────────────────────────────
 const MODES = [
-  { key: "restore", color: () => C.blue,   emoji: "\u{1F535}" },
-  { key: "remix",   color: () => C.yellow, emoji: "\u{1F7E1}" },
-  { key: "rebuild", color: () => C.accent, emoji: "\u{1F534}" },
+  { key: "restore", color: () => C.blue   },
+  { key: "remix",   color: () => C.yellow },
+  { key: "rebuild", color: () => C.accent },
 ];
 
 const modeColor = (key) => {
@@ -492,7 +492,7 @@ export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToa
                   padding:"10px 16px", cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11,
                   letterSpacing:0.5,
                 }}>
-                <span>🔀</span> {t("differentPrompt")}
+                <Ic n="shuffle" s={14} c={C.textSec}/> {t("differentPrompt")}
               </button>
               <button onClick={() => setTimerState(timerState === "idle" ? "picking" : "idle")}
                 style={{
@@ -594,7 +594,7 @@ export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToa
                 background:C.green, color:"#fff", fontFamily:FONT_DISPLAY, fontWeight:900,
                 fontSize:14, letterSpacing:1.2, cursor:"pointer",
               }}>
-              ✓ {t("done") || "DONE"}
+              <Ic n="check" s={14} c="#fff"/> {t("done") || "DONE"}
             </button>
           </div>
         )}
@@ -668,7 +668,7 @@ export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToa
                 background:C.green, color:"#fff", fontFamily:FONT_DISPLAY, fontWeight:900,
                 fontSize:14, letterSpacing:1.2, cursor:"pointer",
               }}>
-              ✓ {t("saveAndClose")}
+              <Ic n="check" s={14} c="#fff"/> {t("saveAndClose")}
             </button>
           </div>
         )}

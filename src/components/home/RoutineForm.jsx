@@ -20,7 +20,7 @@ export const RoutineForm = ({ routine, onSave, onCancel }) => {
   const isEdit = !!routine;
 
   const [f, setF] = useState({
-    emoji: routine?.emoji || "🏋️",
+    emoji: routine?.emoji || "",
     name: routine?.name || "",
     duration: routine?.duration || 30,
     description: routine?.description || "",

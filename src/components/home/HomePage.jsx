@@ -297,18 +297,18 @@ export const HomePage = ({
     });
   };
 
-  // Helper: resolve emoji for reorder/manage rows
+  // Helper: resolve emoji + fallback icon for reorder/manage rows
   const resolveEmoji = (tile) => {
-    if (tile.type === 'routine') return tile.emoji || "🏋️";
+    if (tile.type === 'routine') return { emoji: tile.emoji || null, icon: "dumbbell" };
     if (tile.type === 'idea') {
       const idea = homeIdeas?.find(i => i.id === tile.id);
-      return idea?.emoji || "💡";
+      return { emoji: idea?.emoji || null, icon: "bulb" };
     }
     if (tile.type === 'goalhabit') {
       const habit = habits?.find(h => String(h.id) === String(tile.refId));
-      return habit?.emoji || "🎯";
+      return { emoji: habit?.emoji || null, icon: "target" };
     }
-    return "📋";
+    return { emoji: null, icon: "clipboard" };
   };
 
   // Helper: resolve name for reorder/manage rows
@@ -444,7 +444,7 @@ export const HomePage = ({
                 display: "flex", alignItems: "center", gap: 10, padding: "10px 12px",
                 borderRadius: 10, background: C.surface, border: `1px solid ${C.border}`,
               }}>
-                <span style={{ fontSize: 18, flexShrink: 0 }}>{tile.emoji || "🏋️"}</span>
+                {tile.emoji ? <span style={{ fontSize: 18, flexShrink: 0 }}>{tile.emoji}</span> : <Ic n="dumbbell" s={18}/>}
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontWeight: 800, fontSize: 13, fontFamily: FONT_DISPLAY, color: C.text,
                     overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
@@ -484,7 +484,7 @@ export const HomePage = ({
                 display: "flex", alignItems: "center", gap: 10, padding: "10px 12px",
                 borderRadius: 10, background: C.surface, border: `1px solid ${C.border}`,
               }}>
-                <span style={{ fontSize: 18, flexShrink: 0 }}>{resolveEmoji(tile)}</span>
+                {(() => { const { emoji, icon } = resolveEmoji(tile); return emoji ? <span style={{ fontSize: 18, flexShrink: 0 }}>{emoji}</span> : <Ic n={icon} s={18}/>; })()}
                 <div style={{ flex: 1, minWidth: 0, fontWeight: 800, fontSize: 13, fontFamily: FONT_DISPLAY,
                   color: C.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                   {resolveName(tile)}

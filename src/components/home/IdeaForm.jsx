@@ -9,7 +9,7 @@ export const IdeaForm = ({ idea, onSave, onCancel }) => {
   const t = useT();
 
   const [f, setF] = useState({
-    emoji: idea?.emoji || "💡",
+    emoji: idea?.emoji || "",
     title: idea?.title || "",
     text: idea?.text || "",
     link: idea?.link || "",

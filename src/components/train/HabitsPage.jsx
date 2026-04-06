@@ -159,7 +159,7 @@ export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
                       <div style={{ fontWeight:800, fontSize:13, color:C.text, fontFamily:FONT_DISPLAY,
                         letterSpacing:0.5, lineHeight:1.3,
                         overflow:isOpen?"visible":"hidden", textOverflow:"ellipsis", whiteSpace:isOpen?"normal":"nowrap" }}>
-                        {h.emoji||"🎯"} {h.name}
+                        {h.emoji || <Ic n="target" s={16}/>} {h.name}
                       </div>
                       {h.why&&<div style={{ fontSize:10, color:C.textSec, fontStyle:"italic", marginTop:2, lineHeight:1.4,
                         overflow:isOpen?"visible":"hidden", textOverflow:"ellipsis", whiteSpace:isOpen?"normal":"nowrap" }}>{h.why}</div>}

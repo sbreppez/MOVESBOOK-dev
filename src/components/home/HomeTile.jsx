@@ -11,10 +11,11 @@ export const HomeTile = ({ tile, isChecked, onCheck, onRemove, onEdit, habits, i
   const [expanded, setExpanded] = useState(false);
 
   // Resolve data based on tile type
-  let emoji, name, description, showCheckbox = false, extraInfo = null, isOrphan = false;
+  let emoji = null, fallbackIcon = null, name, description, showCheckbox = false, extraInfo = null, isOrphan = false;
 
   if (tile.type === 'routine') {
-    emoji = tile.emoji || "🏋️";
+    emoji = tile.emoji || null;
+    fallbackIcon = "dumbbell";
     name = tile.name || "";
     description = tile.description || "";
     showCheckbox = tile.checkable;
@@ -23,7 +24,8 @@ export const HomeTile = ({ tile, isChecked, onCheck, onRemove, onEdit, habits, i
     }
   } else if (tile.type === 'idea') {
     const idea = homeIdeas?.find(i => i.id === tile.id);
-    emoji = idea?.emoji || "💡";
+    emoji = idea?.emoji || null;
+    fallbackIcon = "bulb";
     name = idea?.title || "";
     description = idea?.text || "";
     if (idea?.link) {
@@ -32,14 +34,16 @@ export const HomeTile = ({ tile, isChecked, onCheck, onRemove, onEdit, habits, i
   } else if (tile.type === 'goalhabit') {
     const habit = habits?.find(h => String(h.id) === String(tile.refId));
     if (habit) {
-      emoji = habit.emoji || "✅";
+      emoji = habit.emoji || null;
+      fallbackIcon = "check";
       name = habit.name || "";
       description = "";
       showCheckbox = true;
     } else {
       const goal = ideas?.find(i => String(i.id) === String(tile.refId) && (i.type === 'goal' || i.type === 'target'));
       if (goal) {
-        emoji = "🎯";
+        emoji = null;
+        fallbackIcon = "target";
         name = goal.title || "";
         description = goal.text || "";
         if (goal.byWhen) {
@@ -49,7 +53,8 @@ export const HomeTile = ({ tile, isChecked, onCheck, onRemove, onEdit, habits, i
       } else {
         // Orphan: referenced habit/goal was deleted
         isOrphan = true;
-        emoji = "❓";
+        emoji = null;
+        fallbackIcon = "info";
         name = t("deleted") || "Deleted";
         description = "";
       }
@@ -70,9 +75,9 @@ export const HomeTile = ({ tile, isChecked, onCheck, onRemove, onEdit, habits, i
         opacity: isOrphan ? 0.45 : isChecked ? 0.65 : 1,
         transition: "all 0.2s",
       }}>
-      {/* Emoji */}
-      <span style={{ fontSize: 20, flexShrink: 0, width: 28, textAlign: "center", marginTop: 2 }}>
-        {emoji}
+      {/* Emoji / Icon */}
+      <span style={{ fontSize: 20, flexShrink: 0, width: 28, textAlign: "center", marginTop: 2, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        {emoji ? emoji : <Ic n={fallbackIcon} s={16} c={isOrphan ? C.textMuted : undefined}/>}
       </span>
 
       {/* Content */}
