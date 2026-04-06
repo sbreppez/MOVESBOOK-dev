@@ -7,6 +7,7 @@ import { BodyCheckIn } from '../shared/BodyCheckIn';
 import { TrainingLog } from '../shared/TrainingLog';
 import { Modal } from '../shared/Modal';
 import { Btn } from '../shared/Btn';
+import { compressImage } from '../../utils/imageUtils';
 
 // ── Helpers (copied from Sparring — module-scoped, not exported) ────────────
 
@@ -653,28 +654,10 @@ export const CompetitionSimulator = ({
       } catch {}
     };
 
-    const handlePhotoInput = (e) => {
+    const handlePhotoInput = async (e) => {
       const file = e.target.files?.[0];
       if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        const img = new Image();
-        img.onload = () => {
-          const max = 1080;
-          let w = img.width, h = img.height;
-          if (w > max || h > max) {
-            const scale = max / Math.max(w, h);
-            w = Math.round(w * scale);
-            h = Math.round(h * scale);
-          }
-          const c = document.createElement("canvas");
-          c.width = w; c.height = h;
-          c.getContext("2d").drawImage(img, 0, 0, w, h);
-          setSharePhoto(c.toDataURL("image/jpeg", 0.85));
-        };
-        img.src = ev.target.result;
-      };
-      reader.readAsDataURL(file);
+      setSharePhoto(await compressImage(file, 1080));
     };
 
     return (

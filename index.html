@@ -237,6 +237,7 @@ firebase.initializeApp({
             if (data.milestonesShown) { try { const p=JSON.parse(data.milestonesShown); if(Array.isArray(p)) localStorage.setItem('mb_milestones_shown', data.milestonesShown); } catch{} }
             if (data.presession)  { try { const p=JSON.parse(data.presession);  if(p&&typeof p==="object") localStorage.setItem('mb_presession',  data.presession);  } catch{} }
             if (data.injuries)    { try { const p=JSON.parse(data.injuries);    if(Array.isArray(p))            localStorage.setItem('mb_injuries',    data.injuries);    } catch{} }
+            if (data.profilePhoto) localStorage.setItem('mb_profile_photo', data.profilePhoto);
           }
           if (loginDiv) { loginDiv.style.opacity='0'; setTimeout(function(){ loginDiv.style.display='none'; },300); }
           window.dispatchEvent(new Event('mb-auth-resolved'));
@@ -279,6 +280,7 @@ firebase.initializeApp({
             if (d.milestonesShown) localStorage.setItem('mb_milestones_shown', d.milestonesShown);
             if (d.presession)  localStorage.setItem('mb_presession',  d.presession);
             if (d.injuries)    localStorage.setItem('mb_injuries',    d.injuries);
+            if (d.profilePhoto) localStorage.setItem('mb_profile_photo', d.profilePhoto);
           } catch(e){}
         });
       } else {
@@ -288,7 +290,7 @@ firebase.initializeApp({
          'mb_rivals','mb_reps','mb_sparring','mb_combos','mb_lab','mb_rrr','mb_reminders',
          'mb_calendar','mb_stance','mb_musicflow','mb_freestyle','mb_reflections',
          'mb_battleprep','mb_flowmap','mb_cat_domains','mb_reports','mb_milestones_shown',
-         'mb_presession','mb_injuries'].forEach(function(k){ localStorage.removeItem(k); });
+         'mb_presession','mb_injuries','mb_profile_photo'].forEach(function(k){ localStorage.removeItem(k); });
         if (loginDiv) { loginDiv.style.display='flex'; loginDiv.style.opacity='1'; }
         if (_unsubSnap) { _unsubSnap(); _unsubSnap=null; }
       }

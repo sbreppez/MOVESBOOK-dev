@@ -7,6 +7,7 @@ import { Modal } from '../shared/Modal';
 import { BottomSheet } from '../shared/BottomSheet';
 import { useT } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
+import { compressImage } from '../../utils/imageUtils';
 
 const DOMAINS = ["Musicality","Performance","Technique","Variety","Creativity","Personality"];
 const DOMAIN_KEYS = { Musicality:"musicality", Performance:"performance", Technique:"technique", Variety:"variety", Creativity:"creativity", Personality:"personality" };
@@ -250,26 +251,11 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
       }));
     };
 
-    const handlePhoto = (e) => {
+    const handlePhoto = async (e) => {
       const file = e.target.files?.[0];
       if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        const img = new Image();
-        img.onload = () => {
-          const size = 200;
-          const c = document.createElement("canvas");
-          c.width = size; c.height = size;
-          const ctx = c.getContext("2d");
-          const min = Math.min(img.width, img.height);
-          const sx = (img.width - min) / 2;
-          const sy = (img.height - min) / 2;
-          ctx.drawImage(img, sx, sy, min, min, 0, 0, size, size);
-          setF(prev => ({ ...prev, photo: c.toDataURL("image/jpeg", 0.8) }));
-        };
-        img.src = ev.target.result;
-      };
-      reader.readAsDataURL(file);
+      const dataUrl = await compressImage(file, 200, { crop: true, quality: 0.8 });
+      setF(prev => ({ ...prev, photo: dataUrl }));
       e.target.value = "";
     };
 

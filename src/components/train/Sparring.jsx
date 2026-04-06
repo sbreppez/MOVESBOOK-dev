@@ -7,6 +7,7 @@ import { useSettings } from '../../hooks/useSettings';
 import { BodyCheckIn } from '../shared/BodyCheckIn';
 import { TrainingLog } from '../shared/TrainingLog';
 import { Spar1v1 } from './Spar1v1';
+import { compressImage } from '../../utils/imageUtils';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -1101,29 +1102,10 @@ const ShareCard = ({ session, mode, prBroken, photo, onPhotoChange, onClose, t }
 
   useEffect(() => { generateCard(); }, [generateCard]);
 
-  const handlePhotoInput = (e) => {
+  const handlePhotoInput = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      // Resize to max 1080px
-      const img = new Image();
-      img.onload = () => {
-        const max = 1080;
-        let w = img.width, h = img.height;
-        if (w > max || h > max) {
-          const scale = max / Math.max(w, h);
-          w = Math.round(w * scale);
-          h = Math.round(h * scale);
-        }
-        const c = document.createElement("canvas");
-        c.width = w; c.height = h;
-        c.getContext("2d").drawImage(img, 0, 0, w, h);
-        onPhotoChange(c.toDataURL("image/jpeg", 0.85));
-      };
-      img.src = ev.target.result;
-    };
-    reader.readAsDataURL(file);
+    onPhotoChange(await compressImage(file, 1080));
   };
 
   const handleShare = async () => {

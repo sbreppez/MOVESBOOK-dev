@@ -8,6 +8,7 @@ import { TRANSLATIONS } from './constants/translations';
 import { SCHEMA_VERSION, migrateMove, loadLocal, saveLocal, debounce } from './utils/storage';
 import { migrateOldAttributes } from './utils/attributeHelpers';
 import { Ic } from './components/shared/Ic';
+import { ProfileAvatar } from './components/shared/ProfileAvatar';
 import { Toast } from './components/shared/Toast';
 import { NoteModal } from './components/train/NoteModal';
 import { GoalModal } from './components/train/GoalModal';
@@ -139,6 +140,9 @@ export default function App() {
   const [flashcards, setFlashcards] = useState(() => {
     try { const s=localStorage.getItem("mb_flashcards"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { bestScore:null };
   });
+  const [profilePhoto, setProfilePhoto] = useState(() => {
+    try { const s=localStorage.getItem("mb_profile_photo"); if(s) return s; } catch{} return null;
+  });
   const [reminders, setReminders] = useState(() => {
     try { const s=localStorage.getItem("mb_reminders"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { items:[] };
   });
@@ -249,6 +253,10 @@ export default function App() {
   useEffect(()=>{ saveLocal("mb_freestyle", freestyle); },[freestyle]);
   useEffect(()=>{ saveLocal("mb_reflections", reflections); },[reflections]);
   useEffect(()=>{ saveLocal("mb_rivals", rivals); },[rivals]);
+  useEffect(()=>{
+    if(profilePhoto) { try { localStorage.setItem("mb_profile_photo", profilePhoto); } catch{} }
+    else localStorage.removeItem("mb_profile_photo");
+  },[profilePhoto]);
   useEffect(()=>{ saveLocal("mb_battleprep", battleprep); },[battleprep]);
   useEffect(()=>{ saveLocal("mb_flowmap", flowmap); },[flowmap]);
   useEffect(()=>{ saveLocal("mb_reports", reports); },[reports]);
@@ -308,6 +316,7 @@ export default function App() {
       homeStack:   save("homeStack"),
       homeIdeas:   save("homeIdeas"),
       homeChecks:  save("homeChecks"),
+      profilePhoto: save("profilePhoto"),
     };
   }, []);
 
@@ -342,6 +351,7 @@ export default function App() {
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.homeStack?.(fbUser.uid, homeStack); },[homeStack, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.homeIdeas?.(fbUser.uid, homeIdeas); },[homeIdeas, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.homeChecks?.(fbUser.uid, homeChecks); },[homeChecks, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.profilePhoto?.(fbUser.uid, profilePhoto); },[profilePhoto, fbUser]);
 
   // ── Auth resolution ────────────────────────────────────────────────────────
   useEffect(()=>{
@@ -419,6 +429,8 @@ export default function App() {
           if (hi) { try { const p=JSON.parse(hi); if(Array.isArray(p)) setHomeIdeas(p); } catch {} }
           const hc = localStorage.getItem("mb_home_checks");
           if (hc) { try { const p=JSON.parse(hc); if(p&&typeof p==="object") setHomeChecks(p); } catch {} }
+          const ppho = localStorage.getItem("mb_profile_photo");
+          if (ppho) setProfilePhoto(ppho);
           if (p) { try { const pp=JSON.parse(p); if(pp&&Object.values(pp).some(v=>v)) setProfile(pp); } catch{} }
           const st = localStorage.getItem("mb_settings");
           if (st) {
@@ -431,6 +443,14 @@ export default function App() {
           // Show tour for first-time users (no tour record for this uid)
           const uid = window.__MB_USER__.uid;
           if (!localStorage.getItem('mb_toured_' + uid)) setShowTour(true);
+          // One-time migration: push existing rival photos to Firestore
+          if (!localStorage.getItem("mb_rivals_photo_migrated")) {
+            const rvMig = localStorage.getItem("mb_rivals");
+            if (rvMig) {
+              try { const p=JSON.parse(rvMig); if(Array.isArray(p)&&p.some(r=>r.photo)) { window.__MB_DB__?.save(uid,"rivals",p); } } catch{}
+            }
+            localStorage.setItem("mb_rivals_photo_migrated","1");
+          }
         } catch {}
       } else {
         setFbUser(null);
@@ -456,6 +476,7 @@ export default function App() {
         setMusicflow({ sessions:[] });
         setReflections({ lastCategory:-1, lastDate:null });
         setRivals([]);
+        setProfilePhoto(null);
         setBattleprep({ plans:[], history:[] });
         setReports({ milestones:[], weeklyDismissed:null });
         setMilestonesShown([]);
@@ -658,12 +679,8 @@ export default function App() {
               title="Settings">
               <Ic n="cog" s={18} c={C.brownLight}/>
             </button>
-            {fbUser?.photo
-              ? <button id="tour-profile" onClick={()=>setShowProfile(true)} style={{ background:"none", border:"none", cursor:"pointer", padding:2, display:"flex", borderRadius:"50%", overflow:"hidden" }}>
-                  <img src={fbUser.photo} alt={fbUser.name} style={{ width:26, height:26, borderRadius:"50%", objectFit:"cover", border:`1.5px solid ${C.border}` }}/>
-                </button>
-              : <button id="tour-profile" onClick={()=>setShowProfile(true)} style={{ background:"none", border:"none", cursor:"pointer", color:C.brownLight, padding:5 }}><Ic n="user" s={17} c={C.brownLight}/></button>
-            }
+            <ProfileAvatar profilePhoto={profilePhoto} fbUser={fbUser} nickname={profile.nickname}
+              size={26} C={C} onClick={()=>setShowProfile(true)} id="tour-profile" />
             <button onClick={()=>setShowManual(true)}
               style={{ background:"none", border:"none", cursor:"pointer", padding:"3px 5px",
                 borderRadius:6, color:C.brownLight, fontWeight:900, fontSize:16,
@@ -774,7 +791,8 @@ export default function App() {
             onOpenManageReminders={()=>{ setShowProfile(false); setShowManageReminders(true); }}
             onNavigateToStance={()=>{ setShowProfile(false); setTab("reflect"); setSubTab("stance"); }}
             settings={appSettings} onSettingsChange={setAppSettings} onClearMoves={()=>setMoves([])} onRestoreRounds={()=>setRounds(INIT_ROUNDS)} onRestartTour={()=>{setShowProfile(false);setShowTour(true);}} zoom={zoom} onZoomChange={handleZoomChange} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs}
-            onOpenManual={()=>{setShowProfile(false);setShowManual(true);}}/>}
+            onOpenManual={()=>{setShowProfile(false);setShowManual(true);}}
+            profilePhoto={profilePhoto} onProfilePhotoChange={setProfilePhoto} fbUser={fbUser}/>}
           {showManual&&<ManualModal onClose={()=>setShowManual(false)}/>}
           {showSettings&&<SettingsModal
             onClose={()=>setShowSettings(false)}

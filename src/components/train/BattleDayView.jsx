@@ -4,6 +4,7 @@ import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
 import { CAT_COLORS } from '../../constants/categories';
 import { PRESET_META, DEFAULT_CHECKLIST, BATTLE_MOODS, BATTLE_RESULTS, getPreparationStats, toYMD } from './battlePrepHelpers';
+import { compressImage } from '../../utils/imageUtils';
 
 // ── Battle Day View ─────────────────────────────────────────────────────────
 // Flow: pre-battle → reflection → share card → (plan complete if last battle) → done
@@ -519,24 +520,10 @@ const BattleShareCard = ({ plan, battle, meta, prepStats, reflection, onClose, t
 
   useEffect(() => { generateCard(); }, [generateCard]);
 
-  const handlePhotoInput = (e) => {
+  const handlePhotoInput = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const img = new Image();
-      img.onload = () => {
-        const maxW = 1080;
-        const scale = Math.min(1, maxW / img.width);
-        const canvas = document.createElement("canvas");
-        canvas.width = img.width * scale;
-        canvas.height = img.height * scale;
-        canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
-        setPhoto(canvas.toDataURL("image/jpeg", 0.85));
-      };
-      img.src = reader.result;
-    };
-    reader.readAsDataURL(file);
+    setPhoto(await compressImage(file, 1080));
   };
 
   const handleShare = async () => {

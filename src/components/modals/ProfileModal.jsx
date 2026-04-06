@@ -9,8 +9,10 @@ import { SettingsModal } from "./SettingsModal";
 import { FeedbackModal } from "./FeedbackModal";
 import { LegalModal } from "./LegalModal";
 import { downloadBackup, restoreBackup } from "./BackupModal";
+import { ProfileAvatar } from "../shared/ProfileAvatar";
+import { compressImage } from "../../utils/imageUtils";
 
-export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersChange, addToast, onOpenManageReminders, onNavigateToStance, settings, onSettingsChange, onClearMoves, onRestoreRounds, onRestartTour, zoom, onZoomChange, customAttrs, setCustomAttrs, onOpenManual }) => {
+export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersChange, addToast, onOpenManageReminders, onNavigateToStance, settings, onSettingsChange, onClearMoves, onRestoreRounds, onRestartTour, zoom, onZoomChange, customAttrs, setCustomAttrs, onOpenManual, profilePhoto, onProfilePhotoChange, fbUser }) => {
   const { C } = useSettings();
   const t = useT();
   const [f,setF]=useState({ nickname:"", age:"", gender:"", goals:"", years:"", startYear:"", startMonth:"", startDay:"", why:"", ...profile });
@@ -19,6 +21,7 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
   const [showFeedbackSection, setShowFeedbackSection] = useState(false);
   const [legalPage, setLegalPage] = useState(null);
   const fileInputRef = useRef(null);
+  const photoInputRef = useRef(null);
   const [showNoteAdd, setShowNoteAdd] = useState(false);
   const [noteText, setNoteText] = useState("");
   const noteItems = reminders?.items || [];
@@ -32,6 +35,18 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
     addToast({ icon: "mapPin", title: t("noteSaved") });
     setNoteText("");
     setShowNoteAdd(false);
+  };
+  const handleProfilePhoto = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const dataUrl = await compressImage(file, 200, { crop: true, quality: 0.8 });
+    if (onProfilePhotoChange) onProfilePhotoChange(dataUrl);
+    if (addToast) addToast({ icon: "camera", title: t("photoUpdated") });
+    e.target.value = "";
+  };
+  const handleRemovePhoto = () => {
+    if (onProfilePhotoChange) onProfilePhotoChange(null);
+    if (addToast) addToast({ icon: "camera", title: t("photoRemoved") });
   };
   const handleSaveAndClose = () => { onSave(f); onClose(); };
   const handleCancel = () => { onSettingsChange(settingsSnapshot.current); onClose(); };
@@ -51,6 +66,29 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
       </div>
       {/* Scrollable content */}
       <div style={{ flex:1, overflowY:"auto", padding:18 }}>
+
+      {/* ── Profile photo ── */}
+      <div style={{ display:"flex", flexDirection:"column", alignItems:"center", marginBottom:20 }}>
+        <div style={{ position:"relative", cursor:"pointer" }} onClick={()=>photoInputRef.current?.click()}>
+          <ProfileAvatar profilePhoto={profilePhoto} fbUser={fbUser} nickname={f.nickname || profile.nickname}
+            size={80} C={C} />
+          <div style={{ position:"absolute", bottom:0, right:0, width:24, height:24, borderRadius:"50%",
+            background:C.accent, display:"flex", alignItems:"center", justifyContent:"center",
+            border:`2px solid ${C.bg}` }}>
+            <Ic n="camera" s={12} c="#fff"/>
+          </div>
+        </div>
+        {profilePhoto && (
+          <button onClick={handleRemovePhoto}
+            style={{ background:"none", border:"none", cursor:"pointer", marginTop:8,
+              fontSize:11, fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:1,
+              color:C.accent, textTransform:"uppercase" }}>
+            {t("removeProfilePhoto")}
+          </button>
+        )}
+        <input ref={photoInputRef} type="file" accept="image/*" style={{ display:"none" }} onChange={handleProfilePhoto}/>
+      </div>
+
       {sectionHdr(t("identity"),"user")}
       <div style={{ marginBottom:14 }}>
         <label style={lbl()}>{t("nickname")}</label>
