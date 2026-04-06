@@ -212,7 +212,7 @@ export const SetDetailModal = ({ item, onClose, onSave, type="set", allMoves=[],
       <div style={{ marginBottom:16 }}>
         <label style={lbl()}>{isSet?t("howWellKnowSet"):t("howWellKnowRound")} — <span style={{ color:masteryColor(mastery), fontWeight:800 }}>{mastery}%</span></label>
         <div style={{ display:"flex", gap:6, alignItems:"center", marginBottom:6, flexWrap:"wrap" }}>
-          {[[0,"🌱 "+t("justStarted")],[25,"🔧 "+t("learning")],[50,"⚡ "+t("gettingThere")],[75,"🔥 "+t("almostThere")],[100,"💎 "+t("mastered")]].map(([v,label])=>(
+          {[[0,t("justStarted")],[25,t("learning")],[50,t("gettingThere")],[75,t("almostThere")],[100,t("mastered")]].map(([v,label])=>(
             <button key={v} onClick={()=>setMastery(v)}
               style={{ fontSize:11, padding:"3px 8px", borderRadius:12, cursor:"pointer", fontFamily:FONT_BODY,
                 background: mastery===v ? masteryColor(v) : C.surfaceAlt,

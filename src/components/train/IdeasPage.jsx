@@ -273,7 +273,7 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
         {(()=>{
           const order = (ideaSettings.trainTabOrder||["goals","habits","notes","prep"]);
           const planCount = battleprep?.plans?.length || 0;
-          const tabDefs = { goals:["goals","🎯 GOALS",goals.length], notes:["notes","📝 NOTES",notes.length], habits:["habits","🔥 HABITS",null], prep:["prep","⚔️ PREP",planCount||null] };
+          const tabDefs = { goals:["goals","GOALS",goals.length], notes:["notes","NOTES",notes.length], habits:["habits","HABITS",null], prep:["prep","PREP",planCount||null] };
           return order.map(tabId => tabDefs[tabId]||tabDefs.goals);
         })().map(([id,label,count])=>{
           const on = trainTab===id;

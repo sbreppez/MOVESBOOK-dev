@@ -124,9 +124,9 @@ export const FeedbackModal = ({ onClose, inline }) => {
           background:C.surface }}>
           <div>
             <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:14, letterSpacing:2,
-              color:C.text }}>{"💬 "+t("feedbackTitle")}</div>
+              color:C.text }}>{t("feedbackTitle")}</div>
             <div style={{ fontSize:11, color:C.textMuted, marginTop:1 }}>
-              {t("feedbackSubtitle")+" 🔥"}
+              {t("feedbackSubtitle")}
             </div>
           </div>
           <button onClick={onClose} style={{ background:"none", border:"none", cursor:"pointer",
@@ -162,7 +162,7 @@ export const FeedbackModal = ({ onClose, inline }) => {
 
           {/* Train */}
           <div style={{ marginBottom:22 }}>
-            <div style={{ fontSize:11, fontWeight:800, letterSpacing:2, color:C.accent, fontFamily:FONT_DISPLAY, marginBottom:10 }}>{"🎯 "+t("trainSectionLabel")}</div>
+            <div style={{ fontSize:11, fontWeight:800, letterSpacing:2, color:C.accent, fontFamily:FONT_DISPLAY, marginBottom:10 }}>{t("trainSectionLabel")}</div>
             <div style={{ fontSize:12, color:C.textMuted, marginBottom:6 }}>{t("whatDidYouLike")}</div>
             {TRAIN_OPTIONS.map(o=>(
               <button key={o} onClick={()=>toggleCheck(o,trainLikes,setTrainLikes)}
@@ -181,7 +181,7 @@ export const FeedbackModal = ({ onClose, inline }) => {
 
           {/* Vocab */}
           <div style={{ marginBottom:22 }}>
-            <div style={{ fontSize:11, fontWeight:800, letterSpacing:2, color:C.accent, fontFamily:FONT_DISPLAY, marginBottom:10 }}>{"📚 "+t("movesSectionLabel")}</div>
+            <div style={{ fontSize:11, fontWeight:800, letterSpacing:2, color:C.accent, fontFamily:FONT_DISPLAY, marginBottom:10 }}>{t("movesSectionLabel")}</div>
             <div style={{ fontSize:12, color:C.textMuted, marginBottom:6 }}>{t("whatDidYouLike")}</div>
             {MOVES_OPTIONS.map(o=>(
               <button key={o} onClick={()=>toggleCheck(o,movesLikes,setMovesLikes)}
@@ -200,7 +200,7 @@ export const FeedbackModal = ({ onClose, inline }) => {
 
           {/* Battle */}
           <div style={{ marginBottom:22 }}>
-            <div style={{ fontSize:11, fontWeight:800, letterSpacing:2, color:C.accent, fontFamily:FONT_DISPLAY, marginBottom:10 }}>{"⚔️ "+t("battleSectionLabel")}</div>
+            <div style={{ fontSize:11, fontWeight:800, letterSpacing:2, color:C.accent, fontFamily:FONT_DISPLAY, marginBottom:10 }}>{t("battleSectionLabel")}</div>
             <div style={{ fontSize:12, color:C.textMuted, marginBottom:6 }}>{t("whatDidYouLike")}</div>
             {BATTLE_OPTIONS.map(o=>(
               <button key={o} onClick={()=>toggleCheck(o,battleLikes,setBattleLikes)}

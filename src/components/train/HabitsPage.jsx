@@ -90,7 +90,7 @@ export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
           </div>
           <span style={{ fontSize:11, fontWeight:800, color: doneCount===habits.length?C.accent:C.textMuted,
             fontFamily:FONT_DISPLAY, flexShrink:0 }}>
-            {doneCount===habits.length && habits.length>0 ? "🔥 "+t("allDone") : `${Math.round(doneCount/habits.length*100||0)}% ${t("percentToday")}`}
+            {doneCount===habits.length && habits.length>0 ? t("allDone") : `${Math.round(doneCount/habits.length*100||0)}% ${t("percentToday")}`}
           </span>
         </div>
       )}

@@ -41,8 +41,8 @@ export const GoalModal = ({ onClose, onSave, idea }) => {
     padding:"9px 12px", color:C.text, fontSize:13, outline:"none", fontFamily:FONT_BODY, boxSizing:"border-box" };
 
   const tabs = isEdit
-    ? [{id:"journal",label:"📓 "+t("journal")},{id:"goal",label:"🎯 "+t("goal")}]
-    : [{id:"goal",label:"🎯 "+t("goal")}];
+    ? [{id:"journal",label:t("journal")},{id:"goal",label:t("goal")}]
+    : [{id:"goal",label:t("goal")}];
 
   return (
     <div style={{ width:"100%", maxHeight:"92%", background:C.bg, borderRadius:14, display:"flex", flexDirection:"column", overflow:"hidden", boxShadow:"0 16px 48px rgba(0,0,0,0.5)" }}>

@@ -5,40 +5,40 @@ import { useT } from "../../hooks/useTranslation";
 
 const getTourSteps = (t) => [
   { type:"center", skippable:true,
-    emoji:"👟", title:t("tourWelcomeTitle"),
+    icon:"dumbbell", title:t("tourWelcomeTitle"),
     body:t("tourWelcomeBody"),
     sub:t("tourWelcomeSub"),
     cta:t("tourWelcomeCta")+" →" },
 
   { type:"center",
-    emoji:"🗺️", title:t("tourSectionsTitle"),
+    icon:"compass", title:t("tourSectionsTitle"),
     body:t("tourSectionsBody"),
     cards:[
-      { emoji:"🎯", label:"TRAIN", desc:t("tourTrainCardDesc") },
-      { emoji:"📜", label:"MOVES", desc:t("tourMovesCardDesc") },
-      { emoji:"⚔️", label:"BATTLE", desc:t("tourBattleCardDesc") },
+      { icon:"target", label:"TRAIN", desc:t("tourTrainCardDesc") },
+      { icon:"scroll", label:"MOVES", desc:t("tourMovesCardDesc") },
+      { icon:"swords", label:"BATTLE", desc:t("tourBattleCardDesc") },
     ],
     cta:t("tourGotItCta")+" →" },
 
   { type:"spotlight", target:"tour-tab-ideas",
-    emoji:"🎯", title:"TRAIN",
+    icon:"target", title:"TRAIN",
     body:t("tourTrainBody"),
     cta:t("tourNextCta")+" →" },
 
   { type:"spotlight", target:"tour-tab-wip",
-    emoji:"📜", title:"MOVES",
+    icon:"scroll", title:"MOVES",
     body:t("tourMovesBody"),
     cta:t("tourNextCta")+" →" },
 
   { type:"spotlight", target:"tour-tab-ready",
-    emoji:"⚔️", title:"BATTLE",
+    icon:"swords", title:"BATTLE",
     body:t("tourBattleBody"),
     cta:t("tourNextCta")+" →" },
 
   { type:"center", skippable:false,
-    emoji:"➕", title:t("tourAddMoveTitle"),
+    icon:"plus", title:t("tourAddMoveTitle"),
     body:t("tourAddMoveBody"),
-    cta:t("tourAddMoveCta")+" ➕" },
+    cta:t("tourAddMoveCta") },
 ];
 
 export const Walkthrough = ({ onDone }) => {
@@ -118,7 +118,7 @@ export const Walkthrough = ({ onDone }) => {
         <div key={i} style={{ display:"flex", alignItems:"center", gap:12,
           background:D.bg, border:"1px solid "+D.border,
           borderRadius:10, padding:"9px 14px" }}>
-          <span style={{ fontSize:19, flexShrink:0 }}>{c.emoji}</span>
+          <span style={{ flexShrink:0, display:"flex", alignItems:"center" }}><Ic n={c.icon} s={19} c={D.accent}/></span>
           <div>
             <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:11,
               letterSpacing:1.5, color:D.text }}>{c.label}</div>
@@ -150,7 +150,7 @@ export const Walkthrough = ({ onDone }) => {
         boxShadow:"0 40px 120px rgba(0,0,0,0.85)" }}>
         <ProgressBar/>
         <div style={{ textAlign:"center", marginBottom:current.cards ? 4 : 22 }}>
-          <div style={{ fontSize:40, marginBottom:10, lineHeight:1 }}>{current.emoji}</div>
+          <div style={{ marginBottom:10, lineHeight:1, display:"flex", justifyContent:"center" }}><Ic n={current.icon} s={40} c={D.accent}/></div>
           <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16,
             letterSpacing:2.5, color:D.text, marginBottom:10 }}>{current.title}</div>
           {current.body && (
@@ -201,7 +201,7 @@ export const Walkthrough = ({ onDone }) => {
         )}
 
         <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:8 }}>
-          <span style={{ fontSize:18 }}>{current.emoji}</span>
+          <span style={{ display:"flex", alignItems:"center" }}><Ic n={current.icon} s={18} c={D.accent}/></span>
           <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:14,
             letterSpacing:2, color:D.text }}>{current.title}</span>
           <div style={{ flex:1 }}/>
@@ -221,7 +221,7 @@ export const Walkthrough = ({ onDone }) => {
               padding:"8px 18px", color:"#fff", fontFamily:FONT_DISPLAY, fontWeight:900,
               fontSize:11, letterSpacing:2, cursor:"pointer",
               boxShadow:"0 2px 12px rgba(207,32,32,0.35)" }}>
-            {isLast ? t("tourDone")+" 🔥" : current.cta}
+            {isLast ? t("tourDone") : current.cta}
           </button>
         </div>
       </div>

@@ -76,10 +76,9 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
     );
   };
 
-  const sectionHdr=(label,emoji)=>(
+  const sectionHdr=(label)=>(
     <div style={{ display:"flex", alignItems:"center", gap:7, margin:"22px 0 6px",
       paddingBottom:7, borderBottom:`2px solid ${panelBrd}` }}>
-      {emoji&&<span style={{fontSize:14}}>{emoji}</span>}
       <span style={{ fontSize:11, fontWeight:800, letterSpacing:2.5, color:panelMut, fontFamily:FONT_DISPLAY, textTransform:"uppercase" }}>{label}</span>
     </div>
   );
@@ -106,10 +105,10 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
         <div style={{ padding:18 }}>
 
           {/* ── APPEARANCE ──────────────────────────────── */}
-          {sectionHdr(t("appearance"),"🎨")}
+          {sectionHdr(t("appearance"))}
 
           {row(t("theme"), t("themeDesc"),
-            segmented("theme",[{value:"light",icon:"☀️",label:t("light")},{value:"dark",icon:"🌙",label:t("dark")}])
+            segmented("theme",[{value:"light",label:t("light")},{value:"dark",label:t("dark")}])
           )}
 
           {row(t("textSize"), t("textSizeDesc"),
@@ -162,7 +161,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
           )}
 
           {/* ── BEHAVIOUR ───────────────────────────────── */}
-          {sectionHdr(t("behaviour"),"⚡")}
+          {sectionHdr(t("behaviour"))}
 
           {row(t("showMastery"),
             t("showMasteryDesc"),
@@ -195,8 +194,8 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
               style={{ background:panelSrf, border:`1px solid ${panelBrd}`, borderRadius:7,
                 padding:"7px 10px", color:panelTxt, fontSize:12, fontFamily:FONT_DISPLAY,
                 fontWeight:700, outline:"none" }}>
-              <option value="inside">🔒 {t("linkOnCardInside")}</option>
-              <option value="both">🔗 {t("linkOnCardBoth")}</option>
+              <option value="inside">{t("linkOnCardInside")}</option>
+              <option value="both">{t("linkOnCardBoth")}</option>
             </select>
           )}
 
@@ -216,7 +215,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
 
           {(()=>{
             const order = s.trainTabOrder||["goals","habits","notes","prep"];
-            const labels = { goals:"🎯 "+t("trainTabGoals"), habits:"🔥 "+t("trainTabHabits"), notes:"📝 "+t("trainTabNotes"), prep:"⚔️ PREP" };
+            const labels = { goals:t("trainTabGoals"), habits:t("trainTabHabits"), notes:t("trainTabNotes"), prep:"PREP" };
             const move = (from, to) => {
               const next = [...order];
               const [item] = next.splice(from,1);
@@ -244,7 +243,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
           })()}
 
           {/* ── NAVIGATION ──────────────────────────────── */}
-          {sectionHdr(t("navigation"),"🧭")}
+          {sectionHdr(t("navigation"))}
 
           {row(t("defaultTab"), t("defaultTabDesc"),
             <select value={s.defaultTab} onChange={e=>set("defaultTab")(e.target.value)}
@@ -263,10 +262,10 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
               style={{ background:panelSrf, border:`1px solid ${panelBrd}`, borderRadius:7,
                 padding:"7px 10px", color:panelTxt, fontSize:12, fontFamily:FONT_DISPLAY,
                 fontWeight:700, outline:"none" }}>
-              <option value="custom">✋ {t("customSort")}</option>
-              <option value="date">{`📅 ${t("dateAdded")}`}</option>
-              <option value="name">{`🔤 ${t("alphabetical")}`}</option>
-              <option value="mastery">{`💪 ${t("masteryPct")}`}</option>
+              <option value="custom">{t("customSort")}</option>
+              <option value="date">{t("dateAdded")}</option>
+              <option value="name">{t("alphabetical")}</option>
+              <option value="mastery">{t("masteryPct")}</option>
             </select>
           )}
 
@@ -275,14 +274,14 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
               style={{ background:panelSrf, border:`1px solid ${panelBrd}`, borderRadius:7,
                 padding:"7px 10px", color:panelTxt, fontSize:12, fontFamily:FONT_DISPLAY,
                 fontWeight:700, outline:"none" }}>
-              <option value="manual">✋ {t("customSort")}</option>
-              <option value="name">{`🔤 ${t("alphabetical")}`}</option>
-              <option value="progress">{`📈 ${t("mostProgress")}`}</option>
+              <option value="manual">{t("customSort")}</option>
+              <option value="name">{t("alphabetical")}</option>
+              <option value="progress">{t("mostProgress")}</option>
             </select>
           )}
 
           {/* ── CUSTOM ATTRIBUTES ──────────────────────── */}
-          {sectionHdr(t("customAttributes"),"🏷️")}
+          {sectionHdr(t("customAttributes"))}
 
           {customAttrs.length===0 ? (
             <div style={{ fontSize:12, color:panelMut, fontStyle:"italic", padding:"8px 0" }}>
@@ -322,7 +321,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
           </button>
 
           {/* ── DATA ────────────────────────────────────── */}
-          {sectionHdr(t("dataPrivacy"),"🔒")}
+          {sectionHdr(t("dataPrivacy"))}
 
           {row(t("saveBackup"),
             t("saveBackupSettingsDesc"),
@@ -403,7 +402,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
           , true)}
 
           {/* ── ABOUT ───────────────────────────────────── */}
-          {sectionHdr(t("aboutSection"),"📱")}
+          {sectionHdr(t("aboutSection"))}
           <div style={{ padding:"12px 0", borderBottom:`1px solid ${panelBrd}` }}>
             <div style={{ display:"flex", justifyContent:"space-between", marginBottom:6 }}>
               <span style={{ fontSize:13, color:panelMut }}>{t("version")}</span>

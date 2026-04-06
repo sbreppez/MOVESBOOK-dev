@@ -561,7 +561,7 @@ export const Spar1v1 = ({ sparring, onSaveSession, addCalendarEvent, rivals, onR
           {/* How it works */}
           <div style={{ background:C.surface, borderRadius:12, padding:14, border:`1px solid ${C.border}` }}>
             <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, color:C.textMuted, letterSpacing:1, marginBottom:6, textTransform:"uppercase" }}>
-              💡 {t("howItWorks")}
+              {t("howItWorks")}
             </div>
             <div style={{ fontSize:12, color:C.textSec, lineHeight:1.6 }}>
               {t("oneVsOneHowItWorks")}
@@ -931,15 +931,15 @@ export const Spar1v1 = ({ sparring, onSaveSession, addCalendarEvent, rivals, onR
         <div style={{ display:"flex", flexDirection:"column", gap:10, width:"100%", maxWidth:300 }}>
           <button onClick={() => handleAddPerson("rival")}
             style={{ padding:14, borderRadius:12, border:`1.5px solid ${C.border}`, background:C.surface, color:C.text, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:14, display:"flex", alignItems:"center", gap:10 }}>
-            ⚔️ {t("addAsRival")}
+            {t("addAsRival")}
           </button>
           <button onClick={() => handleAddPerson("sparringMate")}
             style={{ padding:14, borderRadius:12, border:`1.5px solid ${C.border}`, background:C.surface, color:C.text, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:14, display:"flex", alignItems:"center", gap:10 }}>
-            🤜 {t("addAsSparringMate")}
+            {t("addAsSparringMate")}
           </button>
           <button onClick={() => handleAddPerson("crew")}
             style={{ padding:14, borderRadius:12, border:`1.5px solid ${C.border}`, background:C.surface, color:C.text, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:14, display:"flex", alignItems:"center", gap:10 }}>
-            👥 {t("addAsCrew")}
+            {t("addAsCrew")}
           </button>
           <button onClick={() => { setShowAddPerson(false); if (addToast) addToast({ emoji: "✅", title: t("sessionSaved") }); onClose(); }}
             style={{ padding:14, borderRadius:12, border:"none", background:"transparent", color:C.textMuted, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:13 }}>

@@ -733,7 +733,7 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
               ...btnPrimaryFn(C), width: "100%", fontSize: 16, padding: "14px 24px",
               letterSpacing: 1.5, display: "flex", alignItems: "center", justifyContent: "center", gap: 8
             }} onClick={() => setStep("rate")}>
-              🔥 {t("tryIt")}
+              {t("tryIt")}
             </button>
           </div>
         </>)}

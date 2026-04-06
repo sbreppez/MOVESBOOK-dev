@@ -609,7 +609,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
 
           {/* How it works */}
           <div style={{ background:C.surface, borderRadius:12, padding:14, marginTop:16, border:`1px solid ${C.border}` }}>
-            <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, color:C.textMuted, letterSpacing:1, marginBottom:6 }}>💡 {t("howItWorks")}</div>
+            <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, color:C.textMuted, letterSpacing:1, marginBottom:6 }}>{t("howItWorks")}</div>
             <div style={{ fontSize:12, color:C.textSec, lineHeight:1.6 }}>
               {t("howItWorksText")}
             </div>
@@ -703,7 +703,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
           <div onClick={handleStopWork}
             style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", cursor:"pointer", userSelect:"none", WebkitTapHighlightColor:"transparent", position:"relative" }}>
             <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:48, color:C.red, animation:"mb-pulse 2s ease-in-out infinite" }}>
-              🔥 {t("go")}
+              {t("go")}
             </div>
             <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:80, color:C.text, lineHeight:1, marginTop:12 }}>
               {fmtTimeTenths(workElapsed)}
@@ -782,7 +782,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
             {phase === "getReady" && (
               <>
                 <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:36, color:C.blue, letterSpacing:3 }}>
-                  ⚡ {t("getReady")}
+                  {t("getReady")}
                 </div>
                 <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:140, color:C.text, lineHeight:1, marginTop:8,
                   animation:"mb-pop-in 0.3s ease-out" }}>
@@ -827,7 +827,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
         {/* Header */}
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"13px 18px", borderBottom:`1px solid ${C.border}`, flexShrink:0 }}>
           <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:2, color:C.green }}>
-            {mode === "death" ? `💀 ${t("youSurvived")}` : `💪 ${t("sessionComplete")}`}
+            {mode === "death" ? `${t("youSurvived")}` : `${t("sessionComplete")}`}
           </span>
           <button onClick={handleDiscard} style={{ background:C.surfaceAlt, border:`1px solid ${C.border}`, cursor:"pointer", color:C.textSec, padding:5, borderRadius:7, display:"flex" }}>
             <Ic n="x" s={14}/>

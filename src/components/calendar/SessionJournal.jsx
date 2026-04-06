@@ -456,7 +456,7 @@ export const SessionJournal = ({
             fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 14,
             letterSpacing: 1, color: "#fff", display: "flex", alignItems: "center",
             justifyContent: "center", gap: 6 }}>
-          🎯 {t("saveSession")}
+          {t("saveSession")}
         </button>
 
         {/* Cancel */}
