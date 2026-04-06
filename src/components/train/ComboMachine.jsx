@@ -72,7 +72,7 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
 
   // ── Spin ────────────────────────────────────────────────────────────────
   const generateCombo = useCallback(() => {
-    if (!pool.length) { addToast({ emoji:"⚠️", title:t("comboNoMoves") }); return; }
+    if (!pool.length) { addToast({ icon:"info", title:t("comboNoMoves") }); return; }
 
     const newSlots = [];
     const used = new Set();
@@ -166,7 +166,7 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
       date: new Date().toISOString().split("T")[0],
     });
     setSaveModal(false);
-    addToast({ emoji:"\u2705", title: t("comboSaved") });
+    addToast({ icon:"check", title: t("comboSaved") });
     if (addCalendarEvent) {
       addCalendarEvent({
         date: new Date().toISOString().split("T")[0],

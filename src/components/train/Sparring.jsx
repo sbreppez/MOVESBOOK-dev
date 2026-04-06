@@ -1060,10 +1060,10 @@ const ShareCard = ({ session, mode, prBroken, photo, onPhotoChange, onClose, t }
     ctx.fillStyle = "#ffffff";
     ctx.fillText("BOOK", 60 + ctx.measureText("MOVES").width, 80);
 
-    // PR emoji
-    ctx.font = "120px serif";
+    // PR label
+    ctx.font = "900 48px 'Barlow Condensed', sans-serif";
     ctx.textAlign = "center";
-    ctx.fillText("🔥", W / 2, H * 0.35);
+    ctx.fillText("COMPLETE", W / 2, H * 0.35);
 
     // PR stat
     const prMessages = {

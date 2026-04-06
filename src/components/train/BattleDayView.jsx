@@ -268,7 +268,7 @@ const PostBattleReflection = ({ plan, battle, meta, prepStats, mood, setMood, re
 
   const handleSave = () => {
     if (!mood || !result) {
-      addToast({ emoji: "\u26A0\uFE0F", title: t("selectMoodAndResult") });
+      addToast({ icon: "info", title: t("selectMoodAndResult") });
       return;
     }
 
@@ -293,7 +293,7 @@ const PostBattleReflection = ({ plan, battle, meta, prepStats, mood, setMood, re
       return { ...prev, plans: updatedPlans };
     });
 
-    addToast({ emoji: "\u2694\uFE0F", title: t("reflectionSaved") });
+    addToast({ icon: "swords", title: t("reflectionSaved") });
     onSaved({ ...reflection, _allDone: allDone });
   };
 
@@ -659,7 +659,7 @@ const PlanCompletionCard = ({ plan, meta, dayMap, setBattleprep, addToast, onClo
       plans: (prev.plans || []).filter(p => p.id !== plan.id),
       history: [...(prev.history || []), { ...plan, status: "completed", endDate: today, completedDate: today }],
     }));
-    addToast({ emoji: "\u{1F3C1}", title: t("planComplete") || "Plan complete" });
+    addToast({ icon: "check", title: t("planComplete") || "Plan complete" });
     onClose();
   };
 

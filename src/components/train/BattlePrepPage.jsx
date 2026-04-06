@@ -63,9 +63,9 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
       const sorted = [...plan.battles].sort((a, b) => a.date.localeCompare(b.date));
       let minGap = Infinity;
       for (let i = 0; i < sorted.length - 1; i++) minGap = Math.min(minGap, daysBetween(sorted[i].date, sorted[i + 1].date));
-      if (minGap <= 2) addToast({ emoji: "\u2694\uFE0F", title: t("gapToastSameEvent") });
-      else if (minGap <= 7) addToast({ emoji: "\u2694\uFE0F", title: t("gapToastStayReady") });
-      else if (minGap <= 21) addToast({ emoji: "\u2694\uFE0F", title: t("gapToastMaintain") });
+      if (minGap <= 2) addToast({ icon: "swords", title: t("gapToastSameEvent") });
+      else if (minGap <= 7) addToast({ icon: "swords", title: t("gapToastStayReady") });
+      else if (minGap <= 21) addToast({ icon: "swords", title: t("gapToastMaintain") });
     }
   };
 
@@ -80,7 +80,7 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
     setExpandedPlanId(null);
     setEditingPlanId(null);
     setConfirmDeleteId(null);
-    addToast({ emoji: "\u{1F4CB}", title: t("planCancelled") || "Plan cancelled" });
+    addToast({ icon: "list", title: t("planCancelled") || "Plan cancelled" });
   };
 
   // Update a plan field directly (for immediate saves like phase overrides)
@@ -310,7 +310,7 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
             <p style={{ fontSize: 13, color: C.textSec, marginBottom: 16 }}>{(t("deleteBattle") || "Delete {name}?").replace("{name}", confirmDeleteUnplanned.title || "Battle")}</p>
             <div style={{ display: "flex", gap: 8 }}>
               <button onClick={() => setConfirmDeleteUnplanned(null)} style={{ flex: 1, padding: "10px", background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 8, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 13, color: C.text }}>{t("cancel")}</button>
-              <button onClick={() => { if (removeCalendarEvent) removeCalendarEvent(confirmDeleteUnplanned.id); setConfirmDeleteUnplanned(null); addToast({ emoji: "\u{1F5D1}\uFE0F", title: t("delete") || "Deleted" }); }} style={{ flex: 1, padding: "10px", background: C.red, border: "none", borderRadius: 8, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 13, color: "#fff" }}>{t("delete")}</button>
+              <button onClick={() => { if (removeCalendarEvent) removeCalendarEvent(confirmDeleteUnplanned.id); setConfirmDeleteUnplanned(null); addToast({ icon: "trash", title: t("delete") || "Deleted" }); }} style={{ flex: 1, padding: "10px", background: C.red, border: "none", borderRadius: 8, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 13, color: "#fff" }}>{t("delete")}</button>
             </div>
           </div>
         </Modal>
@@ -375,7 +375,7 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
       customPhases: newPreset === "custom" ? [{ name: "LOCK IN", percentage: 100 }] : null,
     });
     setConfirmPreset(null);
-    addToast({ emoji: "\u2694\uFE0F", title: `Switched to ${(PRESET_META[newPreset] || {}).label || newPreset}` });
+    addToast({ icon: "swords", title: `Switched to ${(PRESET_META[newPreset] || {}).label || newPreset}` });
   };
 
   // Per-day phase cycling: LOCK IN → POLISH → REST → LOCK IN
@@ -403,7 +403,7 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
   const handleResetToDefault = () => {
     updatePlan(plan.id, { phaseOverrides: {}, customDayOverrides: {} });
     setConfirmReset(false);
-    addToast({ emoji: "\u21BA", title: t("resetToDefault") || "Reset to default schedule" });
+    addToast({ icon: "refresh", title: t("resetToDefault") || "Reset to default schedule" });
   };
 
   // Check if any per-day overrides exist

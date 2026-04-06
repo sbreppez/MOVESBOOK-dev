@@ -46,7 +46,7 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
 
   const handleReveal = () => {
     setRevealing(true);
-    if (addToast) addToast({ emoji: "🧘", title: t("trustYourPreparation") });
+    if (addToast) addToast({ icon: "sparkles", title: t("trustYourPreparation") });
     revealTimerRef.current = setTimeout(() => setRevealing(false), 5000);
   };
 

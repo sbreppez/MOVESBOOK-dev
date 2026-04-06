@@ -222,7 +222,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
         items: (e.items||[]).map((it, i) => i !== itemIdx ? it : { ...it, tensionOverride: null })
       })
     }));
-    if (addToast) addToast("\u21a9\ufe0f " + t("resetToDefault"));
+    if (addToast) addToast({ icon:"refresh", title: t("resetToDefault") });
   };
 
   const TensionDots = ({ level, onTap, onLongPress }) => {

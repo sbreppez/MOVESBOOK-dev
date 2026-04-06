@@ -582,9 +582,9 @@ export const CompetitionSimulator = ({
       ctx.fillStyle = "#ffffff";
       ctx.fillText("BOOK", W / 2 + 50, 80);
 
-      // Competition emoji
-      ctx.font = "80px serif";
-      ctx.fillText("🏆", W / 2, 280);
+      // Competition label
+      ctx.font = "900 40px 'Barlow Condensed', sans-serif";
+      ctx.fillText("WINNER", W / 2, 280);
 
       // Title
       ctx.font = `900 48px 'Barlow Condensed', sans-serif`;

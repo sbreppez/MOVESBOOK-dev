@@ -74,11 +74,11 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
       try {
         const parsed = JSON.parse(ev.target.result);
         if (parsed._format !== "movesbook-backup-v1") {
-          addToast({ emoji:"⚠️", title:t("invalidBackupFile")||"Invalid backup file" });
+          addToast({ icon:"info", title:t("invalidBackupFile")||"Invalid backup file" });
           return;
         }
         restoreBackup(parsed);
-      } catch { addToast({ emoji:"⚠️", title:"Could not read backup file" }); }
+      } catch { addToast({ icon:"info", title:"Could not read backup file" }); }
     };
     reader.readAsText(file);
     e.target.value = "";
@@ -123,7 +123,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
         ? { ...m, date: m.prevDate || null, prevDate: null }
         : { ...m, prevDate: m.date, date: today };
     }));
-    addToast({ emoji: isToday ? "↩️" : "✅", title: t(isToday ? "unmarkedToday" : "markedTrainedToday") });
+    addToast({ icon: isToday ? "refresh" : "check", title: t(isToday ? "unmarkedToday" : "markedTrainedToday") });
   };
   const bulkImport=newMoves=>{ const w=newMoves.map(m=>({...m,id:Date.now()+Math.random(),status:m.status||"wip"})); setMoves(prev=>[...prev,...w]); };
   const delMove=id=>setMoves(prev=>prev.filter(m=>m.id!==id));

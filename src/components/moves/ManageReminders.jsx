@@ -17,7 +17,7 @@ export const ManageReminders = ({ reminders, onRemindersChange, addToast, settin
 
   const handleDelete = (id) => {
     onRemindersChange({ ...reminders, items: items.filter(i => i.id !== id) });
-    addToast({ emoji: "🗑", title: t("noteDeleted") });
+    addToast({ icon: "trash", title: t("noteDeleted") });
     setDeletingId(null);
   };
 
@@ -33,7 +33,7 @@ export const ManageReminders = ({ reminders, onRemindersChange, addToast, settin
       ...reminders,
       items: items.map(i => i.id === id ? { ...i, text } : i)
     });
-    addToast({ emoji: "📌", title: t("noteSaved") });
+    addToast({ icon: "mapPin", title: t("noteSaved") });
     setEditingId(null);
     setEditText("");
   };
@@ -43,7 +43,7 @@ export const ManageReminders = ({ reminders, onRemindersChange, addToast, settin
     if (!text) return;
     const newItem = { id: Date.now().toString(), text, createdAt: new Date().toISOString().split("T")[0] };
     onRemindersChange({ ...reminders, items: [...items, newItem] });
-    addToast({ emoji: "📌", title: t("noteSaved") });
+    addToast({ icon: "mapPin", title: t("noteSaved") });
     setAddText("");
     setShowAddForm(false);
   };

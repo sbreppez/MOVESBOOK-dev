@@ -57,7 +57,7 @@ export const ReminderBlock = ({ reminders, onRemindersChange, addToast, onOpenMa
     if (!text) return;
     const newItem = { id: Date.now().toString(), text, createdAt: new Date().toISOString().split("T")[0] };
     onRemindersChange({ ...reminders, items: [...items, newItem] });
-    addToast({ emoji: "📌", title: t("noteSaved") });
+    addToast({ icon: "mapPin", title: t("noteSaved") });
     setAddText("");
     setShowAddForm(false);
   };
@@ -69,7 +69,7 @@ export const ReminderBlock = ({ reminders, onRemindersChange, addToast, onOpenMa
       i === currentIndex ? { ...item, text } : item
     );
     onRemindersChange({ ...reminders, items: updated });
-    addToast({ emoji: "📌", title: t("noteSaved") });
+    addToast({ icon: "mapPin", title: t("noteSaved") });
     setEditingInline(false);
     setEditText("");
   };

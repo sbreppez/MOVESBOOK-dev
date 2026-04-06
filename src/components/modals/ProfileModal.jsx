@@ -29,7 +29,7 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
     if (!text) return;
     const newItem = { id: Date.now().toString(), text, createdAt: new Date().toISOString().split("T")[0] };
     onRemindersChange({ ...reminders, items: [...noteItems, newItem] });
-    addToast({ emoji: "📌", title: t("noteSaved") });
+    addToast({ icon: "mapPin", title: t("noteSaved") });
     setNoteText("");
     setShowNoteAdd(false);
   };

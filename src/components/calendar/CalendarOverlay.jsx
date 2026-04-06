@@ -122,7 +122,7 @@ export const CalendarOverlay = ({
     }
     setShowJournal(false);
     setEditEvent(null);
-    addToast({ emoji: "✅", title: t("sessionLogged"), msg: "" });
+    addToast({ icon: "check", title: t("sessionLogged"), msg: "" });
     // Show "Go to Prep" prompt for new future battle events
     if (eventObj.type === "battle" && eventObj.date >= today && onGoToPrep) {
       setBattlePrepPrompt({ date: eventObj.date, eventName: eventObj.title || "" });

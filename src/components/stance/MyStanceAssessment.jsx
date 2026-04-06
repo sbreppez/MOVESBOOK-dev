@@ -40,7 +40,7 @@ export const MyStanceAssessment = ({ stance, onStanceChange, addToast, onClose }
         assessments: [...filtered, { id: Date.now(), date: today, scores: { ...scores } }],
       };
     });
-    addToast({ emoji:"🧭", title:t("stanceSaved") });
+    addToast({ icon:"compass", title:t("stanceSaved") });
     onClose();
   };
 

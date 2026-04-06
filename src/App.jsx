@@ -564,7 +564,7 @@ export default function App() {
           const label = m.val
             ? `${m.val} ${milestoneT("movesInVocab")}`
             : milestoneT(m.label);
-          addToast({ emoji:"🏁", title:milestoneT("milestoneReached"), msg:label });
+          addToast({ icon:"check", title:milestoneT("milestoneReached"), msg:label });
         });
       }
       // Silent or live — always persist
@@ -582,7 +582,7 @@ export default function App() {
       if (isDup) return prev;
       return { ...prev, events: [...(prev.events || []), { id: Date.now(), ...eventData }] };
     });
-    if (!silent) addToast({ emoji: "✅", title: tr("sessionLogged") });
+    if (!silent) addToast({ icon: "check", title: tr("sessionLogged") });
   }, [setCalendar, addToast, tr]);
 
   const removeCalendarEvent = useCallback((eventId) => {

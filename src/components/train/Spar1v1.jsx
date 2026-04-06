@@ -333,7 +333,7 @@ export const Spar1v1 = ({ sparring, onSaveSession, addCalendarEvent, rivals, onR
     } else if (!linkedPersonId && session.opponent) {
       setShowAddPerson(true);
     } else {
-      if (addToast) addToast({ emoji: "✅", title: t("sessionSaved") });
+      if (addToast) addToast({ icon: "check", title: t("sessionSaved") });
       onClose();
     }
   };
@@ -423,7 +423,7 @@ export const Spar1v1 = ({ sparring, onSaveSession, addCalendarEvent, rivals, onR
     };
     onRivalsChange(prev => [...prev, newPerson]);
     setShowAddPerson(false);
-    if (addToast) addToast({ emoji: "✅", title: t("sessionSaved") });
+    if (addToast) addToast({ icon: "check", title: t("sessionSaved") });
     onClose();
   };
 
@@ -900,7 +900,7 @@ export const Spar1v1 = ({ sparring, onSaveSession, addCalendarEvent, rivals, onR
               setShowAddPerson(true);
               setScreen("summary");
             } else {
-              if (addToast) addToast({ emoji: "✅", title: t("sessionSaved") });
+              if (addToast) addToast({ icon: "check", title: t("sessionSaved") });
               onClose();
             }
           }}
@@ -939,7 +939,7 @@ export const Spar1v1 = ({ sparring, onSaveSession, addCalendarEvent, rivals, onR
             style={{ padding:14, borderRadius:12, border:`1.5px solid ${C.border}`, background:C.surface, color:C.text, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:14, display:"flex", alignItems:"center", gap:10 }}>
             {t("addAsCrew")}
           </button>
-          <button onClick={() => { setShowAddPerson(false); if (addToast) addToast({ emoji: "✅", title: t("sessionSaved") }); onClose(); }}
+          <button onClick={() => { setShowAddPerson(false); if (addToast) addToast({ icon: "check", title: t("sessionSaved") }); onClose(); }}
             style={{ padding:14, borderRadius:12, border:"none", background:"transparent", color:C.textMuted, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:13 }}>
             {t("skip")}
           </button>

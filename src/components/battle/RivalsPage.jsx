@@ -96,7 +96,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
   const deleteRival = (id) => {
     onRivalsChange(prev => prev.filter(r => r.id !== id));
     setConfirmDelete(null);
-    if (addToast) addToast({ emoji:"\ud83d\uddd1\ufe0f", title: t("deleteRival") });
+    if (addToast) addToast({ icon:"trash", title: t("deleteRival") });
   };
 
   // Import spar session
@@ -108,7 +108,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
       try {
         const data = JSON.parse(ev.target.result);
         if (data._format !== "movesbook-spar-v1" || !data.session) {
-          if (addToast) addToast({ emoji:"\u274c", title: t("invalidSparFile") });
+          if (addToast) addToast({ icon:"x", title: t("invalidSparFile") });
           return;
         }
         const tagged = { ...data.session, perspective:"opponent", importedAt: new Date().toISOString(), importedFrom:"file" };
@@ -117,9 +117,9 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
         const person = allPeople.find(p => p.id === targetId);
         if (!person) return;
         updateRival(targetId, { sparHistory: [...(person.sparHistory || []), tagged] });
-        if (addToast) addToast({ emoji:"\u2705", title: t("sparImported") });
+        if (addToast) addToast({ icon:"check", title: t("sparImported") });
       } catch {
-        if (addToast) addToast({ emoji:"\u274c", title: t("invalidSparFile") });
+        if (addToast) addToast({ icon:"x", title: t("invalidSparFile") });
       }
       setImportTarget(null);
     };
@@ -324,7 +324,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
           rivalId: rival.id,
         }, { silent: true });
       }
-      if (addToast) addToast({ emoji:"\u2694\ufe0f", title: t("battleLogged") });
+      if (addToast) addToast({ icon:"swords", title: t("battleLogged") });
 
       setShowBattleLog(false);
       setPendingConf(rival.confidence || null);
