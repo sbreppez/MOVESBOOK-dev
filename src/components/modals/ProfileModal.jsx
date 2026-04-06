@@ -119,7 +119,7 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
       <div style={{ background: C.surface, borderRadius: 14, border: `1px solid ${C.border}`,
         padding: 16, margin: "12px 0" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 10 }}>
-          <span style={{ fontSize: 14 }}>📌</span>
+          <Ic n="mapPin" s={14} c={C.textMuted}/>
           <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 14, color: C.text }}>
             {t("myNotes")}
           </span>

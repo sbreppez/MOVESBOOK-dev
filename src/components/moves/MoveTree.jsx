@@ -196,7 +196,7 @@ export const MoveTree = ({ moves, catColors, onEdit, settings = {} }) => {
         })}
         {moves.length === 0 && (
           <div style={{ textAlign: "center", padding: 40, color: C.textMuted }}>
-            <div style={{ fontSize: 28, marginBottom: 8 }}>🌳</div>
+            <div style={{ marginBottom: 8 }}><Ic n="tree" s={28} c={C.textMuted}/></div>
             <p style={{ fontSize: 13 }}>No moves yet</p>
           </div>
         )}

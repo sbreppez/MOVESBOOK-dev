@@ -116,7 +116,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
           )}
 
           {row(t("defaultView"), t("defaultViewDesc"),
-            segmented("defaultView",[{value:"list",icon:"☰",label:t("list")},{value:"tiles",icon:"⊞",label:t("tiles")},{value:"tree",icon:"🌿",label:t("treeView")}])
+            segmented("defaultView",[{value:"list",icon:"☰",label:t("list")},{value:"tiles",icon:"⊞",label:t("tiles")},{value:"tree",icon:"",label:t("treeView")}])
           )}
 
           {row(t("displayZoom"), t("displayZoomDesc"),
@@ -373,7 +373,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
                 style={{ padding:"7px 14px", borderRadius:7, border:`1px solid ${accent}44`,
                   background:`${accent}10`, color:accent, cursor:"pointer", fontSize:12,
                   fontWeight:700, fontFamily:FONT_DISPLAY, whiteSpace:"nowrap" }}>
-                {"🗑 "+t("clearBtn")}
+                {t("clearBtn")}
               </button>
             )
           , true)}
@@ -413,7 +413,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
               <span style={{ fontSize:13, color:panelTxt, fontWeight:700 }}>MovesBook Prototype</span>
             </div>
             <div style={{ fontSize:12, color:panelMut, marginTop:8, lineHeight:1.6, fontStyle:"italic" }}>
-              {t("builtForBreakers")+" 🕺"}
+              {t("builtForBreakers")}
             </div>
           </div>
 
@@ -422,7 +422,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
         {onOpenManual && <button onClick={onOpenManual}
           style={{ background:"none", border:`1px solid ${C.borderLight}`, borderRadius:8, padding:"9px 14px",
             color:panelTxt, fontSize:12, cursor:"pointer", fontFamily:FONT_DISPLAY, letterSpacing:1, width:"100%" }}>
-          {"📖 "+t("userManual")}
+          {t("userManual")}
         </button>}
         <button onClick={()=>{ onClose(); setTimeout(()=>{ if(typeof onRestartTour==="function") onRestartTour(); },200); }}
           style={{ background:"none", border:`1px solid ${C.borderLight}`, borderRadius:8, padding:"9px 14px",

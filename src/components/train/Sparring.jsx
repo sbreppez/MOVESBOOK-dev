@@ -1158,7 +1158,7 @@ const ShareCard = ({ session, mode, prBroken, photo, onPhotoChange, onClose, t }
         <input ref={photoInputRef} type="file" accept="image/*" capture="camera" style={{ display:"none" }} onChange={handlePhotoInput}/>
         <button onClick={() => photoInputRef.current?.click()}
           style={{ flex:1, padding:12, borderRadius:10, border:`1px solid ${C.border}`, background:C.surfaceAlt, color:C.text, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, letterSpacing:0.5 }}>
-          📷 {t("addPhoto")}
+          {t("addPhoto")}
         </button>
         <button onClick={handleShare}
           style={{ flex:1, padding:12, borderRadius:10, border:"none", background:C.accent, color:"#fff", cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:12, letterSpacing:0.5 }}>

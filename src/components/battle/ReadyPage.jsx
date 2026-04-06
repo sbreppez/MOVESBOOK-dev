@@ -339,14 +339,14 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
                 color:C.textMuted, padding:"5px 11px", fontSize:13, fontFamily:FONT_DISPLAY, fontWeight:700,
                 display:"flex", alignItems:"center", gap:3 }}
               title={t("loadSavedTemplate")}>
-              📂 {t("loadBtn")}{templates.length>0&&<span style={{ marginLeft:3, background:C.accent, color:C.bg, borderRadius:8, padding:"0 5px", fontSize:10 }}>{templates.length}</span>}
+              {t("loadBtn")}{templates.length>0&&<span style={{ marginLeft:3, background:C.accent, color:C.bg, borderRadius:8, padding:"0 5px", fontSize:10 }}>{templates.length}</span>}
             </button>
             <button onClick={()=>{ setTemplateName(""); setShowSaveTemplate(true); }}
               style={{ background:"none", border:`1px solid ${C.border}`, borderRadius:6, cursor:"pointer",
                 color:C.textMuted, padding:"5px 11px", fontSize:13, fontFamily:FONT_DISPLAY, fontWeight:700,
                 display:"flex", alignItems:"center", gap:3 }}
               title={t("saveCurrentTemplate")}>
-              💾 {t("saveBtn")}
+              {t("saveBtn")}
             </button>
             {rounds.length>1&&<button onClick={()=>setReorderRounds(r=>!r)}
               style={{ background:reorderRounds?C.accent:"none", border:"none", cursor:"pointer", padding:"4px 8px", borderRadius:5,
@@ -395,7 +395,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
             </div>
             <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
               <Btn variant="secondary" onClick={()=>setShowSaveTemplate(false)}>{t("cancel")}</Btn>
-              <Btn onClick={saveTemplate} disabled={!templateName.trim()}>💾 Save Template</Btn>
+              <Btn onClick={saveTemplate} disabled={!templateName.trim()}>Save Template</Btn>
             </div>
           </Modal>
         )}
@@ -405,9 +405,9 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
           <Modal title={t("loadBattleTemplate")} onClose={()=>setShowLoadTemplate(false)}>
             {templates.length===0 ? (
               <div style={{ textAlign:"center", padding:"24px 0", color:C.textMuted }}>
-                <div style={{ fontSize:28, marginBottom:8 }}>📂</div>
+                <div style={{ marginBottom:8 }}><Ic n="download" s={28} c={C.textMuted}/></div>
                 <div style={{ fontSize:13, fontWeight:700, fontFamily:FONT_DISPLAY, marginBottom:4 }}>{t("noTemplatesSaved")}</div>
-                <div style={{ fontSize:12 }}>Set up your rounds then tap 💾 Save to create your first template.</div>
+                <div style={{ fontSize:12 }}>Set up your rounds then tap Save to create your first template.</div>
               </div>
             ) : (
               <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
@@ -493,7 +493,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
                 display:"flex", alignItems:"center", justifyContent:"center",
                 gap:8, minHeight:44,
               }}>
-              {"🎮"} {t("simulateCompetition")}
+              {t("simulateCompetition")}
             </button>
           </div>
         )}

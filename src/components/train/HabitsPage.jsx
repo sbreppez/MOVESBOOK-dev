@@ -217,7 +217,7 @@ export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
                       {doneToday
                         ? <Fragment><span style={{ fontSize:14, color:"#ffffff", fontFamily:FONT_DISPLAY, fontWeight:900, letterSpacing:0.5 }}>{t("done")}</span><span style={{ fontSize:16, marginLeft:6 }}>✅</span><span style={{ fontSize:10, color:"rgba(255,255,255,0.6)", fontFamily:FONT_DISPLAY, marginLeft:6 }}>· {t("undoLabel")}</span></Fragment>
                         : <Fragment>
-                            <span style={{ fontSize:15 }}>✊</span>
+                            <Ic n="fist" s={15} c={C.textMuted}/>
                             <span style={{ fontSize:12, color, fontFamily:FONT_DISPLAY, fontWeight:800, letterSpacing:0.5 }}>{t("didIt")}</span>
                           </Fragment>
                       }

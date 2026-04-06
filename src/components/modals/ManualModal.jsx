@@ -67,7 +67,7 @@ export const ManualModal = ({ onClose }) => {
         <div style={{ display:"flex", alignItems:"center", gap:8, background:C.bg,
           border:`1.5px solid ${q ? C.accent : C.border}`, borderRadius:10, padding:"7px 12px",
           transition:"border-color 0.15s" }}>
-          <span style={{ fontSize:14, color:C.textMuted }}>🔍</span>
+          <Ic n="search" s={14} c={C.textMuted}/>
           <input
             ref={searchRef}
             value={search}
@@ -95,7 +95,7 @@ export const ManualModal = ({ onClose }) => {
       <div style={{ flex:1, overflow:"auto", padding:"8px 0 80px" }}>
         {filtered.length===0&&(
           <div style={{ textAlign:"center", padding:"60px 20px", color:C.textMuted }}>
-            <div style={{ fontSize:32, marginBottom:10 }}>🤷</div>
+            <div style={{ marginBottom:10 }}><Ic n="search" s={32} c={C.textMuted}/></div>
             <div style={{ fontSize:14, fontWeight:700, fontFamily:FONT_DISPLAY, marginBottom:6 }}>{t("nothingFound")}</div>
             <div style={{ fontSize:12 }}>{t("tryDifferentKeywords")}</div>
           </div>

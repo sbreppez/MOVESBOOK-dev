@@ -101,7 +101,7 @@ export const FeedbackModal = ({ onClose, inline }) => {
       <div onClick={e=>e.stopPropagation()} style={{ background:C.surface, borderRadius:16,
         padding:"40px 28px", textAlign:"center", maxWidth:340, width:"100%",
         border:`1px solid ${C.border}` }}>
-        <div style={{ fontSize:48, marginBottom:16 }}>🙏</div>
+        <div style={{ marginBottom:16 }}><Ic n="check" s={48} c={C.accent}/></div>
         <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:18, letterSpacing:1,
           color:C.text, marginBottom:8 }}>{t("thankYou")}</div>
         <div style={{ fontSize:13, color:C.textSec, lineHeight:1.6, marginBottom:24 }}>

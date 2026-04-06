@@ -65,7 +65,7 @@ export const ManageReminders = ({ reminders, onRemindersChange, addToast, settin
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between",
         padding: "14px 16px", borderBottom: `1px solid ${C.border}`, flexShrink: 0 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ fontSize: 16 }}>📌</span>
+          <Ic n="mapPin" s={16} c={C.textMuted}/>
           <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 14,
             letterSpacing: 1.5, color: C.text }}>{t("myNotes")}</span>
         </div>

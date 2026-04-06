@@ -538,16 +538,16 @@ export const Spar1v1 = ({ sparring, onSaveSession, addCalendarEvent, rivals, onR
             </div>
             <div style={{ display:"flex", gap:8 }}>
               {[
-                { id: "me", label: t("me"), emoji: "🙋" },
-                { id: "opponent", label: opponentName.trim() || t("opponent"), emoji: "🤺" },
-                { id: "coin", label: t("coinFlip"), emoji: "🪙" },
+                { id: "me", label: t("me"), icon: "user" },
+                { id: "opponent", label: opponentName.trim() || t("opponent"), icon: "swords" },
+                { id: "coin", label: t("coinFlip"), icon: "dices" },
               ].map(opt => {
                 const active = whoGoesFirstChoice === opt.id;
                 return (
                   <button key={opt.id} onClick={() => setWhoGoesFirstChoice(opt.id)}
                     style={{ flex:1, padding:"14px 8px", borderRadius:12, border:`2px solid ${active ? C.accent : C.border}`,
                       background: active ? C.accent + "14" : C.surface, cursor:"pointer", textAlign:"center", transition:"all 0.15s" }}>
-                    <div style={{ fontSize:24, marginBottom:4 }}>{opt.emoji}</div>
+                    <div style={{ marginBottom:4 }}><Ic n={opt.icon} s={24} c={active ? C.accent : C.textMuted}/></div>
                     <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, color: active ? C.accent : C.text, letterSpacing:0.5,
                       overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{opt.label}</div>
                   </button>
@@ -721,7 +721,7 @@ export const Spar1v1 = ({ sparring, onSaveSession, addCalendarEvent, rivals, onR
         {showAutoEnd && (
           <div onClick={(e) => e.stopPropagation()} style={{ position:"fixed", inset:0, zIndex:600, background:"rgba(0,0,0,0.6)", display:"flex", alignItems:"center", justifyContent:"center", padding:16 }}>
             <div style={{ background:C.surface, borderRadius:16, padding:24, maxWidth:320, width:"100%", textAlign:"center" }}>
-              <div style={{ fontSize:32, marginBottom:8 }}>🔔</div>
+              <div style={{ marginBottom:8 }}><Ic n="bell" s={32} c={C.textMuted}/></div>
               <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, color:C.text, marginBottom:8, textTransform:"uppercase" }}>
                 {t("targetReached")}
               </div>

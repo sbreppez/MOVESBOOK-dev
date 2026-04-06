@@ -11,7 +11,7 @@ export const targetProgress = (current, target) => {
   if (!target || target <= 0) return { pct:0, color:"#e53935", label:"0%" };
   const pct = Math.min(100, Math.max(0, Math.round((current / target) * 100)));
   const color = pct >= 100 ? "#2d6a4f" : pct >= 60 ? "#b5850a" : "#e53935";
-  const label = pct >= 100 ? "Goal reached! 🎉" : `${pct}% there`;
+  const label = pct >= 100 ? "Goal reached!" : `${pct}% there`;
   return { pct, color, label };
 };
 

@@ -209,7 +209,7 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
               color:C.textMuted, padding:"5px 11px", fontSize:13, fontFamily:FONT_DISPLAY, fontWeight:700,
               display:"flex", alignItems:"center", gap:4 }}
             title={t("loadSavedList")}>
-            📂 {t("loadBtn")}
+            {t("loadBtn")}
             {savedLists.length>0&&<span style={{ background:C.accent, color:C.bg, borderRadius:8,
               padding:"0 5px", fontSize:10, fontFamily:FONT_DISPLAY }}>{savedLists.length}</span>}
           </button>
@@ -219,7 +219,7 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
               color:C.textMuted, padding:"5px 11px", fontSize:13, fontFamily:FONT_DISPLAY, fontWeight:700,
               display:"flex", alignItems:"center", gap:4 }}
             title={t("saveCurrentList")}>
-            💾 {t("saveBtn")}
+            {t("saveBtn")}
           </button>
           {/* Reorder */}
           <button onClick={()=>setReorderMode(r=>!r)}
@@ -596,7 +596,7 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
           </div>
           <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
             <Btn variant="secondary" onClick={()=>setShowSaveList(false)}>{t("cancel")}</Btn>
-            <Btn onClick={saveList} disabled={!saveListName.trim()}>💾 Save List</Btn>
+            <Btn onClick={saveList} disabled={!saveListName.trim()}>Save List</Btn>
           </div>
         </Modal>
       )}
@@ -606,9 +606,9 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
         <Modal title={t("loadFreestyleList")} onClose={()=>setShowLoadList(false)}>
           {savedLists.length===0 ? (
             <div style={{ textAlign:"center", padding:"24px 0", color:C.textMuted }}>
-              <div style={{ fontSize:28, marginBottom:8 }}>📂</div>
+              <div style={{ marginBottom:8 }}><Ic n="download" s={28} c={C.textMuted}/></div>
               <div style={{ fontSize:13, fontWeight:700, fontFamily:FONT_DISPLAY, marginBottom:4 }}>{t("noSavedListsYet")}</div>
-              <div style={{ fontSize:12 }}>Build a list then tap 💾 Save to store it for later.</div>
+              <div style={{ fontSize:12 }}>Build a list then tap Save to store it for later.</div>
             </div>
           ) : (
             <div style={{ display:"flex", flexDirection:"column", gap:8 }}>

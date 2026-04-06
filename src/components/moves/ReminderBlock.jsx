@@ -117,7 +117,7 @@ export const ReminderBlock = ({ reminders, onRemindersChange, addToast, onOpenMa
         style={{ display: "flex", alignItems: "center", gap: 8,
           background: C.surfaceAlt, borderRadius: 10, padding: "8px 14px",
           margin: "10px 12px 0", cursor: "pointer" }}>
-        <span style={{ fontSize: 14, lineHeight: 1, flexShrink: 0 }}>📌</span>
+        <span style={{ lineHeight: 1, flexShrink: 0 }}><Ic n="mapPin" s={14} c={C.textMuted}/></span>
         <span style={{ fontFamily: FONT_BODY, fontSize: 13, color: C.text, fontStyle: "italic",
           flex: 1, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
           {current?.text}
@@ -143,7 +143,7 @@ export const ReminderBlock = ({ reminders, onRemindersChange, addToast, onOpenMa
       margin: "10px 12px 0" }}>
       {/* Header: pin left, edit + collapse right */}
       <div style={{ display: "flex", alignItems: "center", marginBottom: 8 }}>
-        <span style={{ fontSize: 14, lineHeight: 1, flex: 1 }}>📌</span>
+        <span style={{ lineHeight: 1, flex: 1 }}><Ic n="mapPin" s={14} c={C.textMuted}/></span>
         <span onClick={(e) => {
             e.stopPropagation();
             setEditText(current?.text || "");

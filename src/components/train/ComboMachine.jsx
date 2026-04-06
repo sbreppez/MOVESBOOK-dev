@@ -302,7 +302,7 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
       {/* Branch root selected info + too small warning */}
       {drillMode === "branch" && branchRoot && (
         <div style={{ padding:"8px 16px", borderBottom:`1px solid ${C.borderLight}`, display:"flex", alignItems:"center", gap:8, flexShrink:0 }}>
-          <span style={{ fontSize:14 }}>🌳</span>
+          <Ic n="tree" s={14}/>
           <span style={{ fontFamily:FONT_BODY, fontSize:12, color:C.text, fontWeight:600 }}>{branchRoot.name}</span>
           <span style={{ fontFamily:FONT_DISPLAY, fontSize:10, color:C.textMuted }}>
             ({branchDescendants.length} {t("descendants")})
@@ -323,7 +323,7 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
       <div style={{ flex:1, overflowY:"auto", padding:"12px 16px", WebkitOverflowScrolling:"touch" }}>
         {!hasSpun && (
           <div style={{ textAlign:"center", padding:"40px 20px", color:C.textMuted }}>
-            <div style={{ fontSize:48, marginBottom:12 }}>🎰</div>
+            <div style={{ marginBottom:12 }}><Ic n="dices" s={48} c={C.textMuted}/></div>
             <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:14, letterSpacing:1 }}>{t("spin")}</div>
             {pool.length > 0 && <div style={{ fontSize:11, marginTop:6, color:C.textMuted }}>{pool.length} {t("selectMoves").toLowerCase().includes("move") ? "moves" : t("selectMoves")}</div>}
           </div>

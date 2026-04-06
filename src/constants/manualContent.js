@@ -80,7 +80,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"reflect", icon:"📊", title:"REFLECT",
+      id:"reflect", icon:"barChart", title:"REFLECT",
       items:[
         { title:"What REFLECT is for",
           body:"REFLECT is where you review your progress. Calendar shows all activity, Stance tracks your self-assessment, Goals tracks your targets, and Notes stores your thoughts." },
@@ -97,7 +97,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"tools", icon:"🛠️", title:"Training Tools",
+      id:"tools", icon:"wrench", title:"Training Tools",
       items:[
         { title:"Explore",
           body:"Creative exploration tool with modifier chips and 4 modes. Access from MOVES > LIBRARY tools strip. Pick a mode, add constraints, and explore new movement ideas." },
@@ -116,7 +116,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"profile", icon:"👤", title:"Profile & Settings",
+      id:"profile", icon:"user", title:"Profile & Settings",
       items:[
         { title:"Your profile",
           body:"Tap the profile avatar in the header. Set your nickname, age, breaking start date, goals, and why you break. Your nickname shows in the header as 'MOVESBOOK of [name]'." },
@@ -227,7 +227,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"reflect", icon:"📊", title:"REFLECT",
+      id:"reflect", icon:"barChart", title:"REFLECT",
       items:[
         { title:"A cosa serve REFLECT",
           body:"REFLECT è dove rivedi i tuoi progressi. Il Calendario mostra tutta l'attività, Stance traccia la tua auto-valutazione, Obiettivi traccia i tuoi target e Note conserva i tuoi pensieri." },
@@ -244,7 +244,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"tools", icon:"🛠️", title:"Strumenti di Allenamento",
+      id:"tools", icon:"wrench", title:"Strumenti di Allenamento",
       items:[
         { title:"Explore",
           body:"Strumento di esplorazione creativa con chip modificatori e 4 modalità. Accesso da MOVES > LIBRERIA striscia strumenti. Scegli una modalità, aggiungi vincoli ed esplora nuove idee di movimento." },
@@ -263,7 +263,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"profile", icon:"👤", title:"Profilo e Impostazioni",
+      id:"profile", icon:"user", title:"Profilo e Impostazioni",
       items:[
         { title:"Il tuo profilo",
           body:"Tocca l'avatar del profilo nell'intestazione. Imposta il tuo soprannome, età, data di inizio breaking, obiettivi e perché balli. Il tuo soprannome appare nell'intestazione come 'MOVESBOOK di [nome]'." },
@@ -374,7 +374,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"reflect", icon:"📊", title:"REFLECT",
+      id:"reflect", icon:"barChart", title:"REFLECT",
       items:[
         { title:"Para qué sirve REFLECT",
           body:"REFLECT es donde revisas tu progreso. El Calendario muestra toda la actividad, Stance rastrea tu auto-evaluación, Objetivos rastrea tus metas y Notas guarda tus pensamientos." },
@@ -391,7 +391,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"tools", icon:"🛠️", title:"Herramientas de Entrenamiento",
+      id:"tools", icon:"wrench", title:"Herramientas de Entrenamiento",
       items:[
         { title:"Explore",
           body:"Herramienta de exploración creativa con chips modificadores y 4 modos. Acceso desde MOVES > BIBLIOTECA franja de herramientas. Elige un modo, agrega restricciones y explora nuevas ideas de movimiento." },
@@ -410,7 +410,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"profile", icon:"👤", title:"Perfil y Configuración",
+      id:"profile", icon:"user", title:"Perfil y Configuración",
       items:[
         { title:"Tu perfil",
           body:"Toca el avatar del perfil en el encabezado. Establece tu apodo, edad, fecha de inicio de breaking, objetivos y por qué bailas. Tu apodo aparece en el encabezado como 'MOVESBOOK de [nombre]'." },
@@ -521,7 +521,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"reflect", icon:"📊", title:"REFLECT",
+      id:"reflect", icon:"barChart", title:"REFLECT",
       items:[
         { title:"À quoi sert REFLECT",
           body:"REFLECT est où vous revoyez vos progrès. Le Calendrier montre toute l'activité, Stance suit votre auto-évaluation, Objectifs suit vos cibles et Notes garde vos pensées." },
@@ -538,7 +538,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"tools", icon:"🛠️", title:"Outils d'Entraînement",
+      id:"tools", icon:"wrench", title:"Outils d'Entraînement",
       items:[
         { title:"Explore",
           body:"Outil d'exploration créative avec chips modificateurs et 4 modes. Accès depuis MOVES > BIBLIOTHÈQUE bande d'outils. Choisissez un mode, ajoutez des contraintes et explorez de nouvelles idées de mouvement." },
@@ -557,7 +557,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"profile", icon:"👤", title:"Profil et Paramètres",
+      id:"profile", icon:"user", title:"Profil et Paramètres",
       items:[
         { title:"Votre profil",
           body:"Tapez l'avatar du profil dans l'en-tête. Définissez votre surnom, âge, date de début de breaking, objectifs et pourquoi vous dansez. Votre surnom apparaît dans l'en-tête comme 'MOVESBOOK de [nom]'." },
@@ -650,7 +650,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"reflect", icon:"📊", title:"REFLECT",
+      id:"reflect", icon:"barChart", title:"REFLECT",
       items:[
         { title:"Para que serve o REFLECT", body:"REFLECT é onde você revisa seu progresso. O Calendário mostra toda atividade, Stance acompanha sua auto-avaliação, Objetivos acompanha suas metas e Notas guarda seus pensamentos." },
         { title:"CALENDÁRIO", body:"Grade mensal com vista de detalhe do dia. Toque qualquer dia para ver todas as sessões. Diário de sessão e log corporal disponíveis por dia." },
@@ -661,7 +661,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"tools", icon:"🛠️", title:"Ferramentas de Treino",
+      id:"tools", icon:"wrench", title:"Ferramentas de Treino",
       items:[
         { title:"Explore", body:"Ferramenta de exploração criativa com chips modificadores e 4 modos. Acesso por MOVES > BIBLIOTECA faixa de ferramentas." },
         { title:"R/R/R (Restaurar / Remixar / Reconstruir)", body:"Prompts curados para revisitar e transformar movimentos existentes. Opções de timer: 1, 3, 5, 10 minutos, Personalizado ou Sem Limite." },
@@ -673,7 +673,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"profile", icon:"👤", title:"Perfil e Configurações",
+      id:"profile", icon:"user", title:"Perfil e Configurações",
       items:[
         { title:"Seu perfil", body:"Toque o avatar do perfil no cabeçalho. Defina seu apelido, idade, data de início no breaking, objetivos e por que você dança. Seu apelido aparece no cabeçalho como 'MOVESBOOK de [nome]'." },
         { title:"Configurações", body:"Acesse pelo ícone de engrenagem no cabeçalho ou dentro do overlay do Perfil. Configure tema, tamanho do texto, idioma, vista padrão, exibição de domínio e mais." },
@@ -745,7 +745,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"reflect", icon:"📊", title:"REFLECT",
+      id:"reflect", icon:"barChart", title:"REFLECT",
       items:[
         { title:"Wofür REFLECT ist", body:"REFLECT ist wo du deinen Fortschritt überprüfst. Kalender zeigt alle Aktivitäten, Stance verfolgt deine Selbsteinschätzung, Ziele verfolgt deine Targets und Notizen bewahrt deine Gedanken." },
         { title:"KALENDER", body:"Monatsraster mit Tagesdetailansicht. Tippe einen Tag, um alle Sessions zu sehen. Session-Tagebuch und Körperlog pro Tag verfügbar." },
@@ -756,7 +756,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"tools", icon:"🛠️", title:"Trainingstools",
+      id:"tools", icon:"wrench", title:"Trainingstools",
       items:[
         { title:"Explore", body:"Kreatives Explorations-Tool mit Modifier-Chips und 4 Modi. Zugang über MOVES > BIBLIOTHEK Tool-Leiste." },
         { title:"R/R/R (Wiederherstellen / Remixen / Neubauen)", body:"Kuratierte Prompts zum Wiederbesuchen und Transformieren bestehender Moves. Timer-Optionen: 1, 3, 5, 10 Minuten, Benutzerdefiniert oder Ohne Limit." },
@@ -768,7 +768,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"profile", icon:"👤", title:"Profil & Einstellungen",
+      id:"profile", icon:"user", title:"Profil & Einstellungen",
       items:[
         { title:"Dein Profil", body:"Tippe den Profil-Avatar im Header. Setze deinen Spitznamen, Alter, Breaking-Startdatum, Ziele und warum du tanzt." },
         { title:"Einstellungen", body:"Zugang über das Zahnrad-Icon im Header oder im Profil-Overlay. Konfiguriere Thema, Textgröße, Sprache, Standardansicht und mehr." },
@@ -840,7 +840,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"reflect", icon:"📊", title:"REFLECT",
+      id:"reflect", icon:"barChart", title:"REFLECT",
       items:[
         { title:"REFLECTの用途", body:"REFLECTは進捗を振り返る場所です。カレンダーはすべてのアクティビティを表示、スタンスは自己評価を追跡、目標はターゲットを追跡、ノートは考えを保存します。" },
         { title:"カレンダー", body:"月間グリッドと日別詳細ビュー。任意の日をタップしてすべてのセッションを表示。セッション日記とボディログが日ごとに利用可能。" },
@@ -851,7 +851,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"tools", icon:"🛠️", title:"トレーニングツール",
+      id:"tools", icon:"wrench", title:"トレーニングツール",
       items:[
         { title:"Explore", body:"モディファイアチップと4つのモード付きのクリエイティブ探索ツール。MOVES > ライブラリツールストリップからアクセス。" },
         { title:"R/R/R（リストア/リミックス/リビルド）", body:"既存のムーブを再訪し変形するためのキュレーションされたプロンプト。タイマーオプション：1、3、5、10分、カスタム、制限なし。" },
@@ -863,7 +863,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"profile", icon:"👤", title:"プロフィールと設定",
+      id:"profile", icon:"user", title:"プロフィールと設定",
       items:[
         { title:"あなたのプロフィール", body:"ヘッダーのプロフィールアバターをタップ。ニックネーム、年齢、ブレイキン開始日、目標、踊る理由を設定。" },
         { title:"設定", body:"ヘッダーのスプロケットアイコンまたはプロフィールオーバーレイ内からアクセス。テーマ、テキストサイズ、言語、デフォルトビューなどを設定。" },
@@ -935,7 +935,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"reflect", icon:"📊", title:"REFLECT",
+      id:"reflect", icon:"barChart", title:"REFLECT",
       items:[
         { title:"REFLECT的用途", body:"REFLECT是你回顾进度的地方。日历显示所有活动，Stance追踪自我评估，目标追踪你的指标，笔记保存你的想法。" },
         { title:"日历", body:"月度网格和日期详细视图。点击任意日期查看所有会话。每天可用会话日记和身体记录。" },
@@ -946,7 +946,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"tools", icon:"🛠️", title:"训练工具",
+      id:"tools", icon:"wrench", title:"训练工具",
       items:[
         { title:"Explore", body:"带修饰芯片和4种模式的创意探索工具。从MOVES > 库工具条访问。" },
         { title:"R/R/R（恢复/混音/重建）", body:"精选提示，用于重访和转化现有动作。计时器选项：1、3、5、10分钟、自定义或无限制。" },
@@ -958,7 +958,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"profile", icon:"👤", title:"个人资料与设置",
+      id:"profile", icon:"user", title:"个人资料与设置",
       items:[
         { title:"你的个人资料", body:"点击标题栏中的个人头像。设置昵称、年龄、开始Breaking的日期、目标和跳舞的原因。" },
         { title:"设置", body:"通过标题栏的齿轮图标或个人资料overlay内部访问。配置主题、文字大小、语言、默认视图等。" },
@@ -1030,7 +1030,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"reflect", icon:"📊", title:"REFLECT",
+      id:"reflect", icon:"barChart", title:"REFLECT",
       items:[
         { title:"Назначение REFLECT", body:"REFLECT — где вы просматриваете свой прогресс. Календарь показывает всю активность, Stance отслеживает самооценку, Цели отслеживают ваши задачи, Заметки хранят ваши мысли." },
         { title:"КАЛЕНДАРЬ", body:"Месячная сетка с детальным видом дня. Нажмите любой день для просмотра всех сессий. Дневник сессий и журнал тела доступны по дням." },
@@ -1041,7 +1041,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"tools", icon:"🛠️", title:"Тренировочные инструменты",
+      id:"tools", icon:"wrench", title:"Тренировочные инструменты",
       items:[
         { title:"Explore", body:"Инструмент творческого исследования с чипами-модификаторами и 4 режимами. Доступ из MOVES > БИБЛИОТЕКА полоса инструментов." },
         { title:"R/R/R (Восстановить / Ремикс / Перестроить)", body:"Курированные подсказки для пересмотра и трансформации существующих движений. Опции таймера: 1, 3, 5, 10 минут, Пользовательский или Без ограничения." },
@@ -1053,7 +1053,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"profile", icon:"👤", title:"Профиль и настройки",
+      id:"profile", icon:"user", title:"Профиль и настройки",
       items:[
         { title:"Ваш профиль", body:"Нажмите аватар профиля в шапке. Установите никнейм, возраст, дату начала брейкинга, цели и почему вы танцуете." },
         { title:"Настройки", body:"Доступ через иконку шестерёнки в шапке или внутри оверлея Профиля. Настройте тему, размер текста, язык, вид по умолчанию и другое." },
@@ -1125,7 +1125,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"reflect", icon:"📊", title:"REFLECT",
+      id:"reflect", icon:"barChart", title:"REFLECT",
       items:[
         { title:"REFLECT의 용도", body:"REFLECT는 진행 상황을 검토하는 곳입니다. 캘린더는 모든 활동을 표시, 스탠스는 자기 평가를 추적, 목표는 타겟을 추적, 노트는 생각을 저장." },
         { title:"캘린더", body:"월간 그리드와 일별 상세 뷰. 아무 날이나 탭하여 모든 세션을 봅니다. 세션 일지와 바디 로그가 일별로 사용 가능." },
@@ -1136,7 +1136,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"tools", icon:"🛠️", title:"훈련 도구",
+      id:"tools", icon:"wrench", title:"훈련 도구",
       items:[
         { title:"Explore", body:"수정자 칩과 4가지 모드가 있는 창의적 탐색 도구. MOVES > 라이브러리 도구 스트립에서 접근." },
         { title:"R/R/R (복원 / 리믹스 / 재구축)", body:"기존 무브를 재방문하고 변형하기 위한 큐레이션된 프롬프트. 타이머 옵션: 1, 3, 5, 10분, 커스텀, 제한 없음." },
@@ -1148,7 +1148,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"profile", icon:"👤", title:"프로필 & 설정",
+      id:"profile", icon:"user", title:"프로필 & 설정",
       items:[
         { title:"프로필", body:"헤더의 프로필 아바타를 탭. 닉네임, 나이, 브레이킹 시작일, 목표, 춤추는 이유를 설정." },
         { title:"설정", body:"헤더의 톱니바퀴 아이콘 또는 프로필 오버레이에서 접근. 테마, 텍스트 크기, 언어, 기본 뷰 등을 설정." },
@@ -1220,7 +1220,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"reflect", icon:"📊", title:"REFLECT",
+      id:"reflect", icon:"barChart", title:"REFLECT",
       items:[
         { title:"REFLECT ใช้สำหรับ", body:"REFLECT เป็นที่ทบทวนความก้าวหน้า ปฏิทินแสดงกิจกรรมทั้งหมด Stance ติดตามการประเมินตนเอง เป้าหมายติดตามเป้า บันทึกเก็บความคิด" },
         { title:"ปฏิทิน", body:"ตารางรายเดือนพร้อมมุมมองรายละเอียดวัน แตะวันใดก็ได้เพื่อดูเซสชันทั้งหมด" },
@@ -1231,7 +1231,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"tools", icon:"🛠️", title:"เครื่องมือฝึกซ้อม",
+      id:"tools", icon:"wrench", title:"เครื่องมือฝึกซ้อม",
       items:[
         { title:"Explore", body:"เครื่องมือสำรวจสร้างสรรค์พร้อมชิปตัวปรับและ 4 โหมด เข้าถึงจาก MOVES > ไลบรารี แถบเครื่องมือ" },
         { title:"R/R/R (คืนสภาพ / รีมิกซ์ / สร้างใหม่)", body:"พรอมต์คัดสรรสำหรับทบทวนและแปลงท่าที่มี ตัวเลือกตั้งเวลา: 1, 3, 5, 10 นาที กำหนดเอง หรือไม่จำกัด" },
@@ -1243,7 +1243,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"profile", icon:"👤", title:"โปรไฟล์และการตั้งค่า",
+      id:"profile", icon:"user", title:"โปรไฟล์และการตั้งค่า",
       items:[
         { title:"โปรไฟล์ของคุณ", body:"แตะอวาตาร์โปรไฟล์ในส่วนหัว ตั้งชื่อเล่น อายุ วันที่เริ่มเบรกกิ้ง เป้าหมาย และเหตุผลที่เต้น" },
         { title:"การตั้งค่า", body:"เข้าถึงผ่านไอคอนเฟืองในส่วนหัวหรือในโอเวอร์เลย์โปรไฟล์ กำหนดค่าธีม ขนาดตัวอักษร ภาษา มุมมองเริ่มต้น และอื่นๆ" },
@@ -1315,7 +1315,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"reflect", icon:"📊", title:"REFLECT",
+      id:"reflect", icon:"barChart", title:"REFLECT",
       items:[
         { title:"REFLECT dùng để làm gì", body:"REFLECT là nơi bạn xem lại tiến trình. Lịch hiển thị tất cả hoạt động, Stance theo dõi tự đánh giá, Mục tiêu theo dõi target, Ghi chú lưu suy nghĩ." },
         { title:"LỊCH", body:"Lưới tháng với xem chi tiết ngày. Nhấn ngày bất kỳ để xem tất cả phiên. Nhật ký phiên và log cơ thể có sẵn mỗi ngày." },
@@ -1326,7 +1326,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"tools", icon:"🛠️", title:"Công Cụ Tập Luyện",
+      id:"tools", icon:"wrench", title:"Công Cụ Tập Luyện",
       items:[
         { title:"Explore", body:"Công cụ khám phá sáng tạo với chip bổ sung và 4 chế độ. Truy cập từ MOVES > THƯVIỆN thanh công cụ." },
         { title:"R/R/R (Khôi phục / Remix / Xây lại)", body:"Gợi ý được chọn lọc để xem lại và biến đổi động tác hiện có. Tùy chọn hẹn giờ: 1, 3, 5, 10 phút, Tùy chỉnh hoặc Không giới hạn." },
@@ -1338,7 +1338,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"profile", icon:"👤", title:"Hồ Sơ & Cài Đặt",
+      id:"profile", icon:"user", title:"Hồ Sơ & Cài Đặt",
       items:[
         { title:"Hồ sơ của bạn", body:"Nhấn avatar hồ sơ trong header. Đặt biệt danh, tuổi, ngày bắt đầu breaking, mục tiêu và lý do bạn nhảy." },
         { title:"Cài đặt", body:"Truy cập qua biểu tượng bánh răng trong header hoặc trong overlay Hồ sơ. Cấu hình chủ đề, cỡ chữ, ngôn ngữ, chế độ xem mặc định và nhiều hơn." },

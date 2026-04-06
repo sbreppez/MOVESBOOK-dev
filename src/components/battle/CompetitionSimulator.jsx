@@ -714,7 +714,7 @@ export const CompetitionSimulator = ({
         {/* Header */}
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"13px 18px", borderBottom:`1px solid ${C.border}`, flexShrink:0 }}>
           <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:2, color:C.brown }}>
-            🎮 {t("competitionSetup")}
+            {t("competitionSetup")}
           </span>
           <button onClick={onClose} style={{ background:C.surfaceAlt, border:`1px solid ${C.border}`, cursor:"pointer", color:C.textSec, padding:5, borderRadius:7, display:"flex" }}>
             <Ic n="x" s={14}/>
@@ -1373,7 +1373,7 @@ export const CompetitionSimulator = ({
             style={{ width:"100%", padding:12, borderRadius:10, border:`1px solid ${C.border}`, background:C.surface,
               color:C.textSec, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, letterSpacing:0.5,
               display:"flex", alignItems:"center", justifyContent:"center", gap:6, marginTop:12 }}>
-            📸 {t("share")}
+            {t("share")}
           </button>
         </div>
 

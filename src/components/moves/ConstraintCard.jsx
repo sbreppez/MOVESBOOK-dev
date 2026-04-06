@@ -163,7 +163,7 @@ export const ConstraintCard = ({ constraint, onConstraintChange, addToast, onOpe
                 cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center",
                 fontSize:15,
               }}>
-              🔀
+              <Ic n="shuffle" s={16}/>
             </button>
             <button onClick={handleDismiss}
               style={{

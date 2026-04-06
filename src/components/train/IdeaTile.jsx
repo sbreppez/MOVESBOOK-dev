@@ -159,7 +159,7 @@ export const IdeaTile = (props) => {
             <div onClick={e=>{e.stopPropagation(); onDismissHint&&onDismissHint();}}
               style={{ marginTop:6, padding:"5px 8px", background:`${color}18`, borderRadius:6,
                 display:"flex", alignItems:"center", gap:5, cursor:"pointer", minWidth:0 }}>
-              <span style={{ fontSize:11 }}>{"📓"}</span>
+              <Ic n="book" s={11} c={C.textSec}/>
               <span style={{ fontSize:10, color, fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:0.3,
                 overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", flex:1 }}>
                 {t("journalHint")}

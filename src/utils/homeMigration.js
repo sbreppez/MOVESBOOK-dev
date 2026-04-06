@@ -22,7 +22,7 @@ export function runHomeMigration(blocks, habits, ideas, homeStack, setHomeStack)
       defaultStack.push({
         id: String(b.id),
         type: "routine",
-        emoji: b.emoji || "🏋️",
+        emoji: b.emoji || "",
         name: b.name || "",
         duration: b.duration || 0,
         description: b.description || "",

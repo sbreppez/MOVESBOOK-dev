@@ -144,7 +144,7 @@ export const MyStanceSection = ({ moves, stance, sparring, calendar, onOpenAsses
   if (!hasAssessment) return (
     <div style={{ background:C.surface, borderRadius:14, border:`1px solid ${C.border}`,
       padding:20, margin:"12px 0", textAlign:"center" }}>
-      <div style={{ fontSize:32, marginBottom:10 }}>🧭</div>
+      <div style={{ marginBottom:10 }}><Ic n="compass" s={32} c={C.textMuted}/></div>
       <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:18, color:C.text, marginBottom:8 }}>
         {t("mapYourStance")}
       </div>
@@ -179,7 +179,7 @@ export const MyStanceSection = ({ moves, stance, sparring, calendar, onOpenAsses
 
       {/* Header */}
       <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:12 }}>
-        <span style={{ fontSize:14 }}>🧭</span>
+        <Ic n="compass" s={14}/>
         <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:14, color:C.text }}>
           {t("myStance")}
         </span>
