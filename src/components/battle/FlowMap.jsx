@@ -22,11 +22,11 @@ const STATE_BG_COLORS = (C) => ({
 });
 
 const IMPACT_LEVELS = [
-  { value: 1, emoji: "😐", label: "weak" },
-  { value: 2, emoji: "😏", label: "chill" },
-  { value: 3, emoji: "😤", label: "solid" },
-  { value: 4, emoji: "🔥", label: "fire" },
-  { value: 5, emoji: "💥", label: "dope" },
+  { value: 1, label: "weak" },
+  { value: 2, label: "chill" },
+  { value: 3, label: "solid" },
+  { value: 4, label: "fire" },
+  { value: 5, label: "dope" },
 ];
 const IMPACT_TENSION = { 1: "low", 2: "low", 3: "mid", 4: "high", 5: "peak" };
 
@@ -785,7 +785,7 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
                       <span style={{
                         fontSize: active ? 28 : 22, transition: "font-size 0.15s",
                         filter: active ? "drop-shadow(0 0 6px rgba(229,57,53,0.4))" : "none"
-                      }}>{lvl.emoji}</span>
+                      }}>{lvl.value}</span>
                       <span style={{
                         fontSize: 10, fontFamily: FONT_DISPLAY, fontWeight: 700,
                         color: active ? C.accent : C.textMuted, letterSpacing: 0.3

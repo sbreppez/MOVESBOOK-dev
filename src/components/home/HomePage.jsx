@@ -355,7 +355,7 @@ export const HomePage = ({
         <div style={{ padding: "6px 12px" }}>
           {todayTiles.length === 0 && (
             <div style={{ textAlign: "center", padding: "40px 20px", color: C.textMuted }}>
-              <div style={{ fontSize: 32, marginBottom: 10 }}>🌅</div>
+              <div style={{ marginBottom: 10 }}><Ic n="sun" s={32} c={C.textMuted}/></div>
               <div style={{ fontSize: 14, fontWeight: 800, fontFamily: FONT_DISPLAY, marginBottom: 6, textTransform: "uppercase" }}>
                 {t("dayStartsHere")}
               </div>

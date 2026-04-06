@@ -475,9 +475,7 @@ export const Spar1v1 = ({ sparring, onSaveSession, addCalendarEvent, rivals, onR
                       setShowPeoplePicker(false);
                     }}
                       style={{ width:"100%", padding:"10px 14px", border:"none", background:"transparent", cursor:"pointer", display:"flex", alignItems:"center", gap:8, textAlign:"left" }}>
-                      <span style={{ fontSize:12, color:C.textMuted }}>
-                        {p.type === "rival" ? "⚔️" : p.type === "sparringMate" ? "🤜" : "👥"}
-                      </span>
+                      <Ic n={p.type==="rival"?"swords":p.type==="sparringMate"?"fist":"users"} s={12} c={C.textMuted}/>
                       <span style={{ fontFamily:FONT_BODY, fontSize:14, color:C.text }}>{p.name}</span>
                       <span style={{ fontFamily:FONT_DISPLAY, fontSize:10, color:C.textMuted, marginLeft:"auto", textTransform:"uppercase" }}>
                         {p.type === "sparringMate" ? t("sparringMate") : p.type === "crew" ? t("crew") : t("rivals")}
@@ -772,7 +770,7 @@ export const Spar1v1 = ({ sparring, onSaveSession, addCalendarEvent, rivals, onR
           {pendingPRs.length > 0 && (<>
             <style>{`@keyframes mb-pr-pop { 0% { transform:scale(0.5); opacity:0; } 50% { transform:scale(1.1); } 100% { transform:scale(1); opacity:1; } }`}</style>
             <div style={{ background:`${C.accent}14`, border:`1.5px solid ${C.accent}40`, borderRadius:12, padding:"10px 14px", marginBottom:14, display:"flex", alignItems:"center", gap:10, animation:"mb-pr-pop 0.5s ease-out" }}>
-              <span style={{ fontSize:22 }}>🔥</span>
+              <Ic n="flame" s={22} c={C.accent}/>
               <div>
                 <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:12, color:C.accent, letterSpacing:1.5 }}>{t("newPersonalRecord")}</div>
                 <div style={{ fontFamily:FONT_BODY, fontSize:11, color:C.textSec, marginTop:2 }}>
@@ -886,7 +884,7 @@ export const Spar1v1 = ({ sparring, onSaveSession, addCalendarEvent, rivals, onR
 
     return (
       <div style={{ position:"absolute", inset:0, zIndex:500, background:C.bg, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:24 }}>
-        <div style={{ fontSize:80, marginBottom:16 }}>🔥</div>
+        <div style={{ marginBottom:16 }}><Ic n="flame" s={64} c={C.accent}/></div>
         <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:32, color:C.text, textAlign:"center", letterSpacing:1 }}>
           {prMessages[prBroken.type] || "NEW RECORD"}
         </div>
@@ -921,7 +919,7 @@ export const Spar1v1 = ({ sparring, onSaveSession, addCalendarEvent, rivals, onR
   if (showAddPerson && savedSession) {
     return (
       <div style={{ position:"absolute", inset:0, zIndex:500, background:C.bg, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:24 }}>
-        <div style={{ fontSize:40, marginBottom:12 }}>🤝</div>
+        <div style={{ marginBottom:12 }}><Ic n="users" s={40} c={C.textMuted}/></div>
         <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:18, color:C.text, textAlign:"center", marginBottom:4, textTransform:"uppercase" }}>
           {t("addPersonPrompt")}
         </div>

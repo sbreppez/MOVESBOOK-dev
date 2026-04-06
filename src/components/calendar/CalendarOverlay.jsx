@@ -393,17 +393,17 @@ export const CalendarOverlay = ({
               <div style={{ background: C.surfaceAlt, borderRadius: 10, padding: 6, marginBottom: 8,
                 border: `1px solid ${C.border}` }}>
                 {[
-                  { type: "training", emoji: "🎯", label: t("training") },
-                  { type: "battle", emoji: "⚔️", label: t("battleEvent") },
-                  { type: "rest", emoji: "😴", label: t("restDay") },
-                  { type: "journal", emoji: "📌", label: t("journalEvent") },
+                  { type: "training", icon: "target", label: t("training") },
+                  { type: "battle", icon: "swords", label: t("battleEvent") },
+                  { type: "rest", icon: "pause", label: t("restDay") },
+                  { type: "journal", icon: "mapPin", label: t("journalEvent") },
                 ].map(opt => (
                   <button key={opt.type} onClick={() => openNewEvent(opt.type)}
                     style={{ width: "100%", padding: "10px 12px", background: "none", border: "none",
                       cursor: "pointer", display: "flex", alignItems: "center", gap: 10,
                       color: C.text, fontSize: 13, fontFamily: FONT_DISPLAY, fontWeight: 700,
                       letterSpacing: 0.5, borderRadius: 8 }}>
-                    <span style={{ fontSize: 16 }}>{opt.emoji}</span>{opt.label}
+                    <Ic n={opt.icon} s={16} c={C.textSec}/>{opt.label}
                   </button>
                 ))}
               </div>
@@ -482,9 +482,7 @@ export const CalendarOverlay = ({
                     padding: "8px 10px", background: C.surfaceAlt, borderRadius: 10, marginBottom: 4 }}>
                     <div style={{ flex: 1 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                        <span style={{ fontSize: 14 }}>
-                          {e.type === "training" ? "🎯" : e.type === "battle" ? "⚔️" : e.type === "rest" ? "😴" : "📌"}
-                        </span>
+                        <Ic n={e.type==="training"?"target":e.type==="battle"?"swords":e.type==="rest"?"pause":"mapPin"} s={14}/>
                         <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12, color: C.text }}>
                           {e.title || t(e.type === "training" ? "trainingSession" : e.type === "battle" ? "battleEvent" : e.type === "rest" ? "restDay" : "journalEvent")}
                         </span>

@@ -182,17 +182,17 @@ export const SessionJournal = ({
         {!isEdit && (
           <div style={{ display: "flex", gap: 6, marginBottom: 14, flexWrap: "wrap" }}>
             {[
-              { type: "training", emoji: "🎯", label: t("training") },
-              { type: "battle", emoji: "⚔️", label: t("battleEvent") },
-              { type: "rest", emoji: "😴", label: t("restDay") },
-              { type: "journal", emoji: "📌", label: t("journalEvent") },
+              { type: "training", icon: "target", label: t("training") },
+              { type: "battle", icon: "swords", label: t("battleEvent") },
+              { type: "rest", icon: "pause", label: t("restDay") },
+              { type: "journal", icon: "mapPin", label: t("journalEvent") },
             ].map(opt => (
               <button key={opt.type} onClick={() => setType(opt.type)}
                 style={{
                   ...chipStyle(type === opt.type),
                   display: "flex", alignItems: "center", gap: 4,
                 }}>
-                <span style={{ fontSize: 13 }}>{opt.emoji}</span>{opt.label}
+                <Ic n={opt.icon} s={13} c={C.textSec}/>{opt.label}
               </button>
             ))}
           </div>

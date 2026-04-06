@@ -472,7 +472,7 @@ export const ManageOverlay = ({ constraint, onConstraintChange, onClose, addToas
         {/* Empty state */}
         {Object.values(grouped).every(g => g.length === 0) && customList.length === 0 && (
           <div style={{ textAlign:"center", padding:40, color:C.textMuted }}>
-            <div style={{ fontSize:28, marginBottom:8 }}>🎯</div>
+            <div style={{ marginBottom:8 }}><Ic n="target" s={28} c={C.textMuted}/></div>
             <p style={{ fontSize:13 }}>{t("constraintNoPool")}</p>
           </div>
         )}

@@ -503,7 +503,7 @@ export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToa
                   borderRadius:10, padding:"10px 16px", cursor:"pointer",
                   fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, letterSpacing:0.5,
                 }}>
-                <span>⏱</span> {t("timer")}
+                <Ic n="timer" s={14} style={{display:"inline-block",verticalAlign:"middle",marginRight:4}}/> {t("timer")}
               </button>
             </div>
 

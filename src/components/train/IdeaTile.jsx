@@ -28,7 +28,7 @@ export const IdeaTile = (props) => {
   const isTarget = idea.type === "target";
   const isPinned = idea.pinned || isGoal || isTarget;
   const isTile   = viewMode === "tiles";
-  const typeEmoji = isGoal ? "🎯" : isTarget ? "🏹" : "📝";
+  const typeIcon = isGoal ? "target" : isTarget ? "crosshair" : "fileText";
   const typeLabel = isGoal ? "GOAL" : isTarget ? "TARGET" : "NOTE";
 
   const handleOpenMenu = (e) => {
@@ -36,7 +36,7 @@ export const IdeaTile = (props) => {
     const rect = btnRef.current.getBoundingClientRect();
     openMenu({
       rect,
-      idea, color, isGoal, isPinned, typeEmoji, typeLabel, text, title,
+      idea, color, isGoal, isPinned, typeIcon, typeLabel, text, title,
       onEdit, onDelete, onDuplicate, onAddToMove, onTogglePin, onChangeColor,
     });
   };
@@ -51,7 +51,7 @@ export const IdeaTile = (props) => {
           {/* Title row */}
           <div style={{ display:"flex", alignItems:"flex-start", gap:6, marginBottom:6 }}>
             {/* Type icon */}
-            <span style={{ fontSize:14, flexShrink:0, paddingTop:1 }} title={typeLabel}>{typeEmoji}</span>
+            <span style={{ flexShrink:0, paddingTop:1 }} title={typeLabel}><Ic n={typeIcon} s={14}/></span>
             <div style={{ flex:1, minWidth:0 }} onClick={onEdit}>
               <div style={{ fontWeight:800, fontSize:13, color: isGoal ? C.accent : C.brown, letterSpacing:1.1, fontFamily:FONT_DISPLAY, cursor:"pointer", lineHeight:1.3, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
                 <Highlight text={title.toUpperCase()} query={searchQuery}/>
@@ -98,12 +98,12 @@ export const IdeaTile = (props) => {
                   <div style={{ fontSize:9, color:tp.color, fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:0.5, marginTop:2 }}>{tp.label}</div>
                 </div>
               );})()}
-              {idea.byWhen&&<div style={{ fontSize:10, color:C.textMuted, marginTop:4 }}>{"📅"} {idea.byWhen}</div>}
+              {idea.byWhen&&<div style={{ fontSize:10, color:C.textMuted, marginTop:4 }}><Ic n="calendar" s={10}/> {idea.byWhen}</div>}
             </div>
           ) : isGoal ? (
             <div style={{ flex:1 }}>
               <div style={{ fontSize:11, color:C.textMuted, fontFamily:FONT_BODY }}>
-                {idea.byWhen ? <span>{"📅"} <strong style={{color:C.textSec}}>{idea.byWhen}</strong></span> : <span style={{fontStyle:"italic"}}>{t("noDeadline")}</span>}
+                {idea.byWhen ? <span><Ic n="calendar" s={10}/> <strong style={{color:C.textSec}}>{idea.byWhen}</strong></span> : <span style={{fontStyle:"italic"}}>{t("noDeadline")}</span>}
               {idea.byWhen&&settings.showDeadlineIndicator!==false&&(()=>{ const tp=goalTimeProgress(idea.createdDate||idea.date, idea.byWhen); if(!tp) return null; return (
                 <span style={{ fontSize:9, color:tp.color, fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:0.5, marginLeft:6 }}>{tp.label}</span>
               );})()}
@@ -133,9 +133,9 @@ export const IdeaTile = (props) => {
                     <div>
                       <div style={{ fontSize:9, fontWeight:800, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY, marginBottom:4 }}>COMMITMENTS</div>
                       <div style={{ display:"flex", flexWrap:"wrap", gap:4 }}>
-                        {idea.daysPerWeek&&<span style={{ fontSize:10, color, background:`${color}18`, borderRadius:4, padding:"2px 7px", fontFamily:FONT_DISPLAY, fontWeight:700 }}>{"📅"} {idea.daysPerWeek}</span>}
-                        {idea.sessionLength&&<span style={{ fontSize:10, color:C.textSec, background:C.surfaceAlt, borderRadius:4, padding:"2px 7px", fontFamily:FONT_DISPLAY }}>{"⏱"} {idea.sessionLength}</span>}
-                        {idea.trainWhere&&<span style={{ fontSize:10, color:C.textSec, background:C.surfaceAlt, borderRadius:4, padding:"2px 7px", fontFamily:FONT_DISPLAY }}>{"📍"} {idea.trainWhere}</span>}
+                        {idea.daysPerWeek&&<span style={{ fontSize:10, color, background:`${color}18`, borderRadius:4, padding:"2px 7px", fontFamily:FONT_DISPLAY, fontWeight:700 }}><Ic n="calendar" s={10}/> {idea.daysPerWeek}</span>}
+                        {idea.sessionLength&&<span style={{ fontSize:10, color:C.textSec, background:C.surfaceAlt, borderRadius:4, padding:"2px 7px", fontFamily:FONT_DISPLAY }}><Ic n="timer" s={10}/> {idea.sessionLength}</span>}
+                        {idea.trainWhere&&<span style={{ fontSize:10, color:C.textSec, background:C.surfaceAlt, borderRadius:4, padding:"2px 7px", fontFamily:FONT_DISPLAY }}><Ic n="mapPin" s={10}/> {idea.trainWhere}</span>}
                       </div>
                     </div>
                   )}
@@ -192,7 +192,7 @@ export const IdeaTile = (props) => {
             <Ic n={expanded?"chevD":"chevR"} s={13} c={C.textMuted}/>
           </button>
           {/* Type icon */}
-          <span style={{ fontSize:13, flexShrink:0 }} title={typeLabel}>{typeEmoji}</span>
+          <span style={{ flexShrink:0 }} title={typeLabel}><Ic n={typeIcon} s={13}/></span>
           <div style={{ flex:1, minWidth:0 }} onClick={onEdit}>
             <span style={{ fontWeight:800, fontSize:14, color: isGoal ? C.accent : C.brown, letterSpacing:1.2, fontFamily:FONT_DISPLAY, cursor:"pointer", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", display:"block" }}>
               <Highlight text={title.toUpperCase()} query={searchQuery}/>
@@ -202,7 +202,7 @@ export const IdeaTile = (props) => {
               const tp = goalTimeProgress(idea.createdDate||idea.date, idea.byWhen);
               return (
                 <div style={{ display:"flex", alignItems:"center", gap:6, marginTop:2, flexWrap:"wrap" }}>
-                  {idea.byWhen&&<span style={{ fontSize:11, color:C.textMuted }}>{"📅"} {idea.byWhen}</span>}
+                  {idea.byWhen&&<span style={{ fontSize:11, color:C.textMuted }}><Ic n="calendar" s={10}/> {idea.byWhen}</span>}
                   {tp&&settings.showDeadlineIndicator!==false&&<span style={{ fontSize:11, fontWeight:800, color:tp.color, fontFamily:FONT_DISPLAY }}>{tp.label}</span>}
                 </div>
               );
@@ -266,7 +266,7 @@ export const IdeaTile = (props) => {
                     <div style={{ fontSize:10, color:tp.color, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:0.5, marginTop:3 }}>{tp.label}</div>
                   </div>
                 );})()}
-                {idea.byWhen&&<div style={{ fontSize:11, color:C.textMuted }}>{"📅"} {t("deadlineColon")} {idea.byWhen}</div>}
+                {idea.byWhen&&<div style={{ fontSize:11, color:C.textMuted }}><Ic n="calendar" s={10}/> {t("deadlineColon")} {idea.byWhen}</div>}
                 {idea.autoLink&&<div style={{ fontSize:10, color:C.textMuted, fontStyle:"italic" }}>{t("autoLinkedMoveLib")}</div>}
               </div>
             ) : isGoal ? (

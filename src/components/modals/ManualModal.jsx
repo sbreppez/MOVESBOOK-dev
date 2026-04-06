@@ -110,7 +110,7 @@ export const ManualModal = ({ onClose }) => {
                 style={{ width:"100%", display:"flex", alignItems:"center", gap:10,
                   padding:"12px 16px", background:"none", border:"none", cursor:"pointer",
                   textAlign:"left" }}>
-                <span style={{ fontSize:18 }}>{sec.icon}</span>
+                <Ic n={sec.icon} s={18} c={C.textMuted}/>
                 <span style={{ flex:1, fontWeight:900, fontSize:13, letterSpacing:1.5,
                   fontFamily:FONT_DISPLAY, color:C.text }}>{sec.title.replace(/^\p{Emoji}\s*/u, "")}</span>
                 <span style={{ fontSize:11, color:C.textMuted, fontFamily:FONT_DISPLAY,

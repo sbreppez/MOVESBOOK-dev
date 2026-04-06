@@ -414,13 +414,13 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
         <div style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:24, gap:16 }}>
           <button onClick={() => setSparMode("solo")}
             style={{ width:"100%", maxWidth:320, padding:"28px 20px", borderRadius:16, border:`2px solid ${C.border}`, background:C.surface, cursor:"pointer", textAlign:"center", transition:"all 0.15s" }}>
-            <div style={{ fontSize:36, marginBottom:8 }}>🥊</div>
+            <div style={{ marginBottom:8 }}><Ic n="fist" s={36} c={C.text}/></div>
             <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:20, color:C.text, letterSpacing:1, textTransform:"uppercase" }}>{t("soloSpar")}</div>
             <div style={{ fontSize:13, color:C.textMuted, marginTop:6 }}>{t("soloSparDesc")}</div>
           </button>
           <button onClick={() => setSparMode("1v1")}
             style={{ width:"100%", maxWidth:320, padding:"28px 20px", borderRadius:16, border:`2px solid ${C.accent}44`, background:C.accent + "0a", cursor:"pointer", textAlign:"center", transition:"all 0.15s" }}>
-            <div style={{ fontSize:36, marginBottom:8 }}>⚔️</div>
+            <div style={{ marginBottom:8 }}><Ic n="swords" s={36} c={C.accent}/></div>
             <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:20, color:C.accent, letterSpacing:1, textTransform:"uppercase" }}>{t("oneVsOne")}</div>
             <div style={{ fontSize:13, color:C.textMuted, marginTop:6 }}>{t("oneVsOneDesc")}</div>
           </button>
@@ -455,7 +455,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
       <div style={{ position:"absolute", inset:0, zIndex:500, background:C.bg, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:24 }}>
         <style>{`@keyframes mb-pr-pop { 0% { transform:scale(0.5); opacity:0; } 50% { transform:scale(1.1); } 100% { transform:scale(1); opacity:1; } }`}</style>
         <div style={{ animation:"mb-pr-pop 0.6s ease-out", textAlign:"center" }}>
-          <div style={{ fontSize:64, marginBottom:12 }}>🔥</div>
+          <div style={{ marginBottom:12 }}><Ic n="flame" s={48} c={C.accent}/></div>
           <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:22, color:C.accent, letterSpacing:2, marginBottom:8 }}>
             {t("newRecord").toUpperCase()}!
           </div>
@@ -493,9 +493,9 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
   // ── SETUP SCREEN ──
   if (screen === "setup") {
     const MODE_CARDS = [
-      { id: "rounds", emoji: "🔢", label: t("roundsMode"), desc: t("setNumberOfRounds") },
-      { id: "time", emoji: "⏱", label: t("timeLimitMode"), desc: t("trainWithinTimeWindow") },
-      { id: "death", emoji: "💀", label: t("cypherTillDeath"), desc: t("noLimitGoUntilYouStop") },
+      { id: "rounds", icon: "hash", label: t("roundsMode"), desc: t("setNumberOfRounds") },
+      { id: "time", icon: "timer", label: t("timeLimitMode"), desc: t("trainWithinTimeWindow") },
+      { id: "death", icon: "skull", label: t("cypherTillDeath"), desc: t("noLimitGoUntilYouStop") },
     ];
     const RATIO_OPTIONS = [0.5, 0.75, 1.0, 1.5, 2.0];
     const TIME_OPTIONS = [5, 10, 15, 20, 30];
@@ -528,7 +528,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
                     background: active ? (C.accent + "14") : C.surface,
                     border: `2px solid ${active ? C.accent : C.border}`,
                     borderRadius:12, cursor:"pointer", textAlign:"left", transition:"all 0.15s" }}>
-                  <span style={{ fontSize:24 }}>{mc.emoji}</span>
+                  <Ic n={mc.icon} s={24}/>
                   <div>
                     <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:14, color: active ? C.accent : C.text, letterSpacing:0.5 }}>{mc.label}</div>
                     <div style={{ fontSize:12, color:C.textMuted, marginTop:2 }}>{mc.desc}</div>
@@ -667,9 +667,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
             )}
           </div>
           {/* Mode emoji */}
-          <span style={{ fontSize:18 }}>
-            {mode === "rounds" ? "🔢" : mode === "time" ? "⏱" : "💀"}
-          </span>
+          <Ic n={mode==="rounds"?"hash":mode==="time"?"timer":"skull"} s={18}/>
         </div>
 
         {/* Progress dots */}
@@ -686,8 +684,8 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
             <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:64, color:C.accent, lineHeight:1 }}>
               {t("tapToStart")}
             </div>
-            <div style={{ fontSize:18, marginTop:16 }}>
-              {mode === "rounds" ? "🔢" : mode === "time" ? "⏱" : "💀"}{" "}
+            <div style={{ fontSize:18, marginTop:16, display:"flex", alignItems:"center", gap:6 }}>
+              <Ic n={mode==="rounds"?"hash":mode==="time"?"timer":"skull"} s={18}/>
               <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, color:C.textSec }}>
                 {mode === "rounds" ? t("roundsMode") : mode === "time" ? t("timeLimitMode") : t("cypherTillDeath")}
               </span>
@@ -810,7 +808,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
   // ── DONE SCREEN ──
   if (screen === "done" && completedSession) {
     const cs = completedSession;
-    const modeEmoji = mode === "rounds" ? "🔢" : mode === "time" ? "⏱" : "💀";
+    const modeIcon = mode === "rounds" ? "hash" : mode === "time" ? "timer" : "skull";
     const modeText = mode === "death" ? t("cypherTillDeath") : mode === "time" ? t("timeLimitMode") : t("roundsMode");
     const showMovePicker = settings.trackMovesInSparring !== false;
 
@@ -839,7 +837,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
           {pendingPRs.length > 0 && (<>
             <style>{`@keyframes mb-pr-pop { 0% { transform:scale(0.5); opacity:0; } 50% { transform:scale(1.1); } 100% { transform:scale(1); opacity:1; } }`}</style>
             <div style={{ background:`${C.accent}14`, border:`1.5px solid ${C.accent}40`, borderRadius:12, padding:"10px 14px", marginBottom:14, display:"flex", alignItems:"center", gap:10, animation:"mb-pr-pop 0.5s ease-out" }}>
-              <span style={{ fontSize:22 }}>🔥</span>
+              <Ic n="flame" s={22} c={C.accent}/>
               <div>
                 <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:12, color:C.accent, letterSpacing:1.5 }}>{t("newPersonalRecord")}</div>
                 <div style={{ fontFamily:FONT_BODY, fontSize:11, color:C.textSec, marginTop:2 }}>
@@ -851,7 +849,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
 
           {/* Mode badge */}
           <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:16 }}>
-            <span style={{ fontSize:18 }}>{modeEmoji}</span>
+            <Ic n={modeIcon} s={18}/>
             <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:13, color:C.textSec }}>{modeText}</span>
           </div>
 
@@ -980,12 +978,12 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
           )}
           {sessions.map(s => {
             const d = new Date(s.date);
-            const modeEmoji = s.mode === "rounds" ? "🔢" : s.mode === "time" ? "⏱" : "💀";
+            const modeIcon = s.mode === "rounds" ? "hash" : s.mode === "time" ? "timer" : "skull";
             return (
               <div key={s.id} style={{ padding:"12px 14px", marginBottom:8, background:C.surface, border:`1px solid ${C.border}`, borderRadius:10 }}>
                 <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
                   <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-                    <span style={{ fontSize:16 }}>{modeEmoji}</span>
+                    <Ic n={modeIcon} s={16}/>
                     <div>
                       <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:14, color:C.text }}>
                         {s.rounds} {t("roundsMode").toLowerCase()}

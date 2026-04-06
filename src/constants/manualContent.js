@@ -4,7 +4,7 @@
 export const MANUAL_CONTENT = {
   en: [
     {
-      id:"overview", icon:"📖", title:"Overview",
+      id:"overview", icon:"book", title:"Overview",
       items:[
         { title:"What is MovesBook?",
           body:"MovesBook is a personal breaking trainer designed to help you train smarter. It covers every stage of your practice: setting goals, building your move library, planning battle sets, and tracking daily habits. Everything is saved locally on your device and synced to the cloud when you're signed in." },
@@ -19,7 +19,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"home", icon:"🏠", title:"HOME",
+      id:"home", icon:"home", title:"HOME",
       items:[
         { title:"What HOME is for",
           body:"HOME is your daily planning space. Build your day with routines, ideas, and goals. Everything is user-added — no hardcoded cards or suggestions." },
@@ -34,7 +34,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"moves", icon:"📜", title:"MOVES",
+      id:"moves", icon:"scroll", title:"MOVES",
       items:[
         { title:"What MOVES is for",
           body:"MOVES is your personal move library. Every move you know or are learning lives here. Organise by category, track mastery, add descriptions and video references, and group moves into sets for battle." },
@@ -59,7 +59,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"battle", icon:"⚔️", title:"BATTLE",
+      id:"battle", icon:"swords", title:"BATTLE",
       items:[
         { title:"What BATTLE is for",
           body:"BATTLE is your competition preparation hub. Plan rounds, prep for events, build freestyle lists, and manage your rivals and sparring partners." },
@@ -131,7 +131,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"tips", icon:"💡", title:"Tips & Tricks",
+      id:"tips", icon:"bulb", title:"Tips & Tricks",
       items:[
         { title:"Use emojis in titles",
           body:"Goals, habits, notes and moves all support emojis in the title. E.g. '👟 Daily Practice', '🏹 Learn 20 moves'. Makes lists easier to scan." },
@@ -151,7 +151,7 @@ export const MANUAL_CONTENT = {
 
   it: [
     {
-      id:"overview", icon:"📖", title:"Panoramica",
+      id:"overview", icon:"book", title:"Panoramica",
       items:[
         { title:"Cos'è MovesBook?",
           body:"MovesBook è un trainer personale per breaking progettato per aiutarti ad allenarti in modo più intelligente. Copre ogni fase della tua pratica: impostare obiettivi, costruire la tua libreria di mosse, pianificare set per le battle e monitorare le abitudini quotidiane. Tutto viene salvato localmente sul tuo dispositivo e sincronizzato nel cloud quando sei connesso." },
@@ -166,7 +166,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"home", icon:"🏠", title:"HOME",
+      id:"home", icon:"home", title:"HOME",
       items:[
         { title:"A cosa serve HOME",
           body:"HOME è il tuo spazio di pianificazione giornaliera. Costruisci la tua giornata con routine, idee e obiettivi. Tutto è aggiunto dall'utente — nessuna carta preimpostata o suggerimento." },
@@ -181,7 +181,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"moves", icon:"📜", title:"MOVES",
+      id:"moves", icon:"scroll", title:"MOVES",
       items:[
         { title:"A cosa serve MOVES",
           body:"MOVES è la tua libreria di mosse personale. Ogni mossa che conosci o stai imparando vive qui. Organizza per categoria, traccia la padronanza, aggiungi descrizioni e riferimenti video, e raggruppa le mosse in set per la battle." },
@@ -206,7 +206,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"battle", icon:"⚔️", title:"BATTLE",
+      id:"battle", icon:"swords", title:"BATTLE",
       items:[
         { title:"A cosa serve BATTLE",
           body:"BATTLE è il tuo hub di preparazione alle competizioni. Pianifica round, preparati per eventi, costruisci liste freestyle e gestisci rivali e partner di allenamento." },
@@ -278,7 +278,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"tips", icon:"💡", title:"Consigli e Trucchi",
+      id:"tips", icon:"bulb", title:"Consigli e Trucchi",
       items:[
         { title:"Usa emoji nei titoli",
           body:"Obiettivi, abitudini, note e mosse supportano tutti emoji nel titolo. Es. '👟 Pratica Quotidiana', '🏹 Impara 20 mosse'. Rende le liste più facili da scansionare." },
@@ -298,7 +298,7 @@ export const MANUAL_CONTENT = {
 
   es: [
     {
-      id:"overview", icon:"📖", title:"Descripción General",
+      id:"overview", icon:"book", title:"Descripción General",
       items:[
         { title:"¿Qué es MovesBook?",
           body:"MovesBook es un entrenador personal de breaking diseñado para ayudarte a entrenar de manera más inteligente. Cubre cada etapa de tu práctica: establecer objetivos, construir tu biblioteca de movimientos, planificar sets de batalla y hacer seguimiento de hábitos diarios. Todo se guarda localmente en tu dispositivo y se sincroniza en la nube cuando inicias sesión." },
@@ -313,7 +313,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"home", icon:"🏠", title:"HOME",
+      id:"home", icon:"home", title:"HOME",
       items:[
         { title:"Para qué sirve HOME",
           body:"HOME es tu espacio de planificación diaria. Construye tu día con rutinas, ideas y objetivos. Todo es añadido por el usuario — sin tarjetas predefinidas ni sugerencias." },
@@ -328,7 +328,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"moves", icon:"📜", title:"MOVES",
+      id:"moves", icon:"scroll", title:"MOVES",
       items:[
         { title:"Para qué sirve MOVES",
           body:"MOVES es tu biblioteca personal de movimientos. Cada movimiento que conoces o estás aprendiendo vive aquí. Organiza por categoría, rastrea el dominio, agrega descripciones y referencias de video, y agrupa movimientos en sets para batalla." },
@@ -353,7 +353,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"battle", icon:"⚔️", title:"BATTLE",
+      id:"battle", icon:"swords", title:"BATTLE",
       items:[
         { title:"Para qué sirve BATTLE",
           body:"BATTLE es tu centro de preparación para competiciones. Planifica rounds, prepárate para eventos, construye listas de freestyle y gestiona tus rivales y compañeros de entrenamiento." },
@@ -425,7 +425,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"tips", icon:"💡", title:"Consejos y Trucos",
+      id:"tips", icon:"bulb", title:"Consejos y Trucos",
       items:[
         { title:"Usa emojis en los títulos",
           body:"Objetivos, hábitos, notas y movimientos soportan emojis en el título. Ej. '👟 Práctica Diaria', '🏹 Aprende 20 movimientos'. Hace las listas más fáciles de escanear." },
@@ -445,7 +445,7 @@ export const MANUAL_CONTENT = {
 
   fr: [
     {
-      id:"overview", icon:"📖", title:"Aperçu",
+      id:"overview", icon:"book", title:"Aperçu",
       items:[
         { title:"Qu'est-ce que MovesBook ?",
           body:"MovesBook est un entraîneur personnel de breaking conçu pour vous aider à vous entraîner plus intelligemment. Il couvre chaque étape de votre pratique : définir des objectifs, construire votre bibliothèque de mouvements, planifier des sets de battle et suivre les habitudes quotidiennes. Tout est sauvegardé localement sur votre appareil et synchronisé dans le cloud lorsque vous êtes connecté." },
@@ -460,7 +460,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"home", icon:"🏠", title:"HOME",
+      id:"home", icon:"home", title:"HOME",
       items:[
         { title:"À quoi sert HOME",
           body:"HOME est votre espace de planification quotidienne. Construisez votre journée avec des routines, idées et objectifs. Tout est ajouté par l'utilisateur — pas de cartes prédéfinies ni de suggestions." },
@@ -475,7 +475,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"moves", icon:"📜", title:"MOVES",
+      id:"moves", icon:"scroll", title:"MOVES",
       items:[
         { title:"À quoi sert MOVES",
           body:"MOVES est votre bibliothèque de mouvements personnelle. Chaque mouvement que vous connaissez ou apprenez vit ici. Organisez par catégorie, suivez la maîtrise, ajoutez des descriptions et références vidéo, et groupez les mouvements en sets pour la battle." },
@@ -500,7 +500,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"battle", icon:"⚔️", title:"BATTLE",
+      id:"battle", icon:"swords", title:"BATTLE",
       items:[
         { title:"À quoi sert BATTLE",
           body:"BATTLE est votre centre de préparation aux compétitions. Planifiez des rounds, préparez des événements, construisez des listes freestyle et gérez vos rivaux et partenaires d'entraînement." },
@@ -572,7 +572,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"tips", icon:"💡", title:"Astuces",
+      id:"tips", icon:"bulb", title:"Astuces",
       items:[
         { title:"Utilisez des emojis dans les titres",
           body:"Objectifs, habitudes, notes et mouvements supportent tous les emojis dans le titre. Ex. '👟 Pratique Quotidienne', '🏹 Apprendre 20 mouvements'. Rend les listes plus faciles à parcourir." },
@@ -592,7 +592,7 @@ export const MANUAL_CONTENT = {
 
   pt: [
     {
-      id:"overview", icon:"📖", title:"Visão Geral",
+      id:"overview", icon:"book", title:"Visão Geral",
       items:[
         { title:"O que é o MovesBook?",
           body:"MovesBook é um treinador pessoal de breaking projetado para ajudá-lo a treinar de forma mais inteligente. Cobre cada etapa da sua prática: definir objetivos, construir sua biblioteca de movimentos, planejar sets de battle e acompanhar hábitos diários. Tudo é salvo localmente no seu dispositivo e sincronizado na nuvem quando você está conectado." },
@@ -607,7 +607,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"home", icon:"🏠", title:"HOME",
+      id:"home", icon:"home", title:"HOME",
       items:[
         { title:"Para que serve o HOME",
           body:"HOME é seu espaço de planejamento diário. Construa seu dia com rotinas, ideias e objetivos. Tudo é adicionado pelo usuário — sem cartões predefinidos ou sugestões." },
@@ -622,7 +622,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"moves", icon:"📜", title:"MOVES",
+      id:"moves", icon:"scroll", title:"MOVES",
       items:[
         { title:"Para que serve o MOVES", body:"MOVES é sua biblioteca pessoal de movimentos. Cada movimento que você conhece ou está aprendendo mora aqui. Organize por categoria, acompanhe o domínio, adicione descrições e referências de vídeo, e agrupe movimentos em sets para battle." },
         { title:"Adicionar um movimento", body:"Toque + na barra inferior. Preencha: Nome do movimento (obrigatório), Categoria, Descrição, Link de vídeo, Domínio (slider 0–100%). Toque Salvar." },
@@ -637,7 +637,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"battle", icon:"⚔️", title:"BATTLE",
+      id:"battle", icon:"swords", title:"BATTLE",
       items:[
         { title:"Para que serve o BATTLE", body:"BATTLE é seu centro de preparação para competições. Planeje rounds, prepare-se para eventos, construa listas freestyle e gerencie seus rivais e parceiros de treino." },
         { title:"PLAN — Criar um round", body:"Em BATTLE > PLAN, toque + para abrir o modal Novo Round. Defina um nome, cor e número de slots. Cada slot contém movimentos ou sets da sua biblioteca." },
@@ -683,7 +683,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"tips", icon:"💡", title:"Dicas e Truques",
+      id:"tips", icon:"bulb", title:"Dicas e Truques",
       items:[
         { title:"Use emojis nos títulos", body:"Objetivos, hábitos, notas e movimentos suportam emojis no título. Ex. '👟 Prática Diária'. Torna as listas mais fáceis de escanear." },
         { title:"Use sets para combos assinatura", body:"Crie um Set em MOVES > SETS para sua combo assinatura ou sequência de abertura." },
@@ -697,7 +697,7 @@ export const MANUAL_CONTENT = {
 
   de: [
     {
-      id:"overview", icon:"📖", title:"Überblick",
+      id:"overview", icon:"book", title:"Überblick",
       items:[
         { title:"Was ist MovesBook?", body:"MovesBook ist ein persönlicher Breaking-Trainer, der dir hilft, intelligenter zu trainieren. Er deckt jede Phase deiner Praxis ab: Ziele setzen, deine Move-Bibliothek aufbauen, Battle-Sets planen und tägliche Gewohnheiten verfolgen. Alles wird lokal auf deinem Gerät gespeichert und in die Cloud synchronisiert, wenn du angemeldet bist." },
         { title:"Die vier Haupttabs", body:"HOME — dein Tagesplan mit Routinen, Ideen und Zielen.\nMOVES — deine persönliche Move-Bibliothek, Sets und Gap-Tracker.\nBATTLE — wo du Runden planst, Events vorbereitest, Freestyle machst und Rivalen verwaltest.\nREFLECT — Kalender, Stance-Bewertung, Ziele und Notizen." },
@@ -707,7 +707,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"home", icon:"🏠", title:"HOME",
+      id:"home", icon:"home", title:"HOME",
       items:[
         { title:"Wofür HOME ist", body:"HOME ist dein täglicher Planungsbereich. Baue deinen Tag mit Routinen, Ideen und Zielen auf. Alles wird vom Benutzer hinzugefügt — keine vordefinierten Karten oder Vorschläge." },
         { title:"Der Tile-Stapel", body:"HOME ist ein einzelner scrollbarer Stapel von Tiles. Drei Typen:\n• Routine — wiederkehrende oder einmalige Aktivität mit Emoji, Name, Dauer, Beschreibung\n• Idee — schnelle Notiz, Videolink oder Trainingsgedanke\n• Ziel/Gewohnheit — aus deinen bestehenden Ziel- und Gewohnheitsdaten gezogen" },
@@ -717,7 +717,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"moves", icon:"📜", title:"MOVES",
+      id:"moves", icon:"scroll", title:"MOVES",
       items:[
         { title:"Wofür MOVES ist", body:"MOVES ist deine persönliche Move-Bibliothek. Jeder Move, den du kennst oder lernst, lebt hier. Organisiere nach Kategorie, verfolge die Beherrschung, füge Beschreibungen und Videoreferenzen hinzu und gruppiere Moves in Sets für Battles." },
         { title:"Einen Move hinzufügen", body:"Tippe + in der unteren Leiste. Fülle aus: Move-Name (erforderlich), Kategorie, Beschreibung, Videolink, Beherrschung (Slider 0–100%). Tippe Speichern." },
@@ -732,7 +732,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"battle", icon:"⚔️", title:"BATTLE",
+      id:"battle", icon:"swords", title:"BATTLE",
       items:[
         { title:"Wofür BATTLE ist", body:"BATTLE ist dein Wettkampfvorbereitungs-Hub. Plane Runden, bereite dich auf Events vor, baue Freestyle-Listen und verwalte deine Rivalen und Trainingspartner." },
         { title:"PLAN — Eine Runde erstellen", body:"In BATTLE > PLAN tippe +, um das Neue-Runde-Modal zu öffnen. Setze Name, Farbe und Anzahl der Slots. Jeder Slot enthält Moves oder Sets aus deiner Bibliothek." },
@@ -778,7 +778,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"tips", icon:"💡", title:"Tipps & Tricks",
+      id:"tips", icon:"bulb", title:"Tipps & Tricks",
       items:[
         { title:"Verwende Emojis in Titeln", body:"Ziele, Gewohnheiten, Notizen und Moves unterstützen alle Emojis im Titel. Z.B. '👟 Tägliches Training'." },
         { title:"Verwende Sets für Signature-Combos", body:"Erstelle ein Set in MOVES > SETS für deine Signature-Combo oder Eröffnungssequenz." },
@@ -792,7 +792,7 @@ export const MANUAL_CONTENT = {
 
   ja: [
     {
-      id:"overview", icon:"📖", title:"概要",
+      id:"overview", icon:"book", title:"概要",
       items:[
         { title:"MovesBookとは？", body:"MovesBookはブレイキンのパーソナルトレーナーで、よりスマートなトレーニングをサポートします。目標設定、ムーブライブラリの構築、バトルセットの計画、日々の習慣の追跡など、練習のすべての段階をカバーします。すべてのデータはデバイスにローカル保存され、サインイン時にクラウドに同期されます。" },
         { title:"4つのメインタブ", body:"HOME — ルーティン、アイデア、目標を含む日々のプラン。\nMOVES — 個人のムーブライブラリ、セット、ギャップトラッカー。\nBATTLE — ラウンドの計画、イベント準備、フリースタイル、ライバル管理。\nREFLECT — カレンダー、スタンス評価、目標、ノート。" },
@@ -802,7 +802,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"home", icon:"🏠", title:"HOME",
+      id:"home", icon:"home", title:"HOME",
       items:[
         { title:"HOMEの用途", body:"HOMEは日々の計画スペースです。ルーティン、アイデア、目標で一日を組み立てましょう。すべてユーザーが追加 — プリセットカードや提案はありません。" },
         { title:"タイルスタック", body:"HOMEはスクロール可能なタイルの1つのスタックです。3つのタイプ：\n• ルーティン — 絵文字、名前、時間、説明付きの繰り返しまたは一回限りの活動\n• アイデア — クイックメモ、動画リンク、トレーニングの思いつき\n• 目標/習慣 — 既存の目標と習慣データから取得" },
@@ -812,7 +812,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"moves", icon:"📜", title:"MOVES",
+      id:"moves", icon:"scroll", title:"MOVES",
       items:[
         { title:"MOVESの用途", body:"MOVESは個人のムーブライブラリです。知っているムーブや学習中のムーブがすべてここにあります。カテゴリで整理、習熟度を追跡、説明と動画リファレンスを追加し、バトル用にセットにグループ化できます。" },
         { title:"ムーブの追加", body:"下部バーの+をタップ。入力：ムーブ名（必須）、カテゴリ、説明、動画リンク、習熟度（0〜100%スライダー）。保存をタップ。" },
@@ -827,7 +827,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"battle", icon:"⚔️", title:"BATTLE",
+      id:"battle", icon:"swords", title:"BATTLE",
       items:[
         { title:"BATTLEの用途", body:"BATTLEは競技準備のハブです。ラウンドの計画、イベント準備、フリースタイルリストの構築、ライバルとスパーリングパートナーの管理。" },
         { title:"PLAN — ラウンドの作成", body:"BATTLE > PLANで+をタップして新しいラウンドモーダルを開きます。名前、色、スロット数を設定。各スロットにはライブラリのムーブやセットが入ります。" },
@@ -873,7 +873,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"tips", icon:"💡", title:"ヒントとコツ",
+      id:"tips", icon:"bulb", title:"ヒントとコツ",
       items:[
         { title:"タイトルに絵文字を使う", body:"目標、習慣、ノート、ムーブはすべてタイトルに絵文字をサポート。例：'👟 デイリープラクティス'。" },
         { title:"シグネチャーコンボにセットを使う", body:"MOVES > SETSでシグネチャーコンボや開始シーケンスのセットを作成。" },
@@ -887,7 +887,7 @@ export const MANUAL_CONTENT = {
 
   zh: [
     {
-      id:"overview", icon:"📖", title:"概览",
+      id:"overview", icon:"book", title:"概览",
       items:[
         { title:"什么是MovesBook？", body:"MovesBook是一个个人Breaking训练助手，旨在帮助你更智能地训练。它涵盖练习的每个阶段：设定目标、构建动作库、规划Battle套路和追踪日常习惯。所有数据保存在本地设备上，登录后同步到云端。" },
         { title:"四个主标签", body:"HOME — 包含日常安排、想法和目标的每日计划。\nMOVES — 个人动作库、套路组和差距追踪器。\nBATTLE — 规划回合、准备赛事、自由式和管理对手。\nREFLECT — 日历、状态评估、目标和笔记。" },
@@ -897,7 +897,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"home", icon:"🏠", title:"HOME",
+      id:"home", icon:"home", title:"HOME",
       items:[
         { title:"HOME的用途", body:"HOME是你的每日计划空间。用日常安排、想法和目标来规划你的一天。所有内容由用户添加——没有预设卡片或建议。" },
         { title:"磁贴堆栈", body:"HOME是一个可滚动的磁贴堆栈。三种类型：\n• 日常安排 — 带表情、名称、时长、描述的重复或一次性活动\n• 想法 — 快速笔记、视频链接或训练想法\n• 目标/习惯 — 从现有目标和习惯数据中拉取" },
@@ -907,7 +907,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"moves", icon:"📜", title:"MOVES",
+      id:"moves", icon:"scroll", title:"MOVES",
       items:[
         { title:"MOVES的用途", body:"MOVES是你的个人动作库。你知道或正在学习的每个动作都在这里。按类别组织，追踪熟练度，添加描述和视频参考，将动作分组为Battle套路。" },
         { title:"添加动作", body:"点击底部栏的+。填写：动作名称（必填）、类别、描述、视频链接、熟练度（0-100%滑块）。点击保存。" },
@@ -922,7 +922,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"battle", icon:"⚔️", title:"BATTLE",
+      id:"battle", icon:"swords", title:"BATTLE",
       items:[
         { title:"BATTLE的用途", body:"BATTLE是你的比赛准备中心。规划回合、准备赛事、构建自由式列表、管理对手和训练伙伴。" },
         { title:"PLAN — 创建回合", body:"在BATTLE > PLAN中，点击+打开新回合弹窗。设置名称、颜色和槽位数量。每个槽位包含库中的动作或套路。" },
@@ -968,7 +968,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"tips", icon:"💡", title:"提示与技巧",
+      id:"tips", icon:"bulb", title:"提示与技巧",
       items:[
         { title:"在标题中使用表情", body:"目标、习惯、笔记和动作都支持标题中的表情。例如：'👟 每日练习'。" },
         { title:"使用套路组作为招牌连招", body:"在MOVES > SETS中为你的招牌连招或开场序列创建一个套路组。" },
@@ -982,7 +982,7 @@ export const MANUAL_CONTENT = {
 
   ru: [
     {
-      id:"overview", icon:"📖", title:"Обзор",
+      id:"overview", icon:"book", title:"Обзор",
       items:[
         { title:"Что такое MovesBook?", body:"MovesBook — это персональный тренер по брейкингу, созданный для более эффективных тренировок. Он охватывает каждый этап практики: постановку целей, создание библиотеки движений, планирование батл-сетов и отслеживание ежедневных привычек. Всё сохраняется локально на устройстве и синхронизируется с облаком при входе в аккаунт." },
         { title:"Четыре основные вкладки", body:"HOME — ваш ежедневный план с рутинами, идеями и целями.\nMOVES — личная библиотека движений, сеты и трекер пробелов.\nBATTLE — планирование раундов, подготовка к мероприятиям, фристайл и управление соперниками.\nREFLECT — календарь, оценка стойки, цели и заметки." },
@@ -992,7 +992,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"home", icon:"🏠", title:"HOME",
+      id:"home", icon:"home", title:"HOME",
       items:[
         { title:"Назначение HOME", body:"HOME — ваше пространство ежедневного планирования. Стройте день с рутинами, идеями и целями. Всё добавляется пользователем — без предустановленных карточек или предложений." },
         { title:"Стек плиток", body:"HOME — единый прокручиваемый стек плиток. Три типа:\n• Рутина — повторяющаяся или разовая активность с эмодзи, названием, длительностью, описанием\n• Идея — быстрая заметка, ссылка на видео или мысль о тренировке\n• Цель/Привычка — из существующих данных целей и привычек" },
@@ -1002,7 +1002,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"moves", icon:"📜", title:"MOVES",
+      id:"moves", icon:"scroll", title:"MOVES",
       items:[
         { title:"Назначение MOVES", body:"MOVES — ваша личная библиотека движений. Каждое движение, которое вы знаете или изучаете, живёт здесь. Организуйте по категориям, отслеживайте мастерство, добавляйте описания и видео-ссылки, группируйте движения в сеты для батлов." },
         { title:"Добавление движения", body:"Нажмите + в нижней панели. Заполните: Название движения (обязательно), Категория, Описание, Ссылка на видео, Мастерство (ползунок 0–100%). Нажмите Сохранить." },
@@ -1017,7 +1017,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"battle", icon:"⚔️", title:"BATTLE",
+      id:"battle", icon:"swords", title:"BATTLE",
       items:[
         { title:"Назначение BATTLE", body:"BATTLE — ваш центр подготовки к соревнованиям. Планируйте раунды, готовьтесь к мероприятиям, создавайте списки фристайла и управляйте соперниками и спарринг-партнёрами." },
         { title:"PLAN — Создание раунда", body:"В BATTLE > PLAN нажмите + для открытия модального окна Нового Раунда. Установите название, цвет и количество слотов." },
@@ -1063,7 +1063,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"tips", icon:"💡", title:"Советы и хитрости",
+      id:"tips", icon:"bulb", title:"Советы и хитрости",
       items:[
         { title:"Используйте эмодзи в заголовках", body:"Цели, привычки, заметки и движения поддерживают эмодзи в заголовке. Например: '👟 Ежедневная практика'." },
         { title:"Используйте сеты для фирменных комбо", body:"Создайте Сет в MOVES > СЕТЫ для вашего фирменного комбо или вступительной последовательности." },
@@ -1077,7 +1077,7 @@ export const MANUAL_CONTENT = {
 
   ko: [
     {
-      id:"overview", icon:"📖", title:"개요",
+      id:"overview", icon:"book", title:"개요",
       items:[
         { title:"MovesBook이란?", body:"MovesBook은 더 스마트한 훈련을 도와주는 개인 브레이킹 트레이너입니다. 목표 설정, 무브 라이브러리 구축, 배틀 세트 계획, 일일 습관 추적 등 연습의 모든 단계를 다룹니다. 모든 데이터는 기기에 로컬 저장되며, 로그인 시 클라우드에 동기화됩니다." },
         { title:"네 개의 메인 탭", body:"HOME — 루틴, 아이디어, 목표가 포함된 일일 계획.\nMOVES — 개인 무브 라이브러리, 세트, 갭 트래커.\nBATTLE — 라운드 계획, 이벤트 준비, 프리스타일, 라이벌 관리.\nREFLECT — 캘린더, 스탠스 평가, 목표, 노트." },
@@ -1087,7 +1087,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"home", icon:"🏠", title:"HOME",
+      id:"home", icon:"home", title:"HOME",
       items:[
         { title:"HOME의 용도", body:"HOME은 일일 계획 공간입니다. 루틴, 아이디어, 목표로 하루를 구성하세요. 모든 것은 사용자가 추가 — 미리 설정된 카드나 제안 없음." },
         { title:"타일 스택", body:"HOME은 스크롤 가능한 단일 타일 스택입니다. 세 가지 유형:\n• 루틴 — 이모지, 이름, 시간, 설명이 있는 반복 또는 일회성 활동\n• 아이디어 — 빠른 메모, 동영상 링크, 훈련 생각\n• 목표/습관 — 기존 목표와 습관 데이터에서 가져옴" },
@@ -1097,7 +1097,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"moves", icon:"📜", title:"MOVES",
+      id:"moves", icon:"scroll", title:"MOVES",
       items:[
         { title:"MOVES의 용도", body:"MOVES는 개인 무브 라이브러리입니다. 알고 있거나 배우고 있는 모든 무브가 여기에 있습니다. 카테고리별로 정리, 숙련도 추적, 설명과 동영상 참조 추가, 배틀용 세트로 그룹화." },
         { title:"무브 추가", body:"하단 바의 +를 탭. 입력: 무브 이름(필수), 카테고리, 설명, 동영상 링크, 숙련도(0-100% 슬라이더). 저장 탭." },
@@ -1112,7 +1112,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"battle", icon:"⚔️", title:"BATTLE",
+      id:"battle", icon:"swords", title:"BATTLE",
       items:[
         { title:"BATTLE의 용도", body:"BATTLE은 대회 준비 허브입니다. 라운드 계획, 이벤트 준비, 프리스타일 리스트 구축, 라이벌과 훈련 파트너 관리." },
         { title:"PLAN — 라운드 만들기", body:"BATTLE > PLAN에서 +를 탭하여 새 라운드 모달을 엽니다. 이름, 색상, 슬롯 수를 설정. 각 슬롯은 라이브러리의 무브나 세트를 담습니다." },
@@ -1158,7 +1158,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"tips", icon:"💡", title:"팁과 요령",
+      id:"tips", icon:"bulb", title:"팁과 요령",
       items:[
         { title:"제목에 이모지 사용", body:"목표, 습관, 노트, 무브 모두 제목에 이모지를 지원합니다. 예: '👟 일일 연습'." },
         { title:"시그니처 콤보에 세트 사용", body:"MOVES > SETS에서 시그니처 콤보나 오프닝 시퀀스를 위한 세트를 만드세요." },
@@ -1172,7 +1172,7 @@ export const MANUAL_CONTENT = {
 
   th: [
     {
-      id:"overview", icon:"📖", title:"ภาพรวม",
+      id:"overview", icon:"book", title:"ภาพรวม",
       items:[
         { title:"MovesBook คืออะไร?", body:"MovesBook เป็นเทรนเนอร์เบรกกิ้งส่วนตัวที่ออกแบบมาเพื่อช่วยให้คุณฝึกซ้อมอย่างชาญฉลาด ครอบคลุมทุกขั้นตอนของการฝึก: ตั้งเป้าหมาย สร้างไลบรารีท่า วางแผนเซ็ตแบทเทิล และติดตามนิสัยประจำวัน ทุกอย่างบันทึกในเครื่องและซิงค์กับคลาวด์เมื่อลงชื่อเข้าใช้" },
         { title:"สี่แท็บหลัก", body:"HOME — แผนประจำวันพร้อมรูทีน ไอเดีย และเป้าหมาย\nMOVES — ไลบรารีท่าส่วนตัว เซ็ต และตัวติดตามช่องว่าง\nBATTLE — วางแผนราวนด์ เตรียมอีเวนต์ ฟรีสไตล์ และจัดการคู่แข่ง\nREFLECT — ปฏิทิน การประเมินท่าทาง เป้าหมาย และบันทึก" },
@@ -1182,7 +1182,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"home", icon:"🏠", title:"HOME",
+      id:"home", icon:"home", title:"HOME",
       items:[
         { title:"HOME ใช้สำหรับ", body:"HOME เป็นพื้นที่วางแผนประจำวัน สร้างวันของคุณด้วยรูทีน ไอเดีย และเป้าหมาย ทุกอย่างเพิ่มโดยผู้ใช้ ไม่มีการ์ดหรือคำแนะนำล่วงหน้า" },
         { title:"สแตกไทล์", body:"HOME เป็นสแตกไทล์เลื่อนได้ สามประเภท:\n• รูทีน — กิจกรรมซ้ำหรือครั้งเดียวพร้อมอีโมจิ ชื่อ เวลา คำอธิบาย\n• ไอเดีย — บันทึกย่อ ลิงก์วิดีโอ หรือความคิดฝึกซ้อม\n• เป้าหมาย/นิสัย — ดึงจากข้อมูลเป้าหมายและนิสัยที่มีอยู่" },
@@ -1192,7 +1192,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"moves", icon:"📜", title:"MOVES",
+      id:"moves", icon:"scroll", title:"MOVES",
       items:[
         { title:"MOVES ใช้สำหรับ", body:"MOVES เป็นไลบรารีท่าส่วนตัว ทุกท่าที่คุณรู้หรือกำลังเรียนอยู่ที่นี่ จัดระเบียบตามหมวดหมู่ ติดตามความชำนาญ เพิ่มคำอธิบายและวิดีโออ้างอิง จัดกลุ่มท่าเป็นเซ็ตสำหรับแบทเทิล" },
         { title:"เพิ่มท่า", body:"แตะ + ในแถบล่าง กรอก: ชื่อท่า (จำเป็น) หมวดหมู่ คำอธิบาย ลิงก์วิดีโอ ความชำนาญ (สไลเดอร์ 0–100%) แตะบันทึก" },
@@ -1207,7 +1207,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"battle", icon:"⚔️", title:"BATTLE",
+      id:"battle", icon:"swords", title:"BATTLE",
       items:[
         { title:"BATTLE ใช้สำหรับ", body:"BATTLE เป็นศูนย์เตรียมการแข่งขัน วางแผนราวนด์ เตรียมอีเวนต์ สร้างรายการฟรีสไตล์ จัดการคู่แข่งและคู่ซ้อม" },
         { title:"PLAN — สร้างราวนด์", body:"ใน BATTLE > PLAN แตะ + เพื่อเปิดโมดัลราวนด์ใหม่ ตั้งชื่อ สี และจำนวนช่อง" },
@@ -1253,7 +1253,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"tips", icon:"💡", title:"เคล็ดลับ",
+      id:"tips", icon:"bulb", title:"เคล็ดลับ",
       items:[
         { title:"ใช้อีโมจิในชื่อเรื่อง", body:"เป้าหมาย นิสัย บันทึก และท่า รองรับอีโมจิในชื่อเรื่อง เช่น '👟 ฝึกซ้อมประจำวัน'" },
         { title:"ใช้เซ็ตสำหรับคอมโบเซ็นเนเจอร์", body:"สร้างเซ็ตใน MOVES > SETS สำหรับคอมโบเซ็นเนเจอร์หรือลำดับเปิด" },
@@ -1267,7 +1267,7 @@ export const MANUAL_CONTENT = {
 
   vi: [
     {
-      id:"overview", icon:"📖", title:"Tổng Quan",
+      id:"overview", icon:"book", title:"Tổng Quan",
       items:[
         { title:"MovesBook là gì?", body:"MovesBook là huấn luyện viên breaking cá nhân được thiết kế để giúp bạn tập luyện thông minh hơn. Nó bao gồm mọi giai đoạn luyện tập: đặt mục tiêu, xây dựng thư viện động tác, lên kế hoạch set battle và theo dõi thói quen hàng ngày. Tất cả được lưu cục bộ trên thiết bị và đồng bộ lên cloud khi đăng nhập." },
         { title:"Bốn tab chính", body:"HOME — kế hoạch hàng ngày với thói quen, ý tưởng và m���c tiêu.\nMOVES — thư viện động tác cá nhân, set và theo dõi khoảng trống.\nBATTLE — lên kế hoạch round, chuẩn bị sự kiện, freestyle và quản lý đối thủ.\nREFLECT — lịch, đánh giá stance, mục tiêu và ghi chú." },
@@ -1277,7 +1277,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"home", icon:"🏠", title:"HOME",
+      id:"home", icon:"home", title:"HOME",
       items:[
         { title:"HOME dùng để làm gì", body:"HOME là không gian lập kế hoạch hàng ngày. Xây dựng ngày của bạn với thói quen, ý tưởng và mục tiêu. Tất cả do người dùng thêm — không có thẻ hay gợi ý mặc định." },
         { title:"Ngăn xếp tile", body:"HOME là một ngăn xếp tile cuộn được. Ba loại:\n• Thói quen — hoạt động lặp lại hoặc một lần với emoji, tên, thời lượng, mô tả\n• Ý tưởng — ghi chú nhanh, liên kết video hoặc suy nghĩ tập luyện\n• Mục tiêu/Thói quen — lấy từ dữ liệu mục tiêu và thói quen hiện có" },
@@ -1287,7 +1287,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"moves", icon:"📜", title:"MOVES",
+      id:"moves", icon:"scroll", title:"MOVES",
       items:[
         { title:"MOVES dùng để làm gì", body:"MOVES là thư viện động tác cá nhân. Mọi động tác bạn biết hoặc đang học đều ở đây. Sắp xếp theo danh mục, theo dõi thành thạo, thêm mô tả và tham chiếu video, nhóm động tác thành set cho battle." },
         { title:"Thêm động tác", body:"Nhấn + ở thanh dưới. Điền: Tên động tác (bắt buộc), Danh mục, Mô tả, Liên kết video, Thành thạo (thanh trượt 0–100%). Nhấn Lưu." },
@@ -1302,7 +1302,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"battle", icon:"⚔️", title:"BATTLE",
+      id:"battle", icon:"swords", title:"BATTLE",
       items:[
         { title:"BATTLE dùng để làm gì", body:"BATTLE là trung tâm chuẩn bị thi đấu. Lên kế hoạch round, chuẩn bị sự kiện, xây dựng danh sách freestyle, quản lý đối thủ và đối tác tập luyện." },
         { title:"PLAN — Tạo round", body:"Trong BATTLE > PLAN, nhấn + để mở modal Round Mới. Đặt tên, màu và số slot." },
@@ -1348,7 +1348,7 @@ export const MANUAL_CONTENT = {
       ]
     },
     {
-      id:"tips", icon:"💡", title:"Mẹo Hay",
+      id:"tips", icon:"bulb", title:"Mẹo Hay",
       items:[
         { title:"Dùng emoji trong tiêu đề", body:"Mục tiêu, thói quen, ghi chú và động tác đều hỗ trợ emoji trong tiêu đề. Ví dụ: '👟 Tập Luyện Hàng Ngày'." },
         { title:"Dùng set cho combo đặc trưng", body:"Tạo Set trong MOVES > SETS cho combo đặc trưng hoặc chuỗi mở đầu." },

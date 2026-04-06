@@ -294,7 +294,7 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
 
         {!trustMode&&toUse.length===0&&!dropping&&(
           <div style={{ textAlign:"center", padding:40, color:C.textMuted }}>
-            <div style={{ fontSize:28, marginBottom:8 }}>🎯</div>
+            <div style={{ marginBottom:8 }}><Ic n="target" s={28} c={C.textMuted}/></div>
             <p style={{ fontSize:13 }}>Tap + below to build your freestyle list</p>
           </div>
         )}

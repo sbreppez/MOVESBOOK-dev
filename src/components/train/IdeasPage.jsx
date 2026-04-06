@@ -165,7 +165,7 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
             <button onClick={onOpenCalendarJournal}
               style={{ flex:1, display:"flex", alignItems:"center", gap:8, background:"none",
                 border:"none", cursor:"pointer", padding:0, textAlign:"left" }}>
-              <span style={{ fontSize:16 }}>🎯</span>
+              <Ic n="target" s={16}/>
               <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:13, color:C.text,
                 letterSpacing:0.3 }}>{t("logTodaysSession")}</span>
               <Ic n="chevR" s={14} c={C.textMuted}/>
@@ -207,7 +207,7 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
               <button onClick={()=>{ setTrainTab("prep"); }}
                 style={{ flex:1, display:"flex", alignItems:"center", gap:8, background:"none",
                   border:"none", cursor:"pointer", padding:0, textAlign:"left" }}>
-                <span style={{ fontSize:16 }}>{"\u2694\uFE0F"}</span>
+                <Ic n="swords" s={16}/>
                 <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:13, color:C.text, letterSpacing:0.3 }}>
                   {label}
                 </span>
@@ -257,7 +257,7 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
             style={{ margin:"0 12px 8px", display:"flex", alignItems:"center", gap:8,
               background:`${pc}18`, border:`1px solid ${pc}40`, borderRadius:10, padding:"10px 14px",
               cursor:"pointer", textAlign:"left", width:"calc(100% - 24px)" }}>
-            <span style={{ fontSize:16 }}>{"\u2694\uFE0F"}</span>
+            <Ic n="swords" s={16}/>
             <span style={{ flex:1, fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, letterSpacing:0.5 }}>
               <span style={{ color:C.text }}>{displayName}</span>
               <span style={{ color:C.textSec }}> {"\u2014"} </span>
@@ -391,7 +391,7 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
             <div style={{ minHeight:36 }}/>
           )}
         </div>
-        {ideas.length===0&&<div style={{ textAlign:"center", padding:50, color:C.textMuted }}><div style={{ fontSize:32, marginBottom:10 }}>💪</div><p style={{fontSize:13}}>{t("emptyGoalsNotes")}</p></div>}
+        {ideas.length===0&&<div style={{ textAlign:"center", padding:50, color:C.textMuted }}><div style={{ marginBottom:10 }}><Ic n="dumbbell" s={28} c={C.textMuted}/></div><p style={{fontSize:13}}>{t("emptyGoalsNotes")}</p></div>}
         {filtered.length===0&&search&&<div style={{ textAlign:"center", padding:30, color:C.textMuted }}><p style={{fontSize:13}}>{t("noResultsFor")} "{search}"</p></div>}
       </div>
       }
