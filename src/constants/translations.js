@@ -205,6 +205,7 @@ export const TRANSLATIONS = {
     importComplete:"Import complete.",
     // Bottom bar & menu
     feedbackLabel:"FEEDBACK", settingsLabel:"SETTINGS",
+    legalLabel:"LEGAL", privacyPolicy:"Privacy Policy", termsOfService:"Terms of Service", disclaimers:"Disclaimers", lastUpdated:"Last updated",
     addMoveMenu:"Add Move", addCategoryMenu:"Add Category",
     // Section banner descriptions
     sectionDescTrain:"TRAIN — set your goals, capture ideas and decide what to practice.",
@@ -1376,6 +1377,7 @@ export const TRANSLATIONS = {
     importComplete:"Importazione completata.",
     // Bottom bar & menu
     feedbackLabel:"FEEDBACK", settingsLabel:"IMPOSTAZIONI",
+    legalLabel:"LEGALE", privacyPolicy:"Informativa sulla Privacy", termsOfService:"Termini di Servizio", disclaimers:"Avvertenze", lastUpdated:"Ultimo aggiornamento",
     addMoveMenu:"Aggiungi mossa", addCategoryMenu:"Aggiungi categoria",
     // Section banner
     sectionDescTrain:"TRAIN — imposta i tuoi obiettivi, cattura idee e decidi cosa praticare.",
@@ -2530,6 +2532,7 @@ export const TRANSLATIONS = {
     roundsWillBeSaved:"rondas se guardarán",
     importComplete:"Importación completada.",
     feedbackLabel:"FEEDBACK", settingsLabel:"AJUSTES",
+    legalLabel:"LEGAL", privacyPolicy:"Política de Privacidad", termsOfService:"Términos de Servicio", disclaimers:"Descargos de Responsabilidad", lastUpdated:"Última actualización",
     addMoveMenu:"Añadir movimiento", addCategoryMenu:"Añadir categoría",
     sectionDescTrain:"TRAIN — establece tus objetivos, captura ideas y decide qué practicar.",
     sectionDescMoves:"MOVES — todos tus movimientos en un solo lugar, organizados y listos para crecer.",
@@ -3670,6 +3673,7 @@ export const TRANSLATIONS = {
     roundsWillBeSaved:"rounds seront enregistrés",
     importComplete:"Importation terminée.",
     feedbackLabel:"FEEDBACK", settingsLabel:"PARAMÈTRES",
+    legalLabel:"JURIDIQUE", privacyPolicy:"Politique de Confidentialité", termsOfService:"Conditions d'Utilisation", disclaimers:"Avertissements", lastUpdated:"Dernière mise à jour",
     addMoveMenu:"Ajouter un mouvement", addCategoryMenu:"Ajouter une catégorie",
     sectionDescTrain:"TRAIN — fixe tes objectifs, capture tes idées et décide quoi pratiquer.",
     sectionDescMoves:"MOVES — tous tes mouvements en un seul endroit, organisés et prêts à grandir.",
@@ -4810,6 +4814,7 @@ export const TRANSLATIONS = {
     roundsWillBeSaved:"rounds serão guardados",
     importComplete:"Importação concluída.",
     feedbackLabel:"FEEDBACK", settingsLabel:"CONFIGURAÇÕES",
+    legalLabel:"LEGAL", privacyPolicy:"Política de Privacidade", termsOfService:"Termos de Serviço", disclaimers:"Avisos Legais", lastUpdated:"Última atualização",
     addMoveMenu:"Adicionar movimento", addCategoryMenu:"Adicionar categoria",
     sectionDescTrain:"TRAIN — defina seus objetivos, capture ideias e decida o que praticar.",
     sectionDescMoves:"MOVES — todos os seus movimentos em um só lugar, organizados e prontos para crescer.",
@@ -5950,6 +5955,7 @@ export const TRANSLATIONS = {
     roundsWillBeSaved:"Runden werden gespeichert",
     importComplete:"Import abgeschlossen.",
     feedbackLabel:"FEEDBACK", settingsLabel:"EINSTELLUNGEN",
+    legalLabel:"RECHTLICHES", privacyPolicy:"Datenschutzrichtlinie", termsOfService:"Nutzungsbedingungen", disclaimers:"Haftungsausschlüsse", lastUpdated:"Letzte Aktualisierung",
     addMoveMenu:"Move hinzufügen", addCategoryMenu:"Kategorie hinzufügen",
     sectionDescTrain:"TRAIN — setze deine Ziele, sammle Ideen und entscheide, was du trainierst.",
     sectionDescMoves:"MOVES — alle deine Moves an einem Ort, organisiert und bereit zu wachsen.",
@@ -7091,6 +7097,7 @@ export const TRANSLATIONS = {
     roundsWillBeSaved:"ラウンドが保存されます",
     importComplete:"インポート完了。",
     feedbackLabel:"フィードバック", settingsLabel:"設定",
+    legalLabel:"法的情報", privacyPolicy:"プライバシーポリシー", termsOfService:"利用規約", disclaimers:"免責事項", lastUpdated:"最終更新",
     addMoveMenu:"ムーブを追加", addCategoryMenu:"カテゴリーを追加",
     sectionDescTrain:"TRAIN — 目標を設定し、アイデアを記録し、何を練習するか決めよう。",
     sectionDescMoves:"MOVES — すべてのムーブを一か所に。整理して、成長させよう。",
@@ -8230,6 +8237,7 @@ export const TRANSLATIONS = {
     roundsWillBeSaved:"个回合将被保存",
     importComplete:"导入完成。",
     feedbackLabel:"反馈", settingsLabel:"设置",
+    legalLabel:"法律信息", privacyPolicy:"隐私政策", termsOfService:"服务条款", disclaimers:"免责声明", lastUpdated:"最后更新",
     addMoveMenu:"添加动作", addCategoryMenu:"添加分类",
     sectionDescTrain:"TRAIN — 设定你的目标，记录想法，决定练什么。",
     sectionDescMoves:"MOVES — 所有动作集中一处，井井有条，随时成长。",
@@ -9369,6 +9377,7 @@ export const TRANSLATIONS = {
     roundsWillBeSaved:"раундов будет сохранено",
     importComplete:"Импорт завершён.",
     feedbackLabel:"ОТЗЫВ", settingsLabel:"НАСТРОЙКИ",
+    legalLabel:"ПРАВОВАЯ ИНФОРМАЦИЯ", privacyPolicy:"Политика конфиденциальности", termsOfService:"Условия обслуживания", disclaimers:"Отказ от ответственности", lastUpdated:"Последнее обновление",
     addMoveMenu:"Добавить движение", addCategoryMenu:"Добавить категорию",
     sectionDescTrain:"TRAIN — ставь цели, записывай идеи и решай, что тренировать.",
     sectionDescMoves:"MOVES — все твои движения в одном месте, организованы и готовы расти.",
@@ -10543,6 +10552,7 @@ export const TRANSLATIONS = {
     // Import
     importComplete:"가져오기 완료.",
     feedbackLabel:"피드백", settingsLabel:"설정",
+    legalLabel:"법률", privacyPolicy:"개인정보 처리방침", termsOfService:"서비스 약관", disclaimers:"면책 조항", lastUpdated:"마지막 업데이트",
     addMoveMenu:"무브 추가", addCategoryMenu:"카테고리 추가",
     sectionDescTrain:"TRAIN — 목표를 설정하고, 아이디어를 기록하고, 무엇을 연습할지 결정하세요.",
     sectionDescMoves:"MOVES — 모든 무브를 한 곳에, 정리하고 성장시키세요.",
@@ -11718,6 +11728,7 @@ export const TRANSLATIONS = {
     importComplete:"นำเข้าเสร็จแล้ว",
     // Bottom bar & menu
     feedbackLabel:"ฟีดแบค", settingsLabel:"ตั้งค่า",
+    legalLabel:"กฎหมาย", privacyPolicy:"นโยบายความเป็นส่วนตัว", termsOfService:"เงื่อนไขการให้บริการ", disclaimers:"ข้อจำกัดความรับผิดชอบ", lastUpdated:"อัปเดตล่าสุด",
     addMoveMenu:"เพิ่มท่า", addCategoryMenu:"เพิ่มหมวดหมู่",
     // Section banner descriptions
     sectionDescTrain:"ฝึกซ้อม — ตั้งเป้าหมาย จดไอเดีย และเลือกสิ่งที่จะซ้อม",
@@ -12878,6 +12889,7 @@ export const TRANSLATIONS = {
     importComplete:"Nhập hoàn tất.",
     // Bottom bar & menu
     feedbackLabel:"GÓP Ý", settingsLabel:"CÀI ĐẶT",
+    legalLabel:"PHÁP LÝ", privacyPolicy:"Chính Sách Bảo Mật", termsOfService:"Điều Khoản Dịch Vụ", disclaimers:"Tuyên Bố Miễn Trừ", lastUpdated:"Cập nhật lần cuối",
     addMoveMenu:"Thêm động tác", addCategoryMenu:"Thêm danh mục",
     // Section banner descriptions
     sectionDescTrain:"LUYỆN TẬP — đặt mục tiêu, ghi ý tưởng và quyết định tập gì.",

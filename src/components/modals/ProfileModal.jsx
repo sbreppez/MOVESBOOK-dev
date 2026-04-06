@@ -7,6 +7,7 @@ import { useSettings } from "../../hooks/useSettings";
 
 import { SettingsModal } from "./SettingsModal";
 import { FeedbackModal } from "./FeedbackModal";
+import { LegalModal } from "./LegalModal";
 import { downloadBackup, restoreBackup } from "./BackupModal";
 
 export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersChange, addToast, onOpenManageReminders, onNavigateToStance, settings, onSettingsChange, onClearMoves, onRestoreRounds, onRestartTour, zoom, onZoomChange, customAttrs, setCustomAttrs, onOpenManual }) => {
@@ -16,6 +17,7 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
   const set=k=>v=>setF(p=>({...p,[k]:v}));
   const [showSettingsSection, setShowSettingsSection] = useState(false);
   const [showFeedbackSection, setShowFeedbackSection] = useState(false);
+  const [legalPage, setLegalPage] = useState(null);
   const fileInputRef = useRef(null);
   const [showNoteAdd, setShowNoteAdd] = useState(false);
   const [noteText, setNoteText] = useState("");
@@ -190,6 +192,20 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
         <SettingsModal inline settings={settings} onSave={onSettingsChange} onClearMoves={onClearMoves} onRestoreRounds={onRestoreRounds} onRestartTour={onRestartTour} zoom={zoom} onZoomChange={onZoomChange} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} onOpenManual={onOpenManual} />
       )}
 
+      {/* ── Legal ── */}
+      {sectionHdr(t("legalLabel") || "LEGAL", "scroll")}
+      {["privacy","terms","disclaimers"].map(pg => (
+        <button key={pg} onClick={() => setLegalPage(pg)}
+          style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"space-between",
+            background:C.surfaceAlt, border:`1px solid ${C.border}`, borderRadius:10,
+            padding:"10px 14px", cursor:"pointer", marginBottom:4 }}>
+          <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, color:C.text, letterSpacing:0.5 }}>
+            {t(pg === "privacy" ? "privacyPolicy" : pg === "terms" ? "termsOfService" : "disclaimers")}
+          </span>
+          <Ic n="chevR" s={14} c={C.textMuted} />
+        </button>
+      ))}
+
       {/* ── Feedback ── */}
       {sectionHdr(t("feedbackLabel") || "FEEDBACK", "edit")}
       <button onClick={() => setShowFeedbackSection(s => !s)}
@@ -236,6 +252,7 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
         <Btn onClick={handleSaveAndClose}>{t("saveProfileBtn")}</Btn>
       </div>
       </div>
+      {legalPage && <LegalModal page={legalPage} onClose={() => setLegalPage(null)} />}
     </div>
   );
 };
