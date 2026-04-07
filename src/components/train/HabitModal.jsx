@@ -23,10 +23,10 @@ export const HabitModal = ({ onClose, onSave, habit }) => {
     boxSizing:"border-box", lineHeight:1.5 };
 
   const TOD = [
-    {id:"morning",   label:"🌅 Morning"},
-    {id:"afternoon", label:"☀️ Afternoon"},
-    {id:"evening",   label:"🌙 Evening"},
-    {id:"anytime",   label:"⚡ Anytime"},
+    {id:"morning",   label:"Morning"},
+    {id:"afternoon", label:"Afternoon"},
+    {id:"evening",   label:"Evening"},
+    {id:"anytime",   label:"Anytime"},
   ];
 
   return (

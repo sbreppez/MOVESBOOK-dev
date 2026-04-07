@@ -22,7 +22,7 @@ export const BulkModal = ({ onClose, onImport, cats }) => {
   const footerEl = step===1
     ? <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
         <Btn variant="secondary" onClick={onClose}>{t("cancel")}</Btn>
-        <Btn onClick={parse} disabled={!txt.trim()}>{t("findMoves")} 🔍</Btn>
+        <Btn onClick={parse} disabled={!txt.trim()}>{t("findMoves")}</Btn>
       </div>
     : <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
         <Btn variant="secondary" onClick={()=>setStep(1)}>{t("back")}</Btn>

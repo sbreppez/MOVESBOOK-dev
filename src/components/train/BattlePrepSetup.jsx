@@ -15,6 +15,8 @@ export const BattlePrepSetup = ({ initialPreset, battleprep, setBattleprep, move
   // Step 2: Battle details — seed from Calendar if available
   const [eventName, setEventName] = useState(seedData?.eventName || "");
   const [planName, setPlanName] = useState("");
+  const [eventUrl, setEventUrl] = useState("");
+  const [location, setLocation] = useState("");
   const [battles, setBattles] = useState(() => {
     if (seedData?.date) return [{ id: Date.now(), date: seedData.date, eventName: seedData.eventName || "" }];
     return [{ id: Date.now(), date: "", eventName: "" }];
@@ -150,6 +152,8 @@ export const BattlePrepSetup = ({ initialPreset, battleprep, setBattleprep, move
       id: "bp_" + Date.now(), preset,
       eventName: eventName.trim(),
       planName: planName.trim() || eventName.trim(),
+      eventUrl: eventUrl.trim() || null,
+      location: location.trim() || null,
       battles: validBattles, trainingDays,
       arsenal: { moveIds: selectedMoveIds, setIds: selectedSetIds },
       customDayOverrides: {}, completedTasks: {},
@@ -212,6 +216,18 @@ export const BattlePrepSetup = ({ initialPreset, battleprep, setBattleprep, move
           <div style={{ marginBottom: 14 }}>
             <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 18, color: C.text, letterSpacing: 1 }}>{summaryPlan.eventName}</div>
             {summaryPlan.planName !== summaryPlan.eventName && <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>{summaryPlan.planName}</div>}
+            {summaryPlan.location && (
+              <div style={{ display:"flex", alignItems:"center", gap:5, marginTop:6 }}>
+                <Ic n="mapPin" s={13} c={C.textSec}/>
+                <span style={{ fontSize:12, color:C.textSec }}>{summaryPlan.location}</span>
+              </div>
+            )}
+            {summaryPlan.eventUrl && (
+              <div style={{ display:"flex", alignItems:"center", gap:5, marginTop:4 }}>
+                <Ic n="extLink" s={13} c={C.accent}/>
+                <span style={{ fontSize:12, color:C.accent }}>{summaryPlan.eventUrl}</span>
+              </div>
+            )}
           </div>
           {/* Preset badge */}
           <div style={{ display: "inline-flex", alignItems: "center", gap: 5, background: `${meta.color}20`, borderRadius: 6, padding: "4px 10px", marginBottom: 14 }}>
@@ -365,6 +381,16 @@ export const BattlePrepSetup = ({ initialPreset, battleprep, setBattleprep, move
             {/* Detail (secondary, optional) */}
             <label style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, letterSpacing: 1, color: C.textMuted, display: "block", marginBottom: 4 }}>{t("detailLabel")}</label>
             <input value={planName} onChange={e => setPlanName(e.target.value)} placeholder={t("detailPlaceholder")}
+              style={{ width: "100%", background: C.bg, border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 12px", color: C.text, fontSize: 14, fontFamily: FONT_BODY, outline: "none", marginBottom: 12 }} />
+
+            {/* Event link (optional) */}
+            <label style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, letterSpacing: 1, color: C.textMuted, display: "block", marginBottom: 4 }}>{t("eventLink")}</label>
+            <input value={eventUrl} onChange={e => setEventUrl(e.target.value)} placeholder={t("addEventLinkHint")}
+              style={{ width: "100%", background: C.bg, border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 12px", color: C.text, fontSize: 14, fontFamily: FONT_BODY, outline: "none", marginBottom: 12 }} />
+
+            {/* Location (optional) */}
+            <label style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, letterSpacing: 1, color: C.textMuted, display: "block", marginBottom: 4 }}>{t("locationLabel")}</label>
+            <input value={location} onChange={e => setLocation(e.target.value)} placeholder={t("battleLocationPlaceholder")}
               style={{ width: "100%", background: C.bg, border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 12px", color: C.text, fontSize: 14, fontFamily: FONT_BODY, outline: "none", marginBottom: 16 }} />
 
             {/* Battle dates */}

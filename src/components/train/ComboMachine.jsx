@@ -72,7 +72,7 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
 
   // ── Spin ────────────────────────────────────────────────────────────────
   const generateCombo = useCallback(() => {
-    if (!pool.length) { addToast({ emoji:"⚠️", title:t("comboNoMoves") }); return; }
+    if (!pool.length) { addToast({ icon:"info", title:t("comboNoMoves") }); return; }
 
     const newSlots = [];
     const used = new Set();
@@ -166,7 +166,7 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
       date: new Date().toISOString().split("T")[0],
     });
     setSaveModal(false);
-    addToast({ emoji:"\u2705", title: t("comboSaved") });
+    addToast({ icon:"check", title: t("comboSaved") });
     if (addCalendarEvent) {
       addCalendarEvent({
         date: new Date().toISOString().split("T")[0],
@@ -210,7 +210,7 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
 
       {/* Header */}
       <div style={{ display:"flex", alignItems:"center", padding:"14px 16px", borderBottom:`1px solid ${C.border}`, background:C.header, flexShrink:0 }}>
-        <span style={{ flex:1, fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:1.5, color:C.headerText }}>{t("comboMachine")}</span>
+        <span style={{ flex:1, fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:1.5, color:C.headerText }}>{t("combine")}</span>
         <button onClick={() => setScreen("transitionManager")} style={{ background:"none", border:"none", cursor:"pointer", padding:6, marginRight:6 }}>
           <Ic n="list" s={20} c={C.headerText}/>
         </button>
@@ -302,7 +302,7 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
       {/* Branch root selected info + too small warning */}
       {drillMode === "branch" && branchRoot && (
         <div style={{ padding:"8px 16px", borderBottom:`1px solid ${C.borderLight}`, display:"flex", alignItems:"center", gap:8, flexShrink:0 }}>
-          <span style={{ fontSize:14 }}>🌳</span>
+          <Ic n="tree" s={14}/>
           <span style={{ fontFamily:FONT_BODY, fontSize:12, color:C.text, fontWeight:600 }}>{branchRoot.name}</span>
           <span style={{ fontFamily:FONT_DISPLAY, fontSize:10, color:C.textMuted }}>
             ({branchDescendants.length} {t("descendants")})
@@ -323,7 +323,7 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
       <div style={{ flex:1, overflowY:"auto", padding:"12px 16px", WebkitOverflowScrolling:"touch" }}>
         {!hasSpun && (
           <div style={{ textAlign:"center", padding:"40px 20px", color:C.textMuted }}>
-            <div style={{ fontSize:48, marginBottom:12 }}>🎰</div>
+            <div style={{ marginBottom:12 }}><Ic n="dices" s={48} c={C.textMuted}/></div>
             <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:14, letterSpacing:1 }}>{t("spin")}</div>
             {pool.length > 0 && <div style={{ fontSize:11, marginTop:6, color:C.textMuted }}>{pool.length} {t("selectMoves").toLowerCase().includes("move") ? "moves" : t("selectMoves")}</div>}
           </div>

@@ -5,11 +5,14 @@ import { Ic } from '../shared/Ic';
 import { Highlight } from '../shared/Highlight';
 import { masteryColor, CARD_BASE, CARD_BAR, CARD_BODY } from '../../constants/styles';
 import { useSettings } from '../../hooks/useSettings';
+import { computeDecay, showDecayArrow } from '../../utils/masteryDecay';
 import { CATS, CAT_COLORS } from '../../constants/categories';
 
 export const MoveTile = ({ move, onClick, onEdit, onDelete, onDuplicate, onMove, allCats=CATS, catColors=CAT_COLORS, searchQuery="", onToggleTrainedToday }) => {
   const { settings } = useSettings();
-  const col=masteryColor(move.mastery), catCol=catColors[move.category]||C.accent;
+  const { displayMastery } = computeDecay(move, settings.decaySensitivity);
+  const hasDecayArrow = showDecayArrow(move, settings.decaySensitivity);
+  const col=masteryColor(displayMastery), catCol=catColors[move.category]||C.accent;
   const showMastery = settings.showMastery !== false;
   const compact = settings.compactCards;
   return (
@@ -51,10 +54,10 @@ export const MoveTile = ({ move, onClick, onEdit, onDelete, onDuplicate, onMove,
       </div>}
       {showMastery&&<Fragment>
         <div style={{ height:3, borderRadius:2, background:C.border, marginBottom:4 }}>
-          <div style={{ height:"100%", width:`${move.mastery}%`, borderRadius:2, background:`linear-gradient(90deg,${C.red},${col})` }}/>
+          <div style={{ height:"100%", width:`${displayMastery}%`, borderRadius:2, background:`linear-gradient(90deg,${C.red},${col})` }}/>
         </div>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-          <span style={{ fontSize: compact ? 11 : 13, color:col, fontWeight:700 }}>{move.mastery}%</span>
+          <span style={{ fontSize: compact ? 11 : 13, color:col, fontWeight:700 }}>{displayMastery}%{hasDecayArrow&&<span style={{ fontSize:9, color:C.red, marginLeft:2 }}>▼</span>}</span>
         </div>
       </Fragment>}
 

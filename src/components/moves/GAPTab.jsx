@@ -5,6 +5,7 @@ import { masteryColor, masteryLabel } from '../../constants/styles';
 import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
 import { CAT_COLORS } from '../../constants/categories';
+import { computeDecay, showDecayArrow } from '../../utils/masteryDecay';
 
 const PRESETS = [7, 14, 30];
 
@@ -119,7 +120,8 @@ export const GAPTab = ({ moves, catColors=CAT_COLORS, setMoves, onDrill, setting
           {staleMoves.map(m => {
             const catCol = catColors[m.category] || C.accent;
             const isTrained = m.date === today;
-            const col = masteryColor(m.mastery);
+            const { displayMastery } = computeDecay(m, settings.decaySensitivity);
+            const col = masteryColor(displayMastery);
             return (
               <div key={m.id} style={{ background:C.bg, border:`1px solid ${C.border}`, borderRadius:10,
                 borderLeft:`4px solid ${borderColor(m)}`, padding:"10px 12px" }}>
@@ -175,9 +177,12 @@ export const GAPTab = ({ moves, catColors=CAT_COLORS, setMoves, onDrill, setting
                       </span>
                     )}
                     <div style={{ width:36, height:3, borderRadius:2, background:C.border }}>
-                      <div style={{ height:"100%", width:`${m.mastery}%`, borderRadius:2, background:col }}/>
+                      <div style={{ height:"100%", width:`${displayMastery}%`, borderRadius:2, background:col }}/>
                     </div>
-                    <span style={{ fontSize:11, color:col, fontWeight:700, fontFamily:FONT_DISPLAY }}>{m.mastery}%</span>
+                    <span style={{ fontSize:11, color:col, fontWeight:700, fontFamily:FONT_DISPLAY }}>{displayMastery}%</span>
+                    {showDecayArrow(m, settings.decaySensitivity) && (
+                      <span style={{ fontSize:9, color:C.red, marginLeft:2 }}>▼</span>
+                    )}
                   </div>
                 </div>
               </div>

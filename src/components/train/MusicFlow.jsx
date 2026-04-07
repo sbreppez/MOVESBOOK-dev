@@ -121,7 +121,7 @@ export const MusicFlow = ({ musicflow, onMusicflowChange, onUpdateSession, refle
       { silent: true }
     );
 
-    addToast({ emoji: "\u2705", title: t("sessionLogged") });
+    addToast({ icon: "check", title: t("sessionLogged") });
     setSavedSession(session);
     setScreen("done");
   };

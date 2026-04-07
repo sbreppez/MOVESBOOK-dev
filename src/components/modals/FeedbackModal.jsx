@@ -4,7 +4,7 @@ import { Ic } from "../shared/Ic";
 import { useT } from "../../hooks/useTranslation";
 import { useSettings } from "../../hooks/useSettings";
 
-export const FeedbackModal = ({ onClose }) => {
+export const FeedbackModal = ({ onClose, inline }) => {
   const { C } = useSettings();
   const t = useT();
 
@@ -101,7 +101,7 @@ export const FeedbackModal = ({ onClose }) => {
       <div onClick={e=>e.stopPropagation()} style={{ background:C.surface, borderRadius:16,
         padding:"40px 28px", textAlign:"center", maxWidth:340, width:"100%",
         border:`1px solid ${C.border}` }}>
-        <div style={{ fontSize:48, marginBottom:16 }}>🙏</div>
+        <div style={{ marginBottom:16 }}><Ic n="check" s={48} c={C.accent}/></div>
         <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:18, letterSpacing:1,
           color:C.text, marginBottom:8 }}>{t("thankYou")}</div>
         <div style={{ fontSize:13, color:C.textSec, lineHeight:1.6, marginBottom:24 }}>
@@ -115,25 +115,25 @@ export const FeedbackModal = ({ onClose }) => {
   );
 
   return (
-    <div style={{ position:"absolute", inset:0, zIndex:1000, background:C.bg,
+    <div style={ inline ? { background:C.bg } : { position:"absolute", inset:0, zIndex:1000, background:C.bg,
       display:"flex", flexDirection:"column", overflow:"hidden" }}>
 
-        {/* Header */}
-        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between",
+        {/* Header — hidden in inline mode */}
+        {!inline && <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between",
           padding:"14px 18px", borderBottom:`1px solid ${C.border}`, flexShrink:0,
           background:C.surface }}>
           <div>
             <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:14, letterSpacing:2,
-              color:C.text }}>{"💬 "+t("feedbackTitle")}</div>
+              color:C.text }}>{t("feedbackTitle")}</div>
             <div style={{ fontSize:11, color:C.textMuted, marginTop:1 }}>
-              {t("feedbackSubtitle")+" 🔥"}
+              {t("feedbackSubtitle")}
             </div>
           </div>
           <button onClick={onClose} style={{ background:"none", border:"none", cursor:"pointer",
             padding:4, display:"flex" }}>
             <Ic n="x" s={18} c={C.textMuted}/>
           </button>
-        </div>
+        </div>}
 
         {/* Scrollable body */}
         <div style={{ flex:1, overflow:"auto", padding:"18px 18px 4px" }}>
@@ -162,7 +162,7 @@ export const FeedbackModal = ({ onClose }) => {
 
           {/* Train */}
           <div style={{ marginBottom:22 }}>
-            <div style={{ fontSize:11, fontWeight:800, letterSpacing:2, color:C.accent, fontFamily:FONT_DISPLAY, marginBottom:10 }}>{"🎯 "+t("trainSectionLabel")}</div>
+            <div style={{ fontSize:11, fontWeight:800, letterSpacing:2, color:C.accent, fontFamily:FONT_DISPLAY, marginBottom:10 }}>{t("trainSectionLabel")}</div>
             <div style={{ fontSize:12, color:C.textMuted, marginBottom:6 }}>{t("whatDidYouLike")}</div>
             {TRAIN_OPTIONS.map(o=>(
               <button key={o} onClick={()=>toggleCheck(o,trainLikes,setTrainLikes)}
@@ -181,7 +181,7 @@ export const FeedbackModal = ({ onClose }) => {
 
           {/* Vocab */}
           <div style={{ marginBottom:22 }}>
-            <div style={{ fontSize:11, fontWeight:800, letterSpacing:2, color:C.accent, fontFamily:FONT_DISPLAY, marginBottom:10 }}>{"📚 "+t("movesSectionLabel")}</div>
+            <div style={{ fontSize:11, fontWeight:800, letterSpacing:2, color:C.accent, fontFamily:FONT_DISPLAY, marginBottom:10 }}>{t("movesSectionLabel")}</div>
             <div style={{ fontSize:12, color:C.textMuted, marginBottom:6 }}>{t("whatDidYouLike")}</div>
             {MOVES_OPTIONS.map(o=>(
               <button key={o} onClick={()=>toggleCheck(o,movesLikes,setMovesLikes)}
@@ -200,7 +200,7 @@ export const FeedbackModal = ({ onClose }) => {
 
           {/* Battle */}
           <div style={{ marginBottom:22 }}>
-            <div style={{ fontSize:11, fontWeight:800, letterSpacing:2, color:C.accent, fontFamily:FONT_DISPLAY, marginBottom:10 }}>{"⚔️ "+t("battleSectionLabel")}</div>
+            <div style={{ fontSize:11, fontWeight:800, letterSpacing:2, color:C.accent, fontFamily:FONT_DISPLAY, marginBottom:10 }}>{t("battleSectionLabel")}</div>
             <div style={{ fontSize:12, color:C.textMuted, marginBottom:6 }}>{t("whatDidYouLike")}</div>
             {BATTLE_OPTIONS.map(o=>(
               <button key={o} onClick={()=>toggleCheck(o,battleLikes,setBattleLikes)}

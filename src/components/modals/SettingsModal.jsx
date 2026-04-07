@@ -6,14 +6,14 @@ import { useT } from "../../hooks/useTranslation";
 import { downloadBackup, restoreBackup } from "./BackupModal";
 import { AttributeModal } from "./AttributeModal";
 
-export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onRestoreRounds, onRestartTour, zoom=1, onZoomChange, customAttrs=[], setCustomAttrs }) => {
+export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onRestoreRounds, onRestartTour, zoom=1, onZoomChange, customAttrs=[], setCustomAttrs, inline, onOpenManual }) => {
   const t = useT();
   const [s,setS]=useState({
-    theme:"light", defaultTab:"wip", showMastery:false,
+    theme:"light", defaultTab:"home", showMastery:true, decaySensitivity:"normal",
     compactCards:false, sortMoves:"custom", fontSize:"medium",
-    showMoveCount:false, confirmDelete:true, practiceReminders:false,
-    reminderTime:"18:00", streakTracking:true, showDeadlineIndicator:true,
-    categorySort:"manual", showMoveCount:true, defaultView:"list", language:"en", linkOnCard:"inside", targetAutoLink:false, trainTabOrder:["goals","habits","notes","prep"],
+    showMoveCount:true, confirmDelete:true, practiceReminders:false,
+    reminderTime:"18:00", showDeadlineIndicator:true,
+    categorySort:"manual", defaultView:"list", language:"en", linkOnCard:"inside", targetAutoLink:false, trainTabOrder:["goals","habits","notes","prep"],
     ...settings
   });
   const origSettings = useRef(settings);
@@ -76,40 +76,39 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
     );
   };
 
-  const sectionHdr=(label,emoji)=>(
+  const sectionHdr=(label)=>(
     <div style={{ display:"flex", alignItems:"center", gap:7, margin:"22px 0 6px",
       paddingBottom:7, borderBottom:`2px solid ${panelBrd}` }}>
-      {emoji&&<span style={{fontSize:14}}>{emoji}</span>}
-      <span style={{ fontSize:11, fontWeight:800, letterSpacing:2.5, color:panelMut, fontFamily:FONT_DISPLAY }}>{label}</span>
+      <span style={{ fontSize:11, fontWeight:800, letterSpacing:2.5, color:panelMut, fontFamily:FONT_DISPLAY, textTransform:"uppercase" }}>{label}</span>
     </div>
   );
 
   const accent=C.accent;
 
   return (
-    <div style={{ position:"absolute", inset:0, zIndex:1000,
+    <div style={ inline ? { color:panelTxt } : { position:"absolute", inset:0, zIndex:1000,
       background:panelBg, display:"flex", flexDirection:"column", overflow:"hidden", color:panelTxt }}>
 
-        {/* Sticky header */}
-        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between",
+        {/* Sticky header — hidden in inline mode */}
+        {!inline && <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between",
           padding:"13px 18px", borderBottom:`1px solid ${panelBrd}`, flexShrink:0,
           background:panelBg, zIndex:10 }}>
-          <span style={{ fontWeight:800, fontSize:15, letterSpacing:2, color:panelTxt, fontFamily:FONT_DISPLAY }}>⚙️ SETTINGS</span>
+          <span style={{ fontWeight:800, fontSize:15, letterSpacing:2, color:panelTxt, fontFamily:FONT_DISPLAY }}>{"\u2699\uFE0F"} SETTINGS</span>
           <button onClick={onClose}
             style={{ background:panelSrf, border:`1px solid ${panelBrd}`, cursor:"pointer",
               color:panelMut, padding:5, borderRadius:7, display:"flex" }}>
             <Ic n="x" s={14} c={panelMut}/>
           </button>
-        </div>
+        </div>}
 
-        <div style={{ flex:1, overflow:"auto", zoom:zoom, WebkitTextSizeAdjust:"none" }}>
+        <div style={ inline ? { zoom:zoom, WebkitTextSizeAdjust:"none" } : { flex:1, overflow:"auto", zoom:zoom, WebkitTextSizeAdjust:"none" }}>
         <div style={{ padding:18 }}>
 
           {/* ── APPEARANCE ──────────────────────────────── */}
-          {sectionHdr(t("appearance"),"🎨")}
+          {sectionHdr(t("appearance"))}
 
           {row(t("theme"), t("themeDesc"),
-            segmented("theme",[{value:"light",icon:"☀️",label:t("light")},{value:"dark",icon:"🌙",label:t("dark")}])
+            segmented("theme",[{value:"light",label:t("light")},{value:"dark",label:t("dark")}])
           )}
 
           {row(t("textSize"), t("textSizeDesc"),
@@ -117,7 +116,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
           )}
 
           {row(t("defaultView"), t("defaultViewDesc"),
-            segmented("defaultView",[{value:"list",icon:"☰",label:t("list")},{value:"tiles",icon:"⊞",label:t("tiles")},{value:"tree",icon:"🌿",label:t("treeView")}])
+            segmented("defaultView",[{value:"list",icon:"☰",label:t("list")},{value:"tiles",icon:"⊞",label:t("tiles")},{value:"tree",icon:"",label:t("treeView")}])
           )}
 
           {row(t("displayZoom"), t("displayZoomDesc"),
@@ -162,11 +161,21 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
           )}
 
           {/* ── BEHAVIOUR ───────────────────────────────── */}
-          {sectionHdr(t("behaviour"),"⚡")}
+          {sectionHdr(t("behaviour"))}
 
           {row(t("showMastery"),
             t("showMasteryDesc"),
             toggle("showMastery")
+          )}
+
+          {row(t("decaySensitivity"),
+            t("decaySensitivityDesc"),
+            segmented("decaySensitivity",[
+              {value:"off",label:t("decayOff")},
+              {value:"gentle",label:t("decayGentle")},
+              {value:"normal",label:t("decayNormal")},
+              {value:"aggressive",label:t("decayAggressive")},
+            ])
           )}
 
           {row(t("showMoveCount"),
@@ -185,8 +194,8 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
               style={{ background:panelSrf, border:`1px solid ${panelBrd}`, borderRadius:7,
                 padding:"7px 10px", color:panelTxt, fontSize:12, fontFamily:FONT_DISPLAY,
                 fontWeight:700, outline:"none" }}>
-              <option value="inside">🔒 {t("linkOnCardInside")}</option>
-              <option value="both">🔗 {t("linkOnCardBoth")}</option>
+              <option value="inside">{t("linkOnCardInside")}</option>
+              <option value="both">{t("linkOnCardBoth")}</option>
             </select>
           )}
 
@@ -195,9 +204,18 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
             toggle("trackMovesInSparring")
           )}
 
+          {row(t("sparringGapThreshold"),
+            t("sparringGapThresholdDesc"),
+            <input type="number" min={1} max={90} value={s.sparringGapThreshold||14}
+              onChange={e => { const v = Math.max(1, Math.min(90, +e.target.value || 14)); set("sparringGapThreshold")(v); }}
+              style={{ width:60, background:panelSrf, border:`1px solid ${panelBrd}`, borderRadius:7,
+                padding:"7px 10px", color:panelTxt, fontSize:12, fontFamily:FONT_DISPLAY,
+                fontWeight:700, outline:"none", textAlign:"center" }}/>
+          )}
+
           {(()=>{
             const order = s.trainTabOrder||["goals","habits","notes","prep"];
-            const labels = { goals:"🎯 "+t("trainTabGoals"), habits:"🔥 "+t("trainTabHabits"), notes:"📝 "+t("trainTabNotes"), prep:"⚔️ PREP" };
+            const labels = { goals:t("trainTabGoals"), habits:t("trainTabHabits"), notes:t("trainTabNotes"), prep:"PREP" };
             const move = (from, to) => {
               const next = [...order];
               const [item] = next.splice(from,1);
@@ -225,16 +243,17 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
           })()}
 
           {/* ── NAVIGATION ──────────────────────────────── */}
-          {sectionHdr(t("navigation"),"🧭")}
+          {sectionHdr(t("navigation"))}
 
           {row(t("defaultTab"), t("defaultTabDesc"),
             <select value={s.defaultTab} onChange={e=>set("defaultTab")(e.target.value)}
               style={{ background:panelSrf, border:`1px solid ${panelBrd}`, borderRadius:7,
                 padding:"7px 10px", color:panelTxt, fontSize:12, fontFamily:FONT_DISPLAY,
                 fontWeight:700, outline:"none" }}>
-              <option value="ideas">🎯 {t("train")}</option>
-              <option value="wip">📜 {t("vocab")}</option>
-              <option value="ready">⚔️ {t("battle")}</option>
+              <option value="home">{t("home")}</option>
+              <option value="moves">{t("vocab")}</option>
+              <option value="battle">{t("battle")}</option>
+              <option value="reflect">{t("reflect")}</option>
             </select>
           )}
 
@@ -243,10 +262,10 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
               style={{ background:panelSrf, border:`1px solid ${panelBrd}`, borderRadius:7,
                 padding:"7px 10px", color:panelTxt, fontSize:12, fontFamily:FONT_DISPLAY,
                 fontWeight:700, outline:"none" }}>
-              <option value="custom">✋ {t("customSort")}</option>
-              <option value="date">{`📅 ${t("dateAdded")}`}</option>
-              <option value="name">{`🔤 ${t("alphabetical")}`}</option>
-              <option value="mastery">{`💪 ${t("masteryPct")}`}</option>
+              <option value="custom">{t("customSort")}</option>
+              <option value="date">{t("dateAdded")}</option>
+              <option value="name">{t("alphabetical")}</option>
+              <option value="mastery">{t("masteryPct")}</option>
             </select>
           )}
 
@@ -255,14 +274,14 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
               style={{ background:panelSrf, border:`1px solid ${panelBrd}`, borderRadius:7,
                 padding:"7px 10px", color:panelTxt, fontSize:12, fontFamily:FONT_DISPLAY,
                 fontWeight:700, outline:"none" }}>
-              <option value="manual">✋ {t("customSort")}</option>
-              <option value="name">{`🔤 ${t("alphabetical")}`}</option>
-              <option value="progress">{`📈 ${t("mostProgress")}`}</option>
+              <option value="manual">{t("customSort")}</option>
+              <option value="name">{t("alphabetical")}</option>
+              <option value="progress">{t("mostProgress")}</option>
             </select>
           )}
 
           {/* ── CUSTOM ATTRIBUTES ──────────────────────── */}
-          {sectionHdr(t("customAttributes"),"🏷️")}
+          {sectionHdr(t("customAttributes"))}
 
           {customAttrs.length===0 ? (
             <div style={{ fontSize:12, color:panelMut, fontStyle:"italic", padding:"8px 0" }}>
@@ -301,28 +320,8 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
             + {t("addAttribute")}
           </button>
 
-          {/* ── PRACTICE ────────────────────────────────── */}
-          {sectionHdr(t("practiceTracking"),"🏆")}
-          <div style={{ position:"relative", pointerEvents:"none" }}>
-            <div style={{ opacity:0.38, userSelect:"none" }}>
-              {row(t("streakTracking"),
-                t("streakDesc"),
-                toggle("streakTracking")
-              )}
-              {row(t("practiceReminders"),
-                t("remindersDesc"),
-                toggle("practiceReminders")
-              )}
-            </div>
-            <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
-              <span style={{ background:panelSrf, border:`1px solid ${panelBrd}`, borderRadius:8,
-                padding:"5px 12px", fontSize:11, fontWeight:800, letterSpacing:1.5,
-                color:panelMut, fontFamily:FONT_DISPLAY }}>{t("comingSoon")}</span>
-            </div>
-          </div>
-
           {/* ── DATA ────────────────────────────────────── */}
-          {sectionHdr(t("dataPrivacy"),"🔒")}
+          {sectionHdr(t("dataPrivacy"))}
 
           {row(t("saveBackup"),
             t("saveBackupSettingsDesc"),
@@ -356,140 +355,6 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
             </label>
           )}
 
-          {row(t("exportAllData"),
-            t("exportAllDataDesc"),
-            <button onClick={()=>{
-              try {
-                const escape = v => {
-                  if (v===undefined||v===null) return "";
-                  const str = String(v).replace(/"/g,'""');
-                  return str.includes(",") || str.includes('"') || str.includes("\n") ? `"${str}"` : str;
-                };
-                const row2 = arr => arr.map(escape).join(",");
-                const sections = [];
-
-                // MOVES
-                const moves = JSON.parse(localStorage.getItem("mb_moves")||"[]");
-                if (moves.length) {
-                  sections.push("TYPE,Name,Category,Mastery (%),Description,Notes,Link,Date Added");
-                  moves.forEach(m => sections.push(row2(["move",m.name,m.category,m.mastery||0,m.description||"",m.notes||"",m.link||"",m.date||""])));
-                  sections.push("");
-                }
-
-                // HABITS
-                const habits = JSON.parse(localStorage.getItem("mb_habits")||"[]");
-                if (habits.length) {
-                  sections.push("TYPE,Name,Frequency,Color,Notes,Check-ins");
-                  habits.forEach(h => sections.push(row2(["habit",h.name,h.frequency||"daily",h.color||"",h.notes||"",(h.checkIns||[]).join("|")])));
-                  sections.push("");
-                }
-
-                // GOALS & NOTES (ideas)
-                const ideas = JSON.parse(localStorage.getItem("mb_ideas")||"[]");
-                const goals = ideas.filter(i=>i.type==="goal");
-                const targets = ideas.filter(i=>i.type==="target");
-                const notes = ideas.filter(i=>i.type==="note");
-                if (goals.length) {
-                  sections.push("TYPE,Title,Why,Deadline,Steps,Commitments,Obstacles");
-                  goals.forEach(g => sections.push(row2(["goal",g.title||"",g.why||"",g.byWhen||"",(g.steps||[]).filter(Boolean).join(" | "),[g.daysPerWeek,g.sessionLength,g.trainWhere].filter(Boolean).join(" · "),g.obstacles||""])));
-                  sections.push("");
-                }
-                if (targets.length) {
-                  sections.push("TYPE,Title,Current,Target,Unit,Deadline");
-                  targets.forEach(g => sections.push(row2(["target",g.title||"",g.current||0,g.target||0,g.unit||"",g.byWhen||""])));
-                  sections.push("");
-                }
-                if (notes.length) {
-                  sections.push("TYPE,Title,Text,Link");
-                  notes.forEach(n => sections.push(row2(["note",n.title||"",n.text||"",n.link||""])));
-                  sections.push("");
-                }
-
-                // SETS
-                const sets = JSON.parse(localStorage.getItem("mb_sets")||"[]");
-                if (sets.length) {
-                  sections.push("TYPE,Name,Details,Color,Mastery (%)");
-                  sets.forEach(s => sections.push(row2(["set",s.name,s.details||"",s.color||"",s.mastery||0])));
-                  sections.push("");
-                }
-
-                if (!sections.length) { alert(t("noDataToExport")); return; }
-                const csv = sections.join("\n");
-                const blob = new Blob([csv], {type:"text/csv;charset=utf-8;"});
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement("a");
-                a.href=url; a.download=`movesbook-export-${new Date().toISOString().split("T")[0]}.csv`; a.click();
-                URL.revokeObjectURL(url);
-              } catch(e) { alert(t("exportFailed")); }
-            }}
-              style={{ padding:"7px 14px", borderRadius:7, border:`1px solid ${panelBrd}`,
-                background:panelSrf, color:panelTxt, cursor:"pointer", fontSize:12,
-                fontWeight:700, fontFamily:FONT_DISPLAY, whiteSpace:"nowrap" }}>
-              {"⬇ "+t("exportCsvBtn")}
-            </button>
-          )}
-
-          {row(t("importMovesFromCsv"),
-            t("importMovesFromCsvDesc"),
-            <label style={{ padding:"7px 14px", borderRadius:7, border:`1px solid ${panelBrd}`,
-              background:panelSrf, color:panelTxt, cursor:"pointer", fontSize:12,
-              fontWeight:700, fontFamily:FONT_DISPLAY, whiteSpace:"nowrap", display:"inline-block" }}>
-              {"⬆ "+t("importCsvBtn")}
-              <input type="file" accept=".csv" style={{ display:"none" }} onChange={e=>{
-                const file = e.target.files?.[0]; if(!file) return;
-                const reader = new FileReader();
-                reader.onload = ev => {
-                  try {
-                    const lines = ev.target.result.split("\n").map(l=>l.trim()).filter(Boolean);
-                    const parseRow = line => {
-                      const cols = []; let cur="", inQ=false;
-                      for (let i=0; i<line.length; i++) {
-                        const ch = line[i];
-                        if (ch==='"' && !inQ) { inQ=true; }
-                        else if (ch==='"' && inQ && line[i+1]==='"') { cur+='"'; i++; }
-                        else if (ch==='"' && inQ) { inQ=false; }
-                        else if (ch===',' && !inQ) { cols.push(cur); cur=""; }
-                        else { cur+=ch; }
-                      }
-                      cols.push(cur);
-                      return cols;
-                    };
-                    const existing = JSON.parse(localStorage.getItem("mb_moves")||"[]");
-                    const existingKeys = new Set(existing.map(m=>(m.name+"|"+m.category).toLowerCase()));
-                    const toAdd = [];
-                    let skipped = 0, headerSeen = false;
-                    for (const line of lines) {
-                      const cols = parseRow(line);
-                      if (!cols[0]) continue;
-                      if (cols[0].toLowerCase()==="type" || cols[0].toLowerCase()==="name") { headerSeen=true; continue; }
-                      if (cols[0].toLowerCase()!=="move") continue;
-                      const [,name,category,mastery,description,notes,link,date] = cols;
-                      if (!name?.trim()) continue;
-                      const key = (name.trim()+"|"+(category?.trim()||"Footworks")).toLowerCase();
-                      if (existingKeys.has(key)) { skipped++; continue; }
-                      existingKeys.add(key);
-                      toAdd.push({ id:Date.now()+Math.random(), name:name.trim(),
-                        category:category?.trim()||"Footworks", mastery:parseInt(mastery)||0,
-                        description:description?.trim()||"", notes:notes?.trim()||"",
-                        link:link?.trim()||"", date:date?.trim()||new Date().toISOString().split("T")[0],
-                        status:"wip" });
-                    }
-                    if (!toAdd.length && !skipped) { alert(t("noMoveRowsFound")); return; }
-                    if (toAdd.length) {
-                      const updated = [...existing, ...toAdd];
-                      localStorage.setItem("mb_moves", JSON.stringify(updated));
-                    }
-                    const msg = `Import complete.\n✅ ${toAdd.length} move${toAdd.length!==1?"s":""} added${skipped?`\n⏭ ${skipped} duplicate${skipped!==1?"s":""} skipped`:""}.`;
-                    alert(msg);
-                    if (toAdd.length) window.location.reload();
-                    e.target.value="";
-                  } catch(err) { alert(t("importFailedCheck")); }
-                };
-                reader.readAsText(file);
-              }}/>
-            </label>
-          )}
-
           {row(t("clearAllMoves"),
             t("clearAllMovesDesc"),
             confirmClear ? (
@@ -508,7 +373,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
                 style={{ padding:"7px 14px", borderRadius:7, border:`1px solid ${accent}44`,
                   background:`${accent}10`, color:accent, cursor:"pointer", fontSize:12,
                   fontWeight:700, fontFamily:FONT_DISPLAY, whiteSpace:"nowrap" }}>
-                {"🗑 "+t("clearBtn")}
+                {t("clearBtn")}
               </button>
             )
           , true)}
@@ -537,7 +402,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
           , true)}
 
           {/* ── ABOUT ───────────────────────────────────── */}
-          {sectionHdr(t("aboutSection"),"📱")}
+          {sectionHdr(t("aboutSection"))}
           <div style={{ padding:"12px 0", borderBottom:`1px solid ${panelBrd}` }}>
             <div style={{ display:"flex", justifyContent:"space-between", marginBottom:6 }}>
               <span style={{ fontSize:13, color:panelMut }}>{t("version")}</span>
@@ -548,12 +413,17 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
               <span style={{ fontSize:13, color:panelTxt, fontWeight:700 }}>MovesBook Prototype</span>
             </div>
             <div style={{ fontSize:12, color:panelMut, marginTop:8, lineHeight:1.6, fontStyle:"italic" }}>
-              {t("builtForBreakers")+" 🕺"}
+              {t("builtForBreakers")}
             </div>
           </div>
 
-          {/* Save button */}
-          <div style={{ marginTop:24, paddingTop:16, borderTop:`1px solid ${C.borderLight}` }}>
+          {/* User Manual + Restart */}
+          <div style={{ marginTop:24, paddingTop:16, borderTop:`1px solid ${C.borderLight}`, display:"flex", flexDirection:"column", gap:8 }}>
+        {onOpenManual && <button onClick={onOpenManual}
+          style={{ background:"none", border:`1px solid ${C.borderLight}`, borderRadius:8, padding:"9px 14px",
+            color:panelTxt, fontSize:12, cursor:"pointer", fontFamily:FONT_DISPLAY, letterSpacing:1, width:"100%" }}>
+          {t("userManual")}
+        </button>}
         <button onClick={()=>{ onClose(); setTimeout(()=>{ if(typeof onRestartTour==="function") onRestartTour(); },200); }}
           style={{ background:"none", border:`1px solid ${C.borderLight}`, borderRadius:8, padding:"9px 14px",
             color:C.textMuted, fontSize:12, cursor:"pointer", fontFamily:FONT_DISPLAY, letterSpacing:1, width:"100%" }}>
@@ -564,7 +434,8 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
         </div>
         </div>{/* end zoom+scroll */}
 
-        {/* Footer — outside zoom so always fully visible */}
+        {/* Footer — outside zoom so always fully visible; hidden when inline (ProfileModal has its own buttons) */}
+        {!inline && (
         <div style={{ display:"flex", gap:8, justifyContent:"flex-end",
           padding:"12px 18px", borderTop:`1px solid ${panelBrd}`, flexShrink:0, background:panelBg }}>
           <button onClick={()=>{ onSave(origSettings.current); onClose(); }}
@@ -576,6 +447,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
               background:accent, color:C.bg, cursor:"pointer", fontSize:14,
               fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:0.8 }}>{t("saveSettings")}</button>
         </div>
+        )}
       {(showAddAttr||editAttr)&&(
         <AttributeModal
           attr={editAttr}

@@ -247,7 +247,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
     } else {
       defaultName = baseName.trim()
         ? `${baseName.trim()} (${t("variation")})`
-        : `${t("lab")} ${t("variation")} ${new Date().toISOString().split("T")[0]}`;
+        : `${t("explore")} ${t("variation")} ${new Date().toISOString().split("T")[0]}`;
       const matchedMove = baseName.trim() ? moves.find(m => m.name.toLowerCase() === baseName.trim().toLowerCase()) : null;
       defaultCat = matchedMove?.category || (cats.length ? cats[0] : "Footworks");
     }
@@ -259,7 +259,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
   const handleSave = () => {
     const preview = buildPreview();
     const moveData = {
-      name: saveName.trim() || `${t("lab")} ${t("variation")}`,
+      name: saveName.trim() || `${t("explore")} ${t("variation")}`,
       category: saveCat,
       description: preview,
       mastery: 0,
@@ -393,10 +393,10 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
   // ── Render: Mode Select Screen ────────────────────────────────────────────
   const renderModeSelect = () => {
     const modes = [
-      { key: "technical",  emoji: "🔧", color: C.blue,   desc: "technicalDesc" },
-      { key: "conceptual", emoji: "🎨", color: C.yellow, desc: "conceptualDesc" },
-      { key: "collide",    emoji: "💥", color: C.red,    desc: "collideDesc" },
-      { key: "grow",       emoji: "🌱", color: C.green,  desc: "growDesc" },
+      { key: "technical",  icon: "wrench",   color: C.blue,   desc: "technicalDesc" },
+      { key: "conceptual", icon: "sparkles", color: C.yellow, desc: "conceptualDesc" },
+      { key: "collide",    icon: "target",   color: C.red,    desc: "collideDesc" },
+      { key: "grow",       icon: "target",   color: C.green,  desc: "growDesc" },
     ];
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: 14, padding: "20px 0" }}>
@@ -413,7 +413,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
             }}
             onPointerEnter={e => e.currentTarget.style.borderColor = m.color}
             onPointerLeave={e => e.currentTarget.style.borderColor = m.color + "30"}>
-            <span style={{ fontSize: 32 }}>{m.emoji}</span>
+            <Ic n={m.icon} s={32} c={m.color}/>
             <div>
               <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 16, color: m.color, letterSpacing: 1 }}>
                 {t(m.key).toUpperCase()}
@@ -452,14 +452,14 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
         </button>
 
         <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 14, color: C.green, letterSpacing: 1, marginBottom: 16 }}>
-          🌱 {t("pickSeedMove")}
+          {t("pickSeedMove")}
         </div>
 
         {catKeys.length === 0 ? (
           <div style={{
             textAlign: "center", padding: "40px 20px", color: C.textMuted,
           }}>
-            <div style={{ fontSize: 40, marginBottom: 12 }}>🌱</div>
+            <div style={{ marginBottom: 12 }}><Ic n="sparkles" s={40} c={C.textMuted}/></div>
             <div style={{ fontFamily: FONT_BODY, fontSize: 13, lineHeight: 1.5 }}>
               {t("noEligibleMoves")}
             </div>
@@ -528,7 +528,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
             display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", marginBottom: 16,
             background: `${C.green}15`, border: `1.5px solid ${C.green}40`, borderRadius: 12,
           }}>
-            <span style={{ fontSize: 20 }}>🌱</span>
+            <Ic n="sparkles" s={20} c={C.green}/>
             <div>
               <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, color: C.green, letterSpacing: 0.5 }}>
                 {t("growSeedLabel").toUpperCase()}
@@ -566,7 +566,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
         {isTech && (
           <div style={{ marginBottom: 20 }}>
             <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 14, color: C.blue, letterSpacing: 1, marginBottom: 12 }}>
-              🔧 {t("technical").toUpperCase()}
+              {t("technical").toUpperCase()}
             </div>
             {TECH_CATS.map(cat => renderChips(cat, TECH_CHIPS[cat], "technical", C.blue, techSel, handleTechChip))}
           </div>
@@ -576,7 +576,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
         {isConcept && (
           <div style={{ marginBottom: 20 }}>
             <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 14, color: C.yellow, letterSpacing: 1, marginBottom: 12 }}>
-              🎨 {t("conceptual").toUpperCase()}
+              {t("conceptual").toUpperCase()}
             </div>
             {CONCEPT_CATS.map(cat => {
               const isSelected = conceptSel.category === cat ? conceptSel.value : null;
@@ -609,7 +609,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
                   fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 13, letterSpacing: 1,
                   cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
                 }}>
-                💥 {t("collide").toUpperCase()}
+                {t("collide").toUpperCase()}
               </button>
               <button onClick={handleRandomise}
                 style={{
@@ -628,7 +628,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
                 fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 13, letterSpacing: 1,
                 cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
               }}>
-              🎲 {t("randomise")}
+              {t("randomise")}
             </button>
           )}
           <button onClick={handleReset}
@@ -731,7 +731,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
         padding: "13px 18px", borderBottom: `1px solid ${C.border}`, background: C.header, flexShrink: 0,
       }}>
         <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 16, color: C.brown, letterSpacing: 1 }}>
-          {t("lab")}
+          {t("explore")}
         </span>
         <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex" }}>
           <Ic n="x" s={20} c={C.textMuted} />

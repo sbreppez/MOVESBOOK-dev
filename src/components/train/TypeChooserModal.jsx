@@ -13,7 +13,7 @@ export const TypeChooserModal = ({ onClose, onChoose }) => {
       <button onClick={()=>onChoose("goal")}
         style={{ padding:"18px 16px", background:C.surface, border:`2px solid ${C.accent}`, borderRadius:12,
           cursor:"pointer", textAlign:"left", display:"flex", alignItems:"center", gap:14 }}>
-        <span style={{ fontSize:28 }}>{"🎯"}</span>
+        <Ic n="target" s={28} c={C.accent}/>
         <div>
           <div style={{ fontWeight:800, fontSize:14, color:C.accent, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>GOAL</div>
           <div style={{ fontSize:12, color:C.textMuted, marginTop:3 }}>{t("goalDesc")}</div>
@@ -22,7 +22,7 @@ export const TypeChooserModal = ({ onClose, onChoose }) => {
       <button onClick={()=>onChoose("target")}
         style={{ padding:"18px 16px", background:C.surface, border:`2px solid ${C.accent}55`, borderRadius:12,
           cursor:"pointer", textAlign:"left", display:"flex", alignItems:"center", gap:14 }}>
-        <span style={{ fontSize:28 }}>{"🏹"}</span>
+        <Ic n="crosshair" s={28} c={C.accent}/>
         <div>
           <div style={{ fontWeight:800, fontSize:14, color:C.accent, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>TARGET</div>
           <div style={{ fontSize:12, color:C.textMuted, marginTop:3 }}>{t("targetDesc")}</div>

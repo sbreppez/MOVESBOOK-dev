@@ -29,6 +29,12 @@
     .msg{font-size:11px;color:#9a8a7a;letter-spacing:2px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
     @keyframes ld{0%{width:3%}30%{width:35%}60%{width:65%}85%{width:88%}100%{width:96%}}
     input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(0.5);cursor:pointer}
+    /* Dark scrollbar */
+    ::-webkit-scrollbar{width:6px;height:6px}
+    ::-webkit-scrollbar-track{background:transparent}
+    ::-webkit-scrollbar-thumb{background:#3a3a3a;border-radius:3px}
+    ::-webkit-scrollbar-thumb:hover{background:#555}
+    *{scrollbar-color:#3a3a3a transparent;scrollbar-width:thin}
   </style>
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -212,6 +218,26 @@ firebase.initializeApp({
             if (data.templates)  localStorage.setItem('mb_templates',  data.templates);
             if (data.catColors)  localStorage.setItem('mb_cat_colors', data.catColors);
             if (data.customAttrs) { try { var _ca=JSON.parse(data.customAttrs); if(Array.isArray(_ca)) localStorage.setItem('mb_custom_attrs', data.customAttrs); } catch(e){} }
+            if (data.rivals)      { try { const p=JSON.parse(data.rivals);      if(Array.isArray(p))            localStorage.setItem('mb_rivals',      data.rivals);      } catch{} }
+            if (data.reps)        { try { const p=JSON.parse(data.reps);        if(Array.isArray(p))            localStorage.setItem('mb_reps',        data.reps);        } catch{} }
+            if (data.sparring)    { try { const p=JSON.parse(data.sparring);    if(p&&typeof p==="object") localStorage.setItem('mb_sparring',    data.sparring);    } catch{} }
+            if (data.combos)      { try { const p=JSON.parse(data.combos);      if(p&&typeof p==="object") localStorage.setItem('mb_combos',      data.combos);      } catch{} }
+            if (data.lab)         { try { const p=JSON.parse(data.lab);         if(p&&typeof p==="object") localStorage.setItem('mb_lab',         data.lab);         } catch{} }
+            if (data.rrr)         { try { const p=JSON.parse(data.rrr);         if(p&&typeof p==="object") localStorage.setItem('mb_rrr',         data.rrr);         } catch{} }
+            if (data.reminders)   { try { const p=JSON.parse(data.reminders);   if(p&&typeof p==="object") localStorage.setItem('mb_reminders',   data.reminders);   } catch{} }
+            if (data.calendar)    { try { const p=JSON.parse(data.calendar);    if(p&&typeof p==="object") localStorage.setItem('mb_calendar',    data.calendar);    } catch{} }
+            if (data.stance)      { try { const p=JSON.parse(data.stance);      if(p&&typeof p==="object") localStorage.setItem('mb_stance',      data.stance);      } catch{} }
+            if (data.musicflow)   { try { const p=JSON.parse(data.musicflow);   if(p&&typeof p==="object") localStorage.setItem('mb_musicflow',   data.musicflow);   } catch{} }
+            if (data.freestyle)   { try { const p=JSON.parse(data.freestyle);   if(p&&typeof p==="object") localStorage.setItem('mb_freestyle',   data.freestyle);   } catch{} }
+            if (data.reflections) { try { const p=JSON.parse(data.reflections); if(p&&typeof p==="object") localStorage.setItem('mb_reflections', data.reflections); } catch{} }
+            if (data.battleprep)  { try { const p=JSON.parse(data.battleprep);  if(p&&typeof p==="object") localStorage.setItem('mb_battleprep',  data.battleprep);  } catch{} }
+            if (data.flowmap)     { try { const p=JSON.parse(data.flowmap);     if(p&&typeof p==="object") localStorage.setItem('mb_flowmap',     data.flowmap);     } catch{} }
+            if (data.catDomains)  { try { const p=JSON.parse(data.catDomains);  if(p&&typeof p==="object") localStorage.setItem('mb_cat_domains', data.catDomains);  } catch{} }
+            if (data.reports)     { try { const p=JSON.parse(data.reports);     if(p&&typeof p==="object") localStorage.setItem('mb_reports',     data.reports);     } catch{} }
+            if (data.milestonesShown) { try { const p=JSON.parse(data.milestonesShown); if(Array.isArray(p)) localStorage.setItem('mb_milestones_shown', data.milestonesShown); } catch{} }
+            if (data.presession)  { try { const p=JSON.parse(data.presession);  if(p&&typeof p==="object") localStorage.setItem('mb_presession',  data.presession);  } catch{} }
+            if (data.injuries)    { try { const p=JSON.parse(data.injuries);    if(Array.isArray(p))            localStorage.setItem('mb_injuries',    data.injuries);    } catch{} }
+            if (data.profilePhoto) localStorage.setItem('mb_profile_photo', data.profilePhoto);
           }
           if (loginDiv) { loginDiv.style.opacity='0'; setTimeout(function(){ loginDiv.style.display='none'; },300); }
           window.dispatchEvent(new Event('mb-auth-resolved'));
@@ -234,12 +260,37 @@ firebase.initializeApp({
             if (d.templates)  localStorage.setItem('mb_templates',  d.templates);
             if (d.catColors)  localStorage.setItem('mb_cat_colors', d.catColors);
             if (d.customAttrs) localStorage.setItem('mb_custom_attrs', d.customAttrs);
+            if (d.cats)        localStorage.setItem('mb_cats',        d.cats);
+            if (d.rivals)      localStorage.setItem('mb_rivals',      d.rivals);
+            if (d.reps)        localStorage.setItem('mb_reps',        d.reps);
+            if (d.sparring)    localStorage.setItem('mb_sparring',    d.sparring);
+            if (d.combos)      localStorage.setItem('mb_combos',      d.combos);
+            if (d.lab)         localStorage.setItem('mb_lab',         d.lab);
+            if (d.rrr)         localStorage.setItem('mb_rrr',         d.rrr);
+            if (d.reminders)   localStorage.setItem('mb_reminders',   d.reminders);
+            if (d.calendar)    localStorage.setItem('mb_calendar',    d.calendar);
+            if (d.stance)      localStorage.setItem('mb_stance',      d.stance);
+            if (d.musicflow)   localStorage.setItem('mb_musicflow',   d.musicflow);
+            if (d.freestyle)   localStorage.setItem('mb_freestyle',   d.freestyle);
+            if (d.reflections) localStorage.setItem('mb_reflections', d.reflections);
+            if (d.battleprep)  localStorage.setItem('mb_battleprep',  d.battleprep);
+            if (d.flowmap)     localStorage.setItem('mb_flowmap',     d.flowmap);
+            if (d.catDomains)  localStorage.setItem('mb_cat_domains', d.catDomains);
+            if (d.reports)     localStorage.setItem('mb_reports',     d.reports);
+            if (d.milestonesShown) localStorage.setItem('mb_milestones_shown', d.milestonesShown);
+            if (d.presession)  localStorage.setItem('mb_presession',  d.presession);
+            if (d.injuries)    localStorage.setItem('mb_injuries',    d.injuries);
+            if (d.profilePhoto) localStorage.setItem('mb_profile_photo', d.profilePhoto);
           } catch(e){}
         });
       } else {
         window.__MB_USER__ = null;
         ['mb_moves','mb_sets','mb_rounds','mb_ideas','mb_profile','mb_settings',
-         'mb_habits','mb_templates','mb_cats','mb_cat_colors','mb_custom_attrs','mb_data_version'].forEach(function(k){ localStorage.removeItem(k); });
+         'mb_habits','mb_templates','mb_cats','mb_cat_colors','mb_custom_attrs','mb_data_version',
+         'mb_rivals','mb_reps','mb_sparring','mb_combos','mb_lab','mb_rrr','mb_reminders',
+         'mb_calendar','mb_stance','mb_musicflow','mb_freestyle','mb_reflections',
+         'mb_battleprep','mb_flowmap','mb_cat_domains','mb_reports','mb_milestones_shown',
+         'mb_presession','mb_injuries','mb_profile_photo'].forEach(function(k){ localStorage.removeItem(k); });
         if (loginDiv) { loginDiv.style.display='flex'; loginDiv.style.opacity='1'; }
         if (_unsubSnap) { _unsubSnap(); _unsubSnap=null; }
       }

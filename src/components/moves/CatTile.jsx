@@ -9,12 +9,15 @@ import { Modal } from '../shared/Modal';
 import { useT } from '../../hooks/useTranslation';
 import { usePlural } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
+import { computeDecay } from '../../utils/masteryDecay';
 
 const TILE_PREVIEW = 4; // number of moves shown before "show more"
 export const CatTile = (props) => {
   const { name, color, total, mastered, moves=[], viewMode="tiles", showMastery=true, showMoveCount=true, onClick, onDelete, onRename, onDuplicate, onChangeColor, draggable, onDragStart, onDragOver, onDrop, isDraggingOver } = props;
   const t = useT();
   const { moveCountStr } = usePlural();
+  const settings = useSettings();
+  const dm = (m) => computeDecay(m, settings.decaySensitivity).displayMastery;
   const [menu,setMenu]=useState(false);
   const [confirmDel,setConfirmDel]=useState(false);
   const [renaming,setRenaming]=useState(false);
@@ -85,9 +88,9 @@ export const CatTile = (props) => {
               <div style={{ borderTop:`1px solid ${C.borderLight}`, paddingTop:5 }}>
                 {shown.map(m=>(
                   <div key={m.id} style={{ display:"flex", alignItems:"center", gap:5, padding:"2px 0" }}>
-                    <div style={{ width:5, height:5, borderRadius:"50%", background:masteryColor(m.mastery), flexShrink:0 }}/>
+                    <div style={{ width:5, height:5, borderRadius:"50%", background:masteryColor(dm(m)), flexShrink:0 }}/>
                     <span style={{ fontSize:11, color:C.textSec, flex:1, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{m.name}</span>
-                    {showMastery&&<span style={{ fontSize:10, color:masteryColor(m.mastery), fontWeight:700, flexShrink:0 }}>{m.mastery}%</span>}
+                    {showMastery&&<span style={{ fontSize:10, color:masteryColor(dm(m)), fontWeight:700, flexShrink:0 }}>{dm(m)}%</span>}
                   </div>
                 ))}
               </div>
@@ -173,9 +176,9 @@ export const CatTile = (props) => {
           <div style={{ borderTop:`1px solid ${C.borderLight}`, padding:"4px 0 6px" }}>
             {moves.map(m=>(
               <div key={m.id} style={{ display:"flex", alignItems:"center", gap:7, padding:"4px 14px 4px 32px" }}>
-                <div style={{ width:5, height:5, borderRadius:"50%", background:masteryColor(m.mastery), flexShrink:0 }}/>
+                <div style={{ width:5, height:5, borderRadius:"50%", background:masteryColor(dm(m)), flexShrink:0 }}/>
                 <span style={{ fontSize:12, color:C.textSec, flex:1 }}>{m.name}</span>
-                {showMastery&&<span style={{ fontSize:11, color:masteryColor(m.mastery), fontWeight:700 }}>{m.mastery}%</span>}
+                {showMastery&&<span style={{ fontSize:11, color:masteryColor(dm(m)), fontWeight:700 }}>{dm(m)}%</span>}
               </div>
             ))}
           </div>
