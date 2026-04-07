@@ -238,7 +238,7 @@ firebase.initializeApp({
             if (data.milestonesShown) { try { const p=JSON.parse(data.milestonesShown); if(Array.isArray(p)) localStorage.setItem('mb_milestones_shown', data.milestonesShown); } catch{} }
             if (data.presession)  { try { const p=JSON.parse(data.presession);  if(p&&typeof p==="object") localStorage.setItem('mb_presession',  data.presession);  } catch{} }
             if (data.injuries)    { try { const p=JSON.parse(data.injuries);    if(Array.isArray(p))            localStorage.setItem('mb_injuries',    data.injuries);    } catch{} }
-            if (data.profilePhoto) { try { localStorage.setItem('mb_profile_photo', JSON.parse(data.profilePhoto)); } catch(e){ localStorage.setItem('mb_profile_photo', data.profilePhoto); } }
+            if (data.profilePhoto) { var _pp = data.profilePhoto; if (_pp && _pp !== 'null' && _pp !== '"null"') { try { _pp = JSON.parse(_pp); } catch(e){} while(typeof _pp==='string'&&_pp.charAt(0)==='"'&&_pp.charAt(_pp.length-1)==='"'){try{var _pp2=JSON.parse(_pp);if(_pp2===_pp)break;_pp=_pp2;}catch(e){break;}} if(typeof _pp==='string'&&_pp.indexOf('data:')===0) localStorage.setItem('mb_profile_photo',_pp); else localStorage.removeItem('mb_profile_photo'); } }
           }
           if (loginDiv) { loginDiv.style.opacity='0'; setTimeout(function(){ loginDiv.style.display='none'; },300); }
           window.dispatchEvent(new Event('mb-auth-resolved'));
@@ -281,7 +281,7 @@ firebase.initializeApp({
             if (d.milestonesShown) localStorage.setItem('mb_milestones_shown', d.milestonesShown);
             if (d.presession)  localStorage.setItem('mb_presession',  d.presession);
             if (d.injuries)    localStorage.setItem('mb_injuries',    d.injuries);
-            if (d.profilePhoto) { try { localStorage.setItem('mb_profile_photo', JSON.parse(d.profilePhoto)); } catch(e){ localStorage.setItem('mb_profile_photo', d.profilePhoto); } }
+            if (d.profilePhoto) { var _sp=d.profilePhoto; if(_sp&&_sp!=='null'&&_sp!=='"null"'){try{_sp=JSON.parse(_sp);}catch(e){}while(typeof _sp==='string'&&_sp.charAt(0)==='"'&&_sp.charAt(_sp.length-1)==='"'){try{var _sp2=JSON.parse(_sp);if(_sp2===_sp)break;_sp=_sp2;}catch(e){break;}}if(typeof _sp==='string'&&_sp.indexOf('data:')===0)localStorage.setItem('mb_profile_photo',_sp);else localStorage.removeItem('mb_profile_photo');} }
           } catch(e){}
         });
       } else {

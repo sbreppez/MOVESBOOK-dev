@@ -43,3 +43,12 @@ export function debounce(fn, ms) {
   let timer;
   return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn(...args), ms); };
 }
+
+export function unwrapPhoto(raw) {
+  if (!raw || raw === "null" || raw === '"null"') return null;
+  let val = raw;
+  while (typeof val === 'string' && val.startsWith('"') && val.endsWith('"')) {
+    try { const parsed = JSON.parse(val); if (parsed === val) break; val = parsed; } catch { break; }
+  }
+  return (typeof val === 'string' && val.startsWith('data:')) ? val : null;
+}

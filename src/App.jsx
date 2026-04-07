@@ -5,7 +5,7 @@ import { CATS, CAT_COLORS, INIT_MOVES, INIT_IDEAS, INIT_HABITS, INIT_SETS, INIT_
 import { SettingsCtx } from './hooks/useSettings';
 import { TrainModalCtx, TrainMenuCtx } from './hooks/useTrainContext';
 import { TRANSLATIONS } from './constants/translations';
-import { SCHEMA_VERSION, migrateMove, loadLocal, saveLocal, debounce } from './utils/storage';
+import { SCHEMA_VERSION, migrateMove, loadLocal, saveLocal, debounce, unwrapPhoto } from './utils/storage';
 import { migrateOldAttributes } from './utils/attributeHelpers';
 import { Ic } from './components/shared/Ic';
 import { ProfileAvatar } from './components/shared/ProfileAvatar';
@@ -141,7 +141,7 @@ export default function App() {
     try { const s=localStorage.getItem("mb_flashcards"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { bestScore:null };
   });
   const [profilePhoto, setProfilePhoto] = useState(() => {
-    try { const s=localStorage.getItem("mb_profile_photo"); if(s) return s; } catch{} return null;
+    try { return unwrapPhoto(localStorage.getItem("mb_profile_photo")); } catch{} return null;
   });
   const [reminders, setReminders] = useState(() => {
     try { const s=localStorage.getItem("mb_reminders"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { items:[] };
@@ -254,8 +254,9 @@ export default function App() {
   useEffect(()=>{ saveLocal("mb_reflections", reflections); },[reflections]);
   useEffect(()=>{ saveLocal("mb_rivals", rivals); },[rivals]);
   useEffect(()=>{
-    if(profilePhoto) { try { localStorage.setItem("mb_profile_photo", profilePhoto); } catch{} }
-    else localStorage.removeItem("mb_profile_photo");
+    if(profilePhoto && typeof profilePhoto === 'string' && profilePhoto.startsWith('data:')) {
+      try { localStorage.setItem("mb_profile_photo", profilePhoto); } catch{}
+    } else localStorage.removeItem("mb_profile_photo");
   },[profilePhoto]);
   useEffect(()=>{ saveLocal("mb_battleprep", battleprep); },[battleprep]);
   useEffect(()=>{ saveLocal("mb_flowmap", flowmap); },[flowmap]);
@@ -351,7 +352,22 @@ export default function App() {
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.homeStack?.(fbUser.uid, homeStack); },[homeStack, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.homeIdeas?.(fbUser.uid, homeIdeas); },[homeIdeas, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.homeChecks?.(fbUser.uid, homeChecks); },[homeChecks, fbUser]);
-  useEffect(()=>{ if(fbUser?.uid) dbSave.current.profilePhoto?.(fbUser.uid, profilePhoto); },[profilePhoto, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid && profilePhoto && profilePhoto.startsWith('data:')) dbSave.current.profilePhoto?.(fbUser.uid, profilePhoto); },[profilePhoto, fbUser]);
+
+  // ── Flush profilePhoto on page close (debounced save may not have fired) ──
+  const profilePhotoRef = useRef(profilePhoto);
+  const fbUserRef = useRef(fbUser);
+  useEffect(()=>{ profilePhotoRef.current = profilePhoto; },[profilePhoto]);
+  useEffect(()=>{ fbUserRef.current = fbUser; },[fbUser]);
+  useEffect(()=>{
+    const flush = () => {
+      const ph = profilePhotoRef.current;
+      const u = fbUserRef.current;
+      if(u?.uid && ph && ph.startsWith('data:')) window.__MB_DB__?.save(u.uid, "profilePhoto", ph);
+    };
+    window.addEventListener("beforeunload", flush);
+    return () => window.removeEventListener("beforeunload", flush);
+  },[]);
 
   // ── Auth resolution ────────────────────────────────────────────────────────
   useEffect(()=>{
@@ -429,7 +445,7 @@ export default function App() {
           if (hi) { try { const p=JSON.parse(hi); if(Array.isArray(p)) setHomeIdeas(p); } catch {} }
           const hc = localStorage.getItem("mb_home_checks");
           if (hc) { try { const p=JSON.parse(hc); if(p&&typeof p==="object") setHomeChecks(p); } catch {} }
-          const ppho = localStorage.getItem("mb_profile_photo");
+          const ppho = unwrapPhoto(localStorage.getItem("mb_profile_photo"));
           if (ppho) setProfilePhoto(ppho);
           if (p) { try { const pp=JSON.parse(p); if(pp&&Object.values(pp).some(v=>v)) setProfile(pp); } catch{} }
           const st = localStorage.getItem("mb_settings");
