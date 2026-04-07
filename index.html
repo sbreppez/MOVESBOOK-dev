@@ -202,6 +202,7 @@ firebase.initializeApp({
     }
 
     _fbAuth.onAuthStateChanged(function(user) {
+      if (_devBypass) return;
       if (user) {
         window.__MB_USER__ = { uid:user.uid, name:user.displayName, email:user.email, photo:user.photoURL };
         window.__MB_DB__.load(user.uid).then(function(data) {
@@ -237,7 +238,7 @@ firebase.initializeApp({
             if (data.milestonesShown) { try { const p=JSON.parse(data.milestonesShown); if(Array.isArray(p)) localStorage.setItem('mb_milestones_shown', data.milestonesShown); } catch{} }
             if (data.presession)  { try { const p=JSON.parse(data.presession);  if(p&&typeof p==="object") localStorage.setItem('mb_presession',  data.presession);  } catch{} }
             if (data.injuries)    { try { const p=JSON.parse(data.injuries);    if(Array.isArray(p))            localStorage.setItem('mb_injuries',    data.injuries);    } catch{} }
-            if (data.profilePhoto) localStorage.setItem('mb_profile_photo', data.profilePhoto);
+            if (data.profilePhoto) { try { localStorage.setItem('mb_profile_photo', JSON.parse(data.profilePhoto)); } catch(e){ localStorage.setItem('mb_profile_photo', data.profilePhoto); } }
           }
           if (loginDiv) { loginDiv.style.opacity='0'; setTimeout(function(){ loginDiv.style.display='none'; },300); }
           window.dispatchEvent(new Event('mb-auth-resolved'));
@@ -280,7 +281,7 @@ firebase.initializeApp({
             if (d.milestonesShown) localStorage.setItem('mb_milestones_shown', d.milestonesShown);
             if (d.presession)  localStorage.setItem('mb_presession',  d.presession);
             if (d.injuries)    localStorage.setItem('mb_injuries',    d.injuries);
-            if (d.profilePhoto) localStorage.setItem('mb_profile_photo', d.profilePhoto);
+            if (d.profilePhoto) { try { localStorage.setItem('mb_profile_photo', JSON.parse(d.profilePhoto)); } catch(e){ localStorage.setItem('mb_profile_photo', d.profilePhoto); } }
           } catch(e){}
         });
       } else {
