@@ -82,7 +82,7 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
           <button onClick={handleRemovePhoto}
             style={{ background:"none", border:"none", cursor:"pointer", marginTop:8,
               fontSize:11, fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:1,
-              color:C.accent, textTransform:"uppercase" }}>
+              color:C.accent }}>
             {t("removeProfilePhoto")}
           </button>
         )}
