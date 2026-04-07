@@ -674,19 +674,13 @@ export default function App() {
             )}
           </div>
           <div style={{ display:"flex", gap:6, alignItems:"center" }}>
+            <ProfileAvatar profilePhoto={profilePhoto} fbUser={fbUser} nickname={profile.nickname}
+              size={26} C={C} onClick={()=>setShowProfile(true)} id="tour-profile" />
             <button onClick={()=>setShowSettings(true)}
               style={{ background:"none", border:"none", cursor:"pointer", padding:5 }}
               title="Settings">
               <Ic n="cog" s={18} c={C.brownLight}/>
             </button>
-            <ProfileAvatar profilePhoto={profilePhoto} fbUser={fbUser} nickname={profile.nickname}
-              size={26} C={C} onClick={()=>setShowProfile(true)} id="tour-profile" />
-            <button onClick={()=>setShowManual(true)}
-              style={{ background:"none", border:"none", cursor:"pointer", padding:"3px 5px",
-                borderRadius:6, color:C.brownLight, fontWeight:900, fontSize:16,
-                fontFamily:FONT_DISPLAY, lineHeight:1 }}
-              id="tour-manual-btn" title="User Manual">?</button>
-
           </div>
         </div>
 

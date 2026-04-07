@@ -337,7 +337,7 @@ export const HomePage = ({
         </span>
         <button onClick={() => setShowGearMenu(true)}
           style={{ background: "none", border: "none", cursor: "pointer", padding: 5, borderRadius: 5, color: C.textMuted }}>
-          <Ic n="cog" s={16} c={C.textMuted}/>
+          <Ic n="moreH" s={16} c={C.textMuted}/>
         </button>
       </div>
 
