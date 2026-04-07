@@ -650,46 +650,6 @@ export default function App() {
   const effectiveZoom = fontScale * zoom;
   const rootHeight = effectiveZoom < 1 ? `${(100 / effectiveZoom).toFixed(2)}vh` : "100vh";
 
-  // ── Password gate ───────────────────────────────────────────────────────────
-  const [isUnlocked, setIsUnlocked] = useState(() => localStorage.getItem('mb_access') === 'true');
-  const [gatePass, setGatePass] = useState('');
-  const [gateError, setGateError] = useState(false);
-
-  const handleGateSubmit = () => {
-    if (gatePass === 'movesbook2026') {
-      localStorage.setItem('mb_access', 'true');
-      setIsUnlocked(true);
-    } else {
-      setGateError(true);
-      setTimeout(() => setGateError(false), 1500);
-    }
-  };
-
-  if (!isUnlocked) {
-    return (
-      <div style={{ position:'fixed', inset:0, background:'#121212', display:'flex',
-        flexDirection:'column', alignItems:'center', justifyContent:'center', zIndex:99999 }}>
-        <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:32, letterSpacing:5, marginBottom:8 }}>
-          <span style={{ color:'#cf0000' }}>MOVES</span><span style={{ color:'#ffffff' }}>BOOK</span>
-        </span>
-        <span style={{ fontFamily:FONT_BODY, fontSize:13, color:'#7a7a7a', letterSpacing:3,
-          textTransform:'uppercase', marginBottom:40 }}>COMING SOON</span>
-        <input type="password" placeholder="Enter access code" value={gatePass}
-          onChange={e => setGatePass(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && handleGateSubmit()}
-          style={{ fontFamily:FONT_BODY, fontSize:15, padding:'12px 18px', borderRadius:10,
-            border:'1px solid #3a3a3a', background:'#1e1e1e', color:'#ffffff', width:240,
-            outline:'none', marginBottom:12, textAlign:'center' }} />
-        <button onClick={handleGateSubmit}
-          style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:14, padding:'10px 32px',
-            borderRadius:10, border:'none', background:'#e53935', color:'#ffffff',
-            cursor:'pointer', textTransform:'uppercase', letterSpacing:1.5 }}>Enter</button>
-        {gateError && <span style={{ fontFamily:FONT_BODY, fontSize:13, color:'#e53935',
-          marginTop:14 }}>Incorrect</span>}
-      </div>
-    );
-  }
-
   return (
     <SettingsCtx.Provider value={{ settings:appSettings, C, cardPad, cardFontSize }}>
       <style>{`
