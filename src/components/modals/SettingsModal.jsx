@@ -263,7 +263,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
             <div key={attr.id} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:10,
               padding:"10px 0", borderBottom:`1px solid ${panelBrd}` }}>
               <div style={{ flex:1, minWidth:0 }}>
-                <div style={{ fontSize:13, fontWeight:700, color:panelTxt, fontFamily:FONT_DISPLAY, letterSpacing:0.3 }}>{attr.name}</div>
+                <div style={{ fontSize:13, fontWeight:700, color:panelTxt, fontFamily:FONT_DISPLAY, letterSpacing:0.3, textTransform:"capitalize" }}>{attr.name}</div>
                 <div style={{ fontSize:11, color:panelMut, marginTop:2, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
                   {attr.values.join(" · ")}
                 </div>
