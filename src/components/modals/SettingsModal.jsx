@@ -13,7 +13,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
     compactCards:false, sortMoves:"custom", fontSize:"medium",
     showMoveCount:true, confirmDelete:true, practiceReminders:false,
     reminderTime:"18:00", showDeadlineIndicator:true,
-    categorySort:"manual", defaultView:"list", language:"en", linkOnCard:"inside", targetAutoLink:false, trainTabOrder:["goals","habits","notes","prep"],
+    categorySort:"manual", defaultView:"list", language:"en", linkOnCard:"inside", targetAutoLink:false,
     ...settings
   });
   const origSettings = useRef(settings);
@@ -213,34 +213,6 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
                 fontWeight:700, outline:"none", textAlign:"center" }}/>
           )}
 
-          {(()=>{
-            const order = s.trainTabOrder||["goals","habits","notes","prep"];
-            const labels = { goals:t("trainTabGoals"), habits:t("trainTabHabits"), notes:t("trainTabNotes"), prep:"PREP" };
-            const move = (from, to) => {
-              const next = [...order];
-              const [item] = next.splice(from,1);
-              next.splice(to,0,item);
-              set("trainTabOrder")(next);
-            };
-            return row(t("trainTabOrder"),
-              t("trainTabOrderDesc"),
-              <div style={{ display:"flex", flexDirection:"column", gap:4, minWidth:140 }}>
-                {order.map((id,i)=>(
-                  <div key={id} style={{ display:"flex", alignItems:"center", gap:6,
-                    background:C.surfaceAlt, borderRadius:6, padding:"5px 8px",
-                    border:`1px solid ${C.border}` }}>
-                    <span style={{ fontSize:11, fontWeight:800, color:C.text, fontFamily:FONT_DISPLAY, flex:1 }}>{labels[id]||id}</span>
-                    <button onClick={()=>i>0&&move(i,i-1)} disabled={i===0}
-                      style={{ background:"none", border:"none", cursor:i>0?"pointer":"default",
-                        color:i>0?C.textSec:C.border, padding:"0 2px", fontSize:12 }}>▲</button>
-                    <button onClick={()=>i<order.length-1&&move(i,i+1)} disabled={i===order.length-1}
-                      style={{ background:"none", border:"none", cursor:i<order.length-1?"pointer":"default",
-                        color:i<order.length-1?C.textSec:C.border, padding:"0 2px", fontSize:12 }}>▼</button>
-                  </div>
-                ))}
-              </div>
-            );
-          })()}
 
           {/* ── NAVIGATION ──────────────────────────────── */}
           {sectionHdr(t("navigation"))}
