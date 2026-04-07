@@ -202,7 +202,7 @@ export const TRANSLATIONS = {
     // Import
     importComplete:"Import complete.",
     // Bottom bar & menu
-    feedbackLabel:"FEEDBACK", settingsLabel:"SETTINGS",
+    feedbackLabel:"FEEDBACK", settingsLabel:"SETTINGS", backupLabel:"BACKUP",
     legalLabel:"LEGAL", privacyPolicy:"Privacy Policy", termsOfService:"Terms of Service", disclaimers:"Disclaimers", lastUpdated:"Last updated",
     addMoveMenu:"Add Move", addCategoryMenu:"Add Category",
     // Section banner descriptions
@@ -1376,7 +1376,7 @@ export const TRANSLATIONS = {
     roundsWillBeSaved:"round verranno salvati",
     importComplete:"Importazione completata.",
     // Bottom bar & menu
-    feedbackLabel:"FEEDBACK", settingsLabel:"IMPOSTAZIONI",
+    feedbackLabel:"FEEDBACK", settingsLabel:"IMPOSTAZIONI", backupLabel:"BACKUP",
     legalLabel:"LEGALE", privacyPolicy:"Informativa sulla Privacy", termsOfService:"Termini di Servizio", disclaimers:"Avvertenze", lastUpdated:"Ultimo aggiornamento",
     addMoveMenu:"Aggiungi mossa", addCategoryMenu:"Aggiungi categoria",
     // Section banner
@@ -2533,7 +2533,7 @@ export const TRANSLATIONS = {
     willBeRemoved:"será eliminado.",
     roundsWillBeSaved:"rondas se guardarán",
     importComplete:"Importación completada.",
-    feedbackLabel:"FEEDBACK", settingsLabel:"AJUSTES",
+    feedbackLabel:"FEEDBACK", settingsLabel:"AJUSTES", backupLabel:"COPIA DE SEGURIDAD",
     legalLabel:"LEGAL", privacyPolicy:"Política de Privacidad", termsOfService:"Términos de Servicio", disclaimers:"Descargos de Responsabilidad", lastUpdated:"Última actualización",
     addMoveMenu:"Añadir movimiento", addCategoryMenu:"Añadir categoría",
     sectionDescTrain:"TRAIN — establece tus objetivos, captura ideas y decide qué practicar.",
@@ -3676,7 +3676,7 @@ export const TRANSLATIONS = {
     willBeRemoved:"sera supprimé.",
     roundsWillBeSaved:"rounds seront enregistrés",
     importComplete:"Importation terminée.",
-    feedbackLabel:"FEEDBACK", settingsLabel:"PARAMÈTRES",
+    feedbackLabel:"FEEDBACK", settingsLabel:"PARAMÈTRES", backupLabel:"SAUVEGARDE",
     legalLabel:"JURIDIQUE", privacyPolicy:"Politique de Confidentialité", termsOfService:"Conditions d'Utilisation", disclaimers:"Avertissements", lastUpdated:"Dernière mise à jour",
     addMoveMenu:"Ajouter un mouvement", addCategoryMenu:"Ajouter une catégorie",
     sectionDescTrain:"TRAIN — fixe tes objectifs, capture tes idées et décide quoi pratiquer.",
@@ -4819,7 +4819,7 @@ export const TRANSLATIONS = {
     willBeRemoved:"será removido.",
     roundsWillBeSaved:"rounds serão guardados",
     importComplete:"Importação concluída.",
-    feedbackLabel:"FEEDBACK", settingsLabel:"CONFIGURAÇÕES",
+    feedbackLabel:"FEEDBACK", settingsLabel:"CONFIGURAÇÕES", backupLabel:"BACKUP",
     legalLabel:"LEGAL", privacyPolicy:"Política de Privacidade", termsOfService:"Termos de Serviço", disclaimers:"Avisos Legais", lastUpdated:"Última atualização",
     addMoveMenu:"Adicionar movimento", addCategoryMenu:"Adicionar categoria",
     sectionDescTrain:"TRAIN — defina seus objetivos, capture ideias e decida o que praticar.",
@@ -5962,7 +5962,7 @@ export const TRANSLATIONS = {
     willBeRemoved:"wird entfernt.",
     roundsWillBeSaved:"Runden werden gespeichert",
     importComplete:"Import abgeschlossen.",
-    feedbackLabel:"FEEDBACK", settingsLabel:"EINSTELLUNGEN",
+    feedbackLabel:"FEEDBACK", settingsLabel:"EINSTELLUNGEN", backupLabel:"SICHERUNG",
     legalLabel:"RECHTLICHES", privacyPolicy:"Datenschutzrichtlinie", termsOfService:"Nutzungsbedingungen", disclaimers:"Haftungsausschlüsse", lastUpdated:"Letzte Aktualisierung",
     addMoveMenu:"Move hinzufügen", addCategoryMenu:"Kategorie hinzufügen",
     sectionDescTrain:"TRAIN — setze deine Ziele, sammle Ideen und entscheide, was du trainierst.",
@@ -7106,7 +7106,7 @@ export const TRANSLATIONS = {
     willBeRemoved:"が削除されます。",
     roundsWillBeSaved:"ラウンドが保存されます",
     importComplete:"インポート完了。",
-    feedbackLabel:"フィードバック", settingsLabel:"設定",
+    feedbackLabel:"フィードバック", settingsLabel:"設定", backupLabel:"バックアップ",
     legalLabel:"法的情報", privacyPolicy:"プライバシーポリシー", termsOfService:"利用規約", disclaimers:"免責事項", lastUpdated:"最終更新",
     addMoveMenu:"ムーブを追加", addCategoryMenu:"カテゴリーを追加",
     sectionDescTrain:"TRAIN — 目標を設定し、アイデアを記録し、何を練習するか決めよう。",
@@ -8248,7 +8248,7 @@ export const TRANSLATIONS = {
     willBeRemoved:"将被删除。",
     roundsWillBeSaved:"个回合将被保存",
     importComplete:"导入完成。",
-    feedbackLabel:"反馈", settingsLabel:"设置",
+    feedbackLabel:"反馈", settingsLabel:"设置", backupLabel:"备份",
     legalLabel:"法律信息", privacyPolicy:"隐私政策", termsOfService:"服务条款", disclaimers:"免责声明", lastUpdated:"最后更新",
     addMoveMenu:"添加动作", addCategoryMenu:"添加分类",
     sectionDescTrain:"TRAIN — 设定你的目标，记录想法，决定练什么。",
@@ -9390,7 +9390,7 @@ export const TRANSLATIONS = {
     willBeRemoved:"будет удалён.",
     roundsWillBeSaved:"раундов будет сохранено",
     importComplete:"Импорт завершён.",
-    feedbackLabel:"ОТЗЫВ", settingsLabel:"НАСТРОЙКИ",
+    feedbackLabel:"ОТЗЫВ", settingsLabel:"НАСТРОЙКИ", backupLabel:"РЕЗЕРВНАЯ КОПИЯ",
     legalLabel:"ПРАВОВАЯ ИНФОРМАЦИЯ", privacyPolicy:"Политика конфиденциальности", termsOfService:"Условия обслуживания", disclaimers:"Отказ от ответственности", lastUpdated:"Последнее обновление",
     addMoveMenu:"Добавить движение", addCategoryMenu:"Добавить категорию",
     sectionDescTrain:"TRAIN — ставь цели, записывай идеи и решай, что тренировать.",
@@ -10567,7 +10567,7 @@ export const TRANSLATIONS = {
     roundsWillBeSaved:"라운드가 저장돼",
     // Import
     importComplete:"가져오기 완료.",
-    feedbackLabel:"피드백", settingsLabel:"설정",
+    feedbackLabel:"피드백", settingsLabel:"설정", backupLabel:"백업",
     legalLabel:"법률", privacyPolicy:"개인정보 처리방침", termsOfService:"서비스 약관", disclaimers:"면책 조항", lastUpdated:"마지막 업데이트",
     addMoveMenu:"무브 추가", addCategoryMenu:"카테고리 추가",
     sectionDescTrain:"TRAIN — 목표를 설정하고, 아이디어를 기록하고, 무엇을 연습할지 결정하세요.",
@@ -11745,7 +11745,7 @@ export const TRANSLATIONS = {
     // Import
     importComplete:"นำเข้าเสร็จแล้ว",
     // Bottom bar & menu
-    feedbackLabel:"ฟีดแบค", settingsLabel:"ตั้งค่า",
+    feedbackLabel:"ฟีดแบค", settingsLabel:"ตั้งค่า", backupLabel:"สำรองข้อมูล",
     legalLabel:"กฎหมาย", privacyPolicy:"นโยบายความเป็นส่วนตัว", termsOfService:"เงื่อนไขการให้บริการ", disclaimers:"ข้อจำกัดความรับผิดชอบ", lastUpdated:"อัปเดตล่าสุด",
     addMoveMenu:"เพิ่มท่า", addCategoryMenu:"เพิ่มหมวดหมู่",
     // Section banner descriptions
@@ -12908,7 +12908,7 @@ export const TRANSLATIONS = {
     // Import
     importComplete:"Nhập hoàn tất.",
     // Bottom bar & menu
-    feedbackLabel:"GÓP Ý", settingsLabel:"CÀI ĐẶT",
+    feedbackLabel:"GÓP Ý", settingsLabel:"CÀI ĐẶT", backupLabel:"SAO LƯU",
     legalLabel:"PHÁP LÝ", privacyPolicy:"Chính Sách Bảo Mật", termsOfService:"Điều Khoản Dịch Vụ", disclaimers:"Tuyên Bố Miễn Trừ", lastUpdated:"Cập nhật lần cuối",
     addMoveMenu:"Thêm động tác", addCategoryMenu:"Thêm danh mục",
     // Section banner descriptions

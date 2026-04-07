@@ -54,7 +54,7 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
   const sectionHdr = (label, icon) => (
     <div style={{ display:"flex", alignItems:"center", gap:7, margin:"20px 0 10px", paddingBottom:6, borderBottom:`1px solid ${C.borderLight}` }}>
       <Ic n={icon} s={14} c={C.accent}/>
-      <span style={{ fontWeight:800, fontSize:13, letterSpacing:1.5, color:C.brown, fontFamily:FONT_DISPLAY }}>{label}</span>
+      <span style={{ fontWeight:800, fontSize:13, letterSpacing:1.5, color:C.brown, fontFamily:FONT_DISPLAY, textTransform:"uppercase" }}>{label}</span>
     </div>
   );
   return (
@@ -258,7 +258,7 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
       {showFeedbackSection && <FeedbackModal inline />}
 
       {/* ── Backup ── */}
-      {sectionHdr("BACKUP", "download")}
+      {sectionHdr(t("backupLabel") || "BACKUP", "download")}
       <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
         <button onClick={downloadBackup}
           style={{ flex: 1, padding: "10px 12px", background: C.surfaceAlt, border: `1px solid ${C.border}`,
