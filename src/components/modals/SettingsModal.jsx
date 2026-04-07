@@ -208,9 +208,10 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
             t("sparringGapThresholdDesc"),
             <input type="number" min={1} max={90} value={s.sparringGapThreshold||14}
               onChange={e => { const v = Math.max(1, Math.min(90, +e.target.value || 14)); set("sparringGapThreshold")(v); }}
-              style={{ width:60, background:isDark?"#282828":C.surfaceAlt, border:`1px solid ${panelBrd}`, borderRadius:8,
+              style={{ width:60, background:isDark?"#282828":"#f0f0f0", border:`1px solid ${panelBrd}`, borderRadius:8,
                 padding:"6px 10px", color:panelTxt, fontSize:13, fontFamily:FONT_DISPLAY,
-                fontWeight:700, outline:"none", textAlign:"center", WebkitAppearance:"none", MozAppearance:"textfield" }}/>
+                fontWeight:700, outline:"none", textAlign:"center", WebkitAppearance:"none", MozAppearance:"textfield",
+                colorScheme:isDark?"dark":"light", boxSizing:"border-box" }}/>
           )}
 
 
