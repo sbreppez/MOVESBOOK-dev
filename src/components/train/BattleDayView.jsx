@@ -4,6 +4,7 @@ import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
 import { CAT_COLORS } from '../../constants/categories';
 import { PRESET_META, DEFAULT_CHECKLIST, BATTLE_MOODS, BATTLE_RESULTS, getPreparationStats, toYMD } from './battlePrepHelpers';
+import { compressImage } from '../../utils/imageUtils';
 
 // ── Battle Day View ─────────────────────────────────────────────────────────
 // Flow: pre-battle → reflection → share card → (plan complete if last battle) → done
@@ -268,7 +269,7 @@ const PostBattleReflection = ({ plan, battle, meta, prepStats, mood, setMood, re
 
   const handleSave = () => {
     if (!mood || !result) {
-      addToast({ emoji: "\u26A0\uFE0F", title: t("selectMoodAndResult") });
+      addToast({ icon: "info", title: t("selectMoodAndResult") });
       return;
     }
 
@@ -293,7 +294,7 @@ const PostBattleReflection = ({ plan, battle, meta, prepStats, mood, setMood, re
       return { ...prev, plans: updatedPlans };
     });
 
-    addToast({ emoji: "\u2694\uFE0F", title: t("reflectionSaved") });
+    addToast({ icon: "swords", title: t("reflectionSaved") });
     onSaved({ ...reflection, _allDone: allDone });
   };
 
@@ -519,24 +520,10 @@ const BattleShareCard = ({ plan, battle, meta, prepStats, reflection, onClose, t
 
   useEffect(() => { generateCard(); }, [generateCard]);
 
-  const handlePhotoInput = (e) => {
+  const handlePhotoInput = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const img = new Image();
-      img.onload = () => {
-        const maxW = 1080;
-        const scale = Math.min(1, maxW / img.width);
-        const canvas = document.createElement("canvas");
-        canvas.width = img.width * scale;
-        canvas.height = img.height * scale;
-        canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
-        setPhoto(canvas.toDataURL("image/jpeg", 0.85));
-      };
-      img.src = reader.result;
-    };
-    reader.readAsDataURL(file);
+    setPhoto(await compressImage(file, 1080));
   };
 
   const handleShare = async () => {
@@ -659,7 +646,7 @@ const PlanCompletionCard = ({ plan, meta, dayMap, setBattleprep, addToast, onClo
       plans: (prev.plans || []).filter(p => p.id !== plan.id),
       history: [...(prev.history || []), { ...plan, status: "completed", endDate: today, completedDate: today }],
     }));
-    addToast({ emoji: "\u{1F3C1}", title: t("planComplete") || "Plan complete" });
+    addToast({ icon: "check", title: t("planComplete") || "Plan complete" });
     onClose();
   };
 

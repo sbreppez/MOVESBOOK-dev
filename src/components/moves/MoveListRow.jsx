@@ -5,9 +5,12 @@ import { Ic } from '../shared/Ic';
 import { Highlight } from '../shared/Highlight';
 import { masteryColor } from '../../constants/styles';
 import { useSettings } from '../../hooks/useSettings';
+import { computeDecay, showDecayArrow } from '../../utils/masteryDecay';
 
 export const MoveListRow = ({ move, catColor, onEdit, onDelete, onMove, allCats, catColors, onToggleTrainedToday }) => {
   const { settings } = useSettings();
+  const { displayMastery } = computeDecay(move, settings.decaySensitivity);
+  const hasDecayArrow = showDecayArrow(move, settings.decaySensitivity);
   const showMastery = settings.showMastery !== false;
   return (
     <div onClick={onEdit} style={{ position:"relative", display:"flex", alignItems:"center", gap:10, background:C.bg, borderRadius:8, padding:"10px 12px", border:`1px solid ${C.border}`, borderLeft:`4px solid ${catColor}`, cursor:"pointer" }}>
@@ -28,9 +31,9 @@ export const MoveListRow = ({ move, catColor, onEdit, onDelete, onMove, allCats,
         </button>;
       })()}
       {showMastery&&<div style={{ width:44, height:3, borderRadius:2, background:C.border, flexShrink:0 }}>
-        <div style={{ height:"100%", width:`${move.mastery}%`, borderRadius:2, background:masteryColor(move.mastery) }}/>
+        <div style={{ height:"100%", width:`${displayMastery}%`, borderRadius:2, background:masteryColor(displayMastery) }}/>
       </div>}
-      <span style={{ fontSize:12, color:masteryColor(move.mastery), fontWeight:700, fontFamily:FONT_DISPLAY, width:30, textAlign:"right", flexShrink:0 }}>{move.mastery}%</span>
+      <span style={{ fontSize:12, color:masteryColor(displayMastery), fontWeight:700, fontFamily:FONT_DISPLAY, width:30, textAlign:"right", flexShrink:0 }}>{displayMastery}%{hasDecayArrow&&<span style={{ fontSize:9, color:C.red, marginLeft:1 }}>▼</span>}</span>
       <button onClick={e=>{e.stopPropagation();onDelete();}}
         style={{ background:"none", border:"none", cursor:"pointer", padding:2, display:"flex", flexShrink:0 }}>
         <Ic n="x" s={13} c={C.textMuted}/>

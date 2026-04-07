@@ -46,8 +46,8 @@ export const TargetGoalModal = ({ onClose, onSave, idea, moves=[] }) => {
     padding:"9px 12px", color:C.text, fontSize:13, outline:"none", fontFamily:FONT_BODY, boxSizing:"border-box" };
 
   const tabs = isEdit
-    ? [{id:"journal",label:"📓 "+t("journal")},{id:"target",label:"🏹 "+t("targetTab")}]
-    : [{id:"target",label:"🏹 "+t("targetTab")}];
+    ? [{id:"journal",label:t("journal")},{id:"target",label:t("targetTab")}]
+    : [{id:"target",label:t("targetTab")}];
 
   return (
     <div style={{ width:"100%", maxHeight:"92%", background:C.bg, borderRadius:14, display:"flex", flexDirection:"column", overflow:"hidden", boxShadow:"0 16px 48px rgba(0,0,0,0.5)" }}>
@@ -88,7 +88,7 @@ export const TargetGoalModal = ({ onClose, onSave, idea, moves=[] }) => {
             />
             {journal.length===0 ? (
               <div style={{ textAlign:"center", padding:"40px 20px", color:C.textMuted }}>
-                <div style={{ fontSize:28, marginBottom:8 }}>{"📓"}</div>
+                <div style={{ marginBottom:8 }}><Ic n="book" s={28} c={C.textMuted}/></div>
                 <div style={{ fontSize:13, fontWeight:700, fontFamily:FONT_DISPLAY, marginBottom:4 }}>{t("noEntriesYet")}</div>
                 <div style={{ fontSize:12 }}>{t("noEntriesHint")}</div>
               </div>
@@ -107,7 +107,7 @@ export const TargetGoalModal = ({ onClose, onSave, idea, moves=[] }) => {
             {!isEdit&&(
               <div style={{ display:"flex", alignItems:"flex-start", gap:8, padding:"10px 12px", background:`${C.accent}12`,
                 border:`1px solid ${C.accent}30`, borderRadius:8, marginBottom:18 }}>
-                <span style={{ fontSize:16, flexShrink:0 }}>{"📓"}</span>
+                <span style={{ flexShrink:0 }}><Ic n="book" s={16} c={C.textMuted}/></span>
                 <span style={{ fontSize:12, color:C.textSec, lineHeight:1.6 }}>
                   {t("targetJournalDesc").split(t("trainingJournal")).map((part,i,arr)=>i<arr.length-1?<React.Fragment key={i}>{part}<strong style={{color:C.text}}>{t("trainingJournal")}</strong></React.Fragment>:part)}
                 </span>

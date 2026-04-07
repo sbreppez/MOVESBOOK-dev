@@ -38,8 +38,9 @@ const TreeNode = ({ node, depth, catColors, onEdit, collapsed, toggleCollapse, i
       {/* Node card */}
       <div onClick={() => onEdit(m)}
         style={{ display: "flex", alignItems: "center", gap: 8, background: C.surface,
-          border: `1px solid ${C.borderLight}`, borderRadius: 10, padding: "10px 14px",
-          borderLeft: `4px solid ${catCol}`, cursor: "pointer", marginBottom: 6 }}>
+          borderTop: `1px solid ${C.borderLight}`, borderRight: `1px solid ${C.borderLight}`,
+          borderBottom: `1px solid ${C.borderLight}`, borderLeft: `4px solid ${catCol}`,
+          borderRadius: 10, padding: "10px 14px", cursor: "pointer", marginBottom: 6 }}>
         {hasChildren && (
           <button onClick={e => { e.stopPropagation(); toggleCollapse(m.id); }}
             style={{ background: "none", border: "none", cursor: "pointer", padding: 8, margin: -6, display: "flex", flexShrink: 0, minWidth: 28, minHeight: 28, alignItems: "center", justifyContent: "center" }}>
@@ -177,8 +178,9 @@ export const MoveTree = ({ moves, catColors, onEdit, settings = {} }) => {
           return (
             <div key={m.id} onClick={() => onEdit(m)}
               style={{ display: "flex", alignItems: "center", gap: 8, background: C.surface,
-                border: `1px solid ${C.borderLight}`, borderRadius: 10, padding: "10px 14px",
-                borderLeft: `4px solid ${catCol}`, cursor: "pointer", marginBottom: 6 }}>
+                borderTop: `1px solid ${C.borderLight}`, borderRight: `1px solid ${C.borderLight}`,
+                borderBottom: `1px solid ${C.borderLight}`, borderLeft: `4px solid ${catCol}`,
+                borderRadius: 10, padding: "10px 14px", cursor: "pointer", marginBottom: 6 }}>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontWeight: 700, fontSize: 14, color: C.text, fontFamily: FONT_DISPLAY,
                   overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
@@ -194,7 +196,7 @@ export const MoveTree = ({ moves, catColors, onEdit, settings = {} }) => {
         })}
         {moves.length === 0 && (
           <div style={{ textAlign: "center", padding: 40, color: C.textMuted }}>
-            <div style={{ fontSize: 28, marginBottom: 8 }}>🌳</div>
+            <div style={{ marginBottom: 8 }}><Ic n="tree" s={28} c={C.textMuted}/></div>
             <p style={{ fontSize: 13 }}>No moves yet</p>
           </div>
         )}

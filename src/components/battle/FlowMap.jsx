@@ -7,7 +7,7 @@ import { useT } from '../../hooks/useTranslation';
 const DEFAULT_TRANSITIONS = ["Thread","Jump","Counter Spin","Slide","Sweep","Touch Foot","Kick","Hop","Roll","Twist","Drop","Spin Through"];
 
 const STATES = [null, "works", "interesting", "explore", "doesntWork"];
-const STATE_ICONS = { works: "✅", interesting: "⭐", explore: "🔍", doesntWork: "❌" };
+const STATE_IC = { works: "checkCircle", interesting: "star", explore: "search", doesntWork: "xCircle" };
 const STATE_COLORS = (C) => ({
   works: C.green,
   interesting: C.yellow,
@@ -22,11 +22,11 @@ const STATE_BG_COLORS = (C) => ({
 });
 
 const IMPACT_LEVELS = [
-  { value: 1, emoji: "😐", label: "weak" },
-  { value: 2, emoji: "😏", label: "chill" },
-  { value: 3, emoji: "😤", label: "solid" },
-  { value: 4, emoji: "🔥", label: "fire" },
-  { value: 5, emoji: "💥", label: "dope" },
+  { value: 1, label: "weak" },
+  { value: 2, label: "chill" },
+  { value: 3, label: "solid" },
+  { value: 4, label: "fire" },
+  { value: 5, label: "dope" },
 ];
 const IMPACT_TENSION = { 1: "low", 2: "low", 3: "mid", 4: "high", 5: "peak" };
 
@@ -185,7 +185,7 @@ export const FlowMap = ({ moves, cats, catColors, flowmap, onFlowmapChange, comb
     const stColors = STATE_COLORS(C);
     return (
       <div style={overlay}>
-        <Header title={t("flowMap")} onBack={onClose} />
+        <Header title={t("map")} onBack={onClose} />
         <div style={scrollArea}>
           {/* Description */}
           <p style={{ color: C.textMuted, fontSize: 13, marginTop: 0, marginBottom: 12, fontFamily: FONT_BODY }}>{t("flowMapDesc")}</p>
@@ -197,7 +197,7 @@ export const FlowMap = ({ moves, cats, catColors, flowmap, onFlowmapChange, comb
                 <div style={{ height: "100%", borderRadius: 2, background: C.accent, width: `${explorePct}%`, transition: "width 0.3s" }} />
               </div>
               <div style={{ fontFamily: FONT_DISPLAY, fontSize: 11, color: C.textMuted, letterSpacing: 1 }}>
-                🔍 {t("connectionsExplored").replace("{count}", totalEvaluated).replace("{total}", totalPossible).replace("{percent}", explorePct)}
+                <Ic n="search" s={12} c={C.textMuted}/> {t("connectionsExplored").replace("{count}", totalEvaluated).replace("{total}", totalPossible).replace("{percent}", explorePct)}
               </div>
             </div>
           )}
@@ -207,11 +207,11 @@ export const FlowMap = ({ moves, cats, catColors, flowmap, onFlowmapChange, comb
             <div style={{ marginBottom: 16 }}>
               {allUnexplored.length > 0 ? (
                 <div onClick={pickRandomUnexplored} style={{ fontFamily: FONT_BODY, fontSize: 12, color: C.accent, fontStyle: "italic", cursor: "pointer" }}>
-                  🎲 {t("tryRandom")}
+                  <Ic n="dices" s={12} c={C.accent}/> {t("tryRandom")}
                 </div>
               ) : totalEvaluated > 0 ? (
                 <div style={{ fontFamily: FONT_BODY, fontSize: 12, color: C.green, fontStyle: "italic" }}>
-                  {t("allExplored")} 🎉
+                  {t("allExplored")} <Ic n="sparkles" s={12} c={C.green}/>
                 </div>
               ) : null}
             </div>
@@ -231,13 +231,13 @@ export const FlowMap = ({ moves, cats, catColors, flowmap, onFlowmapChange, comb
 
           {/* Pick mode cards */}
           {[
-            { emoji: "🟦", key: "withinCategory", descKey: "withinCategoryDesc", subKey: "withinDesc", action: () => setScreen("pickWithin") },
-            { emoji: "🔀", key: "betweenCategories", descKey: "betweenCategoriesDesc", subKey: "betweenDesc", action: () => { setBetweenStep(1); setRowCat(null); setScreen("pickBetween"); } },
-            { emoji: "✏️", key: "customPick", descKey: "customPickDesc", subKey: "customDesc", action: () => { setCustomSelected([]); setScreen("pickCustom"); } },
-          ].map(({ emoji, key, descKey, subKey, action }) => (
+            { icon: "grid", key: "withinCategory", descKey: "withinCategoryDesc", subKey: "withinDesc", action: () => setScreen("pickWithin") },
+            { icon: "shuffle", key: "betweenCategories", descKey: "betweenCategoriesDesc", subKey: "betweenDesc", action: () => { setBetweenStep(1); setRowCat(null); setScreen("pickBetween"); } },
+            { icon: "edit", key: "customPick", descKey: "customPickDesc", subKey: "customDesc", action: () => { setCustomSelected([]); setScreen("pickCustom"); } },
+          ].map(({ icon, key, descKey, subKey, action }) => (
             <div key={key} style={cardStyle} onClick={action}>
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <span style={{ fontSize: 24 }}>{emoji}</span>
+                <Ic n={icon} s={22} c={C.textSec}/>
                 <div>
                   <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 15, letterSpacing: 0.5, color: C.text }}>{t(key)}</div>
                   <div style={{ fontSize: 12, color: C.textSec, marginTop: 2 }}>{t(descKey)}</div>
@@ -382,7 +382,7 @@ export const FlowMap = ({ moves, cats, catColors, flowmap, onFlowmapChange, comb
 
     return (
       <div style={overlay}>
-        <Header title={t("flowMap")} onBack={() => setScreen("home")} />
+        <Header title={t("map")} onBack={() => setScreen("home")} />
 
         {/* View toggle */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "8px 16px", borderBottom: `1px solid ${C.border}`, flexShrink: 0 }}>
@@ -533,7 +533,7 @@ const GridView = ({ rows, cols, isSelfGrid, pairings, catColors, viewMode, C, t,
                   }}>
                   {/* State indicator */}
                   {viewMode === "icons" && state && (
-                    <span style={{ fontSize: cellSize < 50 ? 14 : 18 }}>{STATE_ICONS[state]}</span>
+                    <Ic n={STATE_IC[state]} s={cellSize < 50 ? 14 : 18} c={stColors[state]}/>
                   )}
                   {viewMode === "heat" && !color && (
                     <span style={{ fontSize: 8, color: C.textMuted }}>·</span>
@@ -687,7 +687,7 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
               width: 28, height: 28, borderRadius: "50%", background: C.accent,
               color: "#fff", display: "flex", alignItems: "center", justifyContent: "center",
               cursor: "pointer", fontSize: 14, fontWeight: 700, flexShrink: 0
-            }}>✓</div>
+            }}><Ic n="check" s={14} c="#fff"/></div>
           </div>
         )}
       </div>
@@ -733,7 +733,7 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
               ...btnPrimaryFn(C), width: "100%", fontSize: 16, padding: "14px 24px",
               letterSpacing: 1.5, display: "flex", alignItems: "center", justifyContent: "center", gap: 8
             }} onClick={() => setStep("rate")}>
-              🔥 {t("tryIt")}
+              {t("tryIt")}
             </button>
           </div>
         </>)}
@@ -757,7 +757,7 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
                   return (
                     <div key={s} style={chipStyleFn(active, col, C)}
                       onClick={() => setState(state === s ? null : s)}>
-                      <span style={{ marginRight: 4 }}>{STATE_ICONS[s]}</span>
+                      <span style={{ marginRight: 4, display:"inline-flex" }}><Ic n={STATE_IC[s]} s={14} c={col}/></span>
                       {t(s === "explore" ? "needsExploration" : s)}
                     </div>
                   );
@@ -785,7 +785,7 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
                       <span style={{
                         fontSize: active ? 28 : 22, transition: "font-size 0.15s",
                         filter: active ? "drop-shadow(0 0 6px rgba(229,57,53,0.4))" : "none"
-                      }}>{lvl.emoji}</span>
+                      }}>{lvl.value}</span>
                       <span style={{
                         fontSize: 10, fontFamily: FONT_DISPLAY, fontWeight: 700,
                         color: active ? C.accent : C.textMuted, letterSpacing: 0.3
@@ -809,7 +809,7 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
                 }}
                 onPointerEnter={e => e.currentTarget.style.borderColor = C.yellow}
                 onPointerLeave={e => e.currentTarget.style.borderColor = C.yellow + "40"}>
-                <span style={{ fontSize: 18 }}>⭐</span>
+                <Ic n="star" s={18} c={C.yellow}/>
                 <span style={{ fontFamily: FONT_BODY, fontSize: 13, color: C.text, fontWeight: 600 }}>
                   {t("turnIntoMove")}
                 </span>
@@ -879,7 +879,7 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
                         fontSize: 13, fontWeight: active ? 700 : 400,
                         color: active ? C.accent : C.text, fontFamily: FONT_BODY
                       }}>{cat}</span>
-                      {active && <span style={{ marginLeft: "auto", color: C.accent, fontSize: 14 }}>✓</span>}
+                      {active && <span style={{ marginLeft: "auto", display:"inline-flex" }}><Ic n="check" s={14} c={C.accent}/></span>}
                     </div>
                   );
                 })}
@@ -950,7 +950,7 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 8
               }}
               onClick={handleSaveToLibrary}>
-              💾 {t("saveToLibrary")}
+              <Ic n="save" s={14} c="#fff"/> {t("saveToLibrary")}
             </button>
           </div>
         </>)}

@@ -14,8 +14,10 @@ import { FreestylePage } from './FreestylePage';
 import { RivalsPage } from './RivalsPage';
 import { NewRoundModal } from './NewRoundModal';
 import { SectionBanner } from '../shared/SectionBanner';
+import { BattlePrepPage } from '../train/BattlePrepPage';
+import { computeDecay } from '../../utils/masteryDecay';
 
-export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, addToast, freestyle, onFreestyleChange, rivals, onRivalsChange, addCalendarEvent, onSimulate }) => {
+export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, addToast, freestyle, onFreestyleChange, rivals, onRivalsChange, addCalendarEvent, removeCalendarEvent, onSimulate, battleprep, setBattleprep, calendar, battlePrepSeed, onBattlePrepSeedUsed, onOpenSharedCalendar }) => {
   const t = useT();
   const { moveCountStr, itemCountStr, roundCountStr, entryCountStr } = usePlural();
   const { C } = useSettings();
@@ -88,11 +90,13 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
 
   const [freestyleAddTick, setFreestyleAddTick] = useState(0);
   const [rivalsAddTick, setRivalsAddTick] = useState(0);
+  const [prepAddTick, setPrepAddTick] = useState(0);
   useEffect(()=>{
     if(!onAddTrigger) return;
     if(battleTab==="freestyle") setFreestyleAddTick(t=>t+1);
     else if(battleTab==="rivals") setRivalsAddTick(t=>t+1);
-    else setAddingRound(true);
+    else if(battleTab==="prep") setPrepAddTick(t=>t+1);
+    else if(battleTab==="plan") setAddingRound(true);
   },[onAddTrigger]);
   // onAddTrigger2 in Battle: "Add Move" opens freestyle picker regardless of sub-tab
   useEffect(()=>{
@@ -177,6 +181,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
   const updateSet = (sid, fields) => setSets(p => p.map(s => s.id === sid ? {...s,...fields} : s));
 
   const masteryColorLocal = p => p < 30 ? C.red : p < 60 ? C.yellow : p < 80 ? C.blue : C.green;
+  const dm = m => computeDecay(m, settings.decaySensitivity).displayMastery;
 
   // ── PLAN layout ─────────────────────────────────────────────────────────────
   // ── Tension Role mapping ────────────────────────────────────────────────────
@@ -217,7 +222,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
         items: (e.items||[]).map((it, i) => i !== itemIdx ? it : { ...it, tensionOverride: null })
       })
     }));
-    if (addToast) addToast("\u21a9\ufe0f " + t("resetToDefault"));
+    if (addToast) addToast({ icon:"refresh", title: t("resetToDefault") });
   };
 
   const TensionDots = ({ level, onTap, onLongPress }) => {
@@ -334,14 +339,14 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
                 color:C.textMuted, padding:"5px 11px", fontSize:13, fontFamily:FONT_DISPLAY, fontWeight:700,
                 display:"flex", alignItems:"center", gap:3 }}
               title={t("loadSavedTemplate")}>
-              📂 {t("loadBtn")}{templates.length>0&&<span style={{ marginLeft:3, background:C.accent, color:C.bg, borderRadius:8, padding:"0 5px", fontSize:10 }}>{templates.length}</span>}
+              {t("loadBtn")}{templates.length>0&&<span style={{ marginLeft:3, background:C.accent, color:C.bg, borderRadius:8, padding:"0 5px", fontSize:10 }}>{templates.length}</span>}
             </button>
             <button onClick={()=>{ setTemplateName(""); setShowSaveTemplate(true); }}
               style={{ background:"none", border:`1px solid ${C.border}`, borderRadius:6, cursor:"pointer",
                 color:C.textMuted, padding:"5px 11px", fontSize:13, fontFamily:FONT_DISPLAY, fontWeight:700,
                 display:"flex", alignItems:"center", gap:3 }}
               title={t("saveCurrentTemplate")}>
-              💾 {t("saveBtn")}
+              {t("saveBtn")}
             </button>
             {rounds.length>1&&<button onClick={()=>setReorderRounds(r=>!r)}
               style={{ background:reorderRounds?C.accent:"none", border:"none", cursor:"pointer", padding:"4px 8px", borderRadius:5,
@@ -390,7 +395,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
             </div>
             <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
               <Btn variant="secondary" onClick={()=>setShowSaveTemplate(false)}>{t("cancel")}</Btn>
-              <Btn onClick={saveTemplate} disabled={!templateName.trim()}>💾 Save Template</Btn>
+              <Btn onClick={saveTemplate} disabled={!templateName.trim()}>Save Template</Btn>
             </div>
           </Modal>
         )}
@@ -400,9 +405,9 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
           <Modal title={t("loadBattleTemplate")} onClose={()=>setShowLoadTemplate(false)}>
             {templates.length===0 ? (
               <div style={{ textAlign:"center", padding:"24px 0", color:C.textMuted }}>
-                <div style={{ fontSize:28, marginBottom:8 }}>📂</div>
+                <div style={{ marginBottom:8 }}><Ic n="download" s={28} c={C.textMuted}/></div>
                 <div style={{ fontSize:13, fontWeight:700, fontFamily:FONT_DISPLAY, marginBottom:4 }}>{t("noTemplatesSaved")}</div>
-                <div style={{ fontSize:12 }}>Set up your rounds then tap 💾 Save to create your first template.</div>
+                <div style={{ fontSize:12 }}>Set up your rounds then tap Save to create your first template.</div>
               </div>
             ) : (
               <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
@@ -488,7 +493,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
                 display:"flex", alignItems:"center", justifyContent:"center",
                 gap:8, minHeight:44,
               }}>
-              {"🎮"} {t("simulateCompetition")}
+              {t("simulateCompetition")}
             </button>
           </div>
         )}
@@ -641,7 +646,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
                     <div style={{ width:8, height:8, borderRadius:"50%", background:s.color||C.blue, flexShrink:0 }}/>
                     <span style={{ flex:1, fontSize:13, color:C.text }}>{s.name}</span>
                     <span style={{ fontSize:9, background:`${C.blue}22`, color:C.blue, padding:"1px 5px", borderRadius:4, fontFamily:FONT_DISPLAY, fontWeight:700 }}>SET</span>
-                    {showMastery&&<span style={{ fontSize:11, color:masteryColorLocal(s.mastery||0), fontWeight:700 }}>{s.mastery||0}%</span>}
+                    {showMastery&&<span style={{ fontSize:11, color:masteryColorLocal(dm(s)), fontWeight:700 }}>{dm(s)}%</span>}
                   </button>
                 );
               })}
@@ -667,9 +672,9 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
                         background:sel?C.accent:"transparent", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
                         {sel&&<Ic n="check" s={10} c="#fff"/>}
                       </div>
-                      <div style={{ width:8, height:8, borderRadius:"50%", background:masteryColorLocal(m.mastery), flexShrink:0 }}/>
+                      <div style={{ width:8, height:8, borderRadius:"50%", background:masteryColorLocal(dm(m)), flexShrink:0 }}/>
                       <span style={{ flex:1, fontSize:13, color:C.text }}>{m.name}</span>
-                      {showMastery&&<span style={{ fontSize:11, color:masteryColorLocal(m.mastery), fontWeight:700 }}>{m.mastery}%</span>}
+                      {showMastery&&<span style={{ fontSize:11, color:masteryColorLocal(dm(m)), fontWeight:700 }}>{dm(m)}%</span>}
                     </button>
                   );
                 })}
@@ -733,7 +738,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
 
 
   // ── Sub-tab bar ──────────────────────────────────────────────────────────────
-  const subTabs = [["plan",t("plan")],["freestyle",t("freestyle")],["rivals",t("rivals")]];
+  const subTabs = [["plan",t("plan")],["prep",t("prep")],["freestyle",t("freestyle")],["rivals",t("rivals")]];
 
   return (
     <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column", position:"relative" }}>
@@ -743,7 +748,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
         {subTabs.map(([id,label])=>(
           <button key={id} onClick={()=>setBattleTabAndNotify(id)}
             style={{ flex:1, padding:"9px 0", background:"none", border:"none", cursor:"pointer",
-              fontSize:11, fontWeight:800, letterSpacing:1.5, fontFamily:FONT_DISPLAY,
+              fontSize:11, fontWeight:800, letterSpacing:1.5, fontFamily:FONT_DISPLAY, textTransform:"uppercase",
               color: battleTab===id ? C.accent : C.textMuted,
               borderBottom: battleTab===id ? `2px solid ${C.accent}` : "2px solid transparent" }}>
             {label}
@@ -763,6 +768,9 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
           {pickerEntry&&<VocabPicker pickerState={pickerEntry}/>}
         </div>
       )}
+
+      {/* PREP tab */}
+      {battleTab==="prep"&&<BattlePrepPage battleprep={battleprep} setBattleprep={setBattleprep} moves={moves} sets={sets} addToast={addToast} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={onBattlePrepSeedUsed} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onAddTrigger={prepAddTick} onOpenSharedCalendar={onOpenSharedCalendar}/>}
 
       {/* FREESTYLE tab */}
       {battleTab==="freestyle"&&<FreestylePage moves={moves} sets={sets} settings={settings} onAddTrigger={freestyleAddTick} addToast={addToast} freestyle={freestyle} onFreestyleChange={onFreestyleChange}/>}

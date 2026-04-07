@@ -7,6 +7,7 @@ import { BodyCheckIn } from '../shared/BodyCheckIn';
 import { TrainingLog } from '../shared/TrainingLog';
 import { Modal } from '../shared/Modal';
 import { Btn } from '../shared/Btn';
+import { compressImage } from '../../utils/imageUtils';
 
 // ── Helpers (copied from Sparring — module-scoped, not exported) ────────────
 
@@ -582,9 +583,9 @@ export const CompetitionSimulator = ({
       ctx.fillStyle = "#ffffff";
       ctx.fillText("BOOK", W / 2 + 50, 80);
 
-      // Competition emoji
-      ctx.font = "80px serif";
-      ctx.fillText("🏆", W / 2, 280);
+      // Competition label
+      ctx.font = "900 40px 'Barlow Condensed', sans-serif";
+      ctx.fillText("WINNER", W / 2, 280);
 
       // Title
       ctx.font = `900 48px 'Barlow Condensed', sans-serif`;
@@ -653,28 +654,10 @@ export const CompetitionSimulator = ({
       } catch {}
     };
 
-    const handlePhotoInput = (e) => {
+    const handlePhotoInput = async (e) => {
       const file = e.target.files?.[0];
       if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        const img = new Image();
-        img.onload = () => {
-          const max = 1080;
-          let w = img.width, h = img.height;
-          if (w > max || h > max) {
-            const scale = max / Math.max(w, h);
-            w = Math.round(w * scale);
-            h = Math.round(h * scale);
-          }
-          const c = document.createElement("canvas");
-          c.width = w; c.height = h;
-          c.getContext("2d").drawImage(img, 0, 0, w, h);
-          setSharePhoto(c.toDataURL("image/jpeg", 0.85));
-        };
-        img.src = ev.target.result;
-      };
-      reader.readAsDataURL(file);
+      setSharePhoto(await compressImage(file, 1080));
     };
 
     return (
@@ -685,7 +668,7 @@ export const CompetitionSimulator = ({
         <div style={{ display:"flex", gap:10, padding:"16px 0", width:"100%", maxWidth:360 }}>
           <button onClick={() => photoInputRef.current?.click()}
             style={{ flex:1, padding:14, borderRadius:12, border:`1px solid ${C.border}`, background:C.surfaceAlt, color:C.textSec, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:13, letterSpacing:0.5 }}>
-            📷 {t("addPhoto") || "ADD PHOTO"}
+            {t("addPhoto") || "ADD PHOTO"}
           </button>
           <button onClick={handleShare}
             style={{ flex:1, padding:14, borderRadius:12, border:"none", background:C.accent, color:"#fff", cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:13, letterSpacing:1 }}>
@@ -714,7 +697,7 @@ export const CompetitionSimulator = ({
         {/* Header */}
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"13px 18px", borderBottom:`1px solid ${C.border}`, flexShrink:0 }}>
           <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:2, color:C.brown }}>
-            🎮 {t("competitionSetup")}
+            {t("competitionSetup")}
           </span>
           <button onClick={onClose} style={{ background:C.surfaceAlt, border:`1px solid ${C.border}`, cursor:"pointer", color:C.textSec, padding:5, borderRadius:7, display:"flex" }}>
             <Ic n="x" s={14}/>
@@ -773,7 +756,7 @@ export const CompetitionSimulator = ({
               background: showCustomise ? `${C.accent}14` : C.surface, color: showCustomise ? C.accent : C.textSec,
               cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:12, letterSpacing:1.5,
               display:"flex", alignItems:"center", justifyContent:"center", gap:6, marginBottom:16 }}>
-            ⚙️ {t("customiseBrackets")}
+            {t("customiseBrackets")}
             <Ic n={showCustomise ? "chevD" : "chevR"} s={12} c={showCustomise ? C.accent : C.textMuted}/>
           </button>
 
@@ -991,7 +974,7 @@ export const CompetitionSimulator = ({
           <div onClick={handleStopWork}
             style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", cursor:"pointer", userSelect:"none", WebkitTapHighlightColor:"transparent", position:"relative" }}>
             <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:48, color:C.red, animation:"mb-pulse 2s ease-in-out infinite" }}>
-              🔥 {t("go")}
+              {t("go")}
             </div>
             <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:80, color:C.text, lineHeight:1, marginTop:12 }}>
               {fmtTimeTenths(workElapsed)}
@@ -1083,7 +1066,7 @@ export const CompetitionSimulator = ({
             {phase === "getReady" && (
               <div style={{ animation:"mb-pop-in 0.3s ease-out" }}>
                 <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:24, color:C.blue, letterSpacing:2, textAlign:"center" }}>
-                  ⚡ {t("getReadyBracket")}
+                  {t("getReadyBracket")}
                 </div>
                 <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:140, color:C.text, lineHeight:1, textAlign:"center", marginTop:8 }}>
                   {Math.ceil(restRemaining / 1000)}
@@ -1213,17 +1196,17 @@ export const CompetitionSimulator = ({
           <div style={{ textAlign:"center", marginBottom:20 }}>
             {isBattleMode && (
               <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:18, color:C.accent, letterSpacing:1.5 }}>
-                ⚡ {t("getReadyBracket").toUpperCase()}
+                {t("getReadyBracket").toUpperCase()}
               </div>
             )}
             {isWarning2 && !isBattleMode && (
               <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, color:C.yellow, letterSpacing:1 }}>
-                🟠 2 {t("minutesToGo")} — {t("getReadyBracket")}
+                2 {t("minutesToGo")} — {t("getReadyBracket")}
               </div>
             )}
             {isWarning5 && !isWarning2 && (
               <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, color:C.yellow, letterSpacing:1 }}>
-                🟡 5 {t("minutesToGo")} — {t("startWarmingUp")}
+                5 {t("minutesToGo")} — {t("startWarmingUp")}
               </div>
             )}
             {!isWarning5 && !isWarning2 && !isBattleMode && (
@@ -1283,7 +1266,7 @@ export const CompetitionSimulator = ({
         {/* Header */}
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"13px 18px", borderBottom:`1px solid ${C.border}`, flexShrink:0 }}>
           <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:2, color:C.green }}>
-            🏆 {t("competitionComplete")}
+            {t("competitionComplete")}
           </span>
           <button onClick={handleDiscard} style={{ background:C.surfaceAlt, border:`1px solid ${C.border}`, cursor:"pointer", color:C.textSec, padding:5, borderRadius:7, display:"flex" }}>
             <Ic n="x" s={14}/>
@@ -1373,7 +1356,7 @@ export const CompetitionSimulator = ({
             style={{ width:"100%", padding:12, borderRadius:10, border:`1px solid ${C.border}`, background:C.surface,
               color:C.textSec, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, letterSpacing:0.5,
               display:"flex", alignItems:"center", justifyContent:"center", gap:6, marginTop:12 }}>
-            📸 {t("share")}
+            {t("share")}
           </button>
         </div>
 

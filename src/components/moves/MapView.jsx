@@ -7,12 +7,15 @@ import { MasterySlider } from '../shared/MasterySlider';
 import { masteryColor } from '../../constants/styles';
 import { useT } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
+import { computeDecay } from '../../utils/masteryDecay';
 import { CAT_COLORS } from '../../constants/categories';
 import { MoveModal } from './MoveModal';
 
 const NW=114, NH=50;
 export const MapView = ({ moves, category, onAddMove, onDeleteMove, onUpdateMove }) => {
   const t = useT();
+  const { settings } = useSettings();
+  const decaySensitivity = settings.decaySensitivity || "normal";
   const catColor = CAT_COLORS[category]||C.accent;
   const initNodes = useCallback((mvs)=>{
     const root = { id:"root", label:category, x:180, y:30, isRoot:true, color:catColor, moveId:null };
@@ -20,10 +23,11 @@ export const MapView = ({ moves, category, onAddMove, onDeleteMove, onUpdateMove
     const children = mvs.map((m,i)=>{
       const angle = n===1 ? -Math.PI/2 : (i/n)*2*Math.PI-Math.PI/2;
       const r = Math.max(130,n*22);
-      return { id:`m${m.id}`, label:m.name, x:180+r*Math.cos(angle)-NW/2, y:120+(r*0.65)*Math.sin(angle)-NH/2, isRoot:false, color:masteryColor(m.mastery), moveId:m.id, mastery:m.mastery };
+      const { displayMastery } = computeDecay(m, decaySensitivity);
+      return { id:`m${m.id}`, label:m.name, x:180+r*Math.cos(angle)-NW/2, y:120+(r*0.65)*Math.sin(angle)-NH/2, isRoot:false, color:masteryColor(displayMastery), moveId:m.id, mastery:displayMastery };
     });
     return [root,...children];
-  },[category,catColor]);
+  },[category,catColor,decaySensitivity]);
   const [nodes,setNodes]=useState(()=>initNodes(moves));
   const [edges,setEdges]=useState(()=>moves.map(m=>({from:"root",to:`m${m.id}`})));
   const [scale,setScale]=useState(0.95); const [pan,setPan]=useState({x:20,y:20});
@@ -39,9 +43,10 @@ export const MapView = ({ moves, category, onAddMove, onDeleteMove, onUpdateMove
       const moveIds=new Set(moves.map(m=>`m${m.id}`));
       const added=moves.filter(m=>!prevIds.has(`m${m.id}`)).map(m=>{
         const angle=Math.random()*2*Math.PI, r=130+Math.random()*70;
-        return { id:`m${m.id}`, label:m.name, x:180+r*Math.cos(angle)-NW/2, y:130+r*0.65*Math.sin(angle)-NH/2, isRoot:false, color:masteryColor(m.mastery), moveId:m.id, mastery:m.mastery };
+        const { displayMastery } = computeDecay(m, decaySensitivity);
+        return { id:`m${m.id}`, label:m.name, x:180+r*Math.cos(angle)-NW/2, y:130+r*0.65*Math.sin(angle)-NH/2, isRoot:false, color:masteryColor(displayMastery), moveId:m.id, mastery:displayMastery };
       });
-      return [...prev.filter(n=>n.isRoot||moveIds.has(n.id)).map(n=>{ if(n.isRoot)return n; const m=moves.find(mv=>`m${mv.id}`===n.id); return m?{...n,label:m.name,color:masteryColor(m.mastery),mastery:m.mastery}:n; }),...added];
+      return [...prev.filter(n=>n.isRoot||moveIds.has(n.id)).map(n=>{ if(n.isRoot)return n; const m=moves.find(mv=>`m${mv.id}`===n.id); if(!m)return n; const { displayMastery } = computeDecay(m, decaySensitivity); return {...n,label:m.name,color:masteryColor(displayMastery),mastery:displayMastery}; }),...added];
     });
     setEdges(prev=>{
       const moveIds=new Set(moves.map(m=>`m${m.id}`));
@@ -50,7 +55,7 @@ export const MapView = ({ moves, category, onAddMove, onDeleteMove, onUpdateMove
       const newEdges=moves.filter(m=>!existing.has(`m${m.id}`)).map(m=>({from:"root",to:`m${m.id}`}));
       return [...filtered,...newEdges];
     });
-  },[moves]);
+  },[moves,decaySensitivity]);
 
   const getNode=id=>nodes.find(n=>n.id===id);
   const svgXY=e=>{ const r=svgRef.current.getBoundingClientRect(); return {x:(e.clientX-r.left-pan.x)/scale,y:(e.clientY-r.top-pan.y)/scale}; };

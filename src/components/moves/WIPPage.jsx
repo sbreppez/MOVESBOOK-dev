@@ -21,8 +21,9 @@ import { filterMovesByAttrs } from '../../utils/attributeHelpers';
 import { ReminderBlock } from './ReminderBlock';
 import { GAPTab } from './GAPTab';
 import { MoveTree } from './MoveTree';
+import { downloadBackup, restoreBackup } from '../modals/BackupModal';
 
-export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains={}, setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders }) => {
+export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains={}, setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore, onOpenRRR, onOpenCombine, onOpenMap, onOpenFlashCards }) => {
   const t = useT();
   const { moveCountStr, resultCountStr } = usePlural();
   const { settings:ctxSettings } = useSettings();
@@ -34,7 +35,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   useEffect(()=>{ if(parentSubTab==="gap"&&vocabTab!=="gap") { setVocabTab("gap"); setOpenCat(null); } },[parentSubTab]);
   const [openCat,setOpenCat]=useState(null);
   const [showAdd,setShowAdd]=useState(false); const [bulk,setBulk]=useState(false);
-  useEffect(()=>{ if(onAddTrigger) setShowAdd(true); },[onAddTrigger]);
+  useEffect(()=>{ if(onAddTrigger) { if(vocabTab==="sets") setAddingSet(true); else setShowAdd(true); } },[onAddTrigger]);
   const [editMove,setEditMove]=useState(null);
   // cats/catColors are now lifted to App — received as props
   const [showAddCat,setShowAddCat]=useState(false);
@@ -62,7 +63,26 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   const [attrFilters, setAttrFilters] = useState({});
   const setDragItem=useRef(null);
   const [setDragOver,setSetDragOver]=useState(null);
+  const backupFileRef=useRef(null);
   const masteryColorWip = p => p<30?C.red:p<60?C.yellow:p<80?C.blue:C.green;
+
+  const handleRestoreFile = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const parsed = JSON.parse(ev.target.result);
+        if (parsed._format !== "movesbook-backup-v1") {
+          addToast({ icon:"info", title:t("invalidBackupFile")||"Invalid backup file" });
+          return;
+        }
+        restoreBackup(parsed);
+      } catch { addToast({ icon:"info", title:"Could not read backup file" }); }
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  };
 
   // When an idea is pushed in from the Ideas tab, open the add modal with its text
   useEffect(()=>{
@@ -103,7 +123,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
         ? { ...m, date: m.prevDate || null, prevDate: null }
         : { ...m, prevDate: m.date, date: today };
     }));
-    addToast({ emoji: isToday ? "↩️" : "✅", title: t(isToday ? "unmarkedToday" : "markedTrainedToday") });
+    addToast({ icon: isToday ? "refresh" : "check", title: t(isToday ? "unmarkedToday" : "markedTrainedToday") });
   };
   const bulkImport=newMoves=>{ const w=newMoves.map(m=>({...m,id:Date.now()+Math.random(),status:m.status||"wip"})); setMoves(prev=>[...prev,...w]); };
   const delMove=id=>setMoves(prev=>prev.filter(m=>m.id!==id));
@@ -189,7 +209,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
         <div style={{ flex:1, overflow:"auto", padding:10, paddingBottom:76 }}>
           {allCatMoves.length===0 ? (
             <div style={{ textAlign:"center", padding:40, color:C.textMuted }}>
-              <div style={{ fontSize:32, marginBottom:8 }}>📭</div>
+              <div style={{ marginBottom:8 }}><Ic n="list" s={32} c={C.textMuted}/></div>
               <p style={{ fontSize:15, margin:"0 0 4px" }}>No moves yet in {openCat}</p>
               <p style={{ fontSize:13 }}>Tap + to add your first move</p>
             </div>
@@ -321,10 +341,10 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"6px 14px", borderBottom:`1px solid ${C.borderLight}`, background:C.surface, flexShrink:0 }}>
         {/* MOVES / SETS sub-tabs */}
         <div style={{ display:"flex", gap:0 }}>
-          {[["moves","MOVES"],["sets","SETS"],["gap","GAP"]].map(([id,label])=>(
+          {[["moves",t("library")],["sets","SETS"],["gap","GAP"]].map(([id,label])=>(
             <button key={id} onClick={()=>setVocabTabAndNotify(id)}
               style={{ padding:"4px 10px", background:"none", border:"none", cursor:"pointer",
-                fontSize:10, fontWeight:800, letterSpacing:1.5, fontFamily:FONT_DISPLAY,
+                fontSize:10, fontWeight:800, letterSpacing:1.5, fontFamily:FONT_DISPLAY, textTransform:"uppercase",
                 color: vocabTab===id ? C.accent : C.textMuted,
                 borderBottom: vocabTab===id ? `2px solid ${C.accent}` : "2px solid transparent" }}>
               {label}
@@ -339,7 +359,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
               {hasActiveFilters&&<div style={{ position:"absolute", top:2, right:2, width:6, height:6, borderRadius:"50%", background:C.accent }}/>}
             </button>}
             <button onClick={()=>{ setShowSearch(s=>!s); setSearch(""); }} style={{ background:showSearch?C.surfaceAlt:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:showSearch?C.accent:C.textMuted }}><Ic n="search" s={16}/></button>
-            {[{v:"tiles",ic:"grid"},{v:"list",ic:"list"},{v:"tree",ic:"tree"}].map(({v,ic})=>(
+            {[{v:"tiles",ic:"grid"},{v:"list",ic:"list"},{v:"tree",ic:"gitFork"}].map(({v,ic})=>(
               <button key={v} onClick={()=>setView(v)} style={{ background:view===v?C.surfaceAlt:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:view===v?C.accent:C.textMuted }}><Ic n={ic} s={16}/></button>
             ))}
             <button onClick={()=>setBulk(true)} style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}><Ic n="upload" s={16}/></button>
@@ -350,6 +370,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
             </button>}
           </Fragment>}
           {vocabTab==="sets"&&<Fragment>
+            {sets.filter(s=>(s.moveIds?.length||0)>0).length>=1&&onOpenFlashCards&&<button onClick={onOpenFlashCards} style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}><Ic n="cards" s={16}/></button>}
             <button onClick={()=>setSetsView(v=>v==="list"?"tiles":"list")} style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}><Ic n={setsView==="list"?"grid":"list"} s={16}/></button>
             <button onClick={()=>setReorderMode(r=>!r)}
               style={{ background:reorderMode?C.accent:"none", border:"none", cursor:"pointer", padding:"4px 8px", borderRadius:5,
@@ -359,6 +380,50 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
           </Fragment>}
         </div>
       </div>
+
+      {vocabTab==="moves"&&(
+        <div style={{ display:"flex", gap:8, padding:"8px 14px", borderBottom:`1px solid ${C.borderLight}`, background:C.surface }}>
+          {[
+            { icon:"compass", label:t("explore"), action:onOpenExplore },
+            { icon:"sparkles", label:"R/R/R", action:onOpenRRR },
+            { icon:"puzzle", label:t("combine"), action:onOpenCombine },
+            { icon:"network", label:t("map"), action:onOpenMap },
+          ].map(({ icon, label, action })=>(
+            <button key={icon} onClick={action}
+              style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center",
+                gap:6, background:C.surfaceAlt, border:`1px solid ${C.border}`,
+                borderRadius:10, padding:"10px 14px", cursor:"pointer" }}>
+              <Ic n={icon} s={20} c={C.textMuted}/>
+              <span style={{ fontSize:9, fontWeight:800, fontFamily:FONT_DISPLAY,
+                letterSpacing:1.2, color:C.textMuted, textTransform:"uppercase" }}>
+                {label}
+              </span>
+            </button>
+          ))}
+          {/* Save/Load backup buttons */}
+          <div style={{ display:"flex", flexDirection:"column", gap:6, justifyContent:"center" }}>
+            <button onClick={()=>downloadBackup()}
+              style={{ display:"flex", alignItems:"center", gap:4, background:"none",
+                border:`1px solid ${C.borderLight}`, borderRadius:8, padding:"6px 10px",
+                cursor:"pointer", color:C.textMuted }}>
+              <Ic n="download" s={13} c={C.textMuted}/>
+              <span style={{ fontSize:8, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:1, textTransform:"uppercase" }}>
+                {t("saveBackupBtn")}
+              </span>
+            </button>
+            <button onClick={()=>backupFileRef.current?.click()}
+              style={{ display:"flex", alignItems:"center", gap:4, background:"none",
+                border:`1px solid ${C.borderLight}`, borderRadius:8, padding:"6px 10px",
+                cursor:"pointer", color:C.textMuted }}>
+              <Ic n="upload" s={13} c={C.textMuted}/>
+              <span style={{ fontSize:8, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:1, textTransform:"uppercase" }}>
+                {t("restoreBackupBtn")}
+              </span>
+            </button>
+            <input ref={backupFileRef} type="file" accept=".json" onChange={handleRestoreFile} style={{ display:"none" }}/>
+          </div>
+        </div>
+      )}
 
       {showSearch&&(
         <div style={{ padding:"6px 14px", background:C.surface, borderBottom:`1px solid ${C.borderLight}` }}>
@@ -386,7 +451,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
           <div>
             {sets.length===0&&(
               <div style={{ textAlign:"center", padding:40, color:C.textMuted }}>
-                <div style={{ fontSize:28, marginBottom:8 }}>📋</div>
+                <div style={{ marginBottom:8 }}><Ic n="list" s={28} c={C.textMuted}/></div>
                 <p style={{ fontSize:13 }}>No sets yet — tap + to create one</p>
                 <p style={{ fontSize:11, marginTop:6, fontStyle:"italic" }}>Think of a Set like a Notion database — add your moves to it, then slot it into Battle rounds</p>
               </div>

@@ -64,7 +64,7 @@ export const SetDetailModal = ({ item, onClose, onSave, type="set", allMoves=[],
   const q = pickerQ.toLowerCase().trim();
 
   return (
-    <Modal title={isSet ? "EDIT SET" : "EDIT ROUND"} onClose={onClose} wide>
+    <Modal title={isSet ? (item.id ? "EDIT SET" : "ADD A SET") : "EDIT ROUND"} onClose={onClose}>
       {/* Color stripe */}
       <div style={{ height:5, borderRadius:4, background:`linear-gradient(90deg,${color},${color}55)`, marginBottom:16 }}/>
 
@@ -212,7 +212,7 @@ export const SetDetailModal = ({ item, onClose, onSave, type="set", allMoves=[],
       <div style={{ marginBottom:16 }}>
         <label style={lbl()}>{isSet?t("howWellKnowSet"):t("howWellKnowRound")} — <span style={{ color:masteryColor(mastery), fontWeight:800 }}>{mastery}%</span></label>
         <div style={{ display:"flex", gap:6, alignItems:"center", marginBottom:6, flexWrap:"wrap" }}>
-          {[[0,"🌱 "+t("justStarted")],[25,"🔧 "+t("learning")],[50,"⚡ "+t("gettingThere")],[75,"🔥 "+t("almostThere")],[100,"💎 "+t("mastered")]].map(([v,label])=>(
+          {[[0,t("justStarted")],[25,t("learning")],[50,t("gettingThere")],[75,t("almostThere")],[100,t("mastered")]].map(([v,label])=>(
             <button key={v} onClick={()=>setMastery(v)}
               style={{ fontSize:11, padding:"3px 8px", borderRadius:12, cursor:"pointer", fontFamily:FONT_BODY,
                 background: mastery===v ? masteryColor(v) : C.surfaceAlt,

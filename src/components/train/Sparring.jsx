@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
@@ -6,6 +6,8 @@ import { useT } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
 import { BodyCheckIn } from '../shared/BodyCheckIn';
 import { TrainingLog } from '../shared/TrainingLog';
+import { Spar1v1 } from './Spar1v1';
+import { compressImage } from '../../utils/imageUtils';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -60,10 +62,13 @@ const haptic = (pattern) => {
 
 // ── Main Component ───────────────────────────────────────────────────────────
 
-export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, onSettingsChange, reflections, onReflectionsChange, onClose, addCalendarEvent }) => {
+export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, onSettingsChange, reflections, onReflectionsChange, onClose, addCalendarEvent, rivals, onRivalsChange, addToast }) => {
   const t = useT();
   const { settings: appSettings } = useSettings();
   const isDark = (appSettings.theme || settings.theme) === "dark";
+
+  // ── Spar mode chooser ──
+  const [sparMode, setSparMode] = useState(null); // null | 'solo' | '1v1'
 
   // ── Screen state ──
   const [screen, setScreen] = useState("setup");
@@ -106,6 +111,29 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
   const canvasRef = useRef(null);
   const photoInputRef = useRef(null);
   const [completedSession, setCompletedSession] = useState(null);
+
+  // ── Pending PR detection (shown on done screen before save) ──
+  const pendingPRs = useMemo(() => {
+    if (!completedSession) return [];
+    const records = sparring.records || {};
+    const prs = [];
+    if (!records.mostRounds || completedSession.rounds > records.mostRounds.value) {
+      prs.push({ type: "mostRounds", value: completedSession.rounds });
+    }
+    if (!records.longestRound || completedSession.longestRound > records.longestRound.value) {
+      prs.push({ type: "longestRound", value: completedSession.longestRound });
+    }
+    const totalSec = Math.round(completedSession.totalDuration / 1000);
+    if (!records.longestSession || totalSec > records.longestSession.value) {
+      prs.push({ type: "longestSession", value: totalSec });
+    }
+    if (mode === "death") {
+      if (!records.longestDeathSession || totalSec > records.longestDeathSession.value) {
+        prs.push({ type: "longestDeath", value: totalSec });
+      }
+    }
+    return prs;
+  }, [completedSession, sparring.records, mode]);
 
   // ── Cleanup timers on unmount ──
   useEffect(() => () => {
@@ -374,6 +402,47 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
 
   const catColor = (cat) => catColors[cat] || C.textMuted;
 
+  // ── Chooser screen ──
+  if (sparMode === null) {
+    return (
+      <div style={{ position:"absolute", inset:0, zIndex:500, background:C.bg, display:"flex", flexDirection:"column" }}>
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"13px 18px", borderBottom:`1px solid ${C.border}`, flexShrink:0 }}>
+          <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:2, color:C.text, textTransform:"uppercase" }}>{t("spar")}</span>
+          <button onClick={onClose} style={{ background:C.surfaceAlt, border:`1px solid ${C.border}`, cursor:"pointer", color:C.textSec, padding:5, borderRadius:7, display:"flex" }}>
+            <Ic n="x" s={14}/>
+          </button>
+        </div>
+        <div style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:24, gap:16 }}>
+          <button onClick={() => setSparMode("solo")}
+            style={{ width:"100%", maxWidth:320, padding:"28px 20px", borderRadius:16, border:`2px solid ${C.border}`, background:C.surface, cursor:"pointer", textAlign:"center", transition:"all 0.15s" }}>
+            <div style={{ marginBottom:8 }}><Ic n="fist" s={36} c={C.text}/></div>
+            <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:20, color:C.text, letterSpacing:1, textTransform:"uppercase" }}>{t("soloSpar")}</div>
+            <div style={{ fontSize:13, color:C.textMuted, marginTop:6 }}>{t("soloSparDesc")}</div>
+          </button>
+          <button onClick={() => setSparMode("1v1")}
+            style={{ width:"100%", maxWidth:320, padding:"28px 20px", borderRadius:16, border:`2px solid ${C.accent}44`, background:C.accent + "0a", cursor:"pointer", textAlign:"center", transition:"all 0.15s" }}>
+            <div style={{ marginBottom:8 }}><Ic n="swords" s={36} c={C.accent}/></div>
+            <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:20, color:C.accent, letterSpacing:1, textTransform:"uppercase" }}>{t("oneVsOne")}</div>
+            <div style={{ fontSize:13, color:C.textMuted, marginTop:6 }}>{t("oneVsOneDesc")}</div>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // ── 1v1 mode ──
+  if (sparMode === "1v1") {
+    return <Spar1v1
+      sparring={sparring}
+      onSaveSession={onSaveSession}
+      addCalendarEvent={addCalendarEvent}
+      rivals={rivals}
+      onRivalsChange={onRivalsChange}
+      addToast={addToast}
+      onClose={() => { setSparMode(null); onClose(); }}
+    />;
+  }
+
   // ── PR Celebration Screen ──
   if (prBroken) {
     const prMessages = {
@@ -387,7 +456,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
       <div style={{ position:"absolute", inset:0, zIndex:500, background:C.bg, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:24 }}>
         <style>{`@keyframes mb-pr-pop { 0% { transform:scale(0.5); opacity:0; } 50% { transform:scale(1.1); } 100% { transform:scale(1); opacity:1; } }`}</style>
         <div style={{ animation:"mb-pr-pop 0.6s ease-out", textAlign:"center" }}>
-          <div style={{ fontSize:64, marginBottom:12 }}>🔥</div>
+          <div style={{ marginBottom:12 }}><Ic n="flame" s={48} c={C.accent}/></div>
           <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:22, color:C.accent, letterSpacing:2, marginBottom:8 }}>
             {t("newRecord").toUpperCase()}!
           </div>
@@ -425,9 +494,9 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
   // ── SETUP SCREEN ──
   if (screen === "setup") {
     const MODE_CARDS = [
-      { id: "rounds", emoji: "🔢", label: t("roundsMode"), desc: t("setNumberOfRounds") },
-      { id: "time", emoji: "⏱", label: t("timeLimitMode"), desc: t("trainWithinTimeWindow") },
-      { id: "death", emoji: "💀", label: t("cypherTillDeath"), desc: t("noLimitGoUntilYouStop") },
+      { id: "rounds", icon: "hash", label: t("roundsMode"), desc: t("setNumberOfRounds") },
+      { id: "time", icon: "timer", label: t("timeLimitMode"), desc: t("trainWithinTimeWindow") },
+      { id: "death", icon: "skull", label: t("cypherTillDeath"), desc: t("noLimitGoUntilYouStop") },
     ];
     const RATIO_OPTIONS = [0.5, 0.75, 1.0, 1.5, 2.0];
     const TIME_OPTIONS = [5, 10, 15, 20, 30];
@@ -436,7 +505,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
       <div style={{ position:"absolute", inset:0, zIndex:500, background:C.bg, display:"flex", flexDirection:"column" }}>
         {/* Header */}
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"13px 18px", borderBottom:`1px solid ${C.border}`, flexShrink:0 }}>
-          <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:2, color:C.brown }}>{t("sparring")}</span>
+          <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:2, color:C.brown }}>{t("spar")}</span>
           <div style={{ display:"flex", gap:8 }}>
             <button onClick={() => setScreen("history")}
               style={{ background:C.surfaceAlt, border:`1px solid ${C.border}`, cursor:"pointer", color:C.textSec, padding:"5px 10px", borderRadius:7, fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, letterSpacing:0.5 }}>
@@ -460,7 +529,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
                     background: active ? (C.accent + "14") : C.surface,
                     border: `2px solid ${active ? C.accent : C.border}`,
                     borderRadius:12, cursor:"pointer", textAlign:"left", transition:"all 0.15s" }}>
-                  <span style={{ fontSize:24 }}>{mc.emoji}</span>
+                  <Ic n={mc.icon} s={24}/>
                   <div>
                     <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:14, color: active ? C.accent : C.text, letterSpacing:0.5 }}>{mc.label}</div>
                     <div style={{ fontSize:12, color:C.textMuted, marginTop:2 }}>{mc.desc}</div>
@@ -541,7 +610,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
 
           {/* How it works */}
           <div style={{ background:C.surface, borderRadius:12, padding:14, marginTop:16, border:`1px solid ${C.border}` }}>
-            <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, color:C.textMuted, letterSpacing:1, marginBottom:6 }}>💡 {t("howItWorks")}</div>
+            <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, color:C.textMuted, letterSpacing:1, marginBottom:6 }}>{t("howItWorks")}</div>
             <div style={{ fontSize:12, color:C.textSec, lineHeight:1.6 }}>
               {t("howItWorksText")}
             </div>
@@ -599,9 +668,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
             )}
           </div>
           {/* Mode emoji */}
-          <span style={{ fontSize:18 }}>
-            {mode === "rounds" ? "🔢" : mode === "time" ? "⏱" : "💀"}
-          </span>
+          <Ic n={mode==="rounds"?"hash":mode==="time"?"timer":"skull"} s={18}/>
         </div>
 
         {/* Progress dots */}
@@ -618,8 +685,8 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
             <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:64, color:C.accent, lineHeight:1 }}>
               {t("tapToStart")}
             </div>
-            <div style={{ fontSize:18, marginTop:16 }}>
-              {mode === "rounds" ? "🔢" : mode === "time" ? "⏱" : "💀"}{" "}
+            <div style={{ fontSize:18, marginTop:16, display:"flex", alignItems:"center", gap:6 }}>
+              <Ic n={mode==="rounds"?"hash":mode==="time"?"timer":"skull"} s={18}/>
               <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, color:C.textSec }}>
                 {mode === "rounds" ? t("roundsMode") : mode === "time" ? t("timeLimitMode") : t("cypherTillDeath")}
               </span>
@@ -635,7 +702,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
           <div onClick={handleStopWork}
             style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", cursor:"pointer", userSelect:"none", WebkitTapHighlightColor:"transparent", position:"relative" }}>
             <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:48, color:C.red, animation:"mb-pulse 2s ease-in-out infinite" }}>
-              🔥 {t("go")}
+              {t("go")}
             </div>
             <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:80, color:C.text, lineHeight:1, marginTop:12 }}>
               {fmtTimeTenths(workElapsed)}
@@ -714,7 +781,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
             {phase === "getReady" && (
               <>
                 <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:36, color:C.blue, letterSpacing:3 }}>
-                  ⚡ {t("getReady")}
+                  {t("getReady")}
                 </div>
                 <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:140, color:C.text, lineHeight:1, marginTop:8,
                   animation:"mb-pop-in 0.3s ease-out" }}>
@@ -742,7 +809,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
   // ── DONE SCREEN ──
   if (screen === "done" && completedSession) {
     const cs = completedSession;
-    const modeEmoji = mode === "rounds" ? "🔢" : mode === "time" ? "⏱" : "💀";
+    const modeIcon = mode === "rounds" ? "hash" : mode === "time" ? "timer" : "skull";
     const modeText = mode === "death" ? t("cypherTillDeath") : mode === "time" ? t("timeLimitMode") : t("roundsMode");
     const showMovePicker = settings.trackMovesInSparring !== false;
 
@@ -759,7 +826,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
         {/* Header */}
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"13px 18px", borderBottom:`1px solid ${C.border}`, flexShrink:0 }}>
           <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:2, color:C.green }}>
-            {mode === "death" ? `💀 ${t("youSurvived")}` : `💪 ${t("sessionComplete")}`}
+            {mode === "death" ? `${t("youSurvived")}` : `${t("sessionComplete")}`}
           </span>
           <button onClick={handleDiscard} style={{ background:C.surfaceAlt, border:`1px solid ${C.border}`, cursor:"pointer", color:C.textSec, padding:5, borderRadius:7, display:"flex" }}>
             <Ic n="x" s={14}/>
@@ -767,9 +834,23 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
         </div>
 
         <div style={{ flex:1, overflow:"auto", padding:18 }}>
+          {/* PR badge */}
+          {pendingPRs.length > 0 && (<>
+            <style>{`@keyframes mb-pr-pop { 0% { transform:scale(0.5); opacity:0; } 50% { transform:scale(1.1); } 100% { transform:scale(1); opacity:1; } }`}</style>
+            <div style={{ background:`${C.accent}14`, border:`1.5px solid ${C.accent}40`, borderRadius:12, padding:"10px 14px", marginBottom:14, display:"flex", alignItems:"center", gap:10, animation:"mb-pr-pop 0.5s ease-out" }}>
+              <Ic n="flame" s={22} c={C.accent}/>
+              <div>
+                <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:12, color:C.accent, letterSpacing:1.5 }}>{t("newPersonalRecord")}</div>
+                <div style={{ fontFamily:FONT_BODY, fontSize:11, color:C.textSec, marginTop:2 }}>
+                  {pendingPRs.map(pr => pr.type === "mostRounds" ? `${pr.value} ${t("roundsMode").toLowerCase()}` : pr.type === "longestRound" ? `${pr.value}s ${t("longestRoundLabel").toLowerCase()}` : pr.type === "longestSession" ? fmtDuration(pr.value * 1000) : fmtDuration(pr.value * 1000)).join(" · ")}
+                </div>
+              </div>
+            </div>
+          </>)}
+
           {/* Mode badge */}
           <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:16 }}>
-            <span style={{ fontSize:18 }}>{modeEmoji}</span>
+            <Ic n={modeIcon} s={18}/>
             <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:13, color:C.textSec }}>{modeText}</span>
           </div>
 
@@ -898,12 +979,12 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
           )}
           {sessions.map(s => {
             const d = new Date(s.date);
-            const modeEmoji = s.mode === "rounds" ? "🔢" : s.mode === "time" ? "⏱" : "💀";
+            const modeIcon = s.mode === "rounds" ? "hash" : s.mode === "time" ? "timer" : "skull";
             return (
               <div key={s.id} style={{ padding:"12px 14px", marginBottom:8, background:C.surface, border:`1px solid ${C.border}`, borderRadius:10 }}>
                 <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
                   <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-                    <span style={{ fontSize:16 }}>{modeEmoji}</span>
+                    <Ic n={modeIcon} s={16}/>
                     <div>
                       <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:14, color:C.text }}>
                         {s.rounds} {t("roundsMode").toLowerCase()}
@@ -980,10 +1061,10 @@ const ShareCard = ({ session, mode, prBroken, photo, onPhotoChange, onClose, t }
     ctx.fillStyle = "#ffffff";
     ctx.fillText("BOOK", 60 + ctx.measureText("MOVES").width, 80);
 
-    // PR emoji
-    ctx.font = "120px serif";
+    // PR label
+    ctx.font = "900 48px 'Barlow Condensed', sans-serif";
     ctx.textAlign = "center";
-    ctx.fillText("🔥", W / 2, H * 0.35);
+    ctx.fillText("COMPLETE", W / 2, H * 0.35);
 
     // PR stat
     const prMessages = {
@@ -1021,29 +1102,10 @@ const ShareCard = ({ session, mode, prBroken, photo, onPhotoChange, onClose, t }
 
   useEffect(() => { generateCard(); }, [generateCard]);
 
-  const handlePhotoInput = (e) => {
+  const handlePhotoInput = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      // Resize to max 1080px
-      const img = new Image();
-      img.onload = () => {
-        const max = 1080;
-        let w = img.width, h = img.height;
-        if (w > max || h > max) {
-          const scale = max / Math.max(w, h);
-          w = Math.round(w * scale);
-          h = Math.round(h * scale);
-        }
-        const c = document.createElement("canvas");
-        c.width = w; c.height = h;
-        c.getContext("2d").drawImage(img, 0, 0, w, h);
-        onPhotoChange(c.toDataURL("image/jpeg", 0.85));
-      };
-      img.src = ev.target.result;
-    };
-    reader.readAsDataURL(file);
+    onPhotoChange(await compressImage(file, 1080));
   };
 
   const handleShare = async () => {
@@ -1078,7 +1140,7 @@ const ShareCard = ({ session, mode, prBroken, photo, onPhotoChange, onClose, t }
         <input ref={photoInputRef} type="file" accept="image/*" capture="camera" style={{ display:"none" }} onChange={handlePhotoInput}/>
         <button onClick={() => photoInputRef.current?.click()}
           style={{ flex:1, padding:12, borderRadius:10, border:`1px solid ${C.border}`, background:C.surfaceAlt, color:C.text, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, letterSpacing:0.5 }}>
-          📷 {t("addPhoto")}
+          {t("addPhoto")}
         </button>
         <button onClick={handleShare}
           style={{ flex:1, padding:12, borderRadius:10, border:"none", background:C.accent, color:"#fff", cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:12, letterSpacing:0.5 }}>

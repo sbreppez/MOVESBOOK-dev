@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { CAT_COLORS, CATEGORY_DOMAIN_MAP, DOMAIN_COLORS } from '../../constants/categories';
@@ -7,6 +7,7 @@ import { Ic } from '../shared/Ic';
 import { EXERTION_OPTIONS, BODY_PARTS, BODY_STATES } from '../shared/BodyCheckIn';
 import { SessionJournal } from './SessionJournal';
 import { computeAllDayMaps, getTasksForDay, getPrevDayTasks } from '../train/battlePrepHelpers';
+import { ReportsTimeline } from './ReportsTimeline';
 
 const toYMD = (d) => {
   if (!d) return null;
@@ -24,6 +25,7 @@ export const CalendarOverlay = ({
   addToast, initialDay,
   onClose, onGoToPrep,
   battleprep, onToggleBattlePrepTask, initialMonth,
+  inline, onAddTrigger, reports,
 }) => {
   const t = useT();
   const today = new Date().toISOString().split("T")[0];
@@ -37,7 +39,12 @@ export const CalendarOverlay = ({
   const [showJournal, setShowJournal] = useState(!!initialDay);
   const [editEvent, setEditEvent] = useState(null);
   const [showTypePicker, setShowTypePicker] = useState(false);
-  const [battlePrepPrompt, setBattlePrepPrompt] = useState(null); // { date, eventName }
+  const [battlePrepPrompt, setBattlePrepPrompt] = useState(null);
+  const [calView, setCalView] = useState("days");
+
+  useEffect(() => {
+    if (onAddTrigger) { setSelectedDay(today); setShowTypePicker(true); setShowJournal(false); }
+  }, [onAddTrigger]);
 
   const year = viewDate.getFullYear();
   const month = viewDate.getMonth();
@@ -65,6 +72,7 @@ export const CalendarOverlay = ({
     (moves || []).forEach(m => mark(m.date, "moves"));
     (reps || []).forEach(r => mark(r.date, "moves"));
     (sparring?.sessions || []).forEach(s => mark(s.date, "sparring"));
+    (sparring?.sessions1v1 || []).forEach(s => mark(s.date, "sparring"));
     (habits || []).forEach(h => (h.checkIns || []).forEach(d => mark(d, "habits")));
     (ideas || []).forEach(i => (i.journal || []).forEach(j => mark(j.date, "notes")));
     (calendar?.events || []).forEach(e => {
@@ -114,7 +122,7 @@ export const CalendarOverlay = ({
     }
     setShowJournal(false);
     setEditEvent(null);
-    addToast({ emoji: "✅", title: t("sessionLogged"), msg: "" });
+    addToast({ icon: "check", title: t("sessionLogged"), msg: "" });
     // Show "Go to Prep" prompt for new future battle events
     if (eventObj.type === "battle" && eventObj.date >= today && onGoToPrep) {
       setBattlePrepPrompt({ date: eventObj.date, eventName: eventObj.title || "" });
@@ -176,7 +184,7 @@ export const CalendarOverlay = ({
   // Journal overlay
   if (showJournal) {
     return (
-      <div style={{ position: "absolute", inset: 0, zIndex: 500, background: C.bg, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+      <div style={ inline ? { flex:1, background: C.bg, display: "flex", flexDirection: "column", overflow: "hidden" } : { position: "absolute", inset: 0, zIndex: 500, background: C.bg, display: "flex", flexDirection: "column", overflow: "hidden" }}>
         <SessionJournal
           date={editEvent?.date || selectedDay || today}
           event={editEvent?.id ? editEvent : null}
@@ -194,9 +202,9 @@ export const CalendarOverlay = ({
   }
 
   return (
-    <div style={{ position: "absolute", inset: 0, zIndex: 500, background: C.bg, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-      {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between",
+    <div style={ inline ? { flex:1, background: C.bg, display: "flex", flexDirection: "column", overflow: "hidden" } : { position: "absolute", inset: 0, zIndex: 500, background: C.bg, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+      {/* Header — hidden in inline mode */}
+      {!inline && <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between",
         padding: "13px 18px", borderBottom: `1px solid ${C.border}`, flexShrink: 0 }}>
         <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 16, color: C.text, letterSpacing: 1 }}>
           {t("calendar")}
@@ -204,8 +212,28 @@ export const CalendarOverlay = ({
         <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex" }}>
           <Ic n="x" s={20} c={C.textMuted} />
         </button>
-      </div>
+      </div>}
 
+      {/* Days / Reports toggle — inline mode only */}
+      {inline && (
+        <div style={{ display: "flex", gap: 6, padding: "10px 14px", flexShrink: 0, background: C.bg }}>
+          {[["days", t("calDays")], ["reports", t("calReports")]].map(([id, label]) => {
+            const on = calView === id;
+            return (
+              <button key={id} onClick={() => setCalView(id)}
+                style={{ padding: "6px 14px", borderRadius: 20, border: `1.5px solid ${on ? C.accent : C.border}`,
+                  background: on ? C.accent + "22" : C.surface, color: on ? C.accent : C.textSec,
+                  fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12, letterSpacing: 0.5,
+                  cursor: "pointer" }}>
+                {label}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Days view */}
+      {(!inline || calView === "days") && <>
       {/* Battle Prep prompt — shown after saving a future battle event */}
       {battlePrepPrompt && (
         <div style={{ margin: "8px 12px", background: `${C.accent}10`, border: `1px solid ${C.accent}30`,
@@ -365,17 +393,17 @@ export const CalendarOverlay = ({
               <div style={{ background: C.surfaceAlt, borderRadius: 10, padding: 6, marginBottom: 8,
                 border: `1px solid ${C.border}` }}>
                 {[
-                  { type: "training", emoji: "🎯", label: t("training") },
-                  { type: "battle", emoji: "⚔️", label: t("battleEvent") },
-                  { type: "rest", emoji: "😴", label: t("restDay") },
-                  { type: "journal", emoji: "📌", label: t("journalEvent") },
+                  { type: "training", icon: "target", label: t("training") },
+                  { type: "battle", icon: "swords", label: t("battleEvent") },
+                  { type: "rest", icon: "pause", label: t("restDay") },
+                  { type: "journal", icon: "mapPin", label: t("journalEvent") },
                 ].map(opt => (
                   <button key={opt.type} onClick={() => openNewEvent(opt.type)}
                     style={{ width: "100%", padding: "10px 12px", background: "none", border: "none",
                       cursor: "pointer", display: "flex", alignItems: "center", gap: 10,
                       color: C.text, fontSize: 13, fontFamily: FONT_DISPLAY, fontWeight: 700,
                       letterSpacing: 0.5, borderRadius: 8 }}>
-                    <span style={{ fontSize: 16 }}>{opt.emoji}</span>{opt.label}
+                    <Ic n={opt.icon} s={16} c={C.textSec}/>{opt.label}
                   </button>
                 ))}
               </div>
@@ -454,9 +482,7 @@ export const CalendarOverlay = ({
                     padding: "8px 10px", background: C.surfaceAlt, borderRadius: 10, marginBottom: 4 }}>
                     <div style={{ flex: 1 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                        <span style={{ fontSize: 14 }}>
-                          {e.type === "training" ? "🎯" : e.type === "battle" ? "⚔️" : e.type === "rest" ? "😴" : "📌"}
-                        </span>
+                        <Ic n={e.type==="training"?"target":e.type==="battle"?"swords":e.type==="rest"?"pause":"mapPin"} s={14}/>
                         <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12, color: C.text }}>
                           {e.title || t(e.type === "training" ? "trainingSession" : e.type === "battle" ? "battleEvent" : e.type === "rest" ? "restDay" : "journalEvent")}
                         </span>
@@ -491,6 +517,7 @@ export const CalendarOverlay = ({
                           fontWeight: 600, letterSpacing: 0.3, fontStyle: "italic" }}>
                           {e.source === "rep_counter" ? t("viaRepCounter") :
                            e.source === "sparring" ? t("viaSparring") :
+                           e.source === "spar-1v1" ? t("via1v1Spar") :
                            e.source === "combo_machine" ? t("viaComboMachine") :
                            e.source === "lab" ? t("viaLab") :
                            e.source === "rrr" ? t("viaRRR") : ""}
@@ -658,6 +685,15 @@ export const CalendarOverlay = ({
           </div>
         )}
       </div>
+      </>}
+
+      {/* Reports timeline */}
+      {inline && calView === "reports" && (
+        <ReportsTimeline
+          moves={moves} reps={reps} sparring={sparring} musicflow={musicflow}
+          calendar={calendar} cats={cats} catColors={catColors}
+          battleprep={battleprep} rivals={null} reports={reports}/>
+      )}
     </div>
   );
 };

@@ -2,20 +2,18 @@ import React, { Fragment, useState } from 'react';
 import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
-import { useT, usePlural } from '../../hooks/useTranslation';
+import { useT } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
-import { habitStreak, freqDaysPerWeek } from './helpers';
+import { freqDaysPerWeek } from './helpers';
 
 export const HabitCard = ({ habit, onCheckIn, onEdit, onDelete }) => {
   const { C } = useSettings();
   const t = useT();
-  const { dayCountStr } = usePlural();
   const [expanded, setExpanded] = useState(false);
 
   const today    = new Date().toISOString().split("T")[0];
   const checkIns = habit.checkIns || [];
   const doneToday= checkIns.includes(today);
-  const streak   = habitStreak(checkIns, habit.frequency);
   const color    = habit.color || C.accent;
   const dpw      = freqDaysPerWeek(habit.frequency);
   const freqLabel= { daily:t("everyDay"),"2x":"2×/wk","3x":"3×/wk","4x":"4×/wk","5x":"5×/wk","6x":"6×/wk",weekdays:t("weekdaysLabel") }[habit.frequency]||t("everyDay");
@@ -36,9 +34,6 @@ export const HabitCard = ({ habit, onCheckIn, onEdit, onDelete }) => {
   const R=36, CIRC=2*Math.PI*R;
   const dash=weekPct*CIRC, gap=CIRC-dash, offset=CIRC*0.25;
 
-  // Best streak
-  const best = (()=>{ let b=0,c=0; [...checkIns].sort().forEach((d,i,arr)=>{ if(i===0){c=1;b=1;return;} const diff=(new Date(d)-new Date(arr[i-1]))/86400000; if(diff<=1.5){c++;b=Math.max(b,c);}else c=1; }); return Math.max(b,streak); })();
-
   // 7-day bar
   const last7 = Array.from({length:7},(_,i)=>{ const d=new Date(); d.setDate(d.getDate()-(6-i)); return {ds:d.toISOString().split("T")[0],isToday:i===6}; });
 
@@ -58,7 +53,7 @@ export const HabitCard = ({ habit, onCheckIn, onEdit, onDelete }) => {
             display:"flex", alignItems:"center", justifyContent:"center",
             fontSize:doneToday?20:18, transition:"all 0.18s",
             boxShadow:doneToday?`0 2px 10px ${color}55`:"none" }}>
-          {doneToday?"✓":(habit.emoji||"🎯")}
+          {doneToday?"✓":(habit.emoji||<Ic n="target" s={16}/>)}
         </button>
 
         {/* Name + info — tap to expand */}
@@ -75,18 +70,17 @@ export const HabitCard = ({ habit, onCheckIn, onEdit, onDelete }) => {
             </div>
           )}
           {!expanded&&<div style={{ display:"flex", alignItems:"center", gap:5, marginTop:3, flexWrap:"wrap" }}>
-            {streak>0
-              ? <span style={{ fontSize:11, fontWeight:800, color, fontFamily:FONT_DISPLAY }}>
-                  🔥 {dayCountStr(streak)}
-                </span>
-              : <span style={{ fontSize:11, color:C.textMuted, fontFamily:FONT_DISPLAY }}>{t("startStreakToday")}</span>
-            }
+            {doneToday&&(
+              <span style={{ fontSize:11, fontWeight:800, color:C.green, fontFamily:FONT_DISPLAY }}>
+                ✓ {t("done")}
+              </span>
+            )}
             <span style={{ fontSize:10, color:C.textMuted, background:C.surfaceAlt,
               borderRadius:6, padding:"1px 6px", fontFamily:FONT_DISPLAY }}>{freqLabel}</span>
             {habit.timeOfDay&&habit.timeOfDay!=="anytime"&&(
               <span style={{ fontSize:10, color:C.textMuted, background:C.surfaceAlt,
                 borderRadius:6, padding:"1px 6px", fontFamily:FONT_DISPLAY }}>
-                {{"morning":`🌅 ${t("morning")}`,"afternoon":`☀️ ${t("afternoon")}`,"evening":`🌙 ${t("evening")}`}[habit.timeOfDay]}
+                {{"morning":t("morning"),"afternoon":t("afternoon"),"evening":t("evening")}[habit.timeOfDay]}
               </span>
             )}
           </div>}
@@ -118,7 +112,7 @@ export const HabitCard = ({ habit, onCheckIn, onEdit, onDelete }) => {
             {habit.timeOfDay&&habit.timeOfDay!=="anytime"&&(
               <span style={{ fontSize:9, fontWeight:800, letterSpacing:1, color:C.textMuted, fontFamily:FONT_DISPLAY,
                 background:C.surfaceAlt, borderRadius:4, padding:"2px 8px" }}>
-                {{"morning":`🌅 ${t("morning")}`,"afternoon":`☀️ ${t("afternoon")}`,"evening":`🌙 ${t("evening")}`}[habit.timeOfDay]}
+                {{"morning":t("morning"),"afternoon":t("afternoon"),"evening":t("evening")}[habit.timeOfDay]}
               </span>
             )}
           </div>
@@ -154,17 +148,8 @@ export const HabitCard = ({ habit, onCheckIn, onEdit, onDelete }) => {
                 ))}
               </div>
               <div style={{ display:"flex", justifyContent:"space-between" }}>
-                <div>
-                  <div style={{ fontSize:9, color:C.textMuted, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>{t("streakLabel")}</div>
-                  <div style={{ fontSize:15, fontWeight:900, color, fontFamily:FONT_DISPLAY }}>
-                    {streak>0?`🔥 ${dayCountStr(streak)}`:"—"}
-                  </div>
-                </div>
-                <div style={{ textAlign:"right" }}>
-                  <div style={{ fontSize:9, color:C.textMuted, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>{t("bestLabel")}</div>
-                  <div style={{ fontSize:15, fontWeight:900, color:C.textSec, fontFamily:FONT_DISPLAY }}>
-                    {dayCountStr(best)}
-                  </div>
+                <div style={{ fontSize:12, fontWeight:800, color:doneToday?C.green:C.textMuted, fontFamily:FONT_DISPLAY }}>
+                  {doneToday?`✓ ${t("done")}`:weekDone>0?`${weekDone}/${weekTarget}`:t("thisWeek")}
                 </div>
               </div>
             </div>
@@ -203,7 +188,7 @@ export const HabitCard = ({ habit, onCheckIn, onEdit, onDelete }) => {
             {doneToday
               ? <Fragment><span style={{ fontSize:14, color:"#ffffff", fontFamily:FONT_DISPLAY, fontWeight:900, letterSpacing:0.5 }}>{t("done")}</span><span style={{ fontSize:16, marginLeft:6 }}>✅</span><span style={{ fontSize:10, color:"rgba(255,255,255,0.6)", fontFamily:FONT_DISPLAY, marginLeft:6 }}>· {t("undoLabel")}</span></Fragment>
               : <Fragment>
-                  <span style={{ fontSize:15 }}>✊</span>
+                  <Ic n="fist" s={15} c={C.textMuted}/>
                   <span style={{ fontSize:12, color, fontFamily:FONT_DISPLAY, fontWeight:800, letterSpacing:0.5 }}>{t("didIt")}</span>
                 </Fragment>
             }

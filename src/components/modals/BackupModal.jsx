@@ -5,12 +5,27 @@ import { Ic } from "../shared/Ic";
 import { useT } from "../../hooks/useTranslation";
 
 const BACKUP_KEYS = {
+  // Core data
   moves: "mb_moves", sets: "mb_sets", rounds: "mb_rounds",
   ideas: "mb_ideas", profile: "mb_profile", settings: "mb_settings",
   habits: "mb_habits", templates: "mb_templates",
   categories: "mb_cats", catColors: "mb_cat_colors", catDomains: "mb_cat_domains",
   customAttrs: "mb_custom_attrs",
-  constraint: "mb_constraint",
+  // Training tools
+  sparring: "mb_sparring", reps: "mb_reps", combos: "mb_combos",
+  lab: "mb_lab", rrr: "mb_rrr", musicflow: "mb_musicflow",
+  flashcards: "mb_flashcards", flowmap: "mb_flowmap",
+  // Battle & people
+  rivals: "mb_rivals", battleprep: "mb_battleprep", freestyle: "mb_freestyle",
+  // Reflect & tracking
+  calendar: "mb_calendar", stance: "mb_stance", reflections: "mb_reflections",
+  reports: "mb_reports", reminders: "mb_reminders",
+  // Body & prep
+  presession: "mb_presession", injuries: "mb_injuries",
+  // HOME tiles
+  homeStack: "mb_home_stack", homeIdeas: "mb_home_ideas", homeChecks: "mb_home_checks",
+  // Profile photo
+  profilePhoto: "mb_profile_photo",
 };
 
 export const downloadBackup = () => {
