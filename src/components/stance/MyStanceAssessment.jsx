@@ -138,7 +138,7 @@ export const MyStanceAssessment = ({ stance, onStanceChange, addToast, onClose }
         {/* Next / Save button */}
         <button onClick={handleNext}
           style={{ width:"100%", maxWidth:340, padding:"14px 0", background:C.accent, color:"#fff",
-            border:"none", borderRadius:10, fontSize:14, fontFamily:FONT_DISPLAY, fontWeight:800,
+            border:"none", borderRadius:8, fontSize:14, fontFamily:FONT_DISPLAY, fontWeight:800,
             letterSpacing:1.2, cursor:"pointer", marginTop:8, marginBottom:16 }}>
           {isLast ? `${t("saveMyStance")} →` : `${t("next")||"NEXT"} →`}
         </button>

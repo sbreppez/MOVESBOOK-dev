@@ -142,7 +142,7 @@ export const MyStanceSection = ({ moves, stance, sparring, calendar, onOpenAsses
 
   // Invitation card when 10+ moves but no assessment yet
   if (!hasAssessment) return (
-    <div style={{ background:C.surface, borderRadius:10,
+    <div style={{ background:C.surface, borderRadius:8,
       padding:20, margin:"12px 0", textAlign:"center" }}>
       <div style={{ marginBottom:10 }}><Ic n="compass" s={32} c={C.textMuted}/></div>
       <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:18, color:C.text, marginBottom:8 }}>
@@ -153,7 +153,7 @@ export const MyStanceSection = ({ moves, stance, sparring, calendar, onOpenAsses
       </div>
       <button onClick={onOpenAssessment}
         style={{ width:"100%", padding:"12px 0", background:C.accent, color:"#fff", border:"none",
-          borderRadius:10, fontSize:14, fontFamily:FONT_DISPLAY, fontWeight:800, letterSpacing:1.2,
+          borderRadius:8, fontSize:14, fontFamily:FONT_DISPLAY, fontWeight:800, letterSpacing:1.2,
           cursor:"pointer" }}>
         {t("mapMyStance")} →
       </button>
@@ -174,7 +174,7 @@ export const MyStanceSection = ({ moves, stance, sparring, calendar, onOpenAsses
   const emptyLine = { fontFamily: FONT_BODY, fontSize: 13, color: C.textMuted, fontStyle: "italic" };
 
   return (
-    <div style={{ background:C.surface, borderRadius:10,
+    <div style={{ background:C.surface, borderRadius:8,
       padding:16, margin:"12px 0" }}>
 
       {/* Header */}
@@ -244,7 +244,7 @@ export const MyStanceSection = ({ moves, stance, sparring, calendar, onOpenAsses
       </div>
 
       {/* ── STAMINA CARD ── */}
-      <div style={{ background:C.surfaceAlt, borderRadius:12, padding:16, marginTop:12 }}>
+      <div style={{ background:C.surfaceAlt, borderRadius:8, padding:16, marginTop:12 }}>
         <div style={statLabel}>{t("stamina")}</div>
         {stamina.empty ? (
           <div style={emptyLine}>{t("noSparringYet")}</div>
@@ -260,7 +260,7 @@ export const MyStanceSection = ({ moves, stance, sparring, calendar, onOpenAsses
       </div>
 
       {/* ── VOCABULARY CARD ── */}
-      <div style={{ background:C.surfaceAlt, borderRadius:12, padding:16, marginTop:12 }}>
+      <div style={{ background:C.surfaceAlt, borderRadius:8, padding:16, marginTop:12 }}>
         <div style={statLabel}>{t("vocabularySize")}</div>
         {!vocab.total ? (
           <div style={emptyLine}>—</div>
@@ -308,7 +308,7 @@ export const MyStanceSection = ({ moves, stance, sparring, calendar, onOpenAsses
       </div>
 
       {/* ── TRAINING CONSISTENCY CARD ── */}
-      <div style={{ background:C.surfaceAlt, borderRadius:12, padding:16, marginTop:12 }}>
+      <div style={{ background:C.surfaceAlt, borderRadius:8, padding:16, marginTop:12 }}>
         <div style={statLabel}>{t("trainingConsistency")}</div>
         {consistency.empty ? (
           <div style={emptyLine}>{t("noSessionsYet")}</div>

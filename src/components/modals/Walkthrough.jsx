@@ -53,7 +53,7 @@ export const Walkthrough = ({ onDone }) => {
 
   const D = {
     bg:"#0e0906", surface:"#1a1208", border:"#3a2a18",
-    text:"#ede0cc", muted:"#7a6858", accent:"#cf2020", accentD:"#8b1a1a",
+    text:"#ede0cc", muted:"#7a6858", accent:"#cf2020", accentD:"#C4453E",
   };
 
   useEffect(() => {

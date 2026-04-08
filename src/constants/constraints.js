@@ -1,17 +1,17 @@
 // ── Constraint Card: themes, pool (72 constraints), and daily-pick utilities ──
 
 export const CONSTRAINT_THEMES = [
-  { id: "foundation",  nameKey: "constraintThemeFoundation",  color: "#2a5f8a" },
-  { id: "power",       nameKey: "constraintThemePower",       color: "#b5850a" },
-  { id: "freezes",     nameKey: "constraintThemeFreezes",     color: "#2d6a4f" },
-  { id: "direction",   nameKey: "constraintThemeDirection",   color: "#6b3a8a" },
-  { id: "opposite",    nameKey: "constraintThemeOpposite",    color: "#c0391b" },
-  { id: "transitions", nameKey: "constraintThemeTransitions", color: "#8b1a1a" },
-  { id: "musicality",  nameKey: "constraintThemeMusicality",  color: "#1a6a6a" },
-  { id: "abstract",    nameKey: "constraintThemeAbstract",    color: "#8a3a2a" },
-  { id: "music",       nameKey: "constraintThemeMusic",       color: "#5c3d99" },
-  { id: "cultural",    nameKey: "constraintThemeCultural",    color: "#8a6d3b" },
-  { id: "custom",      nameKey: "constraintThemeCustom",      color: "#4a4a6a" },
+  { id: "foundation",  nameKey: "constraintThemeFoundation",  color: "#4A90C4" },
+  { id: "power",       nameKey: "constraintThemePower",       color: "#D4943A" },
+  { id: "freezes",     nameKey: "constraintThemeFreezes",     color: "#3D9E72" },
+  { id: "direction",   nameKey: "constraintThemeDirection",   color: "#8B6AAE" },
+  { id: "opposite",    nameKey: "constraintThemeOpposite",    color: "#D46A52" },
+  { id: "transitions", nameKey: "constraintThemeTransitions", color: "#C4453E" },
+  { id: "musicality",  nameKey: "constraintThemeMusicality",  color: "#3A9E9E" },
+  { id: "abstract",    nameKey: "constraintThemeAbstract",    color: "#8A6B54" },
+  { id: "music",       nameKey: "constraintThemeMusic",       color: "#7A5C8A" },
+  { id: "cultural",    nameKey: "constraintThemeCultural",    color: "#B07A5E" },
+  { id: "custom",      nameKey: "constraintThemeCustom",      color: "#6B7BA0" },
 ];
 
 export const CONSTRAINT_POOL = [

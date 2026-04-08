@@ -13,7 +13,6 @@ import { EditRoundView } from './EditRoundView';
 import { FreestylePage } from './FreestylePage';
 import { RivalsPage } from './RivalsPage';
 import { NewRoundModal } from './NewRoundModal';
-import { SectionBanner } from '../shared/SectionBanner';
 import { BattlePrepPage } from '../train/BattlePrepPage';
 import { PremiumGate } from '../shared/PremiumGate';
 import { SectionBrief } from '../shared/SectionBrief';
@@ -515,7 +514,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
             const isOpen = expRounds[round.id] !== false; // default open
             const entryCount = (round.entries||[]).length;
             return (
-              <div key={round.id} style={{ position:"relative", marginBottom:8, borderRadius:10, overflow:"hidden", background:C.bg }}>
+              <div key={round.id} style={{ position:"relative", marginBottom:6, borderRadius:8, overflow:"hidden", background:C.bg }}>
                 {/* Color bar */}
                 <div style={{ height:3, background:`linear-gradient(90deg,${rColor},${rColor}55)` }}/>
                 {/* Round header */}
@@ -745,7 +744,6 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
 
   return (
     <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column", position:"relative" }}>
-      <SectionBanner tab="ready"/>
       {/* Sub-tab bar */}
       <div style={{ display:"flex", borderBottom:`1px solid ${C.border}`, background:C.surface, flexShrink:0 }}>
         {subTabs.map(([id,label])=>(

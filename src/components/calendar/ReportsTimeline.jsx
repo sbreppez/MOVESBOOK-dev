@@ -45,7 +45,7 @@ export const ReportsTimeline = ({ moves, reps, sparring, musicflow, calendar, ca
       })}
 
       <button onClick={() => setMonthsBack(prev => prev + 3)}
-        style={{ width:"100%", padding:"12px 0", marginTop:12, borderRadius:10, cursor:"pointer",
+        style={{ width:"100%", padding:"12px 0", marginTop:12, borderRadius:8, cursor:"pointer",
           border:`1px dashed ${C.border}`, background:"none",
           color:C.textMuted, fontSize:12, fontFamily:FONT_DISPLAY, fontWeight:700, letterSpacing:1 }}>
         {t("loadMore") || "Load more"}
@@ -64,7 +64,7 @@ const MonthTile = ({ entry, t, C, catColors }) => {
   const year = date.getFullYear();
 
   return (
-    <div style={{ background:C.surface, borderRadius:10,
+    <div style={{ background:C.surface, borderRadius:8,
       padding:18, marginBottom:14 }}>
       <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:12 }}>
         <Ic n="barChart" s={16} c={C.accent}/>
@@ -115,7 +115,7 @@ const WeekTile = ({ entry, t, C, catColors }) => {
   const dateLabel = formatShortDate(entry.date);
 
   return (
-    <div style={{ background:C.surfaceAlt, borderRadius:12,
+    <div style={{ background:C.surfaceAlt, borderRadius:8,
       padding:14, marginBottom:6 }}>
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:8 }}>
         <span style={{ fontSize:11, fontWeight:800, letterSpacing:1.5, color:C.textSec,

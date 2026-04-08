@@ -439,7 +439,7 @@ export const ManageOverlay = ({ constraint, onConstraintChange, onClose, addToas
         {customList.length > 0 && (
           <div style={{ marginBottom:16 }}>
             <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:6 }}>
-              <span style={{ width:8, height:8, borderRadius:"50%", background:"#4a4a6a", flexShrink:0 }}/>
+              <span style={{ width:8, height:8, borderRadius:"50%", background:"#6B7BA0", flexShrink:0 }}/>
               <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, color:C.text, letterSpacing:0.5 }}>
                 {t("constraintThemeCustom")}
               </span>

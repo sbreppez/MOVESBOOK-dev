@@ -237,7 +237,7 @@ export const CalendarOverlay = ({
       {/* Battle Prep prompt — shown after saving a future battle event */}
       {battlePrepPrompt && (
         <div style={{ margin: "8px 12px", background: `${C.accent}10`, border: `1px solid ${C.accent}30`,
-          borderRadius: 12, padding: "12px 14px", display: "flex", flexDirection: "column", gap: 8, flexShrink: 0 }}>
+          borderRadius: 8, padding: "12px 14px", display: "flex", flexDirection: "column", gap: 8, flexShrink: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
             <span style={{ fontSize: 16 }}>{"\u2694\uFE0F"}</span>
             <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 13, color: C.text,
@@ -367,7 +367,7 @@ export const CalendarOverlay = ({
 
         {/* Day detail panel */}
         {selectedDay && dayData && (
-          <div style={{ marginTop: 12, background: C.surface, borderRadius: 10, padding: 14 }}>
+          <div style={{ marginTop: 12, background: C.surface, borderRadius: 8, padding: 14 }}>
             {/* Day header */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
               <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 14, color: C.text }}>
@@ -389,7 +389,7 @@ export const CalendarOverlay = ({
 
             {/* Type picker dropdown */}
             {showTypePicker && (
-              <div style={{ background: C.surfaceAlt, borderRadius: 10, padding: 6, marginBottom: 8,
+              <div style={{ background: C.surfaceAlt, borderRadius: 8, padding: 6, marginBottom: 8,
                 border: `1px solid ${C.border}` }}>
                 {[
                   { type: "training", icon: "target", label: t("training") },
@@ -429,7 +429,7 @@ export const CalendarOverlay = ({
                     const tasks = plan && dayMapInfo ? getTasksForDay(plan.id, selectedDay, dayMapInfo, prevKeys) : [];
                     const completed = plan?.completedTasks || {};
                     return (
-                      <div key={entry.planId} style={{ background: C.surfaceAlt, borderRadius: 10, padding: 10, marginBottom: 6 }}>
+                      <div key={entry.planId} style={{ background: C.surfaceAlt, borderRadius: 8, padding: 10, marginBottom: 6 }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: isBattle || !tasks.length ? 0 : 6 }}>
                           <div style={{ width: 8, height: 8, borderRadius: "50%", background: entry.phaseColor, flexShrink: 0 }} />
                           <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12, color: C.text, flex: 1 }}>{entry.planName}</span>
@@ -478,7 +478,7 @@ export const CalendarOverlay = ({
                 <div style={sectionLabel}>{t("calendarEvents")}</div>
                 {dayData.calendarEvents.map(e => (
                   <div key={e.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between",
-                    padding: "8px 10px", background: C.surfaceAlt, borderRadius: 10, marginBottom: 4 }}>
+                    padding: "8px 10px", background: C.surfaceAlt, borderRadius: 8, marginBottom: 4 }}>
                     <div style={{ flex: 1 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                         <Ic n={e.type==="training"?"target":e.type==="battle"?"swords":e.type==="rest"?"pause":"mapPin"} s={14}/>

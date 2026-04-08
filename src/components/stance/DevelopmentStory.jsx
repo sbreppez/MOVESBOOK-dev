@@ -81,7 +81,7 @@ export const DevelopmentStory = ({ moves, sparring, calendar }) => {
 
   return (
     <div style={{
-      background: C.surface, borderRadius: 10,
+      background: C.surface, borderRadius: 8,
       padding: 20, margin: "20px 0 8px"
     }}>
       {/* Header */}

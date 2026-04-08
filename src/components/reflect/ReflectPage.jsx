@@ -171,7 +171,7 @@ export const ReflectPage = ({
           </div>
         )}
         <div style={{ flex: 1, overflow: "auto", padding: 10, paddingBottom: 76 }}>
-          <div style={view === "tiles" ? { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, minWidth: 0 } : { display: "flex", flexDirection: "column", gap: 8 }}>
+          <div style={view === "tiles" ? { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, minWidth: 0 } : { display: "flex", flexDirection: "column", gap: 6 }}>
             {visibleIdeas.map((idea, idx) => (
               <div key={idea.id} style={{ position: "relative", minWidth: 0, overflow: "hidden" }}>
                 {reorderMode && (

@@ -469,7 +469,7 @@ export const BattlePrepSetup = ({ initialPreset, battleprep, setBattleprep, move
                 <div key={cat} style={{ marginBottom: 8 }}>
                   <button onClick={toggleCat} style={{ display: "flex", alignItems: "center", gap: 6, width: "100%", padding: "5px 4px", background: "none", border: "none", cursor: "pointer", textAlign: "left" }}>
                     <Chk on={catAllSel} sz={16} />
-                    <div style={{ width: 3, height: 12, borderRadius: 2, background: cat === "Custom" ? "#4a4a6a" : undefined }} />
+                    <div style={{ width: 3, height: 12, borderRadius: 2, background: cat === "Custom" ? "#6B7BA0" : undefined }} />
                     <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, letterSpacing: 0.8, color: C.textSec }}>{cat}</span>
                     <span style={{ fontSize: 10, color: C.textMuted, marginLeft: "auto" }}>({mvs.length})</span>
                   </button>

@@ -368,7 +368,7 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
                 display:"flex", alignItems:"center", gap:10,
                 background: C.surface,
                 border: `1.5px solid ${slot.moveLocked ? C.yellow : C.border}`,
-                borderRadius:12, overflow:"hidden", cursor: hasSpun && !spinning ? "pointer" : "default",
+                borderRadius:8, overflow:"hidden", cursor: hasSpun && !spinning ? "pointer" : "default",
                 opacity: visibleCards.has(i) ? 1 : (spinning ? 0 : 1),
                 animation: visibleCards.has(i) && spinning ? "mb-combo-spin 500ms ease-out forwards" : undefined,
                 transition: !spinning ? "border-color 0.2s" : undefined,
@@ -412,7 +412,7 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
 
         {/* Combo preview */}
         {hasSpun && !spinning && comboPreview.length > 0 && (
-          <div style={{ marginTop:14, padding:"10px 12px", background:C.surfaceAlt, borderRadius:10, border:`1px solid ${C.borderLight}` }}>
+          <div style={{ marginTop:14, padding:"10px 12px", background:C.surfaceAlt, borderRadius:8, border:`1px solid ${C.borderLight}` }}>
             <div style={{ fontSize:10, fontFamily:FONT_DISPLAY, fontWeight:700, color:C.textMuted, letterSpacing:1, marginBottom:6 }}>COMBO</div>
             <div style={{ fontSize:12, lineHeight:1.6, fontFamily:FONT_BODY }}>
               {comboPreview.map((p, idx) => (
@@ -438,19 +438,19 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
         {hasSpun && !spinning && (
           <>
             <button onClick={openSaveModal}
-              style={{ flex:1, padding:14, borderRadius:12, border:`2px solid ${C.green}`, background:"transparent",
+              style={{ flex:1, padding:14, borderRadius:8, border:`2px solid ${C.green}`, background:"transparent",
                 fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:13, letterSpacing:1, color:C.green, cursor:"pointer" }}>
               {t("saveAsSet")}
             </button>
             <button onClick={() => { setSlots([]); setHasSpun(false); setVisibleCards(new Set()); }}
-              style={{ padding:"14px 18px", borderRadius:12, border:`2px solid ${C.red}`, background:"transparent",
+              style={{ padding:"14px 18px", borderRadius:8, border:`2px solid ${C.red}`, background:"transparent",
                 fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:13, letterSpacing:1, color:C.red, cursor:"pointer" }}>
               {t("discard")}
             </button>
           </>
         )}
         <button onClick={generateCombo} disabled={spinning || !pool.length}
-          style={{ flex: hasSpun && !spinning ? 1 : "1 1 100%", padding:14, borderRadius:12, border:"none",
+          style={{ flex: hasSpun && !spinning ? 1 : "1 1 100%", padding:14, borderRadius:8, border:"none",
             background: !pool.length ? C.surfaceAlt : tierColor, color:"#fff",
             fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:14, letterSpacing:1.5,
             cursor: spinning || !pool.length ? "not-allowed" : "pointer", opacity: spinning ? 0.6 : 1 }}>
@@ -466,7 +466,7 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
             style={{ background:C.bg, borderRadius:16, padding:24, width:"100%", maxWidth:380, border:`1px solid ${C.border}` }}>
             <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:14, color:C.text, marginBottom:14, letterSpacing:1 }}>{t("setName")}</div>
             <input value={saveName} onChange={e => setSaveName(e.target.value)}
-              style={{ width:"100%", padding:"10px 12px", borderRadius:10, border:`1.5px solid ${C.border}`, background:C.surface,
+              style={{ width:"100%", padding:"10px 12px", borderRadius:8, border:`1.5px solid ${C.border}`, background:C.surface,
                 color:C.text, fontFamily:FONT_BODY, fontSize:14, outline:"none", boxSizing:"border-box" }}
               autoFocus/>
             <div style={{ marginTop:12, padding:"8px 0", fontSize:11, color:C.textMuted, fontFamily:FONT_BODY, lineHeight:1.5 }}>
@@ -478,7 +478,7 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
               ))}
             </div>
             <button onClick={doSave}
-              style={{ width:"100%", marginTop:14, padding:12, borderRadius:10, border:"none",
+              style={{ width:"100%", marginTop:14, padding:12, borderRadius:8, border:"none",
                 background:C.green, color:"#fff", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:13, letterSpacing:1, cursor:"pointer" }}>
               {t("saveAsSet")}
             </button>
@@ -537,7 +537,7 @@ const MovePicker = ({ moves, catColors, combos, onCombosChange, onBack }) => {
 
       {/* Search */}
       <div style={{ padding:"10px 16px", borderBottom:`1px solid ${C.borderLight}`, flexShrink:0 }}>
-        <div style={{ display:"flex", alignItems:"center", gap:8, background:C.surface, border:`1.5px solid ${C.border}`, borderRadius:10, padding:"8px 12px" }}>
+        <div style={{ display:"flex", alignItems:"center", gap:8, background:C.surface, border:`1.5px solid ${C.border}`, borderRadius:8, padding:"8px 12px" }}>
           <Ic n="search" s={14} c={C.textMuted}/>
           <input value={search} onChange={e => setSearch(e.target.value)} placeholder={t("search")}
             style={{ flex:1, border:"none", background:"transparent", color:C.text, fontFamily:FONT_BODY, fontSize:13, outline:"none" }}/>
@@ -574,7 +574,7 @@ const MovePicker = ({ moves, catColors, combos, onCombosChange, onBack }) => {
       {/* Done */}
       <div style={{ padding:"12px 16px", borderTop:`1px solid ${C.border}`, flexShrink:0 }}>
         <button onClick={done}
-          style={{ width:"100%", padding:14, borderRadius:12, border:"none", background:C.accent, color:"#fff",
+          style={{ width:"100%", padding:14, borderRadius:8, border:"none", background:C.accent, color:"#fff",
             fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:13, letterSpacing:1.5, cursor:"pointer" }}>
           {t("done")}
         </button>
@@ -623,10 +623,10 @@ const TransitionManager = ({ combos, onCombosChange, onBack }) => {
         <input value={input} onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === "Enter" && addTrans()}
           placeholder={t("manageTransitions")}
-          style={{ flex:1, padding:"10px 12px", borderRadius:10, border:`1.5px solid ${C.border}`, background:C.surface,
+          style={{ flex:1, padding:"10px 12px", borderRadius:8, border:`1.5px solid ${C.border}`, background:C.surface,
             color:C.text, fontFamily:FONT_BODY, fontSize:13, outline:"none" }}/>
         <button onClick={addTrans}
-          style={{ padding:"10px 18px", borderRadius:10, border:"none", background:C.accent, color:"#fff",
+          style={{ padding:"10px 18px", borderRadius:8, border:"none", background:C.accent, color:"#fff",
             fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:12, cursor:"pointer" }}>
           +
         </button>
@@ -648,7 +648,7 @@ const TransitionManager = ({ combos, onCombosChange, onBack }) => {
       {/* Done */}
       <div style={{ padding:"12px 16px", borderTop:`1px solid ${C.border}`, flexShrink:0 }}>
         <button onClick={done}
-          style={{ width:"100%", padding:14, borderRadius:12, border:"none", background:C.accent, color:"#fff",
+          style={{ width:"100%", padding:14, borderRadius:8, border:"none", background:C.accent, color:"#fff",
             fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:13, letterSpacing:1.5, cursor:"pointer" }}>
           {t("done")}
         </button>

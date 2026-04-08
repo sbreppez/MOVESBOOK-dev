@@ -5,7 +5,6 @@ import { lbl } from '../../constants/styles';
 import { Ic } from '../shared/Ic';
 import { Modal } from '../shared/Modal';
 import { Btn } from '../shared/Btn';
-import { SectionBanner } from '../shared/SectionBanner';
 import { useT, usePlural } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
 import { useTrainModal } from '../../hooks/useTrainContext';
@@ -153,7 +152,6 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
 
   return (
     <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column" }}>
-      <SectionBanner tab="ideas"/>
       {/* Quick Log banner */}
       {(()=>{
         const todayStr = new Date().toISOString().split("T")[0];
@@ -352,8 +350,8 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
       {(trainTab==="goals"||trainTab==="notes")&&<div style={{ flex:1, overflow:"auto", padding:10, paddingBottom:76 }}>
         <div
           style={view==="tiles"
-            ? {display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,minWidth:0}
-            : {display:"flex",flexDirection:"column",gap:8}}
+            ? {display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,minWidth:0}
+            : {display:"flex",flexDirection:"column",gap:6}}
         >
           {(()=>{ const visibleIdeas = filtered.filter(i=>trainTab==="goals"?(i.type==="goal"||i.type==="target"):i.type==="note"); return visibleIdeas.map((idea, idx) => (
             <div key={idea.id} style={{ position:"relative", minWidth:0, overflow:"hidden" }}>

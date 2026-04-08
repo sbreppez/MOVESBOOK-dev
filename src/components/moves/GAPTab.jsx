@@ -116,7 +116,7 @@ export const GAPTab = ({ moves, catColors=CAT_COLORS, setMoves, onDrill, setting
           <p style={{ fontSize:13 }}>{t("gapAllCaughtUp")}</p>
         </div>
       ) : (
-        <div style={{ display:"flex", flexDirection:"column", gap:8, padding:"10px 14px" }}>
+        <div style={{ display:"flex", flexDirection:"column", gap:6, padding:"10px 14px" }}>
           {staleMoves.map(m => {
             const catCol = catColors[m.category] || C.accent;
             const isTrained = m.date === today;

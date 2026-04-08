@@ -199,7 +199,7 @@ export const SessionJournal = ({
         )}
 
         {/* Journal card */}
-        <div style={{ background: C.surface, borderRadius: 10, padding: 14 }}>
+        <div style={{ background: C.surface, borderRadius: 8, padding: 14 }}>
 
           {/* ── TRAINING TYPE ── */}
           {type === "training" && (
@@ -227,14 +227,14 @@ export const SessionJournal = ({
                   {/* Move tagger */}
                   {!showMovePicker ? (
                     <button onClick={() => setShowMovePicker(true)}
-                      style={{ background: "none", border: `1.5px dashed ${C.border}`, borderRadius: 10,
+                      style={{ background: "none", border: `1.5px dashed ${C.border}`, borderRadius: 8,
                         padding: "8px 12px", cursor: "pointer", color: C.textMuted,
                         fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11,
                         letterSpacing: 0.3, width: "100%", textAlign: "left", marginBottom: 8 }}>
                       {t("tagSpecificMoves")}
                     </button>
                   ) : (
-                    <div style={{ borderRadius: 10, padding: 8,
+                    <div style={{ borderRadius: 8, padding: 8,
                       marginBottom: 8, maxHeight: 220, overflow: "auto" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
                         <Ic n="search" s={14} c={C.textMuted} />
@@ -451,7 +451,7 @@ export const SessionJournal = ({
         {/* Save button */}
         <button onClick={handleSave}
           style={{ width: "100%", padding: "14px 0", marginTop: 16,
-            background: C.green, border: "none", borderRadius: 10, cursor: "pointer",
+            background: C.green, border: "none", borderRadius: 8, cursor: "pointer",
             fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 14,
             letterSpacing: 1, color: "#fff", display: "flex", alignItems: "center",
             justifyContent: "center", gap: 6 }}>

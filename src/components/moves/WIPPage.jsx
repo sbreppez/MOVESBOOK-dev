@@ -4,7 +4,6 @@ import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { masteryColor } from '../../constants/styles';
 import { Ic } from '../shared/Ic';
 import { Highlight } from '../shared/Highlight';
-import { SectionBanner } from '../shared/SectionBanner';
 import { Crumbs } from '../shared/Crumbs';
 import { Btn } from '../shared/Btn';
 import { useT, usePlural } from '../../hooks/useTranslation';
@@ -304,7 +303,6 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
 
   return (
     <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column" }}>
-      <SectionBanner tab="wip"/>
       {reminders?.items?.length > 0 && (
         <ReminderBlock reminders={reminders} onRemindersChange={onRemindersChange} addToast={addToast} onOpenManage={onOpenManageReminders}/>
       )}

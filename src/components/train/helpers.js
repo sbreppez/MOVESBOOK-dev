@@ -10,7 +10,7 @@ export const menuBtnStyle = (color, border) => ({
 export const targetProgress = (current, target) => {
   if (!target || target <= 0) return { pct:0, color:"#e53935", label:"0%" };
   const pct = Math.min(100, Math.max(0, Math.round((current / target) * 100)));
-  const color = pct >= 100 ? "#2d6a4f" : pct >= 60 ? "#b5850a" : "#e53935";
+  const color = pct >= 100 ? "#3D9E72" : pct >= 60 ? "#D4943A" : "#e53935";
   const label = pct >= 100 ? "Goal reached!" : `${pct}% there`;
   return { pct, color, label };
 };
@@ -33,7 +33,7 @@ export const goalTimeProgress = (createdDate, byWhen) => {
   const remaining = end - now;
   const pctRemaining = Math.min(100, Math.max(0, Math.round(remaining / total * 100)));
   const daysLeft = Math.ceil(remaining / 86400000);
-  const color = pctRemaining > 30 ? "#2d6a4f" : pctRemaining > 10 ? "#b5850a" : "#e53935";
+  const color = pctRemaining > 30 ? "#3D9E72" : pctRemaining > 10 ? "#D4943A" : "#e53935";
   const label = daysLeft === 1 ? "1 day left" : `${daysLeft} days left`;
   return { pct: 100 - pctRemaining, color, label };
 };
