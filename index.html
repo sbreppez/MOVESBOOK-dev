@@ -87,6 +87,17 @@ firebase.initializeApp({
       },
       subscribe: function(uid, cb) {
         return _fbDb.collection('users').doc(uid).onSnapshot(function(s){ if(s.exists) cb(s.data()); });
+      },
+      loadDoc: function(collection, docId) {
+        return _fbDb.collection(collection).doc(docId).get().then(function(s){ return s.exists ? s.data() : null; });
+      },
+      redeemPromo: function(uid, code) {
+        var batch = _fbDb.batch();
+        var userRef = _fbDb.collection('users').doc(uid);
+        var promoRef = _fbDb.collection('promo_codes').doc(code);
+        batch.set(userRef, { premium: true, premiumPlan: 'promo', premiumSource: code }, { merge: true });
+        batch.update(promoRef, { usedBy: firebase.firestore.FieldValue.arrayUnion(uid) });
+        return batch.commit();
       }
     };
 

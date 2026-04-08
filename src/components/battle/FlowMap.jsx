@@ -3,6 +3,8 @@ import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
+import { useSettings } from '../../hooks/useSettings';
+import { SectionBrief } from '../shared/SectionBrief';
 
 const DEFAULT_TRANSITIONS = ["Thread","Jump","Counter Spin","Slide","Sweep","Touch Foot","Kick","Hop","Roll","Twist","Drop","Spin Through"];
 
@@ -33,6 +35,7 @@ const IMPACT_TENSION = { 1: "low", 2: "low", 3: "mid", 4: "high", 5: "peak" };
 // ── Main Component ──────────────────────────────────────────────────────────
 export const FlowMap = ({ moves, cats, catColors, flowmap, onFlowmapChange, combos, onSaveMove, onSaveSet, addToast, onClose }) => {
   const t = useT();
+  const { settings: ctxSettings } = useSettings();
 
   const [screen, setScreen] = useState("home");
   const [gridMoves, setGridMoves] = useState({ rows: [], cols: [], mode: null });
@@ -187,8 +190,7 @@ export const FlowMap = ({ moves, cats, catColors, flowmap, onFlowmapChange, comb
       <div style={overlay}>
         <Header title={t("map")} onBack={onClose} />
         <div style={scrollArea}>
-          {/* Description */}
-          <p style={{ color: C.textMuted, fontSize: 13, marginTop: 0, marginBottom: 12, fontFamily: FONT_BODY }}>{t("flowMapDesc")}</p>
+          <SectionBrief desc={t("mapBrief")} stat={totalPossible > 0 ? t("connectionsExplored").replace("{count}", totalEvaluated).replace("{total}", totalPossible).replace("{percent}", explorePct) : null} settings={ctxSettings}/>
 
           {/* Progress bar + stats */}
           {totalPossible > 0 && (
@@ -206,8 +208,8 @@ export const FlowMap = ({ moves, cats, catColors, flowmap, onFlowmapChange, comb
           {totalPossible > 0 && (
             <div style={{ marginBottom: 16 }}>
               {allUnexplored.length > 0 ? (
-                <div onClick={pickRandomUnexplored} style={{ fontFamily: FONT_BODY, fontSize: 12, color: C.accent, fontStyle: "italic", cursor: "pointer" }}>
-                  <Ic n="dices" s={12} c={C.accent}/> {t("tryRandom")}
+                <div onClick={pickRandomUnexplored} style={{ fontFamily: FONT_BODY, fontSize: 12, color: C.textMuted, fontStyle: "italic", cursor: "pointer" }}>
+                  <Ic n="dices" s={12} c={C.textMuted}/> {t("tryRandom")}
                 </div>
               ) : totalEvaluated > 0 ? (
                 <div style={{ fontFamily: FONT_BODY, fontSize: 12, color: C.green, fontStyle: "italic" }}>

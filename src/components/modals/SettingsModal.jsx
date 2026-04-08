@@ -204,6 +204,11 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
             toggle("trackMovesInSparring")
           )}
 
+          {row(t("showSectionDescriptions"),
+            t("showSectionDescriptionsSub"),
+            toggle("showSectionDescriptions")
+          )}
+
           {row(t("sparringGapThreshold"),
             t("sparringGapThresholdDesc"),
             <input type="number" min={1} max={90} value={s.sparringGapThreshold||14}

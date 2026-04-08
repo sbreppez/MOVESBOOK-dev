@@ -5,6 +5,7 @@ import { CAT_COLORS } from '../../constants/categories';
 import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
+import { SectionBrief } from '../shared/SectionBrief';
 
 // ── Audio ───────────────────────────────────────────────────────────────────
 let _audioCtx = null;
@@ -327,7 +328,7 @@ export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToa
         ) : (
           <div style={{ width:26 }}/>
         )}
-        <div style={{ flex:1, textAlign:"center", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:14, letterSpacing:1.5, color: screen !== "modes" ? mc : C.text }}>
+        <div style={{ flex:1, textAlign:"center", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:14, letterSpacing:1.5, color: screen !== "modes" ? mc : C.text, textTransform:"uppercase" }}>
           {screen === "modes" && t("restoreRemixRebuild")}
           {screen === "picker" && t(mode)}
           {screen === "prompt" && t(mode)}
@@ -344,6 +345,7 @@ export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToa
         {/* ════════ MODE SELECTOR ════════ */}
         {screen === "modes" && (
           <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
+            <SectionBrief desc={t("rrrBrief")} stat={t("rrrBriefStat")} settings={settings}/>
             {MODES.map(m => {
               const c = m.color();
               const isLast = rrr?.lastUsed?.mode === m.key;

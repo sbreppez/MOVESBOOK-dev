@@ -20,10 +20,12 @@ import { AttributeFilter } from './AttributeFilter';
 import { filterMovesByAttrs } from '../../utils/attributeHelpers';
 import { ReminderBlock } from './ReminderBlock';
 import { GAPTab } from './GAPTab';
+import { PremiumGate } from '../shared/PremiumGate';
+import { SectionBrief } from '../shared/SectionBrief';
 import { MoveTree } from './MoveTree';
 import { downloadBackup, restoreBackup } from '../modals/BackupModal';
 
-export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains={}, setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore, onOpenRRR, onOpenCombine, onOpenMap, onOpenFlashCards }) => {
+export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains={}, setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore, onOpenRRR, onOpenCombine, onOpenMap, onOpenFlashCards, isPremium }) => {
   const t = useT();
   const { moveCountStr, resultCountStr } = usePlural();
   const { settings:ctxSettings } = useSettings();
@@ -245,8 +247,8 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
             </div>
           )}
         </div>
-        {showAdd&&<MoveModal initialCat={openCat} cats={cats} initialDesc={ideaDesc} onClose={()=>{setShowAdd(false);setIdeaDesc(null);}} onSave={f=>saveMove(f)} customAttrs={customAttrs} onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])} allMoves={moves} catColors={catColors}/>}
-        {editMove&&<MoveModal move={editMove} cats={cats} onClose={()=>setEditMove(null)} onSave={f=>{saveMove(f,editMove.id);setEditMove(null);}} customAttrs={customAttrs} onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])} allMoves={moves} catColors={catColors}/>}
+        {showAdd&&<MoveModal initialCat={openCat} cats={cats} initialDesc={ideaDesc} onClose={()=>{setShowAdd(false);setIdeaDesc(null);}} onSave={f=>saveMove(f)} customAttrs={customAttrs} onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])} allMoves={moves} catColors={catColors} isPremium={isPremium}/>}
+        {editMove&&<MoveModal move={editMove} cats={cats} onClose={()=>setEditMove(null)} onSave={f=>{saveMove(f,editMove.id);setEditMove(null);}} customAttrs={customAttrs} onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])} allMoves={moves} catColors={catColors} isPremium={isPremium}/>}
         {confirmDeleteMove&&(
           <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", zIndex:900, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
             <div style={{ background:C.bg, border:`1px solid ${C.border}`, borderRadius:14, width:"100%", maxWidth:320, padding:20, boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
@@ -359,7 +361,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
               {hasActiveFilters&&<div style={{ position:"absolute", top:2, right:2, width:6, height:6, borderRadius:"50%", background:C.accent }}/>}
             </button>}
             <button onClick={()=>{ setShowSearch(s=>!s); setSearch(""); }} style={{ background:showSearch?C.surfaceAlt:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:showSearch?C.accent:C.textMuted }}><Ic n="search" s={16}/></button>
-            {[{v:"tiles",ic:"grid"},{v:"list",ic:"list"},{v:"tree",ic:"gitFork"}].map(({v,ic})=>(
+            {[{v:"tiles",ic:"grid"},{v:"list",ic:"list"},...(isPremium?[{v:"tree",ic:"gitFork"}]:[])].map(({v,ic})=>(
               <button key={v} onClick={()=>setView(v)} style={{ background:view===v?C.surfaceAlt:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:view===v?C.accent:C.textMuted }}><Ic n={ic} s={16}/></button>
             ))}
             <button onClick={()=>setBulk(true)} style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}><Ic n="upload" s={16}/></button>
@@ -445,10 +447,12 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
       )}
 
       <div style={{ flex:1, overflow:"auto", paddingTop: vocabTab==="gap" ? 0 : 10, paddingLeft: vocabTab==="gap" ? 0 : 10, paddingRight: vocabTab==="gap" ? 0 : 10, paddingBottom:76 }}>
+        {vocabTab==="moves"&&<SectionBrief desc={t("libraryBrief")} stat={`${moves.length} moves across ${cats.length} categories`} settings={st}/>}
         {vocabTab==="gap" ? (
-          <GAPTab moves={moves} catColors={catColors} setMoves={setMoves} onDrill={onDrill} settings={st} onTrainToday={handleToggleTrainedToday}/>
+          isPremium ? <><SectionBrief desc={t("gapBrief")} settings={st}/><GAPTab moves={moves} catColors={catColors} setMoves={setMoves} onDrill={onDrill} settings={st} onTrainToday={handleToggleTrainedToday}/></> : <div style={{padding:20}}><PremiumGate feature="gap" addToast={addToast}/></div>
         ) : vocabTab==="sets" ? (
           <div>
+            <SectionBrief desc={t("setsBrief")} stat={`${sets.length} sets`} settings={st}/>
             {sets.length===0&&(
               <div style={{ textAlign:"center", padding:40, color:C.textMuted }}>
                 <div style={{ marginBottom:8 }}><Ic n="list" s={28} c={C.textMuted}/></div>
@@ -710,9 +714,9 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
       )}
       {showAddCat&&<AddCategoryModal onClose={()=>setShowAddCat(false)} onAdd={addCategory} existingCats={cats} existingColors={catColors}/>}
       {/* MoveModal at root level — for "Add to Move" arriving from Ideas tab */}
-      {showAdd&&<MoveModal initialCat={cats[0]||""} cats={cats} initialDesc={ideaDesc} onClose={()=>{setShowAdd(false);setIdeaDesc(null);}} onSave={f=>saveMove(f)} customAttrs={customAttrs} onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])} allMoves={moves} catColors={catColors}/>}
+      {showAdd&&<MoveModal initialCat={cats[0]||""} cats={cats} initialDesc={ideaDesc} onClose={()=>{setShowAdd(false);setIdeaDesc(null);}} onSave={f=>saveMove(f)} customAttrs={customAttrs} onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])} allMoves={moves} catColors={catColors} isPremium={isPremium}/>}
       {/* EditMove at root level — for tree/search views where openCat is null */}
-      {!openCat&&editMove&&<MoveModal move={editMove} cats={cats} onClose={()=>setEditMove(null)} onSave={f=>{saveMove(f,editMove.id);setEditMove(null);}} customAttrs={customAttrs} onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])} allMoves={moves} catColors={catColors}/>}
+      {!openCat&&editMove&&<MoveModal move={editMove} cats={cats} onClose={()=>setEditMove(null)} onSave={f=>{saveMove(f,editMove.id);setEditMove(null);}} customAttrs={customAttrs} onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])} allMoves={moves} catColors={catColors} isPremium={isPremium}/>}
       {/* Version move modal — triggered by version tracking prompt */}
       {versionMove&&<MoveModal
         initialCat={versionMove.category}

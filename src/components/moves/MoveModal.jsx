@@ -36,7 +36,7 @@ const chipStyle = (active) => ({
 
 const sectionLabel = { fontSize:10, fontWeight:800, letterSpacing:1, color:C.textMuted, fontFamily:FONT_DISPLAY, marginBottom:6 };
 
-export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initialDesc="", cats=CATS, customAttrs=[], onAddAttr, allMoves=[], catColors=CAT_COLORS }) => {
+export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initialDesc="", cats=CATS, customAttrs=[], onAddAttr, allMoves=[], catColors=CAT_COLORS, isPremium }) => {
   const t = useT();
   const [f,setF] = useState({ name:"", category:initialCat, description:initialDesc||"", link:"", mastery:50, date:new Date().toISOString().split("T")[0], status:"wip", rotation:"", travelling:"", custom:"", attrs:{}, origin:"learned", musicEnergy:null, tensionRole:null, parentId:null, ...move });
   const set = k => v => setF(p=>({...p,[k]:v}));
@@ -88,8 +88,8 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
       <Sel label={t("categories")} value={f.category} onChange={set("category")} options={cats.map(c=>({value:c,label:c}))}/>
       <Inp label={t("name") + " *"} value={f.name} onChange={set("name")} placeholder={t("moveNamePlaceholder")}/>
 
-      {/* ── Auto-suggest ── */}
-      {isAddMode && autoSuggest && !f.parentId && (
+      {/* ── Auto-suggest (premium) ── */}
+      {isPremium && isAddMode && autoSuggest && !f.parentId && (
         <div style={{ display:"flex", alignItems:"center", gap:8, padding:"6px 10px", background:C.surfaceAlt, borderRadius:8, marginTop:-4, marginBottom:8, border:`1px solid ${C.borderLight}` }}>
           <span style={{ fontSize:12, color:C.textSec, flex:1 }}>
             {t("basedOnSuggestion").replace("{name}", autoSuggest.name)}
@@ -116,8 +116,8 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
         </div>
       </div>
 
-      {/* ── Based On (parent move) ── */}
-      <div style={{ marginBottom:8 }}>
+      {/* ── Based On (parent move) — premium ── */}
+      {isPremium && <div style={{ marginBottom:8 }}>
         <label style={lbl()}>{t("basedOn")}</label>
         {!showBasedOn && !f.parentId ? (
           <button onClick={() => setShowBasedOn(true)}
@@ -174,7 +174,7 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
             </div>
           </div>
         )}
-      </div>
+      </div>}
 
       <MasterySlider value={f.mastery} onChange={set("mastery")} moveDate={f.date} moveDifficulty={f.difficulty}/>
 
@@ -194,8 +194,8 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
         </div>
       </div>
 
-      {/* ── Origin ── */}
-      <div style={{ marginTop:8, marginBottom:4 }}>
+      {/* ── Origin — premium ── */}
+      {isPremium && <div style={{ marginTop:8, marginBottom:4 }}>
         <div style={sectionLabel}>{t("origin")}</div>
         <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
           {ORIGIN_KEYS.map(o => {
@@ -211,7 +211,7 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
         <div style={{ fontSize:11, color:C.textMuted, fontStyle:"italic", marginTop:5 }}>
           {t(ORIGIN_HINTS[f.origin || "learned"])}
         </div>
-      </div>
+      </div>}
 
       {/* ── Tension Role ── */}
       <div style={{ marginTop:8, marginBottom:4 }}>

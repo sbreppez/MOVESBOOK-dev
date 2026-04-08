@@ -4,6 +4,8 @@ import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { CAT_COLORS } from '../../constants/categories';
 import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
+import { useSettings } from '../../hooks/useSettings';
+import { SectionBrief } from '../shared/SectionBrief';
 
 // ── Difficulty tiers ────────────────────────────────────────────────────────
 const TIERS = {
@@ -21,6 +23,7 @@ const DEFAULT_TRANSITIONS = ["Thread","Jump","Counter Spin","Slide","Sweep","Tou
 // ── Main Component ──────────────────────────────────────────────────────────
 export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveSet, addToast, onClose, addCalendarEvent }) => {
   const t = useT();
+  const { settings: ctxSettings } = useSettings();
   const [screen, setScreen] = useState("main");
   const [moveCount, setMoveCount] = useState(5);
   const [slots, setSlots] = useState([]);
@@ -222,12 +225,13 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
         </button>
       </div>
 
+      <SectionBrief desc={t("combineBrief")} stat={`${moves.length} moves in your library`} settings={ctxSettings}/>
+
       {/* Difficulty bar */}
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"10px 16px", borderBottom:`1px solid ${C.borderLight}`, flexShrink:0 }}>
         {/* Tier badge */}
-        <div style={{ display:"flex", alignItems:"center", gap:8, background:`${tierColor}18`, border:`1.5px solid ${tierColor}`, borderRadius:10, padding:"5px 14px" }}>
-          <span style={{ fontSize:16 }}>{tier.emoji}</span>
-          <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:12, letterSpacing:1.5, color:tierColor }}>{tierLabel}</span>
+        <div style={{ display:"flex", alignItems:"center", background:`${tierColor}18`, borderRadius:10, padding:"5px 14px" }}>
+          <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:15, letterSpacing:1.5, color:tierColor }}>{tierLabel}</span>
         </div>
         {/* Counter */}
         <div style={{ display:"flex", alignItems:"center", gap:10 }}>

@@ -563,7 +563,7 @@ export default function App() {
       compactCards:false, sortMoves:"custom", fontSize:"medium",
       showMoveCount:false, confirmDelete:true, practiceReminders:false,
       reminderTime:"18:00", streakTracking:true, showDeadlineIndicator:true,
-      categorySort:"manual", defaultView:"list", language:"en", linkOnCard:"inside", targetAutoLink:false, trackMovesInSparring:true,
+      categorySort:"manual", defaultView:"list", language:"en", linkOnCard:"inside", targetAutoLink:false, trackMovesInSparring:true, showSectionDescriptions:true,
     },
     ...loadLocal("mb_settings", {}),
   }));

@@ -4,6 +4,8 @@ import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { CAT_COLORS, CATS } from '../../constants/categories';
 import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
+import { useSettings } from '../../hooks/useSettings';
+import { SectionBrief } from '../shared/SectionBrief';
 
 // ── Audio ───────────────────────────────────────────────────────────────────
 let _audioCtx = null;
@@ -56,6 +58,7 @@ const emptyTech = () => {
 // ── Main Component ──────────────────────────────────────────────────────────
 export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addToast, onClose, addCalendarEvent }) => {
   const t = useT();
+  const { settings: ctxSettings } = useSettings();
 
   // ── State ──
   const [screen, setScreen] = useState("select"); // "select" | "workspace" | "pickSeed"
@@ -750,19 +753,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
 
       {/* Scrollable content */}
       <div style={{ flex: 1, overflowY: "auto", padding: "0 16px" }}>
-        {/* Hint banner */}
-        <div style={{
-          display: "flex", alignItems: "center", gap: 8, padding: "10px 14px", marginTop: 12,
-          background: C.surfaceAlt, borderRadius: 10, marginBottom: 12,
-        }}>
-          <div style={{ flex: 1, fontFamily: FONT_BODY, fontSize: 12, color: C.textMuted, fontStyle: "italic", lineHeight: 1.4 }}>
-            {t(TIP_KEYS[tipIdx])}
-          </div>
-          <button onClick={() => setTipIdx(prev => (prev + 1) % TIP_KEYS.length)}
-            style={{ background: "none", border: "none", cursor: "pointer", padding: 4, flexShrink: 0, display: "flex" }}>
-            <Ic n="refresh" s={14} c={C.textMuted} />
-          </button>
-        </div>
+        <SectionBrief desc={t("exploreBrief")} stat={t("exploreBriefStat")} settings={ctxSettings}/>
 
         {screen === "select" && renderModeSelect()}
         {screen === "pickSeed" && renderSeedPicker()}

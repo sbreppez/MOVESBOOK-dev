@@ -11,6 +11,7 @@ import { MyStanceSection } from '../stance/MyStanceSection';
 import { DevelopmentStory } from '../stance/DevelopmentStory';
 import { IdeaTile } from '../train/IdeaTile';
 import { PremiumGate } from '../shared/PremiumGate';
+import { SectionBrief } from '../shared/SectionBrief';
 import { TypeChooserModal } from '../train/TypeChooserModal';
 import { ensureHttps } from '../train/helpers';
 
@@ -232,6 +233,7 @@ export const ReflectPage = ({
 
       {/* Content */}
       {reflectTab === "calendar" && (
+        <><SectionBrief desc={t("calendarBrief")} settings={settings}/>
         <CalendarOverlay inline
           moves={moves} setMoves={setMoves} reps={reps} sparring={sparring} musicflow={musicflow} habits={habits} ideas={ideas}
           calendar={calendar} setCalendar={setCalendar}
@@ -241,20 +243,23 @@ export const ReflectPage = ({
           battleprep={battleprep} initialMonth={initialMonth}
           onToggleBattlePrepTask={onToggleBattlePrepTask}
           onAddTrigger={calendarAddTick} reports={reports} isPremium={isPremium} />
+        </>
       )}
 
       {reflectTab === "stance" && (
         isPremium ? (
           <div style={{ flex: 1, overflow: "auto", padding: 16 }}>
+            <SectionBrief desc={t("stanceBrief")} settings={settings}/>
             <MyStanceSection moves={moves || []} stance={stance} sparring={sparring} calendar={calendar} onOpenAssessment={onOpenStanceAssessment} />
             <DevelopmentStory moves={moves || []} sparring={sparring} calendar={calendar} />
           </div>
         ) : <div style={{padding:20}}><PremiumGate feature="myStance" addToast={addToast}/></div>
       )}
 
-      {reflectTab === "goals" && renderIdeasList("goals")}
+      {reflectTab === "goals" && <><SectionBrief desc={t("goalsBrief")} stat={`${goals.length} active goals`} settings={settings}/>{renderIdeasList("goals")}</>}
       {reflectTab === "notes" && (
         <>
+          <SectionBrief desc={t("notesBrief")} stat={`${notes.length} notes`} settings={settings}/>
           {/* Injury History accordion */}
           {(() => {
             const resolved = (injuries || []).filter(i => i.resolved).sort((a, b) => (b.resolvedDate || b.date || b.startDate || "").localeCompare(a.resolvedDate || a.date || a.startDate || ""));

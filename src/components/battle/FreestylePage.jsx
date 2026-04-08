@@ -11,6 +11,7 @@ import { Modal } from '../shared/Modal';
 import { useT } from '../../hooks/useTranslation';
 import { usePlural } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
+import { SectionBrief } from '../shared/SectionBrief';
 
 export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addToast, freestyle, onFreestyleChange }) => {
   const t = useT();
@@ -180,6 +181,7 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
 
   return (
     <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column", position:"relative" }}>
+      <SectionBrief desc={t("freestyleBrief")} settings={settings}/>
 
       {/* Header */}
       <div style={{ padding:"8px 12px", borderBottom:`1px solid ${C.borderLight}`, background:C.surface,

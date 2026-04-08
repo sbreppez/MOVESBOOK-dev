@@ -1,0 +1,37 @@
+// Premium feature map — feature IDs match PremiumGate `feature` prop
+export const PREMIUM_FEATURES = {
+  myStance: true,
+  moveLineage: true,
+  originField: true,
+  explore: true,
+  flow: true,
+  spar: true,
+  combine: true,
+  gap: true,
+  map: true,
+  roundArc: true,
+  rivals: true,
+  battlePrep: true,
+  compSim: true,
+  rrr: true,
+  reflection: true,
+  devStory: true,
+  shareCards: true,
+  reports: true,
+  injuries: true,
+  sparGap: true,
+  flashCards: true,
+};
+
+export const FREE_FEATURES = {
+  moveLibrary: true,
+  sets: true,
+  battlePlan: true,
+  freestyle: true,
+  goals: true,
+  habits: true,
+  notes: true,
+  calendar: true,
+  drill: true,
+  backup: true,
+};

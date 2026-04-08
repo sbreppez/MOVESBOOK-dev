@@ -16,6 +16,7 @@ import { NewRoundModal } from './NewRoundModal';
 import { SectionBanner } from '../shared/SectionBanner';
 import { BattlePrepPage } from '../train/BattlePrepPage';
 import { PremiumGate } from '../shared/PremiumGate';
+import { SectionBrief } from '../shared/SectionBrief';
 import { computeDecay } from '../../utils/masteryDecay';
 
 export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, addToast, freestyle, onFreestyleChange, rivals, onRivalsChange, addCalendarEvent, removeCalendarEvent, onSimulate, battleprep, setBattleprep, calendar, battlePrepSeed, onBattlePrepSeedUsed, onOpenSharedCalendar, isPremium }) => {
@@ -325,6 +326,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
   const PlanView = () => {
     return (
       <div style={{ flex:1, display:"flex", flexDirection:"column", overflow:"hidden" }}>
+        <SectionBrief desc={t("battlePlanBrief")} stat={`${rounds.length} rounds configured`} settings={settings}/>
         {/* Header */}
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"8px 14px", borderBottom:`1px solid ${C.border}`, background:C.surface, flexShrink:0 }}>
           <span style={{ fontSize:11, fontWeight:800, letterSpacing:1.5, color:C.brownMid, fontFamily:FONT_DISPLAY }}>{t("rounds")}</span>
@@ -487,7 +489,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
             <button onClick={onSimulate}
               style={{
                 width:"100%", padding:14, borderRadius:12,
-                border:`2px dashed ${C.accent}`, background:`${C.accent}0a`,
+                border:`1px solid ${C.accent}`, background:"transparent",
                 color:C.accent, cursor:"pointer",
                 fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:13,
                 letterSpacing:1,
@@ -771,13 +773,13 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
       )}
 
       {/* PREP tab */}
-      {battleTab==="prep"&&(isPremium?<BattlePrepPage battleprep={battleprep} setBattleprep={setBattleprep} moves={moves} sets={sets} addToast={addToast} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={onBattlePrepSeedUsed} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onAddTrigger={prepAddTick} onOpenSharedCalendar={onOpenSharedCalendar}/>:<div style={{padding:20}}><PremiumGate feature="battlePrep" addToast={addToast}/></div>)}
+      {battleTab==="prep"&&(isPremium?<><SectionBrief desc={t("battlePrepBrief")} settings={settings}/><BattlePrepPage battleprep={battleprep} setBattleprep={setBattleprep} moves={moves} sets={sets} addToast={addToast} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={onBattlePrepSeedUsed} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onAddTrigger={prepAddTick} onOpenSharedCalendar={onOpenSharedCalendar}/></>:<div style={{padding:20}}><PremiumGate feature="battlePrep" addToast={addToast}/></div>)}
 
       {/* FREESTYLE tab */}
       {battleTab==="freestyle"&&<FreestylePage moves={moves} sets={sets} settings={settings} onAddTrigger={freestyleAddTick} addToast={addToast} freestyle={freestyle} onFreestyleChange={onFreestyleChange}/>}
 
       {/* RIVALS tab */}
-      {battleTab==="rivals"&&(isPremium?<RivalsPage rivals={rivals||[]} onRivalsChange={onRivalsChange} addToast={addToast} onAddTrigger={rivalsAddTick} addCalendarEvent={addCalendarEvent}/>:<div style={{padding:20}}><PremiumGate feature="rivals" addToast={addToast}/></div>)}
+      {battleTab==="rivals"&&(isPremium?<><SectionBrief desc={t("rivalsBrief")} settings={settings}/><RivalsPage rivals={rivals||[]} onRivalsChange={onRivalsChange} addToast={addToast} onAddTrigger={rivalsAddTick} addCalendarEvent={addCalendarEvent}/></>:<div style={{padding:20}}><PremiumGate feature="rivals" addToast={addToast}/></div>)}
 
       {/* Modals */}
       {addingRound&&<NewRoundModal onClose={()=>setAddingRound(false)}
