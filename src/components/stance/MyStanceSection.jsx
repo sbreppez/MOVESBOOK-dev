@@ -142,7 +142,7 @@ export const MyStanceSection = ({ moves, stance, sparring, calendar, onOpenAsses
 
   // Invitation card when 10+ moves but no assessment yet
   if (!hasAssessment) return (
-    <div style={{ background:C.surface, borderRadius:14, border:`1px solid ${C.border}`,
+    <div style={{ background:C.surface, borderRadius:10,
       padding:20, margin:"12px 0", textAlign:"center" }}>
       <div style={{ marginBottom:10 }}><Ic n="compass" s={32} c={C.textMuted}/></div>
       <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:18, color:C.text, marginBottom:8 }}>
@@ -174,7 +174,7 @@ export const MyStanceSection = ({ moves, stance, sparring, calendar, onOpenAsses
   const emptyLine = { fontFamily: FONT_BODY, fontSize: 13, color: C.textMuted, fontStyle: "italic" };
 
   return (
-    <div style={{ background:C.surface, borderRadius:14, border:`1px solid ${C.border}`,
+    <div style={{ background:C.surface, borderRadius:10,
       padding:16, margin:"12px 0" }}>
 
       {/* Header */}

@@ -15,9 +15,10 @@ import { RivalsPage } from './RivalsPage';
 import { NewRoundModal } from './NewRoundModal';
 import { SectionBanner } from '../shared/SectionBanner';
 import { BattlePrepPage } from '../train/BattlePrepPage';
+import { PremiumGate } from '../shared/PremiumGate';
 import { computeDecay } from '../../utils/masteryDecay';
 
-export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, addToast, freestyle, onFreestyleChange, rivals, onRivalsChange, addCalendarEvent, removeCalendarEvent, onSimulate, battleprep, setBattleprep, calendar, battlePrepSeed, onBattlePrepSeedUsed, onOpenSharedCalendar }) => {
+export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, addToast, freestyle, onFreestyleChange, rivals, onRivalsChange, addCalendarEvent, removeCalendarEvent, onSimulate, battleprep, setBattleprep, calendar, battlePrepSeed, onBattlePrepSeedUsed, onOpenSharedCalendar, isPremium }) => {
   const t = useT();
   const { moveCountStr, itemCountStr, roundCountStr, entryCountStr } = usePlural();
   const { C } = useSettings();
@@ -480,8 +481,8 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
           </Modal>
         )}
 
-        {/* Simulate Competition button */}
-        {rounds.length >= 2 && onSimulate && (
+        {/* Simulate Competition button — premium */}
+        {isPremium && rounds.length >= 2 && onSimulate && (
           <div style={{ padding:"10px 12px 0", flexShrink:0 }}>
             <button onClick={onSimulate}
               style={{
@@ -500,7 +501,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
 
         {/* Rounds list */}
         <div style={{ flex:1, overflow:"auto", padding:"10px 12px" }}>
-          {rounds.some(r => (r.entries||[]).some(e => (e.items||[]).filter(it=>it.type==="move").length >= 2)) && <ArcLegend/>}
+          {isPremium && rounds.some(r => (r.entries||[]).some(e => (e.items||[]).filter(it=>it.type==="move").length >= 2)) && <ArcLegend/>}
           {rounds.length === 0 && (
             <div style={{ textAlign:"center", padding:40, color:C.textMuted }}>
               <div style={{ fontSize:28, marginBottom:8 }}>⚔</div>
@@ -512,7 +513,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
             const isOpen = expRounds[round.id] !== false; // default open
             const entryCount = (round.entries||[]).length;
             return (
-              <div key={round.id} style={{ position:"relative", marginBottom:8, borderRadius:10, border:`1.5px solid ${C.border}`, overflow:"hidden", background:C.bg }}>
+              <div key={round.id} style={{ position:"relative", marginBottom:8, borderRadius:10, overflow:"hidden", background:C.bg }}>
                 {/* Color bar */}
                 <div style={{ height:3, background:`linear-gradient(90deg,${rColor},${rColor}55)` }}/>
                 {/* Round header */}
@@ -571,7 +572,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
                             <span>·</span>
                             {item.type==="set"&&<span style={{ fontSize:8, background:`${C.blue}22`, color:C.blue, padding:"0 3px", borderRadius:3, fontFamily:FONT_DISPLAY, fontWeight:700 }}>SET</span>}
                             <span style={{ flex:1 }}>{label}</span>
-                            {item.type==="move"&&<TensionDots level={tension}
+                            {isPremium&&item.type==="move"&&<TensionDots level={tension}
                               onTap={()=>cycleItemTension(round.id, entry.id, i)}
                               onLongPress={()=>resetItemTension(round.id, entry.id, i)}/>}
                           </div>
@@ -770,13 +771,13 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
       )}
 
       {/* PREP tab */}
-      {battleTab==="prep"&&<BattlePrepPage battleprep={battleprep} setBattleprep={setBattleprep} moves={moves} sets={sets} addToast={addToast} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={onBattlePrepSeedUsed} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onAddTrigger={prepAddTick} onOpenSharedCalendar={onOpenSharedCalendar}/>}
+      {battleTab==="prep"&&(isPremium?<BattlePrepPage battleprep={battleprep} setBattleprep={setBattleprep} moves={moves} sets={sets} addToast={addToast} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={onBattlePrepSeedUsed} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onAddTrigger={prepAddTick} onOpenSharedCalendar={onOpenSharedCalendar}/>:<div style={{padding:20}}><PremiumGate feature="battlePrep" addToast={addToast}/></div>)}
 
       {/* FREESTYLE tab */}
       {battleTab==="freestyle"&&<FreestylePage moves={moves} sets={sets} settings={settings} onAddTrigger={freestyleAddTick} addToast={addToast} freestyle={freestyle} onFreestyleChange={onFreestyleChange}/>}
 
       {/* RIVALS tab */}
-      {battleTab==="rivals"&&<RivalsPage rivals={rivals||[]} onRivalsChange={onRivalsChange} addToast={addToast} onAddTrigger={rivalsAddTick} addCalendarEvent={addCalendarEvent}/>}
+      {battleTab==="rivals"&&(isPremium?<RivalsPage rivals={rivals||[]} onRivalsChange={onRivalsChange} addToast={addToast} onAddTrigger={rivalsAddTick} addCalendarEvent={addCalendarEvent}/>:<div style={{padding:20}}><PremiumGate feature="rivals" addToast={addToast}/></div>)}
 
       {/* Modals */}
       {addingRound&&<NewRoundModal onClose={()=>setAddingRound(false)}

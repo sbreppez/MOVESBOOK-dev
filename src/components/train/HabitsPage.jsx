@@ -105,7 +105,7 @@ export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
           </div>
         )}
         {view==="tiles" && !reorderMode ? (
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:6 }}>
             {habits.map(h=>{
               const today = new Date().toISOString().split("T")[0];
               const checkIns = h.checkIns||[];
@@ -123,7 +123,7 @@ export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
               const isOpen = openHabit===h.id;
               return (
                 <div key={h.id} onClick={()=>setOpenHabit(isOpen?null:h.id)}
-                  style={{ background:C.surface, borderRadius:14, cursor:"pointer",
+                  style={{ background:C.surface, borderRadius:10, cursor:"pointer",
                     border:`1.5px solid ${doneToday?color+"66":C.border}`,
                     overflow:"hidden", display:"flex", flexDirection:"column", minWidth:0,
                     transition:"border-color 0.2s" }}>

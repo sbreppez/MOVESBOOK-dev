@@ -213,7 +213,7 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
       </button>
 
       {/* Battle cards */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
         {sortedPlans.map(plan => {
           const dmData = allDayMaps.find(d => d.planId === plan.id);
           return (
@@ -254,7 +254,7 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
           const dateLabel = new Date(evt.date + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" });
           const dLeft = daysBetween(today, evt.date);
           return (
-            <div key={`cal-${evt.id}`} style={{ background: C.surface, border: `1px dashed ${C.border}`, borderRadius: 14, padding: "14px 14px",
+            <div key={`cal-${evt.id}`} style={{ background: C.surface, border: `1px dashed ${C.border}`, borderRadius: 10, padding: "14px 14px",
               display: "flex", alignItems: "center", gap: 10, width: "100%", boxSizing: "border-box" }}>
               <button onClick={() => { setSeedData({ date: evt.date, eventName: evt.title || "" }); setShowSetup(true); }}
                 style={{ flex: 1, display: "flex", alignItems: "center", gap: 10, background: "none", border: "none", cursor: "pointer", textAlign: "left", padding: 0, minWidth: 0 }}>
@@ -432,7 +432,7 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
   };
 
   return (
-    <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 14, overflow: "hidden" }}>
+    <div style={{ background: C.surface, borderRadius: 10, overflow: "hidden" }}>
       {/* Collapsed header — always visible */}
       <button onClick={onToggleExpand}
         style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "14px 14px",

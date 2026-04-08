@@ -10,6 +10,7 @@ import { CalendarOverlay } from '../calendar/CalendarOverlay';
 import { MyStanceSection } from '../stance/MyStanceSection';
 import { DevelopmentStory } from '../stance/DevelopmentStory';
 import { IdeaTile } from '../train/IdeaTile';
+import { PremiumGate } from '../shared/PremiumGate';
 import { TypeChooserModal } from '../train/TypeChooserModal';
 import { ensureHttps } from '../train/helpers';
 
@@ -18,7 +19,8 @@ export const ReflectPage = ({
   calendar, setCalendar, cats, catColors, settings, onSettingsChange,
   addToast, stance, battleprep, onToggleBattlePrepTask,
   onOpenStanceAssessment, addCalendarEvent, removeCalendarEvent,
-  onSubTabChange, onGoToPrep, initialDay, initialMonth, sets, onAddTrigger, parentSubTab, reports, injuries
+  onSubTabChange, onGoToPrep, initialDay, initialMonth, sets, onAddTrigger, parentSubTab, reports, injuries,
+  isPremium
 }) => {
   const t = useT();
   const { resultCountStr } = usePlural();
@@ -238,14 +240,16 @@ export const ReflectPage = ({
           onGoToPrep={onGoToPrep}
           battleprep={battleprep} initialMonth={initialMonth}
           onToggleBattlePrepTask={onToggleBattlePrepTask}
-          onAddTrigger={calendarAddTick} reports={reports} />
+          onAddTrigger={calendarAddTick} reports={reports} isPremium={isPremium} />
       )}
 
       {reflectTab === "stance" && (
-        <div style={{ flex: 1, overflow: "auto", padding: 16 }}>
-          <MyStanceSection moves={moves || []} stance={stance} sparring={sparring} calendar={calendar} onOpenAssessment={onOpenStanceAssessment} />
-          <DevelopmentStory moves={moves || []} sparring={sparring} calendar={calendar} />
-        </div>
+        isPremium ? (
+          <div style={{ flex: 1, overflow: "auto", padding: 16 }}>
+            <MyStanceSection moves={moves || []} stance={stance} sparring={sparring} calendar={calendar} onOpenAssessment={onOpenStanceAssessment} />
+            <DevelopmentStory moves={moves || []} sparring={sparring} calendar={calendar} />
+          </div>
+        ) : <div style={{padding:20}}><PremiumGate feature="myStance" addToast={addToast}/></div>
       )}
 
       {reflectTab === "goals" && renderIdeasList("goals")}
@@ -259,7 +263,7 @@ export const ReflectPage = ({
             const sevLabels = { 1:"severityMild", 2:"severityModerate", 3:"severitySevere" };
             const daysBetween = (d1, d2) => { if(!d1||!d2) return null; return Math.max(1, Math.floor((new Date(d2+"T12:00:00") - new Date(d1+"T12:00:00")) / 86400000)); };
             return (
-              <div style={{ margin:"0 16px 12px", background:C.surface, borderRadius:14, border:`1.5px solid ${C.border}`, overflow:"hidden" }}>
+              <div style={{ margin:"0 16px 12px", background:C.surface, borderRadius:10, overflow:"hidden" }}>
                 <button onClick={() => setShowInjuryHistory(p => !p)}
                   style={{ display:"flex", alignItems:"center", justifyContent:"space-between", width:"100%",
                     padding:"12px 14px", background:"none", border:"none", cursor:"pointer" }}>

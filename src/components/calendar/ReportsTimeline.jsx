@@ -64,7 +64,7 @@ const MonthTile = ({ entry, t, C, catColors }) => {
   const year = date.getFullYear();
 
   return (
-    <div style={{ background:C.surface, border:`1.5px solid ${C.border}`, borderRadius:14,
+    <div style={{ background:C.surface, borderRadius:10,
       padding:18, marginBottom:14 }}>
       <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:12 }}>
         <Ic n="barChart" s={16} c={C.accent}/>
@@ -115,8 +115,8 @@ const WeekTile = ({ entry, t, C, catColors }) => {
   const dateLabel = formatShortDate(entry.date);
 
   return (
-    <div style={{ background:C.surfaceAlt, border:`1px solid ${C.border}`, borderRadius:12,
-      padding:14, marginBottom:10 }}>
+    <div style={{ background:C.surfaceAlt, borderRadius:12,
+      padding:14, marginBottom:6 }}>
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:8 }}>
         <span style={{ fontSize:11, fontWeight:800, letterSpacing:1.5, color:C.textSec,
           fontFamily:FONT_DISPLAY }}>{t("weekOf")} {dateLabel.toUpperCase()}</span>

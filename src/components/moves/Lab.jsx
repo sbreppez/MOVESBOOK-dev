@@ -407,12 +407,10 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
               else { setMode(m.key); setScreen("workspace"); }
             }}
             style={{
-              background: C.surface, border: `2px solid ${m.color}30`, borderRadius: 16,
+              background: C.surface, borderRadius: 16,
               padding: "22px 20px", cursor: "pointer", textAlign: "left",
               transition: "all 0.15s", display: "flex", alignItems: "center", gap: 16,
-            }}
-            onPointerEnter={e => e.currentTarget.style.borderColor = m.color}
-            onPointerLeave={e => e.currentTarget.style.borderColor = m.color + "30"}>
+            }}>
             <Ic n={m.icon} s={32} c={m.color}/>
             <div>
               <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 16, color: m.color, letterSpacing: 1 }}>
@@ -481,13 +479,10 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
                     setScreen("workspace");
                   }}
                     style={{
-                      background: C.surface, border: `1.5px solid ${C.border}`, borderRadius: 10,
+                      background: C.surface, borderRadius: 10,
                       padding: "10px 14px", cursor: "pointer", textAlign: "left",
                       display: "flex", alignItems: "center", justifyContent: "space-between",
-                      transition: "border-color 0.15s",
-                    }}
-                    onPointerEnter={e => e.currentTarget.style.borderColor = C.green}
-                    onPointerLeave={e => e.currentTarget.style.borderColor = C.border}>
+                    }}>
                     <span style={{ fontFamily: FONT_BODY, fontSize: 13, color: C.text }}>{m.name}</span>
                     <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: C.green }}>
                       {m.mastery}%
@@ -526,7 +521,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
         {mode === "grow" && seedMove && (
           <div style={{
             display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", marginBottom: 16,
-            background: `${C.green}15`, border: `1.5px solid ${C.green}40`, borderRadius: 12,
+            background: `${C.green}15`, borderRadius: 12,
           }}>
             <Ic n="sparkles" s={20} c={C.green}/>
             <div>
@@ -644,7 +639,6 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
         {/* Creativity Timer */}
         <div style={{
           background: C.surface, borderRadius: 12, padding: "14px 16px", marginBottom: 20,
-          border: `1px solid ${C.border}`,
         }}>
           <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, color: C.textMuted, letterSpacing: 1, marginBottom: 10 }}>
             {t("creativityTimer")}

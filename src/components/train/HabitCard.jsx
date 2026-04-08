@@ -38,8 +38,8 @@ export const HabitCard = ({ habit, onCheckIn, onEdit, onDelete }) => {
   const last7 = Array.from({length:7},(_,i)=>{ const d=new Date(); d.setDate(d.getDate()-(6-i)); return {ds:d.toISOString().split("T")[0],isToday:i===6}; });
 
   return (
-    <div style={{ background:C.bg, borderRadius:12, marginBottom:8, overflow:"hidden",
-      border:`1.5px solid ${doneToday?color+"55":C.border}`, borderLeft:`4px solid ${color}`,
+    <div style={{ background:C.bg, borderRadius:8, marginBottom:8, overflow:"hidden",
+      borderLeft:`4px solid ${color}`,
       transition:"border-color 0.2s" }}>
 
       {/* Collapsed row */}

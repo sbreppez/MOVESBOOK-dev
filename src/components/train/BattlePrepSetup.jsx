@@ -320,7 +320,7 @@ export const BattlePrepSetup = ({ initialPreset, battleprep, setBattleprep, move
       <div style={{ flex: 1, overflow: "auto", padding: "0 14px 20px" }}>
         {/* ── STEP 1: Choose preset ── */}
         {step === 1 && (
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             {[
               { id: "smoke", emoji: "\u{1F525}", phases: ["BUILD","SHARPEN","PEAK","TAPER"] },
               { id: "prove", emoji: "\u26A1", phases: ["LOCK IN","POLISH","PERFORM"] },

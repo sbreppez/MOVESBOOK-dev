@@ -25,7 +25,7 @@ export const CalendarOverlay = ({
   addToast, initialDay,
   onClose, onGoToPrep,
   battleprep, onToggleBattlePrepTask, initialMonth,
-  inline, onAddTrigger, reports,
+  inline, onAddTrigger, reports, isPremium,
 }) => {
   const t = useT();
   const today = new Date().toISOString().split("T")[0];
@@ -217,7 +217,7 @@ export const CalendarOverlay = ({
       {/* Days / Reports toggle — inline mode only */}
       {inline && (
         <div style={{ display: "flex", gap: 6, padding: "10px 14px", flexShrink: 0, background: C.bg }}>
-          {[["days", t("calDays")], ["reports", t("calReports")]].map(([id, label]) => {
+          {[["days", t("calDays")], ...(isPremium ? [["reports", t("calReports")]] : [])].map(([id, label]) => {
             const on = calView === id;
             return (
               <button key={id} onClick={() => setCalView(id)}
@@ -367,8 +367,7 @@ export const CalendarOverlay = ({
 
         {/* Day detail panel */}
         {selectedDay && dayData && (
-          <div style={{ marginTop: 12, background: C.surface, borderRadius: 14, padding: 14,
-            border: `1px solid ${C.border}` }}>
+          <div style={{ marginTop: 12, background: C.surface, borderRadius: 10, padding: 14 }}>
             {/* Day header */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
               <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 14, color: C.text }}>

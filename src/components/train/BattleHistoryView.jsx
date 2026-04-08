@@ -42,8 +42,8 @@ export const BattleHistoryView = ({ history, onClose, t }) => {
 
         return (
           <div key={plan.id} style={{
-            background: C.surface, border: `1px solid ${C.border}`, borderRadius: 14,
-            overflow: "hidden", marginBottom: 10,
+            background: C.surface, borderRadius: 10,
+            overflow: "hidden", marginBottom: 6,
           }}>
             {/* Plan header */}
             <div style={{ padding: "12px 14px", display: "flex", alignItems: "center", gap: 8 }}>

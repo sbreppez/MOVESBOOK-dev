@@ -744,7 +744,7 @@ export const CompetitionSimulator = ({
           </div>
 
           {/* Summary */}
-          <div style={{ background:C.surface, borderRadius:10, padding:"10px 14px", marginBottom:20, border:`1px solid ${C.border}` }}>
+          <div style={{ background:C.surface, borderRadius:10, padding:"10px 14px", marginBottom:20 }}>
             <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, color:C.textSec }}>
               {activeBrackets.length} brackets · {totalRoundsAll} {t("totalRounds")} · ~{estimatedMinutes}min {t("estimatedTime")}
             </span>
@@ -764,7 +764,7 @@ export const CompetitionSimulator = ({
           {showCustomise && (
             <div style={{ marginBottom:20 }}>
               {bracketConfig.filter(b => b.enabled).map((b, i) => (
-                <div key={b.roundId} style={{ padding:"14px 16px", marginBottom:8, borderRadius:10, border:`1px solid ${C.border}`, background:C.surface }}>
+                <div key={b.roundId} style={{ padding:"14px 16px", marginBottom:8, borderRadius:10, background:C.surface }}>
                   <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:10 }}>
                     <div style={{ width:10, height:10, borderRadius:"50%", background:b.color }}/>
                     <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:13, color:C.text, flex:1, letterSpacing:0.5 }}>{b.name}</span>
@@ -1131,7 +1131,7 @@ export const CompetitionSimulator = ({
 
           {/* Next bracket preview */}
           {nextBracket && (
-            <div style={{ background:C.surface, borderRadius:12, padding:16, border:`1px solid ${C.border}`, marginBottom:20 }}>
+            <div style={{ background:C.surface, borderRadius:12, padding:16, marginBottom:20 }}>
               <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, color:C.textMuted, letterSpacing:1, marginBottom:6 }}>
                 {t("nextUp")}
               </div>
@@ -1282,7 +1282,7 @@ export const CompetitionSimulator = ({
               { label: t("totalCompetitionTime"), value: fmtDuration(cs.totalDuration) },
               { label: t("avgAcrossBrackets"), value: `${cs.avgRoundLength}s` },
             ].map((s, i) => (
-              <div key={i} style={{ background:C.surface, borderRadius:10, padding:12, border:`1px solid ${C.border}`, textAlign:"center" }}>
+              <div key={i} style={{ background:C.surface, borderRadius:10, padding:12, textAlign:"center" }}>
                 <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:24, color:C.text }}>{s.value}</div>
                 <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:10, color:C.textMuted, letterSpacing:1, marginTop:4 }}>{s.label}</div>
               </div>
@@ -1291,7 +1291,7 @@ export const CompetitionSimulator = ({
 
           {/* Performance trend */}
           {trendText && (
-            <div style={{ background:C.surface, borderRadius:10, padding:"10px 14px", marginBottom:16, border:`1px solid ${C.border}` }}>
+            <div style={{ background:C.surface, borderRadius:10, padding:"10px 14px", marginBottom:16 }}>
               <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:10, color:C.textMuted, letterSpacing:1.5, marginBottom:4 }}>
                 {t("performanceTrend")}
               </div>
@@ -1304,7 +1304,7 @@ export const CompetitionSimulator = ({
             {t("bracketSummary")}
           </div>
           {(cs.brackets || []).map((b, i) => (
-            <div key={i} style={{ marginBottom:10, borderRadius:10, border:`1px solid ${C.border}`, overflow:"hidden", background:C.surface }}>
+            <div key={i} style={{ marginBottom:6, borderRadius:10, overflow:"hidden", background:C.surface }}>
               <div style={{ height:3, background:`linear-gradient(90deg,${b.color},${b.color}55)` }}/>
               <div style={{ padding:"10px 14px" }}>
                 <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:6 }}>

@@ -199,8 +199,7 @@ export const SessionJournal = ({
         )}
 
         {/* Journal card */}
-        <div style={{ background: C.surface, borderRadius: 14, padding: 14,
-          border: `1px solid ${C.border}` }}>
+        <div style={{ background: C.surface, borderRadius: 10, padding: 14 }}>
 
           {/* ── TRAINING TYPE ── */}
           {type === "training" && (
@@ -235,7 +234,7 @@ export const SessionJournal = ({
                       {t("tagSpecificMoves")}
                     </button>
                   ) : (
-                    <div style={{ border: `1px solid ${C.border}`, borderRadius: 10, padding: 8,
+                    <div style={{ borderRadius: 10, padding: 8,
                       marginBottom: 8, maxHeight: 220, overflow: "auto" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
                         <Ic n="search" s={14} c={C.textMuted} />

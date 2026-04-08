@@ -155,8 +155,8 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
 
     return (
       <div onClick={() => { setEditingRival(normalizeRival(rival)); setShowModal(true); }}
-        style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:14, padding:16,
-          cursor:"pointer", marginBottom:10, display:"flex", alignItems:"center", gap:12 }}>
+        style={{ background:C.surface, borderRadius:10, padding:16,
+          cursor:"pointer", marginBottom:6, display:"flex", alignItems:"center", gap:12 }}>
         <div style={{ width:48, height:48, borderRadius:"50%", flexShrink:0, overflow:"hidden",
           background: rival.photo ? "none" : C.surfaceAlt, display:"flex", alignItems:"center", justifyContent:"center",
           border:`2px solid ${C.border}` }}>

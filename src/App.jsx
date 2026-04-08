@@ -34,6 +34,8 @@ import { MyStanceAssessment } from './components/stance/MyStanceAssessment';
 import { CompetitionSimulator } from './components/battle/CompetitionSimulator';
 import { FlowMap } from './components/battle/FlowMap';
 import { PostSessionPrompt } from './components/home/PostSessionPrompt';
+import { usePremium } from './hooks/usePremium';
+import { PremiumGate } from './components/shared/PremiumGate';
 import { detectMilestones } from './utils/reportEngine';
 import { runHomeMigration } from './utils/homeMigration';
 
@@ -278,6 +280,8 @@ export default function App() {
 
   // ── Firestore sync ─────────────────────────────────────────────────────────
   const [fbUser, setFbUser] = useState(null);
+  const { isPremium } = usePremium(fbUser);
+  const [gatedFeature, setGatedFeature] = useState(null);
   const dbSave = useRef({});
 
   useEffect(() => {
@@ -725,9 +729,9 @@ export default function App() {
           <TrainModalCtx.Provider value={{ openModal:(type,idea,onSave)=>{ setTrainMenu(null); setTrainModal({type,idea,onSave}); } }}>
           <TrainMenuCtx.Provider value={{ openMenu:(m)=>setTrainMenu(m), closeMenu:()=>setTrainMenu(null) }}>
             {tab==="home" && <HomePage habits={habits} setHabits={setHabits} injuries={injuries} setInjuries={setInjuries} presession={presession} setPresession={setPresession} ideas={ideas} setIdeas={setIdeas} settings={appSettings} onSettingsChange={setAppSettings} homeStack={homeStack} setHomeStack={setHomeStack} homeIdeas={homeIdeas} setHomeIdeas={setHomeIdeas} homeChecks={homeChecks} setHomeChecks={setHomeChecks}/>}
-            {tab==="moves" && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} catDomains={catDomains} setCatDomains={setCatDomains} sets={sets} setSets={setSets} addToast={addToast} settings={appSettings} onSettingsChange={setAppSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} reminders={reminders} onRemindersChange={setReminders} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}} onOpenManageReminders={()=>setShowManageReminders(true)} onOpenExplore={()=>setShowLab(true)} onOpenRRR={()=>setShowRRR(true)} onOpenCombine={()=>setShowComboMachine(true)} onOpenMap={()=>setShowFlowMap(true)} onOpenFlashCards={()=>setShowFlashCards(true)}/>}
-            {tab==="battle" && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} addToast={addToast} freestyle={freestyle} onFreestyleChange={setFreestyle} rivals={rivals} onRivalsChange={setRivals} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onSimulate={()=>setShowCompSim(true)} battleprep={battleprep} setBattleprep={setBattleprep} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={()=>setBattlePrepSeed(null)} onOpenSharedCalendar={(im)=>{setCalendarInitialMonth(im||null);}}/>}
-            {tab==="reflect" && <ReflectPage ideas={ideas} setIdeas={setIdeas} moves={moves} setMoves={setMovesGrad} reps={reps} sparring={sparring} musicflow={musicflow} habits={habits} calendar={calendar} setCalendar={setCalendar} cats={cats} catColors={catColors} settings={appSettings} onSettingsChange={setAppSettings} addToast={addToast} stance={stance} battleprep={battleprep} onToggleBattlePrepTask={(planId,dateStr,taskIdx)=>{setBattleprep(prev=>{const plans=(prev.plans||[]).map(p=>{if(p.id!==planId) return p;const key=dateStr+"-"+taskIdx;return {...p, completedTasks:{...(p.completedTasks||{}), [key]:!(p.completedTasks||{})[key]}};});return {...prev, plans};});}} onOpenStanceAssessment={()=>setShowStanceAssessment(true)} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onSubTabChange={setSubTab} onGoToPrep={(seed)=>{setBattlePrepSeed(seed);setTab("battle");}} initialDay={calendarInitialDay} initialMonth={calendarInitialMonth} sets={sets} onAddTrigger={addTick} parentSubTab={subTab} reports={reports} injuries={injuries}/>}
+            {tab==="moves" && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} catDomains={catDomains} setCatDomains={setCatDomains} sets={sets} setSets={setSets} addToast={addToast} settings={appSettings} onSettingsChange={setAppSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} reminders={reminders} onRemindersChange={setReminders} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}} onOpenManageReminders={()=>setShowManageReminders(true)} isPremium={isPremium} onOpenExplore={()=>{if(!isPremium){setGatedFeature("explore");return;}setShowLab(true);}} onOpenRRR={()=>{if(!isPremium){setGatedFeature("rrr");return;}setShowRRR(true);}} onOpenCombine={()=>{if(!isPremium){setGatedFeature("combine");return;}setShowComboMachine(true);}} onOpenMap={()=>{if(!isPremium){setGatedFeature("map");return;}setShowFlowMap(true);}} onOpenFlashCards={()=>{if(!isPremium){setGatedFeature("flashCards");return;}setShowFlashCards(true);}}/>}
+            {tab==="battle" && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} addToast={addToast} freestyle={freestyle} onFreestyleChange={setFreestyle} rivals={rivals} onRivalsChange={setRivals} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} isPremium={isPremium} onSimulate={()=>{if(!isPremium){setGatedFeature("compSim");return;}setShowCompSim(true);}} battleprep={battleprep} setBattleprep={setBattleprep} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={()=>setBattlePrepSeed(null)} onOpenSharedCalendar={(im)=>{setCalendarInitialMonth(im||null);}}/>}
+            {tab==="reflect" && <ReflectPage isPremium={isPremium} ideas={ideas} setIdeas={setIdeas} moves={moves} setMoves={setMovesGrad} reps={reps} sparring={sparring} musicflow={musicflow} habits={habits} calendar={calendar} setCalendar={setCalendar} cats={cats} catColors={catColors} settings={appSettings} onSettingsChange={setAppSettings} addToast={addToast} stance={stance} battleprep={battleprep} onToggleBattlePrepTask={(planId,dateStr,taskIdx)=>{setBattleprep(prev=>{const plans=(prev.plans||[]).map(p=>{if(p.id!==planId) return p;const key=dateStr+"-"+taskIdx;return {...p, completedTasks:{...(p.completedTasks||{}), [key]:!(p.completedTasks||{})[key]}};});return {...prev, plans};});}} onOpenStanceAssessment={()=>setShowStanceAssessment(true)} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onSubTabChange={setSubTab} onGoToPrep={(seed)=>{setBattlePrepSeed(seed);setTab("battle");}} initialDay={calendarInitialDay} initialMonth={calendarInitialMonth} sets={sets} onAddTrigger={addTick} parentSubTab={subTab} reports={reports} injuries={injuries}/>}
           </TrainMenuCtx.Provider>
           </TrainModalCtx.Provider>
           {showRepCounter&&<RepCounter moves={moves} catColors={catColors} reps={reps}
@@ -740,7 +744,7 @@ export default function App() {
             onUpdateSession={onUpdateRepSession}
             reflections={reflections} onReflectionsChange={setReflections}
             addCalendarEvent={addCalendarEvent}
-            onClose={()=>{setShowRepCounter(false);setRepCounterPreselect(null);if(lastSessionSaved.current){lastSessionSaved.current=false;setShowPostSessionPrompt(true);}}}/>}
+            onClose={()=>{setShowRepCounter(false);setRepCounterPreselect(null);if(lastSessionSaved.current){lastSessionSaved.current=false;if(isPremium)setShowPostSessionPrompt(true);}}}/>}
           {showSparring&&<Sparring moves={moves} catColors={catColors} sparring={sparring} settings={appSettings}
             onSaveSession={(session, updatedSparring)=>{
               setSparring(updatedSparring);
@@ -753,7 +757,7 @@ export default function App() {
             onSettingsChange={setAppSettings}
             addCalendarEvent={addCalendarEvent}
             rivals={rivals} onRivalsChange={setRivals} addToast={addToast}
-            onClose={()=>{setShowSparring(false);if(lastSessionSaved.current){lastSessionSaved.current=false;setShowPostSessionPrompt(true);}}}/>}
+            onClose={()=>{setShowSparring(false);if(lastSessionSaved.current){lastSessionSaved.current=false;if(isPremium)setShowPostSessionPrompt(true);}}}/>}
           {showCompSim&&<CompetitionSimulator rounds={rounds} moves={moves} catColors={catColors}
             sparring={sparring} settings={appSettings}
             onSaveSession={(session, updatedSparring)=>{ setSparring(updatedSparring); }}
@@ -792,7 +796,7 @@ export default function App() {
             onUpdateSession={onUpdateMusicflowSession}
             reflections={reflections} onReflectionsChange={setReflections}
             addToast={addToast} addCalendarEvent={addCalendarEvent}
-            onClose={()=>{setShowMusicFlow(false);if(lastSessionSaved.current){lastSessionSaved.current=false;setShowPostSessionPrompt(true);}}}/>}
+            onClose={()=>{setShowMusicFlow(false);if(lastSessionSaved.current){lastSessionSaved.current=false;if(isPremium)setShowPostSessionPrompt(true);}}}/>}
           {showPostSessionPrompt&&<PostSessionPrompt presession={presession} setPresession={setPresession} onClose={()=>setShowPostSessionPrompt(false)}/>}
           {showStanceAssessment&&<MyStanceAssessment stance={stance} onStanceChange={setStance}
             addToast={addToast} onClose={()=>{ setShowStanceAssessment(false); setTab("reflect"); setSubTab("stance"); }}/>}
@@ -816,6 +820,9 @@ export default function App() {
           />}
         </div>
 
+        {gatedFeature&&<div onClick={()=>setGatedFeature(null)} style={{position:"fixed",inset:0,zIndex:9000,background:"rgba(0,0,0,0.5)",display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+          <div onClick={e=>e.stopPropagation()} style={{maxWidth:400,width:"100%"}}><PremiumGate feature={gatedFeature} addToast={addToast}/></div>
+        </div>}
         <Toast toasts={toasts} remove={removeToast}/>
         {showTour&&<Walkthrough onDone={handleTourDone}/>}
 
@@ -825,7 +832,7 @@ export default function App() {
           const tabs = [{id:"home",icon:"home",label:tr("home")},{id:"moves",icon:"book",label:tr("vocab")},null,{id:"battle",icon:"sword",label:tr("battle")},{id:"reflect",icon:"barChart",label:tr("reflect")}];
           const handleTabChange = (t) => { setTrainMenu(null); setTab(t); setAddTick(0); setAddTick2(0); setSubTab(t==="moves"?"moves":t==="battle"?"plan":t==="reflect"?"calendar":""); };
           return (
-          <div style={{ display:"flex", alignItems:"stretch", borderTop:`2px solid ${C.border}`,
+          <div style={{ display:"flex", alignItems:"stretch",
             background:C.bg, flexShrink:0, height:58, zIndex:100 }}>
             {tabs.map((tb,i)=>{
               if(!tb) return (
