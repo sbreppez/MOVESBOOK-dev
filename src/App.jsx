@@ -34,6 +34,8 @@ import { MyStanceAssessment } from './components/stance/MyStanceAssessment';
 import { CompetitionSimulator } from './components/battle/CompetitionSimulator';
 import { FlowMap } from './components/battle/FlowMap';
 import { PostSessionPrompt } from './components/home/PostSessionPrompt';
+import { BottomSheet } from './components/shared/BottomSheet';
+import { CreateOverlay } from './components/moves/CreateOverlay';
 import { usePremium } from './hooks/usePremium';
 import { PremiumGate } from './components/shared/PremiumGate';
 import { detectMilestones } from './utils/reportEngine';
@@ -226,6 +228,9 @@ export default function App() {
   });
   const [showFlowMap, setShowFlowMap] = useState(false);
   const [showPostSessionPrompt, setShowPostSessionPrompt] = useState(false);
+  const [showPlusSheet, setShowPlusSheet] = useState(false);
+  const [showCreate, setShowCreate] = useState(false);
+  const [bulkTrigger, setBulkTrigger] = useState(0);
   const lastSessionSaved = useRef(false);
 
   // ── Persist to localStorage on every change ────────────────────────────────
@@ -647,8 +652,8 @@ export default function App() {
   // Secondary add trigger — used for "Add Category" and "Create Round" from bottom menu
   const [addTick2, setAddTick2] = useState(0);
 
-  // + button always opens Add Move
-  const handlePlusPress = () => { setAddTick(t=>t+1); };
+  // + button opens Plus BottomSheet
+  const handlePlusPress = () => { setShowPlusSheet(true); };
   const handleTourDone = () => {
     setShowTour(false);
     if (fbUser?.uid) localStorage.setItem('mb_toured_' + fbUser.uid, '1');
@@ -729,7 +734,7 @@ export default function App() {
           <TrainModalCtx.Provider value={{ openModal:(type,idea,onSave)=>{ setTrainMenu(null); setTrainModal({type,idea,onSave}); } }}>
           <TrainMenuCtx.Provider value={{ openMenu:(m)=>setTrainMenu(m), closeMenu:()=>setTrainMenu(null) }}>
             {tab==="home" && <HomePage habits={habits} setHabits={setHabits} injuries={injuries} setInjuries={setInjuries} presession={presession} setPresession={setPresession} ideas={ideas} setIdeas={setIdeas} settings={appSettings} onSettingsChange={setAppSettings} homeStack={homeStack} setHomeStack={setHomeStack} homeIdeas={homeIdeas} setHomeIdeas={setHomeIdeas} homeChecks={homeChecks} setHomeChecks={setHomeChecks}/>}
-            {tab==="moves" && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} catDomains={catDomains} setCatDomains={setCatDomains} sets={sets} setSets={setSets} addToast={addToast} settings={appSettings} onSettingsChange={setAppSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} reminders={reminders} onRemindersChange={setReminders} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}} onOpenManageReminders={()=>setShowManageReminders(true)} isPremium={isPremium} onOpenExplore={()=>{if(!isPremium){setGatedFeature("explore");return;}setShowLab(true);}} onOpenRRR={()=>{if(!isPremium){setGatedFeature("rrr");return;}setShowRRR(true);}} onOpenCombine={()=>{if(!isPremium){setGatedFeature("combine");return;}setShowComboMachine(true);}} onOpenMap={()=>{if(!isPremium){setGatedFeature("map");return;}setShowFlowMap(true);}} onOpenFlashCards={()=>{if(!isPremium){setGatedFeature("flashCards");return;}setShowFlashCards(true);}}/>}
+            {tab==="moves" && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} catDomains={catDomains} setCatDomains={setCatDomains} sets={sets} setSets={setSets} addToast={addToast} settings={appSettings} onSettingsChange={setAppSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} reminders={reminders} onRemindersChange={setReminders} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}} onOpenManageReminders={()=>setShowManageReminders(true)} isPremium={isPremium} onOpenExplore={()=>{if(!isPremium){setGatedFeature("explore");return;}setShowLab(true);}} onOpenRRR={()=>{if(!isPremium){setGatedFeature("rrr");return;}setShowRRR(true);}} onOpenCombine={()=>{if(!isPremium){setGatedFeature("combine");return;}setShowComboMachine(true);}} onOpenMap={()=>{if(!isPremium){setGatedFeature("map");return;}setShowFlowMap(true);}} onOpenFlashCards={()=>{if(!isPremium){setGatedFeature("flashCards");return;}setShowFlashCards(true);}} onBulkTrigger={bulkTrigger}/>}
             {tab==="battle" && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} addToast={addToast} freestyle={freestyle} onFreestyleChange={setFreestyle} rivals={rivals} onRivalsChange={setRivals} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} isPremium={isPremium} onSimulate={()=>{if(!isPremium){setGatedFeature("compSim");return;}setShowCompSim(true);}} battleprep={battleprep} setBattleprep={setBattleprep} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={()=>setBattlePrepSeed(null)} onOpenSharedCalendar={(im)=>{setCalendarInitialMonth(im||null);}}/>}
             {tab==="reflect" && <ReflectPage isPremium={isPremium} ideas={ideas} setIdeas={setIdeas} moves={moves} setMoves={setMovesGrad} reps={reps} sparring={sparring} musicflow={musicflow} habits={habits} calendar={calendar} setCalendar={setCalendar} cats={cats} catColors={catColors} settings={appSettings} onSettingsChange={setAppSettings} addToast={addToast} stance={stance} battleprep={battleprep} onToggleBattlePrepTask={(planId,dateStr,taskIdx)=>{setBattleprep(prev=>{const plans=(prev.plans||[]).map(p=>{if(p.id!==planId) return p;const key=dateStr+"-"+taskIdx;return {...p, completedTasks:{...(p.completedTasks||{}), [key]:!(p.completedTasks||{})[key]}};});return {...prev, plans};});}} onOpenStanceAssessment={()=>setShowStanceAssessment(true)} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onSubTabChange={setSubTab} onGoToPrep={(seed)=>{setBattlePrepSeed(seed);setTab("battle");}} initialDay={calendarInitialDay} initialMonth={calendarInitialMonth} sets={sets} onAddTrigger={addTick} parentSubTab={subTab} reports={reports} injuries={injuries}/>}
           </TrainMenuCtx.Provider>
@@ -826,27 +831,54 @@ export default function App() {
         <Toast toasts={toasts} remove={removeToast}/>
         {showTour&&<Walkthrough onDone={handleTourDone}/>}
 
+        {/* ── Plus BottomSheet ── */}
+        <BottomSheet open={showPlusSheet} onClose={()=>setShowPlusSheet(false)} title={tr("create")}>
+          <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
+            {[
+              { label:tr("addMove"), icon:"plus", action:()=>{setShowPlusSheet(false);setAddTick(t=>t+1);} },
+              { label:tr("bulkImport"), icon:"upload", action:()=>{setShowPlusSheet(false);setBulkTrigger(t=>t+1);} },
+              { label:tr("addCategory"), icon:"tag", action:()=>{setShowPlusSheet(false);setAddTick2(t=>t+1);} },
+              { label:tr("create"), icon:"sparkles", action:()=>{setShowPlusSheet(false);setShowCreate(true);} },
+            ].map((item,i)=>(
+              <button key={i} onClick={item.action}
+                style={{ display:"flex", alignItems:"center", gap:12, width:"100%",
+                  padding:"14px 12px", borderRadius:8, cursor:"pointer",
+                  background:C.surface, border:"none",
+                  color:C.text, fontSize:13, fontWeight:700,
+                  fontFamily:FONT_DISPLAY, letterSpacing:1 }}>
+                <Ic n={item.icon} s={18} c={C.accent}/>
+                {item.label}
+              </button>
+            ))}
+          </div>
+        </BottomSheet>
+
+        {/* ── Create Overlay ── */}
+        {showCreate&&<CreateOverlay
+          onOpenExplore={()=>{setShowCreate(false);if(!isPremium){setGatedFeature("explore");return;}setShowLab(true);}}
+          onOpenRRR={()=>{setShowCreate(false);if(!isPremium){setGatedFeature("rrr");return;}setShowRRR(true);}}
+          onOpenCombine={()=>{setShowCreate(false);if(!isPremium){setGatedFeature("combine");return;}setShowComboMachine(true);}}
+          onOpenMap={()=>{setShowCreate(false);if(!isPremium){setGatedFeature("map");return;}setShowFlowMap(true);}}
+          onClose={()=>setShowCreate(false)}
+        />}
+
         {/* ── Bottom Bar — 4 tabs + centre Add ── */}
         {!showTour&&(()=>{
-          const anyOverlay = showRepCounter||showSparring||showComboMachine||showManageReminders||showRRR||showFlashCards||showLab||showProfile||showManual||showSettings||showStanceAssessment||showMusicFlow||showCompSim||showPostSessionPrompt;
+          const anyOverlay = showRepCounter||showSparring||showComboMachine||showManageReminders||showRRR||showFlashCards||showLab||showProfile||showManual||showSettings||showStanceAssessment||showMusicFlow||showCompSim||showPostSessionPrompt||showCreate;
           const tabs = [{id:"home",icon:"home",label:tr("home")},{id:"moves",icon:"book",label:tr("vocab")},null,{id:"battle",icon:"sword",label:tr("battle")},{id:"reflect",icon:"barChart",label:tr("reflect")}];
           const handleTabChange = (t) => { setTrainMenu(null); setTab(t); setAddTick(0); setAddTick2(0); setSubTab(t==="moves"?"moves":t==="battle"?"plan":t==="reflect"?"calendar":""); };
           return (
           <div style={{ display:"flex", alignItems:"stretch",
-            background:C.bg, flexShrink:0, height:58, zIndex:100 }}>
+            background:C.header, flexShrink:0, height:50, zIndex:100 }}>
             {tabs.map((tb,i)=>{
               if(!tb) return (
                 <div key="plus" style={{ flex:"0 0 64px", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", position:"relative" }}>
                   <button id="tour-add-btn" onClick={handlePlusPress}
                     style={{ display:"flex", flexDirection:"column", alignItems:"center",
                       justifyContent:"center", background:"none", border:"none", cursor:"pointer" }}>
-                    <div style={{ width:48, height:48, borderRadius:"50%", background:C.accent,
-                      display:"flex", alignItems:"center", justifyContent:"center",
-                      boxShadow:"0 4px 16px rgba(139,26,26,0.4)",
-                      transform:"translateY(-10px)", transition:"transform 0.15s" }}
-                      onMouseEnter={e=>e.currentTarget.style.transform="translateY(-13px) scale(1.07)"}
-                      onMouseLeave={e=>e.currentTarget.style.transform="translateY(-10px) scale(1)"}>
-                      <Ic n="plus" s={22} c={C.bg}/>
+                    <div style={{ width:36, height:36, borderRadius:18, background:C.accent,
+                      display:"flex", alignItems:"center", justifyContent:"center" }}>
+                      <Ic n="plus" s={18} c="#fff"/>
                     </div>
                   </button>
                 </div>
@@ -856,11 +888,10 @@ export default function App() {
               return (
                 <button key={tb.id} onClick={()=>handleTabChange(tb.id)}
                   style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center",
-                    justifyContent:"center", gap:3, background:on?`rgba(${C.accent==="#e53935"?"229,57,53":"207,0,0"},0.08)`:"none",
-                    border:"none", borderBottom:`3px solid ${on?C.accent:"transparent"}`,
-                    cursor:"pointer", color:on?C.accent:C.textMuted, transition:"all 0.15s", position:"relative", overflow:"visible" }}>
-                  <Ic n={tb.icon} s={18} c={on?C.accent:C.textMuted}/>
-                  <span style={{ fontSize:9, fontFamily:FONT_DISPLAY, fontWeight:800, letterSpacing:1.2 }}>{tb.label}</span>
+                    justifyContent:"center", gap:3, background:"none",
+                    border:"none", borderBottom:`2px solid ${on?C.accent:"transparent"}`,
+                    cursor:"pointer", color:on?C.text:C.textMuted, transition:"all 0.15s", position:"relative", overflow:"visible" }}>
+                  <span style={{ fontSize:10, fontFamily:FONT_DISPLAY, fontWeight:800, letterSpacing:1.2 }}>{tb.label}</span>
                   {badge>0&&<span onClick={e=>{e.stopPropagation();handleTabChange("moves");setSubTab("gap");}} style={{ position:"absolute", top:2, right:"calc(50% - 20px)", minWidth:16, height:16, borderRadius:8, background:C.red, color:"#fff", fontSize:9, fontWeight:900, display:"flex", alignItems:"center", justifyContent:"center", padding:"0 4px", lineHeight:1, cursor:"pointer" }}>{badge}</span>}
                 </button>
               );
