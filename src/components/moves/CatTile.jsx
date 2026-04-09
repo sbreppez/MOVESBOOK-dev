@@ -4,7 +4,7 @@ import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
 import { Btn } from '../shared/Btn';
 import { Highlight } from '../shared/Highlight';
-import { masteryColor, CARD_BASE, CARD_BAR, CARD_BODY } from '../../constants/styles';
+import { masteryColor, CARD_BASE, CARD_BODY } from '../../constants/styles';
 import { Modal } from '../shared/Modal';
 import { useT } from '../../hooks/useTranslation';
 import { usePlural } from '../../hooks/useTranslation';
@@ -44,8 +44,7 @@ export const CatTile = (props) => {
         <div
           draggable={draggable}
           onDragStart={onDragStart} onDragOver={onDragOver} onDrop={onDrop}
-          style={{ ...CARD_BASE(), cursor:"default" }}>
-          <div style={CARD_BAR(color)}/>
+          style={{ ...CARD_BASE(), background:C.surface, borderLeft:`4px solid ${color}`, cursor:"default" }}>
           <div style={CARD_BODY()}>
 
           {/* Header row */}
@@ -63,7 +62,7 @@ export const CatTile = (props) => {
                 <div style={{ fontWeight:800, fontSize:13, color:C.brown, letterSpacing:1.1, fontFamily:FONT_DISPLAY, cursor:"pointer", lineHeight:1.2,
                   overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{name.toUpperCase()}</div>
               )}
-              {showMoveCount&&<div style={{ fontSize:11, color:C.textMuted, marginTop:2 }}><span style={{color,fontWeight:700}}>{total}</span> {moveCountStr(total).slice(String(total).length+1)}</div>}
+              {showMoveCount&&<div style={{ fontSize:11, color:C.textMuted, marginTop:2 }}><span style={{color:C.textMuted,fontWeight:700}}>{total}</span> {moveCountStr(total).slice(String(total).length+1)}</div>}
               {/* No progress bar on category tile header — by design */}
             </div>
             {/* ··· menu */}
@@ -126,11 +125,8 @@ export const CatTile = (props) => {
       <div
         draggable={draggable}
         onDragStart={onDragStart} onDragOver={onDragOver} onDrop={onDrop}
-        style={{ position:"relative", background:C.bg, borderRadius:8,
+        style={{ position:"relative", background:C.surface, borderRadius:8, borderLeft:`4px solid ${color}`,
           cursor:"default", overflow:"visible" }}>
-
-        {/* Color bar */}
-        <div style={{ height:4, borderRadius:"10px 10px 0 0", background:`linear-gradient(90deg,${color},${color}55)` }}/>
 
         {/* Header row */}
         <div style={{ display:"flex", alignItems:"center", gap:6, padding:"10px 8px 10px 8px" }}>
@@ -154,7 +150,7 @@ export const CatTile = (props) => {
             )}
           </div>
           {/* Stats */}
-          <div style={{ fontSize:12, color:C.textMuted, flexShrink:0 }}><span style={{color,fontWeight:700}}>{total}</span> {moveCountStr(total).slice(String(total).length+1)}</div>
+          <div style={{ fontSize:12, color:C.textMuted, flexShrink:0 }}><span style={{color:C.textMuted,fontWeight:700}}>{total}</span> {moveCountStr(total).slice(String(total).length+1)}</div>
           {/* ··· menu */}
           <div ref={menuRef} style={{ flexShrink:0 }}>
             <button onClick={e=>{e.stopPropagation();setMenu(m=>!m);}}

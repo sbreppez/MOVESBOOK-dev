@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useRef } from 'react';
 import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
-import { CARD_BASE, CARD_BAR, CARD_BODY } from '../../constants/styles';
+import { CARD_BASE, CARD_BODY } from '../../constants/styles';
 import { IDEA_COLORS } from '../../constants/categories';
 import { Ic } from '../shared/Ic';
 import { Btn } from '../shared/Btn';
@@ -45,8 +45,7 @@ export const IdeaTile = (props) => {
     return (
       <div draggable={draggable} onDragStart={onDragStart} onDragOver={onDragOver} onDrop={onDrop}
         onClick={isGoal ? ()=>setExpanded(x=>!x) : undefined}
-        style={{ ...CARD_BASE(), cursor:isGoal?"pointer":"default", border: isPinned ? `2px solid ${color}66` : undefined }}>
-        <div style={CARD_BAR(color)}/>
+        style={{ ...CARD_BASE(), background:C.surface, borderLeft:`4px solid ${color}`, cursor:isGoal?"pointer":"default", ...(isPinned ? { borderTop:`2px solid ${color}66`, borderRight:`2px solid ${color}66`, borderBottom:`2px solid ${color}66` } : {}) }}>
         <div style={CARD_BODY()}>
           {/* Title row */}
           <div style={{ display:"flex", alignItems:"flex-start", gap:6, marginBottom:6 }}>

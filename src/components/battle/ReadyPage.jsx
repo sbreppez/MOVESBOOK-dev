@@ -750,7 +750,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
           <button key={id} onClick={()=>setBattleTabAndNotify(id)}
             style={{ flex:1, padding:"9px 0", background:"none", border:"none", cursor:"pointer",
               fontSize:11, fontWeight:800, letterSpacing:1.5, fontFamily:FONT_DISPLAY, textTransform:"uppercase",
-              color: battleTab===id ? C.accent : C.textMuted,
+              color: battleTab===id ? C.text : C.textMuted,
               borderBottom: battleTab===id ? `2px solid ${C.accent}` : "2px solid transparent" }}>
             {label}
           </button>

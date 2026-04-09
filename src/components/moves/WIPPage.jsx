@@ -23,7 +23,7 @@ import { PremiumGate } from '../shared/PremiumGate';
 import { SectionBrief } from '../shared/SectionBrief';
 import { MoveTree } from './MoveTree';
 
-export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains={}, setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore, onOpenRRR, onOpenCombine, onOpenMap, onOpenFlashCards, isPremium, onBulkTrigger }) => {
+export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains={}, setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore, onOpenRRR, onOpenCombine, onOpenMap, onOpenFlashCards, isPremium, staleCount=0, onBulkTrigger }) => {
   const t = useT();
   const { moveCountStr, resultCountStr } = usePlural();
   const { settings:ctxSettings } = useSettings();
@@ -326,23 +326,27 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
             <button key={id} onClick={()=>setVocabTabAndNotify(id)}
               style={{ padding:"4px 10px", background:"none", border:"none", cursor:"pointer",
                 fontSize:10, fontWeight:800, letterSpacing:1.5, fontFamily:FONT_DISPLAY, textTransform:"uppercase",
-                color: vocabTab===id ? C.accent : C.textMuted,
-                borderBottom: vocabTab===id ? `2px solid ${C.accent}` : "2px solid transparent" }}>
+                color: vocabTab===id ? C.text : C.textMuted,
+                borderBottom: vocabTab===id ? `2px solid ${C.accent}` : "2px solid transparent",
+                display:"inline-flex", alignItems:"center", gap:4 }}>
               {label}
+              {id==="gap"&&staleCount>0&&isPremium&&<span style={{ width:6, height:6, borderRadius:3, background:C.red, flexShrink:0 }}/>}
             </button>
           ))}
         </div>
         <div style={{ display:"flex", gap:3 }}>
           {vocabTab==="moves"&&<Fragment>
             {customAttrs.length>0&&<button onClick={()=>setShowFilter(s=>!s)}
-              style={{ background:showFilter?C.surfaceAlt:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:showFilter?C.accent:C.textMuted, position:"relative" }}>
+              style={{ background:"none", border:"none", cursor:"pointer", padding:4, position:"relative", color:C.textSec }}>
               <Ic n="filter" s={16}/>
               {hasActiveFilters&&<div style={{ position:"absolute", top:2, right:2, width:6, height:6, borderRadius:"50%", background:C.accent }}/>}
             </button>}
-            <button onClick={()=>{ setShowSearch(s=>!s); setSearch(""); }} style={{ background:showSearch?C.surfaceAlt:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:showSearch?C.accent:C.textMuted }}><Ic n="search" s={16}/></button>
-            {[{v:"tiles",ic:"grid"},{v:"list",ic:"list"},...(isPremium?[{v:"tree",ic:"gitFork"}]:[])].map(({v,ic})=>(
-              <button key={v} onClick={()=>setView(v)} style={{ background:view===v?C.surfaceAlt:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:view===v?C.accent:C.textMuted }}><Ic n={ic} s={16}/></button>
-            ))}
+            {(()=>{
+              const modes = ["list","tiles",...(isPremium?["tree"]:[])];
+              const icons = { list:"list", tiles:"grid", tree:"gitFork" };
+              return <button onClick={()=>setView(modes[(modes.indexOf(view)+1)%modes.length])} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textSec }}><Ic n={icons[view]||"list"} s={16}/></button>;
+            })()}
+            <button onClick={()=>{ setShowSearch(s=>!s); setSearch(""); }} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textSec }}><Ic n="search" s={16}/></button>
             {view!=="tree"&&<button onClick={()=>{ const next=!reorderMode; setReorderMode(next); if(next) setCats(sortedCats); if(!next && onSortChange) onSortChange("categorySort","manual"); }}
               style={{ background:reorderMode?C.accent:"none", border:"none", cursor:"pointer", padding:"4px 8px", borderRadius:5,
                 color:reorderMode?C.bg:C.textMuted, fontSize:13, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>

@@ -3,7 +3,7 @@ import { C } from '../../constants/colors';
 import { FONT_DISPLAY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
 import { Highlight } from '../shared/Highlight';
-import { masteryColor, CARD_BASE, CARD_BAR, CARD_BODY } from '../../constants/styles';
+import { masteryColor, CARD_BASE, CARD_BODY } from '../../constants/styles';
 import { useSettings } from '../../hooks/useSettings';
 import { computeDecay, showDecayArrow } from '../../utils/masteryDecay';
 import { CATS, CAT_COLORS } from '../../constants/categories';
