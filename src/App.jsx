@@ -689,7 +689,7 @@ export default function App() {
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between",
           padding:"10px 16px", background:C.header, borderBottom:`2px solid ${C.border}`, flexShrink:0 }}>
           <div style={{ display:"flex", alignItems:"baseline", gap:0 }}>
-            <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:24, letterSpacing:4 }}>
+            <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:21, letterSpacing:4 }}>
               <span style={{ color:"#cf0000" }}>MOVES</span><span style={{ color:C.headerText }}>BOOK</span>
             </span>
             {profile.nickname&&(
@@ -890,7 +890,7 @@ export default function App() {
                     justifyContent:"center", gap:3, background:"none",
                     border:"none",
                     cursor:"pointer", color:on?C.text:C.textMuted, transition:"all 0.15s", position:"relative", overflow:"visible" }}>
-                  <span style={{ fontSize:10, fontFamily:FONT_DISPLAY, fontWeight:800, letterSpacing:1.2, borderBottom:`2px solid ${on?C.accent:"transparent"}`, paddingBottom:3 }}>{tb.label}</span>
+                  <span style={{ fontSize:11, fontFamily:FONT_DISPLAY, fontWeight:800, letterSpacing:1.2, borderBottom:`2px solid ${on?C.accent:"transparent"}`, paddingBottom:3 }}>{tb.label}</span>
                 </button>
               );
             })}

@@ -56,13 +56,13 @@ export const CatTile = (props) => {
                   onClick={e=>e.stopPropagation()}
                   onBlur={()=>{ if(draft.trim()&&draft.trim()!==name)onRename(draft.trim()); setRenaming(false); }}
                   onKeyDown={e=>{ if(e.key==="Enter"&&draft.trim()){if(draft.trim()!==name)onRename(draft.trim());setRenaming(false);} if(e.key==="Escape"){setDraft(name);setRenaming(false);} }}
-                  style={{ fontWeight:800, fontSize:13, color:C.brown, letterSpacing:1.1, fontFamily:FONT_DISPLAY,
+                  style={{ fontWeight:800, fontSize:16, color:C.brown, letterSpacing:1.1, fontFamily:FONT_DISPLAY,
                     background:"transparent", border:"none", borderBottom:`2px solid ${C.accent}`, outline:"none", width:"90%", padding:"1px 0" }}/>
               ) : (
-                <div style={{ fontWeight:800, fontSize:13, color:C.brown, letterSpacing:1.1, fontFamily:FONT_DISPLAY, cursor:"pointer", lineHeight:1.2,
+                <div style={{ fontWeight:800, fontSize:16, color:C.brown, letterSpacing:1.1, fontFamily:FONT_DISPLAY, cursor:"pointer", lineHeight:1.2,
                   overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{name.toUpperCase()}</div>
               )}
-              {showMoveCount&&<div style={{ fontSize:11, color:C.textMuted, marginTop:2 }}><span style={{color:C.textMuted,fontWeight:700}}>{total}</span> {moveCountStr(total).slice(String(total).length+1)}</div>}
+              {showMoveCount&&<div style={{ fontSize:13, color:C.textMuted, marginTop:2 }}><span style={{color:C.textMuted,fontWeight:700}}>{total}</span> {moveCountStr(total).slice(String(total).length+1)}</div>}
               {/* No progress bar on category tile header — by design */}
             </div>
             {/* ··· menu */}
@@ -88,7 +88,7 @@ export const CatTile = (props) => {
                 {shown.map(m=>(
                   <div key={m.id} style={{ display:"flex", alignItems:"center", gap:5, padding:"2px 0" }}>
                     <div style={{ width:5, height:5, borderRadius:"50%", background:masteryColor(dm(m)), flexShrink:0 }}/>
-                    <span style={{ fontSize:11, color:C.textSec, flex:1, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{m.name}</span>
+                    <span style={{ fontSize:13, color:C.textSec, flex:1, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{m.name}</span>
                     {showMastery&&<span style={{ fontSize:10, color:masteryColor(dm(m)), fontWeight:700, flexShrink:0 }}>{dm(m)}%</span>}
                   </div>
                 ))}
@@ -129,7 +129,7 @@ export const CatTile = (props) => {
           cursor:"default", overflow:"visible" }}>
 
         {/* Header row */}
-        <div style={{ display:"flex", alignItems:"center", gap:6, padding:"10px 8px 10px 8px" }}>
+        <div style={{ display:"flex", alignItems:"center", gap:6, padding:"14px 16px" }}>
           {/* Expand/collapse toggle */}
           <button onClick={e=>{e.stopPropagation();setExpanded(x=>!x);}}
             style={{ background:"none", border:"none", cursor:"pointer", display:"flex", alignItems:"center", padding:2, flexShrink:0 }}>
@@ -142,15 +142,15 @@ export const CatTile = (props) => {
                 onClick={e=>e.stopPropagation()}
                 onBlur={()=>{ if(draft.trim()&&draft.trim()!==name)onRename(draft.trim()); setRenaming(false); }}
                 onKeyDown={e=>{ if(e.key==="Enter"&&draft.trim()){if(draft.trim()!==name)onRename(draft.trim());setRenaming(false);} if(e.key==="Escape"){setDraft(name);setRenaming(false);} }}
-                style={{ fontWeight:800, fontSize:14, color:C.brown, letterSpacing:1.2, fontFamily:FONT_DISPLAY,
+                style={{ fontWeight:800, fontSize:16, color:C.brown, letterSpacing:1.2, fontFamily:FONT_DISPLAY,
                   background:"transparent", border:"none", borderBottom:`2px solid ${C.accent}`, outline:"none", width:"90%", padding:"1px 0" }}/>
             ) : (
-              <span style={{ fontWeight:800, fontSize:14, color:C.brown, letterSpacing:1.2, fontFamily:FONT_DISPLAY, cursor:"pointer",
+              <span style={{ fontWeight:800, fontSize:16, color:C.brown, letterSpacing:1.2, fontFamily:FONT_DISPLAY, cursor:"pointer",
                 overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", display:"block" }}>{name.toUpperCase()}</span>
             )}
           </div>
           {/* Stats */}
-          <div style={{ fontSize:12, color:C.textMuted, flexShrink:0 }}><span style={{color:C.textMuted,fontWeight:700}}>{total}</span> {moveCountStr(total).slice(String(total).length+1)}</div>
+          <div style={{ fontSize:13, color:C.textMuted, flexShrink:0 }}><span style={{color:C.textMuted,fontWeight:700}}>{total}</span> {moveCountStr(total).slice(String(total).length+1)}</div>
           {/* ··· menu */}
           <div ref={menuRef} style={{ flexShrink:0 }}>
             <button onClick={e=>{e.stopPropagation();setMenu(m=>!m);}}
@@ -171,10 +171,10 @@ export const CatTile = (props) => {
         {expanded&&moves.length>0&&(
           <div style={{ borderTop:`1px solid ${C.borderLight}`, padding:"4px 0 6px" }}>
             {moves.map(m=>(
-              <div key={m.id} style={{ display:"flex", alignItems:"center", gap:7, padding:"4px 14px 4px 32px" }}>
+              <div key={m.id} style={{ display:"flex", alignItems:"center", gap:7, padding:"5px 16px 5px 34px" }}>
                 <div style={{ width:5, height:5, borderRadius:"50%", background:masteryColor(dm(m)), flexShrink:0 }}/>
-                <span style={{ fontSize:12, color:C.textSec, flex:1 }}>{m.name}</span>
-                {showMastery&&<span style={{ fontSize:11, color:masteryColor(dm(m)), fontWeight:700 }}>{dm(m)}%</span>}
+                <span style={{ fontSize:13, color:C.textSec, flex:1 }}>{m.name}</span>
+                {showMastery&&<span style={{ fontSize:10, color:masteryColor(dm(m)), fontWeight:700 }}>{dm(m)}%</span>}
               </div>
             ))}
           </div>
