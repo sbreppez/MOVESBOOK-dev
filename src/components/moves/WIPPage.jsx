@@ -160,15 +160,15 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
           <button onClick={()=>{setOpenCat(null);setSearch("");setShowSearch(false);setCatReorderMode(false);}} style={{ background:"none", border:"none", cursor:"pointer", color:C.accent, fontSize:14, fontFamily:FONT_DISPLAY, fontWeight:700 }}>← Back</button>
           <div style={{ display:"flex", gap:3 }}>
             {!catReorderMode&&customAttrs.length>0&&<button onClick={()=>setShowFilter(s=>!s)}
-              style={{ background:showFilter?C.surfaceAlt:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:showFilter?C.accent:C.textMuted, position:"relative" }}>
+              style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:showFilter?C.accent:C.textSec, position:"relative" }}>
               <Ic n="filter" s={16}/>
               {hasActiveFilters&&<div style={{ position:"absolute", top:2, right:2, width:6, height:6, borderRadius:"50%", background:C.accent }}/>}
             </button>}
-            {!catReorderMode&&<button onClick={()=>{ setShowSearch(s=>!s); setSearch(""); }} style={{ background:showSearch?C.surfaceAlt:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:showSearch?C.accent:C.textMuted }}><Ic n="search" s={16}/></button>}
-            {!catReorderMode&&<button onClick={()=>setCatView(v=>v==="tiles"?"list":"tiles")} style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}><Ic n={catView==="tiles"?"list":"grid"} s={16}/></button>}
+            {!catReorderMode&&<button onClick={()=>{ setShowSearch(s=>!s); setSearch(""); }} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:showSearch?C.accent:C.textSec }}><Ic n="search" s={16}/></button>}
+            {!catReorderMode&&<button onClick={()=>setCatView(v=>v==="tiles"?"list":"tiles")} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textSec }}><Ic n={catView==="tiles"?"list":"grid"} s={16}/></button>}
             {allCatMoves.length>1&&<button onClick={()=>{ const next=!catReorderMode; setCatReorderMode(next); if(next){ const ids=allCatMoves.map(m=>m.id); setMoves(prev=>{ const rest=prev.filter(m=>!ids.includes(m.id)); const ordered=ids.map(id=>prev.find(m=>m.id===id)).filter(Boolean); return [...ordered,...rest]; }); } if(!next && onSortChange) onSortChange("sortMoves","custom"); }}
-              style={{ background:catReorderMode?C.accent:"none", border:"none", cursor:"pointer", padding:"4px 8px", borderRadius:5,
-                color:catReorderMode?C.bg:C.textMuted, fontSize:13, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>
+              style={{ background:"none", border:"none", cursor:"pointer", padding:4,
+                color:catReorderMode?C.accent:C.textMuted, fontSize:13, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>
               {catReorderMode?"DONE":"⇅"}
             </button>}
           </div>
@@ -348,8 +348,8 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
             })()}
             <button onClick={()=>{ setShowSearch(s=>!s); setSearch(""); }} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textSec }}><Ic n="search" s={16}/></button>
             {view!=="tree"&&<button onClick={()=>{ const next=!reorderMode; setReorderMode(next); if(next) setCats(sortedCats); if(!next && onSortChange) onSortChange("categorySort","manual"); }}
-              style={{ background:reorderMode?C.accent:"none", border:"none", cursor:"pointer", padding:"4px 8px", borderRadius:5,
-                color:reorderMode?C.bg:C.textMuted, fontSize:13, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>
+              style={{ background:"none", border:"none", cursor:"pointer", padding:4,
+                color:reorderMode?C.accent:C.textMuted, fontSize:13, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>
               {reorderMode?"DONE":"⇅"}
             </button>}
           </Fragment>}
@@ -357,8 +357,8 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
             {sets.filter(s=>(s.moveIds?.length||0)>0).length>=1&&onOpenFlashCards&&<button onClick={onOpenFlashCards} style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}><Ic n="cards" s={16}/></button>}
             <button onClick={()=>setSetsView(v=>v==="list"?"tiles":"list")} style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}><Ic n={setsView==="list"?"grid":"list"} s={16}/></button>
             <button onClick={()=>setReorderMode(r=>!r)}
-              style={{ background:reorderMode?C.accent:"none", border:"none", cursor:"pointer", padding:"4px 8px", borderRadius:5,
-                color:reorderMode?C.bg:C.textMuted, fontSize:13, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>
+              style={{ background:"none", border:"none", cursor:"pointer", padding:4,
+                color:reorderMode?C.accent:C.textMuted, fontSize:13, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>
               {reorderMode?"DONE":"⇅"}
             </button>
           </Fragment>}
@@ -544,7 +544,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
         ) : (
           <div
             style={view==="tiles"
-              ? {display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,alignItems:"stretch"}
+              ? {display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,alignItems:"stretch"}
               : {display:"flex",flexDirection:"column",gap:0}}
             onDragOver={e=>e.preventDefault()}
             onDragLeave={e=>{ if(!e.currentTarget.contains(e.relatedTarget)) setCatDragOver(null); }}
@@ -572,7 +572,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
                         fontSize:14, fontWeight:700, display:"flex", alignItems:"center", justifyContent:"center" }}>▼</button>
                   </div>
                 )}
-                <div style={{ marginBottom: view!=="tiles" ? 8 : 0, flex:1 }}>
+                <div style={{ marginBottom: view!=="tiles" ? 6 : 0, flex:1 }}>
                   <CatTile name={cat} color={catColors[cat]||C.accent} total={inCat(cat).length} mastered={masteredCount(cat)}
                     moves={inCat(cat)} viewMode={view}
                     showMastery={st.showMastery} showMoveCount={st.showMoveCount}

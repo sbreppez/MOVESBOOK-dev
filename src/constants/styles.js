@@ -1,7 +1,7 @@
 import { C } from './colors';
 import { FONT_DISPLAY, FONT_BODY } from './fonts';
 
-export const CARD_BASE  = () => ({ borderRadius:8, background:C.bg, overflow:"hidden", boxShadow:"0 4px 15px rgba(0,0,0,0.12)", minHeight:168, minWidth:0, display:"flex", flexDirection:"column", position:"relative" });
+export const CARD_BASE  = () => ({ borderRadius:8, background:C.surface, overflow:"hidden", minWidth:0, display:"flex", flexDirection:"column", position:"relative" });
 export const CARD_BAR   = (color) => ({ height:5, background:`linear-gradient(90deg,${color},${color}55)`, flexShrink:0 });
 export const CARD_BODY  = () => ({ padding:"12px 12px 8px 12px", flex:1, display:"flex", flexDirection:"column" });
 
