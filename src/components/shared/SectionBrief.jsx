@@ -6,9 +6,9 @@ export const SectionBrief = ({ desc, stat, settings }) => {
   if (settings?.showSectionDescriptions === false) return null;
   const { C } = useSettings();
   return (
-    <div style={{ padding: "8px 16px 5px" }}>
+    <div style={{ padding: "8px 13px 5px" }}>
       {desc && <div style={{ fontSize: 13, color: C.textSec, lineHeight: 1.5, fontFamily: FONT_BODY }}>{desc}</div>}
-      {stat && <div style={{ fontSize: 11, color: C.textMuted, fontStyle: "italic", marginTop: 3, fontFamily: FONT_BODY }}>{stat}</div>}
+      {stat && <div style={{ fontSize: 10, color: C.textMuted, fontStyle: "italic", marginTop: 3, fontFamily: FONT_BODY }}>{stat}</div>}
     </div>
   );
 };

@@ -325,7 +325,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
           {[["moves",t("library")],["sets","SETS"],["gap","GAP"]].map(([id,label])=>(
             <button key={id} onClick={()=>setVocabTabAndNotify(id)}
               style={{ padding:"4px 10px", background:"none", border:"none", cursor:"pointer",
-                fontSize:14, fontWeight:800, letterSpacing:1.5, fontFamily:FONT_DISPLAY, textTransform:"uppercase",
+                fontSize:13, fontWeight:800, letterSpacing:1.5, fontFamily:FONT_DISPLAY, textTransform:"uppercase",
                 color: vocabTab===id ? C.text : C.textMuted,
                 display:"inline-flex", alignItems:"center", gap:4 }}>
               <span style={{ borderBottom: vocabTab===id ? `2px solid ${C.accent}` : "2px solid transparent", paddingBottom:3 }}>
@@ -356,10 +356,10 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
           totalCount={moves.length} filteredCount={cats.reduce((sum,cat)=>sum+inCat(cat).length,0)} />
       )}
 
-      <div style={{ flex:1, overflow:"auto", paddingTop: vocabTab==="gap" ? 0 : 10, paddingLeft: vocabTab==="gap" ? 0 : 16, paddingRight: vocabTab==="gap" ? 0 : 16, paddingBottom:76 }}>
+      <div style={{ flex:1, overflow:"auto", paddingTop: vocabTab==="gap" ? 0 : 10, paddingLeft: vocabTab==="gap" ? 0 : 13, paddingRight: vocabTab==="gap" ? 0 : 13, paddingBottom:76 }}>
         {vocabTab==="moves"&&<SectionBrief desc={t("libraryBrief")} stat={`${moves.length} moves across ${cats.length} categories`} settings={st}/>}
         {vocabTab==="moves"&&(
-          <div style={{ display:"flex", justifyContent:"flex-end", alignItems:"center", gap:8, padding:"5px 16px 3px" }}>
+          <div style={{ display:"flex", justifyContent:"flex-end", alignItems:"center", gap:8, padding:"5px 13px 3px" }}>
             {customAttrs.length>0&&<button onClick={()=>setShowFilter(s=>!s)}
               style={{ background:"none", border:"none", cursor:"pointer", padding:4, position:"relative", color:C.textSec }}>
               <Ic n="filter" s={16}/>
@@ -383,7 +383,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
         ) : vocabTab==="sets" ? (
           <div>
             <SectionBrief desc={t("setsBrief")} stat={`${sets.length} sets`} settings={st}/>
-            <div style={{ display:"flex", justifyContent:"flex-end", alignItems:"center", gap:8, padding:"5px 16px 3px" }}>
+            <div style={{ display:"flex", justifyContent:"flex-end", alignItems:"center", gap:8, padding:"5px 13px 3px" }}>
               {sets.filter(s=>(s.moveIds?.length||0)>0).length>=1&&onOpenFlashCards&&<button onClick={onOpenFlashCards} style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}><Ic n="cards" s={16}/></button>}
               <button onClick={()=>setSetsView(v=>v==="list"?"tiles":"list")} style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}><Ic n={setsView==="list"?"grid":"list"} s={16}/></button>
               <button onClick={()=>setReorderMode(r=>!r)}
@@ -546,7 +546,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
           <div
             style={view==="tiles"
               ? {display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,alignItems:"stretch"}
-              : {display:"flex",flexDirection:"column",gap:6}}
+              : {display:"flex",flexDirection:"column",gap:5}}
             onDragOver={e=>e.preventDefault()}
             onDragLeave={e=>{ if(!e.currentTarget.contains(e.relatedTarget)) setCatDragOver(null); }}
           >
