@@ -319,7 +319,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
         </div>
       )}
 
-      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"6px 14px", borderBottom:`1px solid ${C.borderLight}`, background:C.surface, flexShrink:0 }}>
+      <div style={{ display:"flex", alignItems:"center", padding:"6px 14px", borderBottom:`1px solid ${C.borderLight}`, background:C.surface, flexShrink:0 }}>
         {/* MOVES / SETS sub-tabs */}
         <div style={{ display:"flex", gap:0 }}>
           {[["moves",t("library")],["sets","SETS"],["gap","GAP"]].map(([id,label])=>(
@@ -327,41 +327,13 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
               style={{ padding:"4px 10px", background:"none", border:"none", cursor:"pointer",
                 fontSize:10, fontWeight:800, letterSpacing:1.5, fontFamily:FONT_DISPLAY, textTransform:"uppercase",
                 color: vocabTab===id ? C.text : C.textMuted,
-                borderBottom: vocabTab===id ? `2px solid ${C.accent}` : "2px solid transparent",
                 display:"inline-flex", alignItems:"center", gap:4 }}>
-              {label}
+              <span style={{ borderBottom: vocabTab===id ? `2px solid ${C.accent}` : "2px solid transparent", paddingBottom:3 }}>
+                {label}
+              </span>
               {id==="gap"&&staleCount>0&&isPremium&&<span style={{ width:6, height:6, borderRadius:3, background:C.red, flexShrink:0 }}/>}
             </button>
           ))}
-        </div>
-        <div style={{ display:"flex", gap:3 }}>
-          {vocabTab==="moves"&&<Fragment>
-            {customAttrs.length>0&&<button onClick={()=>setShowFilter(s=>!s)}
-              style={{ background:"none", border:"none", cursor:"pointer", padding:4, position:"relative", color:C.textSec }}>
-              <Ic n="filter" s={16}/>
-              {hasActiveFilters&&<div style={{ position:"absolute", top:2, right:2, width:6, height:6, borderRadius:"50%", background:C.accent }}/>}
-            </button>}
-            {(()=>{
-              const modes = ["list","tiles",...(isPremium?["tree"]:[])];
-              const icons = { list:"list", tiles:"grid", tree:"gitFork" };
-              return <button onClick={()=>setView(modes[(modes.indexOf(view)+1)%modes.length])} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textSec }}><Ic n={icons[view]||"list"} s={16}/></button>;
-            })()}
-            <button onClick={()=>{ setShowSearch(s=>!s); setSearch(""); }} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textSec }}><Ic n="search" s={16}/></button>
-            {view!=="tree"&&<button onClick={()=>{ const next=!reorderMode; setReorderMode(next); if(next) setCats(sortedCats); if(!next && onSortChange) onSortChange("categorySort","manual"); }}
-              style={{ background:"none", border:"none", cursor:"pointer", padding:4,
-                color:reorderMode?C.accent:C.textMuted, fontSize:13, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>
-              {reorderMode?"DONE":"⇅"}
-            </button>}
-          </Fragment>}
-          {vocabTab==="sets"&&<Fragment>
-            {sets.filter(s=>(s.moveIds?.length||0)>0).length>=1&&onOpenFlashCards&&<button onClick={onOpenFlashCards} style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}><Ic n="cards" s={16}/></button>}
-            <button onClick={()=>setSetsView(v=>v==="list"?"tiles":"list")} style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}><Ic n={setsView==="list"?"grid":"list"} s={16}/></button>
-            <button onClick={()=>setReorderMode(r=>!r)}
-              style={{ background:"none", border:"none", cursor:"pointer", padding:4,
-                color:reorderMode?C.accent:C.textMuted, fontSize:13, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>
-              {reorderMode?"DONE":"⇅"}
-            </button>
-          </Fragment>}
         </div>
       </div>
 
@@ -386,11 +358,40 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
 
       <div style={{ flex:1, overflow:"auto", paddingTop: vocabTab==="gap" ? 0 : 10, paddingLeft: vocabTab==="gap" ? 0 : 10, paddingRight: vocabTab==="gap" ? 0 : 10, paddingBottom:76 }}>
         {vocabTab==="moves"&&<SectionBrief desc={t("libraryBrief")} stat={`${moves.length} moves across ${cats.length} categories`} settings={st}/>}
+        {vocabTab==="moves"&&(
+          <div style={{ display:"flex", justifyContent:"flex-end", alignItems:"center", gap:6, padding:"4px 14px 2px" }}>
+            {customAttrs.length>0&&<button onClick={()=>setShowFilter(s=>!s)}
+              style={{ background:"none", border:"none", cursor:"pointer", padding:4, position:"relative", color:C.textSec }}>
+              <Ic n="filter" s={16}/>
+              {hasActiveFilters&&<div style={{ position:"absolute", top:2, right:2, width:6, height:6, borderRadius:"50%", background:C.accent }}/>}
+            </button>}
+            {(()=>{
+              const modes = ["list","tiles",...(isPremium?["tree"]:[])];
+              const icons = { list:"list", tiles:"grid", tree:"gitFork" };
+              return <button onClick={()=>setView(modes[(modes.indexOf(view)+1)%modes.length])} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textSec }}><Ic n={icons[view]||"list"} s={16}/></button>;
+            })()}
+            <button onClick={()=>{ setShowSearch(s=>!s); setSearch(""); }} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textSec }}><Ic n="search" s={16}/></button>
+            {view!=="tree"&&<button onClick={()=>{ const next=!reorderMode; setReorderMode(next); if(next) setCats(sortedCats); if(!next && onSortChange) onSortChange("categorySort","manual"); }}
+              style={{ background:"none", border:"none", cursor:"pointer", padding:4,
+                color:reorderMode?C.accent:C.textMuted, fontSize:13, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>
+              {reorderMode?"DONE":"⇅"}
+            </button>}
+          </div>
+        )}
         {vocabTab==="gap" ? (
           isPremium ? <><SectionBrief desc={t("gapBrief")} settings={st}/><GAPTab moves={moves} catColors={catColors} setMoves={setMoves} onDrill={onDrill} settings={st} onTrainToday={handleToggleTrainedToday}/></> : <div style={{padding:20}}><PremiumGate feature="gap" addToast={addToast}/></div>
         ) : vocabTab==="sets" ? (
           <div>
             <SectionBrief desc={t("setsBrief")} stat={`${sets.length} sets`} settings={st}/>
+            <div style={{ display:"flex", justifyContent:"flex-end", alignItems:"center", gap:6, padding:"4px 14px 2px" }}>
+              {sets.filter(s=>(s.moveIds?.length||0)>0).length>=1&&onOpenFlashCards&&<button onClick={onOpenFlashCards} style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}><Ic n="cards" s={16}/></button>}
+              <button onClick={()=>setSetsView(v=>v==="list"?"tiles":"list")} style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}><Ic n={setsView==="list"?"grid":"list"} s={16}/></button>
+              <button onClick={()=>setReorderMode(r=>!r)}
+                style={{ background:"none", border:"none", cursor:"pointer", padding:4,
+                  color:reorderMode?C.accent:C.textMuted, fontSize:13, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>
+                {reorderMode?"DONE":"⇅"}
+              </button>
+            </div>
             {sets.length===0&&(
               <div style={{ textAlign:"center", padding:40, color:C.textMuted }}>
                 <div style={{ marginBottom:8 }}><Ic n="list" s={28} c={C.textMuted}/></div>
@@ -545,7 +546,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
           <div
             style={view==="tiles"
               ? {display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,alignItems:"stretch"}
-              : {display:"flex",flexDirection:"column",gap:0}}
+              : {display:"flex",flexDirection:"column",gap:4}}
             onDragOver={e=>e.preventDefault()}
             onDragLeave={e=>{ if(!e.currentTarget.contains(e.relatedTarget)) setCatDragOver(null); }}
           >

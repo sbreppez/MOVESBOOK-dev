@@ -700,9 +700,8 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
             <button key={tab.id} onClick={() => setPeopleTab(tab.id)}
               style={{ flex:1, padding:"7px 0", background:"none", border:"none", cursor:"pointer",
                 fontSize:10, fontWeight:800, letterSpacing:1.2, fontFamily:FONT_DISPLAY, textTransform:"uppercase",
-                color: active ? C.text : C.textMuted,
-                borderBottom: active ? `2px solid ${C.accent}` : "2px solid transparent" }}>
-              {t(tab.key)} {count > 0 ? `(${count})` : ""}
+                color: active ? C.text : C.textMuted }}>
+              <span style={{ borderBottom: active ? `2px solid ${C.accent}` : "2px solid transparent", paddingBottom:3 }}>{t(tab.key)}</span> {count > 0 ? `(${count})` : ""}
             </button>
           );
         })}

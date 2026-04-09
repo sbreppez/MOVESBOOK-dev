@@ -182,8 +182,6 @@ export const CatTile = (props) => {
         {expanded&&moves.length===0&&(
           <div style={{ borderTop:`1px solid ${C.borderLight}`, padding:"8px 14px", fontSize:12, color:C.textMuted, fontStyle:"italic" }}>{t("emptyMovesInCat")}</div>
         )}
-        {/* Progress bar at bottom when collapsed */}
-        {!expanded&&total>0&&<div style={{ margin:"0 10px 8px", height:2, borderRadius:1, background:C.border }}><div style={{ height:"100%", width:`${(mastered/total)*100}%`, borderRadius:1, background:color }}/></div>}
       </div>
 
       {confirmDel&&<Modal title={t("deleteCategory")} onClose={()=>setConfirmDel(false)}>

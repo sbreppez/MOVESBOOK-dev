@@ -888,9 +888,9 @@ export default function App() {
                 <button key={tb.id} onClick={()=>handleTabChange(tb.id)}
                   style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center",
                     justifyContent:"center", gap:3, background:"none",
-                    border:"none", borderBottom:`2px solid ${on?C.accent:"transparent"}`,
+                    border:"none",
                     cursor:"pointer", color:on?C.text:C.textMuted, transition:"all 0.15s", position:"relative", overflow:"visible" }}>
-                  <span style={{ fontSize:10, fontFamily:FONT_DISPLAY, fontWeight:800, letterSpacing:1.2 }}>{tb.label}</span>
+                  <span style={{ fontSize:10, fontFamily:FONT_DISPLAY, fontWeight:800, letterSpacing:1.2, borderBottom:`2px solid ${on?C.accent:"transparent"}`, paddingBottom:3 }}>{tb.label}</span>
                 </button>
               );
             })}

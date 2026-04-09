@@ -221,10 +221,9 @@ export const ReflectPage = ({
             <button key={id} onClick={() => setReflectTab(id)}
               style={{ flex: 1, padding: "9px 4px", border: "none", cursor: "pointer",
                 background: "none", color: on ? C.text : C.textMuted,
-                borderBottom: `2px solid ${on ? C.accent : "transparent"}`,
                 fontSize: 11, fontWeight: 800, letterSpacing: 1, fontFamily: FONT_DISPLAY, textTransform: "uppercase",
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
-              {label}
+              <span style={{ borderBottom: `2px solid ${on ? C.accent : "transparent"}`, paddingBottom: 3 }}>{label}</span>
               {count !== null && count > 0 && <span style={{ fontSize: 10, color: on ? C.text : C.textMuted, background: C.surfaceAlt, borderRadius: 10, padding: "0 5px" }}>{count}</span>}
             </button>
           );
