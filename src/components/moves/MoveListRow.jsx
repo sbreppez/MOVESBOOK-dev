@@ -13,7 +13,7 @@ export const MoveListRow = ({ move, catColor, onEdit, onDelete, onMove, allCats,
   const hasDecayArrow = showDecayArrow(move, settings.decaySensitivity);
   const showMastery = settings.showMastery !== false;
   return (
-    <div onClick={onEdit} style={{ position:"relative", display:"flex", alignItems:"center", gap:10, background:C.bg, borderRadius:8, padding:"10px 12px", border:`1px solid ${C.border}`, borderLeft:`4px solid ${catColor}`, cursor:"pointer" }}>
+    <div onClick={onEdit} style={{ position:"relative", display:"flex", alignItems:"center", gap:10, background:C.bg, borderRadius:8, padding:"10px 12px", borderLeft:`4px solid ${catColor}`, cursor:"pointer" }}>
       <div style={{ flex:1, minWidth:0 }}>
         <span style={{ color:C.text, fontSize:14, fontWeight:600, fontFamily:FONT_DISPLAY,
           overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{move.name}</span>

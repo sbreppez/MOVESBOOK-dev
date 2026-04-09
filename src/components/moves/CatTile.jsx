@@ -126,8 +126,8 @@ export const CatTile = (props) => {
       <div
         draggable={draggable}
         onDragStart={onDragStart} onDragOver={onDragOver} onDrop={onDrop}
-        style={{ position:"relative", background:C.bg, border:`1.5px solid ${C.border}`, borderRadius:10,
-          cursor:"default", overflow:"visible", transition:"border-color 0.15s" }}>
+        style={{ position:"relative", background:C.bg, borderRadius:8,
+          cursor:"default", overflow:"visible" }}>
 
         {/* Color bar */}
         <div style={{ height:4, borderRadius:"10px 10px 0 0", background:`linear-gradient(90deg,${color},${color}55)` }}/>

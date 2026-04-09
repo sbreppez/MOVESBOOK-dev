@@ -309,7 +309,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
 
       {/* ── Version tracking prompt ── */}
       {versionEligible && !openCat && vocabTab === "moves" && (
-        <div style={{ margin:"6px 14px", padding:14, background:C.surfaceAlt, border:`1px solid ${C.border}`, borderRadius:8, position:"relative" }}>
+        <div style={{ margin:"6px 14px", padding:14, background:C.surfaceAlt, borderRadius:8, position:"relative" }}>
           <button onClick={() => dismissVersion(versionEligible.id)}
             style={{ position:"absolute", top:8, right:8, background:"none", border:"none", cursor:"pointer", padding:2, display:"flex" }}>
             <Ic n="x" s={14} c={C.textMuted}/>
@@ -391,8 +391,8 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
           ].map(({ icon, label, action })=>(
             <button key={icon} onClick={action}
               style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center",
-                gap:6, background:C.surfaceAlt, border:`1px solid ${C.border}`,
-                borderRadius:10, padding:"10px 14px", cursor:"pointer" }}>
+                gap:6, background:C.surfaceAlt,
+                borderRadius:8, padding:"10px 14px", cursor:"pointer" }}>
               <Ic n={icon} s={20} c={C.textMuted}/>
               <span style={{ fontSize:9, fontWeight:800, fontFamily:FONT_DISPLAY,
                 letterSpacing:1.2, color:C.textMuted, textTransform:"uppercase" }}>
@@ -496,8 +496,8 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
                   const sColor=s.color||C.blue;
                   const isExp=expSets[s.id]!==false;
                   return (
-                    <div key={s.id} style={{ position:"relative", marginBottom:6, borderRadius:10,
-                      border:`1.5px solid ${C.border}`, overflow:"hidden", background:C.bg }}>
+                    <div key={s.id} style={{ position:"relative", marginBottom:6, borderRadius:8,
+                      overflow:"hidden", background:C.bg }}>
                       <div style={{ height:3, background:`linear-gradient(90deg,${sColor},${sColor}44)` }}/>
                       <div style={{ display:"flex", alignItems:"center", padding:"9px 10px", gap:6 }}>
                         {/* Expand/collapse */}
