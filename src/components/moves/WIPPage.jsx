@@ -319,7 +319,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
         </div>
       )}
 
-      <div style={{ display:"flex", alignItems:"center", padding:"6px 14px", borderBottom:`1px solid ${C.borderLight}`, background:C.surface, flexShrink:0 }}>
+      <div style={{ display:"flex", alignItems:"center", padding:"6px 14px", flexShrink:0 }}>
         {/* MOVES / SETS sub-tabs */}
         <div style={{ display:"flex", gap:0 }}>
           {[["moves",t("library")],["sets","SETS"],["gap","GAP"]].map(([id,label])=>(
@@ -545,8 +545,8 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
         ) : (
           <div
             style={view==="tiles"
-              ? {display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,alignItems:"stretch"}
-              : {display:"flex",flexDirection:"column",gap:4}}
+              ? {display:"grid",gridTemplateColumns:"1fr 1fr",gap:3,alignItems:"stretch"}
+              : {display:"flex",flexDirection:"column",gap:3}}
             onDragOver={e=>e.preventDefault()}
             onDragLeave={e=>{ if(!e.currentTarget.contains(e.relatedTarget)) setCatDragOver(null); }}
           >
