@@ -236,7 +236,7 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onUpdateSess
         </div>
         <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:2, color:C.green, marginBottom:24 }}>{t("sessionSaved")}</div>
         {/* Summary card */}
-        <div style={{ width:"100%", maxWidth:340, background:C.surface, borderRadius:12, border:`1px solid ${C.border}`, padding:16, marginBottom:20, borderLeft:`4px solid ${cc}` }}>
+        <div style={{ width:"100%", maxWidth:340, background:C.surface, borderRadius:8, border:`1px solid ${C.border}`, padding:16, marginBottom:20, borderLeft:`4px solid ${cc}` }}>
           <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:15, color:C.text }}>{savedSession.moveName}</div>
           <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:10, color:cc, letterSpacing:0.5, marginTop:2 }}>{savedSession.moveCategory}</div>
           <div style={{ display:"flex", justifyContent:"space-between", marginTop:14 }}>

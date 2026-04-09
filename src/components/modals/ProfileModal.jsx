@@ -167,7 +167,7 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
             <textarea value={noteText} onChange={e => setNoteText(e.target.value.slice(0, 280))}
               placeholder={t("writeYourselfANote")} rows={2} autoFocus
               style={{ width: "100%", background: C.bg, border: `1px solid ${C.border}`,
-                borderRadius: 10, padding: 12, fontSize: 14, fontFamily: FONT_BODY,
+                borderRadius: 8, padding: 12, fontSize: 14, fontFamily: FONT_BODY,
                 color: C.text, resize: "none", outline: "none", boxSizing: "border-box",
                 maxHeight: 120, overflow: "auto" }} />
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 4 }}>
@@ -219,7 +219,7 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
       {sectionHdr(t("settingsLabel") || "SETTINGS", "cog")}
       <button onClick={() => setShowSettingsSection(s => !s)}
         style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between",
-          background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 10,
+          background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 8,
           padding: "10px 14px", cursor: "pointer", marginBottom: 4 }}>
         <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12, color: C.text, letterSpacing: 0.5 }}>
           {showSettingsSection ? "Hide settings" : "Show settings"}
@@ -235,7 +235,7 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
       {["privacy","terms","disclaimers"].map(pg => (
         <button key={pg} onClick={() => setLegalPage(pg)}
           style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"space-between",
-            background:C.surfaceAlt, border:`1px solid ${C.border}`, borderRadius:10,
+            background:C.surfaceAlt, border:`1px solid ${C.border}`, borderRadius:8,
             padding:"10px 14px", cursor:"pointer", marginBottom:4 }}>
           <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, color:C.text, letterSpacing:0.5 }}>
             {t(pg === "privacy" ? "privacyPolicy" : pg === "terms" ? "termsOfService" : "disclaimers")}
@@ -248,7 +248,7 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
       {sectionHdr(t("feedbackLabel") || "FEEDBACK", "edit")}
       <button onClick={() => setShowFeedbackSection(s => !s)}
         style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between",
-          background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 10,
+          background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 8,
           padding: "10px 14px", cursor: "pointer", marginBottom: 4 }}>
         <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12, color: C.text, letterSpacing: 0.5 }}>
           {showFeedbackSection ? "Hide feedback" : "Show feedback form"}
@@ -262,13 +262,13 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
       <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
         <button onClick={downloadBackup}
           style={{ flex: 1, padding: "10px 12px", background: C.surfaceAlt, border: `1px solid ${C.border}`,
-            borderRadius: 10, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700,
+            borderRadius: 8, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700,
             fontSize: 12, color: C.text, letterSpacing: 0.5 }}>
           {t("saveBackup")}
         </button>
         <button onClick={() => fileInputRef.current?.click()}
           style={{ flex: 1, padding: "10px 12px", background: C.surfaceAlt, border: `1px solid ${C.border}`,
-            borderRadius: 10, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700,
+            borderRadius: 8, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700,
             fontSize: 12, color: C.text, letterSpacing: 0.5 }}>
           {t("restoreBackup")}
         </button>

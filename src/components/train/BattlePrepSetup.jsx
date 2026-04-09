@@ -276,7 +276,7 @@ export const BattlePrepSetup = ({ initialPreset, battleprep, setBattleprep, move
             </div>
           )}
           {/* Totals */}
-          <div style={{ background: C.surfaceAlt, borderRadius: 10, padding: "10px 14px", display: "flex", justifyContent: "center", gap: 8 }}>
+          <div style={{ background: C.surfaceAlt, borderRadius: 8, padding: "10px 14px", display: "flex", justifyContent: "center", gap: 8 }}>
             <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 12, color: C.text }}>{totalTraining} <span style={{ fontSize: 10, fontWeight: 700, color: C.textMuted }}>{t("daysTraining")}</span></span>
             <span style={{ color: C.border }}>{"\u00B7"}</span>
             <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 12, color: C.text }}>{restDays > 0 ? restDays : 0} <span style={{ fontSize: 10, fontWeight: 700, color: C.textMuted }}>{t("previewRestDays")}</span></span>
@@ -403,7 +403,7 @@ export const BattlePrepSetup = ({ initialPreset, battleprep, setBattleprep, move
               </div>
             ))}
             {calendarBattles.length > 0 && (
-              <div style={{ background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 10, padding: "10px 12px", marginBottom: 8 }}>
+              <div style={{ background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 12px", marginBottom: 8 }}>
                 <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, letterSpacing: 0.8, color: C.textMuted, marginBottom: 6 }}>{t("upcomingBattlesFromCalendar")}</div>
                 {calendarBattles.map(ce => (
                   <div key={ce.id} style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 0", borderBottom: `1px solid ${C.borderLight}` }}>
@@ -429,7 +429,7 @@ export const BattlePrepSetup = ({ initialPreset, battleprep, setBattleprep, move
               })}
             </div>
             {previewStats && (
-              <div style={{ background: C.surfaceAlt, borderRadius: 10, padding: "10px 14px", display: "flex", justifyContent: "center", gap: 6, flexWrap: "wrap" }}>
+              <div style={{ background: C.surfaceAlt, borderRadius: 8, padding: "10px 14px", display: "flex", justifyContent: "center", gap: 6, flexWrap: "wrap" }}>
                 {[{ n: previewStats.days, l: t("previewDays") }, { n: previewStats.sessions, l: t("previewSessions") }, { n: previewStats.restDays, l: t("previewRestDays") }, { n: previewStats.battleCount, l: t("previewBattles") }].map((s, i) => (
                   <span key={i} style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 12, letterSpacing: 0.5, color: C.text }}>{s.n} <span style={{ color: C.textMuted, fontWeight: 700, fontSize: 10 }}>{s.l}</span>{i < 3 && <span style={{ color: C.border, margin: "0 2px" }}>{" \u00B7 "}</span>}</span>
                 ))}

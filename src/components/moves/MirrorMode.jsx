@@ -133,7 +133,7 @@ export const MirrorMode = ({ moves, catColors=CAT_COLORS, mirror, onMirrorChange
           </div>
 
           {/* Instruction card */}
-          <div style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:12, padding:"16px 18px", width:"100%", marginBottom:16 }}>
+          <div style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:8, padding:"16px 18px", width:"100%", marginBottom:16 }}>
             <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:13, color:C.yellow, letterSpacing:1, marginBottom:6 }}>
               {t("yourOtherSide")}
             </div>

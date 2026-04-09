@@ -631,7 +631,7 @@ export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToa
 
             {/* Prompt text */}
             {lastPromptText && (
-              <div style={{ background:C.surface, borderRadius:12, padding:16, margin:"8px 0 16px",
+              <div style={{ background:C.surface, borderRadius:8, padding:16, margin:"8px 0 16px",
                 width:"100%", boxSizing:"border-box" }}>
                 <div style={{ fontFamily:FONT_BODY, fontSize:14, color:C.textSec,
                   lineHeight:1.6, textAlign:"center", fontStyle:"italic" }}>

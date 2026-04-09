@@ -40,7 +40,7 @@ const TreeNode = ({ node, depth, catColors, onEdit, collapsed, toggleCollapse, i
         style={{ display: "flex", alignItems: "center", gap: 8, background: C.surface,
           borderTop: `1px solid ${C.borderLight}`, borderRight: `1px solid ${C.borderLight}`,
           borderBottom: `1px solid ${C.borderLight}`, borderLeft: `4px solid ${catCol}`,
-          borderRadius: 10, padding: "10px 14px", cursor: "pointer", marginBottom: 6 }}>
+          borderRadius: 8, padding: "10px 14px", cursor: "pointer", marginBottom: 6 }}>
         {hasChildren && (
           <button onClick={e => { e.stopPropagation(); toggleCollapse(m.id); }}
             style={{ background: "none", border: "none", cursor: "pointer", padding: 8, margin: -6, display: "flex", flexShrink: 0, minWidth: 28, minHeight: 28, alignItems: "center", justifyContent: "center" }}>
@@ -180,7 +180,7 @@ export const MoveTree = ({ moves, catColors, onEdit, settings = {} }) => {
               style={{ display: "flex", alignItems: "center", gap: 8, background: C.surface,
                 borderTop: `1px solid ${C.borderLight}`, borderRight: `1px solid ${C.borderLight}`,
                 borderBottom: `1px solid ${C.borderLight}`, borderLeft: `4px solid ${catCol}`,
-                borderRadius: 10, padding: "10px 14px", cursor: "pointer", marginBottom: 6 }}>
+                borderRadius: 8, padding: "10px 14px", cursor: "pointer", marginBottom: 6 }}>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontWeight: 700, fontSize: 14, color: C.text, fontFamily: FONT_DISPLAY,
                   overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>

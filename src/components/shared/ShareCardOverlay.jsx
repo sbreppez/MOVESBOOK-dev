@@ -140,20 +140,20 @@ export const ShareCardOverlay = ({ type, data, onClose, t }) => {
       <div style={{ display: "flex", gap: 10, marginTop: 16, width: "100%", maxWidth: 360 }}>
         <input ref={photoInputRef} type="file" accept="image/*" capture="camera" style={{ display: "none" }} onChange={handlePhotoInput}/>
         <button onClick={() => photoInputRef.current?.click()}
-          style={{ flex: 1, padding: 12, borderRadius: 10, border: `1px solid ${C.border}`,
+          style={{ flex: 1, padding: 12, borderRadius: 8, border: `1px solid ${C.border}`,
             background: C.surfaceAlt, color: C.text, cursor: "pointer",
             fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12, letterSpacing: 0.5 }}>
           {"\uD83D\uDCF7"} {t("addPhoto")}
         </button>
         <button onClick={handleShare}
-          style={{ flex: 1, padding: 12, borderRadius: 10, border: "none",
+          style={{ flex: 1, padding: 12, borderRadius: 8, border: "none",
             background: C.accent, color: "#fff", cursor: "pointer",
             fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 12, letterSpacing: 0.5 }}>
           {t("share")}
         </button>
       </div>
       <button onClick={onClose}
-        style={{ marginTop: 12, padding: "10px 24px", borderRadius: 10, border: "none",
+        style={{ marginTop: 12, padding: "10px 24px", borderRadius: 8, border: "none",
           background: "transparent", color: C.textMuted, cursor: "pointer",
           fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12 }}>
         {t("close")}

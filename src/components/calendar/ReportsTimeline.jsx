@@ -178,8 +178,7 @@ const DayRow = ({ entry, t, C }) => {
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
 const StatBox = ({ label, value, C, warn }) => (
-  <div style={{ textAlign:"center", padding:"8px 4px", background:C.surfaceAlt, borderRadius:8,
-    border:`1px solid ${C.borderLight}` }}>
+  <div style={{ textAlign:"center", padding:"8px 4px", background:C.surfaceAlt, borderRadius:8 }}>
     <div style={{ fontSize:18, fontWeight:900, color:warn?C.yellow:C.text, fontFamily:FONT_DISPLAY }}>
       {value}
     </div>

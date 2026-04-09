@@ -66,7 +66,7 @@ export const HomeTile = ({ tile, isChecked, onCheck, onRemove, onEdit, habits, i
       onClick={() => onEdit?.(tile)}
       style={{
         display: "flex", alignItems: "flex-start", gap: 10,
-        padding: "10px 12px", marginBottom: 6, borderRadius: 10, cursor: "pointer",
+        padding: "10px 12px", marginBottom: 6, borderRadius: 8, cursor: "pointer",
         background: isOrphan ? "transparent" : isChecked ? `${C.green}0a` : C.surface,
         borderLeft: `3px ${isOrphan ? "dashed" : "solid"} ${isChecked ? C.green : C.border}`,
         opacity: isOrphan ? 0.45 : isChecked ? 0.65 : 1,

@@ -163,7 +163,7 @@ export const FlowMap = ({ moves, cats, catColors, flowmap, onFlowmapChange, comb
   const overlay = { position: "absolute", top: 0, left: 0, right: 0, bottom: 0, background: C.bg, zIndex: 500, display: "flex", flexDirection: "column", overflow: "hidden" };
   const headerBar = { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", borderBottom: `1px solid ${C.border}`, flexShrink: 0 };
   const scrollArea = { flex: 1, overflowY: "auto", padding: "16px", WebkitOverflowScrolling: "touch" };
-  const cardStyle = { background: C.surface, borderRadius: 10, padding: "16px", marginBottom: 6, cursor: "pointer" };
+  const cardStyle = { background: C.surface, borderRadius: 8, padding: "16px", marginBottom: 6, cursor: "pointer" };
   const chipStyle = (active) => ({
     display: "inline-block", padding: "6px 14px", borderRadius: 20, border: `1.5px solid ${active ? C.accent : C.border}`,
     background: active ? `${C.accent}20` : C.surface, color: active ? C.accent : C.text, fontSize: 13, fontFamily: FONT_BODY,
@@ -223,7 +223,7 @@ export const FlowMap = ({ moves, cats, catColors, flowmap, onFlowmapChange, comb
           {totalEvaluated > 0 && (
             <div style={{ display: "flex", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
               {[["works", stColors.works], ["interesting", stColors.interesting], ["explore", stColors.explore], ["doesntWork", stColors.doesntWork]].map(([key, col]) => (
-                <div key={key} style={{ background: `${col}18`, border: `1px solid ${col}44`, borderRadius: 10, padding: "8px 14px", minWidth: 60, textAlign: "center" }}>
+                <div key={key} style={{ background: `${col}18`, border: `1px solid ${col}44`, borderRadius: 8, padding: "8px 14px", minWidth: 60, textAlign: "center" }}>
                   <div style={{ fontSize: 20, fontWeight: 900, color: col, fontFamily: FONT_DISPLAY }}>{stats[key]}</div>
                   <div style={{ fontSize: 10, color: C.textSec, marginTop: 2 }}>{t(key === "explore" ? "needsExploration" : key)}</div>
                 </div>
@@ -846,7 +846,7 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
                 value={newMoveName}
                 onChange={e => setNewMoveName(e.target.value)}
                 style={{
-                  width: "100%", padding: "10px 12px", borderRadius: 10,
+                  width: "100%", padding: "10px 12px", borderRadius: 8,
                   border: `1.5px solid ${C.border}`, background: C.surface,
                   color: C.text, fontSize: 14, fontFamily: FONT_BODY, outline: "none",
                   boxSizing: "border-box"
@@ -860,7 +860,7 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
                 {t("saveInCategory")}
               </div>
               <div style={{
-                borderRadius: 10, border: `1px solid ${C.border}`, overflow: "hidden",
+                borderRadius: 8, border: `1px solid ${C.border}`, overflow: "hidden",
                 maxHeight: 200, overflowY: "auto"
               }}>
                 {(cats || []).map((cat, i) => {

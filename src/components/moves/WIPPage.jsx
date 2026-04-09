@@ -309,7 +309,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
 
       {/* ── Version tracking prompt ── */}
       {versionEligible && !openCat && vocabTab === "moves" && (
-        <div style={{ margin:"6px 14px", padding:14, background:C.surfaceAlt, border:`1px solid ${C.border}`, borderRadius:12, position:"relative" }}>
+        <div style={{ margin:"6px 14px", padding:14, background:C.surfaceAlt, border:`1px solid ${C.border}`, borderRadius:8, position:"relative" }}>
           <button onClick={() => dismissVersion(versionEligible.id)}
             style={{ position:"absolute", top:8, right:8, background:"none", border:"none", cursor:"pointer", padding:2, display:"flex" }}>
             <Ic n="x" s={14} c={C.textMuted}/>

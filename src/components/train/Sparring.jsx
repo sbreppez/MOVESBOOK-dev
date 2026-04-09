@@ -981,7 +981,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
             const d = new Date(s.date);
             const modeIcon = s.mode === "rounds" ? "hash" : s.mode === "time" ? "timer" : "skull";
             return (
-              <div key={s.id} style={{ padding:"12px 14px", marginBottom:8, background:C.surface, border:`1px solid ${C.border}`, borderRadius:10 }}>
+              <div key={s.id} style={{ padding:"12px 14px", marginBottom:8, background:C.surface, border:`1px solid ${C.border}`, borderRadius:8 }}>
                 <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
                   <div style={{ display:"flex", alignItems:"center", gap:8 }}>
                     <Ic n={modeIcon} s={16}/>

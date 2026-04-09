@@ -100,8 +100,8 @@ export const HomeAddPicker = ({ open, onClose, homeStack, setHomeStack, homeIdea
     <button onClick={onClick}
       style={{
         display: "flex", alignItems: "center", gap: 10, width: "100%", textAlign: "left",
-        padding: "10px 12px", marginBottom: 4, borderRadius: 10, cursor: "pointer",
-        background: C.surface, border: `1px solid ${C.border}`, transition: "background 0.15s",
+        padding: "10px 12px", marginBottom: 4, borderRadius: 8, cursor: "pointer",
+        background: C.surface, transition: "background 0.15s",
       }}>
       <span style={{ fontSize: 16, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>{emojiOrIcon}</span>
       <div style={{ flex: 1, minWidth: 0 }}>

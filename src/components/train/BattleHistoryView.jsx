@@ -42,7 +42,7 @@ export const BattleHistoryView = ({ history, onClose, t }) => {
 
         return (
           <div key={plan.id} style={{
-            background: C.surface, borderRadius: 10,
+            background: C.surface, borderRadius: 8,
             overflow: "hidden", marginBottom: 6,
           }}>
             {/* Plan header */}

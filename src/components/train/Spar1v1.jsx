@@ -557,7 +557,7 @@ export const Spar1v1 = ({ sparring, onSaveSession, addCalendarEvent, rivals, onR
           </div>
 
           {/* How it works */}
-          <div style={{ background:C.surface, borderRadius:12, padding:14, border:`1px solid ${C.border}` }}>
+          <div style={{ background:C.surface, borderRadius:8, padding:14, border:`1px solid ${C.border}` }}>
             <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, color:C.textMuted, letterSpacing:1, marginBottom:6, textTransform:"uppercase" }}>
               {t("howItWorks")}
             </div>
@@ -809,7 +809,7 @@ export const Spar1v1 = ({ sparring, onSaveSession, addCalendarEvent, rivals, onR
               { label: t("totalTime"), value: fmtDuration(s.totalDuration), color: C.text },
               { label: t("longestRound"), value: fmtDuration(longestRound), color: C.text },
             ].map((stat, i) => (
-              <div key={i} style={{ background:C.surface, borderRadius:12, padding:"12px 14px", border:`1px solid ${C.border}` }}>
+              <div key={i} style={{ background:C.surface, borderRadius:8, padding:"12px 14px", border:`1px solid ${C.border}` }}>
                 <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:10, color:C.textMuted, letterSpacing:1, marginBottom:4, textTransform:"uppercase" }}>{stat.label}</div>
                 <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:22, color:stat.color }}>{stat.value}</div>
               </div>

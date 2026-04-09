@@ -156,7 +156,7 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
               <button key={s.id} onClick={() => toggleSelect(s.id)}
                 style={{ display: "flex", alignItems: "center", gap: 12, width: "100%",
                   padding: "12px 10px", background: checked ? `${C.accent}12` : "none",
-                  border: `1px solid ${checked ? C.accent : C.border}`, borderRadius: 10,
+                  border: `1px solid ${checked ? C.accent : C.border}`, borderRadius: 8,
                   cursor: "pointer", marginBottom: 8, minHeight: 44 }}>
                 {/* Checkbox */}
                 <div style={{ width: 22, height: 22, borderRadius: 5, border: `2px solid ${checked ? C.accent : C.textMuted}`,

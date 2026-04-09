@@ -90,7 +90,7 @@ export const PremiumGate = ({ feature, addToast }) => {
 
   return (
     <div style={{
-      background: C.surface, borderRadius: 10, padding: 24,
+      background: C.surface, borderRadius: 8, padding: 24,
       textAlign: 'center',
     }}>
       <div style={{ marginBottom: 14, opacity: 0.5 }}>

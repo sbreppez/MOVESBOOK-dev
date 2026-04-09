@@ -155,7 +155,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
 
     return (
       <div onClick={() => { setEditingRival(normalizeRival(rival)); setShowModal(true); }}
-        style={{ background:C.surface, borderRadius:10, padding:16,
+        style={{ background:C.surface, borderRadius:8, padding:16,
           cursor:"pointer", marginBottom:6, display:"flex", alignItems:"center", gap:12 }}>
         <div style={{ width:48, height:48, borderRadius:"50%", flexShrink:0, overflow:"hidden",
           background: rival.photo ? "none" : C.surfaceAlt, display:"flex", alignItems:"center", justifyContent:"center",
@@ -579,8 +579,8 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
               const hasDetail = b.howDidItGo || b.whatSurprised || b.trainingNext;
               return (
                 <div key={b.id} onClick={() => hasDetail && setExpandedBattle(isExpanded ? null : b.id)}
-                  style={{ background:C.surfaceAlt, borderRadius:10, padding:"10px 12px", marginBottom:6,
-                    border:`1px solid ${C.border}`, cursor: hasDetail ? "pointer" : "default" }}>
+                  style={{ background:C.surfaceAlt, borderRadius:8, padding:"10px 12px", marginBottom:6,
+                    cursor: hasDetail ? "pointer" : "default" }}>
                   <div style={{ display:"flex", alignItems:"center", gap:8 }}>
                     <span style={{ fontSize:12, fontWeight:700, color:C.text, fontFamily:FONT_DISPLAY }}>{b.date}</span>
                     {res && <span style={{ fontSize:12 }}>{t(res.key)}</span>}
@@ -609,8 +609,8 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
               const dur = s.totalDuration ? Math.round(s.totalDuration / 1000) : null;
               return (
                 <div key={i} onClick={() => setExpandedSpar(isExp ? null : i)}
-                  style={{ background:C.surfaceAlt, borderRadius:10, padding:"10px 12px", marginBottom:6,
-                    border:`1px solid ${C.border}`, cursor:"pointer" }}>
+                  style={{ background:C.surfaceAlt, borderRadius:8, padding:"10px 12px", marginBottom:6,
+                    cursor:"pointer" }}>
                   <div style={{ display:"flex", alignItems:"center", gap:8 }}>
                     <span style={{ fontSize:12, fontWeight:700, color:C.text, fontFamily:FONT_DISPLAY }}>{s.date?.split("T")[0] || "?"}</span>
                     <span style={{ fontSize:11, color:C.textMuted, fontFamily:FONT_BODY }}>{s.rounds || "?"} rounds</span>
@@ -757,8 +757,8 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
               setEditingRival({ type: opt.type });
               setShowModal(true);
             }}
-              style={{ display:"flex", alignItems:"center", gap:12, padding:"14px 16px", borderRadius:12,
-                background:C.surfaceAlt, border:`1px solid ${C.border}`, cursor:"pointer", textAlign:"left" }}>
+              style={{ display:"flex", alignItems:"center", gap:12, padding:"14px 16px", borderRadius:8,
+                background:C.surfaceAlt, cursor:"pointer", textAlign:"left" }}>
               <span style={{ fontSize:20 }}>{opt.emoji}</span>
               <span style={{ fontSize:13, fontWeight:800, color:C.text, fontFamily:FONT_DISPLAY, letterSpacing:0.5, textTransform:"uppercase" }}>
                 {t(opt.key)}
@@ -777,8 +777,8 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
             </div>
           ) : allPeople.map(p => (
             <button key={p.id} onClick={() => { setShowImportPicker(false); triggerImportFor(p.id); }}
-              style={{ display:"flex", alignItems:"center", gap:10, padding:"10px 14px", borderRadius:10,
-                background:C.surfaceAlt, border:`1px solid ${C.border}`, cursor:"pointer", textAlign:"left" }}>
+              style={{ display:"flex", alignItems:"center", gap:10, padding:"10px 14px", borderRadius:8,
+                background:C.surfaceAlt, cursor:"pointer", textAlign:"left" }}>
               <span style={{ fontSize:13, fontWeight:700, color:C.text, fontFamily:FONT_DISPLAY }}>{p.name}</span>
               <span style={{ fontSize:10, color:C.textMuted, fontFamily:FONT_DISPLAY, textTransform:"uppercase" }}>
                 {t(TYPE_OPTIONS.find(to => to.val === (p.type || "rival"))?.key || "typeRival")}

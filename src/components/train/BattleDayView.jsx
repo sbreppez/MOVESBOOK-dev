@@ -160,7 +160,7 @@ const PreBattleSection = ({ plan, battle, dayMap, moves, sets, updatePlan, meta,
       <style>{`@keyframes mb-glow{0%,100%{text-shadow:0 0 20px ${meta.color}60,0 0 40px ${meta.color}30}50%{text-shadow:0 0 30px ${meta.color}80,0 0 60px ${meta.color}50}}`}</style>
 
       {/* Pre-Battle Checklist */}
-      <div style={{ background: C.surface, borderRadius: 10, padding: 14, marginBottom: 6 }}>
+      <div style={{ background: C.surface, borderRadius: 8, padding: 14, marginBottom: 6 }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
           <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 11, letterSpacing: 1.5, color: C.text }}>
             {t("preBattleChecklist")}
@@ -311,7 +311,7 @@ const PostBattleReflection = ({ plan, battle, meta, prepStats, mood, setMood, re
       </div>
 
       {/* Mood selector */}
-      <div style={{ background: C.surface, borderRadius: 10, padding: 14, marginBottom: 6 }}>
+      <div style={{ background: C.surface, borderRadius: 8, padding: 14, marginBottom: 6 }}>
         <label style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, letterSpacing: 1, color: C.textMuted, display: "block", marginBottom: 8 }}>
           {t("howDidItGo")}
         </label>
@@ -336,7 +336,7 @@ const PostBattleReflection = ({ plan, battle, meta, prepStats, mood, setMood, re
       </div>
 
       {/* Round reached */}
-      <div style={{ background: C.surface, borderRadius: 10, padding: 14, marginBottom: 6 }}>
+      <div style={{ background: C.surface, borderRadius: 8, padding: 14, marginBottom: 6 }}>
         <label style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, letterSpacing: 1, color: C.textMuted, display: "block", marginBottom: 8 }}>
           {t("roundReached")}
         </label>
@@ -360,7 +360,7 @@ const PostBattleReflection = ({ plan, battle, meta, prepStats, mood, setMood, re
       </div>
 
       {/* Textareas */}
-      <div style={{ background: C.surface, borderRadius: 10, padding: 14, marginBottom: 6 }}>
+      <div style={{ background: C.surface, borderRadius: 8, padding: 14, marginBottom: 6 }}>
         <ReflectionField label={t("reflectionTakeaway")} placeholder={t("reflectionTakeawayHint")} value={takeaway} onChange={setTakeaway} />
         <ReflectionField label={t("reflectionWhatWorked")} placeholder={t("reflectionWhatWorkedHint")} value={whatWorked} onChange={setWhatWorked} />
         <ReflectionField label={t("reflectionNeedsWork")} placeholder={t("reflectionNeedsWorkHint")} value={needsWork} onChange={setNeedsWork} />
@@ -820,7 +820,7 @@ const PlanCompletionCard = ({ plan, meta, dayMap, setBattleprep, addToast, onClo
           { val: stats.trainingDays, label: t("totalTrainingDays") || "Training days" },
           { val: stats.resultEmojis, label: t("resultsLabel") || "Results", isEmoji: true },
         ].map((s, i) => (
-          <div key={i} style={{ background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 10, padding: "12px 8px" }}>
+          <div key={i} style={{ background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 8, padding: "12px 8px" }}>
             <div style={{ fontFamily: s.isEmoji ? undefined : FONT_DISPLAY, fontWeight: 900, fontSize: s.isEmoji ? 20 : 28, color: C.text }}>
               {s.val}
             </div>
@@ -886,7 +886,7 @@ const ChecklistRow = ({ done, icon, text, onToggle }) => (
 );
 
 const Accordion = ({ title, count, expanded, onToggle, children }) => (
-  <div style={{ background: C.surface, borderRadius: 10, overflow: "hidden", marginBottom: 6 }}>
+  <div style={{ background: C.surface, borderRadius: 8, overflow: "hidden", marginBottom: 6 }}>
     <button onClick={onToggle}
       style={{
         display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "12px 14px",
@@ -910,7 +910,7 @@ const Accordion = ({ title, count, expanded, onToggle, children }) => (
 
 const StatBox = ({ label, value }) => (
   <div style={{
-    background: C.bg, borderRadius: 10, padding: "10px 8px", textAlign: "center",
+    background: C.bg, borderRadius: 8, padding: "10px 8px", textAlign: "center",
     border: `1px solid ${C.borderLight}`,
   }}>
     <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 20, color: C.text }}>{value}</div>

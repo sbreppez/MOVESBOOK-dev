@@ -81,12 +81,12 @@ export const ReminderBlock = ({ reminders, onRemindersChange, addToast, onOpenMa
     // Inline edit mode while collapsed
     if (editingInline) {
       return (
-        <div style={{ background: C.surfaceAlt, borderRadius: 10, padding: "8px 14px",
+        <div style={{ background: C.surfaceAlt, borderRadius: 8, padding: "8px 14px",
           margin: "10px 12px 0" }}>
           <textarea value={editText} onChange={e => setEditText(e.target.value.slice(0, 280))}
             rows={2} autoFocus
             style={{ width: "100%", background: C.surface, border: `1px solid ${C.border}`,
-              borderRadius: 10, padding: 12, fontSize: 14, fontFamily: FONT_BODY,
+              borderRadius: 8, padding: 12, fontSize: 14, fontFamily: FONT_BODY,
               color: C.text, resize: "none", outline: "none", boxSizing: "border-box",
               maxHeight: 120, overflow: "auto" }} />
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 4 }}>
@@ -115,7 +115,7 @@ export const ReminderBlock = ({ reminders, onRemindersChange, addToast, onOpenMa
     return (
       <div onClick={() => setExpanded(true)}
         style={{ display: "flex", alignItems: "center", gap: 8,
-          background: C.surfaceAlt, borderRadius: 10, padding: "8px 14px",
+          background: C.surfaceAlt, borderRadius: 8, padding: "8px 14px",
           margin: "10px 12px 0", cursor: "pointer" }}>
         <span style={{ lineHeight: 1, flexShrink: 0 }}><Ic n="mapPin" s={14} c={C.textMuted}/></span>
         <span style={{ fontFamily: FONT_BODY, fontSize: 13, color: C.text, fontStyle: "italic",
@@ -139,7 +139,7 @@ export const ReminderBlock = ({ reminders, onRemindersChange, addToast, onOpenMa
   // ── Expanded ──
   const current = items[currentIndex] || items[0];
   return (
-    <div style={{ background: C.surfaceAlt, borderRadius: 10, padding: 14,
+    <div style={{ background: C.surfaceAlt, borderRadius: 8, padding: 14,
       margin: "10px 12px 0" }}>
       {/* Header: pin left, edit + collapse right */}
       <div style={{ display: "flex", alignItems: "center", marginBottom: 8 }}>
@@ -163,7 +163,7 @@ export const ReminderBlock = ({ reminders, onRemindersChange, addToast, onOpenMa
           <textarea value={editText} onChange={e => setEditText(e.target.value.slice(0, 280))}
             rows={3} autoFocus
             style={{ width: "100%", background: C.surface, border: `1px solid ${C.border}`,
-              borderRadius: 10, padding: 12, fontSize: 14, fontFamily: FONT_BODY,
+              borderRadius: 8, padding: 12, fontSize: 14, fontFamily: FONT_BODY,
               color: C.text, resize: "none", outline: "none", boxSizing: "border-box",
               maxHeight: 120, overflow: "auto" }} />
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 4 }}>
@@ -215,7 +215,7 @@ export const ReminderBlock = ({ reminders, onRemindersChange, addToast, onOpenMa
                 placeholder={t("writeYourselfANote")}
                 rows={2}
                 style={{ width: "100%", background: C.surface, border: `1px solid ${C.border}`,
-                  borderRadius: 10, padding: 12, fontSize: 14, fontFamily: FONT_BODY,
+                  borderRadius: 8, padding: 12, fontSize: 14, fontFamily: FONT_BODY,
                   color: C.text, resize: "none", outline: "none", boxSizing: "border-box",
                   maxHeight: 120, overflow: "auto" }} />
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 4 }}>

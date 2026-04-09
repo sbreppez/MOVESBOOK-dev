@@ -205,7 +205,7 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
       {/* View Full Calendar button */}
       <button onClick={() => onOpenSharedCalendar && onOpenSharedCalendar()}
         style={{ width: "100%", padding: "10px 12px", background: "transparent",
-          border: `1px solid ${C.border}`, borderRadius: 10, cursor: "pointer",
+          border: `1px solid ${C.border}`, borderRadius: 8, cursor: "pointer",
           fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 12, letterSpacing: 2,
           color: C.textSec, textAlign: "center", marginBottom: 12, display: "flex",
           alignItems: "center", justifyContent: "center", gap: 6 }}>
@@ -254,7 +254,7 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
           const dateLabel = new Date(evt.date + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" });
           const dLeft = daysBetween(today, evt.date);
           return (
-            <div key={`cal-${evt.id}`} style={{ background: C.surface, border: `1px dashed ${C.border}`, borderRadius: 10, padding: "14px 14px",
+            <div key={`cal-${evt.id}`} style={{ background: C.surface, border: `1px dashed ${C.border}`, borderRadius: 8, padding: "14px 14px",
               display: "flex", alignItems: "center", gap: 10, width: "100%", boxSizing: "border-box" }}>
               <button onClick={() => { setSeedData({ date: evt.date, eventName: evt.title || "" }); setShowSetup(true); }}
                 style={{ flex: 1, display: "flex", alignItems: "center", gap: 10, background: "none", border: "none", cursor: "pointer", textAlign: "left", padding: 0, minWidth: 0 }}>
@@ -432,7 +432,7 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
   };
 
   return (
-    <div style={{ background: C.surface, borderRadius: 10, overflow: "hidden" }}>
+    <div style={{ background: C.surface, borderRadius: 8, overflow: "hidden" }}>
       {/* Collapsed header — always visible */}
       <button onClick={onToggleExpand}
         style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "14px 14px",
@@ -533,7 +533,7 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
 
           {/* ── EDIT PLAN PANEL ── */}
           {isEditing && (
-            <div style={{ background: C.bg, border: `1px solid ${C.border}`, borderRadius: 10, padding: 12, marginBottom: 10 }}>
+            <div style={{ background: C.bg, border: `1px solid ${C.border}`, borderRadius: 8, padding: 12, marginBottom: 10 }}>
               {/* Plan Type — preset chips */}
               <label style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, letterSpacing: 1, color: C.textMuted, display: "block", marginBottom: 6 }}>{t("planType") || "PLAN TYPE"}</label>
               <div style={{ display: "flex", gap: 4, marginBottom: 12, flexWrap: "wrap" }}>
@@ -729,7 +729,7 @@ const DayDetail = ({ dateStr, dayMap, plan, today, onToggleTask, t, getDay }) =>
   const isBattle = info.type === "battle";
 
   return (
-    <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10, padding: 12, margin: "4px 0 6px" }}>
+    <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, padding: 12, margin: "4px 0 6px" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
         <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 13, color: C.text }}>
           {new Date(dateStr + "T00:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}

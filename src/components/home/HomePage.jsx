@@ -406,7 +406,7 @@ export const HomePage = ({
             <button key={i} onClick={item.action}
               style={{
                 display: "flex", alignItems: "center", gap: 12, width: "100%",
-                padding: "14px 12px", borderRadius: 10, cursor: "pointer",
+                padding: "14px 12px", borderRadius: 8, cursor: "pointer",
                 background: C.surface, border: `1px solid ${C.border}`,
                 color: C.text, fontSize: 13, fontWeight: 700, fontFamily: FONT_DISPLAY,
                 textAlign: "left", letterSpacing: 0.3,
@@ -442,7 +442,7 @@ export const HomePage = ({
             {allRoutines.map(tile => (
               <div key={tile.id} style={{
                 display: "flex", alignItems: "center", gap: 10, padding: "10px 12px",
-                borderRadius: 10, background: C.surface, border: `1px solid ${C.border}`,
+                borderRadius: 8, background: C.surface,
               }}>
                 {tile.emoji ? <span style={{ fontSize: 18, flexShrink: 0 }}>{tile.emoji}</span> : <Ic n="dumbbell" s={18}/>}
                 <div style={{ flex: 1, minWidth: 0 }}>
@@ -482,7 +482,7 @@ export const HomePage = ({
             {(homeStack.defaultStack || []).map((tile, idx) => (
               <div key={tile.id} style={{
                 display: "flex", alignItems: "center", gap: 10, padding: "10px 12px",
-                borderRadius: 10, background: C.surface, border: `1px solid ${C.border}`,
+                borderRadius: 8, background: C.surface,
               }}>
                 {(() => { const { emoji, icon } = resolveEmoji(tile); return emoji ? <span style={{ fontSize: 18, flexShrink: 0 }}>{emoji}</span> : <Ic n={icon} s={18}/>; })()}
                 <div style={{ flex: 1, minWidth: 0, fontWeight: 800, fontSize: 13, fontFamily: FONT_DISPLAY,

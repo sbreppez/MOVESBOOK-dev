@@ -106,7 +106,7 @@ export const ConstraintCard = ({ constraint, onConstraintChange, addToast, onOpe
         <div style={{
           background: C.surfaceAlt,
           borderLeft: `4px solid ${themeColor}`,
-          borderRadius: 10,
+          borderRadius: 8,
           padding: "10px 14px",
           display: "flex",
           alignItems: "flex-start",

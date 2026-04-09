@@ -59,7 +59,7 @@ export const BodyCheckIn = ({ exertion, onExertionChange, bodyStatus, onBodyStat
   return (
     <div style={{
       background: C.surface,
-      borderRadius: 12,
+      borderRadius: 8,
       padding: 12,
       marginBottom: 12,
     }}>
@@ -137,7 +137,7 @@ export const BodyCheckIn = ({ exertion, onExertionChange, bodyStatus, onBodyStat
                     flex: 1,
                     minWidth: 44,
                     minHeight: 44,
-                    borderRadius: 10,
+                    borderRadius: 8,
                     border: `1.5px solid ${stateColor || C.border}`,
                     background: stateColor ? stateColor + "14" : "transparent",
                     display: "flex",

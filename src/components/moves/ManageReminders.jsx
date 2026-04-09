@@ -95,7 +95,7 @@ export const ManageReminders = ({ reminders, onRemindersChange, addToast, settin
         ) : (
           <>
             {items.map(item => (
-              <div key={item.id} style={{ background: C.surface, borderRadius: 10,
+              <div key={item.id} style={{ background: C.surface, borderRadius: 8,
                 border: `1px solid ${C.border}`, padding: 12, margin: "0 12px 8px" }}>
 
                 {deletingId === item.id ? (
@@ -124,7 +124,7 @@ export const ManageReminders = ({ reminders, onRemindersChange, addToast, settin
                     <textarea value={editText} onChange={e => setEditText(e.target.value.slice(0, 280))}
                       rows={2}
                       style={{ width: "100%", background: C.bg, border: `1px solid ${C.border}`,
-                        borderRadius: 10, padding: 12, fontSize: 14, fontFamily: FONT_BODY,
+                        borderRadius: 8, padding: 12, fontSize: 14, fontFamily: FONT_BODY,
                         color: C.text, resize: "none", outline: "none", boxSizing: "border-box",
                         maxHeight: 120, overflow: "auto" }} />
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 4 }}>
@@ -172,7 +172,7 @@ export const ManageReminders = ({ reminders, onRemindersChange, addToast, settin
                   placeholder={t("writeYourselfANote")}
                   rows={2}
                   style={{ width: "100%", background: C.surface, border: `1px solid ${C.border}`,
-                    borderRadius: 10, padding: 12, fontSize: 14, fontFamily: FONT_BODY,
+                    borderRadius: 8, padding: 12, fontSize: 14, fontFamily: FONT_BODY,
                     color: C.text, resize: "none", outline: "none", boxSizing: "border-box",
                     maxHeight: 120, overflow: "auto" }} />
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 4 }}>

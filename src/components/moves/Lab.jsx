@@ -482,7 +482,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
                     setScreen("workspace");
                   }}
                     style={{
-                      background: C.surface, borderRadius: 10,
+                      background: C.surface, borderRadius: 8,
                       padding: "10px 14px", cursor: "pointer", textAlign: "left",
                       display: "flex", alignItems: "center", justifyContent: "space-between",
                     }}>
@@ -524,7 +524,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
         {mode === "grow" && seedMove && (
           <div style={{
             display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", marginBottom: 16,
-            background: `${C.green}15`, borderRadius: 12,
+            background: `${C.green}15`, borderRadius: 8,
           }}>
             <Ic n="sparkles" s={20} c={C.green}/>
             <div>
@@ -550,7 +550,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
               onChange={e => setBaseName(e.target.value)}
               placeholder={t("baseMoveOptional")}
               style={{
-                width: "100%", padding: "12px 14px", borderRadius: 10, border: `1.5px solid ${C.border}`,
+                width: "100%", padding: "12px 14px", borderRadius: 8, border: `1.5px solid ${C.border}`,
                 background: C.surface, color: C.text, fontFamily: FONT_BODY, fontSize: 14,
                 outline: "none", transition: "border-color 0.15s",
               }}
@@ -585,7 +585,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
 
         {/* Live Preview */}
         <div style={{
-          background: C.surfaceAlt, borderRadius: 12, padding: "14px 16px", marginBottom: 20,
+          background: C.surfaceAlt, borderRadius: 8, padding: "14px 16px", marginBottom: 20,
           border: `1px solid ${C.border}`,
         }}>
           <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, color: C.textMuted, letterSpacing: 1, marginBottom: 6 }}>
@@ -641,7 +641,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
 
         {/* Creativity Timer */}
         <div style={{
-          background: C.surface, borderRadius: 12, padding: "14px 16px", marginBottom: 20,
+          background: C.surface, borderRadius: 8, padding: "14px 16px", marginBottom: 20,
         }}>
           <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, color: C.textMuted, letterSpacing: 1, marginBottom: 10 }}>
             {t("creativityTimer")}
@@ -739,7 +739,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
       {savedFlash && (
         <div style={{
           position: "absolute", top: 54, left: 12, right: 12, zIndex: 610,
-          background: C.surface, border: `2px solid ${C.green}`, borderRadius: 10,
+          background: C.surface, border: `2px solid ${C.green}`, borderRadius: 8,
           padding: "11px 14px", boxShadow: "0 6px 24px rgba(0,0,0,0.25)",
           display: "flex", alignItems: "center", gap: 10,
           animation: "toastIn 0.3s ease",

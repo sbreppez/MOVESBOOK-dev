@@ -389,8 +389,7 @@ export const CalendarOverlay = ({
 
             {/* Type picker dropdown */}
             {showTypePicker && (
-              <div style={{ background: C.surfaceAlt, borderRadius: 8, padding: 6, marginBottom: 8,
-                border: `1px solid ${C.border}` }}>
+              <div style={{ background: C.surfaceAlt, borderRadius: 8, padding: 6, marginBottom: 8 }}>
                 {[
                   { type: "training", icon: "target", label: t("training") },
                   { type: "battle", icon: "swords", label: t("battleEvent") },

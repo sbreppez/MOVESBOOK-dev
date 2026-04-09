@@ -50,14 +50,14 @@ export const IdeaForm = ({ idea, onSave, onCancel }) => {
         <input value={f.emoji} onChange={e => set("emoji")(e.target.value)}
           style={{
             width: 44, height: 44, textAlign: "center", fontSize: 22,
-            background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10,
+            background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8,
             color: C.text, fontFamily: FONT_BODY,
           }}/>
         <input value={f.title} onChange={e => set("title")(e.target.value)}
           placeholder={t("ideaTitle")}
           style={{
             flex: 1, padding: "10px 12px", fontSize: 14, fontFamily: FONT_BODY,
-            background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10,
+            background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8,
             color: C.text,
           }}/>
       </div>
@@ -71,7 +71,7 @@ export const IdeaForm = ({ idea, onSave, onCancel }) => {
           rows={3}
           style={{
             width: "100%", padding: "8px 12px", fontSize: 13, fontFamily: FONT_BODY,
-            background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10,
+            background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8,
             color: C.text, resize: "vertical", marginTop: 4, boxSizing: "border-box",
           }}/>
       </div>
@@ -85,7 +85,7 @@ export const IdeaForm = ({ idea, onSave, onCancel }) => {
           placeholder="https://..."
           style={{
             width: "100%", padding: "8px 12px", fontSize: 13, fontFamily: FONT_BODY,
-            background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10,
+            background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8,
             color: C.text, marginTop: 4, boxSizing: "border-box",
           }}/>
       </div>

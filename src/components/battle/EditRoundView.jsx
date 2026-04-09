@@ -183,7 +183,7 @@ export const EditRoundView = ({ round, onSave, onClose, getMove, getSet, setPick
         {(localRound.entries||[]).map((entry) => {
           const isOpen = localExpEntries[entry.id] !== false;
           return (
-            <div key={entry.id} style={{ marginBottom:6, borderRadius:10, overflow:"hidden", background:C.bg }}>
+            <div key={entry.id} style={{ marginBottom:6, borderRadius:8, overflow:"hidden", background:C.bg }}>
               <div style={{ display:"flex", alignItems:"center", padding:"8px 10px", background:C.surface, gap:6 }}>
                 <button onClick={()=>setLocalExpEntries(p=>({...p,[entry.id]:!isOpen}))}
                   style={{ background:"none", border:"none", cursor:"pointer", padding:0, display:"flex", flexShrink:0 }}>

@@ -52,7 +52,7 @@ export const TrainingLog = ({ value, onChange, framingKey, reflections, onReflec
         placeholder={t("aFewWords")}
         rows={2}
         style={{ width: "100%", fontSize: 13, color: C.text, background: C.surfaceAlt,
-          borderRadius: 10, padding: 12, border: `1px solid ${C.border}`,
+          borderRadius: 8, padding: 12, border: `1px solid ${C.border}`,
           fontFamily: FONT_BODY, resize: "vertical", outline: "none", boxSizing: "border-box" }}
       />
       {/* Rotating hint */}
