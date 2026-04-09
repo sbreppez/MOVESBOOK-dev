@@ -876,7 +876,7 @@ export default function App() {
                   <button id="tour-add-btn" onClick={handlePlusPress}
                     style={{ display:"flex", flexDirection:"column", alignItems:"center",
                       justifyContent:"center", background:"none", border:"none", cursor:"pointer" }}>
-                    <div style={{ width:34, height:34, borderRadius:17, background:C.accent,
+                    <div style={{ width:36, height:36, borderRadius:18, background:C.accent,
                       display:"flex", alignItems:"center", justifyContent:"center" }}>
                       <Ic n="plus" s={18} c="#fff"/>
                     </div>
@@ -890,7 +890,7 @@ export default function App() {
                     justifyContent:"center", gap:3, background:"none",
                     border:"none",
                     cursor:"pointer", color:on?C.text:C.textMuted, transition:"all 0.15s", position:"relative", overflow:"visible" }}>
-                  <span style={{ fontSize:10, fontFamily:FONT_DISPLAY, fontWeight:800, letterSpacing:1.2, borderBottom:`2px solid ${on?C.accent:"transparent"}`, paddingBottom:3 }}>{tb.label}</span>
+                  <span style={{ fontSize:11, fontFamily:FONT_DISPLAY, fontWeight:800, letterSpacing:1.2, borderBottom:`2px solid ${on?C.accent:"transparent"}`, paddingBottom:3 }}>{tb.label}</span>
                 </button>
               );
             })}

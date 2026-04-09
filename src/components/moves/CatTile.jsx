@@ -129,7 +129,7 @@ export const CatTile = (props) => {
           cursor:"default", overflow:"visible" }}>
 
         {/* Header row */}
-        <div style={{ display:"flex", alignItems:"center", gap:6, padding:"13px 13px" }}>
+        <div style={{ display:"flex", alignItems:"center", gap:6, padding:"14px 16px" }}>
           {/* Expand/collapse toggle */}
           <button onClick={e=>{e.stopPropagation();setExpanded(x=>!x);}}
             style={{ background:"none", border:"none", cursor:"pointer", display:"flex", alignItems:"center", padding:2, flexShrink:0 }}>
@@ -171,7 +171,7 @@ export const CatTile = (props) => {
         {expanded&&moves.length>0&&(
           <div style={{ borderTop:`1px solid ${C.borderLight}`, padding:"4px 0 6px" }}>
             {moves.map(m=>(
-              <div key={m.id} style={{ display:"flex", alignItems:"center", gap:7, padding:"5px 13px 5px 34px" }}>
+              <div key={m.id} style={{ display:"flex", alignItems:"center", gap:7, padding:"5px 16px 5px 34px" }}>
                 <div style={{ width:5, height:5, borderRadius:"50%", background:masteryColor(dm(m)), flexShrink:0 }}/>
                 <span style={{ fontSize:13, color:C.textSec, flex:1 }}>{m.name}</span>
                 {showMastery&&<span style={{ fontSize:10, color:masteryColor(dm(m)), fontWeight:700 }}>{dm(m)}%</span>}
