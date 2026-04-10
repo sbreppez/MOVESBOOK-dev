@@ -672,7 +672,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
   const EmptyState = () => {
     const cfg = {
       rivals: { icon:"sword", intro:"rivalsIntro", none:"noRivalsYet", tap:"tapToAddRival" },
-      sparringMate: { icon:"handshake", intro:"sparringMateIntro", none:"noSparringMatesYet", tap:"tapToAddSparringMate" },
+      sparringMate: { icon:"users", intro:"sparringMateIntro", none:"noSparringMatesYet", tap:"tapToAddSparringMate" },
       crew: { icon:"users", intro:"crewIntro", none:"noCrewYet", tap:"tapToAddCrew" },
     }[peopleTab];
     return (
@@ -746,7 +746,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
         <div style={{ display:"flex", flexDirection:"column", gap:6, padding:"8px 0" }}>
           {[
             { type:"rival", icon:"sword", key:"addRival" },
-            { type:"sparringMate", icon:"handshake", key:"addSparringMate" },
+            { type:"sparringMate", icon:"users", key:"addSparringMate" },
             { type:"crew", icon:"users", key:"addCrew" },
           ].map(opt => (
             <button key={opt.type} onClick={() => {
