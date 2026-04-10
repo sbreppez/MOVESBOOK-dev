@@ -25,9 +25,9 @@ const RESULT_OPTIONS = [
 ];
 
 const PEOPLE_TABS = [
-  { id:"rivals", key:"rivals", emoji:"\u2694\ufe0f" },
-  { id:"sparringMate", key:"sparringMate", emoji:"\ud83e\udd1c" },
-  { id:"crew", key:"crew", emoji:"\ud83d\udc64" },
+  { id:"rivals", key:"rivals" },
+  { id:"sparringMate", key:"sparringMate" },
+  { id:"crew", key:"crew" },
 ];
 
 const TYPE_OPTIONS = [
@@ -155,7 +155,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
 
     return (
       <div onClick={() => { setEditingRival(normalizeRival(rival)); setShowModal(true); }}
-        style={{ background:C.surface, borderRadius:8, padding:16,
+        style={{ background:C.surface, borderRadius:8, padding:"14px 16px",
           cursor:"pointer", marginBottom:6, display:"flex", alignItems:"center", gap:12 }}>
         <div style={{ width:48, height:48, borderRadius:"50%", flexShrink:0, overflow:"hidden",
           background: rival.photo ? "none" : C.surfaceAlt, display:"flex", alignItems:"center", justifyContent:"center",
@@ -166,12 +166,12 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
         </div>
         <div style={{ flex:1, minWidth:0 }}>
           <div style={{ display:"flex", alignItems:"center", gap:6, flexWrap:"wrap" }}>
-            <span style={{ fontWeight:800, fontSize:14, color:C.text, fontFamily:FONT_DISPLAY, letterSpacing:0.5 }}>{rival.name}</span>
+            <span style={{ fontWeight:800, fontSize:16, color:C.text, fontFamily:FONT_DISPLAY, letterSpacing:0.5 }}>{rival.name}</span>
             {stanceBadge && <span style={{ fontSize:10, fontWeight:700, color:C.textMuted, fontFamily:FONT_DISPLAY }}>{stanceBadge}</span>}
             {conf && <span style={{ fontSize:14 }}>{conf.emoji}</span>}
           </div>
           {rival.crew && (
-            <div style={{ fontSize:11, color:C.textMuted, fontFamily:FONT_BODY, marginTop:2 }}>{rival.crew}</div>
+            <div style={{ fontSize:13, color:C.textMuted, fontFamily:FONT_BODY, marginTop:2 }}>{rival.crew}</div>
           )}
           {rival.strongDomains?.length > 0 && (
             <div style={{ display:"flex", flexWrap:"wrap", gap:4, marginTop:5 }}>
@@ -671,14 +671,14 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
   // ── Empty state ──
   const EmptyState = () => {
     const cfg = {
-      rivals: { emoji:"\u2694\ufe0f", intro:"rivalsIntro", none:"noRivalsYet", tap:"tapToAddRival" },
-      sparringMate: { emoji:"\ud83e\udd1c", intro:"sparringMateIntro", none:"noSparringMatesYet", tap:"tapToAddSparringMate" },
-      crew: { emoji:"\ud83d\udc64", intro:"crewIntro", none:"noCrewYet", tap:"tapToAddCrew" },
+      rivals: { icon:"sword", intro:"rivalsIntro", none:"noRivalsYet", tap:"tapToAddRival" },
+      sparringMate: { icon:"handshake", intro:"sparringMateIntro", none:"noSparringMatesYet", tap:"tapToAddSparringMate" },
+      crew: { icon:"users", intro:"crewIntro", none:"noCrewYet", tap:"tapToAddCrew" },
     }[peopleTab];
     return (
       <div style={{ textAlign:"center", padding:"48px 20px" }}>
-        <span style={{ fontSize:40 }}>{cfg.emoji}</span>
-        <p style={{ fontFamily:FONT_BODY, fontSize:14, color:C.textMuted, margin:"12px 0 4px", lineHeight:1.5, maxWidth:320, marginLeft:"auto", marginRight:"auto" }}>
+        <Ic n={cfg.icon} s={32} c={C.textMuted}/>
+        <p style={{ fontFamily:FONT_BODY, fontSize:13, color:C.textMuted, margin:"12px 0 4px", lineHeight:1.5, maxWidth:320, marginLeft:"auto", marginRight:"auto" }}>
           {t(cfg.intro)}
         </p>
         <p style={{ fontFamily:FONT_BODY, fontSize:13, color:C.textMuted, margin:0 }}>
@@ -692,38 +692,36 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
   return (
     <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column" }}>
       {/* Inner sub-tab bar */}
-      <div style={{ display:"flex", background:"transparent", flexShrink:0 }}>
+      <div style={{ display:"flex", gap:0, flexShrink:0 }}>
         {PEOPLE_TABS.map(tab => {
           const active = peopleTab === tab.id;
           const count = tab.id === "rivals" ? rivalsList.length : tab.id === "sparringMate" ? sparringMates.length : crewList.length;
           return (
             <button key={tab.id} onClick={() => setPeopleTab(tab.id)}
-              style={{ flex:1, padding:"7px 0", background:"none", border:"none", cursor:"pointer",
-                fontSize:14, fontWeight:800, letterSpacing:1.2, fontFamily:FONT_DISPLAY, textTransform:"uppercase",
+              style={{ padding:"4px 10px", background:"none", border:"none", cursor:"pointer",
+                fontSize:14, fontWeight:800, letterSpacing:1.5, fontFamily:FONT_DISPLAY, textTransform:"uppercase",
                 color: active ? C.text : C.textMuted }}>
-              <span style={{ borderBottom: active ? `2px solid ${C.accent}` : "2px solid transparent", paddingBottom:3 }}>{t(tab.key)}</span> {count > 0 ? `(${count})` : ""}
+              <span style={{ borderBottom: active ? `2px solid ${C.accent}` : "2px solid transparent", paddingBottom:3 }}>{t(tab.key)}{count > 0 ? ` (${count})` : ""}</span>
             </button>
           );
         })}
       </div>
 
       {/* Section header: count + eye toggle + import */}
-      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"8px 16px", flexShrink:0 }}>
-        <span style={{ fontSize:14, fontWeight:800, letterSpacing:1.2, color:C.textMuted, fontFamily:FONT_DISPLAY, textTransform:"uppercase" }}>
+      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"5px 16px 3px", flexShrink:0 }}>
+        <span style={{ fontSize:14, fontWeight:800, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY, textTransform:"uppercase" }}>
           {activeList.length} {t(PEOPLE_TABS.find(t2 => t2.id === peopleTab)?.key || "rivals")}
         </span>
         <div style={{ display:"flex", gap:4 }}>
           <button onClick={() => { setShowImportPicker(true); }}
-            style={{ background:"none", border:"none", cursor:"pointer", padding:6, minWidth:44, minHeight:44,
-              display:"flex", alignItems:"center", justifyContent:"center" }}
+            style={{ background:"none", border:"none", cursor:"pointer", padding:4 }}
             title={t("importSpar")}>
-            <Ic n="upload" s={16} c={C.textMuted}/>
+            <Ic n="upload" s={16} c={C.textSec}/>
           </button>
           <button onClick={() => setBlurred(b => !b)}
-            style={{ background:"none", border:"none", cursor:"pointer", padding:6, minWidth:44, minHeight:44,
-              display:"flex", alignItems:"center", justifyContent:"center" }}
+            style={{ background:"none", border:"none", cursor:"pointer", padding:4 }}
             title={blurred ? t("showProfiles") : t("hideProfiles")}>
-            <Ic n={blurred ? "eyeOff" : "eye"} s={16} c={C.textMuted}/>
+            <Ic n={blurred ? "eyeOff" : "eye"} s={16} c={C.textSec}/>
           </button>
         </div>
       </div>
@@ -747,9 +745,9 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
       <BottomSheet open={showAddMenu} onClose={() => setShowAddMenu(false)} title={t("addPerson")}>
         <div style={{ display:"flex", flexDirection:"column", gap:6, padding:"8px 0" }}>
           {[
-            { type:"rival", emoji:"\u2694\ufe0f", key:"addRival" },
-            { type:"sparringMate", emoji:"\ud83e\udd1c", key:"addSparringMate" },
-            { type:"crew", emoji:"\ud83d\udc64", key:"addCrew" },
+            { type:"rival", icon:"sword", key:"addRival" },
+            { type:"sparringMate", icon:"handshake", key:"addSparringMate" },
+            { type:"crew", icon:"users", key:"addCrew" },
           ].map(opt => (
             <button key={opt.type} onClick={() => {
               setShowAddMenu(false);
@@ -758,7 +756,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
             }}
               style={{ display:"flex", alignItems:"center", gap:12, padding:"14px 16px", borderRadius:8,
                 background:C.surfaceAlt, cursor:"pointer", textAlign:"left" }}>
-              <span style={{ fontSize:20 }}>{opt.emoji}</span>
+              <Ic n={opt.icon} s={20} c={C.textSec}/>
               <span style={{ fontSize:13, fontWeight:800, color:C.text, fontFamily:FONT_DISPLAY, letterSpacing:0.5, textTransform:"uppercase" }}>
                 {t(opt.key)}
               </span>
