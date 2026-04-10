@@ -139,17 +139,17 @@ export const ReflectPage = ({
     return (
       <>
         {/* Search + view toggle */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "6px 14px", borderBottom: `1px solid ${C.borderLight}`, background: C.surface, flexShrink: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "6px 16px", flexShrink: 0 }}>
           <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, color: C.textMuted, fontFamily: FONT_DISPLAY }}>
             {tabType === "goals" ? t("goals") : t("notes")} · {count}
           </span>
-          <div style={{ display: "flex", gap: 3 }}>
+          <div style={{ display: "flex", gap: 8 }}>
             {!reorderMode && <button onClick={() => { setShowSearch(s => !s); setSearch(""); }}
-              style={{ background: showSearch ? C.surfaceAlt : "none", border: "none", cursor: "pointer", padding: 5, borderRadius: 5, color: showSearch ? C.accent : C.textMuted }}>
+              style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: showSearch ? C.accent : C.textSec }}>
               <Ic n="search" s={16} />
             </button>}
             {!reorderMode && <button onClick={() => setView(v => v === "list" ? "tiles" : "list")}
-              style={{ background: "none", border: "none", cursor: "pointer", padding: 5, borderRadius: 5, color: C.textMuted }}>
+              style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: C.textSec }}>
               <Ic n={view === "list" ? "grid" : "list"} s={16} />
             </button>}
             <button onClick={() => { setReorderMode(r => !r); setSearch(""); setShowSearch(false); }}
@@ -213,18 +213,15 @@ export const ReflectPage = ({
   return (
     <div style={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column" }}>
       {/* Sub-tab nav */}
-      <div style={{ display: "flex", background: C.surface, borderBottom: `2px solid ${C.border}`, flexShrink: 0 }}>
+      <div style={{ display: "flex", background: "transparent", flexShrink: 0 }}>
         {subTabs.map(([id, label]) => {
           const on = reflectTab === id;
-          const count = id === "goals" ? goals.length : id === "notes" ? notes.length : null;
           return (
             <button key={id} onClick={() => setReflectTab(id)}
               style={{ flex: 1, padding: "9px 4px", border: "none", cursor: "pointer",
                 background: "none", color: on ? C.text : C.textMuted,
-                fontSize: 14, fontWeight: 800, letterSpacing: 1, fontFamily: FONT_DISPLAY, textTransform: "uppercase",
-                display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
+                fontSize: 14, fontWeight: 800, letterSpacing: 1.5, fontFamily: FONT_DISPLAY, textTransform: "uppercase" }}>
               <span style={{ borderBottom: `2px solid ${on ? C.accent : "transparent"}`, paddingBottom: 3 }}>{label}</span>
-              {count !== null && count > 0 && <span style={{ fontSize: 10, color: on ? C.text : C.textMuted, background: C.surfaceAlt, borderRadius: 10, padding: "0 5px" }}>{count}</span>}
             </button>
           );
         })}

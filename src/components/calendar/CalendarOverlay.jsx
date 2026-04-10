@@ -214,18 +214,17 @@ export const CalendarOverlay = ({
         </button>
       </div>}
 
-      {/* Days / Reports toggle — inline mode only */}
-      {inline && (
-        <div style={{ display: "flex", gap: 6, padding: "10px 14px", flexShrink: 0, background: C.bg }}>
-          {[["days", t("calDays")], ...(isPremium ? [["reports", t("calReports")]] : [])].map(([id, label]) => {
+      {/* Days / Reports toggle — inline mode only, hidden when single option */}
+      {inline && isPremium && (
+        <div style={{ display: "flex", gap: 8, padding: "8px 16px", flexShrink: 0 }}>
+          {[["days", t("calDays")], ["reports", t("calReports")]].map(([id, label]) => {
             const on = calView === id;
             return (
               <button key={id} onClick={() => setCalView(id)}
-                style={{ padding: "6px 14px", borderRadius: 20, border: `1.5px solid ${on ? C.accent : C.border}`,
-                  background: on ? C.accent + "22" : C.surface, color: on ? C.accent : C.textSec,
-                  fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, letterSpacing: 0.5,
-                  cursor: "pointer" }}>
-                {label}
+                style={{ background: "none", border: "none", cursor: "pointer", padding: "4px 0",
+                  fontFamily: FONT_DISPLAY, fontWeight: 800, fontSize: 14, letterSpacing: 1.5,
+                  textTransform: "uppercase", color: on ? C.text : C.textMuted }}>
+                <span style={{ borderBottom: `2px solid ${on ? C.accent : "transparent"}`, paddingBottom: 3 }}>{label}</span>
               </button>
             );
           })}

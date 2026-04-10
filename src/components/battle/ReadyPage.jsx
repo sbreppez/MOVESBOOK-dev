@@ -327,28 +327,23 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
       <div style={{ flex:1, display:"flex", flexDirection:"column", overflow:"hidden" }}>
         <SectionBrief desc={t("battlePlanBrief")} stat={`${rounds.length} rounds configured`} settings={settings}/>
         {/* Header */}
-        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"8px 14px", borderBottom:`1px solid ${C.border}`, background:C.surface, flexShrink:0 }}>
-          <span style={{ fontSize:11, fontWeight:800, letterSpacing:1.5, color:C.brownMid, fontFamily:FONT_DISPLAY }}>{t("rounds")}</span>
-          <div style={{ display:"flex", alignItems:"center", gap:5 }}>
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"8px 16px", flexShrink:0 }}>
+          <span style={{ fontSize:14, fontWeight:800, letterSpacing:1.5, color:C.brownMid, fontFamily:FONT_DISPLAY }}>{t("rounds")}</span>
+          <div style={{ display:"flex", alignItems:"center", gap:8 }}>
             <button onClick={()=>setConfirmRestore(true)}
-              style={{ background:"none", border:`1px solid ${C.border}`, borderRadius:6, cursor:"pointer",
-                color:C.textMuted, padding:"5px 11px", fontSize:13, fontFamily:FONT_DISPLAY, fontWeight:700,
-                display:"flex", alignItems:"center", gap:3 }}>
-              ↺
+              style={{ background:"none", border:"none", cursor:"pointer", padding:4 }}
+              title={t("resetRounds")}>
+              <Ic n="refreshCw" s={16} c={C.textSec}/>
             </button>
             <button onClick={()=>setShowLoadTemplate(true)}
-              style={{ background:"none", border:`1px solid ${C.border}`, borderRadius:6, cursor:"pointer",
-                color:C.textMuted, padding:"5px 11px", fontSize:13, fontFamily:FONT_DISPLAY, fontWeight:700,
-                display:"flex", alignItems:"center", gap:3 }}
+              style={{ background:"none", border:"none", cursor:"pointer", padding:4 }}
               title={t("loadSavedTemplate")}>
-              {t("loadBtn")}{templates.length>0&&<span style={{ marginLeft:3, background:C.accent, color:C.bg, borderRadius:8, padding:"0 5px", fontSize:10 }}>{templates.length}</span>}
+              <Ic n="download" s={16} c={C.textSec}/>
             </button>
             <button onClick={()=>{ setTemplateName(""); setShowSaveTemplate(true); }}
-              style={{ background:"none", border:`1px solid ${C.border}`, borderRadius:6, cursor:"pointer",
-                color:C.textMuted, padding:"5px 11px", fontSize:13, fontFamily:FONT_DISPLAY, fontWeight:700,
-                display:"flex", alignItems:"center", gap:3 }}
+              style={{ background:"none", border:"none", cursor:"pointer", padding:4 }}
               title={t("saveCurrentTemplate")}>
-              {t("saveBtn")}
+              <Ic n="upload" s={16} c={C.textSec}/>
             </button>
             {rounds.length>1&&<button onClick={()=>setReorderRounds(r=>!r)}
               style={{ background:reorderRounds?C.accent:"none", border:"none", cursor:"pointer", padding:"4px 8px", borderRadius:5,
@@ -501,7 +496,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
         )}
 
         {/* Rounds list */}
-        <div style={{ flex:1, overflow:"auto", padding:"10px 12px" }}>
+        <div style={{ flex:1, overflow:"auto", padding:"6px 16px" }}>
           {isPremium && rounds.some(r => (r.entries||[]).some(e => (e.items||[]).filter(it=>it.type==="move").length >= 2)) && <ArcLegend/>}
           {rounds.length === 0 && (
             <div style={{ textAlign:"center", padding:40, color:C.textMuted }}>
@@ -743,7 +738,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
   return (
     <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column", position:"relative" }}>
       {/* Sub-tab bar */}
-      <div style={{ display:"flex", borderBottom:`1px solid ${C.border}`, background:C.surface, flexShrink:0 }}>
+      <div style={{ display:"flex", background:"transparent", flexShrink:0 }}>
         {subTabs.map(([id,label])=>(
           <button key={id} onClick={()=>setBattleTabAndNotify(id)}
             style={{ flex:1, padding:"9px 0", background:"none", border:"none", cursor:"pointer",

@@ -45,7 +45,7 @@ export const IdeaTile = (props) => {
     return (
       <div draggable={draggable} onDragStart={onDragStart} onDragOver={onDragOver} onDrop={onDrop}
         onClick={isGoal ? ()=>setExpanded(x=>!x) : undefined}
-        style={{ ...CARD_BASE(), background:C.surface, borderLeft:`4px solid ${color}`, cursor:isGoal?"pointer":"default", ...(isPinned ? { borderTop:`2px solid ${color}66`, borderRight:`2px solid ${color}66`, borderBottom:`2px solid ${color}66` } : {}) }}>
+        style={{ ...CARD_BASE(), background:C.surface, borderLeft:`4px solid ${color}`, cursor:isGoal?"pointer":"default" }}>
         <div style={CARD_BODY()}>
           {/* Title row */}
           <div style={{ display:"flex", alignItems:"flex-start", gap:6, marginBottom:6 }}>
@@ -182,8 +182,8 @@ export const IdeaTile = (props) => {
       <div
         draggable={draggable}
         onDragStart={onDragStart} onDragOver={onDragOver} onDrop={onDrop}
-        style={{ position:"relative", background:C.surface, border:isPinned?`1.5px solid ${color}66`:"none", borderRadius:8,
-          borderLeft:`4px solid ${color}`, cursor:"default", overflow:"visible", transition:"border-color 0.15s" }}>
+        style={{ position:"relative", background:C.surface, border:"none", borderRadius:8,
+          borderLeft:`4px solid ${color}`, cursor:"default", overflow:"visible" }}>
         <div style={{ display:"flex", alignItems:"center", gap:6, padding:"10px 8px 10px 8px" }}>
           <button onClick={e=>{e.stopPropagation();setExpanded(x=>!x);}}
             style={{ background:"none", border:"none", cursor:"pointer", display:"flex", alignItems:"center", padding:2, flexShrink:0 }}>

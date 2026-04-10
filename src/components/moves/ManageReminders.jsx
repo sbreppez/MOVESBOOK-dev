@@ -96,7 +96,7 @@ export const ManageReminders = ({ reminders, onRemindersChange, addToast, settin
           <>
             {items.map(item => (
               <div key={item.id} style={{ background: C.surface, borderRadius: 8,
-                border: `1px solid ${C.border}`, padding: 12, margin: "0 12px 8px" }}>
+                padding: 12, margin: "0 12px 8px" }}>
 
                 {deletingId === item.id ? (
                   /* Delete confirmation */

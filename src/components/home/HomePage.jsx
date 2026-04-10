@@ -332,7 +332,7 @@ export const HomePage = ({
       {/* Header row */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between",
         padding: "8px 14px", flexShrink: 0 }}>
-        <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, color: C.textMuted, fontFamily: FONT_DISPLAY }}>
+        <span style={{ fontSize: 14, fontWeight: 700, letterSpacing: 1.5, color: C.textMuted, fontFamily: FONT_DISPLAY }}>
           {dateLabel}
         </span>
         <button onClick={() => setShowGearMenu(true)}
@@ -407,7 +407,7 @@ export const HomePage = ({
               style={{
                 display: "flex", alignItems: "center", gap: 12, width: "100%",
                 padding: "14px 12px", borderRadius: 8, cursor: "pointer",
-                background: C.surface, border: `1px solid ${C.border}`,
+                background: C.surface, border: "none",
                 color: C.text, fontSize: 13, fontWeight: 700, fontFamily: FONT_DISPLAY,
                 textAlign: "left", letterSpacing: 0.3,
               }}>
