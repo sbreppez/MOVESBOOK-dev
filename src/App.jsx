@@ -890,7 +890,7 @@ export default function App() {
                     justifyContent:"center", gap:3, background:"none",
                     border:"none",
                     cursor:"pointer", color:on?C.text:C.textMuted, transition:"all 0.15s", position:"relative", overflow:"visible" }}>
-                  <span style={{ fontSize:11, fontFamily:FONT_DISPLAY, fontWeight:800, letterSpacing:1.2, borderBottom:`2px solid ${on?C.accent:"transparent"}`, paddingBottom:3 }}>{tb.label}</span>
+                  <span style={{ fontSize:12, fontFamily:FONT_DISPLAY, fontWeight:800, letterSpacing:1.2, borderBottom:`2px solid ${on?C.accent:"transparent"}`, paddingBottom:3 }}>{tb.label}</span>
                 </button>
               );
             })}
