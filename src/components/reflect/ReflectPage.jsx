@@ -42,7 +42,7 @@ export const ReflectPage = ({
   }, [parentSubTab]);
 
   // ── Goals/Notes state (replicated from IdeasPage) ──
-  const [view, setView] = useState("tiles");
+  const [view, setView] = useState("list");
   const [search, setSearch] = useState("");
   const [showSearch, setShowSearch] = useState(false);
   const [reorderMode, setReorderMode] = useState(false);

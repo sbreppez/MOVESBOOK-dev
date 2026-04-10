@@ -331,8 +331,8 @@ export const HomePage = ({
     <div style={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column" }}>
       {/* Header row */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between",
-        padding: "8px 14px", flexShrink: 0 }}>
-        <span style={{ fontSize: 14, fontWeight: 700, letterSpacing: 1.5, color: C.textMuted, fontFamily: FONT_DISPLAY }}>
+        padding: "8px 16px", flexShrink: 0 }}>
+        <span style={{ fontSize: 14, fontWeight: 800, letterSpacing: 1.5, color: C.text, fontFamily: FONT_DISPLAY, textTransform: "uppercase" }}>
           {dateLabel}
         </span>
         <button onClick={() => setShowGearMenu(true)}

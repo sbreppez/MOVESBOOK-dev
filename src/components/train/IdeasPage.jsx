@@ -18,8 +18,8 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
   const t = useT();
   const { resultCountStr, dayCountStr } = usePlural();
   const { settings: ideaSettings } = useSettings();
-  const [view,       setView]       = useState("tiles");
-  useEffect(() => { setView("tiles"); }, []);
+  const [view,       setView]       = useState("list");
+  useEffect(() => { setView("list"); }, []);
   const [editIdea,   setEditIdea]   = useState(null);
   const [typeChooser,setTypeChooser]= useState(false);
   const prevAddTrigger = useRef(onAddTrigger);

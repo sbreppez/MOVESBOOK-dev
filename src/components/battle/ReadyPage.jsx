@@ -262,7 +262,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
     const gridYs = [1,2,3,4].map(v => PAD_Y + plotH - (((v - 1) / 3) * plotH));
     return (
       <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none"
-        style={{ width:"100%", height:60, display:"block", padding:"0 12px", boxSizing:"border-box" }}>
+        style={{ width:"100%", height:60, display:"block", padding:"0", boxSizing:"border-box" }}>
         {gridYs.map((gy,i) => (
           <line key={i} x1={PAD_X} y1={gy} x2={W - PAD_X} y2={gy}
             stroke={C.border} strokeWidth={0.5} strokeOpacity={0.3}/>
@@ -297,7 +297,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
   const ArcLegend = () => {
     const seen = settings.arcLegendSeen;
     return (
-      <div style={{ margin:"4px 12px 6px", padding:"8px 10px", background:C.surface, borderRadius:8, border:`1px solid ${C.borderLight}` }}>
+      <div style={{ margin:"4px 0 6px", padding:"8px 10px", background:C.surface, borderRadius:8, border:"none" }}>
         <div onClick={()=>{ setArcLegendOpen(p=>!p); if(!seen && window.__MB_SETTINGS_SET__) window.__MB_SETTINGS_SET__(s=>({...s,arcLegendSeen:true})); }}
           style={{ display:"flex", alignItems:"center", cursor:"pointer", gap:6 }}>
           <Ic n={arcLegendOpen?"chevD":"chevR"} s={10} c={C.textMuted}/>
@@ -479,7 +479,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
 
         {/* Simulate Competition button — premium */}
         {isPremium && rounds.length >= 2 && onSimulate && (
-          <div style={{ padding:"10px 12px 0", flexShrink:0 }}>
+          <div style={{ padding:"8px 16px 0", flexShrink:0 }}>
             <button onClick={onSimulate}
               style={{
                 width:"100%", padding:14, borderRadius:12,
@@ -496,7 +496,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
         )}
 
         {/* Rounds list */}
-        <div style={{ flex:1, overflow:"auto", padding:"6px 16px" }}>
+        <div style={{ flex:1, overflow:"auto", padding:"8px 16px" }}>
           {isPremium && rounds.some(r => (r.entries||[]).some(e => (e.items||[]).filter(it=>it.type==="move").length >= 2)) && <ArcLegend/>}
           {rounds.length === 0 && (
             <div style={{ textAlign:"center", padding:40, color:C.textMuted }}>
@@ -511,18 +511,18 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
             return (
               <div key={round.id} style={{ position:"relative", marginBottom:6, borderRadius:8, overflow:"hidden", background:C.surface, borderLeft:`4px solid ${rColor}` }}>
                 {/* Round header */}
-                <div style={{ display:"flex", alignItems:"center", padding:"9px 12px", gap:6 }}>
+                <div style={{ display:"flex", alignItems:"center", padding:"14px 16px", gap:6 }}>
                   {/* Chevron toggle */}
                   {!reorderRounds&&<button onClick={()=>setExpRounds(p=>({...p,[round.id]:!isOpen}))}
                     style={{ background:"none", border:"none", cursor:"pointer", display:"flex", padding:0, flexShrink:0 }}>
-                    <Ic n={isOpen?"chevD":"chevR"} s={13} c={rColor}/>
+                    <Ic n={isOpen?"chevD":"chevR"} s={13} c={C.textMuted}/>
                   </button>}
                   {/* Title */}
                   <span onClick={()=>{ if(!reorderRounds) setEditRound(round); }}
-                    style={{ flex:1, fontWeight:800, fontSize:13, color:C.brown, fontFamily:FONT_DISPLAY, letterSpacing:0.8, cursor:reorderRounds?"default":"pointer" }}>
+                    style={{ flex:1, fontWeight:800, fontSize:16, color:C.brown, fontFamily:FONT_DISPLAY, letterSpacing:1.2, cursor:reorderRounds?"default":"pointer" }}>
                     {round.name}
                   </span>
-                  {!reorderRounds&&<span style={{ fontSize:10, color:rColor, fontWeight:700, fontFamily:FONT_DISPLAY, flexShrink:0 }}>
+                  {!reorderRounds&&<span style={{ fontSize:13, color:C.textMuted, fontWeight:400, fontFamily:FONT_DISPLAY, flexShrink:0 }}>
                     {entryCountStr(entryCount)}
                   </span>}
                   {!reorderRounds&&<button onClick={()=>setEditRound(round)}

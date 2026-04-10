@@ -50,30 +50,7 @@ export const INIT_MOVES = [
 
 const _t = (lang, key) => TRANSLATIONS[lang]?.[key] ?? TRANSLATIONS.en?.[key] ?? key;
 
-export const getInitIdeas = (lang="en") => [
-  {
-    id:201, type:"goal", title:_t(lang,"initGoalTitle"), text:"", color:"#C4453E", pinned:true, link:"",
-    createdDate: (() => { const d = new Date(); return d.toISOString().split("T")[0]; })(),
-    byWhen: (() => { const d = new Date(); d.setMonth(d.getMonth()+4); return d.toISOString().split("T")[0]; })(),
-    why:_t(lang,"initGoalWhy"),
-    steps:[_t(lang,"initGoalStep1"), _t(lang,"initGoalStep2"), _t(lang,"initGoalStep3")],
-    daysPerWeek:_t(lang,"initGoalCommitments"), sessionLength:_t(lang,"initGoalSession"), trainWhere:_t(lang,"initGoalWhere"),
-    obstacles:_t(lang,"initGoalObstacles"),
-    journal:[{
-      id:99901,
-      date: new Date().toLocaleDateString("en-AU",{day:"2-digit",month:"short",year:"numeric"}),
-      text:_t(lang,"initGoalJournalEntry"),
-      link:""
-    }]
-  },
-  {
-    id:203, type:"target", title:_t(lang,"initTargetTitle"), text:"", color:"#4A90C4", pinned:true, link:"",
-    createdDate: (() => { const d = new Date(); return d.toISOString().split("T")[0]; })(),
-    byWhen: (() => { const d = new Date(); d.setMonth(d.getMonth()+5); return d.toISOString().split("T")[0]; })(),
-    target:20, unit:"moves", current:0, autoLink:false
-  },
-  { id:202, type:"note", title:_t(lang,"initNoteTitle"), text:_t(lang,"initNoteText"), color:"#3D9E72", pinned:false, link:"" },
-];
+export const getInitIdeas = (lang="en") => [];
 export const INIT_IDEAS = getInitIdeas("en");
 
 export const getInitHabits = (lang="en") => [
