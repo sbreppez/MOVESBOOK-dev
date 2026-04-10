@@ -179,7 +179,7 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
     return (
       <div style={{ flex: 1, overflow: "auto", padding: "12px 12px 80px" }}>
         <div style={{ textAlign: "center", padding: "48px 20px" }}>
-          <span style={{ fontSize: 40 }}>{"\u2694\uFE0F"}</span>
+          <Ic n="sword" s={32} c={C.textMuted}/>
           <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: C.textMuted, margin: "12px 0 4px", lineHeight: 1.5 }}>
             {t("noUpcomingBattles")}
           </p>

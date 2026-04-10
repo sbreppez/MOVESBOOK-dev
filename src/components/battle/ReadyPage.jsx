@@ -500,7 +500,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
           {isPremium && rounds.some(r => (r.entries||[]).some(e => (e.items||[]).filter(it=>it.type==="move").length >= 2)) && <ArcLegend/>}
           {rounds.length === 0 && (
             <div style={{ textAlign:"center", padding:40, color:C.textMuted }}>
-              <div style={{ fontSize:28, marginBottom:8 }}>⚔</div>
+              <Ic n="sword" s={32} c={C.textMuted}/>
               <p style={{ fontSize:13 }}>No rounds yet — tap ADD to create one</p>
             </div>
           )}
