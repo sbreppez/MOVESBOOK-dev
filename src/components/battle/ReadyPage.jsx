@@ -333,7 +333,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
             <button onClick={()=>setConfirmRestore(true)}
               style={{ background:"none", border:"none", cursor:"pointer", padding:4 }}
               title={t("resetRounds")}>
-              <Ic n="refreshCw" s={16} c={C.textSec}/>
+              <Ic n="refresh" s={16} c={C.textSec}/>
             </button>
             <button onClick={()=>setShowLoadTemplate(true)}
               style={{ background:"none", border:"none", cursor:"pointer", padding:4 }}
