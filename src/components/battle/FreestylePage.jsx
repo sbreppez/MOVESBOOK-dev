@@ -202,7 +202,7 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
             style={{ background:"none", border:"none", cursor:"pointer", padding:4,
               display:"flex", alignItems:"center", opacity:toUse.length===0?0.35:1 }}
             title={t("resetList")}>
-            <Ic n="refreshCw" s={16} c={C.textMuted}/>
+            <Ic n="refresh" s={16} c={C.textMuted}/>
           </button>
           {/* Load */}
           <button onClick={()=>setShowLoadList(true)}
