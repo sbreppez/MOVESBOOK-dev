@@ -184,49 +184,46 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
       <SectionBrief desc={t("freestyleBrief")} settings={settings}/>
 
       {/* Header */}
-      <div style={{ padding:"8px 12px", borderBottom:`1px solid ${C.borderLight}`, background:C.surface,
+      <div style={{ padding:"8px 16px", background:"transparent",
         flexShrink:0, display:"flex", alignItems:"center", justifyContent:"space-between" }}>
-        <span style={{ fontSize:11, fontWeight:800, letterSpacing:2, color:C.textMuted, fontFamily:FONT_DISPLAY }}>
+        <span style={{ fontSize:14, fontWeight:800, letterSpacing:2, color:C.textMuted, fontFamily:FONT_DISPLAY }}>
           {t("toUse")} <span style={{fontWeight:400, letterSpacing:0, fontSize:11}}>· {unchecked.length} left · {checked.length} used</span>
         </span>
-        <div style={{ display:"flex", alignItems:"center", gap:5 }}>
+        <div style={{ display:"flex", alignItems:"center", gap:8 }}>
           {/* Trust Mode */}
           <button onClick={toggleTrust}
-            style={{ background:"none", border:`1px solid ${trustMode?C.accent:C.border}`, borderRadius:6,
-              cursor:"pointer", color:trustMode?C.accent:C.textMuted, padding:"5px 8px",
-              fontSize:11, fontFamily:FONT_DISPLAY, fontWeight:700, letterSpacing:1,
-              display:"flex", alignItems:"center", gap:4 }}>
-            <Ic n={trustMode?"eyeOff":"eye"} s={13} c={trustMode?C.accent:C.textMuted}/>
-            {t("trustMode")}
+            style={{ background:trustMode?C.surfaceAlt:"none", border:"none",
+              cursor:"pointer", padding:4, display:"flex", alignItems:"center" }}
+            title={t("trustMode")}>
+            <Ic n={trustMode?"eyeOff":"eye"} s={16} c={trustMode?C.accent:C.textMuted}/>
           </button>
           {/* Reset */}
           <button onClick={()=>setConfirmReset(true)} disabled={toUse.length===0}
-            style={{ background:"none", border:`1px solid ${C.border}`, borderRadius:6, cursor:"pointer",
-              color:C.textMuted, padding:"5px 11px", fontSize:13, fontFamily:FONT_DISPLAY, fontWeight:700,
+            style={{ background:"none", border:"none", cursor:"pointer", padding:4,
               display:"flex", alignItems:"center", opacity:toUse.length===0?0.35:1 }}
-            title={t("resetList")}>↺</button>
+            title={t("resetList")}>
+            <Ic n="refreshCw" s={16} c={C.textMuted}/>
+          </button>
           {/* Load */}
           <button onClick={()=>setShowLoadList(true)}
-            style={{ background:"none", border:`1px solid ${C.border}`, borderRadius:6, cursor:"pointer",
-              color:C.textMuted, padding:"5px 11px", fontSize:13, fontFamily:FONT_DISPLAY, fontWeight:700,
-              display:"flex", alignItems:"center", gap:4 }}
+            style={{ background:"none", border:"none", cursor:"pointer", padding:4,
+              display:"flex", alignItems:"center", position:"relative" }}
             title={t("loadSavedList")}>
-            {t("loadBtn")}
-            {savedLists.length>0&&<span style={{ background:C.accent, color:C.bg, borderRadius:8,
+            <Ic n="download" s={16} c={C.textMuted}/>
+            {savedLists.length>0&&<span style={{ position:"absolute", top:-4, right:-4, background:C.accent, color:C.bg, borderRadius:8,
               padding:"0 5px", fontSize:10, fontFamily:FONT_DISPLAY }}>{savedLists.length}</span>}
           </button>
           {/* Save */}
           <button onClick={()=>{ setSaveListName(""); setShowSaveList(true); }}
-            style={{ background:"none", border:`1px solid ${C.border}`, borderRadius:6, cursor:"pointer",
-              color:C.textMuted, padding:"5px 11px", fontSize:13, fontFamily:FONT_DISPLAY, fontWeight:700,
-              display:"flex", alignItems:"center", gap:4 }}
+            style={{ background:"none", border:"none", cursor:"pointer", padding:4,
+              display:"flex", alignItems:"center" }}
             title={t("saveCurrentList")}>
-            {t("saveBtn")}
+            <Ic n="upload" s={16} c={C.textMuted}/>
           </button>
           {/* Reorder */}
           <button onClick={()=>setReorderMode(r=>!r)}
-            style={{ background:reorderMode?C.accent:"none", border:`1px solid ${reorderMode?C.accent:C.border}`, borderRadius:6, cursor:"pointer",
-              color:reorderMode?C.bg:C.textMuted, padding:"5px 11px", fontSize:13, fontFamily:FONT_DISPLAY, fontWeight:700 }}>
+            style={{ background:reorderMode?C.accent:"none", border:"none", borderRadius:5, cursor:"pointer",
+              color:reorderMode?C.bg:C.textMuted, padding:"4px 8px", fontSize:13, fontFamily:FONT_DISPLAY, fontWeight:700 }}>
             {reorderMode?t("done"):"⇅"}
           </button>
         </div>

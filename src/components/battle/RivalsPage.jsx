@@ -692,14 +692,14 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
   return (
     <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column" }}>
       {/* Inner sub-tab bar */}
-      <div style={{ display:"flex", borderBottom:`1px solid ${C.border}`, background:C.surface, flexShrink:0 }}>
+      <div style={{ display:"flex", background:"transparent", flexShrink:0 }}>
         {PEOPLE_TABS.map(tab => {
           const active = peopleTab === tab.id;
           const count = tab.id === "rivals" ? rivalsList.length : tab.id === "sparringMate" ? sparringMates.length : crewList.length;
           return (
             <button key={tab.id} onClick={() => setPeopleTab(tab.id)}
               style={{ flex:1, padding:"7px 0", background:"none", border:"none", cursor:"pointer",
-                fontSize:10, fontWeight:800, letterSpacing:1.2, fontFamily:FONT_DISPLAY, textTransform:"uppercase",
+                fontSize:14, fontWeight:800, letterSpacing:1.2, fontFamily:FONT_DISPLAY, textTransform:"uppercase",
                 color: active ? C.text : C.textMuted }}>
               <span style={{ borderBottom: active ? `2px solid ${C.accent}` : "2px solid transparent", paddingBottom:3 }}>{t(tab.key)}</span> {count > 0 ? `(${count})` : ""}
             </button>
@@ -708,8 +708,8 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
       </div>
 
       {/* Section header: count + eye toggle + import */}
-      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"8px 14px", flexShrink:0 }}>
-        <span style={{ fontSize:11, fontWeight:800, letterSpacing:1.2, color:C.textMuted, fontFamily:FONT_DISPLAY, textTransform:"uppercase" }}>
+      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"8px 16px", flexShrink:0 }}>
+        <span style={{ fontSize:14, fontWeight:800, letterSpacing:1.2, color:C.textMuted, fontFamily:FONT_DISPLAY, textTransform:"uppercase" }}>
           {activeList.length} {t(PEOPLE_TABS.find(t2 => t2.id === peopleTab)?.key || "rivals")}
         </span>
         <div style={{ display:"flex", gap:4 }}>
@@ -733,7 +733,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
         {activeList.length === 0 ? (
           <EmptyState/>
         ) : (
-          <div style={{ padding:"0 14px 12px", filter: blurred ? "blur(8px)" : "none", transition:"filter 0.2s",
+          <div style={{ padding:"0 16px 12px", filter: blurred ? "blur(8px)" : "none", transition:"filter 0.2s",
             pointerEvents: blurred ? "none" : "auto" }}>
             {activeList.map(r => <RivalCard key={r.id} rival={r}/>)}
           </div>

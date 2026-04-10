@@ -12,6 +12,7 @@ import { useT } from '../../hooks/useTranslation';
 import { Ic } from '../shared/Ic';
 import { Modal } from '../shared/Modal';
 import { Btn } from '../shared/Btn';
+import { SectionBrief } from '../shared/SectionBrief';
 
 function getTilesForDate(homeStack, selectedDate) {
   if (!homeStack) return [];
@@ -343,6 +344,7 @@ export const HomePage = ({
 
       {/* Week strip */}
       <WeekStrip selectedDate={selectedDate} onSelectDate={setSelectedDate}/>
+      <SectionBrief desc={t("homeBrief")} settings={settings}/>
 
       {/* Scrollable content */}
       <div style={{ flex: 1, overflow: "auto", paddingBottom: 76 }}>

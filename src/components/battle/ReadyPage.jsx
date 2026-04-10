@@ -297,7 +297,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
   const ArcLegend = () => {
     const seen = settings.arcLegendSeen;
     return (
-      <div style={{ margin:"4px 0 6px", padding:"8px 10px", background:C.surface, borderRadius:8, border:"none" }}>
+      <div style={{ margin:"4px 0 6px", padding:"8px 16px", background:C.surface, borderRadius:8, border:"none" }}>
         <div onClick={()=>{ setArcLegendOpen(p=>!p); if(!seen && window.__MB_SETTINGS_SET__) window.__MB_SETTINGS_SET__(s=>({...s,arcLegendSeen:true})); }}
           style={{ display:"flex", alignItems:"center", cursor:"pointer", gap:6 }}>
           <Ic n={arcLegendOpen?"chevD":"chevR"} s={10} c={C.textMuted}/>
@@ -531,7 +531,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
                   </button>}
                   {!reorderRounds&&<button onClick={()=>deleteRound(round.id)}
                     style={{ background:"none", border:"none", cursor:"pointer", padding:3, display:"flex", flexShrink:0 }}>
-                    <Ic n="x" s={13} c={C.accent}/>
+                    <Ic n="x" s={13} c={C.textMuted}/>
                   </button>}
                   {reorderRounds&&<div style={{ display:"flex", flexDirection:"column", gap:2, flexShrink:0 }}>
                     <button onClick={()=>moveRoundUp(roundIdx)} disabled={roundIdx===0}
