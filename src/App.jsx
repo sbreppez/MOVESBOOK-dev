@@ -228,7 +228,7 @@ export default function App() {
   });
   const [showFlowMap, setShowFlowMap] = useState(false);
   const [showPostSessionPrompt, setShowPostSessionPrompt] = useState(false);
-  const [showPlusSheet, setShowPlusSheet] = useState(false);
+  // showPlusSheet removed — each page handles + via onAddTrigger
   const [showCreate, setShowCreate] = useState(false);
   const [bulkTrigger, setBulkTrigger] = useState(0);
   const lastSessionSaved = useRef(false);
@@ -652,11 +652,8 @@ export default function App() {
   // Secondary add trigger — used for "Add Category" and "Create Round" from bottom menu
   const [addTick2, setAddTick2] = useState(0);
 
-  // + button: contextual on MOVES tab (Library→library sheet, Sets→add set, Gap→drill), else global sheet
-  const handlePlusPress = () => {
-    if(tab==="moves") { setAddTick(t=>t+1); return; }
-    setShowPlusSheet(true);
-  };
+  // + button: contextual — each page handles addTick via onAddTrigger
+  const handlePlusPress = () => { setAddTick(t=>t+1); };
   const handleTourDone = () => {
     setShowTour(false);
     if (fbUser?.uid) localStorage.setItem('mb_toured_' + fbUser.uid, '1');
@@ -736,7 +733,7 @@ export default function App() {
           <IdeaMenu menu={trainMenu} onClose={()=>setTrainMenu(null)}/>
           <TrainModalCtx.Provider value={{ openModal:(type,idea,onSave)=>{ setTrainMenu(null); setTrainModal({type,idea,onSave}); } }}>
           <TrainMenuCtx.Provider value={{ openMenu:(m)=>setTrainMenu(m), closeMenu:()=>setTrainMenu(null) }}>
-            {tab==="home" && <HomePage habits={habits} setHabits={setHabits} injuries={injuries} setInjuries={setInjuries} presession={presession} setPresession={setPresession} ideas={ideas} setIdeas={setIdeas} settings={appSettings} onSettingsChange={setAppSettings} homeStack={homeStack} setHomeStack={setHomeStack} homeIdeas={homeIdeas} setHomeIdeas={setHomeIdeas} homeChecks={homeChecks} setHomeChecks={setHomeChecks}/>}
+            {tab==="home" && <HomePage habits={habits} setHabits={setHabits} injuries={injuries} setInjuries={setInjuries} presession={presession} setPresession={setPresession} ideas={ideas} setIdeas={setIdeas} settings={appSettings} onSettingsChange={setAppSettings} homeStack={homeStack} setHomeStack={setHomeStack} homeIdeas={homeIdeas} setHomeIdeas={setHomeIdeas} homeChecks={homeChecks} setHomeChecks={setHomeChecks} onAddTrigger={addTick}/>}
             {tab==="moves" && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} catDomains={catDomains} setCatDomains={setCatDomains} sets={sets} setSets={setSets} addToast={addToast} settings={appSettings} onSettingsChange={setAppSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} reminders={reminders} onRemindersChange={setReminders} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}} onOpenManageReminders={()=>setShowManageReminders(true)} isPremium={isPremium} staleCount={staleCount} onOpenExplore={()=>{if(!isPremium){setGatedFeature("explore");return;}setShowLab(true);}} onOpenRRR={()=>{if(!isPremium){setGatedFeature("rrr");return;}setShowRRR(true);}} onOpenCombine={()=>{if(!isPremium){setGatedFeature("combine");return;}setShowComboMachine(true);}} onOpenMap={()=>{if(!isPremium){setGatedFeature("map");return;}setShowFlowMap(true);}} onOpenFlashCards={()=>{if(!isPremium){setGatedFeature("flashCards");return;}setShowFlashCards(true);}} onBulkTrigger={bulkTrigger}/>}
             {tab==="battle" && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} addToast={addToast} freestyle={freestyle} onFreestyleChange={setFreestyle} rivals={rivals} onRivalsChange={setRivals} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} isPremium={isPremium} onSimulate={()=>{if(!isPremium){setGatedFeature("compSim");return;}setShowCompSim(true);}} battleprep={battleprep} setBattleprep={setBattleprep} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={()=>setBattlePrepSeed(null)} onOpenSharedCalendar={(im)=>{setCalendarInitialMonth(im||null);}}/>}
             {tab==="reflect" && <ReflectPage isPremium={isPremium} ideas={ideas} setIdeas={setIdeas} moves={moves} setMoves={setMovesGrad} reps={reps} sparring={sparring} musicflow={musicflow} habits={habits} calendar={calendar} setCalendar={setCalendar} cats={cats} catColors={catColors} settings={appSettings} onSettingsChange={setAppSettings} addToast={addToast} stance={stance} battleprep={battleprep} onToggleBattlePrepTask={(planId,dateStr,taskIdx)=>{setBattleprep(prev=>{const plans=(prev.plans||[]).map(p=>{if(p.id!==planId) return p;const key=dateStr+"-"+taskIdx;return {...p, completedTasks:{...(p.completedTasks||{}), [key]:!(p.completedTasks||{})[key]}};});return {...prev, plans};});}} onOpenStanceAssessment={()=>setShowStanceAssessment(true)} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onSubTabChange={setSubTab} onGoToPrep={(seed)=>{setBattlePrepSeed(seed);setTab("battle");}} initialDay={calendarInitialDay} initialMonth={calendarInitialMonth} sets={sets} onAddTrigger={addTick} parentSubTab={subTab} reports={reports} injuries={injuries}/>}
@@ -834,27 +831,7 @@ export default function App() {
         <Toast toasts={toasts} remove={removeToast}/>
         {showTour&&<Walkthrough onDone={handleTourDone}/>}
 
-        {/* ── Plus BottomSheet ── */}
-        <BottomSheet open={showPlusSheet} onClose={()=>setShowPlusSheet(false)} title={tr("create")}>
-          <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
-            {[
-              { label:tr("addMove"), icon:"plus", action:()=>{setShowPlusSheet(false);setAddTick(t=>t+1);} },
-              { label:tr("bulkImport"), icon:"upload", action:()=>{setShowPlusSheet(false);setBulkTrigger(t=>t+1);} },
-              { label:tr("addCategory"), icon:"tag", action:()=>{setShowPlusSheet(false);setAddTick2(t=>t+1);} },
-              { label:tr("create"), icon:"sparkles", action:()=>{setShowPlusSheet(false);setShowCreate(true);} },
-            ].map((item,i)=>(
-              <button key={i} onClick={item.action}
-                style={{ display:"flex", alignItems:"center", gap:12, width:"100%",
-                  padding:"14px 12px", borderRadius:8, cursor:"pointer",
-                  background:C.surface, border:"none",
-                  color:C.text, fontSize:13, fontWeight:700,
-                  fontFamily:FONT_DISPLAY, letterSpacing:1 }}>
-                <Ic n={item.icon} s={18} c={C.accent}/>
-                {item.label}
-              </button>
-            ))}
-          </div>
-        </BottomSheet>
+        {/* Plus BottomSheet removed — each page handles + via onAddTrigger */}
 
         {/* ── Create Overlay ── */}
         {showCreate&&<CreateOverlay

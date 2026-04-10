@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { WeekStrip } from './WeekStrip';
 import { HomeTile } from './HomeTile';
 import { HomeAddPicker } from './HomeAddPicker';
@@ -56,12 +56,19 @@ export const HomePage = ({
   injuries, setInjuries, presession, setPresession,
   ideas, setIdeas, settings, onSettingsChange,
   homeStack, setHomeStack, homeIdeas, setHomeIdeas, homeChecks, setHomeChecks,
+  onAddTrigger,
 }) => {
   const { C } = useSettings();
   const t = useT();
   const todayStr = new Date().toISOString().split("T")[0];
   const [selectedDate, setSelectedDate] = useState(todayStr);
   const [showAddPicker, setShowAddPicker] = useState(false);
+
+  // + button: open HomeAddPicker
+  useEffect(() => {
+    if (!onAddTrigger) return;
+    setShowAddPicker(true);
+  }, [onAddTrigger]);
   const [showGearMenu, setShowGearMenu] = useState(false);
   const [editTile, setEditTile] = useState(null);
   const [confirmRemove, setConfirmRemove] = useState(null);
