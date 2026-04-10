@@ -375,18 +375,6 @@ export const HomePage = ({
             />
           ))}
 
-          {/* Add to today button */}
-          <div style={{ marginTop: 12 }}>
-            <button onClick={() => setShowAddPicker(true)}
-              style={{
-                width: "100%", padding: "12px 0", borderRadius: 10, cursor: "pointer",
-                background: "transparent", border: `1.5px dashed ${C.border}`,
-                color: C.accent, fontSize: 13, fontWeight: 800, fontFamily: FONT_DISPLAY,
-                letterSpacing: 0.5, transition: "all 0.15s",
-              }}>
-              {t("addToToday")}
-            </button>
-          </div>
         </div>
       </div>
 
