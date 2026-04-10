@@ -5,6 +5,8 @@ import { HomeAddPicker } from './HomeAddPicker';
 import { PreSessionIntel } from './PreSessionIntel';
 import { RoutineForm } from './RoutineForm';
 import { IdeaForm } from './IdeaForm';
+import { GoalModal } from '../train/GoalModal';
+import { HabitModal } from '../train/HabitModal';
 import { BottomSheet } from '../shared/BottomSheet';
 import { FONT_DISPLAY } from '../../constants/fonts';
 import { useSettings } from '../../hooks/useSettings';
@@ -63,6 +65,7 @@ export const HomePage = ({
   const todayStr = new Date().toISOString().split("T")[0];
   const [selectedDate, setSelectedDate] = useState(todayStr);
   const [showAddPicker, setShowAddPicker] = useState(false);
+  const [addFormType, setAddFormType] = useState(null);
 
   // + button: open HomeAddPicker
   useEffect(() => {
@@ -335,6 +338,35 @@ export const HomePage = ({
     return "";
   };
 
+  // ── Create handlers (from Add Picker tiles) ─────────────────────────────
+
+  const handleCreateRoutine = (fields) => {
+    const newTile = { id: Date.now().toString(), type: 'routine', ...fields };
+    setHomeStack(prev => ({ ...prev, defaultStack: [...prev.defaultStack, newTile] }));
+    setAddFormType(null);
+  };
+
+  const handleCreateIdea = (fields) => {
+    const id = Date.now().toString();
+    setHomeIdeas(prev => [...prev, { id, ...fields }]);
+    setHomeStack(prev => ({ ...prev, defaultStack: [...prev.defaultStack, { id, type: 'idea' }] }));
+    setAddFormType(null);
+  };
+
+  const handleCreateGoal = (goalData) => {
+    const id = Date.now().toString();
+    setIdeas(prev => [...prev, { id, ...goalData }]);
+    setHomeStack(prev => ({ ...prev, defaultStack: [...prev.defaultStack, { id: 'gh_' + id, type: 'goalhabit', refId: id }] }));
+    setAddFormType(null);
+  };
+
+  const handleCreateHabit = (habitData) => {
+    const id = Date.now().toString();
+    setHabits(prev => [...prev, { id, ...habitData }]);
+    setHomeStack(prev => ({ ...prev, defaultStack: [...prev.defaultStack, { id: 'gh_' + id, type: 'goalhabit', refId: id }] }));
+    setAddFormType(null);
+  };
+
   return (
     <div style={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column" }}>
       {/* Header row */}
@@ -387,10 +419,28 @@ export const HomePage = ({
 
       {/* Add Picker */}
       <HomeAddPicker open={showAddPicker} onClose={() => setShowAddPicker(false)}
-        homeStack={homeStack} setHomeStack={setHomeStack}
-        homeIdeas={homeIdeas} setHomeIdeas={setHomeIdeas}
-        habits={habits} ideas={ideas} selectedDate={selectedDate}
+        onAction={(type) => setAddFormType(type)}
       />
+
+      {/* ── Create forms (opened from Add Picker tiles) ── */}
+      {addFormType === "routine" && (
+        <BottomSheet open onClose={() => setAddFormType(null)} title={t("createNewRoutine")}>
+          <RoutineForm onSave={handleCreateRoutine} onCancel={() => setAddFormType(null)}/>
+        </BottomSheet>
+      )}
+      {addFormType === "idea" && (
+        <BottomSheet open onClose={() => setAddFormType(null)} title={t("createNewIdea")}>
+          <IdeaForm onSave={handleCreateIdea} onCancel={() => setAddFormType(null)}/>
+        </BottomSheet>
+      )}
+      {addFormType === "goal" && (
+        <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.6)", zIndex:10000, display:"flex", alignItems:"center", justifyContent:"center", padding:10 }}>
+          <GoalModal onClose={() => setAddFormType(null)} onSave={handleCreateGoal}/>
+        </div>
+      )}
+      {addFormType === "habit" && (
+        <HabitModal onClose={() => setAddFormType(null)} onSave={handleCreateHabit}/>
+      )}
 
       {/* ── Feature 4: Gear Menu ── */}
       <BottomSheet open={showGearMenu} onClose={() => setShowGearMenu(false)} title={t("home")}>
