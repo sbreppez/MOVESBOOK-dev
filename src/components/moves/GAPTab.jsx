@@ -124,7 +124,7 @@ export const GAPTab = ({ moves, catColors=CAT_COLORS, setMoves, onDrill, setting
             const col = masteryColor(displayMastery);
             return (
               <div key={m.id} style={{ background:C.surface, border:"none", borderRadius:8,
-                borderLeft:`4px solid ${borderColor(m)}`, padding:"14px 16px" }}>
+                borderLeft:`4px solid ${borderColor(m)}99`, padding:"14px 16px" }}>
                 {/* Top row: name + trained dot + drill */}
                 <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:4 }}>
                   <div style={{ flex:1, minWidth:0 }}>
@@ -154,7 +154,7 @@ export const GAPTab = ({ moves, catColors=CAT_COLORS, setMoves, onDrill, setting
                   {/* DRILL button */}
                   {onDrill && (
                     <button onClick={() => onDrill(m)}
-                      style={{ background:C.accent, color:"#fff", border:"none", cursor:"pointer",
+                      style={{ background:"transparent", color:C.accent, border:`1px solid ${C.accent}`, cursor:"pointer",
                         borderRadius:6, padding:"4px 10px", fontSize:10, fontWeight:900,
                         fontFamily:FONT_DISPLAY, letterSpacing:1, flexShrink:0 }}>
                       {t("gapDrill")}
