@@ -42,13 +42,6 @@ export const GAPTab = ({ moves, catColors=CAT_COLORS, setMoves, onDrill, setting
     else { setMoves(prev => prev.map(m => m.id === id ? { ...m, date: today } : m)); }
   };
 
-  const borderColor = (m) => {
-    const ratio = m.daysSince / m.adjustedThreshold;
-    if (ratio < 1.5) return C.green;
-    if (ratio < 2.5) return C.yellow;
-    return C.red;
-  };
-
   // Progress ring SVG
   const ringSize = 28, ringStroke = 3;
   const ringR = (ringSize - ringStroke) / 2;
@@ -101,7 +94,7 @@ export const GAPTab = ({ moves, catColors=CAT_COLORS, setMoves, onDrill, setting
       <div style={{ display:"flex", alignItems:"center", gap:12, padding:"6px 16px 12px", borderBottom:`1px solid ${C.borderLight}` }}>
         <svg width={ringSize} height={ringSize} style={{ transform:"rotate(-90deg)", flexShrink:0 }}>
           <circle cx={ringSize/2} cy={ringSize/2} r={ringR} fill="none" stroke={C.border} strokeWidth={ringStroke}/>
-          <circle cx={ringSize/2} cy={ringSize/2} r={ringR} fill="none" stroke={C.green} strokeWidth={ringStroke}
+          <circle cx={ringSize/2} cy={ringSize/2} r={ringR} fill="none" stroke={C.textSec} strokeWidth={ringStroke}
             strokeDasharray={ringC} strokeDashoffset={ringOffset} strokeLinecap="round"/>
         </svg>
         <span style={{ fontSize:13, fontWeight:700, color:C.text, fontFamily:FONT_DISPLAY }}>
@@ -124,7 +117,7 @@ export const GAPTab = ({ moves, catColors=CAT_COLORS, setMoves, onDrill, setting
             const col = masteryColor(displayMastery);
             return (
               <div key={m.id} style={{ background:C.surface, border:"none", borderRadius:8,
-                borderLeft:`4px solid ${borderColor(m)}99`, padding:"14px 16px" }}>
+                borderLeft:`4px solid ${catCol}`, padding:"14px 16px" }}>
                 {/* Top row: name + trained dot + drill */}
                 <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:4 }}>
                   <div style={{ flex:1, minWidth:0 }}>
@@ -154,7 +147,7 @@ export const GAPTab = ({ moves, catColors=CAT_COLORS, setMoves, onDrill, setting
                   {/* DRILL button */}
                   {onDrill && (
                     <button onClick={() => onDrill(m)}
-                      style={{ background:"transparent", color:C.accent, border:`1px solid ${C.accent}`, cursor:"pointer",
+                      style={{ background:"transparent", color:catCol, border:`1px solid ${catCol}`, cursor:"pointer",
                         borderRadius:6, padding:"4px 10px", fontSize:10, fontWeight:900,
                         fontFamily:FONT_DISPLAY, letterSpacing:1, flexShrink:0 }}>
                       {t("gapDrill")}
@@ -177,11 +170,11 @@ export const GAPTab = ({ moves, catColors=CAT_COLORS, setMoves, onDrill, setting
                       </span>
                     )}
                     <div style={{ width:36, height:3, borderRadius:2, background:C.border }}>
-                      <div style={{ height:"100%", width:`${displayMastery}%`, borderRadius:2, background:col }}/>
+                      <div style={{ height:"100%", width:`${displayMastery}%`, borderRadius:2, background:catCol }}/>
                     </div>
-                    <span style={{ fontSize:11, color:col, fontWeight:700, fontFamily:FONT_DISPLAY }}>{displayMastery}%</span>
+                    <span style={{ fontSize:11, color:catCol, fontWeight:700, fontFamily:FONT_DISPLAY }}>{displayMastery}%</span>
                     {showDecayArrow(m, settings.decaySensitivity) && (
-                      <span style={{ fontSize:10, color:C.red, marginLeft:2 }}>▼</span>
+                      <span style={{ fontSize:10, color:catCol, marginLeft:2 }}>▼</span>
                     )}
                   </div>
                 </div>
