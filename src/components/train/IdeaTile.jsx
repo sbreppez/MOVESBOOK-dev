@@ -291,12 +291,6 @@ export const IdeaTile = (props) => {
             )}
           </div>
         )}
-        {!expanded&&<div style={{ margin:"0 10px 8px", height:2, borderRadius:1, background:C.border }}>
-          {isTarget
-            ? <div style={{ height:"100%", width:`${targetProgress(idea.current||0,idea.target).pct}%`, borderRadius:1, background:targetProgress(idea.current||0,idea.target).color, transition:"width 0.3s" }}/>
-            : <div style={{ height:"100%", width:(isGoal||text)?"40%":"0%", borderRadius:1, background:color }}/>
-          }
-        </div>}
       </div>
 
     </div>
