@@ -506,7 +506,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
           )}
           {rounds.map((round, roundIdx) => {
             const rColor = round.color || C.accent;
-            const isOpen = expRounds[round.id] !== false; // default open
+            const isOpen = expRounds[round.id] === true;
             const entryCount = (round.entries||[]).length;
             return (
               <div key={round.id} style={{ position:"relative", marginBottom:6, borderRadius:8, overflow:"hidden", background:C.surface, borderLeft:`4px solid ${rColor}` }}>
