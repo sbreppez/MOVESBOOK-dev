@@ -58,7 +58,7 @@ export const GAPTab = ({ moves, catColors=CAT_COLORS, setMoves, onDrill, setting
   return (
     <div>
       {/* ── Filter Row ── */}
-      <div style={{ display:"flex", gap:6, padding:"10px 14px", flexWrap:"wrap", alignItems:"center" }}>
+      <div style={{ display:"flex", gap:6, padding:"10px 16px", flexWrap:"wrap", alignItems:"center" }}>
         {PRESETS.map(d => {
           const active = threshold === d && !showCustom;
           return (
@@ -98,7 +98,7 @@ export const GAPTab = ({ moves, catColors=CAT_COLORS, setMoves, onDrill, setting
       </div>
 
       {/* ── Summary Bar ── */}
-      <div style={{ display:"flex", alignItems:"center", gap:12, padding:"6px 14px 12px", borderBottom:`1px solid ${C.borderLight}` }}>
+      <div style={{ display:"flex", alignItems:"center", gap:12, padding:"6px 16px 12px", borderBottom:`1px solid ${C.borderLight}` }}>
         <svg width={ringSize} height={ringSize} style={{ transform:"rotate(-90deg)", flexShrink:0 }}>
           <circle cx={ringSize/2} cy={ringSize/2} r={ringR} fill="none" stroke={C.border} strokeWidth={ringStroke}/>
           <circle cx={ringSize/2} cy={ringSize/2} r={ringR} fill="none" stroke={C.green} strokeWidth={ringStroke}
@@ -116,19 +116,19 @@ export const GAPTab = ({ moves, catColors=CAT_COLORS, setMoves, onDrill, setting
           <p style={{ fontSize:13 }}>{t("gapAllCaughtUp")}</p>
         </div>
       ) : (
-        <div style={{ display:"flex", flexDirection:"column", gap:6, padding:"10px 14px" }}>
+        <div style={{ display:"flex", flexDirection:"column", gap:6, padding:"10px 16px" }}>
           {staleMoves.map(m => {
             const catCol = catColors[m.category] || C.accent;
             const isTrained = m.date === today;
             const { displayMastery } = computeDecay(m, settings.decaySensitivity);
             const col = masteryColor(displayMastery);
             return (
-              <div key={m.id} style={{ background:C.bg, border:`1px solid ${C.border}`, borderRadius:10,
-                borderLeft:`4px solid ${borderColor(m)}`, padding:"10px 12px" }}>
+              <div key={m.id} style={{ background:C.surface, border:"none", borderRadius:8,
+                borderLeft:`4px solid ${borderColor(m)}`, padding:"14px 16px" }}>
                 {/* Top row: name + trained dot + drill */}
                 <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:4 }}>
                   <div style={{ flex:1, minWidth:0 }}>
-                    <div style={{ fontWeight:700, fontSize:14, color:C.text, fontFamily:FONT_DISPLAY,
+                    <div style={{ fontWeight:700, fontSize:16, color:C.text, fontFamily:FONT_DISPLAY,
                       overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{m.name}</div>
                     <div style={{ fontSize:10, color:catCol, fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:0.5 }}>
                       {m.category}
