@@ -652,8 +652,11 @@ export default function App() {
   // Secondary add trigger — used for "Add Category" and "Create Round" from bottom menu
   const [addTick2, setAddTick2] = useState(0);
 
-  // + button opens Plus BottomSheet
-  const handlePlusPress = () => { setShowPlusSheet(true); };
+  // + button: contextual on MOVES tab (Library→library sheet, Sets→add set, Gap→drill), else global sheet
+  const handlePlusPress = () => {
+    if(tab==="moves") { setAddTick(t=>t+1); return; }
+    setShowPlusSheet(true);
+  };
   const handleTourDone = () => {
     setShowTour(false);
     if (fbUser?.uid) localStorage.setItem('mb_toured_' + fbUser.uid, '1');

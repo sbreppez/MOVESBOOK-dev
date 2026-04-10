@@ -21,6 +21,7 @@ import { ReminderBlock } from './ReminderBlock';
 import { GAPTab } from './GAPTab';
 import { PremiumGate } from '../shared/PremiumGate';
 import { SectionBrief } from '../shared/SectionBrief';
+import { BottomSheet } from '../shared/BottomSheet';
 import { MoveTree } from './MoveTree';
 
 export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains={}, setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore, onOpenRRR, onOpenCombine, onOpenMap, onOpenFlashCards, isPremium, staleCount=0, onBulkTrigger }) => {
@@ -35,7 +36,13 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   useEffect(()=>{ if(parentSubTab==="gap"&&vocabTab!=="gap") { setVocabTab("gap"); setOpenCat(null); } },[parentSubTab]);
   const [openCat,setOpenCat]=useState(null);
   const [showAdd,setShowAdd]=useState(false); const [bulk,setBulk]=useState(false);
-  useEffect(()=>{ if(onAddTrigger) { if(vocabTab==="sets") setAddingSet(true); else setShowAdd(true); } },[onAddTrigger]);
+  const [showLibraryMenu,setShowLibraryMenu]=useState(false);
+  useEffect(()=>{
+    if(!onAddTrigger) return;
+    if(vocabTab==="sets") setAddingSet(true);
+    else if(vocabTab==="gap") { if(onDrill) onDrill(null); }
+    else setShowLibraryMenu(true);
+  },[onAddTrigger]);
   const [editMove,setEditMove]=useState(null);
   // cats/catColors are now lifted to App — received as props
   const [showAddCat,setShowAddCat]=useState(false);
@@ -668,6 +675,24 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
         move={{ name: `${versionMove.name} (v2)`, category: versionMove.category, origin:"version", parentId: versionMove.id, mastery:0 }}
       />}
       {bulk&&<BulkModal onClose={()=>setBulk(false)} onImport={bulkImport} cats={cats}/>}
+      <BottomSheet open={showLibraryMenu} onClose={()=>setShowLibraryMenu(false)} title={t("addToLibraryTitle")}>
+        <div style={{display:"flex",flexDirection:"column",gap:2}}>
+          {[
+            {icon:"plus",label:t("addMoveMenu"),action:()=>{setShowLibraryMenu(false);setShowAdd(true);}},
+            {icon:"layers",label:t("bulkImportMenu"),action:()=>{setShowLibraryMenu(false);setBulk(true);}},
+            {icon:"folderPlus",label:t("addCategoryMenu"),action:()=>{setShowLibraryMenu(false);setShowAddCat(true);}},
+            {icon:"compass",label:t("tools"),action:()=>{setShowLibraryMenu(false);if(onOpenExplore)onOpenExplore();}},
+          ].map(opt=>(
+            <button key={opt.icon} onClick={opt.action}
+              style={{width:"100%",padding:"14px 16px",background:"none",border:"none",
+                cursor:"pointer",display:"flex",alignItems:"center",gap:12,
+                color:C.text,fontSize:14,fontFamily:FONT_DISPLAY,fontWeight:700,
+                letterSpacing:0.5,borderRadius:8}}>
+              <Ic n={opt.icon} s={18} c={C.textSec}/>{opt.label}
+            </button>
+          ))}
+        </div>
+      </BottomSheet>
     </div>
   );
 };
