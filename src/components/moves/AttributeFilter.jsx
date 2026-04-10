@@ -36,7 +36,7 @@ export const AttributeFilter = ({ customAttrs, activeFilters, setActiveFilters, 
   if (customAttrs.length === 0) {
     return (
       <div style={{ padding: "10px 14px", background: C.surfaceAlt, borderBottom: `1px solid ${C.borderLight}` }}>
-        <div style={{ fontSize: 12, color: C.textMuted, fontStyle: "italic" }}>
+        <div style={{ fontSize: 13, color: C.textMuted, fontStyle: "italic" }}>
           {t("noAttributesDefined")}
         </div>
       </div>

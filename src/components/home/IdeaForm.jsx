@@ -36,7 +36,7 @@ export const IdeaForm = ({ idea, onSave, onCancel }) => {
   ];
 
   const pill = (active) => ({
-    padding: "6px 14px", borderRadius: 20, cursor: "pointer", fontSize: 12,
+    padding: "6px 14px", borderRadius: 20, cursor: "pointer", fontSize: 11,
     fontWeight: 700, fontFamily: FONT_DISPLAY, border: `1.5px solid ${active ? C.accent : C.border}`,
     background: active ? `${C.accent}20` : "transparent",
     color: active ? C.accent : C.textSec, transition: "all 0.15s",

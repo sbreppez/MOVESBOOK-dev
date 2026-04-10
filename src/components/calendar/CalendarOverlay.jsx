@@ -223,7 +223,7 @@ export const CalendarOverlay = ({
               <button key={id} onClick={() => setCalView(id)}
                 style={{ padding: "6px 14px", borderRadius: 20, border: `1.5px solid ${on ? C.accent : C.border}`,
                   background: on ? C.accent + "22" : C.surface, color: on ? C.accent : C.textSec,
-                  fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12, letterSpacing: 0.5,
+                  fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, letterSpacing: 0.5,
                   cursor: "pointer" }}>
                 {label}
               </button>
@@ -246,14 +246,14 @@ export const CalendarOverlay = ({
           <div style={{ display: "flex", gap: 8 }}>
             <button onClick={() => { onGoToPrep(battlePrepPrompt); setBattlePrepPrompt(null); }}
               style={{ flex: 1, padding: "8px 12px", background: C.accent, border: "none", borderRadius: 8,
-                cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 12,
+                cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 11,
                 letterSpacing: 1, color: "#fff" }}>
               {t("goToPrep")} {"\u2192"}
             </button>
             <button onClick={() => setBattlePrepPrompt(null)}
               style={{ flex: 1, padding: "8px 12px", background: C.surfaceAlt, border: `1px solid ${C.border}`,
                 borderRadius: 8, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700,
-                fontSize: 12, letterSpacing: 0.5, color: C.textMuted }}>
+                fontSize: 11, letterSpacing: 0.5, color: C.textMuted }}>
               {t("notNow")}
             </button>
           </div>
@@ -431,13 +431,13 @@ export const CalendarOverlay = ({
                       <div key={entry.planId} style={{ background: C.surfaceAlt, borderRadius: 8, padding: 10, marginBottom: 6 }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: isBattle || !tasks.length ? 0 : 6 }}>
                           <div style={{ width: 8, height: 8, borderRadius: "50%", background: entry.phaseColor, flexShrink: 0 }} />
-                          <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12, color: C.text, flex: 1 }}>{entry.planName}</span>
-                          <span style={{ fontSize: 9, fontFamily: FONT_DISPLAY, fontWeight: 700, background: `${entry.phaseColor}25`, color: entry.phaseColor, borderRadius: 4, padding: "1px 6px" }}>{entry.phase}</span>
+                          <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: C.text, flex: 1 }}>{entry.planName}</span>
+                          <span style={{ fontSize: 10, fontFamily: FONT_DISPLAY, fontWeight: 700, background: `${entry.phaseColor}25`, color: entry.phaseColor, borderRadius: 4, padding: "1px 6px" }}>{entry.phase}</span>
                         </div>
                         {isBattle && (
                           <div style={{ textAlign: "center", padding: "8px 0 4px" }}>
                             <span style={{ fontSize: 20 }}>{"\u2694\uFE0F"}</span>
-                            <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 12, letterSpacing: 1, color: C.red, marginTop: 2 }}>{t("battleDay")}</div>
+                            <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 11, letterSpacing: 1, color: C.red, marginTop: 2 }}>{t("battleDay")}</div>
                           </div>
                         )}
                         {!isBattle && tasks.map((task, i) => {
@@ -466,7 +466,7 @@ export const CalendarOverlay = ({
              dayData.habitsCompleted.length === 0 &&
              dayData.notesOnDay.length === 0 && dayData.calendarEvents.length === 0 &&
              !(activityMap[selectedDay]?.battlePrepPhases?.length) && (
-              <div style={{ color: C.textMuted, fontSize: 12, fontFamily: FONT_BODY, padding: "12px 0", textAlign: "center" }}>
+              <div style={{ color: C.textMuted, fontSize: 11, fontFamily: FONT_BODY, padding: "12px 0", textAlign: "center" }}>
                 {t("noActivity")}
               </div>
             )}
@@ -481,7 +481,7 @@ export const CalendarOverlay = ({
                     <div style={{ flex: 1 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                         <Ic n={e.type==="training"?"target":e.type==="battle"?"swords":e.type==="rest"?"pause":"mapPin"} s={14}/>
-                        <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12, color: C.text }}>
+                        <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: C.text }}>
                           {e.title || t(e.type === "training" ? "trainingSession" : e.type === "battle" ? "battleEvent" : e.type === "rest" ? "restDay" : "journalEvent")}
                         </span>
                         {e.duration && (
@@ -493,7 +493,7 @@ export const CalendarOverlay = ({
                       {e.categories?.length > 0 && (
                         <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginTop: 4 }}>
                           {e.categories.map(cat => (
-                            <span key={cat} style={{ fontSize: 9, fontFamily: FONT_DISPLAY, fontWeight: 700,
+                            <span key={cat} style={{ fontSize: 10, fontFamily: FONT_DISPLAY, fontWeight: 700,
                               color: catColors[cat] || CAT_COLORS[cat] || C.textSec,
                               background: (catColors[cat] || CAT_COLORS[cat] || C.accent) + "18",
                               borderRadius: 6, padding: "1px 6px" }}>

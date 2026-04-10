@@ -157,7 +157,7 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onUpdateSess
                 background:C.surface, border:`1px solid ${C.border}`, borderRadius:10, cursor:"pointer",
                 borderLeft:`4px solid ${catColor(m.category)}`, textAlign:"left" }}>
               <div>
-                <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:15, color:C.text }}>{m.name}</div>
+                <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, color:C.text }}>{m.name}</div>
                 <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:10, color:catColor(m.category), letterSpacing:0.5, marginTop:2 }}>{m.category}</div>
               </div>
             </button>
@@ -177,7 +177,7 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onUpdateSess
         <div style={{ position:"absolute", inset:0, background:`${cc}26`, pointerEvents:"none", transition:"opacity 0.15s", opacity:flash?1:0, zIndex:1 }}/>
         {/* Top bar */}
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"13px 18px", borderBottom:`1px solid ${C.border}`, flexShrink:0, zIndex:2 }}>
-          <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:15, color:cc, letterSpacing:0.5 }}>{selectedMove.name}</span>
+          <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, color:cc, letterSpacing:0.5 }}>{selectedMove.name}</span>
           <div style={{ display:"flex", alignItems:"center", gap:12 }}>
             <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:22, color:C.text }}>{fmtTime(elapsed)}</span>
             <button onClick={(e) => { e.stopPropagation(); setScreen("select"); }}
@@ -189,7 +189,7 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onUpdateSess
         {/* Giant tap zone */}
         <div onClick={handleTap}
           style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", cursor:"pointer", userSelect:"none", WebkitTapHighlightColor:"transparent", zIndex:2, position:"relative" }}>
-          <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:120, color:C.text, lineHeight:1 }}>{count}</div>
+          <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:110, color:C.text, lineHeight:1 }}>{count}</div>
           <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:13, color:C.textMuted, marginTop:8, letterSpacing:2 }}>{t("reps")}</div>
           <div style={{ fontSize:11, color:C.textMuted, marginTop:16, animation:"mb-breathe 3s ease-in-out infinite", letterSpacing:0.5 }}>{t("tapToCount")}</div>
         </div>
@@ -237,7 +237,7 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onUpdateSess
         <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:2, color:C.green, marginBottom:24 }}>{t("sessionSaved")}</div>
         {/* Summary card */}
         <div style={{ width:"100%", maxWidth:340, background:C.surface, borderRadius:8, border:`1px solid ${C.border}`, padding:16, marginBottom:20, borderLeft:`4px solid ${cc}` }}>
-          <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:15, color:C.text }}>{savedSession.moveName}</div>
+          <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, color:C.text }}>{savedSession.moveName}</div>
           <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:10, color:cc, letterSpacing:0.5, marginTop:2 }}>{savedSession.moveCategory}</div>
           <div style={{ display:"flex", justifyContent:"space-between", marginTop:14 }}>
             <div>

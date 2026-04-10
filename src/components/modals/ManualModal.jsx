@@ -97,7 +97,7 @@ export const ManualModal = ({ onClose }) => {
           <div style={{ textAlign:"center", padding:"60px 20px", color:C.textMuted }}>
             <div style={{ marginBottom:10 }}><Ic n="search" s={32} c={C.textMuted}/></div>
             <div style={{ fontSize:14, fontWeight:700, fontFamily:FONT_DISPLAY, marginBottom:6 }}>{t("nothingFound")}</div>
-            <div style={{ fontSize:12 }}>{t("tryDifferentKeywords")}</div>
+            <div style={{ fontSize:13 }}>{t("tryDifferentKeywords")}</div>
           </div>
         )}
         {filtered.map(sec=>{
@@ -127,7 +127,7 @@ export const ManualModal = ({ onClose }) => {
                     fontFamily:FONT_DISPLAY, letterSpacing:0.5, marginBottom:6 }}>
                     {highlight(item.title)}
                   </div>
-                  <div style={{ fontSize:12, color:C.textSec, lineHeight:1.75,
+                  <div style={{ fontSize:13, color:C.textSec, lineHeight:1.75,
                     whiteSpace:"pre-wrap", fontFamily:FONT_BODY }}>
                     {highlight(item.body)}
                   </div>

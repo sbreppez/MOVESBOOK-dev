@@ -208,11 +208,11 @@ export const FlowMap = ({ moves, cats, catColors, flowmap, onFlowmapChange, comb
           {totalPossible > 0 && (
             <div style={{ marginBottom: 16 }}>
               {allUnexplored.length > 0 ? (
-                <div onClick={pickRandomUnexplored} style={{ fontFamily: FONT_BODY, fontSize: 12, color: C.textMuted, fontStyle: "italic", cursor: "pointer" }}>
+                <div onClick={pickRandomUnexplored} style={{ fontFamily: FONT_BODY, fontSize: 11, color: C.textMuted, fontStyle: "italic", cursor: "pointer" }}>
                   <Ic n="dices" s={12} c={C.textMuted}/> {t("tryRandom")}
                 </div>
               ) : totalEvaluated > 0 ? (
-                <div style={{ fontFamily: FONT_BODY, fontSize: 12, color: C.green, fontStyle: "italic" }}>
+                <div style={{ fontFamily: FONT_BODY, fontSize: 11, color: C.green, fontStyle: "italic" }}>
                   {t("allExplored")} <Ic n="sparkles" s={12} c={C.green}/>
                 </div>
               ) : null}
@@ -241,9 +241,9 @@ export const FlowMap = ({ moves, cats, catColors, flowmap, onFlowmapChange, comb
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <Ic n={icon} s={22} c={C.textSec}/>
                 <div>
-                  <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 15, letterSpacing: 0.5, color: C.text }}>{t(key)}</div>
-                  <div style={{ fontSize: 12, color: C.textSec, marginTop: 2 }}>{t(descKey)}</div>
-                  <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2, fontStyle: "italic", fontFamily: FONT_BODY }}>{t(subKey)}</div>
+                  <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 16, letterSpacing: 0.5, color: C.text }}>{t(key)}</div>
+                  <div style={{ fontSize: 11, color: C.textSec, marginTop: 2 }}>{t(descKey)}</div>
+                  <div style={{ fontSize: 11, color: C.textMuted, marginTop: 2, fontStyle: "italic", fontFamily: FONT_BODY }}>{t(subKey)}</div>
                 </div>
               </div>
             </div>
@@ -346,7 +346,7 @@ export const FlowMap = ({ moves, cats, catColors, flowmap, onFlowmapChange, comb
             <div key={cat} style={{ marginBottom: 16 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
                 <div style={{ width: 3, height: 14, borderRadius: 2, background: catColors[cat] || C.accent }} />
-                <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12, letterSpacing: 0.5, color: C.textSec }}>{cat}</span>
+                <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, letterSpacing: 0.5, color: C.textSec }}>{cat}</span>
               </div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                 {grouped[cat].map(m => {
@@ -647,7 +647,7 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
   // ── Transition chips (reused in explore step) ──
   const TransitionChips = () => (
     <div style={{ marginBottom: 16 }}>
-      <div style={{ fontSize: 12, fontWeight: 700, color: C.textSec, marginBottom: 6, fontFamily: FONT_DISPLAY, letterSpacing: 0.5 }}>{t("transition")}</div>
+      <div style={{ fontSize: 11, fontWeight: 700, color: C.textSec, marginBottom: 6, fontFamily: FONT_DISPLAY, letterSpacing: 0.5 }}>{t("transition")}</div>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
         {transitions.map(tr => {
           const active = selectedTransitions.includes(tr);
@@ -657,7 +657,7 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
               border: `1.5px solid ${active ? C.accent : C.border}`,
               background: active ? `${C.accent}20` : C.surface,
               color: active ? C.accent : C.textSec,
-              fontSize: 12, cursor: "pointer", fontWeight: active ? 700 : 400
+              fontSize: 11, cursor: "pointer", fontWeight: active ? 700 : 400
             }} onClick={() => toggleTransition(tr)}>
               {tr}
             </div>
@@ -667,7 +667,7 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
           <div style={{
             display: "inline-block", padding: "5px 12px", borderRadius: 20,
             border: `1px dashed ${C.border}`, background: "transparent",
-            color: C.textMuted, fontSize: 12, cursor: "pointer"
+            color: C.textMuted, fontSize: 11, cursor: "pointer"
           }} onClick={() => setShowCustomInput(true)}>
             + {t("addCustom")}
           </div>
@@ -681,7 +681,7 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
               placeholder="e.g. Cartwheel"
               style={{
                 padding: "5px 10px", borderRadius: 20, border: `1.5px solid ${C.accent}`,
-                background: C.surface, color: C.text, fontSize: 12, fontFamily: FONT_BODY,
+                background: C.surface, color: C.text, fontSize: 11, fontFamily: FONT_BODY,
                 outline: "none", width: 120
               }}
             />
@@ -749,7 +749,7 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
 
             {/* HOW DID IT FEEL? */}
             <div style={{ marginBottom: 16 }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: C.textSec, marginBottom: 8, fontFamily: FONT_DISPLAY, letterSpacing: 0.5 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: C.textSec, marginBottom: 8, fontFamily: FONT_DISPLAY, letterSpacing: 0.5 }}>
                 {t("howDidItFeel")}
               </div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
@@ -769,7 +769,7 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
 
             {/* IMPACT */}
             <div style={{ marginBottom: 20 }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: C.textSec, marginBottom: 8, fontFamily: FONT_DISPLAY, letterSpacing: 0.5 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: C.textSec, marginBottom: 8, fontFamily: FONT_DISPLAY, letterSpacing: 0.5 }}>
                 {t("impactLabel") || "IMPACT"}
               </div>
               <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
@@ -839,7 +839,7 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
 
             {/* MOVE NAME */}
             <div style={{ marginBottom: 16 }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: C.textSec, marginBottom: 6, fontFamily: FONT_DISPLAY, letterSpacing: 0.5 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: C.textSec, marginBottom: 6, fontFamily: FONT_DISPLAY, letterSpacing: 0.5 }}>
                 {t("moveName")}
               </div>
               <input
@@ -856,7 +856,7 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
 
             {/* SAVE IN CATEGORY */}
             <div style={{ marginBottom: 16 }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: C.textSec, marginBottom: 6, fontFamily: FONT_DISPLAY, letterSpacing: 0.5 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: C.textSec, marginBottom: 6, fontFamily: FONT_DISPLAY, letterSpacing: 0.5 }}>
                 {t("saveInCategory")}
               </div>
               <div style={{
@@ -890,7 +890,7 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
 
             {/* DIFFICULTY */}
             <div style={{ marginBottom: 16 }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: C.textSec, marginBottom: 6, fontFamily: FONT_DISPLAY, letterSpacing: 0.5 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: C.textSec, marginBottom: 6, fontFamily: FONT_DISPLAY, letterSpacing: 0.5 }}>
                 {t("difficulty") || "DIFFICULTY"}
               </div>
               <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
@@ -903,7 +903,7 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
                         border: `1.5px solid ${active ? C.accent : C.border}`,
                         background: active ? C.accent : C.surface,
                         color: active ? C.bg : C.textSec,
-                        fontSize: 12, cursor: "pointer", fontWeight: active ? 700 : 400,
+                        fontSize: 11, cursor: "pointer", fontWeight: active ? 700 : 400,
                         fontFamily: FONT_DISPLAY, letterSpacing: 0.3
                       }}>
                       {t("difficulty_" + d) || d.charAt(0).toUpperCase() + d.slice(1)}
@@ -915,7 +915,7 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
 
             {/* ORIGIN */}
             <div style={{ marginBottom: 20 }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: C.textSec, marginBottom: 6, fontFamily: FONT_DISPLAY, letterSpacing: 0.5 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: C.textSec, marginBottom: 6, fontFamily: FONT_DISPLAY, letterSpacing: 0.5 }}>
                 {t("origin") || "ORIGIN"}
               </div>
               <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
@@ -932,7 +932,7 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
                         border: `1.5px solid ${active ? C.accent : C.border}`,
                         background: active ? C.accent : C.surface,
                         color: active ? C.bg : C.textSec,
-                        fontSize: 12, cursor: "pointer", fontWeight: active ? 700 : 400,
+                        fontSize: 11, cursor: "pointer", fontWeight: active ? 700 : 400,
                         fontFamily: FONT_DISPLAY, letterSpacing: 0.3
                       }}>
                       {o.label}
@@ -968,7 +968,7 @@ const chipStyleFn = (active, col, C) => ({
   border: `1.5px solid ${active ? col : C.border}`,
   background: active ? `${col}22` : C.surface,
   color: active ? col : C.textSec,
-  fontSize: 12, cursor: "pointer", fontWeight: active ? 700 : 400
+  fontSize: 11, cursor: "pointer", fontWeight: active ? 700 : 400
 });
 
 const btnPrimaryFn = (C) => ({

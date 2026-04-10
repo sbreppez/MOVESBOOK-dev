@@ -215,17 +215,17 @@ export const BattlePrepSetup = ({ initialPreset, battleprep, setBattleprep, move
           {/* Event + Plan name */}
           <div style={{ marginBottom: 14 }}>
             <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 18, color: C.text, letterSpacing: 1 }}>{summaryPlan.eventName}</div>
-            {summaryPlan.planName !== summaryPlan.eventName && <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>{summaryPlan.planName}</div>}
+            {summaryPlan.planName !== summaryPlan.eventName && <div style={{ fontSize: 11, color: C.textMuted, marginTop: 2 }}>{summaryPlan.planName}</div>}
             {summaryPlan.location && (
               <div style={{ display:"flex", alignItems:"center", gap:5, marginTop:6 }}>
                 <Ic n="mapPin" s={13} c={C.textSec}/>
-                <span style={{ fontSize:12, color:C.textSec }}>{summaryPlan.location}</span>
+                <span style={{ fontSize:11, color:C.textSec }}>{summaryPlan.location}</span>
               </div>
             )}
             {summaryPlan.eventUrl && (
               <div style={{ display:"flex", alignItems:"center", gap:5, marginTop:4 }}>
                 <Ic n="extLink" s={13} c={C.accent}/>
-                <span style={{ fontSize:12, color:C.accent }}>{summaryPlan.eventUrl}</span>
+                <span style={{ fontSize:11, color:C.accent }}>{summaryPlan.eventUrl}</span>
               </div>
             )}
           </div>
@@ -277,23 +277,23 @@ export const BattlePrepSetup = ({ initialPreset, battleprep, setBattleprep, move
           )}
           {/* Totals */}
           <div style={{ background: C.surfaceAlt, borderRadius: 8, padding: "10px 14px", display: "flex", justifyContent: "center", gap: 8 }}>
-            <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 12, color: C.text }}>{totalTraining} <span style={{ fontSize: 10, fontWeight: 700, color: C.textMuted }}>{t("daysTraining")}</span></span>
+            <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 11, color: C.text }}>{totalTraining} <span style={{ fontSize: 10, fontWeight: 700, color: C.textMuted }}>{t("daysTraining")}</span></span>
             <span style={{ color: C.border }}>{"\u00B7"}</span>
-            <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 12, color: C.text }}>{restDays > 0 ? restDays : 0} <span style={{ fontSize: 10, fontWeight: 700, color: C.textMuted }}>{t("previewRestDays")}</span></span>
+            <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 11, color: C.text }}>{restDays > 0 ? restDays : 0} <span style={{ fontSize: 10, fontWeight: 700, color: C.textMuted }}>{t("previewRestDays")}</span></span>
             <span style={{ color: C.border }}>{"\u00B7"}</span>
-            <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 12, color: C.text }}>{totalDays} <span style={{ fontSize: 10, fontWeight: 700, color: C.textMuted }}>{t("previewDays")}</span></span>
+            <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 11, color: C.text }}>{totalDays} <span style={{ fontSize: 10, fontWeight: 700, color: C.textMuted }}>{t("previewDays")}</span></span>
           </div>
         </div>
         {/* Footer */}
         <div style={{ padding: "12px 14px", borderTop: `1px solid ${C.border}`, flexShrink: 0, display: "flex", flexDirection: "column", gap: 6 }}>
           <button onClick={handleActivate}
             style={{ width: "100%", padding: "14px", background: C.accent, border: "none", borderRadius: 10, cursor: "pointer",
-              fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 15, letterSpacing: 2, color: "#fff" }}>
+              fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 16, letterSpacing: 2, color: "#fff" }}>
             {"\u2705"} {t("startPlan")}
           </button>
           <button onClick={handleBack}
             style={{ width: "100%", padding: "8px", background: "none", border: "none", cursor: "pointer",
-              fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12, color: C.textMuted, letterSpacing: 0.5 }}>
+              fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: C.textMuted, letterSpacing: 0.5 }}>
             {"\u2190"} {t("cancel")}
           </button>
         </div>
@@ -334,11 +334,11 @@ export const BattlePrepSetup = ({ initialPreset, battleprep, setBattleprep, move
                   <div style={{ padding: 14 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
                       <span style={{ fontSize: 18 }}>{p.emoji}</span>
-                      <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 15, letterSpacing: 1, color: C.text }}>{meta.label}</span>
+                      <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 16, letterSpacing: 1, color: C.text }}>{meta.label}</span>
                       {sel && <Ic n="check" s={16} c={C.accent} />}
                     </div>
-                    <p style={{ fontFamily: FONT_BODY, fontSize: 12, color: C.textSec, margin: "0 0 6px", lineHeight: 1.4 }}>{t(`prepDesc_${p.id}`)}</p>
-                    {p.phases.length > 0 && <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>{p.phases.map(ph => <span key={ph} style={{ fontSize: 9, fontFamily: FONT_DISPLAY, fontWeight: 700, letterSpacing: 0.5, color: C.textMuted, background: C.surfaceAlt, borderRadius: 5, padding: "2px 6px" }}>{ph}</span>)}</div>}
+                    <p style={{ fontFamily: FONT_BODY, fontSize: 11, color: C.textSec, margin: "0 0 6px", lineHeight: 1.4 }}>{t(`prepDesc_${p.id}`)}</p>
+                    {p.phases.length > 0 && <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>{p.phases.map(ph => <span key={ph} style={{ fontSize: 10, fontFamily: FONT_DISPLAY, fontWeight: 700, letterSpacing: 0.5, color: C.textMuted, background: C.surfaceAlt, borderRadius: 5, padding: "2px 6px" }}>{ph}</span>)}</div>}
                   </div>
                 </button>
               );
@@ -356,13 +356,13 @@ export const BattlePrepSetup = ({ initialPreset, battleprep, setBattleprep, move
                   style={{ flex: 1, background: C.bg, border: `1px solid ${C.border}`, borderRadius: 8, padding: "8px 10px", color: C.text, fontSize: 13, fontFamily: FONT_BODY, outline: "none" }} />
                 <input type="number" value={ph.percentage} onChange={e => updatePhase(i, "percentage", e.target.value)} min={1} max={100}
                   style={{ width: 60, background: C.bg, border: `1px solid ${C.border}`, borderRadius: 8, padding: "8px 6px", color: C.text, fontSize: 13, fontFamily: FONT_BODY, textAlign: "center", outline: "none" }} />
-                <span style={{ fontSize: 12, color: C.textMuted }}>%</span>
+                <span style={{ fontSize: 11, color: C.textMuted }}>%</span>
                 {customPhases.length > 1 && <button onClick={() => removePhase(i)} style={{ background: "none", border: "none", cursor: "pointer", padding: 2, color: C.textMuted }}><Ic n="x" s={14} /></button>}
               </div>
             ))}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
-              <span style={{ fontSize: 12, fontFamily: FONT_DISPLAY, fontWeight: 700, letterSpacing: 0.5, color: customPhasesSum === 100 ? C.green : C.red }}>{t("total")}: {customPhasesSum}%</span>
-              {customPhases.length < 6 && <button onClick={addPhase} style={{ background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 8, padding: "6px 12px", cursor: "pointer", fontSize: 12, fontFamily: FONT_DISPLAY, fontWeight: 700, color: C.accent }}>+ {t("prepAddPhase")}</button>}
+              <span style={{ fontSize: 11, fontFamily: FONT_DISPLAY, fontWeight: 700, letterSpacing: 0.5, color: customPhasesSum === 100 ? C.green : C.red }}>{t("total")}: {customPhasesSum}%</span>
+              {customPhases.length < 6 && <button onClick={addPhase} style={{ background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 8, padding: "6px 12px", cursor: "pointer", fontSize: 11, fontFamily: FONT_DISPLAY, fontWeight: 700, color: C.accent }}>+ {t("prepAddPhase")}</button>}
             </div>
             <div style={{ display: "flex", height: 6, borderRadius: 3, overflow: "hidden", marginTop: 12, background: C.surfaceAlt }}>
               {customPhases.map((ph, i) => { const colors = ["#1565c0", "#f57f17", "#e53935", "#2e7d32", "#ab47bc", "#ff7043"]; return <div key={i} style={{ width: `${ph.percentage}%`, background: colors[i % colors.length] }} />; })}
@@ -409,7 +409,7 @@ export const BattlePrepSetup = ({ initialPreset, battleprep, setBattleprep, move
                   <div key={ce.id} style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 0", borderBottom: `1px solid ${C.borderLight}` }}>
                     <span style={{ fontSize: 13 }}>{"\u2694\uFE0F"}</span>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 12, fontFamily: FONT_DISPLAY, fontWeight: 700, color: C.text }}>{new Date(ce.date + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</div>
+                      <div style={{ fontSize: 11, fontFamily: FONT_DISPLAY, fontWeight: 700, color: C.text }}>{new Date(ce.date + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</div>
                       {ce.title && <div style={{ fontSize: 11, color: C.textSec, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{ce.title}</div>}
                     </div>
                     <button onClick={() => importCalendarBattle(ce)} style={{ background: `${C.accent}15`, border: `1px solid ${C.accent}40`, borderRadius: 6, padding: "4px 10px", cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 10, letterSpacing: 0.5, color: C.accent, flexShrink: 0 }}>+ ADD</button>
@@ -417,7 +417,7 @@ export const BattlePrepSetup = ({ initialPreset, battleprep, setBattleprep, move
                 ))}
               </div>
             )}
-            <button onClick={addBattle} style={{ background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 8, padding: "8px 14px", cursor: "pointer", fontSize: 12, fontFamily: FONT_DISPLAY, fontWeight: 700, color: C.accent, marginBottom: 4, width: "100%" }}>+ {t("addAnotherBattleDate")}</button>
+            <button onClick={addBattle} style={{ background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 8, padding: "8px 14px", cursor: "pointer", fontSize: 11, fontFamily: FONT_DISPLAY, fontWeight: 700, color: C.accent, marginBottom: 4, width: "100%" }}>+ {t("addAnotherBattleDate")}</button>
             <p style={{ fontSize: 11, color: C.textMuted, fontFamily: FONT_BODY, fontStyle: "italic", margin: "2px 0 16px" }}>{t("backToBackHint")}</p>
 
             {/* Training days */}
@@ -425,13 +425,13 @@ export const BattlePrepSetup = ({ initialPreset, battleprep, setBattleprep, move
             <div style={{ display: "flex", gap: 6, marginBottom: 16 }}>
               {DAY_LABELS.map((label, i) => {
                 const on = trainingDays.includes(i);
-                return <button key={i} onClick={() => toggleTrainingDay(i)} style={{ width: 38, height: 38, borderRadius: "50%", background: on ? `${C.accent}20` : C.surfaceAlt, border: `2px solid ${on ? C.accent : C.border}`, color: on ? C.accent : C.textMuted, fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 12, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>{label}</button>;
+                return <button key={i} onClick={() => toggleTrainingDay(i)} style={{ width: 38, height: 38, borderRadius: "50%", background: on ? `${C.accent}20` : C.surfaceAlt, border: `2px solid ${on ? C.accent : C.border}`, color: on ? C.accent : C.textMuted, fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>{label}</button>;
               })}
             </div>
             {previewStats && (
               <div style={{ background: C.surfaceAlt, borderRadius: 8, padding: "10px 14px", display: "flex", justifyContent: "center", gap: 6, flexWrap: "wrap" }}>
                 {[{ n: previewStats.days, l: t("previewDays") }, { n: previewStats.sessions, l: t("previewSessions") }, { n: previewStats.restDays, l: t("previewRestDays") }, { n: previewStats.battleCount, l: t("previewBattles") }].map((s, i) => (
-                  <span key={i} style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 12, letterSpacing: 0.5, color: C.text }}>{s.n} <span style={{ color: C.textMuted, fontWeight: 700, fontSize: 10 }}>{s.l}</span>{i < 3 && <span style={{ color: C.border, margin: "0 2px" }}>{" \u00B7 "}</span>}</span>
+                  <span key={i} style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 11, letterSpacing: 0.5, color: C.text }}>{s.n} <span style={{ color: C.textMuted, fontWeight: 700, fontSize: 10 }}>{s.l}</span>{i < 3 && <span style={{ color: C.border, margin: "0 2px" }}>{" \u00B7 "}</span>}</span>
                 ))}
               </div>
             )}
@@ -457,7 +457,7 @@ export const BattlePrepSetup = ({ initialPreset, battleprep, setBattleprep, move
             {/* Select All Moves */}
             <button onClick={toggleAllMoves} style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "8px 4px", background: allMovesSelected ? `${C.accent}08` : "transparent", border: "none", cursor: "pointer", textAlign: "left", borderBottom: `1px solid ${C.border}`, marginBottom: 6 }}>
               <Chk on={allMovesSelected} />
-              <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 12, letterSpacing: 1, color: C.text }}>{t("selectAllMoves")}</span>
+              <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 11, letterSpacing: 1, color: C.text }}>{t("selectAllMoves")}</span>
             </button>
 
             {/* Moves by category */}
@@ -494,7 +494,7 @@ export const BattlePrepSetup = ({ initialPreset, battleprep, setBattleprep, move
                 <div style={{ borderTop: `1px solid ${C.border}`, marginTop: 10, paddingTop: 10 }}>
                   <button onClick={toggleAllSets} style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "8px 4px", background: allSetsSelected ? `${C.accent}08` : "transparent", border: "none", cursor: "pointer", textAlign: "left", marginBottom: 6 }}>
                     <Chk on={allSetsSelected} />
-                    <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 12, letterSpacing: 1, color: C.text }}>{t("selectAllSets")}</span>
+                    <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 11, letterSpacing: 1, color: C.text }}>{t("selectAllSets")}</span>
                   </button>
                 </div>
                 {(sets || []).map(s => {
@@ -518,7 +518,7 @@ export const BattlePrepSetup = ({ initialPreset, battleprep, setBattleprep, move
       <div style={{ padding: "12px 14px", borderTop: `1px solid ${C.border}`, flexShrink: 0 }}>
         {isArsenalStep ? (
           <button onClick={() => setShowSummary(true)} disabled={!canNext()}
-            style={{ width: "100%", padding: "14px", background: canNext() ? C.accent : C.surfaceAlt, border: "none", borderRadius: 10, cursor: canNext() ? "pointer" : "default", fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 15, letterSpacing: 2, color: canNext() ? "#fff" : C.textMuted }}>
+            style={{ width: "100%", padding: "14px", background: canNext() ? C.accent : C.surfaceAlt, border: "none", borderRadius: 10, cursor: canNext() ? "pointer" : "default", fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 16, letterSpacing: 2, color: canNext() ? "#fff" : C.textMuted }}>
             {t("generatePlan")}
           </button>
         ) : (

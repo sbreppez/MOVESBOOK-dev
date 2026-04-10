@@ -2,7 +2,6 @@ import { C } from './colors';
 import { FONT_DISPLAY, FONT_BODY } from './fonts';
 
 export const CARD_BASE  = () => ({ borderRadius:8, background:C.surface, overflow:"hidden", minWidth:0, display:"flex", flexDirection:"column", position:"relative" });
-export const CARD_BAR   = (color) => ({ height:5, background:`linear-gradient(90deg,${color},${color}55)`, flexShrink:0 });
 export const CARD_BODY  = () => ({ padding:"14px 16px 13px 16px", flex:1, display:"flex", flexDirection:"column" });
 
 export const masteryColor = p => p < 30 ? C.red : p < 60 ? C.yellow : p < 80 ? C.blue : C.green;

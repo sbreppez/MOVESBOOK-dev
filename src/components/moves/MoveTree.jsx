@@ -11,7 +11,7 @@ const OriginBadge = ({ origin }) => {
   const cfg = map[origin];
   if (!cfg) return null;
   return (
-    <span style={{ fontSize: 9, fontWeight: 700, fontFamily: FONT_DISPLAY, borderRadius: 6,
+    <span style={{ fontSize: 10, fontWeight: 700, fontFamily: FONT_DISPLAY, borderRadius: 6,
       padding: "1px 6px", background: cfg.bg, color: "#fff", letterSpacing: 0.5, flexShrink: 0 }}>
       {cfg.label}
     </span>
@@ -53,7 +53,7 @@ const TreeNode = ({ node, depth, catColors, onEdit, collapsed, toggleCollapse, i
             {m.name}
           </div>
         </div>
-        <span style={{ fontSize: 12, fontWeight: 700, color: masteryColor(m.mastery || 0), flexShrink: 0 }}>
+        <span style={{ fontSize: 11, fontWeight: 700, color: masteryColor(m.mastery || 0), flexShrink: 0 }}>
           {m.mastery || 0}%
         </span>
         <Ic n="edit" s={14} c={C.textMuted} />
@@ -142,7 +142,7 @@ export const MoveTree = ({ moves, catColors, onEdit, settings = {} }) => {
     <div>
       {/* Stats banner */}
       {moves.length > 0 && (
-        <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12, color: C.textMuted,
+        <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: C.textMuted,
           marginBottom: 12, letterSpacing: 0.5 }}>
           {stats.roots} {t("roots")} · {stats.variations} {t("variations")} · {stats.standalone} {t("standalone").toLowerCase()} · {t("deepest")}: {stats.maxDepth} {t("levels")}
         </div>
@@ -187,7 +187,7 @@ export const MoveTree = ({ moves, catColors, onEdit, settings = {} }) => {
                   {m.name}
                 </div>
               </div>
-              <span style={{ fontSize: 12, fontWeight: 700, color: masteryColor(m.mastery || 0), flexShrink: 0 }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: masteryColor(m.mastery || 0), flexShrink: 0 }}>
                 {m.mastery || 0}%
               </span>
               <Ic n="edit" s={14} c={C.textMuted} />

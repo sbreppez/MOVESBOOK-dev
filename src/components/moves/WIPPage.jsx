@@ -192,7 +192,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
           {allCatMoves.length===0 ? (
             <div style={{ textAlign:"center", padding:40, color:C.textMuted }}>
               <div style={{ marginBottom:8 }}><Ic n="list" s={32} c={C.textMuted}/></div>
-              <p style={{ fontSize:15, margin:"0 0 4px" }}>No moves yet in {openCat}</p>
+              <p style={{ fontSize:16, margin:"0 0 4px" }}>No moves yet in {openCat}</p>
               <p style={{ fontSize:13 }}>Tap + to add your first move</p>
             </div>
           ) : catMoves.length===0 ? (
@@ -231,7 +231,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
         {editMove&&<MoveModal move={editMove} cats={cats} onClose={()=>setEditMove(null)} onSave={f=>{saveMove(f,editMove.id);setEditMove(null);}} customAttrs={customAttrs} onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])} allMoves={moves} catColors={catColors} isPremium={isPremium}/>}
         {confirmDeleteMove&&(
           <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", zIndex:900, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
-            <div style={{ background:C.bg, border:`1px solid ${C.border}`, borderRadius:14, width:"100%", maxWidth:320, padding:20, boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
+            <div style={{ background:C.bg, borderRadius:16, width:"100%", maxWidth:320, padding:20, boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
               <div style={{ fontWeight:900, fontSize:14, letterSpacing:1.5, fontFamily:FONT_DISPLAY, color:C.brown, marginBottom:8 }}>{t("deleteMove")}</div>
               <p style={{ fontSize:13, color:C.textSec, marginBottom:16, lineHeight:1.5 }}>
                 {t("deleteMoveBody1")}<span style={{ color:C.text, fontWeight:700 }}>{confirmDeleteMove.name}</span>{t("deleteMoveBody2")}
@@ -384,8 +384,8 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
           <div>
             <SectionBrief desc={t("setsBrief")} stat={`${sets.length} sets`} settings={st}/>
             <div style={{ display:"flex", justifyContent:"flex-end", alignItems:"center", gap:8, padding:"5px 16px 3px" }}>
-              {sets.filter(s=>(s.moveIds?.length||0)>0).length>=1&&onOpenFlashCards&&<button onClick={onOpenFlashCards} style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}><Ic n="cards" s={16}/></button>}
-              <button onClick={()=>setSetsView(v=>v==="list"?"tiles":"list")} style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}><Ic n={setsView==="list"?"grid":"list"} s={16}/></button>
+              {sets.filter(s=>(s.moveIds?.length||0)>0).length>=1&&onOpenFlashCards&&<button onClick={onOpenFlashCards} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textMuted }}><Ic n="cards" s={16}/></button>}
+              <button onClick={()=>setSetsView(v=>v==="list"?"tiles":"list")} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textMuted }}><Ic n={setsView==="list"?"grid":"list"} s={16}/></button>
               <button onClick={()=>setReorderMode(r=>!r)}
                 style={{ background:"none", border:"none", cursor:"pointer", padding:4,
                   color:reorderMode?C.accent:C.textMuted, fontSize:13, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>
@@ -406,12 +406,11 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
                   const sColor=s.color||C.blue;
                   return (
                     <div key={s.id} onClick={()=>setEditSetModal(s)}
-                      style={{ borderRadius:10, border:`1.5px solid ${C.border}`, overflow:"hidden", background:C.bg, cursor:"pointer", position:"relative" }}>
-                      <div style={{ height:4, background:`linear-gradient(90deg,${sColor},${sColor}44)` }}/>
+                      style={{ borderRadius:8, overflow:"hidden", background:C.surface, cursor:"pointer", position:"relative", borderLeft:`4px solid ${sColor}` }}>
                       <div style={{ padding:"10px 10px 8px" }}>
                         <div style={{ display:"flex", alignItems:"flex-start", gap:6, marginBottom:4 }}>
                           <div style={{ width:8, height:8, borderRadius:"50%", background:sColor, flexShrink:0, marginTop:3 }}/>
-                          <div style={{ fontWeight:800, fontSize:12, color:C.brown, fontFamily:FONT_DISPLAY, flex:1, lineHeight:1.3, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", minWidth:0 }}>{s.name}</div>
+                          <div style={{ fontWeight:800, fontSize:11, color:C.brown, fontFamily:FONT_DISPLAY, flex:1, lineHeight:1.3, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", minWidth:0 }}>{s.name}</div>
                           <button onClick={e=>{ e.stopPropagation(); setConfirmDeleteSet(s); }}
                             style={{ background:"none", border:"none", cursor:"pointer", padding:2, flexShrink:0, display:"flex", marginTop:-2, marginRight:-4 }}>
                             <Ic n="x" s={12} c={C.textMuted}/>
@@ -438,8 +437,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
                   const isExp=expSets[s.id]!==false;
                   return (
                     <div key={s.id} style={{ position:"relative", marginBottom:6, borderRadius:8,
-                      overflow:"hidden", background:C.bg }}>
-                      <div style={{ height:3, background:`linear-gradient(90deg,${sColor},${sColor}44)` }}/>
+                      overflow:"hidden", background:C.surface, borderLeft:`4px solid ${sColor}` }}>
                       <div style={{ display:"flex", alignItems:"center", padding:"9px 10px", gap:6 }}>
                         {/* Expand/collapse */}
                         <button onClick={()=>setExpSets(p=>({...p,[s.id]:!isExp}))}
@@ -533,7 +531,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
                     <div style={{ fontWeight:700, fontSize:13, color:C.text, fontFamily:FONT_DISPLAY, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}><Highlight text={m.name} query={search}/></div>
                     <div style={{ fontSize:11, color:C.textMuted, marginTop:1 }}>{m._cat}</div>
                   </div>
-                  <span style={{ fontSize:12, color:masteryColor(m.mastery), fontWeight:700 }}>{m.mastery}%</span>
+                  <span style={{ fontSize:11, color:masteryColor(m.mastery), fontWeight:700 }}>{m.mastery}%</span>
                 </div>
               ))}
             </div>
@@ -613,7 +611,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
         onSave={fields=>setSets(p=>p.map(s=>s.id===editSetModal.id?{...s,...fields}:s))}/>}
       {confirmDeleteSet&&(
         <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", zIndex:900, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
-          <div style={{ background:C.bg, border:`1px solid ${C.border}`, borderRadius:14, width:"100%", maxWidth:320, padding:20, boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
+          <div style={{ background:C.bg, borderRadius:16, width:"100%", maxWidth:320, padding:20, boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
             <div style={{ fontWeight:900, fontSize:14, letterSpacing:1.5, fontFamily:FONT_DISPLAY, color:C.brown, marginBottom:8 }}>DELETE SET?</div>
             <p style={{ fontSize:13, color:C.textSec, marginBottom:16, lineHeight:1.5 }}>
               "<span style={{ color:C.text, fontWeight:700 }}>{confirmDeleteSet.name}</span>" will be permanently deleted. This can't be undone.
@@ -633,7 +631,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
       )}
       {confirmDeleteMove&&(
         <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", zIndex:900, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
-          <div style={{ background:C.bg, border:`1px solid ${C.border}`, borderRadius:14, width:"100%", maxWidth:320, padding:20, boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
+          <div style={{ background:C.bg, borderRadius:16, width:"100%", maxWidth:320, padding:20, boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
             <div style={{ fontWeight:900, fontSize:14, letterSpacing:1.5, fontFamily:FONT_DISPLAY, color:C.brown, marginBottom:8 }}>{t("deleteMove")}</div>
             <p style={{ fontSize:13, color:C.textSec, marginBottom:16, lineHeight:1.5 }}>
               {t("deleteMoveBody1")}<span style={{ color:C.text, fontWeight:700 }}>{confirmDeleteMove.name}</span>{t("deleteMoveBody2")}

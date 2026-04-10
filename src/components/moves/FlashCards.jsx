@@ -144,7 +144,7 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
           {/* Select All / Deselect All */}
           <button onClick={toggleAll}
             style={{ background: "none", border: "none", cursor: "pointer", padding: "6px 0", marginBottom: 12,
-              fontFamily: FONT_DISPLAY, fontSize: 12, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase",
+              fontFamily: FONT_DISPLAY, fontSize: 11, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase",
               color: C.accent }}>
             {allSelected ? t("deselectAll") : t("selectAll")}
           </button>
@@ -176,7 +176,7 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
 
           {/* Min sets hint */}
           {selectedIds.length < 2 && (
-            <p style={{ fontFamily: FONT_BODY, fontSize: 12, color: C.yellow, textAlign: "center", margin: "12px 0" }}>
+            <p style={{ fontFamily: FONT_BODY, fontSize: 11, color: C.yellow, textAlign: "center", margin: "12px 0" }}>
               {t("minSetsRequired")}
             </p>
           )}
@@ -185,7 +185,7 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
           <button onClick={startGame} disabled={selectedIds.length < 2}
             style={{ width: "100%", padding: "14px 0", borderRadius: 12, border: "none", cursor: selectedIds.length < 2 ? "default" : "pointer",
               background: selectedIds.length < 2 ? C.surfaceAlt : C.accent, color: selectedIds.length < 2 ? C.textMuted : "#fff",
-              fontFamily: FONT_DISPLAY, fontSize: 15, fontWeight: 800, letterSpacing: 1.5, textTransform: "uppercase",
+              fontFamily: FONT_DISPLAY, fontSize: 16, fontWeight: 800, letterSpacing: 1.5, textTransform: "uppercase",
               marginTop: 8, opacity: selectedIds.length < 2 ? 0.5 : 1, minHeight: 48 }}>
             {t("flashCards")}
           </button>
@@ -232,7 +232,7 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
                   textTransform: "uppercase", letterSpacing: 1 }}>
                   {currentSet.name}
                 </div>
-                <div style={{ fontFamily: FONT_BODY, fontSize: 12, color: C.textMuted, marginTop: 12 }}>
+                <div style={{ fontFamily: FONT_BODY, fontSize: 11, color: C.textMuted, marginTop: 12 }}>
                   {currentMoves.length} moves
                 </div>
               </div>
@@ -250,7 +250,7 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
                   {currentSet.name}
                 </div>
                 {currentMoves.map(m => (
-                  <div key={m.id} style={{ fontFamily: FONT_BODY, fontSize: 15, color: C.text, padding: "4px 0",
+                  <div key={m.id} style={{ fontFamily: FONT_BODY, fontSize: 16, color: C.text, padding: "4px 0",
                     borderBottom: `1px solid ${C.borderLight}`, width: "100%", textAlign: "center" }}>
                     {m.name}
                   </div>
@@ -261,7 +261,7 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
 
           {/* Tap hint */}
           {!flipped && (
-            <div style={{ fontFamily: FONT_BODY, fontSize: 12, color: C.textMuted }}>
+            <div style={{ fontFamily: FONT_BODY, fontSize: 11, color: C.textMuted }}>
               ↻ tap to flip
             </div>
           )}
@@ -322,7 +322,7 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
           {/* Missed sets list */}
           {missedSets.length > 0 && (
             <div style={{ width: "100%", maxWidth: 360, marginTop: 8 }}>
-              <div style={{ fontFamily: FONT_DISPLAY, fontSize: 12, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase",
+              <div style={{ fontFamily: FONT_DISPLAY, fontSize: 11, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase",
                 color: C.textMuted, marginBottom: 8 }}>
                 {t("setsMissed")}
               </div>

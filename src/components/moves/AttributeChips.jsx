@@ -47,7 +47,7 @@ export const AttributeChips = ({ attr, selected, onChange, compact }) => {
     whiteSpace: "nowrap",
     ...(compact
       ? { fontSize: 11, padding: "3px 10px" }
-      : { fontSize: 12, padding: "5px 12px" }
+      : { fontSize: 11, padding: "5px 13px" }
     ),
   };
 

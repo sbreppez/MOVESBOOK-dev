@@ -513,7 +513,7 @@ export const Spar1v1 = ({ sparring, onSaveSession, addCalendarEvent, rivals, onR
               </div>
             )}
             {!hasRoundLimit && (
-              <div style={{ fontSize:12, color:C.textMuted, fontStyle:"italic" }}>{t("unlimitedRounds")}</div>
+              <div style={{ fontSize:11, color:C.textMuted, fontStyle:"italic" }}>{t("unlimitedRounds")}</div>
             )}
           </div>
 
@@ -548,7 +548,7 @@ export const Spar1v1 = ({ sparring, onSaveSession, addCalendarEvent, rivals, onR
                     style={{ flex:1, padding:"14px 8px", borderRadius:12, border:`2px solid ${active ? C.accent : C.border}`,
                       background: active ? C.accent + "14" : C.surface, cursor:"pointer", textAlign:"center", transition:"all 0.15s" }}>
                     <div style={{ marginBottom:4 }}><Ic n={opt.icon} s={24} c={active ? C.accent : C.textMuted}/></div>
-                    <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, color: active ? C.accent : C.text, letterSpacing:0.5,
+                    <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, color: active ? C.accent : C.text, letterSpacing:0.5,
                       overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{opt.label}</div>
                   </button>
                 );
@@ -561,7 +561,7 @@ export const Spar1v1 = ({ sparring, onSaveSession, addCalendarEvent, rivals, onR
             <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, color:C.textMuted, letterSpacing:1, marginBottom:6, textTransform:"uppercase" }}>
               {t("howItWorks")}
             </div>
-            <div style={{ fontSize:12, color:C.textSec, lineHeight:1.6 }}>
+            <div style={{ fontSize:13, color:C.textSec, lineHeight:1.6 }}>
               {t("oneVsOneHowItWorks")}
             </div>
           </div>
@@ -572,7 +572,7 @@ export const Spar1v1 = ({ sparring, onSaveSession, addCalendarEvent, rivals, onR
           <button onClick={handleStart} disabled={!canStart}
             style={{ width:"100%", padding:16, borderRadius:12, border:"none",
               background: canStart ? C.accent : C.surfaceHigh, color: canStart ? "#fff" : C.textMuted,
-              cursor: canStart ? "pointer" : "default", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:15, letterSpacing:1.5, transition:"all 0.15s" }}>
+              cursor: canStart ? "pointer" : "default", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:1.5, transition:"all 0.15s" }}>
             {t("startSession")}
           </button>
         </div>
@@ -772,7 +772,7 @@ export const Spar1v1 = ({ sparring, onSaveSession, addCalendarEvent, rivals, onR
             <div style={{ background:`${C.accent}14`, border:`1.5px solid ${C.accent}40`, borderRadius:12, padding:"10px 14px", marginBottom:14, display:"flex", alignItems:"center", gap:10, animation:"mb-pr-pop 0.5s ease-out" }}>
               <Ic n="flame" s={22} c={C.accent}/>
               <div>
-                <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:12, color:C.accent, letterSpacing:1.5 }}>{t("newPersonalRecord")}</div>
+                <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:11, color:C.accent, letterSpacing:1.5 }}>{t("newPersonalRecord")}</div>
                 <div style={{ fontFamily:FONT_BODY, fontSize:11, color:C.textSec, marginTop:2 }}>
                   {pendingPRs.map(pr => pr.type === "mostRounds" ? `${pr.value} ${t("roundsMode") || "rounds"}` : pr.type === "longestRound" ? `${pr.value}s` : fmtDuration(pr.value * 1000)).join(" · ")}
                 </div>
@@ -795,7 +795,7 @@ export const Spar1v1 = ({ sparring, onSaveSession, addCalendarEvent, rivals, onR
           </div>
 
           {/* Date */}
-          <div style={{ fontSize:12, color:C.textMuted, marginBottom:16 }}>
+          <div style={{ fontSize:11, color:C.textMuted, marginBottom:16 }}>
             {new Date(s.date).toLocaleDateString()} · {new Date(s.date).toLocaleTimeString([], { hour:"2-digit", minute:"2-digit" })}
           </div>
 
@@ -854,7 +854,7 @@ export const Spar1v1 = ({ sparring, onSaveSession, addCalendarEvent, rivals, onR
         <div style={{ padding:"10px 18px 24px", flexShrink:0, display:"flex", flexDirection:"column", gap:8 }}>
           <div style={{ display:"flex", gap:8 }}>
             <button onClick={handleShareJSON}
-              style={{ flex:1, padding:12, borderRadius:10, border:`1px solid ${C.border}`, background:C.surfaceAlt, color:C.text, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, letterSpacing:0.5, display:"flex", alignItems:"center", justifyContent:"center", gap:6 }}>
+              style={{ flex:1, padding:12, borderRadius:10, border:`1px solid ${C.border}`, background:C.surfaceAlt, color:C.text, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, letterSpacing:0.5, display:"flex", alignItems:"center", justifyContent:"center", gap:6 }}>
               <Ic n="share-2" s={14}/> {t("shareJSON")}
             </button>
             <button onClick={handleSave}
@@ -863,7 +863,7 @@ export const Spar1v1 = ({ sparring, onSaveSession, addCalendarEvent, rivals, onR
             </button>
           </div>
           <button onClick={onClose}
-            style={{ width:"100%", padding:12, borderRadius:10, border:`1px solid ${C.border}`, background:C.surfaceAlt, color:C.textMuted, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12 }}>
+            style={{ width:"100%", padding:12, borderRadius:10, border:`1px solid ${C.border}`, background:C.surfaceAlt, color:C.textMuted, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11 }}>
             {t("discard")}
           </button>
         </div>

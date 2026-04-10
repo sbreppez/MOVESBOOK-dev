@@ -64,13 +64,13 @@ export const MyStanceAssessment = ({ stance, onStanceChange, addToast, onClose }
             </button>
           )}
         </div>
-        <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:15, letterSpacing:2,
+        <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:2,
           color:C.brown, textAlign:"center" }}>
           {t("myStance")}
         </span>
         <button onClick={onClose}
           style={{ background:"none", border:"none", cursor:"pointer", padding:4,
-            color:C.textMuted, fontSize:12, fontFamily:FONT_DISPLAY, fontWeight:700, letterSpacing:1 }}>
+            color:C.textMuted, fontSize:11, fontFamily:FONT_DISPLAY, fontWeight:700, letterSpacing:1 }}>
           {t("skip")||"SKIP"}
         </button>
       </div>
@@ -103,7 +103,7 @@ export const MyStanceAssessment = ({ stance, onStanceChange, addToast, onClose }
         {/* Sub-questions */}
         <div style={{ marginTop:24, maxWidth:340, width:"100%" }}>
           {current.qKeys.map((qk, i) => (
-            <div key={i} style={{ fontFamily:FONT_BODY, fontSize:12, color:C.textMuted,
+            <div key={i} style={{ fontFamily:FONT_BODY, fontSize:13, color:C.textMuted,
               textAlign:"center", lineHeight:1.6, marginBottom:2 }}>
               {t(qk)}
             </div>

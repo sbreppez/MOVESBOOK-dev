@@ -56,7 +56,7 @@ export const BattleHistoryView = ({ history, onClose, t }) => {
                     {plan.eventName || plan.planName}
                   </span>
                   <span style={{
-                    fontSize: 9, fontFamily: FONT_DISPLAY, fontWeight: 700,
+                    fontSize: 10, fontFamily: FONT_DISPLAY, fontWeight: 700,
                     background: `${meta.color}20`, color: meta.color,
                     borderRadius: 4, padding: "2px 6px", flexShrink: 0,
                   }}>
@@ -66,7 +66,7 @@ export const BattleHistoryView = ({ history, onClose, t }) => {
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <span style={{ fontSize: 11, fontFamily: FONT_BODY, color: C.textSec }}>{endLabel}</span>
                   <span style={{
-                    fontSize: 9, fontFamily: FONT_DISPLAY, fontWeight: 700,
+                    fontSize: 10, fontFamily: FONT_DISPLAY, fontWeight: 700,
                     background: isCompleted ? `${C.green}20` : `${C.textMuted}15`,
                     color: isCompleted ? C.green : C.textMuted,
                     borderRadius: 4, padding: "2px 6px",
@@ -97,7 +97,7 @@ export const BattleHistoryView = ({ history, onClose, t }) => {
                     <span style={{ fontSize: 18 }}>{moodObj.emoji || ""}</span>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                        <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12, color: C.text }}>
+                        <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: C.text }}>
                           {battleDateLabel}
                         </span>
                         {battle.eventName && (
@@ -108,7 +108,7 @@ export const BattleHistoryView = ({ history, onClose, t }) => {
                       </div>
                     </div>
                     <span style={{
-                      fontSize: 9, fontFamily: FONT_DISPLAY, fontWeight: 700,
+                      fontSize: 10, fontFamily: FONT_DISPLAY, fontWeight: 700,
                       background: `${resultObj.color || C.textMuted}20`,
                       color: resultObj.color || C.textMuted,
                       borderRadius: 4, padding: "2px 8px", flexShrink: 0,
@@ -142,7 +142,7 @@ export const BattleHistoryView = ({ history, onClose, t }) => {
             {/* No reflections for cancelled plans */}
             {!isCompleted && battlesWithReflections.length === 0 && (
               <div style={{ borderTop: `1px solid ${C.borderLight}`, padding: "10px 14px" }}>
-                <span style={{ fontSize: 12, fontFamily: FONT_BODY, color: C.textMuted, fontStyle: "italic" }}>
+                <span style={{ fontSize: 11, fontFamily: FONT_BODY, color: C.textMuted, fontStyle: "italic" }}>
                   {t("planCancelled")}
                 </span>
               </div>
@@ -156,7 +156,7 @@ export const BattleHistoryView = ({ history, onClose, t }) => {
 
 const ReflectionRow = ({ label, text }) => (
   <div style={{ marginTop: 8 }}>
-    <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 9, letterSpacing: 0.8, color: C.textMuted, marginBottom: 2 }}>
+    <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, letterSpacing: 0.8, color: C.textMuted, marginBottom: 2 }}>
       {label}
     </div>
     <div style={{ fontFamily: FONT_BODY, fontSize: 13, color: C.textSec, lineHeight: 1.5 }}>

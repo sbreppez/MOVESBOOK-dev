@@ -332,7 +332,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
                   borderRadius: 20, padding: "6px 14px", border: `1.5px solid ${isActive ? accentColor : C.border}`,
                   background: isActive ? accentColor + "22" : C.surface,
                   color: isActive ? accentColor : C.textSec,
-                  fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12, cursor: "pointer",
+                  fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, cursor: "pointer",
                   transition: "all 0.15s", whiteSpace: "nowrap",
                 }}>
                 {label}
@@ -345,7 +345,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
             style={{
               borderRadius: 20, padding: "6px 12px", border: `1.5px dashed ${C.border}`,
               background: "none", color: C.textMuted, fontFamily: FONT_DISPLAY, fontWeight: 700,
-              fontSize: 12, cursor: "pointer", display: "flex", alignItems: "center", gap: 4,
+              fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center", gap: 4,
             }}>
             <Ic n="plus" s={12} c={C.textMuted} /> {t("addCustomChip")}
           </button>
@@ -375,7 +375,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
               onClick={() => { if (newChipText.trim()) { addCustomChip(pool, catKey, newChipText.trim()); setAddingChip(null); } }}
               style={{
                 borderRadius: 8, padding: "6px 12px", background: accentColor, color: "#fff",
-                border: "none", fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12, cursor: "pointer",
+                border: "none", fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, cursor: "pointer",
               }}>
               <Ic n="check" s={14} c="#fff" />
             </button>
@@ -447,7 +447,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
             alignItems: "center", gap: 6, padding: "8px 0", color: C.textMuted, marginBottom: 12,
           }}>
           <span style={{ fontSize: 14 }}>←</span>
-          <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12, letterSpacing: 0.5 }}>
+          <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, letterSpacing: 0.5 }}>
             {t("grow").toUpperCase()}
           </span>
         </button>
@@ -515,7 +515,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
             alignItems: "center", gap: 6, padding: "8px 0", color: C.textMuted, marginBottom: 8,
           }}>
           <span style={{ fontSize: 14 }}>←</span>
-          <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12, letterSpacing: 0.5 }}>
+          <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, letterSpacing: 0.5 }}>
             {t(mode).toUpperCase()}
           </span>
         </button>
@@ -739,8 +739,8 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
       {savedFlash && (
         <div style={{
           position: "absolute", top: 54, left: 12, right: 12, zIndex: 610,
-          background: C.surface, border: `2px solid ${C.green}`, borderRadius: 8,
-          padding: "11px 14px", boxShadow: "0 6px 24px rgba(0,0,0,0.25)",
+          background: C.surface, borderRadius: 8,
+          padding: "11px 14px",
           display: "flex", alignItems: "center", gap: 10,
           animation: "toastIn 0.3s ease",
         }}>
@@ -812,7 +812,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
             {/* Preview */}
             <div style={{
               background: C.surfaceAlt, borderRadius: 8, padding: "10px 12px", marginBottom: 16,
-              fontSize: 12, color: C.textSec, fontFamily: FONT_BODY, lineHeight: 1.4,
+              fontSize: 11, color: C.textSec, fontFamily: FONT_BODY, lineHeight: 1.4,
             }}>
               {buildPreview()}
             </div>

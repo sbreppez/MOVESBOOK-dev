@@ -29,7 +29,7 @@ const TENSION_ROLE_OPTS = [
 const chipStyle = (active) => ({
   border:`1.5px solid ${active ? C.accent : C.border}`, cursor:"pointer",
   borderRadius:20, fontFamily:FONT_DISPLAY, fontWeight:700, letterSpacing:0.3,
-  fontSize:12, padding:"5px 12px", whiteSpace:"nowrap", transition:"all 0.15s",
+  fontSize:11, padding:"5px 12px", whiteSpace:"nowrap", transition:"all 0.15s",
   background: active ? C.accent : C.surface,
   color: active ? C.bg : C.textSec,
 });
@@ -91,7 +91,7 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
       {/* ── Auto-suggest (premium) ── */}
       {isPremium && isAddMode && autoSuggest && !f.parentId && (
         <div style={{ display:"flex", alignItems:"center", gap:8, padding:"6px 10px", background:C.surfaceAlt, borderRadius:8, marginTop:-4, marginBottom:8, border:`1px solid ${C.borderLight}` }}>
-          <span style={{ fontSize:12, color:C.textSec, flex:1 }}>
+          <span style={{ fontSize:11, color:C.textSec, flex:1 }}>
             {t("basedOnSuggestion").replace("{name}", autoSuggest.name)}
           </span>
           <button onClick={() => confirmSuggest(autoSuggest)}
@@ -127,7 +127,7 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
           </button>
         ) : parentMove ? (
           <div style={{ display:"inline-flex", alignItems:"center", gap:6, background:C.surfaceAlt, borderRadius:20, padding:"4px 10px 4px 12px", border:`1px solid ${C.border}` }}>
-            <span style={{ fontSize:12, fontWeight:700, color:C.text, fontFamily:FONT_DISPLAY }}>{parentMove.name}</span>
+            <span style={{ fontSize:11, fontWeight:700, color:C.text, fontFamily:FONT_DISPLAY }}>{parentMove.name}</span>
             <button onClick={() => setF(p=>({...p, parentId:null}))}
               style={{ background:"none", border:"none", cursor:"pointer", padding:2, display:"flex" }}>
               <Ic n="x" s={12} c={C.textMuted}/>
@@ -158,7 +158,7 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
             {/* Move list */}
             <div style={{ maxHeight:180, overflowY:"auto" }}>
               {basedOnMoves.length === 0 ? (
-                <div style={{ fontSize:12, color:C.textMuted, textAlign:"center", padding:12 }}>No moves found</div>
+                <div style={{ fontSize:11, color:C.textMuted, textAlign:"center", padding:12 }}>No moves found</div>
               ) : basedOnMoves.map(m => {
                 const col = masteryColor(m.mastery || 0);
                 const catCol = catColors[m.category] || C.accent;
@@ -258,7 +258,7 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
       {/* ── More Details (Custom Attributes) ── */}
       <button onClick={() => setShowMore(s => !s)}
         style={{ background:"none", border:"none", cursor:"pointer", display:"flex",
-          alignItems:"center", gap:6, color:C.textMuted, fontSize:12, fontFamily:FONT_DISPLAY,
+          alignItems:"center", gap:6, color:C.textMuted, fontSize:11, fontFamily:FONT_DISPLAY,
           fontWeight:700, letterSpacing:0.5, padding:"8px 0", marginBottom:4 }}>
         <Ic n={showMore ? "chevD" : "chevR"} s={12} c={C.textMuted} />
         {showMore ? t("hideDetails") : t("moreDetails")}
@@ -282,12 +282,12 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
               </div>
             ))
           ) : (
-            <div style={{ fontSize:12, color:C.textMuted, fontStyle:"italic", marginBottom:6 }}>
+            <div style={{ fontSize:11, color:C.textMuted, fontStyle:"italic", marginBottom:6 }}>
               {t("noAttributesDefined")}
             </div>
           )}
           <button onClick={() => setShowAttrModal(true)}
-            style={{ background:"none", border:"none", cursor:"pointer", fontSize:12,
+            style={{ background:"none", border:"none", cursor:"pointer", fontSize:11,
               color:C.accent, fontWeight:700, fontFamily:FONT_DISPLAY, padding:"4px 0" }}>
             + {t("addNewAttribute")}
           </button>

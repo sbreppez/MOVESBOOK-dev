@@ -94,8 +94,8 @@ export const BackupModal = ({ onClose }) => {
     return (
       <div onClick={onClose} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.6)",
         zIndex:1100, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
-        <div onClick={e=>e.stopPropagation()} style={{ background:C.bg, border:`1px solid ${C.border}`,
-          borderRadius:14, width:"100%", maxWidth:340, padding:20, boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
+        <div onClick={e=>e.stopPropagation()} style={{ background:C.bg,
+          borderRadius:16, width:"100%", maxWidth:340, padding:20, boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
           <div style={{ fontWeight:900, fontSize:14, letterSpacing:1.5, fontFamily:FONT_DISPLAY,
             color:C.brown, marginBottom:8 }}>{t("restoreConfirmTitle")}</div>
           <p style={{ fontSize:13, color:C.textSec, marginBottom:16, lineHeight:1.6 }}>
@@ -121,8 +121,8 @@ export const BackupModal = ({ onClose }) => {
   return (
     <div onClick={onClose} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.6)",
       zIndex:1100, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
-      <div onClick={e=>e.stopPropagation()} style={{ background:C.bg, border:`1px solid ${C.border}`,
-        borderRadius:14, width:"100%", maxWidth:340, overflow:"hidden",
+      <div onClick={e=>e.stopPropagation()} style={{ background:C.bg,
+        borderRadius:16, width:"100%", maxWidth:340, overflow:"hidden",
         boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
 
         {/* Header */}
@@ -131,7 +131,7 @@ export const BackupModal = ({ onClose }) => {
           <div>
             <div style={{ fontWeight:900, fontSize:14, letterSpacing:2, fontFamily:FONT_DISPLAY,
               color:C.brown }}>{t("backupData")}</div>
-            <div style={{ fontSize:12, color:C.textSec, marginTop:2 }}>{t("backupSubtitle")}</div>
+            <div style={{ fontSize:11, color:C.textSec, marginTop:2 }}>{t("backupSubtitle")}</div>
           </div>
           <button onClick={onClose} style={{ background:"none", border:"none", cursor:"pointer", padding:4, display:"flex" }}>
             <Ic n="x" s={16} c={C.textMuted}/>

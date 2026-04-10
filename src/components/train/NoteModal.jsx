@@ -24,9 +24,9 @@ export const NoteModal = ({ onClose, onSave, idea }) => {
     padding:"9px 12px", color:C.text, fontSize:13, outline:"none", resize:"vertical",
     fontFamily:FONT_BODY, boxSizing:"border-box", lineHeight:1.5 };
   return (
-    <div style={{ width:"100%", maxHeight:"90%", background:C.bg, borderRadius:14, display:"flex", flexDirection:"column", overflow:"hidden", boxShadow:"0 16px 48px rgba(0,0,0,0.5)" }}>
+    <div style={{ width:"100%", maxHeight:"90%", background:C.bg, borderRadius:16, display:"flex", flexDirection:"column", overflow:"hidden", boxShadow:"0 16px 48px rgba(0,0,0,0.5)" }}>
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 16px", background:C.surface, borderBottom:`1px solid ${C.border}`, flexShrink:0 }}>
-        <span style={{ fontWeight:900, fontSize:15, letterSpacing:2, fontFamily:FONT_DISPLAY, color:C.text }}>{isEdit?t("editNote"):t("newNote")}</span>
+        <span style={{ fontWeight:900, fontSize:16, letterSpacing:2, fontFamily:FONT_DISPLAY, color:C.text }}>{isEdit?t("editNote"):t("newNote")}</span>
         <div style={{ display:"flex", gap:8 }}>
           <Btn variant="secondary" onClick={onClose}>{t("cancel")}</Btn>
           <Btn onClick={handleSave} disabled={!title.trim()&&!text.trim()}>{t("save")}</Btn>

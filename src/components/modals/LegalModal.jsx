@@ -43,7 +43,7 @@ export const LegalModal = ({ page, onClose }) => {
               textTransform:"uppercase" }}>
               {sec.heading}
             </div>
-            <div style={{ fontSize:12, color:C.textSec, lineHeight:1.75,
+            <div style={{ fontSize:13, color:C.textSec, lineHeight:1.75,
               whiteSpace:"pre-wrap", fontFamily:FONT_BODY }}>
               {sec.body}
             </div>

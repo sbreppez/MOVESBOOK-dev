@@ -391,7 +391,7 @@ export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToa
                       {/* Category header */}
                       <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:6 }}>
                         <div style={{ width:8, height:8, borderRadius:"50%", background:cc, flexShrink:0 }}/>
-                        <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, letterSpacing:1, color:C.textSec }}>{cat}</span>
+                        <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, letterSpacing:1, color:C.textSec }}>{cat}</span>
                       </div>
                       {/* Move rows */}
                       {catMoves.map(mv => {
@@ -527,7 +527,7 @@ export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToa
                       background: (opt.seconds === "custom" && showCustomInput) ? mc + "22" : C.surface,
                       border:`1.5px solid ${mc}`, borderRadius:20,
                       padding:"6px 14px", cursor:"pointer", fontFamily:FONT_DISPLAY,
-                      fontWeight:700, fontSize:12, color:mc, letterSpacing:0.5,
+                      fontWeight:700, fontSize:11, color:mc, letterSpacing:0.5,
                     }}>
                     {opt.seconds === "custom" ? t("customTimer") : opt.seconds === -1 ? t("noLimitTimer") : opt.label}
                   </button>
@@ -557,7 +557,7 @@ export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToa
                   style={{
                     padding:"8px 18px", borderRadius:10, border:"none",
                     background:mc, color:"#fff", fontFamily:FONT_DISPLAY,
-                    fontWeight:700, fontSize:12, letterSpacing:1, cursor:"pointer",
+                    fontWeight:700, fontSize:11, letterSpacing:1, cursor:"pointer",
                     opacity: parseInt(customMinutes, 10) > 0 ? 1 : 0.4,
                   }}>
                   {t("go")}

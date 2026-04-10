@@ -31,7 +31,6 @@ export const BottomSheet = ({ open, onClose, title, titleIcon, children, maxHeig
         style={{
           width: "100%", maxWidth: 420, maxHeight: maxHeight || "70vh",
           background: C.bg, borderRadius: "20px 20px 0 0",
-          border: `1px solid ${C.border}`, borderBottom: "none",
           display: "flex", flexDirection: "column", overflow: "hidden",
           boxShadow: "0 -8px 40px rgba(0,0,0,0.3)",
           transform: visible ? "translateY(0)" : "translateY(100%)",
@@ -62,7 +61,7 @@ export const BottomSheet = ({ open, onClose, title, titleIcon, children, maxHeig
         </div>
 
         {/* Body */}
-        <div style={{ flex: 1, overflowY: "auto", padding: "8px 14px" }}>
+        <div style={{ flex: 1, overflowY: "auto", padding: "8px 16px" }}>
           {children}
         </div>
       </div>

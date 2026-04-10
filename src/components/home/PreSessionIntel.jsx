@@ -126,7 +126,7 @@ export const PreSessionIntel = ({ presession, setPresession }) => {
           onKeyDown={e => { if(e.key === "Enter") addTry(); }}
           style={{
             flex:1, background:C.surfaceAlt, border:`1px solid ${C.border}`, borderRadius:8,
-            padding:"7px 10px", color:C.text, fontSize:12, outline:"none", fontFamily:FONT_BODY,
+            padding:"9px 12px", color:C.text, fontSize:14, outline:"none", fontFamily:FONT_BODY,
           }}/>
         <button onClick={addTry} disabled={!newTry.trim()}
           style={{

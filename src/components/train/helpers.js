@@ -3,7 +3,7 @@ import { C } from '../../constants/colors';
 export const menuBtnStyle = (color, border) => ({
   width:"100%", padding:"10px 13px", background:"none", border:"none", cursor:"pointer",
   display:"flex", alignItems:"center", gap:8,
-  color: color || C.text, fontSize:12, fontFamily:"inherit",
+  color: color || C.text, fontSize:11, fontFamily:"inherit",
   borderTop: border ? `1px solid ${C.borderLight}` : "none",
 });
 

@@ -214,7 +214,7 @@ export const MyStanceSection = ({ moves, stance, sparring, calendar, onOpenAsses
 
       {/* First-time note */}
       {isFirst && (
-        <div style={{ fontFamily:FONT_BODY, fontSize:12, color:C.textMuted, lineHeight:1.6,
+        <div style={{ fontFamily:FONT_BODY, fontSize:13, color:C.textMuted, lineHeight:1.6,
           marginBottom:12, fontStyle:"italic", textAlign:"center" }}>
           {t("stanceFirstResult")}
         </div>
@@ -267,7 +267,7 @@ export const MyStanceSection = ({ moves, stance, sparring, calendar, onOpenAsses
         ) : (
           <div>
             {/* Primary line */}
-            <div style={{ fontFamily:FONT_BODY, fontSize:15, color:C.text, fontWeight:700, marginBottom:6 }}>
+            <div style={{ fontFamily:FONT_BODY, fontSize:16, color:C.text, fontWeight:700, marginBottom:6 }}>
               {vocab.total} {t("moves") || "moves"} · <span style={{ color:C.accent }}>{vocab.creations} {t("originals")}</span>
             </div>
             {/* Origin breakdown */}

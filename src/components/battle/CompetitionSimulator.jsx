@@ -676,7 +676,7 @@ export const CompetitionSimulator = ({
           </button>
         </div>
         <button onClick={() => setShowShareCard(false)}
-          style={{ padding:"10px 24px", borderRadius:8, border:`1px solid ${C.border}`, background:C.surfaceAlt, color:C.textSec, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, marginBottom:10 }}>
+          style={{ padding:"10px 24px", borderRadius:8, border:`1px solid ${C.border}`, background:C.surfaceAlt, color:C.textSec, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, marginBottom:10 }}>
           {t("close")}
         </button>
         <input ref={photoInputRef} type="file" accept="image/*" capture="environment" onChange={handlePhotoInput}
@@ -745,7 +745,7 @@ export const CompetitionSimulator = ({
 
           {/* Summary */}
           <div style={{ background:C.surface, borderRadius:8, padding:"10px 14px", marginBottom:20 }}>
-            <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, color:C.textSec }}>
+            <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, color:C.textSec }}>
               {activeBrackets.length} brackets · {totalRoundsAll} {t("totalRounds")} · ~{estimatedMinutes}min {t("estimatedTime")}
             </span>
           </div>
@@ -754,7 +754,7 @@ export const CompetitionSimulator = ({
           <button onClick={() => setShowCustomise(!showCustomise)}
             style={{ width:"100%", padding:"12px 16px", borderRadius:10, border:`1px solid ${C.border}`,
               background: showCustomise ? `${C.accent}14` : C.surface, color: showCustomise ? C.accent : C.textSec,
-              cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:12, letterSpacing:1.5,
+              cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:11, letterSpacing:1.5,
               display:"flex", alignItems:"center", justifyContent:"center", gap:6, marginBottom:16 }}>
             {t("customiseBrackets")}
             <Ic n={showCustomise ? "chevD" : "chevR"} s={12} c={showCustomise ? C.accent : C.textMuted}/>
@@ -795,7 +795,7 @@ export const CompetitionSimulator = ({
                             <button key={mins} onClick={() => setBracketConfig(prev => prev.map(x => x.roundId === b.roundId ? { ...x, breakTime: mins } : x))}
                               style={{ borderRadius:16, padding:"6px 14px", border:`1.5px solid ${active ? C.accent : C.border}`,
                                 background: active ? C.accent + "26" : C.surfaceAlt, color: active ? C.accent : C.textSec,
-                                fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, cursor:"pointer", transition:"all 0.15s" }}>
+                                fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, cursor:"pointer", transition:"all 0.15s" }}>
                               {mins} {t("breakTimeMinutes")}
                             </button>
                           );
@@ -826,7 +826,7 @@ export const CompetitionSimulator = ({
                 );
               })}
             </div>
-            <div style={{ fontSize:12, color:C.textMuted, marginTop:8 }}>
+            <div style={{ fontSize:11, color:C.textMuted, marginTop:8 }}>
               {t("restExplain")} {Math.round(restRatio * 100)}%
             </div>
           </div>
@@ -839,11 +839,11 @@ export const CompetitionSimulator = ({
               background: activeBrackets.length > 0 ? C.accent : C.surfaceHigh,
               color: activeBrackets.length > 0 ? "#fff" : C.textMuted,
               cursor: activeBrackets.length > 0 ? "pointer" : "default",
-              fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:15, letterSpacing:1.5, transition:"background 0.15s" }}>
+              fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:1.5, transition:"background 0.15s" }}>
             {t("startSimulation")}
           </button>
           {activeBrackets.length === 0 && (
-            <div style={{ textAlign:"center", fontSize:12, color:C.accent, marginTop:8, fontWeight:700 }}>
+            <div style={{ textAlign:"center", fontSize:11, color:C.accent, marginTop:8, fontWeight:700 }}>
               {t("noBracketsSelected")}
             </div>
           )}
@@ -927,13 +927,13 @@ export const CompetitionSimulator = ({
           <div style={{ display:"flex", alignItems:"center", gap:10 }}>
             <div style={{ width:8, height:8, borderRadius:"50%", background:bracketColor }}/>
             <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, color:C.text }}>{bracketLabel}</span>
-            <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, color:C.textMuted }}>
+            <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, color:C.textMuted }}>
               R{roundNum}/{bracketRoundCount}
             </span>
           </div>
           <div style={{ display:"flex", alignItems:"center", gap:8 }}>
             {sessionStart && (
-              <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, color:C.textMuted }}>
+              <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, color:C.textMuted }}>
                 {fmtTimeSec(Math.round(sessionElapsed / 1000))}
               </span>
             )}
@@ -998,7 +998,7 @@ export const CompetitionSimulator = ({
             {/* Move references during work */}
             {currentMoveRefs.length > 0 && (
               <div style={{ position:"absolute", bottom:80, left:0, right:0, padding:"0 20px" }}>
-                <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:9, color:C.textMuted, letterSpacing:1.5, textAlign:"center", marginBottom:6 }}>
+                <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:10, color:C.textMuted, letterSpacing:1.5, textAlign:"center", marginBottom:6 }}>
                   {t("currentMoves")}
                 </div>
                 <div style={{ display:"flex", gap:4, flexWrap:"wrap", justifyContent:"center" }}>
@@ -1056,7 +1056,7 @@ export const CompetitionSimulator = ({
                   </span>
                 </button>
 
-                <div style={{ fontSize:12, color:C.textMuted, marginTop:12 }}>
+                <div style={{ fontSize:11, color:C.textMuted, marginTop:12 }}>
                   Your round: {Math.round(lastWorkMs / 1000)}s → Rest: {Math.round(restTotal / 1000)}s
                 </div>
               </>
@@ -1119,7 +1119,7 @@ export const CompetitionSimulator = ({
           <div style={{ display:"flex", gap:6, flexWrap:"wrap", justifyContent:"center", marginBottom:12 }}>
             {(lastBracket?.roundLog || []).map((r, i) => (
               <div key={i} style={{ padding:"5px 12px", borderRadius:16, background:C.surface,
-                fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, color:C.textSec }}>
+                fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, color:C.textSec }}>
                 R{r.round}:{r.workSecs}s
               </div>
             ))}
@@ -1138,7 +1138,7 @@ export const CompetitionSimulator = ({
               <div style={{ display:"flex", alignItems:"center", gap:8 }}>
                 <div style={{ width:10, height:10, borderRadius:"50%", background:nextBracket.color }}/>
                 <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, color:C.text }}>{nextBracket.name}</span>
-                <span style={{ fontSize:12, color:C.textMuted }}>— {nextBracket.roundCount} {t("totalRounds")}</span>
+                <span style={{ fontSize:11, color:C.textMuted }}>— {nextBracket.roundCount} {t("totalRounds")}</span>
               </div>
             </div>
           )}
@@ -1182,7 +1182,7 @@ export const CompetitionSimulator = ({
             {t("waitingPeriod")}
           </span>
           <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-            <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, color:C.textMuted }}>
+            <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, color:C.textMuted }}>
               {fmtTimeSec(Math.round(sessionElapsed / 1000))} total
             </span>
             <button onClick={handleExitSimulation} style={{ background:C.surfaceAlt, border:`1px solid ${C.border}`, cursor:"pointer", color:C.textSec, padding:5, borderRadius:7, display:"flex" }}>
@@ -1220,7 +1220,7 @@ export const CompetitionSimulator = ({
           <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize: isBattleMode ? 100 : 72, color: isBattleMode ? C.accent : C.text, lineHeight:1, marginBottom:8 }}>
             {fmtTimeSec(secLeft)}
           </div>
-          <div style={{ fontSize:12, color:C.textMuted, marginBottom:32 }}>
+          <div style={{ fontSize:11, color:C.textMuted, marginBottom:32 }}>
             {t("minutesToGo")}
           </div>
 
@@ -1233,7 +1233,7 @@ export const CompetitionSimulator = ({
               <div style={{ display:"flex", gap:6, flexWrap:"wrap", justifyContent:"center" }}>
                 {nextMoveRefs.map((m, i) => (
                   <span key={i} style={{ padding:"5px 12px", borderRadius:14, background:C.surface,
-                    fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, color:catColor(m.category) }}>
+                    fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, color:catColor(m.category) }}>
                     {m.name}
                   </span>
                 ))}
@@ -1304,12 +1304,11 @@ export const CompetitionSimulator = ({
             {t("bracketSummary")}
           </div>
           {(cs.brackets || []).map((b, i) => (
-            <div key={i} style={{ marginBottom:6, borderRadius:8, overflow:"hidden", background:C.surface }}>
-              <div style={{ height:3, background:`linear-gradient(90deg,${b.color},${b.color}55)` }}/>
+            <div key={i} style={{ marginBottom:6, borderRadius:8, overflow:"hidden", background:C.surface, borderLeft:`4px solid ${b.color}` }}>
               <div style={{ padding:"10px 14px" }}>
                 <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:6 }}>
                   <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:14, color:C.text, letterSpacing:0.5 }}>{b.name}</span>
-                  <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, color:b.color }}>avg {b.avgRoundLength}s</span>
+                  <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, color:b.color }}>avg {b.avgRoundLength}s</span>
                 </div>
                 <div style={{ display:"flex", gap:4, flexWrap:"wrap" }}>
                   {(b.roundLog || []).map((r, j) => (
@@ -1354,7 +1353,7 @@ export const CompetitionSimulator = ({
           {/* Share card button */}
           <button onClick={() => setShowShareCard(true)}
             style={{ width:"100%", padding:12, borderRadius:10, border:`1px solid ${C.border}`, background:C.surface,
-              color:C.textSec, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, letterSpacing:0.5,
+              color:C.textSec, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, letterSpacing:0.5,
               display:"flex", alignItems:"center", justifyContent:"center", gap:6, marginTop:12 }}>
             {t("share")}
           </button>

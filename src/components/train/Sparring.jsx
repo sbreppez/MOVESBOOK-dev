@@ -460,7 +460,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
           <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:22, color:C.accent, letterSpacing:2, marginBottom:8 }}>
             {t("newRecord").toUpperCase()}!
           </div>
-          <div style={{ fontFamily:FONT_BODY, fontSize:15, color:C.textSec, maxWidth:300, lineHeight:1.5, marginBottom:32 }}>
+          <div style={{ fontFamily:FONT_BODY, fontSize:16, color:C.textSec, maxWidth:300, lineHeight:1.5, marginBottom:32 }}>
             {prMessages[prBroken.type] || "New personal record!"}
           </div>
           <div style={{ display:"flex", flexDirection:"column", gap:10, width:"100%", maxWidth:280 }}>
@@ -532,7 +532,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
                   <Ic n={mc.icon} s={24}/>
                   <div>
                     <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:14, color: active ? C.accent : C.text, letterSpacing:0.5 }}>{mc.label}</div>
-                    <div style={{ fontSize:12, color:C.textMuted, marginTop:2 }}>{mc.desc}</div>
+                    <div style={{ fontSize:11, color:C.textMuted, marginTop:2 }}>{mc.desc}</div>
                   </div>
                 </button>
               );
@@ -589,7 +589,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
                 );
               })}
             </div>
-            <div style={{ fontSize:12, color:C.textMuted, marginTop:8 }}>
+            <div style={{ fontSize:11, color:C.textMuted, marginTop:8 }}>
               {t("restExplain")} {Math.round(restRatio * 100)}%
             </div>
           </div>
@@ -611,7 +611,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
           {/* How it works */}
           <div style={{ background:C.surface, borderRadius:12, padding:14, marginTop:16, border:`1px solid ${C.border}` }}>
             <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, color:C.textMuted, letterSpacing:1, marginBottom:6 }}>{t("howItWorks")}</div>
-            <div style={{ fontSize:12, color:C.textSec, lineHeight:1.6 }}>
+            <div style={{ fontSize:11, color:C.textSec, lineHeight:1.6 }}>
               {t("howItWorksText")}
             </div>
           </div>
@@ -620,7 +620,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
         {/* Start button */}
         <div style={{ padding:"14px 18px 24px", flexShrink:0 }}>
           <button onClick={() => setScreen("active")}
-            style={{ width:"100%", padding:16, borderRadius:12, border:"none", background:C.accent, color:"#fff", cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:15, letterSpacing:1.5, transition:"background 0.15s" }}>
+            style={{ width:"100%", padding:16, borderRadius:12, border:"none", background:C.accent, color:"#fff", cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:1.5, transition:"background 0.15s" }}>
             {t("startSession")}
           </button>
         </div>
@@ -772,7 +772,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
                 </button>
 
                 {/* Work info */}
-                <div style={{ fontSize:12, color:C.textMuted, marginTop:12 }}>
+                <div style={{ fontSize:11, color:C.textMuted, marginTop:12 }}>
                   Your round: {Math.round(lastWorkMs / 1000)}s → Rest: {Math.round(restTotal / 1000)}s
                 </div>
               </>
@@ -840,7 +840,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
             <div style={{ background:`${C.accent}14`, border:`1.5px solid ${C.accent}40`, borderRadius:12, padding:"10px 14px", marginBottom:14, display:"flex", alignItems:"center", gap:10, animation:"mb-pr-pop 0.5s ease-out" }}>
               <Ic n="flame" s={22} c={C.accent}/>
               <div>
-                <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:12, color:C.accent, letterSpacing:1.5 }}>{t("newPersonalRecord")}</div>
+                <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:11, color:C.accent, letterSpacing:1.5 }}>{t("newPersonalRecord")}</div>
                 <div style={{ fontFamily:FONT_BODY, fontSize:11, color:C.textSec, marginTop:2 }}>
                   {pendingPRs.map(pr => pr.type === "mostRounds" ? `${pr.value} ${t("roundsMode").toLowerCase()}` : pr.type === "longestRound" ? `${pr.value}s ${t("longestRoundLabel").toLowerCase()}` : pr.type === "longestSession" ? fmtDuration(pr.value * 1000) : fmtDuration(pr.value * 1000)).join(" · ")}
                 </div>
@@ -874,7 +874,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
           <div style={{ display:"flex", gap:6, flexWrap:"wrap", marginBottom:20 }}>
             {cs.roundLog.map((r, i) => (
               <div key={i} style={{ padding:"5px 12px", borderRadius:16, background:C.surface, border:`1px solid ${C.border}`,
-                fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, color:C.textSec }}>
+                fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, color:C.textSec }}>
                 R{r.round}:{r.workSecs}s
               </div>
             ))}
@@ -920,7 +920,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
                 })}
               </div>
               {selectedMoves.length > 0 && (
-                <div style={{ fontSize:12, color:C.textMuted, marginTop:6 }}>
+                <div style={{ fontSize:11, color:C.textMuted, marginTop:6 }}>
                   {selectedMoves.length} move{selectedMoves.length !== 1 ? "s" : ""} selected
                 </div>
               )}
@@ -1139,16 +1139,16 @@ const ShareCard = ({ session, mode, prBroken, photo, onPhotoChange, onClose, t }
       <div style={{ display:"flex", gap:10, marginTop:16, width:"100%", maxWidth:360 }}>
         <input ref={photoInputRef} type="file" accept="image/*" capture="camera" style={{ display:"none" }} onChange={handlePhotoInput}/>
         <button onClick={() => photoInputRef.current?.click()}
-          style={{ flex:1, padding:12, borderRadius:10, border:`1px solid ${C.border}`, background:C.surfaceAlt, color:C.text, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, letterSpacing:0.5 }}>
+          style={{ flex:1, padding:12, borderRadius:10, border:`1px solid ${C.border}`, background:C.surfaceAlt, color:C.text, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, letterSpacing:0.5 }}>
           {t("addPhoto")}
         </button>
         <button onClick={handleShare}
-          style={{ flex:1, padding:12, borderRadius:10, border:"none", background:C.accent, color:"#fff", cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:12, letterSpacing:0.5 }}>
+          style={{ flex:1, padding:12, borderRadius:10, border:"none", background:C.accent, color:"#fff", cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:11, letterSpacing:0.5 }}>
           {t("share")}
         </button>
       </div>
       <button onClick={onClose}
-        style={{ marginTop:12, padding:"10px 24px", borderRadius:10, border:"none", background:"transparent", color:C.textMuted, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12 }}>
+        style={{ marginTop:12, padding:"10px 24px", borderRadius:10, border:"none", background:"transparent", color:C.textMuted, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11 }}>
         {t("close")}
       </button>
     </div>

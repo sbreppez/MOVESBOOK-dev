@@ -163,7 +163,7 @@ export const EditRoundView = ({ round, onSave, onClose, getMove, getSet, setPick
       <div style={{ display:"flex", alignItems:"center", gap:10, padding:"12px 14px", background:C.surface, borderBottom:`1px solid ${C.border}`, flexShrink:0 }}>
         <button onClick={save} style={{ background:"none", border:"none", cursor:"pointer", color:C.accent, fontSize:13, fontFamily:FONT_DISPLAY, fontWeight:700, padding:0 }}>{`← ${t("save")}`}</button>
         <div style={{ width:10, height:10, borderRadius:"50%", background:localRound.color||C.accent, flexShrink:0 }}/>
-        <span style={{ flex:1, fontWeight:900, fontSize:15, letterSpacing:1.5, color:C.brown, fontFamily:FONT_DISPLAY }}>{localRound.name}</span>
+        <span style={{ flex:1, fontWeight:900, fontSize:16, letterSpacing:1.5, color:C.brown, fontFamily:FONT_DISPLAY }}>{localRound.name}</span>
         <button onClick={onClose} style={{ background:"none", border:"none", cursor:"pointer", padding:2 }}><Ic n="x" s={16} c={C.textMuted}/></button>
       </div>
       {/* Round meta */}
@@ -176,7 +176,7 @@ export const EditRoundView = ({ round, onSave, onClose, getMove, getSet, setPick
         <textarea value={localRound.notes||""} onChange={e=>setLocalRound(r=>({...r,notes:e.target.value}))}
           placeholder={t("notesRound")} rows={2}
           style={{ width:"100%", background:C.bg, border:`1px solid ${C.border}`, borderRadius:7, padding:"7px 10px",
-            color:C.text, fontSize:12, fontFamily:FONT_BODY, outline:"none", resize:"none", boxSizing:"border-box" }}/>
+            color:C.text, fontSize:14, fontFamily:FONT_BODY, outline:"none", resize:"none", boxSizing:"border-box" }}/>
       </div>
       {/* Entries list */}
       <div style={{ flex:1, overflow:"auto", padding:"10px 12px" }}>
@@ -195,10 +195,10 @@ export const EditRoundView = ({ round, onSave, onClose, getMove, getSet, setPick
                     onBlur={()=>{ if(renameVal.trim()) localRenameEntry(entry.id,renameVal.trim()); setRenaming(null); }}
                     onKeyDown={e=>{ if(e.key==="Enter"){ if(renameVal.trim()) localRenameEntry(entry.id,renameVal.trim()); setRenaming(null); } }}
                     style={{ flex:1, background:C.bg, border:`1px solid ${C.accent}`, borderRadius:5, padding:"2px 6px",
-                      color:C.text, fontSize:12, fontFamily:FONT_DISPLAY, fontWeight:700, outline:"none" }}/>
+                      color:C.text, fontSize:14, fontFamily:FONT_DISPLAY, fontWeight:700, outline:"none" }}/>
                 ) : (
                   <span onDoubleClick={()=>{ setRenaming(entry.id); setRenameVal(entry.name); }}
-                    style={{ flex:1, fontSize:12, fontWeight:800, color:C.brownMid, fontFamily:FONT_DISPLAY, letterSpacing:0.8, cursor:"pointer" }}
+                    style={{ flex:1, fontSize:11, fontWeight:800, color:C.brownMid, fontFamily:FONT_DISPLAY, letterSpacing:0.8, cursor:"pointer" }}
                     title={t("doubleTapRename")}>{entry.name}</span>
                 )}
                 {showMoveCount&&<span style={{ fontSize:10, color:C.textMuted }}>{(entry.items||[]).length}</span>}
@@ -241,10 +241,10 @@ export const EditRoundView = ({ round, onSave, onClose, getMove, getSet, setPick
                           opacity: isDragging ? 0.4 : 1 }}>
                         <div style={{ width:7, height:7, borderRadius:"50%", flexShrink:0,
                           background: item.type==="set" ? (getSet(item.refId)?.color||C.blue) : masteryColor(getMove(item.refId)?.mastery||0) }}/>
-                        <span style={{ flex:1, fontSize:12, color:C.text }}>{label}</span>
-                        {item.type==="set"&&<span style={{ fontSize:9, background:`${C.blue}22`, color:C.blue, padding:"1px 5px", borderRadius:4, fontFamily:FONT_DISPLAY, fontWeight:700 }}>SET</span>}
+                        <span style={{ flex:1, fontSize:11, color:C.text }}>{label}</span>
+                        {item.type==="set"&&<span style={{ fontSize:10, background:`${C.blue}22`, color:C.blue, padding:"1px 5px", borderRadius:4, fontFamily:FONT_DISPLAY, fontWeight:700 }}>SET</span>}
                         {dupes.length>0&&(
-                          <span style={{ fontSize:9, color:C.yellow, fontWeight:700, fontFamily:FONT_DISPLAY }} title={t("alsoIn")+" "+dupes.join(", ")}>
+                          <span style={{ fontSize:10, color:C.yellow, fontWeight:700, fontFamily:FONT_DISPLAY }} title={t("alsoIn")+" "+dupes.join(", ")}>
                             {t("alsoIn")} {dupes[0]}
                           </span>
                         )}
@@ -265,7 +265,7 @@ export const EditRoundView = ({ round, onSave, onClose, getMove, getSet, setPick
         })}
         <button onClick={localAddEntry}
           style={{ width:"100%", padding:"10px", background:"none", border:`1.5px dashed ${C.accent}`,
-            borderRadius:10, cursor:"pointer", color:C.accent, fontSize:12,
+            borderRadius:10, cursor:"pointer", color:C.accent, fontSize:11,
             fontFamily:FONT_DISPLAY, fontWeight:700, letterSpacing:1, display:"flex", alignItems:"center", justifyContent:"center", gap:6 }}>
           <Ic n="plus" s={13} c={C.accent}/> ADD ENTRY
         </button>
@@ -282,7 +282,7 @@ export const EditRoundView = ({ round, onSave, onClose, getMove, getSet, setPick
       {/* Delete entry confirmation */}
       {confirmDeleteEntry&&(
         <div style={{ position:"absolute", inset:0, background:"rgba(0,0,0,0.55)", zIndex:600, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
-          <div style={{ background:C.bg, border:`1px solid ${C.border}`, borderRadius:14, width:"100%", maxWidth:300, padding:20, boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
+          <div style={{ background:C.bg, borderRadius:16, width:"100%", maxWidth:300, padding:20, boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
             <div style={{ fontWeight:900, fontSize:14, letterSpacing:1.5, fontFamily:FONT_DISPLAY, color:C.brown, marginBottom:8 }}>DELETE ENTRY?</div>
             <p style={{ fontSize:13, color:C.textSec, marginBottom:16, lineHeight:1.5 }}>
               "<span style={{ color:C.text, fontWeight:700 }}>{confirmDeleteEntry.name}</span>" and its {itemCountStr((confirmDeleteEntry.items||[]).length)} will be removed.

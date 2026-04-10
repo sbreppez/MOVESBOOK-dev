@@ -65,8 +65,6 @@ export const SetDetailModal = ({ item, onClose, onSave, type="set", allMoves=[],
 
   return (
     <Modal title={isSet ? (item.id ? "EDIT SET" : "ADD A SET") : "EDIT ROUND"} onClose={onClose}>
-      {/* Color stripe */}
-      <div style={{ height:5, borderRadius:4, background:`linear-gradient(90deg,${color},${color}55)`, marginBottom:16 }}/>
 
       <Inp label="NAME *" value={name} onChange={setName} placeholder={isSet ? "e.g. Opening Set…" : "e.g. Top 16…"}/>
 
@@ -162,7 +160,7 @@ export const SetDetailModal = ({ item, onClose, onSave, type="set", allMoves=[],
                   if (catMoves.length===0) return null;
                   return (
                     <div key={cat}>
-                      <div style={{ padding:"5px 10px", background:C.surfaceAlt, fontSize:9, fontWeight:800, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY }}>
+                      <div style={{ padding:"5px 10px", background:C.surfaceAlt, fontSize:10, fontWeight:800, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY }}>
                         {cat.toUpperCase()}
                       </div>
                       {catMoves.map(m => {
@@ -191,14 +189,14 @@ export const SetDetailModal = ({ item, onClose, onSave, type="set", allMoves=[],
                   );
                 })}
                 {allMoves.filter(m=>!q||m.name.toLowerCase().includes(q)).length===0&&(
-                  <div style={{ padding:"16px", textAlign:"center", color:C.textMuted, fontSize:12 }}>No moves match "{pickerQ}"</div>
+                  <div style={{ padding:"16px", textAlign:"center", color:C.textMuted, fontSize:11 }}>No moves match "{pickerQ}"</div>
                 )}
               </div>
               {/* Done button */}
               <div style={{ padding:"8px 10px", borderTop:`1px solid ${C.borderLight}` }}>
                 <button onClick={()=>setPickerOpen(false)}
                   style={{ width:"100%", padding:"8px", background:C.accent, border:"none", borderRadius:7,
-                    color:C.bg, fontSize:12, fontWeight:900, fontFamily:FONT_DISPLAY, letterSpacing:1, cursor:"pointer" }}>
+                    color:C.bg, fontSize:13, fontWeight:900, fontFamily:FONT_DISPLAY, letterSpacing:1, cursor:"pointer" }}>
                   {t("done")} — {moveCountStr(localIds.length)}
                 </button>
               </div>

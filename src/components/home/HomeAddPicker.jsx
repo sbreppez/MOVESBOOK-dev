@@ -89,7 +89,7 @@ export const HomeAddPicker = ({ open, onClose, homeStack, setHomeStack, homeIdea
       style={{
         width: "100%", padding: "12px 0", borderRadius: 10, cursor: "pointer",
         background: "transparent", border: `1.5px dashed ${C.border}`,
-        color: C.accent, fontSize: 12, fontWeight: 800, fontFamily: FONT_DISPLAY,
+        color: C.accent, fontSize: 13, fontWeight: 800, fontFamily: FONT_DISPLAY,
         letterSpacing: 0.5, marginBottom: 6,
       }}>
       + {label}
@@ -136,7 +136,7 @@ export const HomeAddPicker = ({ open, onClose, homeStack, setHomeStack, homeIdea
           {/* Goals & Habits */}
           {sectionHeader(t("addGoalOrHabit"))}
           {availableHabits.length === 0 && availableGoals.length === 0 && (
-            <div style={{ textAlign: "center", padding: "12px 0", color: C.textMuted, fontSize: 12 }}>
+            <div style={{ textAlign: "center", padding: "12px 0", color: C.textMuted, fontSize: 13 }}>
               {t("noGoalsHabits")}
             </div>
           )}

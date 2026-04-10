@@ -93,13 +93,13 @@ export const ReminderBlock = ({ reminders, onRemindersChange, addToast, onOpenMa
             <span style={{ fontSize: 10, color: C.textMuted }}>{editText.length}/280</span>
             <div style={{ display: "flex", gap: 8 }}>
               <button onClick={() => { setEditingInline(false); setEditText(""); }}
-                style={{ background: "none", border: "none", color: C.textMuted, fontSize: 12,
+                style={{ background: "none", border: "none", color: C.textMuted, fontSize: 11,
                   fontFamily: FONT_DISPLAY, fontWeight: 700, cursor: "pointer", padding: "6px 10px" }}>
                 {t("cancel") || "CANCEL"}
               </button>
               <button onClick={handleEditSave} disabled={!editText.trim()}
                 style={{ background: editText.trim() ? C.accent : C.border, color: "#fff",
-                  border: "none", fontSize: 12, fontFamily: FONT_DISPLAY, fontWeight: 700,
+                  border: "none", fontSize: 11, fontFamily: FONT_DISPLAY, fontWeight: 700,
                   borderRadius: 8, padding: "8px 16px", cursor: editText.trim() ? "pointer" : "default",
                   opacity: editText.trim() ? 1 : 0.5 }}>
                 {t("save") || "SAVE"}
@@ -170,13 +170,13 @@ export const ReminderBlock = ({ reminders, onRemindersChange, addToast, onOpenMa
             <span style={{ fontSize: 10, color: C.textMuted }}>{editText.length}/280</span>
             <div style={{ display: "flex", gap: 8 }}>
               <button onClick={() => { setEditingInline(false); setEditText(""); }}
-                style={{ background: "none", border: "none", color: C.textMuted, fontSize: 12,
+                style={{ background: "none", border: "none", color: C.textMuted, fontSize: 11,
                   fontFamily: FONT_DISPLAY, fontWeight: 700, cursor: "pointer", padding: "6px 10px" }}>
                 {t("cancel") || "CANCEL"}
               </button>
               <button onClick={handleEditSave} disabled={!editText.trim()}
                 style={{ background: editText.trim() ? C.accent : C.border, color: "#fff",
-                  border: "none", fontSize: 12, fontFamily: FONT_DISPLAY, fontWeight: 700,
+                  border: "none", fontSize: 11, fontFamily: FONT_DISPLAY, fontWeight: 700,
                   borderRadius: 8, padding: "8px 16px", cursor: editText.trim() ? "pointer" : "default",
                   opacity: editText.trim() ? 1 : 0.5 }}>
                 {t("save") || "SAVE"}
@@ -222,13 +222,13 @@ export const ReminderBlock = ({ reminders, onRemindersChange, addToast, onOpenMa
                 <span style={{ fontSize: 10, color: C.textMuted }}>{addText.length}/280</span>
                 <div style={{ display: "flex", gap: 8 }}>
                   <button onClick={() => { setShowAddForm(false); setAddText(""); }}
-                    style={{ background: "none", border: "none", color: C.textMuted, fontSize: 12,
+                    style={{ background: "none", border: "none", color: C.textMuted, fontSize: 11,
                       fontFamily: FONT_DISPLAY, fontWeight: 700, cursor: "pointer", padding: "6px 10px" }}>
                     {t("cancel") || "CANCEL"}
                   </button>
                   <button onClick={handleSave} disabled={!addText.trim()}
                     style={{ background: addText.trim() ? C.accent : C.border, color: "#fff",
-                      border: "none", fontSize: 12, fontFamily: FONT_DISPLAY, fontWeight: 700,
+                      border: "none", fontSize: 11, fontFamily: FONT_DISPLAY, fontWeight: 700,
                       borderRadius: 8, padding: "8px 16px", cursor: addText.trim() ? "pointer" : "default",
                       opacity: addText.trim() ? 1 : 0.5 }}>
                     {t("save") || "SAVE"}

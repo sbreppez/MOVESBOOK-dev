@@ -115,7 +115,7 @@ export const ConstraintCard = ({ constraint, onConstraintChange, addToast, onOpe
           {/* Left: label + theme pill + text */}
           <div style={{ flex:1, minWidth:0 }}>
             <div style={{
-              fontFamily: FONT_DISPLAY, fontSize:9, color:C.textMuted,
+              fontFamily: FONT_DISPLAY, fontSize:10, color:C.textMuted,
               letterSpacing:2, fontWeight:700, textTransform:"uppercase", marginBottom:3,
             }}>
               {t("constraintLabel")}
@@ -132,14 +132,14 @@ export const ConstraintCard = ({ constraint, onConstraintChange, addToast, onOpe
                 {t(theme.nameKey)}
               </span>
               <span style={{
-                fontSize:9, color:C.textMuted, fontFamily:FONT_DISPLAY,
+                fontSize:10, color:C.textMuted, fontFamily:FONT_DISPLAY,
                 letterSpacing:1, fontWeight:700, textTransform:"uppercase",
               }}>
                 {modeLabel}
               </span>
             </div>
             <div style={{
-              fontFamily: FONT_DISPLAY, fontWeight:700, fontSize:15,
+              fontFamily: FONT_DISPLAY, fontWeight:700, fontSize:16,
               color:C.text, lineHeight:1.3,
             }}>
               {displayText}
@@ -161,7 +161,7 @@ export const ConstraintCard = ({ constraint, onConstraintChange, addToast, onOpe
                 width:32, height:32, borderRadius:8,
                 background:C.surface, border:`1px solid ${C.border}`,
                 cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center",
-                fontSize:15,
+                fontSize:16,
               }}>
               <Ic n="shuffle" s={16}/>
             </button>
@@ -342,7 +342,7 @@ export const ManageOverlay = ({ constraint, onConstraintChange, onClose, addToas
             <button onClick={handleAddCustom}
               style={{
                 background:C.accent, color:"#fff", border:"none",
-                borderRadius:8, padding:"5px 14px", fontSize:12,
+                borderRadius:8, padding:"5px 14px", fontSize:13,
                 fontWeight:700, fontFamily:FONT_DISPLAY, cursor:"pointer",
               }}>
               {t("add")}
@@ -402,7 +402,7 @@ export const ManageOverlay = ({ constraint, onConstraintChange, onClose, addToas
                   width:8, height:8, borderRadius:"50%", background:th.color, flexShrink:0,
                 }}/>
                 <span style={{
-                  fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12,
+                  fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11,
                   color:C.text, letterSpacing:0.5,
                 }}>
                   {t(th.nameKey)}
@@ -419,7 +419,7 @@ export const ManageOverlay = ({ constraint, onConstraintChange, onClose, addToas
                     {t(c.textKey)}
                   </span>
                   <span style={{
-                    fontSize:9, color:C.textMuted, fontFamily:FONT_DISPLAY,
+                    fontSize:10, color:C.textMuted, fontFamily:FONT_DISPLAY,
                     letterSpacing:1, fontWeight:700, textTransform:"uppercase",
                     whiteSpace:"nowrap",
                   }}>
@@ -440,7 +440,7 @@ export const ManageOverlay = ({ constraint, onConstraintChange, onClose, addToas
           <div style={{ marginBottom:16 }}>
             <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:6 }}>
               <span style={{ width:8, height:8, borderRadius:"50%", background:"#6B7BA0", flexShrink:0 }}/>
-              <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, color:C.text, letterSpacing:0.5 }}>
+              <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, color:C.text, letterSpacing:0.5 }}>
                 {t("constraintThemeCustom")}
               </span>
               <span style={{ fontSize:10, color:C.textMuted }}>({customList.length})</span>
@@ -454,7 +454,7 @@ export const ManageOverlay = ({ constraint, onConstraintChange, onClose, addToas
                   {c.text}
                 </span>
                 <span style={{
-                  fontSize:9, color:C.textMuted, fontFamily:FONT_DISPLAY,
+                  fontSize:10, color:C.textMuted, fontFamily:FONT_DISPLAY,
                   letterSpacing:1, fontWeight:700, textTransform:"uppercase",
                   whiteSpace:"nowrap",
                 }}>

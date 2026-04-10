@@ -22,8 +22,8 @@ export const WeekStrip = ({ selectedDate, onSelectDate }) => {
   }
 
   return (
-    <div style={{ display:"flex", padding:"8px 10px", gap:4, background:C.surface,
-      borderBottom:`1px solid ${C.borderLight}`, flexShrink:0 }}>
+    <div style={{ display:"flex", padding:"8px 16px", gap:4, background:"transparent",
+      flexShrink:0 }}>
       {days.map(({ dateStr, dayNum, dow }) => {
         const isToday = dateStr === todayStr;
         const isSelected = dateStr === selectedDate;
@@ -32,7 +32,7 @@ export const WeekStrip = ({ selectedDate, onSelectDate }) => {
           <button key={dateStr} onClick={() => onSelectDate(dateStr)}
             style={{
               flex:1, display:"flex", flexDirection:"column", alignItems:"center", gap:2,
-              padding:"6px 0", borderRadius:10, border:"none", cursor:"pointer",
+              padding:"6px 0", borderRadius:8, border:"none", cursor:"pointer",
               background: isToday ? C.accent : isSelected ? `${C.accent}18` : "transparent",
               outline: isSelected && !isToday ? `1.5px solid ${C.accent}` : "none",
               transition:"all 0.15s",
@@ -44,7 +44,7 @@ export const WeekStrip = ({ selectedDate, onSelectDate }) => {
               {DAY_LETTERS[dow]}
             </span>
             <span style={{
-              fontSize:15, fontWeight:900, fontFamily:FONT_DISPLAY,
+              fontSize:16, fontWeight:900, fontFamily:FONT_DISPLAY,
               color: isToday ? "#fff" : isSelected ? C.accent : C.text,
             }}>
               {dayNum}

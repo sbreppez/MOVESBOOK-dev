@@ -59,7 +59,7 @@ export const AttributeModal = ({ onClose, onSave, attr, existingNames = [] }) =>
     background: active ? C.accent : C.surface,
     color: active ? C.bg : C.textSec,
     cursor: "pointer",
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: 700,
     fontFamily: FONT_DISPLAY,
     letterSpacing: 0.3,
@@ -118,7 +118,7 @@ export const AttributeModal = ({ onClose, onSave, attr, existingNames = [] }) =>
 
       {/* Error */}
       {error && (
-        <div style={{ fontSize: 12, color: C.accent, marginBottom: 12 }}>{error}</div>
+        <div style={{ fontSize: 11, color: C.accent, marginBottom: 12 }}>{error}</div>
       )}
 
       {/* Buttons */}

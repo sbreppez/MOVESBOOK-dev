@@ -335,7 +335,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
                 const active = battleForm.result === opt.val;
                 return (
                   <button key={opt.val} onClick={() => setBattleForm(p => ({...p, result: active ? null : opt.val}))}
-                    style={{ flex:1, borderRadius:10, padding:"10px 4px", fontSize:12, fontWeight:700, fontFamily:FONT_DISPLAY,
+                    style={{ flex:1, borderRadius:8, padding:"10px 4px", fontSize:11, fontWeight:700, fontFamily:FONT_DISPLAY,
                       letterSpacing:0.3, cursor:"pointer", transition:"all 0.15s", textAlign:"center",
                       background: active ? `${C.accent}18` : C.surface,
                       color: active ? C.accent : C.textSec,
@@ -371,7 +371,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
             {t("saveBattleLog")}
           </button>
           <button onClick={() => setShowBattleLog(false)}
-            style={{ width:"100%", padding:"8px 0", background:"none", border:"none", color:C.textSec, fontSize:12,
+            style={{ width:"100%", padding:"8px 0", background:"none", border:"none", color:C.textSec, fontSize:11,
               fontWeight:700, fontFamily:FONT_DISPLAY, cursor:"pointer", letterSpacing:0.5 }}>
             {t("cancel")}
           </button>
@@ -423,7 +423,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
               const active = f.type === opt.val;
               return (
                 <button key={opt.val} onClick={() => setF(prev => ({ ...prev, type: opt.val }))}
-                  style={{ flex:1, borderRadius:10, padding:"8px 4px", fontSize:11, fontWeight:700, fontFamily:FONT_DISPLAY,
+                  style={{ flex:1, borderRadius:8, padding:"8px 4px", fontSize:11, fontWeight:700, fontFamily:FONT_DISPLAY,
                     letterSpacing:0.3, cursor:"pointer", transition:"all 0.15s", textAlign:"center",
                     background: active ? `${C.accent}18` : C.surface,
                     color: active ? C.accent : C.textSec,
@@ -461,7 +461,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
               const active = f.stance === opt.val;
               return (
                 <button key={opt.val} onClick={() => setF(prev => ({ ...prev, stance: opt.val }))}
-                  style={{ flex:1, borderRadius:10, padding:"8px 4px", fontSize:11, fontWeight:700, fontFamily:FONT_DISPLAY,
+                  style={{ flex:1, borderRadius:8, padding:"8px 4px", fontSize:11, fontWeight:700, fontFamily:FONT_DISPLAY,
                     letterSpacing:0.3, cursor:"pointer", transition:"all 0.15s", textAlign:"center",
                     background: active ? `${C.accent}18` : C.surface,
                     color: active ? C.accent : C.textSec,
@@ -476,13 +476,13 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
         {/* Their Strengths */}
         <div style={{ marginBottom:14 }}>
           <label style={lbl()}>{t("theirStrengths")}</label>
-          <div style={{ fontSize:12, color:C.textMuted, marginBottom:8, fontFamily:FONT_BODY }}>{t("theirStrengthsSub")}</div>
+          <div style={{ fontSize:13, color:C.textMuted, marginBottom:8, fontFamily:FONT_BODY }}>{t("theirStrengthsSub")}</div>
           <div style={{ display:"flex", flexWrap:"wrap", gap:6 }}>
             {DOMAINS.map(d => {
               const active = f.strongDomains.includes(d);
               return (
                 <button key={d} onClick={() => toggleDomain(d)}
-                  style={{ borderRadius:20, padding:"5px 12px", fontSize:12, fontWeight:700, fontFamily:FONT_DISPLAY,
+                  style={{ borderRadius:20, padding:"5px 12px", fontSize:11, fontWeight:700, fontFamily:FONT_DISPLAY,
                     letterSpacing:0.3, cursor:"pointer", transition:"all 0.15s", whiteSpace:"nowrap",
                     background: active ? C.accent : C.surface,
                     color: active ? C.bg : C.textSec,
@@ -509,13 +509,13 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
         {/* Confidence */}
         <div style={{ marginBottom:14 }}>
           <label style={lbl()}>{t("confidenceLabel")}</label>
-          <div style={{ fontSize:12, color:C.textMuted, marginBottom:8, fontFamily:FONT_BODY }}>{t("confidenceSub")}</div>
+          <div style={{ fontSize:13, color:C.textMuted, marginBottom:8, fontFamily:FONT_BODY }}>{t("confidenceSub")}</div>
           <div style={{ display:"flex", gap:6 }}>
             {CONF_OPTIONS.map(opt => {
               const active = f.confidence === opt.val;
               return (
                 <button key={opt.val} onClick={() => setF(prev => ({ ...prev, confidence: active ? null : opt.val }))}
-                  style={{ flex:1, borderRadius:10, padding:"8px 4px", fontSize:11, fontWeight:700, fontFamily:FONT_DISPLAY,
+                  style={{ flex:1, borderRadius:8, padding:"8px 4px", fontSize:11, fontWeight:700, fontFamily:FONT_DISPLAY,
                     letterSpacing:0.3, cursor:"pointer", transition:"all 0.15s", textAlign:"center",
                     background: active ? `${C.accent}18` : C.surface,
                     color: active ? C.accent : C.textSec,
@@ -531,14 +531,14 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
         {/* When */}
         <div style={{ marginBottom:14 }}>
           <label style={lbl()}>{t("rivalWhen")}</label>
-          <div style={{ fontSize:12, color:C.textMuted, marginBottom:6, fontFamily:FONT_BODY }}>{t("rivalWhenHint")}</div>
+          <div style={{ fontSize:13, color:C.textMuted, marginBottom:6, fontFamily:FONT_BODY }}>{t("rivalWhenHint")}</div>
           <input value={f.targetWhen} onChange={e => setF(prev => ({ ...prev, targetWhen: e.target.value }))} placeholder={t("rivalWhenPlaceholder")} style={inp()}/>
         </div>
 
         {/* Where */}
         <div style={{ marginBottom:14 }}>
           <label style={lbl()}>{t("rivalWhere")}</label>
-          <div style={{ fontSize:12, color:C.textMuted, marginBottom:6, fontFamily:FONT_BODY }}>{t("rivalWhereHint")}</div>
+          <div style={{ fontSize:13, color:C.textMuted, marginBottom:6, fontFamily:FONT_BODY }}>{t("rivalWhereHint")}</div>
           <input value={f.targetWhere} onChange={e => setF(prev => ({ ...prev, targetWhere: e.target.value }))} placeholder={t("rivalWherePlaceholder")} style={inp()}/>
         </div>
 
@@ -555,7 +555,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
             <div key={i} style={{ display:"flex", gap:6, marginBottom:6, alignItems:"flex-start" }}>
               <div style={{ flex:1, display:"flex", flexDirection:"column", gap:4 }}>
                 <input value={vr.url} onChange={e => updateVideoRef(i, "url", e.target.value)} placeholder={t("pasteLink")} style={{ ...inp(), marginBottom:0 }}/>
-                <input value={vr.label} onChange={e => updateVideoRef(i, "label", e.target.value)} placeholder={t("labelOptional")} style={{ ...inp(), marginBottom:0, fontSize:12 }}/>
+                <input value={vr.label} onChange={e => updateVideoRef(i, "label", e.target.value)} placeholder={t("labelOptional")} style={{ ...inp(), marginBottom:0, fontSize:14 }}/>
               </div>
               <button onClick={() => removeVideoRef(i)} style={{ background:"none", border:"none", cursor:"pointer", padding:6, marginTop:6 }}>
                 <Ic n="x" s={14} c={C.textMuted}/>
@@ -563,7 +563,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
             </div>
           ))}
           <button onClick={addVideoRef}
-            style={{ fontSize:12, fontWeight:700, color:C.accent, background:"none", border:"none", cursor:"pointer",
+            style={{ fontSize:11, fontWeight:700, color:C.accent, background:"none", border:"none", cursor:"pointer",
               padding:"4px 0", fontFamily:FONT_DISPLAY, letterSpacing:0.5 }}>
             {t("addVideoRef")}
           </button>
@@ -582,16 +582,16 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
                   style={{ background:C.surfaceAlt, borderRadius:8, padding:"10px 12px", marginBottom:6,
                     cursor: hasDetail ? "pointer" : "default" }}>
                   <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-                    <span style={{ fontSize:12, fontWeight:700, color:C.text, fontFamily:FONT_DISPLAY }}>{b.date}</span>
-                    {res && <span style={{ fontSize:12 }}>{t(res.key)}</span>}
+                    <span style={{ fontSize:11, fontWeight:700, color:C.text, fontFamily:FONT_DISPLAY }}>{b.date}</span>
+                    {res && <span style={{ fontSize:11 }}>{t(res.key)}</span>}
                     {b.event && <span style={{ fontSize:11, color:C.textMuted, fontFamily:FONT_BODY }}>\u2014 {b.event}</span>}
                     {hasDetail && <span style={{ marginLeft:"auto", fontSize:10, color:C.textMuted }}>{isExpanded ? "\u25b2" : "\u25bc"}</span>}
                   </div>
                   {isExpanded && (
                     <div style={{ marginTop:8, paddingTop:8, borderTop:`1px solid ${C.border}` }}>
-                      {b.howDidItGo && <div style={{ marginBottom:6 }}><div style={{ fontSize:10, fontWeight:700, color:C.textMuted, fontFamily:FONT_DISPLAY, letterSpacing:0.8, marginBottom:2 }}>{t("howDidItGo")}</div><div style={{ fontSize:12, color:C.textSec, lineHeight:1.5, fontFamily:FONT_BODY }}>{b.howDidItGo}</div></div>}
-                      {b.whatSurprised && <div style={{ marginBottom:6 }}><div style={{ fontSize:10, fontWeight:700, color:C.textMuted, fontFamily:FONT_DISPLAY, letterSpacing:0.8, marginBottom:2 }}>{t("whatSurprised")}</div><div style={{ fontSize:12, color:C.textSec, lineHeight:1.5, fontFamily:FONT_BODY }}>{b.whatSurprised}</div></div>}
-                      {b.trainingNext && <div><div style={{ fontSize:10, fontWeight:700, color:C.textMuted, fontFamily:FONT_DISPLAY, letterSpacing:0.8, marginBottom:2 }}>{t("trainingNext")}</div><div style={{ fontSize:12, color:C.textSec, lineHeight:1.5, fontFamily:FONT_BODY }}>{b.trainingNext}</div></div>}
+                      {b.howDidItGo && <div style={{ marginBottom:6 }}><div style={{ fontSize:10, fontWeight:700, color:C.textMuted, fontFamily:FONT_DISPLAY, letterSpacing:0.8, marginBottom:2 }}>{t("howDidItGo")}</div><div style={{ fontSize:13, color:C.textSec, lineHeight:1.5, fontFamily:FONT_BODY }}>{b.howDidItGo}</div></div>}
+                      {b.whatSurprised && <div style={{ marginBottom:6 }}><div style={{ fontSize:10, fontWeight:700, color:C.textMuted, fontFamily:FONT_DISPLAY, letterSpacing:0.8, marginBottom:2 }}>{t("whatSurprised")}</div><div style={{ fontSize:13, color:C.textSec, lineHeight:1.5, fontFamily:FONT_BODY }}>{b.whatSurprised}</div></div>}
+                      {b.trainingNext && <div><div style={{ fontSize:10, fontWeight:700, color:C.textMuted, fontFamily:FONT_DISPLAY, letterSpacing:0.8, marginBottom:2 }}>{t("trainingNext")}</div><div style={{ fontSize:13, color:C.textSec, lineHeight:1.5, fontFamily:FONT_BODY }}>{b.trainingNext}</div></div>}
                     </div>
                   )}
                 </div>
@@ -612,10 +612,10 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
                   style={{ background:C.surfaceAlt, borderRadius:8, padding:"10px 12px", marginBottom:6,
                     cursor:"pointer" }}>
                   <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-                    <span style={{ fontSize:12, fontWeight:700, color:C.text, fontFamily:FONT_DISPLAY }}>{s.date?.split("T")[0] || "?"}</span>
+                    <span style={{ fontSize:11, fontWeight:700, color:C.text, fontFamily:FONT_DISPLAY }}>{s.date?.split("T")[0] || "?"}</span>
                     <span style={{ fontSize:11, color:C.textMuted, fontFamily:FONT_BODY }}>{s.rounds || "?"} rounds</span>
                     {dur && <span style={{ fontSize:11, color:C.textMuted, fontFamily:FONT_BODY }}>{Math.floor(dur/60)}m{dur%60}s</span>}
-                    <span style={{ fontSize:9, color:C.accent, fontWeight:700, fontFamily:FONT_DISPLAY, marginLeft:"auto" }}>IMPORTED</span>
+                    <span style={{ fontSize:10, color:C.accent, fontWeight:700, fontFamily:FONT_DISPLAY, marginLeft:"auto" }}>IMPORTED</span>
                   </div>
                   {isExp && s.roundLog && (
                     <div style={{ marginTop:8, paddingTop:8, borderTop:`1px solid ${C.border}` }}>
@@ -635,7 +635,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
         {/* Import Spar button (in modal) */}
         {isEdit && (
           <button onClick={() => triggerImportFor(rival.id)}
-            style={{ fontSize:12, fontWeight:700, color:C.accent, background:"none", border:"none", cursor:"pointer",
+            style={{ fontSize:11, fontWeight:700, color:C.accent, background:"none", border:"none", cursor:"pointer",
               padding:"4px 0", fontFamily:FONT_DISPLAY, letterSpacing:0.5, marginBottom:14, display:"block" }}>
             {t("importSpar")}
           </button>
@@ -655,7 +655,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
         <div style={{ display:"flex", gap:8, marginTop:4 }}>
           {isEdit && (
             <button onClick={() => { onClose(); setTimeout(() => setConfirmDelete(rival), 100); }}
-              style={{ fontSize:12, color:C.red || C.accent, background:"none", border:"none", cursor:"pointer",
+              style={{ fontSize:11, color:C.red || C.accent, background:"none", border:"none", cursor:"pointer",
                 fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:0.5, padding:"10px 0" }}>
               {getDeleteTitle(f.type)}
             </button>
@@ -808,7 +808,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
           style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", zIndex:900,
             display:"flex", alignItems:"center", justifyContent:"center", padding:16 }}>
           <div onClick={e => e.stopPropagation()}
-            style={{ background:C.bg, border:`1px solid ${C.border}`, borderRadius:14, maxWidth:320, padding:20, width:"100%",
+            style={{ background:C.bg, borderRadius:16, maxWidth:320, padding:20, width:"100%",
               boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
             <div style={{ fontWeight:900, fontSize:14, letterSpacing:1.5, fontFamily:FONT_DISPLAY, color:C.text, marginBottom:8 }}>
               {getDeleteTitle(normalizeRival(confirmDelete).type)}
@@ -830,7 +830,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
           style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.7)", zIndex:1000,
             display:"flex", alignItems:"center", justifyContent:"center", padding:"28px 12px" }}>
           <div onClick={e => e.stopPropagation()}
-            style={{ background:C.bg, border:`2px solid ${C.border}`, borderRadius:14, width:"100%", maxWidth:420,
+            style={{ background:C.bg, borderRadius:16, width:"100%", maxWidth:420,
               padding:20, boxShadow:"0 24px 80px rgba(0,0,0,0.4)" }}>
             <p style={{ fontSize:13, color:C.textSec, lineHeight:1.6, fontFamily:FONT_BODY, marginBottom:16, textAlign:"center" }}>
               {t("stillFeelTheSame")}
@@ -843,7 +843,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
                     updateRival(editingRival.id, { confidence: opt.val });
                     setShowConfPrompt(false);
                   }}
-                    style={{ flex:1, borderRadius:10, padding:"8px 4px", fontSize:11, fontWeight:700, fontFamily:FONT_DISPLAY,
+                    style={{ flex:1, borderRadius:8, padding:"8px 4px", fontSize:11, fontWeight:700, fontFamily:FONT_DISPLAY,
                       letterSpacing:0.3, cursor:"pointer", transition:"all 0.15s", textAlign:"center",
                       background: active ? `${C.accent}18` : C.surface,
                       color: active ? C.accent : C.textSec,
@@ -856,7 +856,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
             </div>
             <button onClick={() => setShowConfPrompt(false)}
               style={{ width:"100%", padding:"10px 0", background:"none", border:`1.5px solid ${C.border}`, borderRadius:8,
-                color:C.textSec, fontSize:12, fontWeight:700, fontFamily:FONT_DISPLAY, cursor:"pointer", letterSpacing:1 }}>
+                color:C.textSec, fontSize:11, fontWeight:700, fontFamily:FONT_DISPLAY, cursor:"pointer", letterSpacing:1 }}>
               {t("skip")}
             </button>
           </div>

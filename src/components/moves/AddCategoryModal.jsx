@@ -39,7 +39,7 @@ export const AddCategoryModal = ({ onClose, onAdd, existingCats=[], existingColo
   return (
     <Modal title={t("addCategory")} onClose={onClose}>
       <Inp label={t("categoryNameLabel") + " *"} value={name} onChange={v=>{setName(v);setDupWarning(false);}} placeholder={t("catPlaceholder")}/>
-      {nameDup && !isExactDup && <p style={{ color:C.yellow, fontSize:12, marginTop:-10, marginBottom:12 }}>{"\u26a0"} {t("categoryExists")}</p>}
+      {nameDup && !isExactDup && <p style={{ color:C.yellow, fontSize:13, marginTop:-10, marginBottom:12 }}>{"\u26a0"} {t("categoryExists")}</p>}
 
       <div style={{ marginBottom:16 }}>
         <label style={lbl()}>{t("colour")}</label>
@@ -50,7 +50,7 @@ export const AddCategoryModal = ({ onClose, onAdd, existingCats=[], existingColo
         </div>
       </div>
       <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:16, padding:"10px 14px", background:C.surfaceAlt, borderRadius:8, borderLeft:`4px solid ${color}` }}>
-        <span style={{ fontWeight:800, fontSize:15, color:C.brown, fontFamily:FONT_DISPLAY, letterSpacing:1.5 }}>{name.toUpperCase()||t("preview")}</span>
+        <span style={{ fontWeight:800, fontSize:16, color:C.brown, fontFamily:FONT_DISPLAY, letterSpacing:1.5 }}>{name.toUpperCase()||t("preview")}</span>
       </div>
       <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
         <Btn variant="secondary" onClick={onClose}>{t("cancel")}</Btn>

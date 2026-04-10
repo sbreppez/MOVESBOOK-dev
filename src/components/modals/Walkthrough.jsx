@@ -210,7 +210,7 @@ export const Walkthrough = ({ onDone }) => {
           </span>
         </div>
 
-        <p style={{ fontSize:12.5, color:D.muted, lineHeight:1.6, margin:"0 0 14px" }}>
+        <p style={{ fontSize:13, color:D.muted, lineHeight:1.6, margin:"0 0 14px" }}>
           {current.body}
         </p>
 

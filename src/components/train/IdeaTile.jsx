@@ -61,7 +61,7 @@ export const IdeaTile = (props) => {
                 <a href={idea.link.startsWith("http")?idea.link:"https://"+idea.link} target="_blank" rel="noopener noreferrer"
                   onClick={e=>e.stopPropagation()}
                   style={{ display:"flex", alignItems:"center", justifyContent:"center",
-                    width:22, height:22, borderRadius:5, color:C.textMuted, textDecoration:"none" }}
+                    width:22, height:22, color:C.textMuted, textDecoration:"none" }}
                   title="Open link"><Ic n="extLink" s={13} c={C.textMuted}/></a>
               )}
               <button ref={btnRef} onClick={handleOpenMenu}
@@ -94,7 +94,7 @@ export const IdeaTile = (props) => {
                   <div style={{ height:4, borderRadius:2, background:C.border }}>
                     <div style={{ height:"100%", width:`${tp.pct}%`, borderRadius:2, background:tp.color, transition:"width 0.3s" }}/>
                   </div>
-                  <div style={{ fontSize:9, color:tp.color, fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:0.5, marginTop:2 }}>{tp.label}</div>
+                  <div style={{ fontSize:10, color:tp.color, fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:0.5, marginTop:2 }}>{tp.label}</div>
                 </div>
               );})()}
               {idea.byWhen&&<div style={{ fontSize:10, color:C.textMuted, marginTop:4 }}><Ic n="calendar" s={10}/> {idea.byWhen}</div>}
@@ -104,7 +104,7 @@ export const IdeaTile = (props) => {
               <div style={{ fontSize:11, color:C.textMuted, fontFamily:FONT_BODY }}>
                 {idea.byWhen ? <span><Ic n="calendar" s={10}/> <strong style={{color:C.textSec}}>{idea.byWhen}</strong></span> : <span style={{fontStyle:"italic"}}>{t("noDeadline")}</span>}
               {idea.byWhen&&settings.showDeadlineIndicator!==false&&(()=>{ const tp=goalTimeProgress(idea.createdDate||idea.date, idea.byWhen); if(!tp) return null; return (
-                <span style={{ fontSize:9, color:tp.color, fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:0.5, marginLeft:6 }}>{tp.label}</span>
+                <span style={{ fontSize:10, color:tp.color, fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:0.5, marginLeft:6 }}>{tp.label}</span>
               );})()}
               </div>
               {idea.steps&&idea.steps.filter(s=>s).length>0&&(
@@ -118,19 +118,19 @@ export const IdeaTile = (props) => {
                 </div>
               )}
               {!expanded&&idea.steps&&idea.steps.filter(s=>s).length>2&&(
-                <div style={{ fontSize:9, color:C.textMuted, marginTop:4, fontStyle:"italic" }}>tap to see all · {idea.steps.filter(s=>s).length} steps</div>
+                <div style={{ fontSize:10, color:C.textMuted, marginTop:4, fontStyle:"italic" }}>tap to see all · {idea.steps.filter(s=>s).length} steps</div>
               )}
               {expanded&&(
                 <div style={{ marginTop:10, borderTop:`1px solid ${C.borderLight}`, paddingTop:8, display:"flex", flexDirection:"column", gap:8 }}>
                   {idea.why&&(
                     <div>
-                      <div style={{ fontSize:9, fontWeight:800, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY, marginBottom:3 }}>WHY</div>
+                      <div style={{ fontSize:10, fontWeight:800, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY, marginBottom:3 }}>WHY</div>
                       <p style={{ fontSize:11, color:C.textSec, margin:0, lineHeight:1.5 }}>{idea.why}</p>
                     </div>
                   )}
                   {(idea.daysPerWeek||idea.sessionLength||idea.trainWhere)&&(
                     <div>
-                      <div style={{ fontSize:9, fontWeight:800, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY, marginBottom:4 }}>COMMITMENTS</div>
+                      <div style={{ fontSize:10, fontWeight:800, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY, marginBottom:4 }}>COMMITMENTS</div>
                       <div style={{ display:"flex", flexWrap:"wrap", gap:4 }}>
                         {idea.daysPerWeek&&<span style={{ fontSize:10, color, background:`${color}18`, borderRadius:4, padding:"2px 7px", fontFamily:FONT_DISPLAY, fontWeight:700 }}><Ic n="calendar" s={10}/> {idea.daysPerWeek}</span>}
                         {idea.sessionLength&&<span style={{ fontSize:10, color:C.textSec, background:C.surfaceAlt, borderRadius:4, padding:"2px 7px", fontFamily:FONT_DISPLAY }}><Ic n="timer" s={10}/> {idea.sessionLength}</span>}
@@ -140,16 +140,16 @@ export const IdeaTile = (props) => {
                   )}
                   {idea.obstacles&&(
                     <div>
-                      <div style={{ fontSize:9, fontWeight:800, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY, marginBottom:3 }}>OBSTACLES</div>
+                      <div style={{ fontSize:10, fontWeight:800, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY, marginBottom:3 }}>OBSTACLES</div>
                       <p style={{ fontSize:11, color:C.textSec, margin:0, lineHeight:1.5 }}>{idea.obstacles}</p>
                     </div>
                   )}
-                  <div style={{ fontSize:9, color:C.textMuted, textAlign:"center", marginTop:2 }}>tap to collapse</div>
+                  <div style={{ fontSize:10, color:C.textMuted, textAlign:"center", marginTop:2 }}>tap to collapse</div>
                 </div>
               )}
             </div>
           ) : (
-            <div style={{ fontSize:12, color:C.textSec, lineHeight:1.5, flex:1,
+            <div style={{ fontSize:13, color:C.textSec, lineHeight:1.5, flex:1,
               overflow:"hidden", display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical" }}>
               <Highlight text={text||""} query={searchQuery}/>
             </div>
@@ -182,9 +182,8 @@ export const IdeaTile = (props) => {
       <div
         draggable={draggable}
         onDragStart={onDragStart} onDragOver={onDragOver} onDrop={onDrop}
-        style={{ position:"relative", background:C.bg, border:`1.5px solid ${isPinned?color+"66":C.border}`, borderRadius:10,
-          cursor:"default", overflow:"visible", transition:"border-color 0.15s" }}>
-        <div style={{ height:4, borderRadius:"10px 10px 0 0", background:`linear-gradient(90deg,${color},${color}55)` }}/>
+        style={{ position:"relative", background:C.surface, border:isPinned?`1.5px solid ${color}66`:"none", borderRadius:8,
+          borderLeft:`4px solid ${color}`, cursor:"default", overflow:"visible", transition:"border-color 0.15s" }}>
         <div style={{ display:"flex", alignItems:"center", gap:6, padding:"10px 8px 10px 8px" }}>
           <button onClick={e=>{e.stopPropagation();setExpanded(x=>!x);}}
             style={{ background:"none", border:"none", cursor:"pointer", display:"flex", alignItems:"center", padding:2, flexShrink:0 }}>
@@ -228,7 +227,7 @@ export const IdeaTile = (props) => {
               <a href={idea.link.startsWith("http")?idea.link:"https://"+idea.link} target="_blank" rel="noopener noreferrer"
                 onClick={e=>e.stopPropagation()}
                 style={{ display:"flex", alignItems:"center", justifyContent:"center",
-                  width:22, height:22, borderRadius:5, color:C.textMuted, textDecoration:"none" }}
+                  width:22, height:22, color:C.textMuted, textDecoration:"none" }}
                 title="Open link"><Ic n="extLink" s={13} c={C.textMuted}/></a>
             )}
             <button ref={btnRef} onClick={handleOpenMenu}
@@ -270,22 +269,22 @@ export const IdeaTile = (props) => {
               </div>
             ) : isGoal ? (
               <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
-                {idea.why&&<div><span style={{ fontSize:10, fontWeight:800, color:C.textMuted, letterSpacing:1, fontFamily:FONT_DISPLAY }}>{t("whyGoal")}</span><p style={{ fontSize:12, color:C.textSec, marginTop:2 }}>{idea.why}</p></div>}
+                {idea.why&&<div><span style={{ fontSize:10, fontWeight:800, color:C.textMuted, letterSpacing:1, fontFamily:FONT_DISPLAY }}>{t("whyGoal")}</span><p style={{ fontSize:13, color:C.textSec, marginTop:2 }}>{idea.why}</p></div>}
                 {idea.steps&&idea.steps.filter(s=>s).length>0&&(
                   <div><span style={{ fontSize:10, fontWeight:800, color:C.textMuted, letterSpacing:1, fontFamily:FONT_DISPLAY }}>{t("threeMainSteps")}</span>
                     {idea.steps.filter(s=>s).map((s,i)=>(
-                      <div key={i} style={{ fontSize:12, color:C.textSec, display:"flex", gap:5, marginTop:3 }}>
+                      <div key={i} style={{ fontSize:13, color:C.textSec, display:"flex", gap:5, marginTop:3 }}>
                         <span style={{ color, fontWeight:800, fontFamily:FONT_DISPLAY, flexShrink:0 }}>{i+1}.</span><span>{s}</span>
                       </div>
                     ))}
                   </div>
                 )}
-                {(idea.daysPerWeek||idea.sessionLength||idea.trainWhere)&&<div><span style={{ fontSize:10, fontWeight:800, color:C.textMuted, letterSpacing:1, fontFamily:FONT_DISPLAY }}>{t("commitments")}</span><p style={{ fontSize:12, color:C.textSec, marginTop:2 }}>{[idea.daysPerWeek,idea.sessionLength,idea.trainWhere].filter(Boolean).join(" · ")}</p></div>}
-                {idea.obstacles&&<div><span style={{ fontSize:10, fontWeight:800, color:C.textMuted, letterSpacing:1, fontFamily:FONT_DISPLAY }}>{t("obstacles")}</span><p style={{ fontSize:12, color:C.textSec, marginTop:2 }}>{idea.obstacles}</p></div>}
+                {(idea.daysPerWeek||idea.sessionLength||idea.trainWhere)&&<div><span style={{ fontSize:10, fontWeight:800, color:C.textMuted, letterSpacing:1, fontFamily:FONT_DISPLAY }}>{t("commitments")}</span><p style={{ fontSize:13, color:C.textSec, marginTop:2 }}>{[idea.daysPerWeek,idea.sessionLength,idea.trainWhere].filter(Boolean).join(" · ")}</p></div>}
+                {idea.obstacles&&<div><span style={{ fontSize:10, fontWeight:800, color:C.textMuted, letterSpacing:1, fontFamily:FONT_DISPLAY }}>{t("obstacles")}</span><p style={{ fontSize:13, color:C.textSec, marginTop:2 }}>{idea.obstacles}</p></div>}
               </div>
             ) : (
               <Fragment>
-                <span style={{ fontSize:12, color:C.textSec, lineHeight:1.5, whiteSpace:"pre-wrap", wordBreak:"break-word" }}>
+                <span style={{ fontSize:13, color:C.textSec, lineHeight:1.5, whiteSpace:"pre-wrap", wordBreak:"break-word" }}>
                   <Highlight text={text} query={searchQuery}/>
                 </span>
               </Fragment>

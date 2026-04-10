@@ -16,10 +16,10 @@ export const MoveTile = ({ move, onClick, onEdit, onDelete, onDuplicate, onMove,
   const showMastery = settings.showMastery !== false;
   const compact = settings.compactCards;
   return (
-    <div onClick={onClick} style={{ position:"relative", background:C.bg, border:`1px solid ${C.border}`, borderRadius:8,
+    <div onClick={onClick} style={{ position:"relative", background:C.surface, borderRadius:8,
       padding: compact ? "7px 8px 5px" : "10px 10px 8px", cursor:"pointer", borderLeft:`4px solid ${catCol}` }}>
       <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom: showMastery ? 5 : 2 }}>
-        <span style={{ fontWeight:700, fontSize: compact ? 13 : 15, color:C.text, lineHeight:1.2, flex:1, paddingRight:4, fontFamily:FONT_DISPLAY,
+        <span style={{ fontWeight:700, fontSize: compact ? 13 : 16, color:C.text, lineHeight:1.2, flex:1, paddingRight:4, fontFamily:FONT_DISPLAY,
           overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", minWidth:0 }}>
           <Highlight text={move.name} query={searchQuery}/>
         </span>
@@ -38,7 +38,7 @@ export const MoveTile = ({ move, onClick, onEdit, onDelete, onDuplicate, onMove,
             <a href={move.link.startsWith("http")?move.link:"https://"+move.link} target="_blank" rel="noopener noreferrer"
               onClick={e=>e.stopPropagation()}
               style={{ display:"flex", alignItems:"center", justifyContent:"center",
-                width:20, height:20, borderRadius:5, color:C.textMuted, padding:2, textDecoration:"none" }}>
+                width:20, height:20, color:C.textMuted, padding:2, textDecoration:"none" }}>
               <Ic n="extLink" s={12} c={C.textMuted}/>
             </a>
           )}
@@ -48,7 +48,7 @@ export const MoveTile = ({ move, onClick, onEdit, onDelete, onDuplicate, onMove,
           </button>
         </div>
       </div>
-      {move.description&&<div style={{ fontSize:10, color:C.textSec, lineHeight:1.4, marginBottom:4,
+      {move.description&&<div style={{ fontSize:11, color:C.textSec, lineHeight:1.4, marginBottom:4,
         overflow:"hidden", textOverflow:"ellipsis", display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical" }}>
         {move.description}
       </div>}
@@ -57,7 +57,7 @@ export const MoveTile = ({ move, onClick, onEdit, onDelete, onDuplicate, onMove,
           <div style={{ height:"100%", width:`${displayMastery}%`, borderRadius:2, background:`linear-gradient(90deg,${C.red},${col})` }}/>
         </div>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-          <span style={{ fontSize: compact ? 11 : 13, color:col, fontWeight:700 }}>{displayMastery}%{hasDecayArrow&&<span style={{ fontSize:9, color:C.red, marginLeft:2 }}>▼</span>}</span>
+          <span style={{ fontSize: compact ? 11 : 13, color:col, fontWeight:700 }}>{displayMastery}%{hasDecayArrow&&<span style={{ fontSize:10, color:C.red, marginLeft:2 }}>▼</span>}</span>
         </div>
       </Fragment>}
 

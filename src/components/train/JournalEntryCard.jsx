@@ -12,10 +12,10 @@ export const JournalEntryCard = ({ entry, onDelete, onUpdate }) => {
   const [text, setText] = useState(entry.text || "");
   const [link, setLink] = useState(entry.link || "");
   const inputStyle = { width:"100%", background:C.surfaceAlt, border:`1px solid ${C.border}`, borderRadius:7,
-    padding:"8px 10px", color:C.text, fontSize:12, outline:"none", fontFamily:FONT_BODY, boxSizing:"border-box" };
+    padding:"9px 12px", color:C.text, fontSize:14, outline:"none", fontFamily:FONT_BODY, boxSizing:"border-box" };
   const save = () => { onUpdate({ text:text.trim(), link:ensureHttps(link.trim()) }); setEditing(false); };
   return (
-    <div style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:10,
+    <div style={{ background:C.surface, borderRadius:8,
       padding:"12px 14px", marginBottom:10 }}>
       <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:6 }}>
         <span style={{ fontSize:10, fontWeight:800, color:C.accent, letterSpacing:1.5, fontFamily:FONT_DISPLAY }}>{entry.date}</span>

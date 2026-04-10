@@ -186,7 +186,7 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
       {/* Header */}
       <div style={{ padding:"8px 12px", borderBottom:`1px solid ${C.borderLight}`, background:C.surface,
         flexShrink:0, display:"flex", alignItems:"center", justifyContent:"space-between" }}>
-        <span style={{ fontSize:12, fontWeight:800, letterSpacing:2, color:C.textMuted, fontFamily:FONT_DISPLAY }}>
+        <span style={{ fontSize:11, fontWeight:800, letterSpacing:2, color:C.textMuted, fontFamily:FONT_DISPLAY }}>
           {t("toUse")} <span style={{fontWeight:400, letterSpacing:0, fontSize:11}}>· {unchecked.length} left · {checked.length} used</span>
         </span>
         <div style={{ display:"flex", alignItems:"center", gap:5 }}>
@@ -246,7 +246,7 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
             <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:48, color:C.text, lineHeight:1 }}>
               {unchecked.length}
             </div>
-            <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, color:C.textMuted,
+            <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, color:C.textMuted,
               letterSpacing:2, textTransform:"uppercase", marginTop:6 }}>
               {t("movesReady")}
             </div>
@@ -258,7 +258,7 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
             )}
             <button onClick={handleReveal}
               style={{ marginTop:32, background:C.surfaceAlt, border:`1px solid ${C.border}`, borderRadius:8,
-                padding:"10px 24px", color:C.text, fontSize:12, fontWeight:800, fontFamily:FONT_DISPLAY,
+                padding:"10px 24px", color:C.text, fontSize:11, fontWeight:800, fontFamily:FONT_DISPLAY,
                 letterSpacing:2, cursor:"pointer" }}>
               {t("reveal")}
             </button>
@@ -279,7 +279,7 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
                   borderBottom:`1px solid ${C.borderLight}`, background:C.bg }}>
                   <div style={{ width:7, height:7, borderRadius: isSet?"2px":"50%", background:dotColor, flexShrink:0 }}/>
                   <span style={{ flex:1, fontSize:13, color:C.text, fontFamily:FONT_BODY }}>{m.name}</span>
-                  {isSet && <span style={{ fontSize:9, fontWeight:800, letterSpacing:1, color:C.textMuted, fontFamily:FONT_DISPLAY, background:C.surface, borderRadius:4, padding:"2px 5px" }}>SET</span>}
+                  {isSet && <span style={{ fontSize:10, fontWeight:800, letterSpacing:1, color:C.textMuted, fontFamily:FONT_DISPLAY, background:C.surface, borderRadius:4, padding:"2px 5px" }}>SET</span>}
                   {!isSet && showMastery&&<span style={{ fontSize:11, color:masteryColor(dm(m)), fontWeight:700, flexShrink:0 }}>{dm(m)}%</span>}
                 </div>
               );
@@ -318,7 +318,7 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
                 </button>}
                 <div style={{ width:7, height:7, borderRadius: isSet?"2px":"50%", background:dotColor, flexShrink:0 }}/>
                 <span style={{ flex:1, fontSize:13, color:C.text, fontFamily:FONT_BODY }}>{m.name}</span>
-                {isSet && <span style={{ fontSize:9, fontWeight:800, letterSpacing:1, color:C.textMuted, fontFamily:FONT_DISPLAY, background:C.surface, borderRadius:4, padding:"2px 5px" }}>SET</span>}
+                {isSet && <span style={{ fontSize:10, fontWeight:800, letterSpacing:1, color:C.textMuted, fontFamily:FONT_DISPLAY, background:C.surface, borderRadius:4, padding:"2px 5px" }}>SET</span>}
                 {!isSet && showMastery&&<span style={{ fontSize:11, color:masteryColor(dm(m)), fontWeight:700, flexShrink:0 }}>{dm(m)}%</span>}
                 {!reorderMode&&<button onClick={()=>removeItem(item.id)}
                   style={{ background:"none", border:"none", cursor:"pointer", padding:2, display:"flex", flexShrink:0 }}>
@@ -346,7 +346,7 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
                 borderBottom:`1px solid ${C.border}`, cursor:"pointer",
                 display:"flex", alignItems:"center", gap:6, padding:"8px 12px", color:C.textMuted }}>
               <Ic n={usedOpen?"chevD":"chevR"} s={12} c={C.textMuted}/>
-              <span style={{ fontSize:12, fontWeight:800, letterSpacing:1.5, fontFamily:FONT_DISPLAY }}>USED · {checked.length}</span>
+              <span style={{ fontSize:11, fontWeight:800, letterSpacing:1.5, fontFamily:FONT_DISPLAY }}>USED · {checked.length}</span>
             </button>
             {usedOpen && checked.map(item=>{
               const isSet = item.type==="set";
@@ -364,7 +364,7 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
                   </button>
                   <div style={{ width:7, height:7, borderRadius: isSet?"2px":"50%", background:dotColor, flexShrink:0 }}/>
                   <span style={{ flex:1, fontSize:13, color:C.textMuted, fontFamily:FONT_BODY, textDecoration:"line-through" }}>{m.name}</span>
-                  {isSet && <span style={{ fontSize:9, fontWeight:800, letterSpacing:1, color:C.textMuted, fontFamily:FONT_DISPLAY, background:C.surface, borderRadius:4, padding:"2px 5px" }}>SET</span>}
+                  {isSet && <span style={{ fontSize:10, fontWeight:800, letterSpacing:1, color:C.textMuted, fontFamily:FONT_DISPLAY, background:C.surface, borderRadius:4, padding:"2px 5px" }}>SET</span>}
                   {!isSet && showMastery&&<span style={{ fontSize:11, color:masteryColor(dm(m)), fontWeight:700, flexShrink:0 }}>{dm(m)}%</span>}
                   <button onClick={()=>removeItem(item.id)}
                     style={{ background:"none", border:"none", cursor:"pointer", padding:2, display:"flex", flexShrink:0 }}>
@@ -406,7 +406,7 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
                 {isAllSel && <Ic n="check" s={11} c="#fff"/>}
                 {isAllPart && <div style={{ width:8, height:2, background:C.accent, borderRadius:1 }}/>}
               </div>
-              <span style={{ fontSize:12, fontWeight:800, letterSpacing:1.5, color:C.brownMid, fontFamily:FONT_DISPLAY }}>
+              <span style={{ fontSize:11, fontWeight:800, letterSpacing:1.5, color:C.brownMid, fontFamily:FONT_DISPLAY }}>
                 SELECT ALL
               </span>
               <span style={{ fontSize:11, color:C.textMuted, marginLeft:"auto" }}>
@@ -471,7 +471,7 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
                         style={{ flex:1, display:"flex", alignItems:"center", gap:7, padding:"7px 14px 7px 4px",
                           background:"transparent", border:"none", cursor:"pointer", textAlign:"left" }}>
                         <div style={{ width:8, height:8, borderRadius:"50%", background:col, flexShrink:0 }}/>
-                        <span style={{ flex:1, fontSize:12, fontWeight:800, letterSpacing:1, color:C.brownMid, fontFamily:FONT_DISPLAY }}>{cat}</span>
+                        <span style={{ flex:1, fontSize:11, fontWeight:800, letterSpacing:1, color:C.brownMid, fontFamily:FONT_DISPLAY }}>{cat}</span>
                         <span style={{ fontSize:10, color:C.textMuted }}>{catMoves.length}</span>
                         <Ic n={isExp?"chevD":"chevR"} s={11} c={C.textMuted}/>
                       </button>
@@ -532,7 +532,7 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
                   <button onClick={()=>setExpCats(p=>({...p,"__sets__":p["__sets__"]===false?true:false}))}
                     style={{ flex:1, display:"flex", alignItems:"center", gap:7, padding:"7px 14px 7px 4px",
                       background:"transparent", border:"none", cursor:"pointer", textAlign:"left" }}>
-                    <span style={{ fontSize:12, fontWeight:800, letterSpacing:1.5, color:C.brownMid, fontFamily:FONT_DISPLAY }}>SETS</span>
+                    <span style={{ fontSize:11, fontWeight:800, letterSpacing:1.5, color:C.brownMid, fontFamily:FONT_DISPLAY }}>SETS</span>
                     <span style={{ fontSize:10, color:C.textMuted, marginLeft:"auto" }}>{sets.length}</span>
                     <Ic n={expCats["__sets__"]===false?"chevR":"chevD"} s={11} c={C.textMuted}/>
                   </button>
@@ -555,7 +555,7 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
                       </div>
                       <div style={{ width:7, height:7, borderRadius:2, background:s.color||C.accent, flexShrink:0 }}/>
                       <span style={{ flex:1, fontSize:13, color:C.text, fontFamily:FONT_BODY }}>{s.name}</span>
-                      <span style={{ fontSize:9, fontWeight:800, letterSpacing:1, color:C.textMuted, fontFamily:FONT_DISPLAY,
+                      <span style={{ fontSize:10, fontWeight:800, letterSpacing:1, color:C.textMuted, fontFamily:FONT_DISPLAY,
                         background:C.surface, borderRadius:4, padding:"2px 5px" }}>
                         {(s.moveIds||[]).length} moves
                       </span>
@@ -568,7 +568,7 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
 
           {/* Picker footer */}
           <div style={{ padding:"10px 14px", borderTop:`1px solid ${C.border}`, background:C.surface, flexShrink:0, display:"flex", alignItems:"center", justifyContent:"space-between" }}>
-            <span style={{ fontSize:12, color:C.textMuted }}>
+            <span style={{ fontSize:11, color:C.textMuted }}>
               {pickerSel.length>0 ? `${pickerSel.length} selected` : t("tapToSelect")}
             </span>
             <button onClick={confirmPick} disabled={pickerSel.length===0}
@@ -610,11 +610,11 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
             <div style={{ textAlign:"center", padding:"24px 0", color:C.textMuted }}>
               <div style={{ marginBottom:8 }}><Ic n="download" s={28} c={C.textMuted}/></div>
               <div style={{ fontSize:13, fontWeight:700, fontFamily:FONT_DISPLAY, marginBottom:4 }}>{t("noSavedListsYet")}</div>
-              <div style={{ fontSize:12 }}>Build a list then tap Save to store it for later.</div>
+              <div style={{ fontSize:13 }}>Build a list then tap Save to store it for later.</div>
             </div>
           ) : (
             <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
-              <p style={{ fontSize:12, color:C.textMuted, marginBottom:4, lineHeight:1.5 }}>
+              <p style={{ fontSize:13, color:C.textMuted, marginBottom:4, lineHeight:1.5 }}>
                 Tap a list to load it. Your current list will be replaced.
               </p>
               {savedLists.map(entry=>(
@@ -648,7 +648,7 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
           <p style={{ fontSize:13, color:C.textSec, marginBottom:8, lineHeight:1.6 }}>
             Load <strong style={{color:C.text}}>{confirmLoadList.name}</strong>?
           </p>
-          <p style={{ fontSize:12, color:C.accent, fontWeight:700, marginBottom:20 }}>
+          <p style={{ fontSize:13, color:C.accent, fontWeight:700, marginBottom:20 }}>
             ⚠️ Your current list will be replaced.
           </p>
           <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
@@ -664,7 +664,7 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
           <p style={{ fontSize:13, color:C.textSec, marginBottom:8, lineHeight:1.6 }}>
             Delete <strong style={{color:C.text}}>{confirmDeleteList.name}</strong>?
           </p>
-          <p style={{ fontSize:12, color:C.accent, fontWeight:700, marginBottom:20 }}>⚠️ {t("cannotBeUndone")}</p>
+          <p style={{ fontSize:13, color:C.accent, fontWeight:700, marginBottom:20 }}>⚠️ {t("cannotBeUndone")}</p>
           <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
             <Btn variant="secondary" onClick={()=>setConfirmDeleteList(null)}>{t("cancel")}</Btn>
             <Btn variant="danger" onClick={()=>deleteList(confirmDeleteList.id)}>{t("delete")}</Btn>

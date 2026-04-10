@@ -140,7 +140,7 @@ export const ReflectPage = ({
       <>
         {/* Search + view toggle */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "6px 14px", borderBottom: `1px solid ${C.borderLight}`, background: C.surface, flexShrink: 0 }}>
-          <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1.5, color: C.textMuted, fontFamily: FONT_DISPLAY }}>
+          <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, color: C.textMuted, fontFamily: FONT_DISPLAY }}>
             {tabType === "goals" ? t("goals") : t("notes")} · {count}
           </span>
           <div style={{ display: "flex", gap: 3 }}>
@@ -299,7 +299,7 @@ export const ReflectPage = ({
                             {dateStart}{inj.resolvedDate ? ` → ${inj.resolvedDate}` : ""}{dur ? ` (${dur} ${t("daysInjured")})` : ""}
                           </div>
                           {inj.preventionNote && (
-                            <div style={{ fontSize:12, color:C.yellow, fontFamily:FONT_BODY, fontStyle:"italic", marginBottom:4, lineHeight:1.5 }}>
+                            <div style={{ fontSize:13, color:C.yellow, fontFamily:FONT_BODY, fontStyle:"italic", marginBottom:4, lineHeight:1.5 }}>
                               {inj.preventionNote}
                             </div>
                           )}
@@ -338,7 +338,7 @@ export const ReflectPage = ({
       {showStanceConfirm && (
         <Modal onClose={() => setShowStanceConfirm(false)}>
           <div style={{ textAlign: "center", padding: "10px 0" }}>
-            <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 10, color: C.text, fontFamily: FONT_DISPLAY }}>{t("updateStance")}</div>
+            <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 10, color: C.text, fontFamily: FONT_DISPLAY }}>{t("updateStance")}</div>
             <div style={{ fontSize: 13, color: C.textSec, marginBottom: 18, lineHeight: 1.5 }}>{t("updateStanceConfirm")}</div>
             <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
               <Btn variant="secondary" onClick={() => setShowStanceConfirm(false)}>{t("cancel")}</Btn>

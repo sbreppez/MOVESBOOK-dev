@@ -231,7 +231,7 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"10px 16px", borderBottom:`1px solid ${C.borderLight}`, flexShrink:0 }}>
         {/* Tier badge */}
         <div style={{ display:"flex", alignItems:"center", background:`${tierColor}18`, borderRadius:10, padding:"5px 14px" }}>
-          <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:15, letterSpacing:1.5, color:tierColor }}>{tierLabel}</span>
+          <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:16, letterSpacing:1.5, color:tierColor }}>{tierLabel}</span>
         </div>
         {/* Counter */}
         <div style={{ display:"flex", alignItems:"center", gap:10 }}>
@@ -280,7 +280,7 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
             {t("pickRootMove")}
           </div>
           {movesWithChildren.length === 0 ? (
-            <div style={{ fontSize:12, color:C.textMuted, fontFamily:FONT_BODY, padding:"8px 0" }}>
+            <div style={{ fontSize:13, color:C.textMuted, fontFamily:FONT_BODY, padding:"8px 0" }}>
               {t("branchTooSmall")}
             </div>
           ) : (
@@ -292,7 +292,7 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
                     padding:"8px 12px", cursor:"pointer", textAlign:"left",
                     display:"flex", alignItems:"center", justifyContent:"space-between",
                   }}>
-                  <span style={{ fontFamily:FONT_BODY, fontSize:12, color:C.text }}>{m.name}</span>
+                  <span style={{ fontFamily:FONT_BODY, fontSize:13, color:C.text }}>{m.name}</span>
                   <span style={{ fontFamily:FONT_DISPLAY, fontSize:10, color:C.textMuted }}>
                     {getDescendants(m.id).length} {t("descendants")}
                   </span>
@@ -307,7 +307,7 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
       {drillMode === "branch" && branchRoot && (
         <div style={{ padding:"8px 16px", borderBottom:`1px solid ${C.borderLight}`, display:"flex", alignItems:"center", gap:8, flexShrink:0 }}>
           <Ic n="tree" s={14}/>
-          <span style={{ fontFamily:FONT_BODY, fontSize:12, color:C.text, fontWeight:600 }}>{branchRoot.name}</span>
+          <span style={{ fontFamily:FONT_BODY, fontSize:13, color:C.text, fontWeight:600 }}>{branchRoot.name}</span>
           <span style={{ fontFamily:FONT_DISPLAY, fontSize:10, color:C.textMuted }}>
             ({branchDescendants.length} {t("descendants")})
           </span>
@@ -318,7 +318,7 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
         </div>
       )}
       {drillMode === "branch" && branchRoot && branchDescendants.length < 3 && (
-        <div style={{ padding:"8px 16px", background:`${C.yellow}15`, fontSize:12, color:C.yellow, fontFamily:FONT_BODY }}>
+        <div style={{ padding:"8px 16px", background:`${C.yellow}15`, fontSize:13, color:C.yellow, fontFamily:FONT_BODY }}>
           {t("branchTooSmall")}
         </div>
       )}
@@ -389,7 +389,7 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
               {/* Move info */}
               <div style={{ flex:1, padding:"10px 0", minWidth:0 }}>
                 <div style={{
-                  fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:15, color:C.text,
+                  fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, color:C.text,
                   animation: spinning && !visibleCards.has(i) ? "mb-combo-flicker 0.08s infinite" : undefined,
                   whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis",
                 }}>
@@ -403,7 +403,7 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
               {/* Lock badge */}
               {hasSpun && !spinning && (
                 <div style={{ padding:"4px 10px 4px 0", fontSize:11, color: slot.moveLocked ? C.yellow : C.textMuted, fontFamily:FONT_DISPLAY, fontWeight:700, display:"flex", alignItems:"center", gap:3 }}>
-                  {slot.moveLocked ? <><span>{"\u{1F512}"}</span><span style={{ fontSize:9 }}>LOCKED</span></> : <span style={{ opacity:0.4, fontSize:9 }}>{t("tapToLock")}</span>}
+                  {slot.moveLocked ? <><span>{"\u{1F512}"}</span><span style={{ fontSize:10 }}>LOCKED</span></> : <span style={{ opacity:0.4, fontSize:10 }}>{t("tapToLock")}</span>}
                 </div>
               )}
             </div>
@@ -414,7 +414,7 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
         {hasSpun && !spinning && comboPreview.length > 0 && (
           <div style={{ marginTop:14, padding:"10px 12px", background:C.surfaceAlt, borderRadius:8, border:`1px solid ${C.borderLight}` }}>
             <div style={{ fontSize:10, fontFamily:FONT_DISPLAY, fontWeight:700, color:C.textMuted, letterSpacing:1, marginBottom:6 }}>COMBO</div>
-            <div style={{ fontSize:12, lineHeight:1.6, fontFamily:FONT_BODY }}>
+            <div style={{ fontSize:13, lineHeight:1.6, fontFamily:FONT_BODY }}>
               {comboPreview.map((p, idx) => (
                 <span key={idx}>
                   {p.type === "trans" && <span style={{ color:C.accent, fontStyle:"italic", fontSize:11 }}>{" \u2192 "}{p.text}{" \u2192 "}</span>}
@@ -565,7 +565,7 @@ const MovePicker = ({ moves, catColors, combos, onCombosChange, onBack }) => {
             {/* Info */}
             <div style={{ flex:1, minWidth:0 }}>
               <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:13, color:C.text, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{m.name}</div>
-              <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:9, color:getCatColor(m.category), letterSpacing:0.5 }}>{m.category}</div>
+              <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:10, color:getCatColor(m.category), letterSpacing:0.5 }}>{m.category}</div>
             </div>
           </div>
         ))}
@@ -627,7 +627,7 @@ const TransitionManager = ({ combos, onCombosChange, onBack }) => {
             color:C.text, fontFamily:FONT_BODY, fontSize:13, outline:"none" }}/>
         <button onClick={addTrans}
           style={{ padding:"10px 18px", borderRadius:8, border:"none", background:C.accent, color:"#fff",
-            fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:12, cursor:"pointer" }}>
+            fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:13, cursor:"pointer" }}>
           +
         </button>
       </div>

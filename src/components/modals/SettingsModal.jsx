@@ -68,7 +68,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
           return <button key={o.value||o} onClick={()=>set(key)(o.value||o)}
             style={{ padding:"6px 12px", border:"none", borderLeft:i>0?`1px solid ${panelBrd}`:"none",
               background:active?accent:panelSrf, color:active?"#fff":panelMut,
-              cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:FONT_DISPLAY, transition:"all 0.15s" }}>
+              cursor:"pointer", fontSize:11, fontWeight:700, fontFamily:FONT_DISPLAY, transition:"all 0.15s" }}>
             {o.icon&&<span style={{marginRight:4}}>{o.icon}</span>}{o.label||o}
           </button>;
         })}
@@ -93,7 +93,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
         {!inline && <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between",
           padding:"13px 18px", borderBottom:`1px solid ${panelBrd}`, flexShrink:0,
           background:panelBg, zIndex:10 }}>
-          <span style={{ fontWeight:800, fontSize:15, letterSpacing:2, color:panelTxt, fontFamily:FONT_DISPLAY }}>{"\u2699\uFE0F"} SETTINGS</span>
+          <span style={{ fontWeight:800, fontSize:16, letterSpacing:2, color:panelTxt, fontFamily:FONT_DISPLAY }}>{"\u2699\uFE0F"} SETTINGS</span>
           <button onClick={onClose}
             style={{ background:panelSrf, border:`1px solid ${panelBrd}`, cursor:"pointer",
               color:panelMut, padding:5, borderRadius:7, display:"flex" }}>
@@ -143,7 +143,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
           {row(t("language"), t("languageDesc"),
             <select value={s.language||"en"} onChange={e=>set("language")(e.target.value)}
               style={{ background:panelSrf, border:`1px solid ${panelBrd}`, borderRadius:7,
-                padding:"7px 10px", color:panelTxt, fontSize:12, fontFamily:FONT_DISPLAY,
+                padding:"7px 10px", color:panelTxt, fontSize:14, fontFamily:FONT_DISPLAY,
                 fontWeight:700, outline:"none" }}>
               <option value="en">English</option>
               <option value="it">Italiano</option>
@@ -192,7 +192,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
             t("linkOnCardDesc"),
             <select value={s.linkOnCard||"inside"} onChange={e=>set("linkOnCard")(e.target.value)}
               style={{ background:panelSrf, border:`1px solid ${panelBrd}`, borderRadius:7,
-                padding:"7px 10px", color:panelTxt, fontSize:12, fontFamily:FONT_DISPLAY,
+                padding:"7px 10px", color:panelTxt, fontSize:14, fontFamily:FONT_DISPLAY,
                 fontWeight:700, outline:"none" }}>
               <option value="inside">{t("linkOnCardInside")}</option>
               <option value="both">{t("linkOnCardBoth")}</option>
@@ -226,7 +226,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
           {row(t("defaultTab"), t("defaultTabDesc"),
             <select value={s.defaultTab} onChange={e=>set("defaultTab")(e.target.value)}
               style={{ background:panelSrf, border:`1px solid ${panelBrd}`, borderRadius:7,
-                padding:"7px 10px", color:panelTxt, fontSize:12, fontFamily:FONT_DISPLAY,
+                padding:"7px 10px", color:panelTxt, fontSize:14, fontFamily:FONT_DISPLAY,
                 fontWeight:700, outline:"none" }}>
               <option value="home">{t("home")}</option>
               <option value="moves">{t("vocab")}</option>
@@ -238,7 +238,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
           {row(t("sortMoves"), t("sortMovesDesc"),
             <select value={s.sortMoves} onChange={e=>set("sortMoves")(e.target.value)}
               style={{ background:panelSrf, border:`1px solid ${panelBrd}`, borderRadius:7,
-                padding:"7px 10px", color:panelTxt, fontSize:12, fontFamily:FONT_DISPLAY,
+                padding:"7px 10px", color:panelTxt, fontSize:14, fontFamily:FONT_DISPLAY,
                 fontWeight:700, outline:"none" }}>
               <option value="custom">{t("customSort")}</option>
               <option value="date">{t("dateAdded")}</option>
@@ -250,7 +250,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
           {row(t("sortCategories"), t("sortCatsDesc"),
             <select value={s.categorySort} onChange={e=>set("categorySort")(e.target.value)}
               style={{ background:panelSrf, border:`1px solid ${panelBrd}`, borderRadius:7,
-                padding:"7px 10px", color:panelTxt, fontSize:12, fontFamily:FONT_DISPLAY,
+                padding:"7px 10px", color:panelTxt, fontSize:14, fontFamily:FONT_DISPLAY,
                 fontWeight:700, outline:"none" }}>
               <option value="manual">{t("customSort")}</option>
               <option value="name">{t("alphabetical")}</option>
@@ -262,7 +262,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
           {sectionHdr(t("customAttributes"))}
 
           {customAttrs.length===0 ? (
-            <div style={{ fontSize:12, color:panelMut, fontStyle:"italic", padding:"8px 0" }}>
+            <div style={{ fontSize:11, color:panelMut, fontStyle:"italic", padding:"8px 0" }}>
               {t("noAttributesDefined")}
             </div>
           ) : customAttrs.map(attr=>(
@@ -294,7 +294,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
           <button onClick={()=>setShowAddAttr(true)}
             style={{ width:"100%", padding:"10px", borderRadius:8, marginTop:8,
               border:`1px dashed ${panelBrd}`, background:"none", color:panelMut, cursor:"pointer",
-              fontSize:12, fontFamily:FONT_DISPLAY, fontWeight:700, letterSpacing:1 }}>
+              fontSize:11, fontFamily:FONT_DISPLAY, fontWeight:700, letterSpacing:1 }}>
             + {t("addAttribute")}
           </button>
 
@@ -305,7 +305,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
             t("saveBackupSettingsDesc"),
             <button onClick={()=>{ downloadBackup(); }}
               style={{ padding:"7px 14px", borderRadius:7, border:`1px solid ${panelBrd}`,
-                background:panelSrf, color:panelTxt, cursor:"pointer", fontSize:12,
+                background:panelSrf, color:panelTxt, cursor:"pointer", fontSize:11,
                 fontWeight:700, fontFamily:FONT_DISPLAY, whiteSpace:"nowrap" }}>
               {"⬇ "+t("saveBackupBtn")}
             </button>
@@ -314,7 +314,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
           {row(t("restoreBackup"),
             t("restoreBackupSettingsDesc"),
             <label style={{ padding:"7px 14px", borderRadius:7, border:`1px solid ${panelBrd}`,
-              background:panelSrf, color:panelTxt, cursor:"pointer", fontSize:12,
+              background:panelSrf, color:panelTxt, cursor:"pointer", fontSize:11,
               fontWeight:700, fontFamily:FONT_DISPLAY, whiteSpace:"nowrap", display:"inline-block" }}>
               {"⬆ "+t("restoreBackupBtn")}
               <input ref={restoreFileRef} type="file" accept=".json" style={{ display:"none" }} onChange={e=>{
@@ -339,17 +339,17 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
               <div style={{ display:"flex", gap:6 }}>
                 <button onClick={()=>setConfirmClear(false)}
                   style={{ padding:"6px 10px", borderRadius:7, border:`1px solid ${panelBrd}`,
-                    background:panelSrf, color:panelMut, cursor:"pointer", fontSize:12,
+                    background:panelSrf, color:panelMut, cursor:"pointer", fontSize:11,
                     fontWeight:700, fontFamily:FONT_DISPLAY }}>{t("cancel")}</button>
                 <button onClick={()=>{ onClearMoves(); setConfirmClear(false); onClose(); }}
                   style={{ padding:"6px 10px", borderRadius:7, border:`1px solid ${accent}`,
-                    background:`${accent}22`, color:accent, cursor:"pointer", fontSize:12,
+                    background:`${accent}22`, color:accent, cursor:"pointer", fontSize:11,
                     fontWeight:700, fontFamily:FONT_DISPLAY }}>{t("confirm")}</button>
               </div>
             ) : (
               <button onClick={()=>setConfirmClear(true)}
                 style={{ padding:"7px 14px", borderRadius:7, border:`1px solid ${accent}44`,
-                  background:`${accent}10`, color:accent, cursor:"pointer", fontSize:12,
+                  background:`${accent}10`, color:accent, cursor:"pointer", fontSize:11,
                   fontWeight:700, fontFamily:FONT_DISPLAY, whiteSpace:"nowrap" }}>
                 {t("clearBtn")}
               </button>
@@ -362,17 +362,17 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
               <div style={{ display:"flex", gap:6 }}>
                 <button onClick={()=>setConfirmRestoreRounds(false)}
                   style={{ padding:"6px 10px", borderRadius:7, border:`1px solid ${panelBrd}`,
-                    background:panelSrf, color:panelMut, cursor:"pointer", fontSize:12,
+                    background:panelSrf, color:panelMut, cursor:"pointer", fontSize:11,
                     fontWeight:700, fontFamily:FONT_DISPLAY }}>{t("cancel")}</button>
                 <button onClick={()=>{ onRestoreRounds(); setConfirmRestoreRounds(false); onClose(); }}
                   style={{ padding:"6px 10px", borderRadius:7, border:`1px solid ${accent}`,
-                    background:`${accent}22`, color:accent, cursor:"pointer", fontSize:12,
+                    background:`${accent}22`, color:accent, cursor:"pointer", fontSize:11,
                     fontWeight:700, fontFamily:FONT_DISPLAY }}>{t("confirm")}</button>
               </div>
             ) : (
               <button onClick={()=>setConfirmRestoreRounds(true)}
                 style={{ padding:"7px 14px", borderRadius:7, border:`1px solid ${panelBrd}`,
-                  background:panelSrf, color:panelTxt, cursor:"pointer", fontSize:12,
+                  background:panelSrf, color:panelTxt, cursor:"pointer", fontSize:11,
                   fontWeight:700, fontFamily:FONT_DISPLAY, whiteSpace:"nowrap" }}>
                 {"↺ "+t("restoreBtn")}
               </button>
@@ -390,7 +390,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
               <span style={{ fontSize:13, color:panelMut }}>{t("buildLabel")}</span>
               <span style={{ fontSize:13, color:panelTxt, fontWeight:700 }}>MovesBook Prototype</span>
             </div>
-            <div style={{ fontSize:12, color:panelMut, marginTop:8, lineHeight:1.6, fontStyle:"italic" }}>
+            <div style={{ fontSize:13, color:panelMut, marginTop:8, lineHeight:1.6, fontStyle:"italic" }}>
               {t("builtForBreakers")}
             </div>
           </div>
@@ -399,12 +399,12 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
           <div style={{ marginTop:24, paddingTop:16, borderTop:`1px solid ${C.borderLight}`, display:"flex", flexDirection:"column", gap:8 }}>
         {onOpenManual && <button onClick={onOpenManual}
           style={{ background:"none", border:`1px solid ${C.borderLight}`, borderRadius:8, padding:"9px 14px",
-            color:panelTxt, fontSize:12, cursor:"pointer", fontFamily:FONT_DISPLAY, letterSpacing:1, width:"100%" }}>
+            color:panelTxt, fontSize:11, cursor:"pointer", fontFamily:FONT_DISPLAY, letterSpacing:1, width:"100%" }}>
           {t("userManual")}
         </button>}
         <button onClick={()=>{ onClose(); setTimeout(()=>{ if(typeof onRestartTour==="function") onRestartTour(); },200); }}
           style={{ background:"none", border:`1px solid ${C.borderLight}`, borderRadius:8, padding:"9px 14px",
-            color:C.textMuted, fontSize:12, cursor:"pointer", fontFamily:FONT_DISPLAY, letterSpacing:1, width:"100%" }}>
+            color:C.textMuted, fontSize:11, cursor:"pointer", fontFamily:FONT_DISPLAY, letterSpacing:1, width:"100%" }}>
           {"↺ "+t("restartWalkthrough")}
         </button>
       </div>
@@ -440,7 +440,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
       )}
       {confirmDeleteAttr&&(
         <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", zIndex:1200, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
-          <div style={{ background:C.bg, border:`1px solid ${C.border}`, borderRadius:14, width:"100%", maxWidth:340, padding:20, boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
+          <div style={{ background:C.bg, borderRadius:16, width:"100%", maxWidth:340, padding:20, boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
             <div style={{ fontWeight:900, fontSize:14, letterSpacing:1.5, fontFamily:FONT_DISPLAY, color:C.brown, marginBottom:8 }}>{t("deleteAttribute")}</div>
             <p style={{ fontSize:13, color:C.textSec, marginBottom:16, lineHeight:1.5 }}>
               {t("deleteAttributeConfirm").replace("{name}", confirmDeleteAttr.name)}
@@ -456,7 +456,7 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
       )}
       {confirmRestore&&(
         <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", zIndex:1200, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
-          <div style={{ background:C.bg, border:`1px solid ${C.border}`, borderRadius:14, width:"100%", maxWidth:340, padding:20, boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
+          <div style={{ background:C.bg, borderRadius:16, width:"100%", maxWidth:340, padding:20, boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
             <div style={{ fontWeight:900, fontSize:14, letterSpacing:1.5, fontFamily:FONT_DISPLAY, color:C.brown, marginBottom:8 }}>{t("restoreConfirmTitle")}</div>
             <p style={{ fontSize:13, color:C.textSec, marginBottom:16, lineHeight:1.6 }}>
               {t("restoreConfirmBody")} <strong style={{ color:C.text }}>{(()=>{ try { return new Date(confirmRestore._exportedAt).toLocaleDateString(undefined,{year:"numeric",month:"long",day:"numeric",hour:"2-digit",minute:"2-digit"}); } catch { return confirmRestore._exportedAt; } })()}</strong>{t("restoreConfirmBody2")}

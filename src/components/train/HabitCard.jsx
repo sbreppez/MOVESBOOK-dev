@@ -38,7 +38,7 @@ export const HabitCard = ({ habit, onCheckIn, onEdit, onDelete }) => {
   const last7 = Array.from({length:7},(_,i)=>{ const d=new Date(); d.setDate(d.getDate()-(6-i)); return {ds:d.toISOString().split("T")[0],isToday:i===6}; });
 
   return (
-    <div style={{ background:C.bg, borderRadius:8, marginBottom:6, overflow:"hidden",
+    <div style={{ background:C.surface, borderRadius:8, marginBottom:6, overflow:"hidden",
       borderLeft:`4px solid ${color}`,
       transition:"border-color 0.2s" }}>
 
@@ -52,7 +52,7 @@ export const HabitCard = ({ habit, onCheckIn, onEdit, onDelete }) => {
             background:doneToday?color:C.surface,
             display:"flex", alignItems:"center", justifyContent:"center",
             fontSize:doneToday?20:18, transition:"all 0.18s",
-            boxShadow:doneToday?`0 2px 10px ${color}55`:"none" }}>
+            boxShadow:"none" }}>
           {doneToday?"✓":(habit.emoji||<Ic n="target" s={16}/>)}
         </button>
 
@@ -107,10 +107,10 @@ export const HabitCard = ({ habit, onCheckIn, onEdit, onDelete }) => {
 
           {/* Freq + time badges */}
           <div style={{ display:"flex", gap:6, marginBottom:12, flexWrap:"wrap" }}>
-            <span style={{ fontSize:9, fontWeight:800, letterSpacing:1, color, fontFamily:FONT_DISPLAY,
+            <span style={{ fontSize:10, fontWeight:800, letterSpacing:1, color, fontFamily:FONT_DISPLAY,
               background:`${color}18`, borderRadius:4, padding:"2px 8px" }}>{freqLabel}</span>
             {habit.timeOfDay&&habit.timeOfDay!=="anytime"&&(
-              <span style={{ fontSize:9, fontWeight:800, letterSpacing:1, color:C.textMuted, fontFamily:FONT_DISPLAY,
+              <span style={{ fontSize:10, fontWeight:800, letterSpacing:1, color:C.textMuted, fontFamily:FONT_DISPLAY,
                 background:C.surfaceAlt, borderRadius:4, padding:"2px 8px" }}>
                 {{"morning":t("morning"),"afternoon":t("afternoon"),"evening":t("evening")}[habit.timeOfDay]}
               </span>
@@ -139,7 +139,7 @@ export const HabitCard = ({ habit, onCheckIn, onEdit, onDelete }) => {
               }
             </svg>
             <div style={{ flex:1 }}>
-              <div style={{ fontSize:9, color:C.textMuted, fontFamily:FONT_DISPLAY, letterSpacing:1, marginBottom:5 }}>{t("thisWeek")}</div>
+              <div style={{ fontSize:10, color:C.textMuted, fontFamily:FONT_DISPLAY, letterSpacing:1, marginBottom:5 }}>{t("thisWeek")}</div>
               <div style={{ display:"flex", gap:3, marginBottom:10 }}>
                 {last7.map(({ds,isToday})=>(
                   <div key={ds} style={{ flex:1, height:7, borderRadius:4,
@@ -148,7 +148,7 @@ export const HabitCard = ({ habit, onCheckIn, onEdit, onDelete }) => {
                 ))}
               </div>
               <div style={{ display:"flex", justifyContent:"space-between" }}>
-                <div style={{ fontSize:12, fontWeight:800, color:doneToday?C.green:C.textMuted, fontFamily:FONT_DISPLAY }}>
+                <div style={{ fontSize:13, fontWeight:800, color:doneToday?C.green:C.textMuted, fontFamily:FONT_DISPLAY }}>
                   {doneToday?`✓ ${t("done")}`:weekDone>0?`${weekDone}/${weekTarget}`:t("thisWeek")}
                 </div>
               </div>
@@ -156,7 +156,7 @@ export const HabitCard = ({ habit, onCheckIn, onEdit, onDelete }) => {
           </div>
 
           {/* 30-day dot grid */}
-          <div style={{ fontSize:9, fontWeight:800, letterSpacing:1.5, color:C.textMuted,
+          <div style={{ fontSize:10, fontWeight:800, letterSpacing:1.5, color:C.textMuted,
             fontFamily:FONT_DISPLAY, marginBottom:6 }}>{t("last30Days")}</div>
           <div style={{ display:"flex", flexWrap:"wrap", gap:4, marginBottom:12 }}>
             {dots.map(dot=>(
@@ -172,9 +172,9 @@ export const HabitCard = ({ habit, onCheckIn, onEdit, onDelete }) => {
           {habit.notes&&(
             <div style={{ padding:"8px 10px", background:C.surfaceAlt, borderRadius:8,
               border:`1px solid ${C.border}`, marginBottom:12 }}>
-              <div style={{ fontSize:9, fontWeight:800, letterSpacing:1.5, color:C.textMuted,
+              <div style={{ fontSize:10, fontWeight:800, letterSpacing:1.5, color:C.textMuted,
                 fontFamily:FONT_DISPLAY, marginBottom:4 }}>{t("notes")}</div>
-              <p style={{ fontSize:12, color:C.textSec, lineHeight:1.6, margin:0, whiteSpace:"pre-wrap" }}>{habit.notes}</p>
+              <p style={{ fontSize:13, color:C.textSec, lineHeight:1.6, margin:0, whiteSpace:"pre-wrap" }}>{habit.notes}</p>
             </div>
           )}
 
@@ -189,7 +189,7 @@ export const HabitCard = ({ habit, onCheckIn, onEdit, onDelete }) => {
               ? <Fragment><span style={{ fontSize:14, color:"#ffffff", fontFamily:FONT_DISPLAY, fontWeight:900, letterSpacing:0.5 }}>{t("done")}</span><span style={{ fontSize:16, marginLeft:6 }}>✅</span><span style={{ fontSize:10, color:"rgba(255,255,255,0.6)", fontFamily:FONT_DISPLAY, marginLeft:6 }}>· {t("undoLabel")}</span></Fragment>
               : <Fragment>
                   <Ic n="fist" s={15} c={C.textMuted}/>
-                  <span style={{ fontSize:12, color, fontFamily:FONT_DISPLAY, fontWeight:800, letterSpacing:0.5 }}>{t("didIt")}</span>
+                  <span style={{ fontSize:13, color, fontFamily:FONT_DISPLAY, fontWeight:800, letterSpacing:0.5 }}>{t("didIt")}</span>
                 </Fragment>
             }
           </button>

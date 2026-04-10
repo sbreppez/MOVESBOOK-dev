@@ -190,7 +190,7 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
         {history.length > 0 && (
           <button onClick={() => setShowHistory(true)}
             style={{ display: "block", margin: "8px auto 0", background: "none", border: "none",
-              cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12,
+              cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11,
               letterSpacing: 1, color: C.textMuted, padding: "8px 16px" }}>
             {t("planHistory")} ({history.length})
           </button>
@@ -206,7 +206,7 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
       <button onClick={() => onOpenSharedCalendar && onOpenSharedCalendar()}
         style={{ width: "100%", padding: "10px 12px", background: "transparent",
           border: `1px solid ${C.border}`, borderRadius: 8, cursor: "pointer",
-          fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 12, letterSpacing: 2,
+          fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 11, letterSpacing: 2,
           color: C.textSec, textAlign: "center", marginBottom: 12, display: "flex",
           alignItems: "center", justifyContent: "center", gap: 6 }}>
         {"\u{1F4C5}"} {t("viewFullCalendar")}
@@ -260,10 +260,10 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
                 style={{ flex: 1, display: "flex", alignItems: "center", gap: 10, background: "none", border: "none", cursor: "pointer", textAlign: "left", padding: 0, minWidth: 0 }}>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 2 }}>
-                    <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 15, letterSpacing: 0.5, color: C.text }}>{evt.title || "Battle"}</span>
-                    <span style={{ fontSize: 9, fontFamily: FONT_DISPLAY, fontWeight: 700, background: `${C.accent}15`, color: C.accent, borderRadius: 4, padding: "2px 6px" }}>{t("noplan") || "NO PLAN"}</span>
+                    <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 16, letterSpacing: 0.5, color: C.text }}>{evt.title || "Battle"}</span>
+                    <span style={{ fontSize: 10, fontFamily: FONT_DISPLAY, fontWeight: 700, background: `${C.accent}15`, color: C.accent, borderRadius: 4, padding: "2px 6px" }}>{t("noplan") || "NO PLAN"}</span>
                   </div>
-                  <div style={{ fontSize: 12, fontFamily: FONT_BODY, color: C.textSec, marginBottom: 2 }}>{dateLabel}</div>
+                  <div style={{ fontSize: 11, fontFamily: FONT_BODY, color: C.textSec, marginBottom: 2 }}>{dateLabel}</div>
                   <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: C.textMuted }}>{dLeft >= 0 ? `${dLeft} ${t("daysLeft")}` : ""} {"\u2014"} {t("tapToAddBattle")}</div>
                 </div>
                 <Ic n="chevR" s={14} c={C.textMuted} />
@@ -281,7 +281,7 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
       {(battleprep?.history || []).length > 0 && (
         <button onClick={() => setShowHistory(true)}
           style={{ display: "block", margin: "16px auto 0", background: "none", border: "none",
-            cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12,
+            cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11,
             letterSpacing: 1, color: C.textMuted, padding: "8px 16px" }}>
           {t("planHistory")} ({(battleprep?.history || []).length})
         </button>
@@ -439,10 +439,10 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
           background: "none", border: "none", cursor: "pointer", textAlign: "left" }}>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 2, flexWrap: "wrap" }}>
-            <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 15, letterSpacing: 0.5, color: C.text,
+            <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 16, letterSpacing: 0.5, color: C.text,
               overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{displayName}</span>
-            <span style={{ fontSize: 9, fontFamily: FONT_DISPLAY, fontWeight: 700, background: `${meta.color}20`, color: meta.color, borderRadius: 4, padding: "2px 6px", flexShrink: 0 }}>{meta.icon} {meta.label}</span>
-            {isBattleDay && <span style={{ fontSize: 9, fontFamily: FONT_DISPLAY, fontWeight: 900, background: `${meta.color}30`, color: meta.color, borderRadius: 4, padding: "2px 6px", flexShrink: 0, letterSpacing: 0.5 }}>{t("todayIsTheDay")}</span>}
+            <span style={{ fontSize: 10, fontFamily: FONT_DISPLAY, fontWeight: 700, background: `${meta.color}20`, color: meta.color, borderRadius: 4, padding: "2px 6px", flexShrink: 0 }}>{meta.icon} {meta.label}</span>
+            {isBattleDay && <span style={{ fontSize: 10, fontFamily: FONT_DISPLAY, fontWeight: 900, background: `${meta.color}30`, color: meta.color, borderRadius: 4, padding: "2px 6px", flexShrink: 0, letterSpacing: 0.5 }}>{t("todayIsTheDay")}</span>}
           </div>
           {plan.location && (
             <div style={{ display:"flex", alignItems:"center", gap:4, marginBottom:2 }}>
@@ -451,7 +451,7 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
             </div>
           )}
           {battleDateStr && !isBattleDay && (
-            <div style={{ fontSize: 12, fontFamily: FONT_BODY, color: C.textSec, marginBottom: 2 }}>{battleDateStr}</div>
+            <div style={{ fontSize: 11, fontFamily: FONT_BODY, color: C.textSec, marginBottom: 2 }}>{battleDateStr}</div>
           )}
           {isBattleDay ? (
             <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: meta.color, letterSpacing: 0.3 }}>
@@ -501,14 +501,14 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
                 <button onClick={() => { const url = plan.eventUrl.match(/^https?:\/\//) ? plan.eventUrl : `https://${plan.eventUrl}`; window.open(url, "_blank", "noopener"); }}
                   style={{ display:"flex", alignItems:"center", gap:6, padding:"8px 12px", background:C.surfaceAlt, border:`1px solid ${C.border}`, borderRadius:8, cursor:"pointer", textAlign:"left", width:"100%" }}>
                   <Ic n="extLink" s={14} c={C.accent}/>
-                  <span style={{ fontFamily:FONT_BODY, fontSize:12, color:C.accent, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", flex:1 }}>{plan.eventUrl}</span>
+                  <span style={{ fontFamily:FONT_BODY, fontSize:11, color:C.accent, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", flex:1 }}>{plan.eventUrl}</span>
                 </button>
               )}
               {plan.location && (
                 <button onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(plan.location)}`, "_blank", "noopener")}
                   style={{ display:"flex", alignItems:"center", gap:6, padding:"8px 12px", background:C.surfaceAlt, border:`1px solid ${C.border}`, borderRadius:8, cursor:"pointer", textAlign:"left", width:"100%" }}>
                   <Ic n="mapPin" s={14} c={C.accent}/>
-                  <span style={{ fontFamily:FONT_BODY, fontSize:12, color:C.accent }}>{t("openInMaps")}</span>
+                  <span style={{ fontFamily:FONT_BODY, fontSize:11, color:C.accent }}>{t("openInMaps")}</span>
                   <span style={{ fontFamily:FONT_BODY, fontSize:11, color:C.textMuted, marginLeft:4 }}>{plan.location}</span>
                 </button>
               )}
@@ -545,7 +545,7 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
                       style={{ padding: "5px 10px", borderRadius: 20, cursor: isActive ? "default" : "pointer",
                         background: isActive ? `${pm.color || C.accent}20` : "transparent",
                         border: `1.5px solid ${isActive ? pm.color || C.accent : C.border}`,
-                        fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 9, letterSpacing: 0.8,
+                        fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, letterSpacing: 0.8,
                         color: isActive ? pm.color || C.accent : C.textMuted }}>
                       {pm.icon} {pm.label}
                     </button>
@@ -608,7 +608,7 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
                       {!isBattle && info.session && (
                         <span style={{ fontSize: 8, fontFamily: FONT_DISPLAY, fontWeight: 700, color: phColor }}>S{info.session}</span>
                       )}
-                      <span style={{ fontSize: 9, fontFamily: FONT_DISPLAY, fontWeight: 700,
+                      <span style={{ fontSize: 10, fontFamily: FONT_DISPLAY, fontWeight: 700,
                         background: `${phColor}20`, color: phColor, borderRadius: 4, padding: "1px 5px",
                         letterSpacing: 0.5, marginLeft: "auto" }}>
                         {isBattle ? "\u2694\uFE0F " : ""}{phLabel}
@@ -624,13 +624,13 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
               {hasOverrides && (
                 <button onClick={() => setConfirmReset(true)}
                   style={{ display: "block", margin: "0 auto 10px", background: "none", border: "none",
-                    cursor: "pointer", fontFamily: FONT_BODY, fontSize: 12, color: C.textMuted }}>
+                    cursor: "pointer", fontFamily: FONT_BODY, fontSize: 11, color: C.textMuted }}>
                   {"\u21BA"} {t("resetToDefault") || "Reset to default schedule"}
                 </button>
               )}
 
               {/* Save changes */}
-              <button onClick={handleSaveEdit} style={{ width: "100%", padding: "10px", background: C.accent, border: "none", borderRadius: 8, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 12, letterSpacing: 1.5, color: "#fff" }}>{t("saveChanges")}</button>
+              <button onClick={handleSaveEdit} style={{ width: "100%", padding: "10px", background: C.accent, border: "none", borderRadius: 8, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 11, letterSpacing: 1.5, color: "#fff" }}>{t("saveChanges")}</button>
             </div>
           )}
 
@@ -642,7 +642,7 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
                 <h3 style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 14, letterSpacing: 1, color: C.text, margin: "8px 0" }}>
                   {(PRESET_META[confirmPreset] || {}).label}
                 </h3>
-                <p style={{ fontSize: 12, color: C.textSec, marginBottom: 16 }}>
+                <p style={{ fontSize: 11, color: C.textSec, marginBottom: 16 }}>
                   {t("switchPlanConfirm") || "Switch preset? This will rebuild your training schedule."}
                 </p>
                 <div style={{ display: "flex", gap: 8 }}>
@@ -661,7 +661,7 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
                 <h3 style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 14, letterSpacing: 1, color: C.text, margin: "8px 0" }}>
                   {t("resetToDefault") || "Reset to default"}
                 </h3>
-                <p style={{ fontSize: 12, color: C.textSec, marginBottom: 16 }}>
+                <p style={{ fontSize: 11, color: C.textSec, marginBottom: 16 }}>
                   {t("resetConfirm") || "Reset all custom changes? This will restore the default schedule."}
                 </p>
                 <div style={{ display: "flex", gap: 8 }}>
@@ -678,7 +678,7 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
               {phaseSummary.map((p, i) => (
                 <div key={i} style={{ display: "flex", alignItems: "center", gap: 3 }}>
                   <div style={{ width: 6, height: 6, borderRadius: "50%", background: p.color }} />
-                  <span style={{ fontSize: 9, fontFamily: FONT_DISPLAY, fontWeight: 700, color: C.textMuted }}>{p.name}</span>
+                  <span style={{ fontSize: 10, fontFamily: FONT_DISPLAY, fontWeight: 700, color: C.textMuted }}>{p.name}</span>
                 </div>
               ))}
             </div>
@@ -702,7 +702,7 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
                       <span style={{ fontSize: 8, fontFamily: FONT_DISPLAY, fontWeight: 700, background: `${info.phaseColor}20`, color: info.phaseColor, borderRadius: 4, padding: "1px 5px", letterSpacing: 0.5 }}>
                         {info.type === "battle" ? "\u2694\uFE0F BATTLE" : info.type === "training" ? (info.session ? `S${info.session}` : info.phase) : "REST"}
                       </span>
-                      <span style={{ flex: 1, fontSize: 9, fontFamily: FONT_DISPLAY, fontWeight: 700, color: C.textMuted, textAlign: "right" }}>{info.phase}</span>
+                      <span style={{ flex: 1, fontSize: 10, fontFamily: FONT_DISPLAY, fontWeight: 700, color: C.textMuted, textAlign: "right" }}>{info.phase}</span>
                       {isOverridden && <span style={{ fontSize: 8, color: C.accent }}>*</span>}
                       {complete && <div style={{ width: 5, height: 5, borderRadius: "50%", background: C.green }} />}
                       <Ic n={isSel ? "chevD" : "chevR"} s={11} c={C.textMuted} />
@@ -735,13 +735,13 @@ const DayDetail = ({ dateStr, dayMap, plan, today, onToggleTask, t, getDay }) =>
           {new Date(dateStr + "T00:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
         </span>
         {isToday && <span style={{ fontSize: 8, fontFamily: FONT_DISPLAY, fontWeight: 700, background: `${C.accent}20`, color: C.accent, borderRadius: 4, padding: "1px 5px" }}>TODAY</span>}
-        <span style={{ fontSize: 9, fontFamily: FONT_DISPLAY, fontWeight: 700, letterSpacing: 0.5, background: `${info.phaseColor}25`, color: info.phaseColor, borderRadius: 4, padding: "2px 7px", marginLeft: "auto" }}>{info.phase}</span>
+        <span style={{ fontSize: 10, fontFamily: FONT_DISPLAY, fontWeight: 700, letterSpacing: 0.5, background: `${info.phaseColor}25`, color: info.phaseColor, borderRadius: 4, padding: "2px 7px", marginLeft: "auto" }}>{info.phase}</span>
       </div>
       {isBattle && (
         <div style={{ textAlign: "center", padding: "10px 0" }}>
           <span style={{ fontSize: 28 }}>{"\u2694\uFE0F"}</span>
           <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 14, letterSpacing: 1, color: C.red, marginTop: 3 }}>{t("battleDay")}</div>
-          {info.eventName && <div style={{ fontSize: 12, color: C.textSec, marginTop: 2 }}>{info.eventName}</div>}
+          {info.eventName && <div style={{ fontSize: 11, color: C.textSec, marginTop: 2 }}>{info.eventName}</div>}
         </div>
       )}
       {!isBattle && tasks.map((task, i) => {
@@ -753,7 +753,7 @@ const DayDetail = ({ dateStr, dayMap, plan, today, onToggleTask, t, getDay }) =>
               {done && <Ic n="check" s={12} c="#fff" />}
             </div>
             <span style={{ fontSize: 14, flexShrink: 0 }}>{task.emoji}</span>
-            <span style={{ flex: 1, fontSize: 12, fontFamily: FONT_BODY, color: done ? C.textMuted : C.text, textDecoration: done ? "line-through" : "none", opacity: done ? 0.45 : 1, lineHeight: 1.4 }}>{t(task.key)}</span>
+            <span style={{ flex: 1, fontSize: 11, fontFamily: FONT_BODY, color: done ? C.textMuted : C.text, textDecoration: done ? "line-through" : "none", opacity: done ? 0.45 : 1, lineHeight: 1.4 }}>{t(task.key)}</span>
           </button>
         );
       })}

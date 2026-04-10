@@ -200,7 +200,7 @@ const PreBattleSection = ({ plan, battle, dayMap, moves, sets, updatePlan, meta,
             onKeyDown={e => e.key === "Enter" && addCustomItem()}
             style={{
               flex: 1, background: C.bg, border: `1px solid ${C.borderLight}`, borderRadius: 7,
-              padding: "7px 10px", color: C.text, fontSize: 12, fontFamily: FONT_BODY, outline: "none",
+              padding: "7px 10px", color: C.text, fontSize: 14, fontFamily: FONT_BODY, outline: "none",
             }} />
           <button onClick={addCustomItem}
             style={{
@@ -234,7 +234,7 @@ const PreBattleSection = ({ plan, battle, dayMap, moves, sets, updatePlan, meta,
           </div>
         ))}
         {arsenalMoves.length === 0 && (
-          <div style={{ fontSize: 12, color: C.textMuted, fontFamily: FONT_BODY, padding: "8px 0" }}>
+          <div style={{ fontSize: 13, color: C.textMuted, fontFamily: FONT_BODY, padding: "8px 0" }}>
             No moves selected
           </div>
         )}
@@ -324,7 +324,7 @@ const PostBattleReflection = ({ plan, battle, meta, prepStats, mood, setMood, re
                   padding: "6px 12px", borderRadius: 20, cursor: "pointer",
                   background: active ? `${meta.color}20` : C.surfaceAlt,
                   border: `1.5px solid ${active ? meta.color : C.border}`,
-                  fontFamily: FONT_BODY, fontSize: 12, fontWeight: 700,
+                  fontFamily: FONT_BODY, fontSize: 13, fontWeight: 700,
                   color: active ? meta.color : C.textSec,
                   display: "flex", alignItems: "center", gap: 4,
                 }}>
@@ -585,7 +585,7 @@ const BattleShareCard = ({ plan, battle, meta, prepStats, reflection, onClose, t
           marginTop: 12, marginBottom: 16, padding: "10px 24px",
           background: "none", border: `1px solid ${C.border}`, borderRadius: 8,
           cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700,
-          fontSize: 12, letterSpacing: 1, color: C.textSec,
+          fontSize: 11, letterSpacing: 1, color: C.textSec,
         }}>
         {t("closeCard")}
       </button>
@@ -781,7 +781,7 @@ const PlanCompletionCard = ({ plan, meta, dayMap, setBattleprep, addToast, onClo
             marginTop: 12, marginBottom: 16, padding: "10px 24px",
             background: "none", border: `1px solid ${C.border}`, borderRadius: 8,
             cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700,
-            fontSize: 12, letterSpacing: 1, color: C.textSec,
+            fontSize: 11, letterSpacing: 1, color: C.textSec,
           }}>
           {t("closeCard")}
         </button>
@@ -804,11 +804,11 @@ const PlanCompletionCard = ({ plan, meta, dayMap, setBattleprep, addToast, onClo
         <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 16, color: C.text }}>
           {plan.eventName || plan.planName}
         </span>
-        <span style={{ fontSize: 9, fontFamily: FONT_DISPLAY, fontWeight: 700, background: `${meta.color}20`, color: meta.color, borderRadius: 4, padding: "2px 6px", marginLeft: 6 }}>
+        <span style={{ fontSize: 10, fontFamily: FONT_DISPLAY, fontWeight: 700, background: `${meta.color}20`, color: meta.color, borderRadius: 4, padding: "2px 6px", marginLeft: 6 }}>
           {meta.icon} {meta.label}
         </span>
       </div>
-      <div style={{ fontFamily: FONT_BODY, fontSize: 12, color: C.textSec, marginBottom: 16 }}>
+      <div style={{ fontFamily: FONT_BODY, fontSize: 13, color: C.textSec, marginBottom: 16 }}>
         {dateRange}
       </div>
 
@@ -824,7 +824,7 @@ const PlanCompletionCard = ({ plan, meta, dayMap, setBattleprep, addToast, onClo
             <div style={{ fontFamily: s.isEmoji ? undefined : FONT_DISPLAY, fontWeight: 900, fontSize: s.isEmoji ? 20 : 28, color: C.text }}>
               {s.val}
             </div>
-            <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 9, letterSpacing: 0.5, color: C.textMuted, marginTop: 2 }}>
+            <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, letterSpacing: 0.5, color: C.textMuted, marginTop: 2 }}>
               {s.label}
             </div>
           </div>
@@ -842,7 +842,7 @@ const PlanCompletionCard = ({ plan, meta, dayMap, setBattleprep, addToast, onClo
           style={{
             flex: 1, padding: "12px 16px", background: C.surfaceAlt, border: `1px solid ${C.border}`,
             borderRadius: 10, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 900,
-            fontSize: 12, letterSpacing: 1, color: C.text,
+            fontSize: 11, letterSpacing: 1, color: C.text,
             display: "flex", alignItems: "center", justifyContent: "center", gap: 5,
           }}>
           <Ic n="share" s={14} c={C.text} /> {t("sharePlanCard") || "SHARE"}
@@ -851,7 +851,7 @@ const PlanCompletionCard = ({ plan, meta, dayMap, setBattleprep, addToast, onClo
           style={{
             flex: 1, padding: "12px 16px", background: C.accent, border: "none",
             borderRadius: 10, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 900,
-            fontSize: 12, letterSpacing: 1, color: "#fff",
+            fontSize: 11, letterSpacing: 1, color: "#fff",
           }}>
           {t("planCompleteDone") || "DONE"}
         </button>
@@ -879,7 +879,7 @@ const ChecklistRow = ({ done, icon, text, onToggle }) => (
     </div>
     <span style={{ fontSize: 14, flexShrink: 0 }}>{icon}</span>
     <span style={{
-      flex: 1, fontSize: 12, fontFamily: FONT_BODY, color: done ? C.textMuted : C.text,
+      flex: 1, fontSize: 13, fontFamily: FONT_BODY, color: done ? C.textMuted : C.text,
       textDecoration: done ? "line-through" : "none", opacity: done ? 0.5 : 1, lineHeight: 1.4,
     }}>{text}</span>
   </button>
@@ -914,7 +914,7 @@ const StatBox = ({ label, value }) => (
     border: `1px solid ${C.borderLight}`,
   }}>
     <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 20, color: C.text }}>{value}</div>
-    <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 9, letterSpacing: 0.5, color: C.textMuted, marginTop: 2 }}>{label}</div>
+    <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, letterSpacing: 0.5, color: C.textMuted, marginTop: 2 }}>{label}</div>
   </div>
 );
 

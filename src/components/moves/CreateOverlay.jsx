@@ -50,7 +50,7 @@ export const CreateOverlay = ({ onOpenExplore, onOpenRRR, onOpenCombine, onOpenM
               {tool.title}
             </div>
             <div style={{
-              fontFamily: FONT_BODY, fontSize: 12, color: C.textSec, marginTop: 4, lineHeight: 1.5,
+              fontFamily: FONT_BODY, fontSize: 13, color: C.textSec, marginTop: 4, lineHeight: 1.5,
             }}>
               {t(tool.descKey)}
             </div>

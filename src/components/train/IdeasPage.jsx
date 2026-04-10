@@ -256,7 +256,7 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
               background:`${pc}18`, border:`1px solid ${pc}40`, borderRadius:10, padding:"10px 14px",
               cursor:"pointer", textAlign:"left", width:"calc(100% - 24px)" }}>
             <Ic n="swords" s={16}/>
-            <span style={{ flex:1, fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, letterSpacing:0.5 }}>
+            <span style={{ flex:1, fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, letterSpacing:0.5 }}>
               <span style={{ color:C.text }}>{displayName}</span>
               <span style={{ color:C.textSec }}> {"\u2014"} </span>
               <span style={{ color:C.textSec }}><span style={{ color:C.text, fontWeight:900 }}>{daysLeft}</span> {t("daysLeft")} (<span style={{ color:C.red, fontWeight:900 }}>{sessionsLeft} {t("daysTraining")}</span>)</span>
@@ -304,7 +304,7 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
               title={`${doneToday} of ${habits.length} habits done today`}>
               <span style={{ fontSize: allOn ? 18 : 15,
                 opacity: someOn ? 1 : 0.35, lineHeight:1 }}>{allOn?"✅":"✓"}</span>
-              <span style={{ fontSize:12, fontWeight:900, fontFamily:FONT_DISPLAY,
+              <span style={{ fontSize:11, fontWeight:900, fontFamily:FONT_DISPLAY,
                 color: allOn ? C.green : someOn ? C.textSec : C.textMuted }}>
                 {doneToday}/{habits.length}
               </span>
@@ -314,16 +314,16 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
       </div>
       {/* Search + view toggle (only for goals/notes) */}
       {(trainTab==="goals"||trainTab==="notes")&&<div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"6px 14px", borderBottom:`1px solid ${C.borderLight}`, background:C.surface, flexShrink:0 }}>
-        <span style={{ fontSize:12, fontWeight:700, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY }}>
+        <span style={{ fontSize:11, fontWeight:700, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY }}>
           {trainTab==="goals"?"GOALS":"NOTES"} · {trainTab==="goals"?goals.length:notes.length}
         </span>
         <div style={{ display:"flex", gap:3 }}>
           {!reorderMode&&<button onClick={()=>{ setShowSearch(s=>!s); setSearch(""); }}
-            style={{ background:showSearch?C.surfaceAlt:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:showSearch?C.accent:C.textMuted }}>
+            style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:showSearch?C.accent:C.textMuted }}>
             <Ic n="search" s={16}/>
           </button>}
           {!reorderMode&&<button onClick={()=>setView(v=>v==="list"?"tiles":"list")}
-            style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}>
+            style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textMuted }}>
             <Ic n={view==="list"?"grid":"list"} s={16}/>
           </button>}
           <button onClick={()=>{ setReorderMode(r=>!r); setSearch(""); setShowSearch(false); }}
@@ -424,7 +424,7 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
       {confirmDel&&(
         <div style={{ position:"absolute", inset:0, background:"rgba(0,0,0,0.6)", zIndex:4000, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
           <div style={{ background:C.bg, border:`2px solid ${C.border}`, borderRadius:14, padding:24, width:"100%" }}>
-            <div style={{ fontWeight:800, fontSize:15, letterSpacing:2, color:C.brown, fontFamily:FONT_DISPLAY, marginBottom:12 }}>
+            <div style={{ fontWeight:800, fontSize:16, letterSpacing:2, color:C.brown, fontFamily:FONT_DISPLAY, marginBottom:12 }}>
               {confirmDel.type==="goal"?t("deleteGoal"):t("deleteNote")}
             </div>
             <p style={{ color:C.textSec, marginBottom:20, lineHeight:1.6 }}>

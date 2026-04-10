@@ -58,7 +58,7 @@ export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between",
         padding:"8px 14px", borderBottom:`1px solid ${C.borderLight}`, background:C.surface, flexShrink:0 }}>
         <div>
-          <span style={{ fontSize:12, fontWeight:700, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY }}>
+          <span style={{ fontSize:11, fontWeight:700, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY }}>
             HABITS · {habits.length}
           </span>
           {habits.length>0&&(
@@ -69,7 +69,7 @@ export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
         </div>
         <div style={{ display:"flex", alignItems:"center", gap:4 }}>
           {!reorderMode&&<button onClick={()=>{ setView(v=>v==="list"?"tiles":"list"); setOpenHabit(null); }}
-            style={{ background:"none", border:"none", cursor:"pointer", padding:5, borderRadius:5, color:C.textMuted }}>
+            style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textMuted }}>
             <Ic n={view==="list"?"grid":"list"} s={16}/>
           </button>}
           {habits.length>1&&<button onClick={()=>setReorderMode(r=>!r)}
@@ -101,7 +101,7 @@ export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
           <div style={{ textAlign:"center", padding:"40px 20px", color:C.textMuted }}>
             <div style={{ marginBottom:8 }}><Ic n="fist" s={32} c={C.textMuted}/></div>
             <div style={{ fontSize:13, fontWeight:700, fontFamily:FONT_DISPLAY, marginBottom:6 }}>{t("noHabitsYet")}</div>
-            <div style={{ fontSize:12 }}>{t("buildRoutine")}</div>
+            <div style={{ fontSize:13 }}>{t("buildRoutine")}</div>
           </div>
         )}
         {view==="tiles" && !reorderMode ? (
@@ -123,11 +123,10 @@ export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
               const isOpen = openHabit===h.id;
               return (
                 <div key={h.id} onClick={()=>setOpenHabit(isOpen?null:h.id)}
-                  style={{ background:C.surface, borderRadius:10, cursor:"pointer",
-                    border:`1.5px solid ${doneToday?color+"66":C.border}`,
+                  style={{ background:C.surface, borderRadius:8, cursor:"pointer",
+                    border:doneToday?`1.5px solid ${color}66`:"none", borderLeft:`4px solid ${color}`,
                     overflow:"hidden", display:"flex", flexDirection:"column", minWidth:0,
                     transition:"border-color 0.2s" }}>
-                  <div style={{ height:4, background:`linear-gradient(90deg,${color},${color}44)`, flexShrink:0 }}/>
                   <div style={{ padding:"12px 12px 10px", display:"flex", flexDirection:"column" }}>
 
                     {/* Ring — centred, prominent */}
@@ -167,13 +166,13 @@ export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
 
                     {/* Freq badge */}
                     <div style={{ marginBottom:10 }}>
-                      <span style={{ fontSize:9, fontWeight:800, letterSpacing:1, color, fontFamily:FONT_DISPLAY,
+                      <span style={{ fontSize:10, fontWeight:800, letterSpacing:1, color, fontFamily:FONT_DISPLAY,
                         background:`${color}18`, borderRadius:4, padding:"2px 8px" }}>{freqLabel}</span>
                     </div>
 
                     {/* 7-day dots */}
                     <div style={{ marginBottom:10 }}>
-                      <div style={{ fontSize:9, color:C.textMuted, fontFamily:FONT_DISPLAY, letterSpacing:1, marginBottom:5 }}>{t("thisWeek")}</div>
+                      <div style={{ fontSize:10, color:C.textMuted, fontFamily:FONT_DISPLAY, letterSpacing:1, marginBottom:5 }}>{t("thisWeek")}</div>
                       <div style={{ display:"flex", gap:4 }}>
                         {last7.map(({ds,isToday})=>(
                           <div key={ds} style={{ flex:1, height:8, borderRadius:4,
@@ -185,7 +184,7 @@ export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
 
                     {/* Status */}
                     <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:10 }}>
-                      <div style={{ fontSize:12, color:doneToday?C.green:C.textMuted, fontWeight:800, fontFamily:FONT_DISPLAY }}>
+                      <div style={{ fontSize:13, color:doneToday?C.green:C.textMuted, fontWeight:800, fontFamily:FONT_DISPLAY }}>
                         {doneToday?`✓ ${t("doneToday")}`:`${weekDone}/${weekTarget} ${t("thisWeek").toLowerCase()}`}
                       </div>
                     </div>
@@ -194,7 +193,7 @@ export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
                     {isOpen&&h.notes&&(
                       <div style={{ fontSize:11, color:C.textSec, lineHeight:1.5, marginBottom:10,
                         background:C.surfaceAlt, borderRadius:8, padding:"8px 10px",
-                        border:`1px solid ${C.border}` }}>
+                        }}>
                         {h.notes}
                       </div>
                     )}
@@ -218,12 +217,12 @@ export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
                         ? <Fragment><span style={{ fontSize:14, color:"#ffffff", fontFamily:FONT_DISPLAY, fontWeight:900, letterSpacing:0.5 }}>{t("done")}</span><span style={{ fontSize:16, marginLeft:6 }}>✅</span><span style={{ fontSize:10, color:"rgba(255,255,255,0.6)", fontFamily:FONT_DISPLAY, marginLeft:6 }}>· {t("undoLabel")}</span></Fragment>
                         : <Fragment>
                             <Ic n="fist" s={15} c={C.textMuted}/>
-                            <span style={{ fontSize:12, color, fontFamily:FONT_DISPLAY, fontWeight:800, letterSpacing:0.5 }}>{t("didIt")}</span>
+                            <span style={{ fontSize:13, color, fontFamily:FONT_DISPLAY, fontWeight:800, letterSpacing:0.5 }}>{t("didIt")}</span>
                           </Fragment>
                       }
                     </button>
 
-                    {isOpen&&<div style={{ fontSize:9, color:C.textMuted, textAlign:"center", marginTop:6 }}>{t("tapToCollapse")}</div>}
+                    {isOpen&&<div style={{ fontSize:10, color:C.textMuted, textAlign:"center", marginTop:6 }}>{t("tapToCollapse")}</div>}
                   </div>
                 </div>
               );
@@ -262,7 +261,7 @@ export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
           <p style={{ color:C.textSec, marginBottom:8, fontSize:13, lineHeight:1.6 }}>
             Delete <strong style={{color:C.text}}>{confirmDel.name}</strong>?
           </p>
-          <p style={{ color:C.accent, fontSize:12, fontWeight:700, marginBottom:20 }}>
+          <p style={{ color:C.accent, fontSize:13, fontWeight:700, marginBottom:20 }}>
             {t("deleteHabitWarning")}
           </p>
           <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>

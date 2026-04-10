@@ -61,7 +61,7 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
     <div style={{ position:"absolute", inset:0, zIndex:900, background:C.bg, display:"flex", flexDirection:"column", overflow:"hidden" }}>
       {/* Header */}
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"13px 18px", borderBottom:`1px solid ${C.border}`, flexShrink:0, background:C.bg, zIndex:10 }}>
-        <span style={{ fontWeight:800, fontSize:15, letterSpacing:2, color:C.brown, fontFamily:FONT_DISPLAY }}>{t("myProfile")}</span>
+        <span style={{ fontWeight:800, fontSize:16, letterSpacing:2, color:C.brown, fontFamily:FONT_DISPLAY }}>{t("myProfile")}</span>
         <button onClick={handleSaveAndClose} style={{ background:C.surfaceAlt, border:`1px solid ${C.border}`, cursor:"pointer", color:C.textSec, padding:5, borderRadius:7, display:"flex" }}><Ic n="x" s={14}/></button>
       </div>
       {/* Scrollable content */}
@@ -174,13 +174,13 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
               <span style={{ fontSize: 10, color: C.textMuted }}>{noteText.length}/280</span>
               <div style={{ display: "flex", gap: 8 }}>
                 <button onClick={() => { setShowNoteAdd(false); setNoteText(""); }}
-                  style={{ background: "none", border: "none", color: C.textMuted, fontSize: 12,
+                  style={{ background: "none", border: "none", color: C.textMuted, fontSize: 11,
                     fontFamily: FONT_DISPLAY, fontWeight: 700, cursor: "pointer", padding: "6px 10px" }}>
                   {t("cancel") || "CANCEL"}
                 </button>
                 <button onClick={handleNoteSave} disabled={!noteText.trim()}
                   style={{ background: noteText.trim() ? C.accent : C.border, color: "#fff",
-                    border: "none", fontSize: 12, fontFamily: FONT_DISPLAY, fontWeight: 700,
+                    border: "none", fontSize: 11, fontFamily: FONT_DISPLAY, fontWeight: 700,
                     borderRadius: 8, padding: "6px 14px", cursor: noteText.trim() ? "pointer" : "default",
                     opacity: noteText.trim() ? 1 : 0.5 }}>
                   {t("save") || "SAVE"}
@@ -190,7 +190,7 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
           </div>
         ) : noteItems.length === 0 ? (
           <div>
-            <div style={{ fontSize: 12, color: C.textMuted, fontStyle: "italic", marginBottom: 10 }}>
+            <div style={{ fontSize: 11, color: C.textMuted, fontStyle: "italic", marginBottom: 10 }}>
               {t("stickyNoteHint")}
             </div>
             <button onClick={() => setShowNoteAdd(true)}
@@ -202,7 +202,7 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
           </div>
         ) : (
           <div>
-            <div style={{ fontSize: 12, color: C.textMuted, marginBottom: 10 }}>
+            <div style={{ fontSize: 11, color: C.textMuted, marginBottom: 10 }}>
               {noteItems.length} {t("xNotes")}
             </div>
             <button onClick={onOpenManageReminders}
@@ -221,7 +221,7 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
         style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between",
           background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 8,
           padding: "10px 14px", cursor: "pointer", marginBottom: 4 }}>
-        <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12, color: C.text, letterSpacing: 0.5 }}>
+        <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: C.text, letterSpacing: 0.5 }}>
           {showSettingsSection ? "Hide settings" : "Show settings"}
         </span>
         <Ic n={showSettingsSection ? "chevD" : "chevR"} s={14} c={C.textMuted} />
@@ -237,7 +237,7 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
           style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"space-between",
             background:C.surfaceAlt, border:`1px solid ${C.border}`, borderRadius:8,
             padding:"10px 14px", cursor:"pointer", marginBottom:4 }}>
-          <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, color:C.text, letterSpacing:0.5 }}>
+          <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:11, color:C.text, letterSpacing:0.5 }}>
             {t(pg === "privacy" ? "privacyPolicy" : pg === "terms" ? "termsOfService" : "disclaimers")}
           </span>
           <Ic n="chevR" s={14} c={C.textMuted} />
@@ -250,7 +250,7 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
         style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between",
           background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 8,
           padding: "10px 14px", cursor: "pointer", marginBottom: 4 }}>
-        <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12, color: C.text, letterSpacing: 0.5 }}>
+        <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: C.text, letterSpacing: 0.5 }}>
           {showFeedbackSection ? "Hide feedback" : "Show feedback form"}
         </span>
         <Ic n={showFeedbackSection ? "chevD" : "chevR"} s={14} c={C.textMuted} />
@@ -263,13 +263,13 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
         <button onClick={downloadBackup}
           style={{ flex: 1, padding: "10px 12px", background: C.surfaceAlt, border: `1px solid ${C.border}`,
             borderRadius: 8, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700,
-            fontSize: 12, color: C.text, letterSpacing: 0.5 }}>
+            fontSize: 11, color: C.text, letterSpacing: 0.5 }}>
           {t("saveBackup")}
         </button>
         <button onClick={() => fileInputRef.current?.click()}
           style={{ flex: 1, padding: "10px 12px", background: C.surfaceAlt, border: `1px solid ${C.border}`,
             borderRadius: 8, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700,
-            fontSize: 12, color: C.text, letterSpacing: 0.5 }}>
+            fontSize: 11, color: C.text, letterSpacing: 0.5 }}>
           {t("restoreBackup")}
         </button>
         <input ref={fileInputRef} type="file" accept=".json" style={{ display: "none" }}

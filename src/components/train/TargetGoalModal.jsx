@@ -50,10 +50,10 @@ export const TargetGoalModal = ({ onClose, onSave, idea, moves=[] }) => {
     : [{id:"target",label:t("targetTab")}];
 
   return (
-    <div style={{ width:"100%", maxHeight:"92%", background:C.bg, borderRadius:14, display:"flex", flexDirection:"column", overflow:"hidden", boxShadow:"0 16px 48px rgba(0,0,0,0.5)" }}>
+    <div style={{ width:"100%", maxHeight:"92%", background:C.bg, borderRadius:16, display:"flex", flexDirection:"column", overflow:"hidden", boxShadow:"0 16px 48px rgba(0,0,0,0.5)" }}>
       {/* Header */}
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 16px", background:C.surface, borderBottom:`1px solid ${C.border}`, flexShrink:0 }}>
-        <span style={{ fontWeight:900, fontSize:15, letterSpacing:2, fontFamily:FONT_DISPLAY, color:C.accent }}>{isEdit?t("editTarget"):t("newTarget")}</span>
+        <span style={{ fontWeight:900, fontSize:16, letterSpacing:2, fontFamily:FONT_DISPLAY, color:C.accent }}>{isEdit?t("editTarget"):t("newTarget")}</span>
         <div style={{ display:"flex", gap:8 }}>
           <Btn variant="secondary" onClick={onClose}>{t("cancel")}</Btn>
           <Btn onClick={handleSave} disabled={!title.trim()}>{t("save")}</Btn>
@@ -69,7 +69,7 @@ export const TargetGoalModal = ({ onClose, onSave, idea, moves=[] }) => {
               <button key={tb.id} onClick={()=>setActiveTab(tb.id)}
                 style={{ flex:1, padding:"10px 6px", border:"none", cursor:"pointer", background:on?C.bg:"transparent",
                   color:on?C.accent:C.textSec, borderBottom:`3px solid ${on?C.accent:"transparent"}`,
-                  fontSize:12, fontWeight:800, letterSpacing:1.5, fontFamily:FONT_DISPLAY }}>
+                  fontSize:11, fontWeight:800, letterSpacing:1.5, fontFamily:FONT_DISPLAY }}>
                 {tb.label}
               </button>
             );
@@ -90,7 +90,7 @@ export const TargetGoalModal = ({ onClose, onSave, idea, moves=[] }) => {
               <div style={{ textAlign:"center", padding:"40px 20px", color:C.textMuted }}>
                 <div style={{ marginBottom:8 }}><Ic n="book" s={28} c={C.textMuted}/></div>
                 <div style={{ fontSize:13, fontWeight:700, fontFamily:FONT_DISPLAY, marginBottom:4 }}>{t("noEntriesYet")}</div>
-                <div style={{ fontSize:12 }}>{t("noEntriesHint")}</div>
+                <div style={{ fontSize:13 }}>{t("noEntriesHint")}</div>
               </div>
             ) : journal.map(entry=>(
               <JournalEntryCard key={entry.id} entry={entry}
@@ -108,7 +108,7 @@ export const TargetGoalModal = ({ onClose, onSave, idea, moves=[] }) => {
               <div style={{ display:"flex", alignItems:"flex-start", gap:8, padding:"10px 12px", background:`${C.accent}12`,
                 border:`1px solid ${C.accent}30`, borderRadius:8, marginBottom:18 }}>
                 <span style={{ flexShrink:0 }}><Ic n="book" s={16} c={C.textMuted}/></span>
-                <span style={{ fontSize:12, color:C.textSec, lineHeight:1.6 }}>
+                <span style={{ fontSize:13, color:C.textSec, lineHeight:1.6 }}>
                   {t("targetJournalDesc").split(t("trainingJournal")).map((part,i,arr)=>i<arr.length-1?<React.Fragment key={i}>{part}<strong style={{color:C.text}}>{t("trainingJournal")}</strong></React.Fragment>:part)}
                 </span>
               </div>
@@ -151,7 +151,7 @@ export const TargetGoalModal = ({ onClose, onSave, idea, moves=[] }) => {
               <div style={{ marginBottom:14, display:"flex", alignItems:"center", justifyContent:"space-between",
                 padding:"10px 12px", background:C.surfaceAlt, borderRadius:8, border:`1px solid ${C.border}` }}>
                 <div>
-                  <div style={{ fontSize:12, fontWeight:800, color:C.text, fontFamily:FONT_DISPLAY }}>{t("autoLinkMoveLib")}</div>
+                  <div style={{ fontSize:11, fontWeight:800, color:C.text, fontFamily:FONT_DISPLAY }}>{t("autoLinkMoveLib")}</div>
                   <div style={{ fontSize:11, color:C.textMuted, marginTop:2 }}>Use your actual move count as progress ({moves.length} moves)</div>
                 </div>
                 <button onClick={()=>setAutoLink(x=>!x)}

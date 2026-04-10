@@ -81,13 +81,13 @@ export const ManageReminders = ({ reminders, onRemindersChange, addToast, settin
           /* Empty state */
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center",
             justifyContent: "center", padding: "60px 24px", gap: 8 }}>
-            <span style={{ fontSize: 15, color: C.textMuted, fontFamily: FONT_DISPLAY,
+            <span style={{ fontSize: 16, color: C.textMuted, fontFamily: FONT_DISPLAY,
               fontWeight: 700 }}>{t("noNotesYet")}</span>
             <span style={{ fontSize: 13, color: C.textMuted, textAlign: "center",
               lineHeight: 1.5 }}>{t("noNotesDesc")}</span>
             <button onClick={() => setShowAddForm(true)}
               style={{ marginTop: 16, background: C.accent, color: "#fff", border: "none",
-                fontSize: 12, fontFamily: FONT_DISPLAY, fontWeight: 700, borderRadius: 8,
+                fontSize: 11, fontFamily: FONT_DISPLAY, fontWeight: 700, borderRadius: 8,
                 padding: "10px 20px", cursor: "pointer", letterSpacing: 0.5 }}>
               + {t("addNote")}
             </button>
@@ -106,13 +106,13 @@ export const ManageReminders = ({ reminders, onRemindersChange, addToast, settin
                     </div>
                     <div style={{ display: "flex", justifyContent: "center", gap: 10 }}>
                       <button onClick={() => setDeletingId(null)}
-                        style={{ background: "none", border: "none", color: C.textMuted, fontSize: 12,
+                        style={{ background: "none", border: "none", color: C.textMuted, fontSize: 11,
                           fontFamily: FONT_DISPLAY, fontWeight: 700, cursor: "pointer", padding: "6px 12px" }}>
                         {t("cancel") || "CANCEL"}
                       </button>
                       <button onClick={() => handleDelete(item.id)}
                         style={{ background: `${C.accent}2e`, color: C.accent, border: "none",
-                          fontSize: 12, fontFamily: FONT_DISPLAY, fontWeight: 700, borderRadius: 8,
+                          fontSize: 11, fontFamily: FONT_DISPLAY, fontWeight: 700, borderRadius: 8,
                           padding: "6px 14px", cursor: "pointer" }}>
                         {t("delete") || "DELETE"}
                       </button>
@@ -131,13 +131,13 @@ export const ManageReminders = ({ reminders, onRemindersChange, addToast, settin
                       <span style={{ fontSize: 10, color: C.textMuted }}>{editText.length}/280</span>
                       <div style={{ display: "flex", gap: 8 }}>
                         <button onClick={() => { setEditingId(null); setEditText(""); }}
-                          style={{ background: "none", border: "none", color: C.textMuted, fontSize: 12,
+                          style={{ background: "none", border: "none", color: C.textMuted, fontSize: 11,
                             fontFamily: FONT_DISPLAY, fontWeight: 700, cursor: "pointer", padding: "6px 10px" }}>
                           {t("cancel") || "CANCEL"}
                         </button>
                         <button onClick={() => handleEditSave(item.id)} disabled={!editText.trim()}
                           style={{ background: editText.trim() ? C.accent : C.border, color: "#fff",
-                            border: "none", fontSize: 12, fontFamily: FONT_DISPLAY, fontWeight: 700,
+                            border: "none", fontSize: 11, fontFamily: FONT_DISPLAY, fontWeight: 700,
                             borderRadius: 8, padding: "6px 14px", cursor: editText.trim() ? "pointer" : "default",
                             opacity: editText.trim() ? 1 : 0.5 }}>
                           {t("save") || "SAVE"}
@@ -179,13 +179,13 @@ export const ManageReminders = ({ reminders, onRemindersChange, addToast, settin
                   <span style={{ fontSize: 10, color: C.textMuted }}>{addText.length}/280</span>
                   <div style={{ display: "flex", gap: 8 }}>
                     <button onClick={() => { setShowAddForm(false); setAddText(""); }}
-                      style={{ background: "none", border: "none", color: C.textMuted, fontSize: 12,
+                      style={{ background: "none", border: "none", color: C.textMuted, fontSize: 11,
                         fontFamily: FONT_DISPLAY, fontWeight: 700, cursor: "pointer", padding: "6px 10px" }}>
                       {t("cancel") || "CANCEL"}
                     </button>
                     <button onClick={handleAddSave} disabled={!addText.trim()}
                       style={{ background: addText.trim() ? C.accent : C.border, color: "#fff",
-                        border: "none", fontSize: 12, fontFamily: FONT_DISPLAY, fontWeight: 700,
+                        border: "none", fontSize: 11, fontFamily: FONT_DISPLAY, fontWeight: 700,
                         borderRadius: 8, padding: "6px 14px", cursor: addText.trim() ? "pointer" : "default",
                         opacity: addText.trim() ? 1 : 0.5 }}>
                       {t("save") || "SAVE"}
@@ -197,7 +197,7 @@ export const ManageReminders = ({ reminders, onRemindersChange, addToast, settin
               <button onClick={() => setShowAddForm(true)}
                 style={{ display: "block", width: "calc(100% - 24px)", margin: "4px 12px",
                   background: C.surfaceAlt, border: `1.5px dashed ${C.border}`, borderRadius: 10,
-                  padding: 12, fontSize: 12, fontFamily: FONT_DISPLAY, fontWeight: 700,
+                  padding: 12, fontSize: 11, fontFamily: FONT_DISPLAY, fontWeight: 700,
                   color: C.textSec, cursor: "pointer", letterSpacing: 0.5, textAlign: "center" }}>
                 + {t("addNote")}
               </button>

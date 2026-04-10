@@ -16,7 +16,7 @@ export const TypeChooserModal = ({ onClose, onChoose }) => {
         <Ic n="target" s={28} c={C.accent}/>
         <div>
           <div style={{ fontWeight:800, fontSize:14, color:C.accent, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>GOAL</div>
-          <div style={{ fontSize:12, color:C.textMuted, marginTop:3 }}>{t("goalDesc")}</div>
+          <div style={{ fontSize:13, color:C.textMuted, marginTop:3 }}>{t("goalDesc")}</div>
         </div>
       </button>
       <button onClick={()=>onChoose("target")}
@@ -25,7 +25,7 @@ export const TypeChooserModal = ({ onClose, onChoose }) => {
         <Ic n="crosshair" s={28} c={C.accent}/>
         <div>
           <div style={{ fontWeight:800, fontSize:14, color:C.accent, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>TARGET</div>
-          <div style={{ fontSize:12, color:C.textMuted, marginTop:3 }}>{t("targetDesc")}</div>
+          <div style={{ fontSize:13, color:C.textMuted, marginTop:3 }}>{t("targetDesc")}</div>
         </div>
       </button>
     </div>

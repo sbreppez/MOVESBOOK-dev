@@ -91,7 +91,7 @@ export const GAPTab = ({ moves, catColors=CAT_COLORS, setMoves, onDrill, setting
             }}
             placeholder="days"
             style={{ width:56, padding:"4px 8px", borderRadius:8, border:`1.5px solid ${C.accent}`,
-              background:C.bg, color:C.text, fontSize:12, fontFamily:FONT_DISPLAY, fontWeight:700,
+              background:C.bg, color:C.text, fontSize:14, fontFamily:FONT_DISPLAY, fontWeight:700,
               outline:"none", textAlign:"center" }}
           />
         )}
@@ -171,7 +171,7 @@ export const GAPTab = ({ moves, catColors=CAT_COLORS, setMoves, onDrill, setting
                   </span>
                   <div style={{ display:"flex", alignItems:"center", gap:4, marginLeft:"auto" }}>
                     {m.difficulty && (
-                      <span style={{ fontSize:9, fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:0.5,
+                      <span style={{ fontSize:10, fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:0.5,
                         borderRadius:4, padding:"1px 6px", background:C.surfaceAlt, color:C.textSec }}>
                         {t("difficulty_"+m.difficulty)}
                       </span>
@@ -181,7 +181,7 @@ export const GAPTab = ({ moves, catColors=CAT_COLORS, setMoves, onDrill, setting
                     </div>
                     <span style={{ fontSize:11, color:col, fontWeight:700, fontFamily:FONT_DISPLAY }}>{displayMastery}%</span>
                     {showDecayArrow(m, settings.decaySensitivity) && (
-                      <span style={{ fontSize:9, color:C.red, marginLeft:2 }}>▼</span>
+                      <span style={{ fontSize:10, color:C.red, marginLeft:2 }}>▼</span>
                     )}
                   </div>
                 </div>

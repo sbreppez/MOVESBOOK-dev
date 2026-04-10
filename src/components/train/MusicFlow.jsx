@@ -136,7 +136,7 @@ export const MusicFlow = ({ musicflow, onMusicflowChange, onUpdateSession, refle
         {/* Top bar: stage indicator (left) + close button (right) */}
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start",
           padding:"14px 16px 0" }}>
-          <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:9, color:C.textMuted,
+          <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:10, color:C.textMuted,
             letterSpacing:2, textTransform:"uppercase", paddingTop:8 }}>
             {`STAGE ${stage + 1} · ${t(STAGE_KEYS[stage])}`}
           </div>

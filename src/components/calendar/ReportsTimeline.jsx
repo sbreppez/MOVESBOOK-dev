@@ -30,7 +30,7 @@ export const ReportsTimeline = ({ moves, reps, sparring, musicflow, calendar, ca
         <div style={{ textAlign:"center", color:C.textMuted }}>
           <Ic n="barChart" s={36} c={C.textMuted}/>
           <p style={{ fontSize:13, fontFamily:FONT_DISPLAY, fontWeight:700, letterSpacing:1, marginTop:12 }}>{t("calReports")}</p>
-          <p style={{ fontSize:12, marginTop:6 }}>{t("noDataYet")}</p>
+          <p style={{ fontSize:13, marginTop:6 }}>{t("noDataYet")}</p>
         </div>
       </div>
     );
@@ -47,7 +47,7 @@ export const ReportsTimeline = ({ moves, reps, sparring, musicflow, calendar, ca
       <button onClick={() => setMonthsBack(prev => prev + 3)}
         style={{ width:"100%", padding:"12px 0", marginTop:12, borderRadius:8, cursor:"pointer",
           border:`1px dashed ${C.border}`, background:"none",
-          color:C.textMuted, fontSize:12, fontFamily:FONT_DISPLAY, fontWeight:700, letterSpacing:1 }}>
+          color:C.textMuted, fontSize:11, fontFamily:FONT_DISPLAY, fontWeight:700, letterSpacing:1 }}>
         {t("loadMore") || "Load more"}
       </button>
     </div>
@@ -100,7 +100,7 @@ const MonthTile = ({ entry, t, C, catColors }) => {
       </div>
 
       {d.narrative && (
-        <p style={{ fontSize:12, color:C.textSec, lineHeight:1.6, margin:0, fontFamily:FONT_BODY }}>
+        <p style={{ fontSize:13, color:C.textSec, lineHeight:1.6, margin:0, fontFamily:FONT_BODY }}>
           {d.narrative}
         </p>
       )}
@@ -123,7 +123,7 @@ const WeekTile = ({ entry, t, C, catColors }) => {
       </div>
 
       <div style={{ display:"flex", gap:12, alignItems:"center", flexWrap:"wrap" }}>
-        <span style={{ fontSize:12, color:C.text, fontWeight:700, fontFamily:FONT_DISPLAY }}>
+        <span style={{ fontSize:11, color:C.text, fontWeight:700, fontFamily:FONT_DISPLAY }}>
           {d.sessionCount} {t("sessionsCount")}
         </span>
         {d.movesAdded > 0 && (
@@ -182,7 +182,7 @@ const StatBox = ({ label, value, C, warn }) => (
     <div style={{ fontSize:18, fontWeight:900, color:warn?C.yellow:C.text, fontFamily:FONT_DISPLAY }}>
       {value}
     </div>
-    <div style={{ fontSize:9, fontWeight:700, letterSpacing:1, color:C.textMuted,
+    <div style={{ fontSize:10, fontWeight:700, letterSpacing:1, color:C.textMuted,
       fontFamily:FONT_DISPLAY, marginTop:2 }}>{label}</div>
   </div>
 );

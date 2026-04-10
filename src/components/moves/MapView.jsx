@@ -127,7 +127,7 @@ export const MapView = ({ moves, category, onAddMove, onDeleteMove, onUpdateMove
           })}
         </g>
       </svg>
-      <div style={{ position:"absolute", bottom:12, right:12, fontSize:12, color:C.textMuted, textAlign:"right", lineHeight:1.7, pointerEvents:"none" }}>{t("mapHelpDrag")}<br/>{t("mapHelpConnect")}</div>
+      <div style={{ position:"absolute", bottom:12, right:12, fontSize:11, color:C.textMuted, textAlign:"right", lineHeight:1.7, pointerEvents:"none" }}>{t("mapHelpDrag")}<br/>{t("mapHelpConnect")}</div>
       {editNode&&<MoveModal move={editNode} onClose={()=>setEditNode(null)} onSave={f=>{onUpdateMove(editNode.moveId,f);setEditNode(null);}}/>}
     </div>
   );

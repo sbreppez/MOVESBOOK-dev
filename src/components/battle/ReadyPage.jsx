@@ -364,10 +364,10 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
             <p style={{ color:C.textSec, marginBottom:8, lineHeight:1.6, fontSize:13 }}>
               This will replace your current rounds with the default battle structure:
             </p>
-            <div style={{ background:C.surfaceAlt, borderRadius:8, padding:"10px 14px", marginBottom:16, fontSize:12, color:C.textSec, lineHeight:1.9 }}>
+            <div style={{ background:C.surfaceAlt, borderRadius:8, padding:"10px 14px", marginBottom:16, fontSize:13, color:C.textSec, lineHeight:1.9 }}>
               Prelims · Top 32 · Top 16 · Top 8 · Semi-Finals · Finals · Reserve
             </div>
-            <p style={{ color:C.accent, fontWeight:700, fontSize:12, marginBottom:20, lineHeight:1.6 }}>
+            <p style={{ color:C.accent, fontWeight:700, fontSize:13, marginBottom:20, lineHeight:1.6 }}>
               ⚠️ All your current rounds and their entries will be permanently erased. This cannot be undone.
             </p>
             <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
@@ -409,11 +409,11 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
               <div style={{ textAlign:"center", padding:"24px 0", color:C.textMuted }}>
                 <div style={{ marginBottom:8 }}><Ic n="download" s={28} c={C.textMuted}/></div>
                 <div style={{ fontSize:13, fontWeight:700, fontFamily:FONT_DISPLAY, marginBottom:4 }}>{t("noTemplatesSaved")}</div>
-                <div style={{ fontSize:12 }}>Set up your rounds then tap Save to create your first template.</div>
+                <div style={{ fontSize:13 }}>Set up your rounds then tap Save to create your first template.</div>
               </div>
             ) : (
               <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
-                <p style={{ fontSize:12, color:C.textMuted, marginBottom:4, lineHeight:1.5 }}>
+                <p style={{ fontSize:13, color:C.textMuted, marginBottom:4, lineHeight:1.5 }}>
                   Tap a template to load it. This will replace your current rounds and entries.
                 </p>
                 {templates.map(tpl=>(
@@ -456,7 +456,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
             <p style={{ fontSize:13, color:C.textSec, marginBottom:8, lineHeight:1.6 }}>
               Load <strong style={{color:C.text}}>{confirmLoadTpl.name}</strong>?
             </p>
-            <p style={{ fontSize:12, color:C.accent, fontWeight:700, marginBottom:20, lineHeight:1.6 }}>
+            <p style={{ fontSize:13, color:C.accent, fontWeight:700, marginBottom:20, lineHeight:1.6 }}>
               ⚠️ Your current rounds and all their entries will be replaced. This cannot be undone.
             </p>
             <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
@@ -472,7 +472,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
             <p style={{ fontSize:13, color:C.textSec, marginBottom:8, lineHeight:1.6 }}>
               Delete <strong style={{color:C.text}}>{confirmDeleteTpl.name}</strong>?
             </p>
-            <p style={{ fontSize:12, color:C.accent, fontWeight:700, marginBottom:20 }}>
+            <p style={{ fontSize:13, color:C.accent, fontWeight:700, marginBottom:20 }}>
               ⚠️ {t("cannotBeUndone")}
             </p>
             <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
@@ -506,7 +506,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
           {rounds.length === 0 && (
             <div style={{ textAlign:"center", padding:40, color:C.textMuted }}>
               <div style={{ fontSize:28, marginBottom:8 }}>⚔</div>
-              <p style={{ fontSize:12 }}>No rounds yet — tap ADD to create one</p>
+              <p style={{ fontSize:13 }}>No rounds yet — tap ADD to create one</p>
             </div>
           )}
           {rounds.map((round, roundIdx) => {
@@ -514,9 +514,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
             const isOpen = expRounds[round.id] !== false; // default open
             const entryCount = (round.entries||[]).length;
             return (
-              <div key={round.id} style={{ position:"relative", marginBottom:6, borderRadius:8, overflow:"hidden", background:C.bg }}>
-                {/* Color bar */}
-                <div style={{ height:3, background:`linear-gradient(90deg,${rColor},${rColor}55)` }}/>
+              <div key={round.id} style={{ position:"relative", marginBottom:6, borderRadius:8, overflow:"hidden", background:C.surface, borderLeft:`4px solid ${rColor}` }}>
                 {/* Round header */}
                 <div style={{ display:"flex", alignItems:"center", padding:"9px 12px", gap:6 }}>
                   {/* Chevron toggle */}
@@ -560,7 +558,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
                       <div style={{ display:"flex", alignItems:"center", gap:5 }}>
                         <Ic n="chevR" s={10} c={C.textMuted}/>
                         <span style={{ fontSize:11, fontWeight:700, color:C.brownMid, fontFamily:FONT_DISPLAY, flex:1 }}>{entry.name}</span>
-                        <span style={{ fontSize:9, color:C.textMuted }}>{(entry.items||[]).length} items</span>
+                        <span style={{ fontSize:10, color:C.textMuted }}>{(entry.items||[]).length} items</span>
                       </div>
                       {moveItems.length >= 2 && <ArcVis items={entry.items}/>}
                       {(() => { const fb = getArcFeedback(entry.items); return fb ? <div style={{ fontSize:10, color:C.textSec, fontStyle:"italic", padding:"2px 0 4px" }}>{fb}</div> : null; })()}
@@ -647,7 +645,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
                     </div>
                     <div style={{ width:8, height:8, borderRadius:"50%", background:s.color||C.blue, flexShrink:0 }}/>
                     <span style={{ flex:1, fontSize:13, color:C.text }}>{s.name}</span>
-                    <span style={{ fontSize:9, background:`${C.blue}22`, color:C.blue, padding:"1px 5px", borderRadius:4, fontFamily:FONT_DISPLAY, fontWeight:700 }}>SET</span>
+                    <span style={{ fontSize:10, background:`${C.blue}22`, color:C.blue, padding:"1px 5px", borderRadius:4, fontFamily:FONT_DISPLAY, fontWeight:700 }}>SET</span>
                     {showMastery&&<span style={{ fontSize:11, color:masteryColorLocal(dm(s)), fontWeight:700 }}>{dm(s)}%</span>}
                   </button>
                 );
@@ -703,9 +701,9 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
     const save = () => { updateSet(set.id, f); onClose(); };
     return (
       <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.6)", zIndex:800, display:"flex", alignItems:"center", justifyContent:"center", padding:16 }}>
-        <div style={{ background:C.bg, border:`1px solid ${C.border}`, borderRadius:14, width:"100%", maxWidth:400, overflow:"hidden", boxShadow:"0 24px 80px rgba(0,0,0,0.4)" }}>
+        <div style={{ background:C.bg, borderRadius:16, width:"100%", maxWidth:400, overflow:"hidden", boxShadow:"0 24px 80px rgba(0,0,0,0.4)" }}>
           <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 16px", background:C.surface, borderBottom:`1px solid ${C.border}` }}>
-            <span style={{ fontWeight:900, fontSize:15, letterSpacing:2, fontFamily:FONT_DISPLAY, color:C.text }}>{t("editSet")}</span>
+            <span style={{ fontWeight:900, fontSize:16, letterSpacing:2, fontFamily:FONT_DISPLAY, color:C.text }}>{t("editSet")}</span>
             <button onClick={onClose} style={{ background:"none", border:"none", cursor:"pointer", padding:2 }}><Ic n="x" s={18} c={C.textMuted}/></button>
           </div>
           <div style={{ padding:"16px 16px 20px" }}>

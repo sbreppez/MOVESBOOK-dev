@@ -144,7 +144,7 @@ export const MirrorMode = ({ moves, catColors=CAT_COLORS, mirror, onMirrorChange
 
           {/* Dominant side mastery */}
           <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:20, width:"100%" }}>
-            <span style={{ fontSize:12, color:C.textMuted }}>{t("dominantSideMastery")}:</span>
+            <span style={{ fontSize:11, color:C.textMuted }}>{t("dominantSideMastery")}:</span>
             <span style={{ fontSize:14, fontWeight:700, color:masteryColor(drillMove.mastery) }}>{drillMove.mastery}%</span>
           </div>
 
@@ -165,11 +165,11 @@ export const MirrorMode = ({ moves, catColors=CAT_COLORS, mirror, onMirrorChange
               </div>
               <div style={{ display:"flex", gap:10 }}>
                 <button onClick={handleMarkMirrored}
-                  style={{ flex:1, padding:"12px 0", borderRadius:10, border:"none", background:C.green, color:"#fff", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:12, letterSpacing:1, cursor:"pointer" }}>
+                  style={{ flex:1, padding:"12px 0", borderRadius:10, border:"none", background:C.green, color:"#fff", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:13, letterSpacing:1, cursor:"pointer" }}>
                   {t("yesMirrored")}
                 </button>
                 <button onClick={()=>setShowConfirm(false)}
-                  style={{ flex:1, padding:"12px 0", borderRadius:10, border:`1px solid ${C.border}`, background:C.surfaceAlt, color:C.textSec, fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:12, letterSpacing:1, cursor:"pointer" }}>
+                  style={{ flex:1, padding:"12px 0", borderRadius:10, border:`1px solid ${C.border}`, background:C.surfaceAlt, color:C.textSec, fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:13, letterSpacing:1, cursor:"pointer" }}>
                   {t("notYet")}
                 </button>
               </div>
@@ -279,7 +279,7 @@ export const MirrorMode = ({ moves, catColors=CAT_COLORS, mirror, onMirrorChange
           ) : (
             <>
               {/* Tip banner */}
-              <div style={{ fontSize:12, color:C.textMuted, fontStyle:"italic", marginBottom:14, lineHeight:1.5 }}>
+              <div style={{ fontSize:13, color:C.textMuted, fontStyle:"italic", marginBottom:14, lineHeight:1.5 }}>
                 {t("pickOneMovePerSession")}
               </div>
               {/* Grouped by category */}
@@ -376,7 +376,7 @@ export const MirrorMode = ({ moves, catColors=CAT_COLORS, mirror, onMirrorChange
                   <>
                     <span style={{ fontSize:10, color:C.textMuted, fontFamily:FONT_DISPLAY, fontWeight:700, letterSpacing:0.5, flexShrink:0 }}>N/A</span>
                     <button onClick={()=>handleUndoNA(m.id)}
-                      style={{ background:`${C.yellow}20`, color:C.yellow, border:"none", cursor:"pointer", borderRadius:6, padding:"3px 8px", fontSize:9, fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:0.5, flexShrink:0 }}>
+                      style={{ background:`${C.yellow}20`, color:C.yellow, border:"none", cursor:"pointer", borderRadius:6, padding:"3px 8px", fontSize:10, fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:0.5, flexShrink:0 }}>
                       {t("undo")}
                     </button>
                   </>

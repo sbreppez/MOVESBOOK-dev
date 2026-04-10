@@ -46,7 +46,7 @@ export const RoutineForm = ({ routine, onSave, onCancel }) => {
   };
 
   const pill = (active) => ({
-    padding: "6px 14px", borderRadius: 20, cursor: "pointer", fontSize: 12,
+    padding: "6px 14px", borderRadius: 20, cursor: "pointer", fontSize: 11,
     fontWeight: 700, fontFamily: FONT_DISPLAY, border: `1.5px solid ${active ? C.accent : C.border}`,
     background: active ? `${C.accent}20` : "transparent",
     color: active ? C.accent : C.textSec, transition: "all 0.15s",
@@ -101,7 +101,7 @@ export const RoutineForm = ({ routine, onSave, onCancel }) => {
 
       {/* Checkable */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <span style={{ fontSize: 12, fontWeight: 700, color: C.textSec, fontFamily: FONT_DISPLAY, textTransform: "uppercase" }}>
+        <span style={{ fontSize: 11, fontWeight: 700, color: C.textSec, fontFamily: FONT_DISPLAY, textTransform: "uppercase" }}>
           {t("routineCheckable")}
         </span>
         <button onClick={() => set("checkable")(!f.checkable)}
@@ -158,7 +158,7 @@ export const RoutineForm = ({ routine, onSave, onCancel }) => {
                   style={{
                     width: 34, height: 34, borderRadius: "50%", border: `1.5px solid ${active ? C.accent : C.border}`,
                     background: active ? `${C.accent}20` : "transparent",
-                    color: active ? C.accent : C.textMuted, fontSize: 12, fontWeight: 800,
+                    color: active ? C.accent : C.textMuted, fontSize: 11, fontWeight: 800,
                     fontFamily: FONT_DISPLAY, cursor: "pointer",
                     display: "flex", alignItems: "center", justifyContent: "center",
                   }}>

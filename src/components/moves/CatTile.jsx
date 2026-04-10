@@ -74,9 +74,9 @@ export const CatTile = (props) => {
               {menu&&<div onClick={e=>e.stopPropagation()}
                 style={{ position:"absolute", top:30, right:6, background:C.bg, border:`1px solid ${C.border}`, borderRadius:9,
                   overflow:"hidden", zIndex:9999, minWidth:165, boxShadow:"0 8px 28px rgba(0,0,0,0.22)" }}>
-                  <button onClick={()=>{setRenaming(true);setDraft(name);closeMenu();}} style={{ width:"100%", padding:"9px 13px", background:"none", border:"none", cursor:"pointer", display:"flex", alignItems:"center", gap:8, color:C.text, fontSize:12, fontFamily:"inherit" }}><Ic n="edit" s={12} c={C.textSec}/>{t("rename")}</button>
-                  <button onClick={()=>{onDuplicate();closeMenu();}} style={{ width:"100%", padding:"9px 13px", background:"none", border:"none", cursor:"pointer", display:"flex", alignItems:"center", gap:8, color:C.text, fontSize:12, fontFamily:"inherit", borderTop:`1px solid ${C.borderLight}` }}><Ic n="copy" s={12} c={C.textSec}/>{t("duplicate")}</button>
-                  <button onClick={()=>{setConfirmDel(true);closeMenu();}} style={{ width:"100%", padding:"9px 13px", background:"none", border:"none", cursor:"pointer", display:"flex", alignItems:"center", gap:8, color:C.accent, fontSize:12, fontFamily:"inherit", borderTop:`1px solid ${C.border}` }}><Ic n="trash" s={12} c={C.accent}/>{t("delete")}</button>
+                  <button onClick={()=>{setRenaming(true);setDraft(name);closeMenu();}} style={{ width:"100%", padding:"9px 13px", background:"none", border:"none", cursor:"pointer", display:"flex", alignItems:"center", gap:8, color:C.text, fontSize:11, fontFamily:"inherit" }}><Ic n="edit" s={12} c={C.textSec}/>{t("rename")}</button>
+                  <button onClick={()=>{onDuplicate();closeMenu();}} style={{ width:"100%", padding:"9px 13px", background:"none", border:"none", cursor:"pointer", display:"flex", alignItems:"center", gap:8, color:C.text, fontSize:11, fontFamily:"inherit", borderTop:`1px solid ${C.borderLight}` }}><Ic n="copy" s={12} c={C.textSec}/>{t("duplicate")}</button>
+                  <button onClick={()=>{setConfirmDel(true);closeMenu();}} style={{ width:"100%", padding:"9px 13px", background:"none", border:"none", cursor:"pointer", display:"flex", alignItems:"center", gap:8, color:C.accent, fontSize:11, fontFamily:"inherit", borderTop:`1px solid ${C.border}` }}><Ic n="trash" s={12} c={C.accent}/>{t("delete")}</button>
               </div>}
             </div>
           </div>
@@ -160,9 +160,9 @@ export const CatTile = (props) => {
             {menu&&<div onClick={e=>e.stopPropagation()}
               style={{ position:"absolute", top:36, right:6, background:C.bg, border:`1px solid ${C.border}`, borderRadius:9,
                 overflow:"hidden", zIndex:9999, minWidth:165, boxShadow:"0 8px 28px rgba(0,0,0,0.22)" }}>
-                <button onClick={()=>{setRenaming(true);setDraft(name);closeMenu();}} style={{ width:"100%", padding:"9px 13px", background:"none", border:"none", cursor:"pointer", display:"flex", alignItems:"center", gap:8, color:C.text, fontSize:12, fontFamily:"inherit" }}><Ic n="edit" s={12} c={C.textSec}/>{t("rename")}</button>
-                <button onClick={()=>{onDuplicate();closeMenu();}} style={{ width:"100%", padding:"9px 13px", background:"none", border:"none", cursor:"pointer", display:"flex", alignItems:"center", gap:8, color:C.text, fontSize:12, fontFamily:"inherit", borderTop:`1px solid ${C.borderLight}` }}><Ic n="copy" s={12} c={C.textSec}/>{t("duplicate")}</button>
-                <button onClick={()=>{setConfirmDel(true);closeMenu();}} style={{ width:"100%", padding:"9px 13px", background:"none", border:"none", cursor:"pointer", display:"flex", alignItems:"center", gap:8, color:C.accent, fontSize:12, fontFamily:"inherit", borderTop:`1px solid ${C.border}` }}><Ic n="trash" s={12} c={C.accent}/>{t("delete")}</button>
+                <button onClick={()=>{setRenaming(true);setDraft(name);closeMenu();}} style={{ width:"100%", padding:"9px 13px", background:"none", border:"none", cursor:"pointer", display:"flex", alignItems:"center", gap:8, color:C.text, fontSize:11, fontFamily:"inherit" }}><Ic n="edit" s={12} c={C.textSec}/>{t("rename")}</button>
+                <button onClick={()=>{onDuplicate();closeMenu();}} style={{ width:"100%", padding:"9px 13px", background:"none", border:"none", cursor:"pointer", display:"flex", alignItems:"center", gap:8, color:C.text, fontSize:11, fontFamily:"inherit", borderTop:`1px solid ${C.borderLight}` }}><Ic n="copy" s={12} c={C.textSec}/>{t("duplicate")}</button>
+                <button onClick={()=>{setConfirmDel(true);closeMenu();}} style={{ width:"100%", padding:"9px 13px", background:"none", border:"none", cursor:"pointer", display:"flex", alignItems:"center", gap:8, color:C.accent, fontSize:11, fontFamily:"inherit", borderTop:`1px solid ${C.border}` }}><Ic n="trash" s={12} c={C.accent}/>{t("delete")}</button>
             </div>}
           </div>
         </div>
@@ -180,7 +180,7 @@ export const CatTile = (props) => {
           </div>
         )}
         {expanded&&moves.length===0&&(
-          <div style={{ borderTop:`1px solid ${C.borderLight}`, padding:"8px 14px", fontSize:12, color:C.textMuted, fontStyle:"italic" }}>{t("emptyMovesInCat")}</div>
+          <div style={{ borderTop:`1px solid ${C.borderLight}`, padding:"8px 14px", fontSize:13, color:C.textMuted, fontStyle:"italic" }}>{t("emptyMovesInCat")}</div>
         )}
       </div>
 

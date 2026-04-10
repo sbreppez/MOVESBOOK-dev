@@ -243,7 +243,7 @@ export const SessionJournal = ({
                           onChange={e => setMoveSearch(e.target.value)}
                           placeholder={t("search")}
                           style={{ flex: 1, background: "none", border: "none", outline: "none",
-                            color: C.text, fontSize: 12, fontFamily: FONT_BODY }}
+                            color: C.text, fontSize: 13, fontFamily: FONT_BODY }}
                         />
                         <button onClick={() => { setShowMovePicker(false); setMoveSearch(""); }}
                           style={{ background: "none", border: "none", cursor: "pointer", padding: 2 }}>
@@ -252,7 +252,7 @@ export const SessionJournal = ({
                       </div>
                       {Object.entries(groupedMoves).map(([cat, mvs]) => (
                         <div key={cat}>
-                          <div style={{ fontSize: 9, fontFamily: FONT_DISPLAY, fontWeight: 700,
+                          <div style={{ fontSize: 10, fontFamily: FONT_DISPLAY, fontWeight: 700,
                             color: catColors[cat] || CAT_COLORS[cat] || C.textMuted,
                             letterSpacing: 0.5, marginTop: 6, marginBottom: 3 }}>
                             {cat}
@@ -267,7 +267,7 @@ export const SessionJournal = ({
                                 <span style={{ width: 6, height: 6, borderRadius: "50%",
                                   background: catColors[m.category] || CAT_COLORS[m.category] || C.accent,
                                   flexShrink: 0 }} />
-                                <span style={{ fontSize: 12, color: C.text, flex: 1 }}>{m.name}</span>
+                                <span style={{ fontSize: 13, color: C.text, flex: 1 }}>{m.name}</span>
                                 {sel && <Ic n="check" s={14} c={C.accent} />}
                               </button>
                             );
@@ -302,7 +302,7 @@ export const SessionJournal = ({
                     onChange={e => setWorkDescription(e.target.value)}
                     placeholder={t("anythingElse")}
                     style={{ width: "100%", background: C.surfaceAlt, border: `1px solid ${C.border}`,
-                      borderRadius: 8, padding: "8px 10px", color: C.text, fontSize: 12,
+                      borderRadius: 8, padding: "8px 10px", color: C.text, fontSize: 13,
                       fontFamily: FONT_BODY, outline: "none" }}
                   />
                 </div>
@@ -371,7 +371,7 @@ export const SessionJournal = ({
                   placeholder={t("notesPlaceholder")}
                   rows={3}
                   style={{ width: "100%", background: C.surfaceAlt, border: `1px solid ${C.border}`,
-                    borderRadius: 8, padding: "8px 10px", color: C.text, fontSize: 12,
+                    borderRadius: 8, padding: "8px 10px", color: C.text, fontSize: 13,
                     fontFamily: FONT_BODY, outline: "none", resize: "vertical" }}
                 />
               )}
@@ -396,7 +396,7 @@ export const SessionJournal = ({
                   placeholder={t("notesPlaceholder")}
                   rows={2}
                   style={{ width: "100%", background: C.surfaceAlt, border: `1px solid ${C.border}`,
-                    borderRadius: 8, padding: "8px 10px", color: C.text, fontSize: 12,
+                    borderRadius: 8, padding: "8px 10px", color: C.text, fontSize: 13,
                     fontFamily: FONT_BODY, outline: "none", resize: "vertical", marginBottom: 8 }}
                 />
               </div>
@@ -411,7 +411,7 @@ export const SessionJournal = ({
                   onChange={e => setEventLink(e.target.value)}
                   placeholder={t("addEventLinkHint")}
                   style={{ width: "100%", background: C.surfaceAlt, border: `1px solid ${C.border}`,
-                    borderRadius: 8, padding: "8px 10px", color: C.text, fontSize: 12,
+                    borderRadius: 8, padding: "8px 10px", color: C.text, fontSize: 13,
                     fontFamily: FONT_BODY, outline: "none" }}
                 />
                 {!eventLink && (
@@ -441,7 +441,7 @@ export const SessionJournal = ({
                 placeholder={t("notesPlaceholder")}
                 rows={3}
                 style={{ width: "100%", background: C.surfaceAlt, border: `1px solid ${C.border}`,
-                  borderRadius: 8, padding: "8px 10px", color: C.text, fontSize: 12,
+                  borderRadius: 8, padding: "8px 10px", color: C.text, fontSize: 13,
                   fontFamily: FONT_BODY, outline: "none", resize: "vertical" }}
               />
             </>
@@ -463,7 +463,7 @@ export const SessionJournal = ({
           style={{ width: "100%", padding: "10px 0", marginTop: 8,
             background: "none", border: "none", cursor: "pointer",
             color: C.textMuted, fontFamily: FONT_DISPLAY, fontWeight: 700,
-            fontSize: 12, letterSpacing: 0.5 }}>
+            fontSize: 13, letterSpacing: 0.5 }}>
           {t("cancel")}
         </button>
       </div>

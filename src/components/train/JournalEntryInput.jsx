@@ -33,7 +33,7 @@ export const JournalEntryInput = ({ onAdd, placeholder }) => {
       <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:8 }}>
         <input ref={linkRef} value={link} onChange={e=>setLink(e.target.value)}
           placeholder="https://youtube.com/…"
-          style={{ flex:1, ...inputStyle, fontSize:12 }}/>
+          style={{ flex:1, ...inputStyle, fontSize:14 }}/>
         {link&&<a href={link.startsWith("http")?link:"https://"+link} target="_blank" rel="noopener noreferrer"
           style={{ flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center",
             width:34, height:34, borderRadius:8, background:C.accent, color:C.bg, textDecoration:"none" }}
