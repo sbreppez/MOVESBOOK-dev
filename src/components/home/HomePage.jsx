@@ -64,7 +64,7 @@ export const HomePage = ({
   injuries, setInjuries, presession, setPresession,
   ideas, setIdeas, settings, onSettingsChange,
   homeStack, setHomeStack, homeIdeas, setHomeIdeas, homeChecks, setHomeChecks,
-  onAddTrigger,
+  onAddTrigger, addCalendarEvent, removeCalendarEvent,
 }) => {
   const { C } = useSettings();
   const t = useT();
@@ -180,6 +180,7 @@ export const HomePage = ({
       }));
       if (tile.type === 'idea') {
         setHomeIdeas(prev => prev.filter(i => i.id !== tile.id));
+        // TODO: remove linked calendar event (needs calendar state to find eventId by ideaId)
       }
     }
     setConfirmRemove(null);
@@ -242,9 +243,23 @@ export const HomePage = ({
         }));
       }
     } else if (editTile.type === 'idea') {
+      const oldIdea = homeIdeas?.find(i => i.id === editTile.id);
       setHomeIdeas(prev => prev.map(i =>
         i.id === editTile.id ? { ...i, ...fields } : i
       ));
+      // Add calendar event if showDate changed or was added
+      const oldDate = oldIdea?.showDate;
+      const newDate = fields.showDate;
+      if (oldDate !== newDate && newDate && addCalendarEvent) {
+        addCalendarEvent({
+          date: newDate,
+          type: "journal",
+          title: fields.title || oldIdea?.title || "Idea",
+          source: "home-idea",
+          ideaId: editTile.id,
+        }, { silent: true });
+      }
+      // TODO: remove old calendar event when date changes/removed (needs calendar state access)
     }
     setEditTile(null);
   };
@@ -340,6 +355,15 @@ export const HomePage = ({
     const id = Date.now().toString();
     setHomeIdeas(prev => [...prev, { id, ...fields }]);
     setHomeStack(prev => ({ ...prev, defaultStack: [{ id, type: 'idea' }, ...prev.defaultStack] }));
+    if (fields.showDate && addCalendarEvent) {
+      addCalendarEvent({
+        date: fields.showDate,
+        type: "journal",
+        title: fields.title || "Idea",
+        source: "home-idea",
+        ideaId: id,
+      }, { silent: true });
+    }
     setAddFormType(null);
   };
 
