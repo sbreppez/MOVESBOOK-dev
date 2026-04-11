@@ -22,6 +22,15 @@ export const HomeTile = ({ tile, isChecked, onCheck, onRemove, onEdit, habits, i
     if (tile.duration > 0) {
       extraInfo = `${tile.duration} min`;
     }
+  } else if (tile.type === 'note') {
+    const note = ideas?.find(i => i.id === tile.id);
+    emoji = null;
+    fallbackIcon = "fileText";
+    name = note?.title || "";
+    description = note?.text || "";
+    if (note?.link) {
+      extraInfo = note.link;
+    }
   } else if (tile.type === 'idea') {
     const idea = homeIdeas?.find(i => i.id === tile.id);
     emoji = idea?.emoji || null;
@@ -104,7 +113,7 @@ export const HomeTile = ({ tile, isChecked, onCheck, onRemove, onEdit, habits, i
         )}
 
         {/* Idea link */}
-        {tile.type === 'idea' && extraInfo && (
+        {(tile.type === 'idea' || tile.type === 'note') && extraInfo && (
           <button onClick={e => { e.stopPropagation(); window.open(extraInfo, "_blank"); }}
             style={{
               display: "inline-flex", alignItems: "center", gap: 3,

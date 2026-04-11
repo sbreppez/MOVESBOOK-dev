@@ -16,7 +16,7 @@ import { Modal } from '../shared/Modal';
 import { Btn } from '../shared/Btn';
 import { SectionBrief } from '../shared/SectionBrief';
 
-function getTilesForDate(homeStack, selectedDate, homeIdeas) {
+function getTilesForDate(homeStack, selectedDate, homeIdeas, ideas) {
   if (!homeStack) return [];
   const dow = new Date(selectedDate + "T12:00:00").getDay();
   const overrides = homeStack.overrides?.[selectedDate] || {};
@@ -25,6 +25,12 @@ function getTilesForDate(homeStack, selectedDate, homeIdeas) {
   const base = (homeStack.defaultStack || []).filter(tile => {
     if (removed.includes(tile.id)) return false;
     if (tile.type === 'goalhabit') return true;
+    if (tile.type === 'note') {
+      const note = ideas?.find(i => i.id === tile.id);
+      if (note?.homeOnly === false) return false;
+      if (note?.showDate && selectedDate < note.showDate) return false;
+      return true;
+    }
     if (tile.type === 'idea') {
       const idea = homeIdeas?.find(i => i.id === tile.id);
       if (idea?.homeOnly === false) return false;
@@ -46,6 +52,10 @@ function getTilesForDate(homeStack, selectedDate, homeIdeas) {
 // Resolve a tile's display name for confirmations
 function resolveTileName(tile, homeIdeas, habits, ideas) {
   if (tile.type === 'routine') return tile.name || "";
+  if (tile.type === 'note') {
+    const note = ideas?.find(i => i.id === tile.id);
+    return note?.title || note?.text?.slice(0, 60) || "";
+  }
   if (tile.type === 'idea') {
     const idea = homeIdeas?.find(i => i.id === tile.id);
     return idea?.title || idea?.text?.slice(0, 60) || "";
@@ -93,8 +103,8 @@ export const HomePage = ({
   const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   const todayTiles = useMemo(
-    () => getTilesForDate(homeStack, selectedDate, homeIdeas),
-    [homeStack, selectedDate, homeIdeas]
+    () => getTilesForDate(homeStack, selectedDate, homeIdeas, ideas),
+    [homeStack, selectedDate, homeIdeas, ideas]
   );
 
   const dayChecks = homeChecks?.[selectedDate] || {};
@@ -182,6 +192,9 @@ export const HomePage = ({
         setHomeIdeas(prev => prev.filter(i => i.id !== tile.id));
         // TODO: remove linked calendar event (needs calendar state to find eventId by ideaId)
       }
+      if (tile.type === 'note') {
+        setIdeas(prev => prev.filter(i => i.id !== tile.id));
+      }
     }
     setConfirmRemove(null);
   };
@@ -201,7 +214,7 @@ export const HomePage = ({
         return;
       }
     }
-    if (tile.type === 'routine' || tile.type === 'idea') {
+    if (tile.type === 'routine' || tile.type === 'idea' || tile.type === 'note') {
       setEditTile(tile);
     }
   };
@@ -261,6 +274,23 @@ export const HomePage = ({
         }, { silent: true });
       }
       // TODO: remove old calendar event when date changes/removed (needs calendar state access)
+    } else if (editTile.type === 'note') {
+      const oldNote = ideas?.find(i => i.id === editTile.id);
+      setIdeas(prev => prev.map(i =>
+        i.id === editTile.id ? { ...i, ...fields } : i
+      ));
+      const oldDate = oldNote?.showDate;
+      const newDate = fields.showDate;
+      if (oldDate !== newDate && newDate && addCalendarEvent) {
+        addCalendarEvent({
+          date: newDate,
+          type: "journal",
+          title: fields.title || oldNote?.title || "Note",
+          text: fields.text || "",
+          source: "home-idea",
+          ideaId: editTile.id,
+        }, { silent: true });
+      }
     }
     setEditTile(null);
   };
@@ -354,13 +384,13 @@ export const HomePage = ({
 
   const handleCreateIdea = (fields) => {
     const id = Date.now().toString();
-    setHomeIdeas(prev => [...prev, { id, ...fields }]);
-    setHomeStack(prev => ({ ...prev, defaultStack: [{ id, type: 'idea' }, ...prev.defaultStack] }));
+    setIdeas(prev => [{ id, type: 'note', title: fields.title, text: fields.text, link: fields.link, showDate: fields.showDate || null, pinned: fields.pinned || false, homeOnly: fields.homeOnly !== false, createdDate: new Date().toISOString() }, ...prev]);
+    setHomeStack(prev => ({ ...prev, defaultStack: [{ id, type: 'note' }, ...prev.defaultStack] }));
     if (fields.showDate && addCalendarEvent) {
       addCalendarEvent({
         date: fields.showDate,
         type: "journal",
-        title: fields.title || "Idea",
+        title: fields.title || "Note",
         text: fields.text || "",
         source: "home-idea",
         ideaId: id,
@@ -604,6 +634,12 @@ export const HomePage = ({
               <Btn variant="primary" onClick={() => doRemove("allDays")}>{t("deletePermanently")}</Btn>
             </>)}
 
+            {/* Note: Just today + Delete permanently */}
+            {confirmRemove.type === 'note' && (<>
+              <Btn variant="secondary" onClick={() => doRemove("justToday")}>{t("justToday")}</Btn>
+              <Btn variant="primary" onClick={() => doRemove("allDays")}>{t("deletePermanently")}</Btn>
+            </>)}
+
             {/* Goal/Habit: Remove from HOME + Delete entirely */}
             {confirmRemove.type === 'goalhabit' && (<>
               <Btn variant="secondary" onClick={() => doRemove("allDays")}>{t("removeFromHome")}</Btn>
@@ -638,6 +674,11 @@ export const HomePage = ({
       {editTile && editTile.type === 'idea' && (
         <BottomSheet open={true} onClose={() => setEditTile(null)} title={t("editIdea")}>
           <IdeaForm idea={homeIdeas?.find(i => i.id === editTile.id)} onSave={handleEditSave} onCancel={() => setEditTile(null)}/>
+        </BottomSheet>
+      )}
+      {editTile && editTile.type === 'note' && (
+        <BottomSheet open={true} onClose={() => setEditTile(null)} title={t("editNote")}>
+          <IdeaForm idea={ideas?.find(i => i.id === editTile.id)} onSave={handleEditSave} onCancel={() => setEditTile(null)}/>
         </BottomSheet>
       )}
     </div>
