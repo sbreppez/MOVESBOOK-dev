@@ -398,6 +398,16 @@ export const HomePage = ({
           <PreSessionIntel presession={presession} setPresession={setPresession}/>
         )}
 
+        {/* Sort icon — only when 2+ tiles */}
+        {todayTiles.length >= 2 && (
+          <div style={{ display: "flex", justifyContent: "flex-end", padding: "4px 16px 0" }}>
+            <button onClick={() => setShowReorder(true)}
+              style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
+              <Ic n="grip" s={16} c={C.textSec}/>
+            </button>
+          </div>
+        )}
+
         {/* Tile stack */}
         <div style={{ padding: "6px 12px" }}>
           {todayTiles.length === 0 && (
