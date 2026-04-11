@@ -3,6 +3,7 @@ import { C } from "../../constants/colors";
 import { FONT_DISPLAY, FONT_BODY } from "../../constants/fonts";
 import { Ic } from "../shared/Ic";
 import { useT } from "../../hooks/useTranslation";
+import { todayLocal } from "../../utils/dateUtils";
 
 const BACKUP_KEYS = {
   // Core data
@@ -38,7 +39,7 @@ export const downloadBackup = () => {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `MOVESBOOK_DATA_${new Date().toISOString().split("T")[0]}.json`;
+  a.download = `MOVESBOOK_DATA_${todayLocal()}.json`;
   a.click();
   URL.revokeObjectURL(url);
 };

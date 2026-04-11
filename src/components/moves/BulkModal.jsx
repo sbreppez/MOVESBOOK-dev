@@ -10,6 +10,7 @@ import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
 import { CATS } from '../../constants/categories';
+import { todayLocal } from '../../utils/dateUtils';
 
 export const BulkModal = ({ onClose, onImport, cats }) => {
   const t = useT();
@@ -18,7 +19,7 @@ export const BulkModal = ({ onClose, onImport, cats }) => {
   const [cat,setCat]=useState(cats?.[0]||"Footworks"); const [mastery,setMastery]=useState(50);
   const parse=()=>{ const names=txt.split(/[\n,]+/).map(s=>s.trim()).filter(Boolean); setParsed(names.map((n,i)=>({id:i,name:n}))); setSel(names.map((_,i)=>i)); setStep(2); };
   const tog=id=>setSel(s=>s.includes(id)?s.filter(x=>x!==id):[...s,id]);
-  const imp=()=>{ onImport(parsed.filter(p=>sel.includes(p.id)).map(p=>({name:p.name,category:cat,mastery,description:"",link:"",date:new Date().toISOString().split("T")[0],status:"wip"}))); onClose(); };
+  const imp=()=>{ onImport(parsed.filter(p=>sel.includes(p.id)).map(p=>({name:p.name,category:cat,mastery,description:"",link:"",date:todayLocal(),status:"wip"}))); onClose(); };
   const footerEl = step===1
     ? <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
         <Btn variant="secondary" onClick={onClose}>{t("cancel")}</Btn>

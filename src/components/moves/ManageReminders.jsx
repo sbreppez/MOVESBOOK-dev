@@ -3,6 +3,7 @@ import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
+import { todayLocal } from '../../utils/dateUtils';
 
 export const ManageReminders = ({ reminders, onRemindersChange, addToast, settings, onClose }) => {
   const t = useT();
@@ -41,7 +42,7 @@ export const ManageReminders = ({ reminders, onRemindersChange, addToast, settin
   const handleAddSave = () => {
     const text = addText.trim();
     if (!text) return;
-    const newItem = { id: Date.now().toString(), text, createdAt: new Date().toISOString().split("T")[0] };
+    const newItem = { id: Date.now().toString(), text, createdAt: todayLocal() };
     onRemindersChange({ ...reminders, items: [...items, newItem] });
     addToast({ icon: "mapPin", title: t("noteSaved") });
     setAddText("");

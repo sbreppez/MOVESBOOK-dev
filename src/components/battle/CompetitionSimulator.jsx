@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback, Fragment } from 'react
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
+import { todayLocal } from '../../utils/dateUtils';
 import { useSettings } from '../../hooks/useSettings';
 import { BodyCheckIn } from '../shared/BodyCheckIn';
 import { TrainingLog } from '../shared/TrainingLog';
@@ -478,7 +479,7 @@ export const CompetitionSimulator = ({
     if (addCalendarEvent) {
       const bracketNames = (completedSession.brackets || []).map(b => b.name).join(" → ");
       addCalendarEvent({
-        date: new Date().toISOString().split("T")[0],
+        date: todayLocal(),
         type: "training",
         title: `Competition Sim — ${bracketNames}`,
         duration: Math.round((completedSession.totalDuration || 0) / 60000) || 1,

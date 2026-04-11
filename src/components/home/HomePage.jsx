@@ -15,6 +15,7 @@ import { Ic } from '../shared/Ic';
 import { Modal } from '../shared/Modal';
 import { Btn } from '../shared/Btn';
 import { SectionBrief } from '../shared/SectionBrief';
+import { todayLocal } from '../../utils/dateUtils';
 
 function getTilesForDate(homeStack, selectedDate, homeIdeas, ideas) {
   if (!homeStack) return [];
@@ -78,7 +79,7 @@ export const HomePage = ({
 }) => {
   const { C } = useSettings();
   const t = useT();
-  const todayStr = new Date().toISOString().split("T")[0];
+  const todayStr = todayLocal();
   const [selectedDate, setSelectedDate] = useState(todayStr);
   const [showAddPicker, setShowAddPicker] = useState(false);
   const [addFormType, setAddFormType] = useState(null);

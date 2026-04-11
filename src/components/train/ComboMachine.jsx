@@ -6,6 +6,7 @@ import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
 import { SectionBrief } from '../shared/SectionBrief';
+import { todayLocal } from '../../utils/dateUtils';
 
 // ── Difficulty tiers ────────────────────────────────────────────────────────
 const TIERS = {
@@ -151,7 +152,7 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
 
   // ── Save as Set ────────────────────────────────────────────────────────
   const openSaveModal = () => {
-    const d = new Date().toISOString().split("T")[0];
+    const d = todayLocal();
     setSaveName(`Combo ${d}`);
     setSaveModal(true);
   };
@@ -161,18 +162,18 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
       return prefix + s.move.name;
     }).join("");
     onSaveSet({
-      name: saveName || `Combo ${new Date().toISOString().split("T")[0]}`,
+      name: saveName || `Combo ${todayLocal()}`,
       color: tierColor,
       moveIds: slots.map(s => s.move.id),
       notes: comboText,
       mastery: 0,
-      date: new Date().toISOString().split("T")[0],
+      date: todayLocal(),
     });
     setSaveModal(false);
     addToast({ icon:"check", title: t("comboSaved") });
     if (addCalendarEvent) {
       addCalendarEvent({
-        date: new Date().toISOString().split("T")[0],
+        date: todayLocal(),
         type: "training",
         title: `Combo Machine — ${saveName || "Combo"}`,
         categories: [...new Set(slots.map(s => s.move.category))],

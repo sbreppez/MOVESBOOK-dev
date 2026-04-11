@@ -13,6 +13,7 @@ import { TypeChooserModal } from './TypeChooserModal';
 import { IdeaTile } from './IdeaTile';
 import { HabitsPage } from './HabitsPage';
 import { BattlePrepPage } from './BattlePrepPage';
+import { todayLocal, toLocalYMD } from '../../utils/dateUtils';
 
 export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[], setHabits=()=>{}, calendar, onOpenCalendarJournal, battleprep, setBattleprep, moves, sets, addToast, externalTrainSubTab, onTrainSubTabUsed, battlePrepSeed, onBattlePrepSeedUsed, addCalendarEvent, removeCalendarEvent, onSubTabChange, onOpenSharedCalendar }) => {
   const t = useT();
@@ -70,11 +71,11 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
     try { localStorage.setItem("mb_hint_goal_journal", "1"); } catch {}
   };
   const [quickLogDismissed, setQuickLogDismissed] = useState(() => {
-    try { const st = JSON.parse(localStorage.getItem("mb_settings") || "{}"); return st.quickLogDismissed === new Date().toISOString().split("T")[0]; } catch { return false; }
+    try { const st = JSON.parse(localStorage.getItem("mb_settings") || "{}"); return st.quickLogDismissed === todayLocal(); } catch { return false; }
   });
   const dismissQuickLog = () => {
     setQuickLogDismissed(true);
-    try { const st = JSON.parse(localStorage.getItem("mb_settings") || "{}"); st.quickLogDismissed = new Date().toISOString().split("T")[0]; localStorage.setItem("mb_settings", JSON.stringify(st)); } catch {}
+    try { const st = JSON.parse(localStorage.getItem("mb_settings") || "{}"); st.quickLogDismissed = todayLocal(); localStorage.setItem("mb_settings", JSON.stringify(st)); } catch {}
   };
 
   const addIdea   = (fields) => setIdeas(p=>[...p,{ id:Date.now(), ...fields }]);
@@ -154,7 +155,7 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
     <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column" }}>
       {/* Quick Log banner */}
       {(()=>{
-        const todayStr = new Date().toISOString().split("T")[0];
+        const todayStr = todayLocal();
         const hasTodayTraining = (calendar?.events||[]).some(e => e.date === todayStr && e.type === "training");
         if (hasTodayTraining || quickLogDismissed || !onOpenCalendarJournal) return null;
         return (
@@ -179,7 +180,7 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
       {(()=>{
         const plans = battleprep?.plans || [];
         if (!plans.length) return null;
-        const todayStr = new Date().toISOString().split("T")[0];
+        const todayStr = todayLocal();
 
         // 1. Check for unreflected past battles (reminder banner)
         let reminderBattle = null, reminderPlan = null;
@@ -240,7 +241,7 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
         let sessionsLeft = 0;
         const td = nearestPlan.trainingDays || [];
         for (let d = new Date(todayStr); d <= new Date(nearest.date); d.setDate(d.getDate()+1)) {
-          const ds = d.toISOString().split("T")[0];
+          const ds = toLocalYMD(d);
           const override = (nearestPlan.customDayOverrides||{})[ds];
           if (override === "rest") continue;
           if (override === "training" || td.includes(d.getDay())) {
@@ -292,7 +293,7 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
         {/* Habit completion indicator — done today / total */}
         {(()=>{
           if (!habits.length) return null;
-          const today = new Date().toISOString().split("T")[0];
+          const today = todayLocal();
           const doneToday = habits.filter(h => (h.checkIns||[]).includes(today)).length;
           const allOn = doneToday === habits.length;
           const someOn = doneToday > 0;

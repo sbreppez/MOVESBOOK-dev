@@ -4,6 +4,7 @@ import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { CAT_COLORS } from '../../constants/categories';
 import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
+import { todayLocal } from '../../utils/dateUtils';
 import { useSettings } from '../../hooks/useSettings';
 import { SectionBrief } from '../shared/SectionBrief';
 
@@ -260,14 +261,14 @@ export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToa
         mode,
         moveId: selectedMoveId || null,
         moveName: moveName || null,
-        date: new Date().toISOString().split("T")[0],
+        date: todayLocal(),
       }
     });
     setScreen("summary");
   };
 
   const handleSaveAndClose = () => {
-    const today = new Date().toISOString().split("T")[0];
+    const today = todayLocal();
     const selectedMove = selectedMoveId ? moves.find(m => m.id === selectedMoveId) : null;
     const notesWithPrompt = [summaryNotes.trim(), lastPromptText ? `Prompt: ${lastPromptText}` : ""].filter(Boolean).join("\n\n");
     if (addCalendarEvent) {

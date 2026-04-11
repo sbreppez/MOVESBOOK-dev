@@ -1,4 +1,5 @@
 import { TRANSLATIONS } from './translations';
+import { todayLocal } from '../utils/dateUtils';
 
 export const CAT_COLORS = {
   Toprocks:       "#C4453E",
@@ -54,8 +55,8 @@ export const getInitIdeas = (lang="en") => [];
 export const INIT_IDEAS = getInitIdeas("en");
 
 export const getInitHabits = (lang="en") => [
-  { id:601, name:_t(lang,"initHabit1Name"), frequency:"daily", createdDate: new Date().toISOString().split('T')[0], checkIns:[], color:"#C4453E", why:_t(lang,"initHabit1Why"), timeOfDay:"anytime", notes:"" },
-  { id:602, name:_t(lang,"initHabit2Name"), frequency:"daily", createdDate: new Date().toISOString().split('T')[0], checkIns:[], color:"#4A90C4", why:_t(lang,"initHabit2Why"), timeOfDay:"morning", notes:_t(lang,"initHabit2Notes") },
+  { id:601, name:_t(lang,"initHabit1Name"), frequency:"daily", createdDate: todayLocal(), checkIns:[], color:"#C4453E", why:_t(lang,"initHabit1Why"), timeOfDay:"anytime", notes:"" },
+  { id:602, name:_t(lang,"initHabit2Name"), frequency:"daily", createdDate: todayLocal(), checkIns:[], color:"#4A90C4", why:_t(lang,"initHabit2Why"), timeOfDay:"morning", notes:_t(lang,"initHabit2Notes") },
 ];
 export const INIT_HABITS = getInitHabits("en");
 

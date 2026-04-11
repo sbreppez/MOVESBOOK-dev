@@ -1,4 +1,5 @@
 import { C } from '../../constants/colors';
+import { todayLocal } from '../../utils/dateUtils';
 
 export const menuBtnStyle = (color, border) => ({
   width:"100%", padding:"10px 13px", background:"none", border:"none", cursor:"pointer",
@@ -46,6 +47,6 @@ export const freqDaysPerWeek = (freq) => {
 };
 
 export const habitDoneToday = (checkIns) => {
-  const today = new Date().toISOString().split("T")[0];
+  const today = todayLocal();
   return (checkIns||[]).includes(today);
 };

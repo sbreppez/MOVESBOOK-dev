@@ -5,6 +5,7 @@ import { CAT_COLORS } from '../../constants/categories';
 import { useT } from '../../hooks/useTranslation';
 import { Ic } from '../shared/Ic';
 import { BodyCheckIn } from '../shared/BodyCheckIn';
+import { todayLocal } from '../../utils/dateUtils';
 
 const SPECIAL_CHIPS = ["Freestyle", "Sets", "Mobility", "Conditioning"];
 const SPECIAL_CHIP_KEYS = { Freestyle: "freestyleChip", Sets: "setsChip", Mobility: "mobilityChip", Conditioning: "conditioningChip" };
@@ -56,7 +57,7 @@ export const SessionJournal = ({
     return `${day} ${t(monthKeys[d.getMonth()])} ${d.getFullYear()}`;
   }, [date, t]);
 
-  const isToday = date === new Date().toISOString().split("T")[0];
+  const isToday = date === todayLocal();
 
   // Toggle category chip
   const toggleCat = (cat) => {

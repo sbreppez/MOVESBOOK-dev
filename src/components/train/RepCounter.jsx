@@ -4,6 +4,7 @@ import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
 import { TrainingLog } from '../shared/TrainingLog';
 import { useT } from '../../hooks/useTranslation';
+import { todayLocal } from '../../utils/dateUtils';
 
 const fmtTime = (ms) => {
   const s = Math.floor(ms / 1000);
@@ -109,7 +110,7 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onUpdateSess
     onSaveSession(session);
     if (addCalendarEvent) {
       addCalendarEvent({
-        date: new Date().toISOString().split("T")[0],
+        date: todayLocal(),
         type: "training",
         title: `Rep Counter — ${selectedMove.name}`,
         categories: [selectedMove.category],

@@ -9,6 +9,7 @@ import { useSettings } from '../../hooks/useSettings';
 import { freqDaysPerWeek, habitDoneToday } from './helpers';
 import { HabitModal } from './HabitModal';
 import { HabitCard } from './HabitCard';
+import { todayLocal, toLocalYMD } from '../../utils/dateUtils';
 
 export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
   const { C } = useSettings();
@@ -33,13 +34,13 @@ export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
   },[onAddTrigger]);
 
   const addHabit = (fields) => setHabits(p=>[...p,{
-    id:Date.now(), checkIns:[], createdDate:new Date().toISOString().split("T")[0], ...fields
+    id:Date.now(), checkIns:[], createdDate:todayLocal(), ...fields
   }]);
   const updateHabit = (id, fields) => setHabits(p=>p.map(h=>h.id===id?{...h,...fields}:h));
   const deleteHabit = (id) => setHabits(p=>p.filter(h=>h.id!==id));
 
   const checkIn = (id) => {
-    const today = new Date().toISOString().split("T")[0];
+    const today = todayLocal();
     setHabits(p=>p.map(h=>{
       if (h.id!==id) return h;
       const already = (h.checkIns||[]).includes(today);
@@ -107,19 +108,19 @@ export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
         {view==="tiles" && !reorderMode ? (
           <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:6 }}>
             {habits.map(h=>{
-              const today = new Date().toISOString().split("T")[0];
+              const today = todayLocal();
               const checkIns = h.checkIns||[];
               const doneToday = checkIns.includes(today);
               const color = h.color || C.accent;
               const dpw = freqDaysPerWeek(h.frequency);
               const freqLabel = { daily:t("everyDay"),"2x":t("freq2xShort"),"3x":t("freq3xShort"),"4x":t("freq4xShort"),"5x":t("freq5xShort"),"6x":t("freq6xShort"),weekdays:t("freqWeekdays") }[h.frequency]||t("everyDay");
-              const weekStart = (()=>{ const d=new Date(); d.setDate(d.getDate()-d.getDay()); return d.toISOString().split("T")[0]; })();
+              const weekStart = (()=>{ const d=new Date(); d.setDate(d.getDate()-d.getDay()); return toLocalYMD(d); })();
               const weekDone = checkIns.filter(d=>d>=weekStart).length;
               const weekTarget = dpw>=7?7:dpw;
               const weekPct = Math.min(weekDone/weekTarget,1);
               const R=44, CIRC=2*Math.PI*R;
               const dash=weekPct*CIRC, gap=CIRC-dash, offset=CIRC*0.25;
-              const last7 = Array.from({length:7},(_,i)=>{ const d=new Date(); d.setDate(d.getDate()-(6-i)); return {ds:d.toISOString().split("T")[0],isToday:i===6}; });
+              const last7 = Array.from({length:7},(_,i)=>{ const d=new Date(); d.setDate(d.getDate()-(6-i)); return {ds:toLocalYMD(d),isToday:i===6}; });
               const isOpen = openHabit===h.id;
               return (
                 <div key={h.id} onClick={()=>setOpenHabit(isOpen?null:h.id)}

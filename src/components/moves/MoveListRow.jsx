@@ -6,6 +6,7 @@ import { Highlight } from '../shared/Highlight';
 import { masteryColor } from '../../constants/styles';
 import { useSettings } from '../../hooks/useSettings';
 import { computeDecay, showDecayArrow } from '../../utils/masteryDecay';
+import { todayLocal } from '../../utils/dateUtils';
 
 export const MoveListRow = ({ move, catColor, onEdit, onDelete, onMove, allCats, catColors, onToggleTrainedToday }) => {
   const { settings } = useSettings();
@@ -21,7 +22,7 @@ export const MoveListRow = ({ move, catColor, onEdit, onDelete, onMove, allCats,
           overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{move.description}</div>}
       </div>
       {onToggleTrainedToday&&(()=>{
-        const isTrained = move.date === new Date().toISOString().split("T")[0];
+        const isTrained = move.date === todayLocal();
         return <button onClick={e=>{e.stopPropagation();onToggleTrainedToday(move.id);}}
           style={{ width:16, height:16, borderRadius:"50%", flexShrink:0, padding:0,
             border: isTrained ? "none" : `1.5px solid ${C.border}`,

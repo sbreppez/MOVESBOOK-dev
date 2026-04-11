@@ -7,6 +7,7 @@ import { Modal } from '../shared/Modal';
 import { BottomSheet } from '../shared/BottomSheet';
 import { useT } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
+import { todayLocal } from '../../utils/dateUtils';
 import { compressImage } from '../../utils/imageUtils';
 
 const DOMAINS = ["Musicality","Performance","Technique","Variety","Creativity","Personality"];
@@ -42,7 +43,7 @@ const STANCE_OPTIONS = [
   { val:"unknown", key:"stanceUnknown" },
 ];
 
-const today = () => new Date().toISOString().split("T")[0];
+const today = () => todayLocal();
 
 const cleanIG = (val) => {
   let h = (val || "").trim();

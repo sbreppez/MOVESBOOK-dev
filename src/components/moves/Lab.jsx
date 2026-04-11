@@ -3,6 +3,7 @@ import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { CAT_COLORS, CATS } from '../../constants/categories';
 import { Ic } from '../shared/Ic';
+import { todayLocal } from '../../utils/dateUtils';
 import { useT } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
 import { SectionBrief } from '../shared/SectionBrief';
@@ -250,7 +251,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
     } else {
       defaultName = baseName.trim()
         ? `${baseName.trim()} (${t("variation")})`
-        : `${t("explore")} ${t("variation")} ${new Date().toISOString().split("T")[0]}`;
+        : `${t("explore")} ${t("variation")} ${todayLocal()}`;
       const matchedMove = baseName.trim() ? moves.find(m => m.name.toLowerCase() === baseName.trim().toLowerCase()) : null;
       defaultCat = matchedMove?.category || (cats.length ? cats[0] : "Footworks");
     }
@@ -266,7 +267,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
       category: saveCat,
       description: preview,
       mastery: 0,
-      date: new Date().toISOString().split("T")[0],
+      date: todayLocal(),
       status: "wip",
       attrs: {},
       origin: "creation",
@@ -281,7 +282,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
     savedTimer.current = setTimeout(() => setSavedFlash(false), 2500);
     if (addCalendarEvent) {
       addCalendarEvent({
-        date: new Date().toISOString().split("T")[0],
+        date: todayLocal(),
         type: "training",
         title: `Lab — ${saveName.trim() || t("variation")}`,
         categories: saveCat ? [saveCat] : [],

@@ -9,6 +9,7 @@ import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
 import { ensureHttps } from './helpers';
+import { todayLocal } from '../../utils/dateUtils';
 import { JournalEntryCard } from './JournalEntryCard';
 import { JournalEntryInput } from './JournalEntryInput';
 
@@ -35,7 +36,7 @@ export const TargetGoalModal = ({ onClose, onSave, idea, moves=[] }) => {
     onSave({ type:"target", pinned:true, title:title.trim(),
       target, unit:unit.trim()||"items", current:effectiveCurrent,
       byWhen, link: ensureHttps(link.trim()), autoLink, color, journal, text:"",
-      createdDate: idea?.createdDate || new Date().toISOString().split("T")[0]
+      createdDate: idea?.createdDate || todayLocal()
     });
     onClose();
   };

@@ -3,6 +3,7 @@ import { PRESET_COLORS } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { lbl } from '../../constants/styles';
 import { INIT_ROUNDS } from '../../constants/categories';
+import { todayLocal } from '../../utils/dateUtils';
 import { useSettings } from '../../hooks/useSettings';
 import { useT, usePlural } from '../../hooks/useTranslation';
 import { Ic } from '../shared/Ic';
@@ -124,7 +125,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
     const entries = Array.from({length: Math.max(1, entryCount)}, (_,i) => ({
       id: id + i + 1, name: entryCount === 1 ? t("entryPrefix")+" 1" : t("entryPrefix")+" "+(i+1), items: []
     }));
-    setRounds(p => [...p, { id, name, color, notes:"", date: new Date().toISOString().split("T")[0], entries }]);
+    setRounds(p => [...p, { id, name, color, notes:"", date: todayLocal(), entries }]);
   };
   const deleteRound = rid => setRounds(p => p.filter(r => r.id !== rid));
   const updateRound = (rid, fields) => setRounds(p => p.map(r => r.id === rid ? {...r,...fields} : r));
@@ -177,7 +178,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
   const [entryDragOver, setEntryDragOver] = useState(null);
 
   // ── Sets CRUD ────────────────────────────────────────────────────────────────
-  const addSet = name => setSets(p => [...p, { id:Date.now(), name, color:PRESET_COLORS[1], notes:"", mastery:0, date:new Date().toISOString().split("T")[0] }]);
+  const addSet = name => setSets(p => [...p, { id:Date.now(), name, color:PRESET_COLORS[1], notes:"", mastery:0, date:todayLocal() }]);
   const deleteSet = sid => setSets(p => p.filter(s => s.id !== sid));
   const updateSet = (sid, fields) => setSets(p => p.map(s => s.id === sid ? {...s,...fields} : s));
 

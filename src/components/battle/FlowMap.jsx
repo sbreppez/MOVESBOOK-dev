@@ -3,6 +3,7 @@ import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
+import { todayLocal } from '../../utils/dateUtils';
 import { useSettings } from '../../hooks/useSettings';
 import { SectionBrief } from '../shared/SectionBrief';
 
@@ -118,7 +119,7 @@ export const FlowMap = ({ moves, cats, catColors, flowmap, onFlowmapChange, comb
       ...prev,
       pairings: {
         ...(prev.pairings || {}),
-        [key]: { ...(prev.pairings?.[key] || {}), ...update, date: new Date().toISOString().split("T")[0] }
+        [key]: { ...(prev.pairings?.[key] || {}), ...update, date: todayLocal() }
       }
     }));
   }, [onFlowmapChange]);
@@ -614,7 +615,7 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
 
   const handleSaveToLibrary = () => {
     if (!newMoveName.trim() || !selectedCat) return;
-    const today = new Date().toISOString().split("T")[0];
+    const today = todayLocal();
     const moveData = {
       name: newMoveName.trim(),
       category: selectedCat,

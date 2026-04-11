@@ -11,6 +11,7 @@ import { useT } from '../../hooks/useTranslation';
 import { usePlural } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
 import { masteryColor, lbl, inp } from '../../constants/styles';
+import { todayLocal } from '../../utils/dateUtils';
 
 const ensureHttps = (url) => {
   if (!url || !url.trim()) return "";
@@ -29,7 +30,7 @@ export const SetDetailModal = ({ item, onClose, onSave, type="set", allMoves=[],
   const [mastery, setMastery] = useState(item.mastery ?? 0);
   const [details, setDetails] = useState(item.details || "");
   const [notes,   setNotes]   = useState(item.notes  || "");
-  const [date,    setDate]    = useState(item.date   || new Date().toISOString().split("T")[0]);
+  const [date,    setDate]    = useState(item.date   || todayLocal());
   const [localIds, setLocalIds] = useState(type==="set" ? (item.moveIds||[]) : (item.setIds||[]));
   const [pickerOpen, setPickerOpen] = useState(false);
   const [pickerQ, setPickerQ] = useState("");

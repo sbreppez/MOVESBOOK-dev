@@ -3,6 +3,7 @@ import { FONT_DISPLAY, FONT_BODY } from "../../constants/fonts";
 import { Ic } from "../shared/Ic";
 import { useT } from "../../hooks/useTranslation";
 import { useSettings } from "../../hooks/useSettings";
+import { todayLocal, toLocalYMD } from '../../utils/dateUtils';
 import { StanceRadarChart } from "./StanceRadarChart";
 import { ShareCardOverlay } from "../shared/ShareCardOverlay";
 
@@ -92,8 +93,8 @@ const computeConsistency = (calendar) => {
   const events = (calendar?.events || []).filter(e => e.type === "training");
   if (!events.length) return { empty: true };
 
-  const today = new Date().toISOString().split("T")[0];
-  const fourWeeksAgo = new Date(Date.now() - 28 * 86400000).toISOString().split("T")[0];
+  const today = todayLocal();
+  const fourWeeksAgo = toLocalYMD(new Date(Date.now() - 28 * 86400000));
   const recent = events.filter(e => e.date >= fourWeeksAgo);
   const avgPerWeek = (recent.length / 4).toFixed(1);
 
@@ -104,7 +105,7 @@ const computeConsistency = (calendar) => {
   let streak = 0;
   const todayMs = new Date(today + "T00:00:00").getTime();
   for (let i = 0; i <= 365; i++) {
-    const d = new Date(todayMs - i * 86400000).toISOString().split("T")[0];
+    const d = toLocalYMD(new Date(todayMs - i * 86400000));
     if (dates.includes(d)) streak++;
     else if (i === 0) continue; // today might not have a session yet
     else break;

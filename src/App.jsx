@@ -6,6 +6,7 @@ import { SettingsCtx } from './hooks/useSettings';
 import { TrainModalCtx, TrainMenuCtx } from './hooks/useTrainContext';
 import { TRANSLATIONS } from './constants/translations';
 import { SCHEMA_VERSION, migrateMove, loadLocal, saveLocal, debounce, unwrapPhoto } from './utils/storage';
+import { todayLocal } from './utils/dateUtils';
 import { migrateOldAttributes } from './utils/attributeHelpers';
 import { Ic } from './components/shared/Ic';
 import { ProfileAvatar } from './components/shared/ProfileAvatar';
@@ -663,7 +664,7 @@ export default function App() {
 
   // GAP badge: count stale moves (default 14-day threshold with difficulty adjustment)
   const staleCount = useMemo(() => {
-    const todayMs = new Date(new Date().toISOString().split("T")[0]).getTime();
+    const todayMs = new Date(todayLocal()).getTime();
     return moves.filter(m => {
       const lastMs = m.date ? new Date(m.date).getTime() : 0;
       const days = Math.floor((todayMs - lastMs) / 86400000);
@@ -743,7 +744,7 @@ export default function App() {
             preselectedMove={repCounterPreselect}
             onSaveSession={(session)=>{
               setReps(prev=>[session,...prev]);
-              setMoves(prev=>prev.map(m=>m.id===session.moveId?{...m,date:new Date().toISOString().split("T")[0]}:m));
+              setMoves(prev=>prev.map(m=>m.id===session.moveId?{...m,date:todayLocal()}:m));
               lastSessionSaved.current=true;
             }}
             onUpdateSession={onUpdateRepSession}
@@ -754,7 +755,7 @@ export default function App() {
             onSaveSession={(session, updatedSparring)=>{
               setSparring(updatedSparring);
               if(session.movesTrained?.length){
-                setMoves(prev=>prev.map(m=>session.movesTrained.includes(m.id)?{...m,date:new Date().toISOString().split("T")[0]}:m));
+                setMoves(prev=>prev.map(m=>session.movesTrained.includes(m.id)?{...m,date:todayLocal()}:m));
               }
               lastSessionSaved.current=true;
             }}

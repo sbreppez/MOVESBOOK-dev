@@ -4,6 +4,7 @@ import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
 import { TrainingLog } from '../shared/TrainingLog';
 import { useT } from '../../hooks/useTranslation';
+import { todayLocal } from '../../utils/dateUtils';
 
 const PROMPT_KEYS = [
   "mfPrompt1","mfPrompt2","mfPrompt3","mfPrompt4",
@@ -101,7 +102,7 @@ export const MusicFlow = ({ musicflow, onMusicflowChange, onUpdateSession, refle
     const duration = Math.floor(elapsed / 1000);
     const stageReached = getStage(promptCount) + 1;
     const finalPromptCount = promptCount + 1;
-    const today = new Date().toISOString().split("T")[0];
+    const today = todayLocal();
 
     const session = {
       id: Date.now(),

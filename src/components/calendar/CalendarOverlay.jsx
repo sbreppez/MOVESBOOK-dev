@@ -8,11 +8,12 @@ import { EXERTION_OPTIONS, BODY_PARTS, BODY_STATES } from '../shared/BodyCheckIn
 import { SessionJournal } from './SessionJournal';
 import { computeAllDayMaps, getTasksForDay, getPrevDayTasks } from '../train/battlePrepHelpers';
 import { ReportsTimeline } from './ReportsTimeline';
+import { todayLocal, toLocalYMD } from '../../utils/dateUtils';
 
 const toYMD = (d) => {
   if (!d) return null;
   if (typeof d === "string" && /^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
-  try { return new Date(d).toISOString().split("T")[0]; } catch { return null; }
+  try { return toLocalYMD(d); } catch { return null; }
 };
 
 const MONTH_KEYS = ["january","february","march","april","may","june","july","august","september","october","november","december"];
@@ -28,7 +29,7 @@ export const CalendarOverlay = ({
   inline, onAddTrigger, reports, isPremium,
 }) => {
   const t = useT();
-  const today = new Date().toISOString().split("T")[0];
+  const today = todayLocal();
 
   const [viewDate, setViewDate] = useState(() => {
     if (initialMonth) return new Date(initialMonth.year, initialMonth.month, 1);

@@ -4,10 +4,12 @@
  * No React dependencies.
  */
 
+import { todayLocal, toLocalYMD } from './dateUtils';
+
 const toYMD = (d) => {
   if (!d) return null;
   if (typeof d === "string" && /^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
-  try { return new Date(d).toISOString().split("T")[0]; } catch { return null; }
+  try { return toLocalYMD(d); } catch { return null; }
 };
 
 const getMonday = (dateStr) => {
@@ -15,13 +17,13 @@ const getMonday = (dateStr) => {
   const day = d.getDay();
   const diff = (day === 0 ? -6 : 1) - day;
   d.setDate(d.getDate() + diff);
-  return d.toISOString().split("T")[0];
+  return toLocalYMD(d);
 };
 
 const addDays = (dateStr, n) => {
   const d = new Date(dateStr + "T00:00:00");
   d.setDate(d.getDate() + n);
-  return d.toISOString().split("T")[0];
+  return toLocalYMD(d);
 };
 
 const MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -202,7 +204,7 @@ const MILESTONE_DEFS = [
 
 export const detectMilestones = ({ moves, sparring, battleprep, reps, musicflow, cats, calendar }, existingMilestones) => {
   const existingIds = new Set((existingMilestones || []).map(m => m.id));
-  const today = new Date().toISOString().split("T")[0];
+  const today = todayLocal();
   const monthStr = today.slice(0, 7);
 
   const moveCount = (moves || []).length;
@@ -256,14 +258,14 @@ export const detectMilestones = ({ moves, sparring, battleprep, reps, musicflow,
 
 export const buildTimeline = (monthsBack, data, milestones) => {
   const today = new Date();
-  const todayStr = today.toISOString().split("T")[0];
+  const todayStr = todayLocal();
   const entries = [];
 
   // Determine date range
   const startDate = new Date(today);
   startDate.setMonth(startDate.getMonth() - monthsBack);
   startDate.setDate(1);
-  const startStr = startDate.toISOString().split("T")[0];
+  const startStr = toLocalYMD(startDate);
 
   // Group milestones by date for quick lookup
   const milestonesByDate = {};
@@ -294,7 +296,7 @@ export const buildTimeline = (monthsBack, data, milestones) => {
   const weekSet = new Set();
   let dayCursor = new Date(startDate);
   while (dayCursor <= today) {
-    const ds = dayCursor.toISOString().split("T")[0];
+    const ds = toLocalYMD(dayCursor);
     const monday = getMonday(ds);
     if (!weekSet.has(monday) && monday >= startStr) {
       weekSet.add(monday);
@@ -315,7 +317,7 @@ export const buildTimeline = (monthsBack, data, milestones) => {
   const currentMonthStart = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-01`;
   let dayPtr = new Date(currentMonthStart + "T00:00:00");
   while (dayPtr <= today) {
-    const ds = dayPtr.toISOString().split("T")[0];
+    const ds = toLocalYMD(dayPtr);
     const daily = computeDailyEntry(ds, data);
     entries.push({ type: "day", date: ds, data: daily });
     dayPtr.setDate(dayPtr.getDate() + 1);

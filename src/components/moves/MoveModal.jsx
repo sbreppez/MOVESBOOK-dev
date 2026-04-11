@@ -13,6 +13,7 @@ import { CATS, CAT_COLORS } from '../../constants/categories';
 import { AttributeChips } from './AttributeChips';
 import { AttributeModal } from '../modals/AttributeModal';
 import { masteryColor, lbl, inp } from '../../constants/styles';
+import { todayLocal } from '../../utils/dateUtils';
 
 const DOMAIN_OPTS = ["musicality","performance","technique","variety","creativity","personality"];
 const ORIGIN_KEYS = ["learned","version","creation"];
@@ -38,7 +39,7 @@ const sectionLabel = { fontSize:10, fontWeight:800, letterSpacing:1, color:C.tex
 
 export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initialDesc="", cats=CATS, customAttrs=[], onAddAttr, allMoves=[], catColors=CAT_COLORS, isPremium }) => {
   const t = useT();
-  const [f,setF] = useState({ name:"", category:initialCat, description:initialDesc||"", link:"", mastery:50, date:new Date().toISOString().split("T")[0], status:"wip", rotation:"", travelling:"", custom:"", attrs:{}, origin:"learned", musicEnergy:null, tensionRole:null, parentId:null, ...move });
+  const [f,setF] = useState({ name:"", category:initialCat, description:initialDesc||"", link:"", mastery:50, date:todayLocal(), status:"wip", rotation:"", travelling:"", custom:"", attrs:{}, origin:"learned", musicEnergy:null, tensionRole:null, parentId:null, ...move });
   const set = k => v => setF(p=>({...p,[k]:v}));
   const handleSave = () => { if (f.name) { onSave(f); onClose(); } };
   const [showMore, setShowMore] = useState(false);

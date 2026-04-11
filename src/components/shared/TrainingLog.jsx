@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { useT } from '../../hooks/useTranslation';
+import { todayLocal } from '../../utils/dateUtils';
 
 const HINT_KEYS = ['hint_body','hint_rhythm','hint_mental','hint_creative','hint_performance'];
 
@@ -13,7 +14,7 @@ export const TrainingLog = ({ value, onChange, framingKey, reflections, onReflec
 
   useEffect(() => {
     // Pick hint on mount
-    const today = new Date().toISOString().split("T")[0];
+    const today = todayLocal();
     const last = reflections?.lastCategory ?? -1;
     if (reflections?.lastDate === today && last >= 0 && last < 5) {
       hintIdx.current = last;

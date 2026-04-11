@@ -7,6 +7,7 @@ import { Btn } from '../shared/Btn';
 import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
 import { ensureHttps } from './helpers';
+import { todayLocal } from '../../utils/dateUtils';
 import { GoalField } from './GoalField';
 import { JournalEntryCard } from './JournalEntryCard';
 import { JournalEntryInput } from './JournalEntryInput';
@@ -31,7 +32,7 @@ export const GoalModal = ({ onClose, onSave, idea }) => {
     onSave({ type:"goal", pinned:true, title:title.trim(), why, byWhen,
       steps, daysPerWeek, sessionLength:sessionLen, trainWhere,
       obstacles, color, journal, link:ensureHttps(link.trim()), text:"",
-      createdDate: idea?.createdDate || new Date().toISOString().split('T')[0] });
+      createdDate: idea?.createdDate || todayLocal() });
     onClose();
   };
 

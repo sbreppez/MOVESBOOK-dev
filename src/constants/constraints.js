@@ -1,3 +1,5 @@
+import { todayLocal } from '../utils/dateUtils';
+
 // ── Constraint Card: themes, pool (72 constraints), and daily-pick utilities ──
 
 export const CONSTRAINT_THEMES = [
@@ -101,7 +103,7 @@ export const CONSTRAINT_POOL = [
 
 // ── Helpers ──
 
-export const todayString = () => new Date().toISOString().split("T")[0];
+export const todayString = () => todayLocal();
 
 /** Build the active pool from state: built-in minus removed, plus custom, filtered by modeFilter */
 export const buildActivePool = (state) => {

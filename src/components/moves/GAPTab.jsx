@@ -6,6 +6,7 @@ import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
 import { CAT_COLORS } from '../../constants/categories';
 import { computeDecay, showDecayArrow } from '../../utils/masteryDecay';
+import { todayLocal } from '../../utils/dateUtils';
 
 const PRESETS = [7, 14, 30];
 
@@ -15,7 +16,7 @@ export const GAPTab = ({ moves, catColors=CAT_COLORS, setMoves, onDrill, setting
   const [customDays, setCustomDays] = useState("");
   const [showCustom, setShowCustom] = useState(false);
 
-  const today = new Date().toISOString().split("T")[0];
+  const today = todayLocal();
   const todayMs = new Date(today).getTime();
 
   const { staleMoves, freshCount } = useMemo(() => {

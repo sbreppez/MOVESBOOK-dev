@@ -8,6 +8,7 @@ import { BodyCheckIn } from '../shared/BodyCheckIn';
 import { TrainingLog } from '../shared/TrainingLog';
 import { Spar1v1 } from './Spar1v1';
 import { compressImage } from '../../utils/imageUtils';
+import { todayLocal } from '../../utils/dateUtils';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -371,7 +372,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
     if (addCalendarEvent) {
       const modeLabel = mode === "rounds" ? `${session.rounds} rounds` : mode === "time" ? "Timed" : "Cypher Till Death";
       addCalendarEvent({
-        date: new Date().toISOString().split("T")[0],
+        date: todayLocal(),
         type: "training",
         title: `Sparring — ${modeLabel}`,
         duration: Math.round((session.totalDuration || 0) / 60000) || 1,

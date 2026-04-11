@@ -3,6 +3,7 @@ import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { useSettings } from '../../hooks/useSettings';
 import { useT } from '../../hooks/useTranslation';
 import { Ic } from '../shared/Ic';
+import { todayLocal } from '../../utils/dateUtils';
 
 export const PreSessionIntel = ({ presession, setPresession }) => {
   const { C } = useSettings();
@@ -34,7 +35,7 @@ export const PreSessionIntel = ({ presession, setPresession }) => {
     if (!newTry.trim()) return;
     setPresession(prev => ({
       ...prev,
-      wantToTry: [...(prev.wantToTry || []), { id: Date.now(), text: newTry.trim(), date: new Date().toISOString().split("T")[0] }],
+      wantToTry: [...(prev.wantToTry || []), { id: Date.now(), text: newTry.trim(), date: todayLocal() }],
     }));
     setNewTry("");
   };

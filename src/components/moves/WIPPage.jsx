@@ -3,6 +3,7 @@ import { C, PRESET_COLORS } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { masteryColor } from '../../constants/styles';
 import { Ic } from '../shared/Ic';
+import { todayLocal } from '../../utils/dateUtils';
 import { Highlight } from '../shared/Highlight';
 import { Crumbs } from '../shared/Crumbs';
 import { Btn } from '../shared/Btn';
@@ -102,7 +103,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
     }
   };
   const handleToggleTrainedToday = (id) => {
-    const today = new Date().toISOString().split("T")[0];
+    const today = todayLocal();
     const move = moves.find(m => m.id === id);
     if (!move) return;
     const isToday = move.date === today;
@@ -609,7 +610,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
         )}
       </div>
       {vocabTab==="sets"&&addingSet&&<SetDetailModal type="set"
-        item={{ name:"", color:PRESET_COLORS[1], moveIds:[], notes:"", mastery:0, date:new Date().toISOString().split("T")[0] }}
+        item={{ name:"", color:PRESET_COLORS[1], moveIds:[], notes:"", mastery:0, date:todayLocal() }}
         onClose={()=>setAddingSet(false)}
         allMoves={moves} allSets={sets}
         onSave={fields=>{ setSets(p=>[...p,{id:Date.now(),...fields}]); setAddingSet(false); }}/>}

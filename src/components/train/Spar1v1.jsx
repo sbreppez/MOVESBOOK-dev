@@ -5,6 +5,7 @@ import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
 import { BottomSheet } from '../shared/BottomSheet';
+import { todayLocal } from '../../utils/dateUtils';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -297,7 +298,7 @@ export const Spar1v1 = ({ sparring, onSaveSession, addCalendarEvent, rivals, onR
     // Calendar event
     if (addCalendarEvent) {
       addCalendarEvent({
-        date: new Date().toISOString().split("T")[0],
+        date: todayLocal(),
         type: "training",
         title: `1v1 Spar vs ${session.opponent || t("opponent")}`,
         duration: Math.round((session.totalDuration || 0) / 60000) || 1,
@@ -366,7 +367,7 @@ export const Spar1v1 = ({ sparring, onSaveSession, addCalendarEvent, rivals, onR
     const json = JSON.stringify(exportData, null, 2);
     const blob = new Blob([json], { type: "application/json" });
     const safeName = (session.opponent || "partner").replace(/[^a-zA-Z0-9]/g, "_");
-    const dateStr = new Date().toISOString().split("T")[0];
+    const dateStr = todayLocal();
     const filename = `MOVESBOOK_SPAR_${safeName}_${dateStr}.json`;
 
     try {

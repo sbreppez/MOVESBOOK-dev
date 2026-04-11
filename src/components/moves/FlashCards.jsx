@@ -3,6 +3,7 @@ import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
+import { todayLocal } from '../../utils/dateUtils';
 
 function shuffle(arr) {
   const a = [...arr];
@@ -69,13 +70,13 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
       const best = flashcards?.bestScore;
       const newBest = !best || percentage > best.percentage;
       if (newBest) {
-        onFlashcardsChange({ ...flashcards, bestScore: { percentage, total, correct, date: new Date().toISOString().split("T")[0] } });
+        onFlashcardsChange({ ...flashcards, bestScore: { percentage, total, correct, date: todayLocal() } });
         setIsNewBest(true);
       }
 
       addCalendarEvent({
         source: "flashcards",
-        date: new Date().toISOString().split("T")[0],
+        date: todayLocal(),
         title: "Flash Cards",
         type: "flashcards",
         score: { percentage, total, correct },

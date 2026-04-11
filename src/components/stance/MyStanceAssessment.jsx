@@ -4,6 +4,7 @@ import { Ic } from "../shared/Ic";
 import { useT } from "../../hooks/useTranslation";
 import { useSettings } from "../../hooks/useSettings";
 import { STANCE_DOMAINS } from "./MyStanceSection";
+import { todayLocal } from '../../utils/dateUtils';
 
 const SCREEN_CONTENT = [
   { key:"musicality",   descKey:"musicality_desc", qKeys:["musicality_s1","musicality_s2","musicality_s3","musicality_s4","musicality_s5","musicality_s6","musicality_s7","musicality_s8","musicality_s9","musicality_s10"] },
@@ -31,7 +32,7 @@ export const MyStanceAssessment = ({ stance, onStanceChange, addToast, onClose }
   };
 
   const handleSave = () => {
-    const today = new Date().toISOString().split("T")[0];
+    const today = todayLocal();
     onStanceChange(prev => {
       const existing = prev.assessments || [];
       const filtered = existing.filter(a => a.date !== today);

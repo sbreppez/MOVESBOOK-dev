@@ -5,6 +5,7 @@ import { CAT_COLORS } from '../../constants/categories';
 import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
 import { masteryColor } from '../../constants/styles';
+import { todayLocal } from '../../utils/dateUtils';
 
 export const MirrorMode = ({ moves, catColors=CAT_COLORS, mirror, onMirrorChange, addToast, preselectedMove, onClose }) => {
   const t = useT();
@@ -50,7 +51,7 @@ export const MirrorMode = ({ moves, catColors=CAT_COLORS, mirror, onMirrorChange
     return Object.entries(groups);
   };
 
-  const today = new Date().toISOString().split("T")[0];
+  const today = todayLocal();
 
   // Actions
   const handleMarkMirrored = () => {

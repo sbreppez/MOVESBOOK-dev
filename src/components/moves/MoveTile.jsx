@@ -6,6 +6,7 @@ import { Highlight } from '../shared/Highlight';
 import { masteryColor, CARD_BASE, CARD_BODY } from '../../constants/styles';
 import { useSettings } from '../../hooks/useSettings';
 import { computeDecay, showDecayArrow } from '../../utils/masteryDecay';
+import { todayLocal } from '../../utils/dateUtils';
 import { CATS, CAT_COLORS } from '../../constants/categories';
 
 export const MoveTile = ({ move, onClick, onEdit, onDelete, onDuplicate, onMove, allCats=CATS, catColors=CAT_COLORS, searchQuery="", onToggleTrainedToday }) => {
@@ -25,7 +26,7 @@ export const MoveTile = ({ move, onClick, onEdit, onDelete, onDuplicate, onMove,
         </span>
         <div style={{ display:"flex", alignItems:"center", gap:2, flexShrink:0 }}>
           {onToggleTrainedToday&&(()=>{
-            const isTrained = move.date === new Date().toISOString().split("T")[0];
+            const isTrained = move.date === todayLocal();
             return <button onClick={e=>{e.stopPropagation();onToggleTrainedToday(move.id);}}
               style={{ width:16, height:16, borderRadius:"50%", flexShrink:0, padding:0,
                 border: isTrained ? "none" : `1.5px solid ${C.border}`,

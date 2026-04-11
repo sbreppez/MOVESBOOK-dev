@@ -11,6 +11,7 @@ import { LegalModal } from "./LegalModal";
 import { downloadBackup, restoreBackup } from "./BackupModal";
 import { ProfileAvatar } from "../shared/ProfileAvatar";
 import { compressImage } from "../../utils/imageUtils";
+import { todayLocal } from '../../utils/dateUtils';
 
 export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersChange, addToast, onOpenManageReminders, onNavigateToStance, settings, onSettingsChange, onClearMoves, onRestoreRounds, onRestartTour, zoom, onZoomChange, customAttrs, setCustomAttrs, onOpenManual, profilePhoto, onProfilePhotoChange, fbUser }) => {
   const { C } = useSettings();
@@ -30,7 +31,7 @@ export const ProfileModal = ({ onClose, profile, onSave, reminders, onRemindersC
   const handleNoteSave = () => {
     const text = noteText.trim();
     if (!text) return;
-    const newItem = { id: Date.now().toString(), text, createdAt: new Date().toISOString().split("T")[0] };
+    const newItem = { id: Date.now().toString(), text, createdAt: todayLocal() };
     onRemindersChange({ ...reminders, items: [...noteItems, newItem] });
     addToast({ icon: "mapPin", title: t("noteSaved") });
     setNoteText("");

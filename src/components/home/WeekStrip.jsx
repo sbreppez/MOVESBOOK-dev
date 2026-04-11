@@ -2,20 +2,21 @@ import React from 'react';
 import { FONT_DISPLAY } from '../../constants/fonts';
 import { useSettings } from '../../hooks/useSettings';
 import { useT } from '../../hooks/useTranslation';
+import { todayLocal, toLocalYMD } from '../../utils/dateUtils';
 
 const DAY_LETTERS = ['S','M','T','W','T','F','S'];
 
 export const WeekStrip = ({ selectedDate, onSelectDate }) => {
   const { C } = useSettings();
   const t = useT();
-  const todayStr = new Date().toISOString().split("T")[0];
+  const todayStr = todayLocal();
 
   const days = [];
   for (let i = -3; i <= 3; i++) {
     const d = new Date();
     d.setDate(d.getDate() + i);
     days.push({
-      dateStr: d.toISOString().split("T")[0],
+      dateStr: toLocalYMD(d),
       dayNum: d.getDate(),
       dow: d.getDay(),
     });

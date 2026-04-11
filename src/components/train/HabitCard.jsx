@@ -5,13 +5,14 @@ import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
 import { freqDaysPerWeek } from './helpers';
+import { todayLocal, toLocalYMD } from '../../utils/dateUtils';
 
 export const HabitCard = ({ habit, onCheckIn, onEdit, onDelete }) => {
   const { C } = useSettings();
   const t = useT();
   const [expanded, setExpanded] = useState(false);
 
-  const today    = new Date().toISOString().split("T")[0];
+  const today    = todayLocal();
   const checkIns = habit.checkIns || [];
   const doneToday= checkIns.includes(today);
   const color    = habit.color || C.accent;
@@ -22,12 +23,12 @@ export const HabitCard = ({ habit, onCheckIn, onEdit, onDelete }) => {
   const dots = [];
   for (let i=29; i>=0; i--) {
     const d = new Date(); d.setDate(d.getDate()-i);
-    const ds = d.toISOString().split("T")[0];
+    const ds = toLocalYMD(d);
     dots.push({ ds, done: checkIns.includes(ds), isToday: i===0 });
   }
 
   // Weekly ring
-  const weekStart = (()=>{ const d=new Date(); d.setDate(d.getDate()-d.getDay()); return d.toISOString().split("T")[0]; })();
+  const weekStart = (()=>{ const d=new Date(); d.setDate(d.getDate()-d.getDay()); return toLocalYMD(d); })();
   const weekDone  = checkIns.filter(d=>d>=weekStart).length;
   const weekTarget= dpw>=7?7:dpw;
   const weekPct   = Math.min(weekDone/weekTarget,1);
@@ -35,7 +36,7 @@ export const HabitCard = ({ habit, onCheckIn, onEdit, onDelete }) => {
   const dash=weekPct*CIRC, gap=CIRC-dash, offset=CIRC*0.25;
 
   // 7-day bar
-  const last7 = Array.from({length:7},(_,i)=>{ const d=new Date(); d.setDate(d.getDate()-(6-i)); return {ds:d.toISOString().split("T")[0],isToday:i===6}; });
+  const last7 = Array.from({length:7},(_,i)=>{ const d=new Date(); d.setDate(d.getDate()-(6-i)); return {ds:toLocalYMD(d),isToday:i===6}; });
 
   return (
     <div style={{ background:C.surface, borderRadius:8, marginBottom:6, overflow:"hidden",
