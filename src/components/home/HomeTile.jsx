@@ -126,7 +126,7 @@ export const HomeTile = ({ tile, isChecked, onCheck, onRemove, onEdit, habits, i
         {description && (
           <ExpandableText
             text={description} maxLines={2} fontSize={11}
-            color={C.textMuted} lineHeight={1.4}
+            color={C.textSec} lineHeight={1.4}
             expanded={expanded} onToggle={() => setExpanded(!expanded)}
             style={{ marginTop: 3 }}
           />

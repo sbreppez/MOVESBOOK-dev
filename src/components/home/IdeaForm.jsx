@@ -62,6 +62,15 @@ export const IdeaForm = ({ idea, onSave, onCancel }) => {
             background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8,
             color: C.text, marginTop: 4, boxSizing: "border-box", outline: "none",
           }}/>
+        {f.showDate && f.showDate < new Date().toISOString().split("T")[0] && (
+          <div style={{
+            fontSize: 11, color: C.accent, fontWeight: 700, fontFamily: FONT_DISPLAY,
+            marginTop: 4, display: "flex", alignItems: "center", gap: 4,
+          }}>
+            <Ic n="info" s={12} c={C.accent}/>
+            {t("pastDateWarning")}
+          </div>
+        )}
       </div>
 
       {/* Pin the idea to Home */}
