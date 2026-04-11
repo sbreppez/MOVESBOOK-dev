@@ -16,7 +16,7 @@ import { Modal } from '../shared/Modal';
 import { Btn } from '../shared/Btn';
 import { SectionBrief } from '../shared/SectionBrief';
 
-function getTilesForDate(homeStack, selectedDate) {
+function getTilesForDate(homeStack, selectedDate, homeIdeas) {
   if (!homeStack) return [];
   const dow = new Date(selectedDate + "T12:00:00").getDay();
   const overrides = homeStack.overrides?.[selectedDate] || {};
@@ -24,7 +24,13 @@ function getTilesForDate(homeStack, selectedDate) {
 
   const base = (homeStack.defaultStack || []).filter(tile => {
     if (removed.includes(tile.id)) return false;
-    if (tile.type === 'idea' || tile.type === 'goalhabit') return true;
+    if (tile.type === 'goalhabit') return true;
+    if (tile.type === 'idea') {
+      const idea = homeIdeas?.find(i => i.id === tile.id);
+      if (idea?.homeOnly === false) return false;
+      if (idea?.showDate && selectedDate < idea.showDate) return false;
+      return true;
+    }
     const r = tile.repeat || { type: "daily", days: [] };
     if (r.type === "daily") return true;
     if (r.type === "workdays") return dow >= 1 && dow <= 5;
@@ -87,8 +93,8 @@ export const HomePage = ({
   const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   const todayTiles = useMemo(
-    () => getTilesForDate(homeStack, selectedDate),
-    [homeStack, selectedDate]
+    () => getTilesForDate(homeStack, selectedDate, homeIdeas),
+    [homeStack, selectedDate, homeIdeas]
   );
 
   const dayChecks = homeChecks?.[selectedDate] || {};
@@ -342,28 +348,28 @@ export const HomePage = ({
 
   const handleCreateRoutine = (fields) => {
     const newTile = { id: Date.now().toString(), type: 'routine', ...fields };
-    setHomeStack(prev => ({ ...prev, defaultStack: [...prev.defaultStack, newTile] }));
+    setHomeStack(prev => ({ ...prev, defaultStack: [newTile, ...prev.defaultStack] }));
     setAddFormType(null);
   };
 
   const handleCreateIdea = (fields) => {
     const id = Date.now().toString();
     setHomeIdeas(prev => [...prev, { id, ...fields }]);
-    setHomeStack(prev => ({ ...prev, defaultStack: [...prev.defaultStack, { id, type: 'idea' }] }));
+    setHomeStack(prev => ({ ...prev, defaultStack: [{ id, type: 'idea' }, ...prev.defaultStack] }));
     setAddFormType(null);
   };
 
   const handleCreateGoal = (goalData) => {
     const id = Date.now().toString();
     setIdeas(prev => [...prev, { id, ...goalData }]);
-    setHomeStack(prev => ({ ...prev, defaultStack: [...prev.defaultStack, { id: 'gh_' + id, type: 'goalhabit', refId: id }] }));
+    setHomeStack(prev => ({ ...prev, defaultStack: [{ id: 'gh_' + id, type: 'goalhabit', refId: id }, ...prev.defaultStack] }));
     setAddFormType(null);
   };
 
   const handleCreateHabit = (habitData) => {
     const id = Date.now().toString();
     setHabits(prev => [...prev, { id, ...habitData }]);
-    setHomeStack(prev => ({ ...prev, defaultStack: [...prev.defaultStack, { id: 'gh_' + id, type: 'goalhabit', refId: id }] }));
+    setHomeStack(prev => ({ ...prev, defaultStack: [{ id: 'gh_' + id, type: 'goalhabit', refId: id }, ...prev.defaultStack] }));
     setAddFormType(null);
   };
 
