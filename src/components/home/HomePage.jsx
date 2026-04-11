@@ -295,41 +295,25 @@ export const HomePage = ({
 
   // ── Feature 3: Reorder handlers ─────────────────────────────────────────
 
-  const moveTileUp = (idx) => {
-    if (idx === 0) return;
+  const moveTileUp = (tileId) => {
     setHomeStack(prev => {
       const arr = [...(prev.defaultStack || [])];
+      const idx = arr.findIndex(t => t.id === tileId);
+      if (idx <= 0) return prev;
       [arr[idx - 1], arr[idx]] = [arr[idx], arr[idx - 1]];
       return { ...prev, defaultStack: arr };
     });
   };
 
-  const moveTileDown = (idx) => {
-    const stack = homeStack.defaultStack || [];
-    if (idx >= stack.length - 1) return;
+  const moveTileDown = (tileId) => {
     setHomeStack(prev => {
       const arr = [...(prev.defaultStack || [])];
+      const idx = arr.findIndex(t => t.id === tileId);
+      if (idx < 0 || idx >= arr.length - 1) return prev;
       [arr[idx], arr[idx + 1]] = [arr[idx + 1], arr[idx]];
       return { ...prev, defaultStack: arr };
     });
   };
-
-  // Helper: resolve emoji + fallback icon for reorder/manage rows
-  const resolveEmoji = (tile) => {
-    if (tile.type === 'routine') return { emoji: tile.emoji || null, icon: "dumbbell" };
-    if (tile.type === 'idea') {
-      const idea = homeIdeas?.find(i => i.id === tile.id);
-      return { emoji: idea?.emoji || null, icon: "bulb" };
-    }
-    if (tile.type === 'goalhabit') {
-      const habit = habits?.find(h => String(h.id) === String(tile.refId));
-      return { emoji: habit?.emoji || null, icon: "target" };
-    }
-    return { emoji: null, icon: "clipboard" };
-  };
-
-  // Helper: resolve name for reorder/manage rows
-  const resolveName = (tile) => resolveTileName(tile, homeIdeas, habits, ideas);
 
   // All routines from defaultStack (for manage routines)
   const allRoutines = (homeStack.defaultStack || []).filter(t => t.type === 'routine');
@@ -398,12 +382,19 @@ export const HomePage = ({
           <PreSessionIntel presession={presession} setPresession={setPresession}/>
         )}
 
-        {/* Sort icon — only when 2+ tiles */}
+        {/* Sort toggle — only when 2+ tiles */}
         {todayTiles.length >= 2 && (
           <div style={{ display: "flex", justifyContent: "flex-end", padding: "4px 16px 0" }}>
-            <button onClick={() => setShowReorder(true)}
-              style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
-              <Ic n="grip" s={16} c={C.textSec}/>
+            <button onClick={() => setShowReorder(r => !r)}
+              style={{
+                background: showReorder ? C.accent : "none",
+                border: "none", cursor: "pointer",
+                padding: "4px 8px", borderRadius: 5,
+                color: showReorder ? C.bg : C.textMuted,
+                fontSize: 13, fontWeight: 800,
+                fontFamily: FONT_DISPLAY, letterSpacing: 1,
+              }}>
+              {showReorder ? t("done") : "⇅"}
             </button>
           </div>
         )}
@@ -420,14 +411,41 @@ export const HomePage = ({
             </div>
           )}
 
-          {todayTiles.map(tile => (
-            <HomeTile key={tile.id} tile={tile}
-              isChecked={!!dayChecks[tile.id]}
-              onCheck={handleTileCheck}
-              onRemove={handleTileRemove}
-              onEdit={handleTileEdit}
-              habits={habits} ideas={ideas} homeIdeas={homeIdeas}
-            />
+          {todayTiles.map((tile, idx) => (
+            <div key={tile.id} style={{ position: "relative" }}>
+              {showReorder && (
+                <div style={{
+                  position: "absolute", right: 6, top: "50%", transform: "translateY(-50%)",
+                  zIndex: 10, display: "flex", flexDirection: "column", gap: 2,
+                }}>
+                  <button onClick={() => moveTileUp(tile.id)} disabled={idx === 0}
+                    style={{
+                      width: 26, height: 26, borderRadius: 6,
+                      border: `1px solid ${C.border}`, background: C.bg,
+                      cursor: idx === 0 ? "default" : "pointer",
+                      color: idx === 0 ? C.border : C.accent,
+                      fontSize: 14, fontWeight: 700,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                    }}>▲</button>
+                  <button onClick={() => moveTileDown(tile.id)} disabled={idx === todayTiles.length - 1}
+                    style={{
+                      width: 26, height: 26, borderRadius: 6,
+                      border: `1px solid ${C.border}`, background: C.bg,
+                      cursor: idx === todayTiles.length - 1 ? "default" : "pointer",
+                      color: idx === todayTiles.length - 1 ? C.border : C.accent,
+                      fontSize: 14, fontWeight: 700,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                    }}>▼</button>
+                </div>
+              )}
+              <HomeTile tile={tile}
+                isChecked={!!dayChecks[tile.id]}
+                onCheck={handleTileCheck}
+                onRemove={handleTileRemove}
+                onEdit={handleTileEdit}
+                habits={habits} ideas={ideas} homeIdeas={homeIdeas}
+              />
+            </div>
           ))}
 
         </div>
@@ -528,46 +546,6 @@ export const HomePage = ({
                     background: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
                   <Ic n="trash" s={14} c={C.accent}/>
                 </button>
-              </div>
-            ))}
-          </div>
-        )}
-      </BottomSheet>
-
-      {/* ── Feature 3: Reorder Tiles ── */}
-      <BottomSheet open={showReorder} onClose={() => setShowReorder(false)} title={t("reorderTiles")}>
-        {(homeStack.defaultStack || []).length === 0 ? (
-          <div style={{ textAlign: "center", padding: "30px 20px", color: C.textMuted, fontSize: 13 }}>
-            {t("dayStartsHereHint")}
-          </div>
-        ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-            {(homeStack.defaultStack || []).map((tile, idx) => (
-              <div key={tile.id} style={{
-                display: "flex", alignItems: "center", gap: 10, padding: "10px 12px",
-                borderRadius: 8, background: C.surface,
-              }}>
-                {(() => { const { emoji, icon } = resolveEmoji(tile); return emoji ? <span style={{ fontSize: 18, flexShrink: 0 }}>{emoji}</span> : <Ic n={icon} s={18}/>; })()}
-                <div style={{ flex: 1, minWidth: 0, fontWeight: 800, fontSize: 13, fontFamily: FONT_DISPLAY,
-                  color: C.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                  {resolveName(tile)}
-                </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 2, flexShrink: 0 }}>
-                  <button onClick={() => moveTileUp(idx)} disabled={idx === 0}
-                    style={{
-                      width: 26, height: 26, borderRadius: 6, border: `1px solid ${C.border}`,
-                      background: C.bg, cursor: idx === 0 ? "default" : "pointer",
-                      color: idx === 0 ? C.border : C.accent,
-                      fontSize: 14, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center",
-                    }}>▲</button>
-                  <button onClick={() => moveTileDown(idx)} disabled={idx === (homeStack.defaultStack || []).length - 1}
-                    style={{
-                      width: 26, height: 26, borderRadius: 6, border: `1px solid ${C.border}`,
-                      background: C.bg, cursor: idx === (homeStack.defaultStack || []).length - 1 ? "default" : "pointer",
-                      color: idx === (homeStack.defaultStack || []).length - 1 ? C.border : C.accent,
-                      fontSize: 14, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center",
-                    }}>▼</button>
-                </div>
               </div>
             ))}
           </div>
