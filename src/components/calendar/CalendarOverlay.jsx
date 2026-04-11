@@ -201,6 +201,40 @@ export const CalendarOverlay = ({
     );
   }
 
+  // ── Home-idea note tile (expandable, no edit button) ──
+  const HomeIdeaNote = ({ event, onDelete }) => {
+    const [expanded, setExpanded] = useState(false);
+    const hasText = event.text && event.text.trim();
+    return (
+      <div style={{ background: C.surfaceAlt, borderRadius: 8, marginBottom: 4, overflow: "hidden" }}>
+        <div style={{ display: "flex", alignItems: "center", padding: "10px 12px", gap: 8 }}>
+          <Ic n="fileText" s={14} c={C.textSec}/>
+          <span style={{ flex: 1, fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12, color: C.text,
+            overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            {event.title || t("note")}
+          </span>
+          <button onClick={() => onDelete()}
+            style={{ background: "none", border: "none", cursor: "pointer", padding: 4, flexShrink: 0 }}>
+            <Ic n="trash" s={14} c={C.textMuted}/>
+          </button>
+        </div>
+        {hasText && (<>
+          {expanded && (
+            <div style={{ padding: "0 12px 10px 34px", fontSize: 13, fontFamily: FONT_BODY,
+              color: C.textSec, lineHeight: 1.5 }}>
+              {event.text}
+            </div>
+          )}
+          <button onClick={() => setExpanded(x => !x)}
+            style={{ width: "100%", display: "flex", justifyContent: "center",
+              padding: "4px 0 6px", background: "none", border: "none", cursor: "pointer" }}>
+            <Ic n={expanded ? "chevU" : "chevD"} s={12} c={C.textMuted}/>
+          </button>
+        </>)}
+      </div>
+    );
+  };
+
   return (
     <div style={ inline ? { flex:1, background: C.bg, display: "flex", flexDirection: "column", overflow: "hidden" } : { position: "absolute", inset: 0, zIndex: 500, background: C.bg, display: "flex", flexDirection: "column", overflow: "hidden" }}>
       {/* Header — hidden in inline mode */}
@@ -474,7 +508,11 @@ export const CalendarOverlay = ({
             {dayData.calendarEvents.length > 0 && (
               <div>
                 <div style={sectionLabel}>{t("calendarEvents")}</div>
-                {dayData.calendarEvents.map(e => (
+                {dayData.calendarEvents.map(e => {
+                  if (e.source === "home-idea") {
+                    return <HomeIdeaNote key={e.id} event={e} onDelete={() => handleDeleteEvent(e.id)} />;
+                  }
+                  return (
                   <div key={e.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between",
                     padding: "8px 10px", background: C.surfaceAlt, borderRadius: 8, marginBottom: 4 }}>
                     <div style={{ flex: 1 }}>
@@ -532,7 +570,8 @@ export const CalendarOverlay = ({
                       </button>
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             )}
 

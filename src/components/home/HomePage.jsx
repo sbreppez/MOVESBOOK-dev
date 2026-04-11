@@ -255,6 +255,7 @@ export const HomePage = ({
           date: newDate,
           type: "journal",
           title: fields.title || oldIdea?.title || "Idea",
+          text: fields.text || "",
           source: "home-idea",
           ideaId: editTile.id,
         }, { silent: true });
@@ -360,6 +361,7 @@ export const HomePage = ({
         date: fields.showDate,
         type: "journal",
         title: fields.title || "Idea",
+        text: fields.text || "",
         source: "home-idea",
         ideaId: id,
       }, { silent: true });
