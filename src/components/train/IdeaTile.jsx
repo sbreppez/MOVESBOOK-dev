@@ -36,10 +36,10 @@ export const IdeaTile = (props) => {
   const typeIcon = isGoal ? "target" : isTarget ? "crosshair" : "fileText";
   const typeLabel = isGoal ? "GOAL" : isTarget ? "TARGET" : "NOTE";
 
-  const menuDropdown = (
+  const renderMenu = (posStyle={right:0}) => (
     <div onClick={e=>e.stopPropagation()}
       style={{
-        position:"absolute", top:24, right:0, background:C.bg,
+        position:"absolute", top:24, ...posStyle, background:C.bg,
         border:`1px solid ${C.border}`, borderRadius:9, overflow:"hidden",
         zIndex:9999, minWidth:175, boxShadow:"0 8px 28px rgba(0,0,0,0.22)",
       }}>
@@ -135,7 +135,7 @@ export const IdeaTile = (props) => {
                   style={{ background:"none", border:"none", cursor:"pointer", color:C.textMuted, padding:2 }}>
                   <Ic n="more" s={13}/>
                 </button>
-                {menu && menuDropdown}
+                {menu && renderMenu(menuRef.current?.getBoundingClientRect().right > window.innerWidth / 2 ? {right:0} : {left:0})}
               </div>
             </div>
           </div>
@@ -305,7 +305,7 @@ export const IdeaTile = (props) => {
                 style={{ background:"none", border:"none", cursor:"pointer", color:C.textMuted, padding:3 }}>
                 <Ic n="more" s={13}/>
               </button>
-              {menu && menuDropdown}
+              {menu && renderMenu()}
             </div>
           </div>
         </div>
