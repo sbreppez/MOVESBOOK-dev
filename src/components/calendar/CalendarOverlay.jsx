@@ -9,6 +9,8 @@ import { SessionJournal } from './SessionJournal';
 import { computeAllDayMaps, getTasksForDay, getPrevDayTasks } from '../train/battlePrepHelpers';
 import { ReportsTimeline } from './ReportsTimeline';
 import { Modal } from '../shared/Modal';
+import { BottomSheet } from '../shared/BottomSheet';
+import { IdeaForm } from '../home/IdeaForm';
 import { todayLocal, toLocalYMD } from '../../utils/dateUtils';
 
 const toYMD = (d) => {
@@ -44,6 +46,7 @@ export const CalendarOverlay = ({
   const [battlePrepPrompt, setBattlePrepPrompt] = useState(null);
   const [calView, setCalView] = useState("days");
   const [confirmDeleteNote, setConfirmDeleteNote] = useState(null);
+  const [editHomeNote, setEditHomeNote] = useState(null);
 
   useEffect(() => {
     if (onAddTrigger) { setSelectedDay(today); setShowTypePicker(true); setShowJournal(false); }
@@ -548,7 +551,7 @@ export const CalendarOverlay = ({
                 {dayData.calendarEvents.map(e => {
                   if (e.source === "home-idea") {
                     return <HomeIdeaNote key={e.id} event={e}
-                      onEdit={(evt) => { setEditEvent(evt); setShowJournal(true); }}
+                      onEdit={(evt) => setEditHomeNote(evt)}
                       onDelete={(evt) => setConfirmDeleteNote(evt)}
                     />;
                   }
@@ -769,6 +772,28 @@ export const CalendarOverlay = ({
           moves={moves} reps={reps} sparring={sparring} musicflow={musicflow}
           calendar={calendar} cats={cats} catColors={catColors}
           battleprep={battleprep} rivals={null} reports={reports}/>
+      )}
+
+      {/* Edit home-idea note */}
+      {editHomeNote && (
+        <BottomSheet open={true} onClose={() => setEditHomeNote(null)} title={t("editNote")}>
+          <IdeaForm
+            idea={editHomeNote}
+            onSave={(fields) => {
+              // TODO: sync edit to ideas store (setIdeas not available as prop)
+              setCalendar(prev => ({
+                ...prev,
+                events: (prev.events || []).map(e =>
+                  e.id === editHomeNote.id
+                    ? { ...e, title: fields.title, text: fields.text, link: fields.link, showDate: fields.showDate || e.date, pinned: fields.pinned, homeOnly: fields.homeOnly }
+                    : e
+                ),
+              }));
+              setEditHomeNote(null);
+            }}
+            onCancel={() => setEditHomeNote(null)}
+          />
+        </BottomSheet>
       )}
 
       {/* Delete note confirmation modal */}
