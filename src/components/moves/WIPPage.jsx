@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, Fragment } from 'react';
-import { C, PRESET_COLORS } from '../../constants/colors';
+import { PRESET_COLORS } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { masteryColor } from '../../constants/styles';
 import { Ic } from '../shared/Ic';
@@ -40,6 +40,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   const [showLibraryMenu,setShowLibraryMenu]=useState(false);
   useEffect(()=>{
     if(!onAddTrigger) return;
+    if(openCat) { setShowAdd(true); return; }
     if(vocabTab==="sets") setAddingSet(true);
     else if(vocabTab==="gap") { if(onDrill) onDrill(null); }
     else setShowLibraryMenu(true);
