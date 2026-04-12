@@ -51,10 +51,11 @@ export const IdeaTile = (props) => {
           <div style={{ display:"flex", alignItems:"flex-start", gap:6, marginBottom:6 }}>
             {/* Type icon */}
             <span style={{ flexShrink:0, paddingTop:1 }} title={typeLabel}><Ic n={typeIcon} s={14}/></span>
-            <div style={{ flex:1, minWidth:0 }} onClick={onEdit}>
+            <div style={{ flex:1, minWidth:0, display:"flex", alignItems:"center", gap:4 }} onClick={onEdit}>
               <div style={{ fontWeight:800, fontSize:13, color: isGoal ? C.accent : C.brown, letterSpacing:1.1, fontFamily:FONT_DISPLAY, cursor:"pointer", lineHeight:1.3, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
                 <Highlight text={title.toUpperCase()} query={searchQuery}/>
               </div>
+              {isPinned && !isGoal && !isTarget && <Ic n="mapPin" s={10} c={C.accent} style={{flexShrink:0}}/>}
             </div>
             <div style={{ flexShrink:0, display:"flex", alignItems:"center", gap:2 }}>
               {idea.link&&settings.linkOnCard==="both"&&(

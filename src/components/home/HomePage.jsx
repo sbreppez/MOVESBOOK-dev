@@ -280,6 +280,7 @@ export const HomePage = ({
       setIdeas(prev => prev.map(i =>
         i.id === editTile.id ? { ...i, ...fields } : i
       ));
+      // TODO: sync updated fields to calendar event (setCalendar not available in HomePage)
       const oldDate = oldNote?.showDate;
       const newDate = fields.showDate;
       if (oldDate !== newDate && newDate && addCalendarEvent) {

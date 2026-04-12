@@ -20,7 +20,7 @@ export const HomeTile = ({ tile, isChecked, onCheck, onRemove, onEdit, habits, i
   }, [menu]);
 
   // Resolve data based on tile type
-  let emoji = null, fallbackIcon = null, name, description, showCheckbox = false, extraInfo = null, isOrphan = false;
+  let emoji = null, fallbackIcon = null, name, description, showCheckbox = false, extraInfo = null, isOrphan = false, isPinned = false;
 
   if (tile.type === 'routine') {
     emoji = tile.emoji || null;
@@ -37,6 +37,7 @@ export const HomeTile = ({ tile, isChecked, onCheck, onRemove, onEdit, habits, i
     fallbackIcon = "fileText";
     name = note?.title || "";
     description = note?.text || "";
+    isPinned = note?.pinned || false;
     if (note?.link) {
       extraInfo = note.link;
     }
@@ -102,6 +103,7 @@ export const HomeTile = ({ tile, isChecked, onCheck, onRemove, onEdit, habits, i
           overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
         }}>
           {name}
+          {isPinned && <Ic n="mapPin" s={10} c={C.accent} style={{marginLeft:4, verticalAlign:"middle"}}/>}
           {extraInfo && tile.type === 'routine' && (
             <span style={{ fontWeight: 600, fontSize: 11, color: C.textMuted, marginLeft: 6 }}>
               · {extraInfo}

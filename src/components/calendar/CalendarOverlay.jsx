@@ -23,7 +23,7 @@ const MONTH_KEYS = ["january","february","march","april","may","june","july","au
 const DAY_KEYS = ["sunS","monS","tueS","wedS","thuS","friS","satS"];
 
 export const CalendarOverlay = ({
-  moves, setMoves, reps, sparring, musicflow, habits, ideas,
+  moves, setMoves, reps, sparring, musicflow, habits, ideas, setIdeas,
   calendar, setCalendar,
   cats, catColors, settings, onSettingsChange,
   addToast, initialDay,
@@ -229,6 +229,7 @@ export const CalendarOverlay = ({
             overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
             {event.title || t("note")}
           </span>
+          {event.pinned && <Ic n="mapPin" s={10} c={C.accent}/>}
           {/* Three-dot menu */}
           <div ref={menuRef} style={{ flexShrink: 0, position: "relative" }}>
             <button onClick={e => { e.stopPropagation(); setMenu(m => !m); }}
@@ -780,7 +781,14 @@ export const CalendarOverlay = ({
           <IdeaForm
             idea={editHomeNote}
             onSave={(fields) => {
-              // TODO: sync edit to ideas store (setIdeas not available as prop)
+              // Sync edit to ideas store (single source of truth)
+              if (setIdeas && editHomeNote.ideaId) {
+                setIdeas(prev => prev.map(i =>
+                  i.id === editHomeNote.ideaId
+                    ? { ...i, title: fields.title, text: fields.text, link: fields.link, showDate: fields.showDate, pinned: fields.pinned, homeOnly: fields.homeOnly }
+                    : i
+                ));
+              }
               setCalendar(prev => ({
                 ...prev,
                 events: (prev.events || []).map(e =>
