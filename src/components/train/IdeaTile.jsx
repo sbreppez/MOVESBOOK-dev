@@ -55,7 +55,7 @@ export const IdeaTile = (props) => {
               <div style={{ fontWeight:800, fontSize:13, color: isGoal ? C.accent : C.brown, letterSpacing:1.1, fontFamily:FONT_DISPLAY, cursor:"pointer", lineHeight:1.3, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
                 <Highlight text={title.toUpperCase()} query={searchQuery}/>
               </div>
-              {isPinned && !isGoal && !isTarget && <Ic n="mapPin" s={10} c={C.accent} style={{flexShrink:0}}/>}
+              {isPinned && !isGoal && !isTarget && <Ic n="pin" s={10} c={C.accent} style={{flexShrink:0}}/>}
             </div>
             <div style={{ flexShrink:0, display:"flex", alignItems:"center", gap:2 }}>
               {idea.link&&settings.linkOnCard==="both"&&(

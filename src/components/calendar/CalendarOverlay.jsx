@@ -229,7 +229,7 @@ export const CalendarOverlay = ({
             overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
             {event.title || t("note")}
           </span>
-          {event.pinned && <Ic n="mapPin" s={10} c={C.accent}/>}
+          {event.pinned && <Ic n="pin" s={10} c={C.accent}/>}
           {/* Three-dot menu */}
           <div ref={menuRef} style={{ flexShrink: 0, position: "relative" }}>
             <button onClick={e => { e.stopPropagation(); setMenu(m => !m); }}

@@ -46,7 +46,7 @@ export const IdeaMenu = ({ menu, onClose }) => {
           <span style={{fontSize:11}}>{typeEmoji}</span>{t("edit")} {typeLabel.toLowerCase()}
         </button>
         {!isGoal&&<button onClick={()=>{ onTogglePin&&onTogglePin(); onClose(); }} style={menuBtnStyle(C.text,true)}>
-          <Ic n="mapPin" s={11} c={C.textSec}/>{isPinned?t("unpinBtn"):t("pinToTop")}
+          <Ic n="pin" s={11} c={C.textSec}/>{isPinned?t("unpinBtn"):t("pinToTop")}
         </button>}
         <button onClick={()=>setSubColor(true)} style={{ ...menuBtnStyle(C.text,true), justifyContent:"space-between" }}>
           <span style={{ display:"flex", alignItems:"center", gap:8 }}>
