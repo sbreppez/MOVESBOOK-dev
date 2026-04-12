@@ -3,6 +3,7 @@ import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { useSettings } from '../../hooks/useSettings';
 import { useT } from '../../hooks/useTranslation';
 import { Btn } from '../shared/Btn';
+import { Ic } from '../shared/Ic';
 
 const TIME_OPTIONS = ["morning", "midday", "afternoon", "evening"];
 const REPEAT_OPTIONS = [
@@ -20,11 +21,8 @@ export const RoutineForm = ({ routine, onSave, onCancel }) => {
   const isEdit = !!routine;
 
   const [f, setF] = useState({
-    emoji: routine?.emoji || "",
     name: routine?.name || "",
-    duration: routine?.duration || 30,
-    description: routine?.description || "",
-    checkable: routine?.checkable ?? true,
+    steps: routine?.steps || [],
     repeatType: routine?.repeat?.type || "daily",
     repeatDays: routine?.repeat?.days || [],
     timeOfDay: routine?.timeOfDay || "morning",
@@ -35,11 +33,8 @@ export const RoutineForm = ({ routine, onSave, onCancel }) => {
   const handleSave = () => {
     if (!f.name.trim()) return;
     onSave({
-      emoji: f.emoji,
       name: f.name.trim(),
-      duration: Math.max(0, parseInt(f.duration) || 0),
-      description: f.description.trim(),
-      checkable: f.checkable,
+      steps: f.steps.filter(s => s.text.trim()).map(s => ({ id: s.id, text: s.text.trim() })),
       repeat: { type: f.repeatType, days: f.repeatDays },
       timeOfDay: f.timeOfDay,
     });
@@ -55,67 +50,53 @@ export const RoutineForm = ({ routine, onSave, onCancel }) => {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-      {/* Emoji + Name */}
-      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-        <input value={f.emoji} onChange={e => set("emoji")(e.target.value)}
-          style={{
-            width: 44, height: 44, textAlign: "center", fontSize: 22,
-            background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8,
-            color: C.text, fontFamily: FONT_BODY,
-          }}/>
-        <input value={f.name} onChange={e => set("name")(e.target.value)}
-          placeholder={t("routineName")}
-          style={{
-            flex: 1, padding: "10px 12px", fontSize: 14, fontFamily: FONT_BODY,
-            background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8,
-            color: C.text,
-          }}/>
-      </div>
+      {/* Name */}
+      <input value={f.name} onChange={e => set("name")(e.target.value)}
+        placeholder={t("routineName")}
+        style={{
+          width: "100%", padding: "10px 12px", fontSize: 14, fontFamily: FONT_BODY,
+          background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8,
+          color: C.text, outline: "none", boxSizing: "border-box",
+        }}/>
 
-      {/* Duration */}
+      {/* Steps — checklist builder */}
       <div>
         <label style={{ fontSize: 11, fontWeight: 800, color: C.textMuted, fontFamily: FONT_DISPLAY, letterSpacing: 1, textTransform: "uppercase" }}>
-          {t("routineDuration")}
+          {t("steps")}
         </label>
-        <input type="number" value={f.duration} onChange={e => set("duration")(e.target.value)}
-          style={{
-            width: "100%", padding: "8px 12px", fontSize: 14, fontFamily: FONT_BODY,
-            background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8,
-            color: C.text, marginTop: 4,
-          }}/>
-      </div>
-
-      {/* Description */}
-      <div>
-        <label style={{ fontSize: 11, fontWeight: 800, color: C.textMuted, fontFamily: FONT_DISPLAY, letterSpacing: 1, textTransform: "uppercase" }}>
-          {t("routineDescription")}
-        </label>
-        <textarea value={f.description} onChange={e => set("description")(e.target.value)}
-          rows={3}
-          style={{
-            width: "100%", padding: "8px 12px", fontSize: 13, fontFamily: FONT_BODY,
-            background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8,
-            color: C.text, resize: "vertical", marginTop: 4, boxSizing: "border-box",
-          }}/>
-      </div>
-
-      {/* Checkable */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <span style={{ fontSize: 11, fontWeight: 700, color: C.textSec, fontFamily: FONT_DISPLAY, textTransform: "uppercase" }}>
-          {t("routineCheckable")}
-        </span>
-        <button onClick={() => set("checkable")(!f.checkable)}
-          style={{
-            width: 44, height: 26, borderRadius: 13, border: "none", cursor: "pointer",
-            background: f.checkable ? C.green : C.surfaceAlt,
-            position: "relative", transition: "background 0.2s",
-          }}>
-          <div style={{
-            width: 20, height: 20, borderRadius: "50%", background: "#fff",
-            position: "absolute", top: 3,
-            left: f.checkable ? 21 : 3, transition: "left 0.2s",
-          }}/>
-        </button>
+        <div style={{ display: "flex", flexDirection: "column", gap: 4, marginTop: 6 }}>
+          {f.steps.map((step, idx) => (
+            <div key={step.id} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <div style={{ width: 18, height: 18, borderRadius: 4, border: `2px solid ${C.border}`, flexShrink: 0 }}/>
+              <input
+                value={step.text}
+                onChange={e => {
+                  const newSteps = [...f.steps];
+                  newSteps[idx] = { ...step, text: e.target.value };
+                  set("steps")(newSteps);
+                }}
+                placeholder={`${t("step")} ${idx + 1}`}
+                style={{
+                  flex: 1, padding: "8px 12px", fontSize: 13, fontFamily: FONT_BODY,
+                  background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8,
+                  color: C.text, outline: "none", boxSizing: "border-box",
+                }}/>
+              <button onClick={() => set("steps")(f.steps.filter((_, i) => i !== idx))}
+                style={{ background: "none", border: "none", cursor: "pointer", padding: 4, flexShrink: 0 }}>
+                <Ic n="x" s={14} c={C.textMuted}/>
+              </button>
+            </div>
+          ))}
+          <button onClick={() => set("steps")([...f.steps, { id: Date.now().toString(), text: "" }])}
+            style={{
+              display: "flex", alignItems: "center", gap: 6, padding: "8px 12px",
+              background: "transparent", border: `1.5px dashed ${C.border}`,
+              borderRadius: 8, cursor: "pointer", color: C.accent,
+              fontSize: 12, fontWeight: 700, fontFamily: FONT_DISPLAY,
+            }}>
+            <Ic n="plus" s={14} c={C.accent}/> {t("addStep")}
+          </button>
+        </div>
       </div>
 
       {/* Time of Day */}
