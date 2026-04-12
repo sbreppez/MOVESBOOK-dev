@@ -677,19 +677,21 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
       />}
       {bulk&&<BulkModal onClose={()=>setBulk(false)} onImport={bulkImport} cats={cats}/>}
       <BottomSheet open={showLibraryMenu} onClose={()=>setShowLibraryMenu(false)} title={t("addToLibraryTitle")}>
-        <div style={{display:"flex",flexDirection:"column",gap:2}}>
+        <div style={{display:"flex",flexDirection:"column",gap:6}}>
           {[
             {icon:"plus",label:t("addMoveMenu"),action:()=>{setShowLibraryMenu(false);setShowAdd(true);}},
-            {icon:"layers",label:t("bulkImportMenu"),action:()=>{setShowLibraryMenu(false);setBulk(true);}},
+            {icon:"cards",label:t("bulkImportMenu"),action:()=>{setShowLibraryMenu(false);setBulk(true);}},
             {icon:"folderPlus",label:t("addCategoryMenu"),action:()=>{setShowLibraryMenu(false);setShowAddCat(true);}},
             {icon:"compass",label:t("tools"),action:()=>{setShowLibraryMenu(false);if(onOpenExplore)onOpenExplore();}},
           ].map(opt=>(
             <button key={opt.icon} onClick={opt.action}
-              style={{width:"100%",padding:"14px 16px",background:"none",border:"none",
-                cursor:"pointer",display:"flex",alignItems:"center",gap:12,
-                color:C.text,fontSize:14,fontFamily:FONT_DISPLAY,fontWeight:700,
-                letterSpacing:0.5,borderRadius:8}}>
-              <Ic n={opt.icon} s={18} c={C.textSec}/>{opt.label}
+              style={{display:"flex",alignItems:"center",gap:12,width:"100%",
+                padding:"14px 16px",borderRadius:8,cursor:"pointer",
+                background:C.surfaceAlt,border:"none",textAlign:"left"}}>
+              <Ic n={opt.icon} s={18} c={C.textSec}/>
+              <span style={{fontSize:14,fontFamily:FONT_DISPLAY,fontWeight:700,color:C.text}}>
+                {opt.label}
+              </span>
             </button>
           ))}
         </div>
