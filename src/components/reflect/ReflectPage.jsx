@@ -115,14 +115,14 @@ export const ReflectPage = ({
     });
   };
   const changeColor = (id, color) => setIdeas(p => p.map(i => i.id === id ? { ...i, color } : i));
-  const togglePin = (id) => setIdeas(p => p.map(i => i.id === id && i.type !== "goal" ? { ...i, pinnedNotes: !i.pinnedNotes } : i));
+  const togglePin = (id) => setIdeas(p => p.map(i => i.id === id && i.type !== "goal" ? { ...i, pinnedNotes: !i.pinnedNotes, pinned: undefined } : i));
 
   const q = search.toLowerCase().trim();
   const base = q ? ideas.filter(i => (i.title || "").toLowerCase().includes(q) || (i.text || "").toLowerCase().includes(q)) : ideas;
   const filtered = reorderMode ? base : [
     ...base.filter(i => i.type === "goal"),
-    ...base.filter(i => i.type !== "goal" && (i.pinnedNotes || i.pinned)),
-    ...base.filter(i => i.type !== "goal" && !(i.pinnedNotes || i.pinned)),
+    ...base.filter(i => i.type !== "goal" && i.pinnedNotes),
+    ...base.filter(i => i.type !== "goal" && !i.pinnedNotes),
   ];
 
   const goals = ideas.filter(i => i.type === "goal" || i.type === "target");

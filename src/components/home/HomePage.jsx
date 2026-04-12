@@ -161,7 +161,7 @@ export const HomePage = ({
   const handleTogglePinHome = (tile) => {
     if (tile.type === 'note') {
       setIdeas(prev => prev.map(i =>
-        i.id === tile.id ? { ...i, pinnedHome: !i.pinnedHome } : i
+        i.id === tile.id ? { ...i, pinnedHome: !i.pinnedHome, pinned: undefined } : i
       ));
     }
   };

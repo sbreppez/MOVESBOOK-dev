@@ -37,7 +37,7 @@ export const HomeTile = ({ tile, isChecked, onCheck, onRemove, onEdit, onToggleP
     fallbackIcon = "fileText";
     name = note?.title || "";
     description = note?.text || "";
-    isPinned = note?.pinnedHome || note?.pinned || false;
+    isPinned = note?.pinnedHome || false;
     if (note?.link) {
       extraInfo = note.link;
     }

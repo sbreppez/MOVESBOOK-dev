@@ -26,7 +26,7 @@ export const IdeaTile = (props) => {
   const text   = idea.text  || "";
   const isGoal   = idea.type === "goal";
   const isTarget = idea.type === "target";
-  const isPinned = idea.pinnedNotes || idea.pinned || isGoal || isTarget;
+  const isPinned = idea.pinnedNotes || isGoal || isTarget;
   const isTile   = viewMode === "tiles";
   const typeIcon = isGoal ? "target" : isTarget ? "crosshair" : "fileText";
   const typeLabel = isGoal ? "GOAL" : isTarget ? "TARGET" : "NOTE";
@@ -193,8 +193,9 @@ export const IdeaTile = (props) => {
           {/* Type icon */}
           <span style={{ flexShrink:0 }} title={typeLabel}><Ic n={typeIcon} s={13}/></span>
           <div style={{ flex:1, minWidth:0 }} onClick={onEdit}>
-            <span style={{ fontWeight:800, fontSize:14, color: isGoal ? C.accent : C.brown, letterSpacing:1.2, fontFamily:FONT_DISPLAY, cursor:"pointer", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", display:"block" }}>
+            <span style={{ fontWeight:800, fontSize:14, color: isGoal ? C.accent : C.brown, letterSpacing:1.2, fontFamily:FONT_DISPLAY, cursor:"pointer", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", display:"flex", alignItems:"center" }}>
               <Highlight text={title.toUpperCase()} query={searchQuery}/>
+              {isPinned && !isGoal && !isTarget && <Ic n="pin" s={10} c={C.accent} style={{flexShrink:0, marginLeft:4}}/>}
             </span>
             {/* Journey Goal: date + days to go */}
             {isGoal&&(()=>{
