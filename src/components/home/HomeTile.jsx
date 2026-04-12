@@ -5,7 +5,7 @@ import { useT } from '../../hooks/useTranslation';
 import { Ic } from '../shared/Ic';
 import { ExpandableText } from '../shared/ExpandableText';
 
-export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEdit, onTogglePin, habits, ideas, homeIdeas }) => {
+export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEdit, onTogglePin, onOpenJournal, habits, ideas, homeIdeas }) => {
   const { C } = useSettings();
   const t = useT();
   const [expanded, setExpanded] = useState(false);
@@ -20,10 +20,10 @@ export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEd
   }, [menu]);
 
   // Resolve data based on tile type
-  let emoji = null, fallbackIcon = null, name, description, showCheckbox = false, extraInfo = null, isOrphan = false, isPinned = false;
+  let emoji = null, fallbackIcon = null, name, description, showCheckbox = false, extraInfo = null, isOrphan = false, isPinned = false, isGoal = false;
 
   if (tile.type === 'routine') {
-    fallbackIcon = "refresh";
+    fallbackIcon = "list";
     name = tile.name || "";
   } else if (tile.type === 'note') {
     const note = ideas?.find(i => i.id === tile.id);
@@ -55,8 +55,9 @@ export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEd
     } else {
       const goal = ideas?.find(i => String(i.id) === String(tile.refId) && (i.type === 'goal' || i.type === 'target'));
       if (goal) {
+        isGoal = true;
         emoji = null;
-        fallbackIcon = "target";
+        fallbackIcon = "trophy";
         name = goal.title || "";
         description = goal.text || "";
         if (goal.byWhen) {
@@ -100,11 +101,14 @@ export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEd
 
       {/* Content */}
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{
+        <div
+          onClick={isGoal && onOpenJournal ? (e) => { e.stopPropagation(); onOpenJournal(tile); } : undefined}
+          style={{
           fontWeight: 800, fontSize: 13, fontFamily: FONT_DISPLAY, letterSpacing: 0.3,
           color: tileChecked ? C.textMuted : C.text,
           textDecoration: tileChecked ? "line-through" : "none",
           overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+          cursor: isGoal ? "pointer" : undefined,
         }}>
           {name}
           {isPinned && <Ic n="pin" s={10} c={C.accent} style={{marginLeft:4, verticalAlign:"middle"}}/>}

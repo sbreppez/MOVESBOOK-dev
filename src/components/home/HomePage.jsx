@@ -90,6 +90,7 @@ export const HomePage = ({
   const [showGearMenu, setShowGearMenu] = useState(false);
   const [editTile, setEditTile] = useState(null);
   const [confirmRemove, setConfirmRemove] = useState(null);
+  const [journalGoalTile, setJournalGoalTile] = useState(null);
 
   // Feature 2: edit scope
   const [pendingEdit, setPendingEdit] = useState(null);
@@ -269,6 +270,11 @@ export const HomePage = ({
     if (tile.type === 'routine' || tile.type === 'idea' || tile.type === 'note' || tile.type === 'goalhabit') {
       setEditTile(tile);
     }
+  };
+
+  const handleOpenJournal = (tile) => {
+    const goal = ideas?.find(i => String(i.id) === String(tile.refId) && (i.type === 'goal' || i.type === 'target'));
+    if (goal) setJournalGoalTile({ tile, goal });
   };
 
   // Feature 2: intercept save for recurring routines
@@ -554,6 +560,7 @@ export const HomePage = ({
                 onRemove={handleTileRemove}
                 onEdit={handleTileEdit}
                 onTogglePin={handleTogglePinHome}
+                onOpenJournal={handleOpenJournal}
                 habits={habits} ideas={ideas} homeIdeas={homeIdeas}
               />
             </div>
@@ -779,6 +786,21 @@ export const HomePage = ({
         setEditTile(null);
         return null;
       })()}
+
+      {journalGoalTile && (
+        <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.6)", zIndex:10000, display:"flex", alignItems:"center", justifyContent:"center", padding:10 }}>
+          <GoalModal
+            onClose={() => setJournalGoalTile(null)}
+            onSave={(fields) => {
+              setIdeas(prev => prev.map(i =>
+                String(i.id) === String(journalGoalTile.tile.refId) ? { ...i, ...fields } : i
+              ));
+              setJournalGoalTile(null);
+            }}
+            idea={journalGoalTile.goal}
+          />
+        </div>
+      )}
     </div>
   );
 };
