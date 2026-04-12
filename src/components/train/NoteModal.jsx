@@ -1,16 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { lbl } from '../../constants/styles';
 import { IDEA_COLORS } from '../../constants/categories';
 import { Btn } from '../shared/Btn';
 import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
+import { useSettings } from '../../hooks/useSettings';
 import { ensureHttps } from './helpers';
 import { todayLocal } from '../../utils/dateUtils';
 
 export const NoteModal = ({ onClose, onSave, idea }) => {
   const t = useT();
+  const { C } = useSettings();
   const [title, setTitle] = useState(idea?.title || "");
   const [text,  setText]  = useState(idea?.text  || "");
   const [color, setColor] = useState(idea?.color || IDEA_COLORS[1]);
