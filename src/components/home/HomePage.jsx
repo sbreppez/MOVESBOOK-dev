@@ -73,7 +73,7 @@ export const HomePage = ({
   injuries, setInjuries, presession, setPresession,
   ideas, setIdeas, settings, onSettingsChange,
   homeStack, setHomeStack, homeIdeas, setHomeIdeas, homeChecks, setHomeChecks,
-  onAddTrigger, addCalendarEvent, removeCalendarEvent,
+  onAddTrigger, addCalendarEvent, removeCalendarEvent, calendar,
 }) => {
   const { C } = useSettings();
   const t = useT();
@@ -155,37 +155,41 @@ export const HomePage = ({
   };
 
   const handleStepCheck = (tile, stepId) => {
-    setHomeChecks(prev => {
-      const day = { ...(prev[selectedDate] || {}) };
-      const tileChecks = typeof day[tile.id] === 'object' ? { ...day[tile.id] } : {};
+    // Compute new check state
+    const day = { ...(homeChecks[selectedDate] || {}) };
+    const tileChecks = typeof day[tile.id] === 'object' ? { ...day[tile.id] } : {};
 
-      if (tileChecks[stepId]) {
-        delete tileChecks[stepId];
-      } else {
-        tileChecks[stepId] = true;
-      }
+    if (tileChecks[stepId]) {
+      delete tileChecks[stepId];
+    } else {
+      tileChecks[stepId] = true;
+    }
 
-      day[tile.id] = Object.keys(tileChecks).length > 0 ? tileChecks : undefined;
-      if (!day[tile.id]) delete day[tile.id];
+    day[tile.id] = Object.keys(tileChecks).length > 0 ? tileChecks : undefined;
+    if (!day[tile.id]) delete day[tile.id];
 
-      // Log completion when all steps are done
-      const allSteps = tile.steps || [];
-      const nowComplete = allSteps.length > 0 && allSteps.every(s => tileChecks[s.id]);
-      if (nowComplete) {
-        const completions = JSON.parse(localStorage.getItem('mb_routine_completions') || '[]');
-        completions.push({
-          routineId: tile.id,
-          routineName: tile.name,
-          date: selectedDate,
-          stepsCompleted: allSteps.length,
-          stepsTotal: allSteps.length,
-          timestamp: new Date().toISOString(),
-        });
-        localStorage.setItem('mb_routine_completions', JSON.stringify(completions));
-      }
+    setHomeChecks(prev => ({ ...prev, [selectedDate]: day }));
 
-      return { ...prev, [selectedDate]: day };
-    });
+    // Upsert calendar event for this routine + date
+    const allSteps = tile.steps || [];
+    const completedCount = allSteps.filter(s => tileChecks[s.id]).length;
+
+    const existing = (calendar?.events || []).find(e =>
+      e.source === "home-routine" && e.date === selectedDate && e.routineId === tile.id
+    );
+    if (existing) removeCalendarEvent(existing.id);
+
+    if (completedCount > 0) {
+      addCalendarEvent({
+        date: selectedDate,
+        type: "routine",
+        title: tile.name,
+        source: "home-routine",
+        routineId: tile.id,
+        stepsCompleted: completedCount,
+        stepsTotal: allSteps.length,
+      }, { silent: true });
+    }
   };
 
   const handleTileRemove = (tile) => {

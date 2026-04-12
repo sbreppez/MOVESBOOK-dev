@@ -47,9 +47,15 @@ export const computeDailyEntry = (date, { moves, reps, sparring, musicflow, cale
   const flowCount = (musicflow?.sessions || []).filter(s => toYMD(s.date) === d).length;
   const sessionsLogged = repCount + sparCount + flowCount;
 
-  const isRest = movesAdded === 0 && movesTrained === 0 && sessionsLogged === 0;
+  // Routine completions
+  const routineEvents = (calendar?.events || []).filter(e => e.date === d && e.type === "routine");
+  const routineCount = routineEvents.length;
+  const routineSteps = routineEvents.reduce((s, e) => s + (e.stepsCompleted || 0), 0);
+  const routineStepsTotal = routineEvents.reduce((s, e) => s + (e.stepsTotal || 0), 0);
 
-  return { date: d, movesAdded, movesTrained, sessionsLogged, isRest };
+  const isRest = movesAdded === 0 && movesTrained === 0 && sessionsLogged === 0 && routineCount === 0;
+
+  return { date: d, movesAdded, movesTrained, sessionsLogged, isRest, routineCount, routineSteps, routineStepsTotal };
 };
 
 // ── Weekly Report ───────────────────────────────────────────────────────────
@@ -57,7 +63,7 @@ export const computeDailyEntry = (date, { moves, reps, sparring, musicflow, cale
 export const computeWeeklyReport = (weekStart, data) => {
   const { moves, reps, sparring, musicflow, calendar, cats } = data;
   const weekEnd = addDays(weekStart, 6);
-  let sessionCount = 0, movesAdded = 0;
+  let sessionCount = 0, movesAdded = 0, routineCount = 0, routineSteps = 0, routineStepsTotal = 0;
   const catCounts = {};
 
   for (let i = 0; i < 7; i++) {
@@ -65,6 +71,9 @@ export const computeWeeklyReport = (weekStart, data) => {
     const daily = computeDailyEntry(d, { moves, reps, sparring, musicflow, calendar });
     sessionCount += daily.sessionsLogged;
     movesAdded += daily.movesAdded;
+    routineCount += daily.routineCount;
+    routineSteps += daily.routineSteps;
+    routineStepsTotal += daily.routineStepsTotal;
 
     // Count category activity from reps
     (reps || []).filter(r => toYMD(r.date) === d).forEach(r => {
@@ -87,7 +96,7 @@ export const computeWeeklyReport = (weekStart, data) => {
     ? Object.entries(catCounts).sort((a, b) => b[1] - a[1])[0][0]
     : null;
 
-  return { weekStart, weekEnd, sessionCount, movesAdded, sharpestCategory };
+  return { weekStart, weekEnd, sessionCount, movesAdded, sharpestCategory, routineCount, routineSteps, routineStepsTotal };
 };
 
 // ── Monthly Report ──────────────────────────────────────────────────────────
@@ -97,7 +106,7 @@ export const computeMonthlyReport = (year, month, data) => {
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const monthStr = `${year}-${String(month + 1).padStart(2, "0")}`;
 
-  let totalSessions = 0, movesAdded = 0;
+  let totalSessions = 0, movesAdded = 0, routineCount = 0, routineSteps = 0, routineStepsTotal = 0;
   const catCounts = {};
 
   for (let d = 1; d <= daysInMonth; d++) {
@@ -105,6 +114,9 @@ export const computeMonthlyReport = (year, month, data) => {
     const daily = computeDailyEntry(dateStr, { moves, reps, sparring, musicflow, calendar });
     totalSessions += daily.sessionsLogged;
     movesAdded += daily.movesAdded;
+    routineCount += daily.routineCount;
+    routineSteps += daily.routineSteps;
+    routineStepsTotal += daily.routineStepsTotal;
 
     // Category tracking
     (reps || []).filter(r => toYMD(r.date) === dateStr).forEach(r => {
@@ -144,19 +156,21 @@ export const computeMonthlyReport = (year, month, data) => {
     return hd && hd >= `${monthStr}-01` && hd <= monthEnd;
   }).length;
 
-  // Narrative (Development Story style)
-  const narrative = buildMonthlyNarrative({
+  const narrative2 = buildMonthlyNarrative({
     totalSessions, movesAdded, staleCount, sparSessions,
-    mostTrainedCat, leastTrainedCat, battleCount, monthName: MONTH_NAMES[month]
+    mostTrainedCat, leastTrainedCat, battleCount, monthName: MONTH_NAMES[month],
+    routineCount, routineSteps, routineStepsTotal
   });
 
   return {
     year, month, totalSessions, movesAdded, staleCount,
-    sparringFreq, mostTrainedCat, leastTrainedCat, battleCount, narrative
+    sparringFreq, mostTrainedCat, leastTrainedCat, battleCount,
+    routineCount, routineSteps, routineStepsTotal,
+    narrative: narrative2
   };
 };
 
-const buildMonthlyNarrative = ({ totalSessions, movesAdded, staleCount, sparSessions, mostTrainedCat, leastTrainedCat, battleCount, monthName }) => {
+const buildMonthlyNarrative = ({ totalSessions, movesAdded, staleCount, sparSessions, mostTrainedCat, leastTrainedCat, battleCount, monthName, routineCount, routineSteps, routineStepsTotal }) => {
   const lines = [];
   if (totalSessions > 0) {
     lines.push(`${totalSessions} session${totalSessions !== 1 ? "s" : ""} logged in ${monthName}.`);
@@ -181,6 +195,9 @@ const buildMonthlyNarrative = ({ totalSessions, movesAdded, staleCount, sparSess
   }
   if (battleCount > 0) {
     lines.push(`${battleCount} battle${battleCount !== 1 ? "s" : ""} completed.`);
+  }
+  if (routineCount > 0) {
+    lines.push(`${routineSteps}/${routineStepsTotal} routine steps completed.`);
   }
   return lines.join(" ");
 };

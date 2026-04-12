@@ -97,6 +97,12 @@ const MonthTile = ({ entry, t, C, catColors }) => {
             {d.battleCount} {t("battlesLabel")}
           </span>
         )}
+        {d.routineCount > 0 && (
+          <span style={{ fontSize:10, color:C.textSec, background:C.surfaceAlt, borderRadius:6,
+            padding:"2px 8px", fontFamily:FONT_DISPLAY, fontWeight:700 }}>
+            {d.routineSteps}/{d.routineStepsTotal} {t("routineStepsLabel")}
+          </span>
+        )}
       </div>
 
       {d.narrative && (
@@ -134,6 +140,11 @@ const WeekTile = ({ entry, t, C, catColors }) => {
         {d.sharpestCategory && (
           <CatPill label={t("sharpest")} cat={d.sharpestCategory} catColors={catColors} C={C} small/>
         )}
+        {d.routineCount > 0 && (
+          <span style={{ fontSize:11, color:C.textSec, fontFamily:FONT_DISPLAY }}>
+            {d.routineSteps}/{d.routineStepsTotal} {t("routineStepsLabel")}
+          </span>
+        )}
       </div>
 
       {d.milestones && d.milestones.length > 0 && (
@@ -169,6 +180,7 @@ const DayRow = ({ entry, t, C }) => {
           {d.movesTrained > 0 && <span>{d.movesTrained} {t("movesTrainedLabel")}</span>}
           {d.movesAdded > 0 && <span>+{d.movesAdded} {t("movesAddedLabel")}</span>}
           {d.sessionsLogged > 0 && <span>{d.sessionsLogged} {t("sessionsCount")}</span>}
+          {d.routineCount > 0 && <span>{d.routineSteps}/{d.routineStepsTotal} {t("routineStepsLabel")}</span>}
         </div>
       )}
     </div>
