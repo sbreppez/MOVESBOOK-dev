@@ -15,8 +15,6 @@ export const IdeaForm = ({ idea, onSave, onCancel }) => {
     text: idea?.text || "",
     link: idea?.link || "",
     showDate: idea?.showDate || "",
-    pinnedHome: idea?.pinnedHome || idea?.pinned || false,
-    homeOnly: idea?.homeOnly !== false,
   });
 
   const set = (k) => (v) => setF(p => ({ ...p, [k]: v }));
@@ -27,8 +25,6 @@ export const IdeaForm = ({ idea, onSave, onCancel }) => {
       text: f.text.trim(),
       link: f.link.trim(),
       showDate: f.showDate || null,
-      pinnedHome: f.pinnedHome,
-      homeOnly: f.homeOnly,
     });
   };
 
@@ -81,46 +77,6 @@ export const IdeaForm = ({ idea, onSave, onCancel }) => {
           </div>
         )}
       </div>
-
-      {/* Pin the idea to Home */}
-      <button onClick={() => set("pinnedHome")(!f.pinnedHome)}
-        style={{
-          display: "flex", alignItems: "center", gap: 10, width: "100%",
-          padding: "10px 12px", borderRadius: 8, cursor: "pointer",
-          background: "transparent", border: "none", textAlign: "left",
-        }}>
-        <div style={{
-          width: 20, height: 20, borderRadius: 5, flexShrink: 0,
-          border: `2px solid ${f.pinnedHome ? C.green : C.border}`,
-          background: f.pinnedHome ? C.green : "transparent",
-          display: "flex", alignItems: "center", justifyContent: "center",
-        }}>
-          {f.pinnedHome && <Ic n="check" s={12} c="#fff"/>}
-        </div>
-        <span style={{ fontSize: 13, fontFamily: FONT_BODY, color: C.text }}>
-          {t("pinIdeaToHome")}
-        </span>
-      </button>
-
-      {/* Show on Home */}
-      <button onClick={() => set("homeOnly")(!f.homeOnly)}
-        style={{
-          display: "flex", alignItems: "center", gap: 10, width: "100%",
-          padding: "10px 12px", borderRadius: 8, cursor: "pointer",
-          background: "transparent", border: "none", textAlign: "left",
-        }}>
-        <div style={{
-          width: 20, height: 20, borderRadius: 5, flexShrink: 0,
-          border: `2px solid ${f.homeOnly ? C.green : C.border}`,
-          background: f.homeOnly ? C.green : "transparent",
-          display: "flex", alignItems: "center", justifyContent: "center",
-        }}>
-          {f.homeOnly && <Ic n="check" s={12} c="#fff"/>}
-        </div>
-        <span style={{ fontSize: 13, fontFamily: FONT_BODY, color: C.text }}>
-          {t("showOnHome")}
-        </span>
-      </button>
 
       {/* Link */}
       <div>

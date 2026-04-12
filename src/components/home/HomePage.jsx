@@ -28,13 +28,11 @@ function getTilesForDate(homeStack, selectedDate, homeIdeas, ideas) {
     if (tile.type === 'goalhabit') return true;
     if (tile.type === 'note') {
       const note = ideas?.find(i => i.id === tile.id);
-      if (note?.homeOnly === false) return false;
       if (note?.showDate && selectedDate < note.showDate) return false;
       return true;
     }
     if (tile.type === 'idea') {
       const idea = homeIdeas?.find(i => i.id === tile.id);
-      if (idea?.homeOnly === false) return false;
       if (idea?.showDate && selectedDate < idea.showDate) return false;
       return true;
     }
@@ -160,6 +158,14 @@ export const HomePage = ({
     setConfirmRemove(tile);
   };
 
+  const handleTogglePinHome = (tile) => {
+    if (tile.type === 'note') {
+      setIdeas(prev => prev.map(i =>
+        i.id === tile.id ? { ...i, pinnedHome: !i.pinnedHome } : i
+      ));
+    }
+  };
+
   // ── Feature 1: Smart remove ──────────────────────────────────────────────
 
   const doRemove = (mode) => {
@@ -201,6 +207,7 @@ export const HomePage = ({
       }
       if (tile.type === 'note') {
         setIdeas(prev => prev.filter(i => i.id !== tile.id));
+        // TODO: remove linked calendar events by ideaId (removeCalendarEvent filters by event.id, not ideaId)
       }
     }
     setConfirmRemove(null);
@@ -392,7 +399,7 @@ export const HomePage = ({
 
   const handleCreateIdea = (fields) => {
     const id = Date.now().toString();
-    setIdeas(prev => [{ id, type: 'note', title: fields.title, text: fields.text, link: fields.link, showDate: fields.showDate || null, pinnedHome: fields.pinnedHome || false, homeOnly: fields.homeOnly !== false, createdDate: new Date().toISOString() }, ...prev]);
+    setIdeas(prev => [{ id, type: 'note', title: fields.title, text: fields.text, link: fields.link, showDate: fields.showDate || null, createdDate: new Date().toISOString() }, ...prev]);
     setHomeStack(prev => ({ ...prev, defaultStack: [{ id, type: 'note' }, ...prev.defaultStack] }));
     if (fields.showDate && addCalendarEvent) {
       addCalendarEvent({
@@ -507,6 +514,7 @@ export const HomePage = ({
                 onCheck={handleTileCheck}
                 onRemove={handleTileRemove}
                 onEdit={handleTileEdit}
+                onTogglePin={handleTogglePinHome}
                 habits={habits} ideas={ideas} homeIdeas={homeIdeas}
               />
             </div>
@@ -642,10 +650,10 @@ export const HomePage = ({
               <Btn variant="primary" onClick={() => doRemove("allDays")}>{t("deletePermanently")}</Btn>
             </>)}
 
-            {/* Note: Just today + Delete permanently */}
+            {/* Note: Remove from here + Delete everywhere */}
             {confirmRemove.type === 'note' && (<>
-              <Btn variant="secondary" onClick={() => doRemove("justToday")}>{t("justToday")}</Btn>
-              <Btn variant="primary" onClick={() => doRemove("allDays")}>{t("deletePermanently")}</Btn>
+              <Btn variant="secondary" onClick={() => doRemove("justToday")}>{t("removeFromHere")}</Btn>
+              <Btn variant="primary" onClick={() => doRemove("allDays")}>{t("deleteEverywhere")}</Btn>
             </>)}
 
             {/* Goal/Habit: Remove from HOME + Delete entirely */}

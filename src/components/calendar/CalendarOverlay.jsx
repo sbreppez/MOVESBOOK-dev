@@ -784,7 +784,7 @@ export const CalendarOverlay = ({
               if (setIdeas && editHomeNote.ideaId) {
                 setIdeas(prev => prev.map(i =>
                   i.id === editHomeNote.ideaId
-                    ? { ...i, title: fields.title, text: fields.text, link: fields.link, showDate: fields.showDate, pinnedHome: fields.pinnedHome, homeOnly: fields.homeOnly }
+                    ? { ...i, title: fields.title, text: fields.text, link: fields.link, showDate: fields.showDate }
                     : i
                 ));
               }
@@ -792,7 +792,7 @@ export const CalendarOverlay = ({
                 ...prev,
                 events: (prev.events || []).map(e =>
                   e.id === editHomeNote.id
-                    ? { ...e, title: fields.title, text: fields.text, link: fields.link, showDate: fields.showDate || e.date, pinnedHome: fields.pinnedHome, homeOnly: fields.homeOnly }
+                    ? { ...e, title: fields.title, text: fields.text, link: fields.link, showDate: fields.showDate || e.date }
                     : e
                 ),
               }));

@@ -5,7 +5,7 @@ import { useT } from '../../hooks/useTranslation';
 import { Ic } from '../shared/Ic';
 import { ExpandableText } from '../shared/ExpandableText';
 
-export const HomeTile = ({ tile, isChecked, onCheck, onRemove, onEdit, habits, ideas, homeIdeas }) => {
+export const HomeTile = ({ tile, isChecked, onCheck, onRemove, onEdit, onTogglePin, habits, ideas, homeIdeas }) => {
   const { C } = useSettings();
   const t = useT();
   const [expanded, setExpanded] = useState(false);
@@ -185,6 +185,14 @@ export const HomeTile = ({ tile, isChecked, onCheck, onRemove, onEdit, habits, i
                 color: C.text, fontSize: 12, fontFamily: "inherit" }}>
               <Ic n="edit" s={12} c={C.textSec}/>{t("edit")}
             </button>
+            {(tile.type === 'note' || tile.type === 'idea') && (
+              <button onClick={() => { setMenu(false); onTogglePin?.(tile); }}
+                style={{ width: "100%", padding: "9px 13px", background: "none", border: "none",
+                  cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
+                  color: C.text, fontSize: 12, fontFamily: "inherit", borderTop: `1px solid ${C.border}` }}>
+                <Ic n="pin" s={12} c={C.textSec}/>{isPinned ? t("unpinBtn") : t("pinToTop")}
+              </button>
+            )}
             <button onClick={() => { setMenu(false); onRemove?.(tile); }}
               style={{ width: "100%", padding: "9px 13px", background: "none", border: "none",
                 cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
