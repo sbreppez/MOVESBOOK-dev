@@ -509,57 +509,53 @@ export const HomePage = ({
       <WeekStrip selectedDate={selectedDate} onSelectDate={setSelectedDate}/>
       <SectionBrief desc={t("homeBrief")} settings={settings}/>
 
+      {/* Select/Reorder bar — OUTSIDE scroll container, always visible */}
+      {todayTiles.length >= 1 && (
+        <div style={{ display: "flex", justifyContent: "flex-end", padding: "4px 16px 0", gap: 8, flexShrink: 0 }}>
+          {/* Select mode toggle */}
+          {selectMode ? (
+            <>
+              {selectedIds.size > 0 && (
+                <button onClick={() => setConfirmBulkDelete(true)}
+                  style={{ background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex", alignItems: "center", gap: 4 }}>
+                  <Ic n="trash" s={16} c={C.accent}/>
+                  <span style={{ fontSize: 11, color: C.accent, fontWeight: 700, fontFamily: FONT_DISPLAY }}>{selectedIds.size}</span>
+                </button>
+              )}
+              <button onClick={exitSelectMode}
+                style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
+                <Ic n="x" s={16} c={C.textMuted}/>
+              </button>
+            </>
+          ) : (
+            <button onClick={() => setSelectMode(true)}
+              style={{ background: "none", border: "none", cursor: "pointer", padding: 4,
+                color: C.textMuted }}>
+              <Ic n="checkCircle" s={16} c={C.textMuted}/>
+            </button>
+          )}
+          {/* Reorder toggle — hide during select mode */}
+          {!selectMode && todayTiles.length >= 2 && (
+            <button onClick={() => setShowReorder(r => !r)}
+              style={{
+                background: showReorder ? C.accent : "none",
+                border: "none", cursor: "pointer",
+                padding: "4px 8px", borderRadius: 5,
+                color: showReorder ? C.bg : C.textMuted,
+                fontSize: 13, fontWeight: 800,
+                fontFamily: FONT_DISPLAY, letterSpacing: 1,
+              }}>
+              {showReorder ? t("done") : "⇅"}
+            </button>
+          )}
+        </div>
+      )}
+
       {/* Scrollable content */}
       <div style={{ flex: 1, overflow: "auto", paddingBottom: 76 }}>
         {/* Pre-session intelligence */}
         {isBreakingDay && presession && (
           <PreSessionIntel presession={presession} setPresession={setPresession}/>
-        )}
-
-        {/* Select + Sort toggle */}
-        {todayTiles.length >= 1 && (
-          <div style={{ display: "flex", justifyContent: "flex-end", padding: "4px 16px 0", gap: 8 }}>
-            {/* Select mode toggle */}
-            {selectMode ? (
-              <>
-                {selectedIds.size > 0 && (
-                  <button onClick={() => setConfirmBulkDelete(true)}
-                    style={{ background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex", alignItems: "center", gap: 4 }}>
-                    <Ic n="trash" s={16} c={C.accent}/>
-                    <span style={{ fontSize: 11, color: C.accent, fontWeight: 700, fontFamily: FONT_DISPLAY }}>{selectedIds.size}</span>
-                  </button>
-                )}
-                <button onClick={exitSelectMode}
-                  style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
-                  <Ic n="x" s={16} c={C.textMuted}/>
-                </button>
-              </>
-            ) : (
-              <button onClick={() => setSelectMode(true)}
-                style={{
-                  background: "none", border: "none", cursor: "pointer",
-                  padding: "4px 8px", borderRadius: 5,
-                  color: C.textMuted, fontSize: 13, fontWeight: 800,
-                  fontFamily: FONT_DISPLAY, letterSpacing: 1,
-                }}>
-                {t("select")}
-              </button>
-            )}
-            {/* Reorder toggle — hide during select mode */}
-            {!selectMode && todayTiles.length >= 2 && (
-              <button onClick={() => setShowReorder(r => !r)}
-                style={{
-                  background: showReorder ? C.accent : "none",
-                  border: "none", cursor: "pointer",
-                  padding: "4px 8px", borderRadius: 5,
-                  color: showReorder ? C.bg : C.textMuted,
-                  fontSize: 13, fontWeight: 800,
-                  fontFamily: FONT_DISPLAY, letterSpacing: 1,
-                }}>
-                {showReorder ? t("done") : "⇅"}
-              </button>
-            )}
-          </div>
         )}
 
         {/* Tile stack */}
