@@ -222,7 +222,7 @@ export const CalendarOverlay = ({
     }, [menu]);
 
     return (
-      <div style={{ background: C.surfaceAlt, borderRadius: 8, marginBottom: 4, overflow: "hidden" }}>
+      <div style={{ background: C.surfaceAlt, borderRadius: 8, marginBottom: 4, overflow: "visible" }}>
         <div style={{ display: "flex", alignItems: "center", padding: "10px 12px", gap: 8 }}>
           <Ic n="fileText" s={14} c={C.textSec}/>
           <span style={{ flex: 1, fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12, color: C.text,
