@@ -354,7 +354,7 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
             : {display:"flex",flexDirection:"column",gap:6}}
         >
           {(()=>{ const visibleIdeas = filtered.filter(i=>trainTab==="goals"?(i.type==="goal"||i.type==="target"):i.type==="note"); return visibleIdeas.map((idea, idx) => (
-            <div key={idea.id} style={{ position:"relative", minWidth:0, overflow:"hidden" }}>
+            <div key={idea.id} style={{ position:"relative", minWidth:0, overflow:"visible" }}>
               {reorderMode&&(
                 <div style={{ position:"absolute", right:6, top:"50%", transform:"translateY(-50%)", zIndex:10,
                   display:"flex", flexDirection:"column", gap:2 }}>

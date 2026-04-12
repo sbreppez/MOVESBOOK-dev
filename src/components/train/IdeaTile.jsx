@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useRef } from 'react';
+import React, { Fragment, useState, useRef, useEffect } from 'react';
 import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { CARD_BASE, CARD_BODY } from '../../constants/styles';
@@ -9,7 +9,6 @@ import { Highlight } from '../shared/Highlight';
 import { useT } from '../../hooks/useTranslation';
 import { usePlural } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
-import { useTrainMenu } from '../../hooks/useTrainContext';
 import { targetProgress, goalTimeProgress } from './helpers';
 
 export const IdeaTile = (props) => {
@@ -17,10 +16,16 @@ export const IdeaTile = (props) => {
   const t = useT();
   const { settings } = useSettings();
   const [expanded,   setExpanded]   = useState(false);
-  const btnRef = useRef(null);
-  const { openMenu } = useTrainMenu();
+  const [menu, setMenu] = useState(false);
+  const [subColor, setSubColor] = useState(false);
+  const menuRef = useRef(null);
 
-  const closeMenu = () => {};  // menu is managed externally
+  useEffect(() => {
+    if (!menu) return;
+    const h = e => { if (menuRef.current && !menuRef.current.contains(e.target)) { setMenu(false); setSubColor(false); } };
+    document.addEventListener("pointerdown", h);
+    return () => document.removeEventListener("pointerdown", h);
+  }, [menu]);
   const color  = idea.color || IDEA_COLORS[0];
   const title  = idea.title || "Untitled";
   const text   = idea.text  || "";
@@ -31,15 +36,75 @@ export const IdeaTile = (props) => {
   const typeIcon = isGoal ? "target" : isTarget ? "crosshair" : "fileText";
   const typeLabel = isGoal ? "GOAL" : isTarget ? "TARGET" : "NOTE";
 
-  const handleOpenMenu = (e) => {
-    e.stopPropagation();
-    const rect = btnRef.current.getBoundingClientRect();
-    openMenu({
-      rect,
-      idea, color, isGoal, isPinned, typeIcon, typeLabel, text, title,
-      onEdit, onDelete, onDuplicate, onAddToMove, onTogglePin, onChangeColor,
-    });
-  };
+  const menuDropdown = (
+    <div onClick={e=>e.stopPropagation()}
+      style={{
+        position:"absolute", top:24, right:0, background:C.bg,
+        border:`1px solid ${C.border}`, borderRadius:9, overflow:"hidden",
+        zIndex:9999, minWidth:175, boxShadow:"0 8px 28px rgba(0,0,0,0.22)",
+      }}>
+      {!subColor ? (<>
+        <button onClick={()=>{ setMenu(false); onEdit(); }}
+          style={{ width:"100%", padding:"9px 13px", background:"none", border:"none",
+            cursor:"pointer", display:"flex", alignItems:"center", gap:8,
+            color:C.text, fontSize:12, fontFamily:"inherit" }}>
+          <Ic n="edit" s={12} c={C.textSec}/>{t("edit")} {typeLabel.toLowerCase()}
+        </button>
+        {!isGoal&&!isTarget&&(
+          <button onClick={()=>{ setMenu(false); onTogglePin&&onTogglePin(); }}
+            style={{ width:"100%", padding:"9px 13px", background:"none", border:"none",
+              cursor:"pointer", display:"flex", alignItems:"center", gap:8,
+              color:C.text, fontSize:12, fontFamily:"inherit", borderTop:`1px solid ${C.border}` }}>
+            <Ic n="pin" s={12} c={C.textSec}/>{isPinned?t("unpinBtn"):t("pinToTop")}
+          </button>
+        )}
+        <button onClick={()=>setSubColor(true)}
+          style={{ width:"100%", padding:"9px 13px", background:"none", border:"none",
+            cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"space-between",
+            color:C.text, fontSize:12, fontFamily:"inherit", borderTop:`1px solid ${C.border}` }}>
+          <span style={{ display:"flex", alignItems:"center", gap:8 }}>
+            <span style={{ width:12, height:12, borderRadius:3, background:color, display:"inline-block", flexShrink:0 }}/>
+            {t("changeColour")}
+          </span>
+          <Ic n="chevR" s={11} c={C.textMuted}/>
+        </button>
+        {onAddToMove&&(
+          <button onClick={()=>{ setMenu(false); onAddToMove(text||title); }}
+            style={{ width:"100%", padding:"9px 13px", background:"none", border:"none",
+              cursor:"pointer", display:"flex", alignItems:"center", gap:8,
+              color:C.text, fontSize:12, fontFamily:"inherit", borderTop:`1px solid ${C.border}` }}>
+            <Ic n="plus" s={12} c={C.textSec}/>{t("addToMove")}
+          </button>
+        )}
+        <button onClick={()=>{ setMenu(false); onDuplicate(); }}
+          style={{ width:"100%", padding:"9px 13px", background:"none", border:"none",
+            cursor:"pointer", display:"flex", alignItems:"center", gap:8,
+            color:C.text, fontSize:12, fontFamily:"inherit", borderTop:`1px solid ${C.border}` }}>
+          <Ic n="copy" s={12} c={C.textSec}/>{t("duplicate")}
+        </button>
+        <button onClick={()=>{ setMenu(false); onDelete(); }}
+          style={{ width:"100%", padding:"9px 13px", background:"none", border:"none",
+            cursor:"pointer", display:"flex", alignItems:"center", gap:8,
+            color:C.accent, fontSize:12, fontFamily:"inherit", borderTop:`1px solid ${C.border}` }}>
+          <Ic n="trash" s={12} c={C.accent}/>{t("delete")}
+        </button>
+      </>) : (<>
+        <button onClick={()=>setSubColor(false)}
+          style={{ width:"100%", padding:"8px 13px", background:C.surfaceAlt, border:"none", cursor:"pointer",
+            display:"flex", alignItems:"center", gap:6, color:C.textSec, fontSize:11, fontFamily:"inherit",
+            borderBottom:`1px solid ${C.border}` }}>
+          ← {t("back")}
+        </button>
+        <div style={{ padding:"10px 12px", display:"flex", flexWrap:"wrap", gap:7 }}>
+          {IDEA_COLORS.map(pc=>(
+            <button key={pc} onClick={()=>{ onChangeColor(pc); setMenu(false); setSubColor(false); }}
+              style={{ width:24, height:24, borderRadius:5, background:pc, cursor:"pointer", outline:"none",
+                border: pc===color ? `2.5px solid ${C.brown}` : `1.5px solid transparent` }}/>
+          ))}
+        </div>
+      </>)}
+    </div>
+  );
 
   if (isTile) {
     return (
@@ -65,10 +130,13 @@ export const IdeaTile = (props) => {
                     width:22, height:22, color:C.textMuted, textDecoration:"none" }}
                   title="Open link"><Ic n="extLink" s={13} c={C.textMuted}/></a>
               )}
-              <button ref={btnRef} onClick={handleOpenMenu}
-                style={{ background:"none", border:"none", cursor:"pointer", color:C.textMuted, padding:2 }}>
-                <Ic n="more" s={13}/>
-              </button>
+              <div ref={menuRef} style={{ position:"relative" }}>
+                <button onClick={e=>{ e.stopPropagation(); setMenu(m=>!m); setSubColor(false); }}
+                  style={{ background:"none", border:"none", cursor:"pointer", color:C.textMuted, padding:2 }}>
+                  <Ic n="more" s={13}/>
+                </button>
+                {menu && menuDropdown}
+              </div>
             </div>
           </div>
           {/* Content preview */}
@@ -232,10 +300,13 @@ export const IdeaTile = (props) => {
                   width:22, height:22, color:C.textMuted, textDecoration:"none" }}
                 title="Open link"><Ic n="extLink" s={13} c={C.textMuted}/></a>
             )}
-            <button ref={btnRef} onClick={handleOpenMenu}
-              style={{ background:"none", border:"none", cursor:"pointer", color:C.textMuted, padding:3 }}>
-              <Ic n="more" s={13}/>
-            </button>
+            <div ref={menuRef} style={{ position:"relative" }}>
+              <button onClick={e=>{ e.stopPropagation(); setMenu(m=>!m); setSubColor(false); }}
+                style={{ background:"none", border:"none", cursor:"pointer", color:C.textMuted, padding:3 }}>
+                <Ic n="more" s={13}/>
+              </button>
+              {menu && menuDropdown}
+            </div>
           </div>
         </div>
         {expanded&&(
