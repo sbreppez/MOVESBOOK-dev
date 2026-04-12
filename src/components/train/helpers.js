@@ -1,12 +1,4 @@
-import { C } from '../../constants/colors';
 import { todayLocal } from '../../utils/dateUtils';
-
-export const menuBtnStyle = (color, border) => ({
-  width:"100%", padding:"10px 13px", background:"none", border:"none", cursor:"pointer",
-  display:"flex", alignItems:"center", gap:8,
-  color: color || C.text, fontSize:11, fontFamily:"inherit",
-  borderTop: border ? `1px solid ${C.borderLight}` : "none",
-});
 
 export const targetProgress = (current, target) => {
   if (!target || target <= 0) return { pct:0, color:"#e53935", label:"0%" };
