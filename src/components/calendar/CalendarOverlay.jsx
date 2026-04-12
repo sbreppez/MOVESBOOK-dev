@@ -225,7 +225,7 @@ export const CalendarOverlay = ({
       <div style={{ background: C.surfaceAlt, borderRadius: 8, marginBottom: 4, overflow: "visible" }}>
         <div style={{ display: "flex", alignItems: "center", padding: "10px 12px", gap: 8 }}>
           <Ic n="fileText" s={14} c={C.textSec}/>
-          <span style={{ flex: 1, fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 12, color: C.text,
+          <span style={{ flex: 1, fontFamily: FONT_DISPLAY, fontWeight: 800, fontSize: 13, color: C.text,
             overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
             {event.title || t("note")}
           </span>
@@ -260,7 +260,7 @@ export const CalendarOverlay = ({
         </div>
         {hasText && (<>
           {expanded && (
-            <div style={{ padding: "0 12px 10px 34px", fontSize: 13, fontFamily: FONT_BODY,
+            <div style={{ padding: "0 12px 10px 34px", fontSize: 11, fontFamily: FONT_BODY,
               color: C.textSec, lineHeight: 1.5 }}>
               {event.text}
             </div>
