@@ -5,7 +5,7 @@ import { useT } from '../../hooks/useTranslation';
 import { Ic } from '../shared/Ic';
 import { ExpandableText } from '../shared/ExpandableText';
 
-export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEdit, onTogglePin, onOpenJournal, habits, ideas, homeIdeas }) => {
+export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEdit, onTogglePin, onOpenJournal, selectMode, isSelected, onToggleSelect, habits, ideas, homeIdeas }) => {
   const { C } = useSettings();
   const t = useT();
   const [expanded, setExpanded] = useState(false);
@@ -94,6 +94,20 @@ export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEd
         opacity: isOrphan ? 0.45 : tileChecked ? 0.65 : 1,
         transition: "all 0.2s",
       }}>
+      {/* Selection checkbox */}
+      {selectMode && (
+        <button onClick={e => { e.stopPropagation(); onToggleSelect?.(); }}
+          style={{
+            width: 22, height: 22, borderRadius: 6, flexShrink: 0,
+            border: `2px solid ${isSelected ? C.accent : C.border}`,
+            background: isSelected ? C.accent : "transparent",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            cursor: "pointer", marginTop: 2, padding: 0,
+          }}>
+          {isSelected && <Ic n="check" s={14} c="#fff"/>}
+        </button>
+      )}
+
       {/* Emoji / Icon */}
       <span style={{ fontSize: 20, flexShrink: 0, width: 28, textAlign: "center", marginTop: 2, display: "flex", alignItems: "center", justifyContent: "center" }}>
         {emoji ? emoji : <Ic n={fallbackIcon} s={16} c={isOrphan ? C.textMuted : undefined}/>}
@@ -208,8 +222,8 @@ export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEd
         </button>
       )}
 
-      {/* Three-dot menu */}
-      <div ref={menuRef} style={{ flexShrink: 0, position: "relative" }}>
+      {/* Three-dot menu — hidden during select mode */}
+      {!selectMode && <div ref={menuRef} style={{ flexShrink: 0, position: "relative" }}>
         <button onClick={e => { e.stopPropagation(); setMenu(m => !m); }}
           style={{ background: "none", border: "none", cursor: "pointer", color: C.textMuted, padding: 2 }}>
           <Ic n="more" s={13}/>
@@ -243,7 +257,7 @@ export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEd
             </button>
           </div>
         )}
-      </div>
+      </div>}
     </div>
   );
 };

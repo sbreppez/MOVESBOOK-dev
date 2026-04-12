@@ -98,6 +98,25 @@ export const HomePage = ({
   // Feature 3: reorder
   const [showReorder, setShowReorder] = useState(false);
 
+  // Feature 5: bulk select + delete
+  const [selectMode, setSelectMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState(new Set());
+  const [confirmBulkDelete, setConfirmBulkDelete] = useState(false);
+
+  const toggleSelect = (tileId) => {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      if (next.has(tileId)) next.delete(tileId);
+      else next.add(tileId);
+      return next;
+    });
+  };
+
+  const exitSelectMode = () => {
+    setSelectMode(false);
+    setSelectedIds(new Set());
+  };
+
   // Feature 4: manage routines + reset confirm
   const [showManageRoutines, setShowManageRoutines] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
@@ -497,20 +516,35 @@ export const HomePage = ({
           <PreSessionIntel presession={presession} setPresession={setPresession}/>
         )}
 
-        {/* Sort toggle — only when 2+ tiles */}
-        {todayTiles.length >= 2 && (
-          <div style={{ display: "flex", justifyContent: "flex-end", padding: "4px 16px 0" }}>
-            <button onClick={() => setShowReorder(r => !r)}
+        {/* Select + Sort toggle */}
+        {todayTiles.length >= 1 && (
+          <div style={{ display: "flex", justifyContent: "flex-end", padding: "4px 16px 0", gap: 8 }}>
+            {/* Select mode toggle */}
+            <button onClick={() => selectMode ? exitSelectMode() : setSelectMode(true)}
               style={{
-                background: showReorder ? C.accent : "none",
+                background: selectMode ? C.accent : "none",
                 border: "none", cursor: "pointer",
                 padding: "4px 8px", borderRadius: 5,
-                color: showReorder ? C.bg : C.textMuted,
+                color: selectMode ? C.bg : C.textMuted,
                 fontSize: 13, fontWeight: 800,
                 fontFamily: FONT_DISPLAY, letterSpacing: 1,
               }}>
-              {showReorder ? t("done") : "⇅"}
+              {selectMode ? t("done") : t("select")}
             </button>
+            {/* Reorder toggle — hide during select mode */}
+            {!selectMode && todayTiles.length >= 2 && (
+              <button onClick={() => setShowReorder(r => !r)}
+                style={{
+                  background: showReorder ? C.accent : "none",
+                  border: "none", cursor: "pointer",
+                  padding: "4px 8px", borderRadius: 5,
+                  color: showReorder ? C.bg : C.textMuted,
+                  fontSize: 13, fontWeight: 800,
+                  fontFamily: FONT_DISPLAY, letterSpacing: 1,
+                }}>
+                {showReorder ? t("done") : "⇅"}
+              </button>
+            )}
           </div>
         )}
 
@@ -561,10 +595,34 @@ export const HomePage = ({
                 onEdit={handleTileEdit}
                 onTogglePin={handleTogglePinHome}
                 onOpenJournal={handleOpenJournal}
+                selectMode={selectMode}
+                isSelected={selectedIds.has(tile.id)}
+                onToggleSelect={() => toggleSelect(tile.id)}
                 habits={habits} ideas={ideas} homeIdeas={homeIdeas}
               />
             </div>
           ))}
+
+          {/* Bulk select bar */}
+          {selectMode && selectedIds.size > 0 && (
+            <div style={{
+              display: "flex", gap: 8, padding: "12px 16px",
+              alignItems: "center", justifyContent: "space-between",
+            }}>
+              <span style={{ fontSize: 12, color: C.textSec, fontFamily: FONT_DISPLAY, fontWeight: 700 }}>
+                {selectedIds.size} {t("selected")}
+              </span>
+              <button onClick={() => setConfirmBulkDelete(true)}
+                style={{
+                  padding: "8px 16px", borderRadius: 8, cursor: "pointer",
+                  background: C.accent, border: "none",
+                  color: "#fff", fontSize: 12, fontWeight: 800,
+                  fontFamily: FONT_DISPLAY, letterSpacing: 0.5,
+                }}>
+                {t("deleteSelected")}
+              </button>
+            </div>
+          )}
 
         </div>
       </div>
@@ -709,6 +767,59 @@ export const HomePage = ({
             </>)}
 
             <Btn variant="secondary" onClick={() => setConfirmRemove(null)}>{t("cancel")}</Btn>
+          </div>
+        </Modal>
+      )}
+
+      {/* ── Feature 5: Bulk delete confirmation ── */}
+      {confirmBulkDelete && (
+        <Modal onClose={() => setConfirmBulkDelete(false)}>
+          <div style={{ padding: 20, textAlign: "center" }}>
+            <Ic n="trash" s={28} c={C.accent}/>
+            <h3 style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 16, letterSpacing: 1, color: C.text, margin: "8px 0" }}>
+              {t("deleteSelected")}
+            </h3>
+            <p style={{ fontSize: 13, color: C.textSec, marginBottom: 16, lineHeight: 1.5 }}>
+              {selectedIds.size} {t("itemsWillBeDeleted")}
+            </p>
+            <div style={{ display: "flex", gap: 8 }}>
+              <button onClick={() => setConfirmBulkDelete(false)}
+                style={{ flex: 1, padding: "10px", background: C.surfaceAlt, border: `1px solid ${C.border}`,
+                  borderRadius: 8, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 13, color: C.text }}>
+                {t("cancel")}
+              </button>
+              <button onClick={() => {
+                const ids = [...selectedIds];
+                // Remove from homeStack
+                setHomeStack(prev => ({
+                  ...prev,
+                  defaultStack: (prev.defaultStack || []).filter(t => !ids.includes(t.id)),
+                }));
+                // Delete underlying data for each tile
+                ids.forEach(tileId => {
+                  const tile = todayTiles.find(t => t.id === tileId);
+                  if (!tile) return;
+                  if (tile.type === 'note') {
+                    setIdeas(prev => prev.filter(i => i.id !== tileId));
+                  } else if (tile.type === 'idea') {
+                    setHomeIdeas(prev => prev.filter(i => i.id !== tileId));
+                  } else if (tile.type === 'goalhabit' && tile.refId) {
+                    const isHabit = habits?.some(h => String(h.id) === String(tile.refId));
+                    if (isHabit) {
+                      setHabits(prev => prev.filter(h => String(h.id) !== String(tile.refId)));
+                    } else {
+                      setIdeas(prev => prev.filter(i => String(i.id) !== String(tile.refId)));
+                    }
+                  }
+                });
+                setConfirmBulkDelete(false);
+                exitSelectMode();
+              }}
+                style={{ flex: 1, padding: "10px", background: C.accent, border: "none",
+                  borderRadius: 8, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 13, color: "#fff" }}>
+                {t("delete")}
+              </button>
+            </div>
           </div>
         </Modal>
       )}
