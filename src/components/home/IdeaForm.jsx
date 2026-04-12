@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { useSettings } from '../../hooks/useSettings';
 import { useT } from '../../hooks/useTranslation';
@@ -16,6 +16,10 @@ export const IdeaForm = ({ idea, onSave, onCancel }) => {
     link: idea?.link || "",
     showDate: idea?.showDate || "",
   });
+
+  const textRef = useRef(null);
+  const autoResize = (el) => { if (!el) return; el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; };
+  useEffect(() => { if (textRef.current) autoResize(textRef.current); }, []);
 
   const set = (k) => (v) => setF(p => ({ ...p, [k]: v }));
 
@@ -48,12 +52,12 @@ export const IdeaForm = ({ idea, onSave, onCancel }) => {
         }}/>
 
       {/* Text */}
-      <textarea value={f.text} onChange={e => set("text")(e.target.value)}
+      <textarea ref={textRef} value={f.text} onChange={e => { set("text")(e.target.value); autoResize(e.target); }}
         rows={3}
         style={{
           width: "100%", padding: "10px 12px", fontSize: 13, fontFamily: FONT_BODY,
           background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8,
-          color: C.text, resize: "vertical", marginTop: 4, boxSizing: "border-box", outline: "none",
+          color: C.text, resize: "none", overflow: "hidden", marginTop: 4, boxSizing: "border-box", outline: "none",
         }}/>
 
       {/* Show the idea on the: */}

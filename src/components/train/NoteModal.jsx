@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { lbl } from '../../constants/styles';
@@ -16,6 +16,9 @@ export const NoteModal = ({ onClose, onSave, idea }) => {
   const [color, setColor] = useState(idea?.color || IDEA_COLORS[1]);
   const [link,  setLink]  = useState(idea?.link  || "");
   const [showDate, setShowDate] = useState(idea?.showDate || "");
+  const textRef = useRef(null);
+  const autoResize = (el) => { if (!el) return; el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; };
+  useEffect(() => { if (textRef.current) autoResize(textRef.current); }, []);
   const isEdit = !!idea;
   const handleSave = () => {
     if (!title.trim() && !text.trim()) return;
@@ -24,7 +27,7 @@ export const NoteModal = ({ onClose, onSave, idea }) => {
     onClose();
   };
   const taStyle = { width:"100%", background:C.surface, border:`1px solid ${C.border}`, borderRadius:8,
-    padding:"9px 12px", color:C.text, fontSize:13, outline:"none", resize:"vertical",
+    padding:"9px 12px", color:C.text, fontSize:13, outline:"none", resize:"none", overflow:"hidden",
     fontFamily:FONT_BODY, boxSizing:"border-box", lineHeight:1.5 };
   return (
     <div style={{ width:"100%", maxHeight:"90%", background:C.surface, borderRadius:16, display:"flex", flexDirection:"column", overflow:"hidden", boxShadow:"0 16px 48px rgba(0,0,0,0.5)" }}>
@@ -48,7 +51,7 @@ export const NoteModal = ({ onClose, onSave, idea }) => {
         </div>
         <div style={{ marginBottom:14 }}>
           <label style={lbl()}>{t("description")}</label>
-          <textarea value={text} onChange={e=>setText(e.target.value)} placeholder={t("describeIdea")} rows={8} style={taStyle}/>
+          <textarea ref={textRef} value={text} onChange={e=>{ setText(e.target.value); autoResize(e.target); }} placeholder={t("describeIdea")} rows={3} style={taStyle}/>
         </div>
         <div style={{ marginBottom:14 }}>
           <label style={lbl()}>{t("videoRefLinkOptional")}</label>
