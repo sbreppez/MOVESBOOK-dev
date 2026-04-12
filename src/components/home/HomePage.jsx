@@ -520,7 +520,7 @@ export const HomePage = ({
         </BottomSheet>
       )}
       {addFormType === "idea" && (
-        <BottomSheet open onClose={() => setAddFormType(null)} title={t("createNewIdea")}>
+        <BottomSheet open onClose={() => setAddFormType(null)} title={t("addNoteTile")}>
           <IdeaForm onSave={handleCreateIdea} onCancel={() => setAddFormType(null)}/>
         </BottomSheet>
       )}
@@ -673,7 +673,7 @@ export const HomePage = ({
         </BottomSheet>
       )}
       {editTile && editTile.type === 'idea' && (
-        <BottomSheet open={true} onClose={() => setEditTile(null)} title={t("editIdea")}>
+        <BottomSheet open={true} onClose={() => setEditTile(null)} title={t("editNote")}>
           <IdeaForm idea={homeIdeas?.find(i => i.id === editTile.id)} onSave={handleEditSave} onCancel={() => setEditTile(null)}/>
         </BottomSheet>
       )}

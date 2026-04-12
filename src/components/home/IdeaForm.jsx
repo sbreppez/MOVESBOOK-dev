@@ -34,6 +34,14 @@ export const IdeaForm = ({ idea, onSave, onCancel }) => {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+      {/* Hint */}
+      <div style={{
+        fontSize: 11, color: C.textMuted, fontFamily: FONT_BODY,
+        lineHeight: 1.5, marginBottom: 8, fontStyle: "italic",
+      }}>
+        {t("noteHint")}
+      </div>
+
       {/* Title */}
       <input value={f.title} onChange={e => set("title")(e.target.value)}
         placeholder={t("ideaTitle")}

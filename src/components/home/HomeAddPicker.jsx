@@ -10,7 +10,7 @@ export const HomeAddPicker = ({ open, onClose, onAction }) => {
   const t = useT();
 
   const tiles = [
-    { icon: "fileText", label: t("addIdeaNote"), type: "idea" },
+    { icon: "fileText", label: t("addNoteTile"), type: "idea" },
     { icon: "refresh",  label: t("addRoutine"),  type: "routine" },
     { icon: "target",   label: t("addGoal"),     type: "goal" },
     { icon: "check",    label: t("addHabit"),    type: "habit" },
