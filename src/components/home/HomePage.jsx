@@ -154,6 +154,40 @@ export const HomePage = ({
     }
   };
 
+  const handleStepCheck = (tile, stepId) => {
+    setHomeChecks(prev => {
+      const day = { ...(prev[selectedDate] || {}) };
+      const tileChecks = typeof day[tile.id] === 'object' ? { ...day[tile.id] } : {};
+
+      if (tileChecks[stepId]) {
+        delete tileChecks[stepId];
+      } else {
+        tileChecks[stepId] = true;
+      }
+
+      day[tile.id] = Object.keys(tileChecks).length > 0 ? tileChecks : undefined;
+      if (!day[tile.id]) delete day[tile.id];
+
+      // Log completion when all steps are done
+      const allSteps = tile.steps || [];
+      const nowComplete = allSteps.length > 0 && allSteps.every(s => tileChecks[s.id]);
+      if (nowComplete) {
+        const completions = JSON.parse(localStorage.getItem('mb_routine_completions') || '[]');
+        completions.push({
+          routineId: tile.id,
+          routineName: tile.name,
+          date: selectedDate,
+          stepsCompleted: allSteps.length,
+          stepsTotal: allSteps.length,
+          timestamp: new Date().toISOString(),
+        });
+        localStorage.setItem('mb_routine_completions', JSON.stringify(completions));
+      }
+
+      return { ...prev, [selectedDate]: day };
+    });
+  };
+
   const handleTileRemove = (tile) => {
     setConfirmRemove(tile);
   };
@@ -510,8 +544,9 @@ export const HomePage = ({
                 </div>
               )}
               <HomeTile tile={tile}
-                isChecked={!!dayChecks[tile.id]}
+                isChecked={tile.type === 'routine' && tile.steps?.length > 0 ? dayChecks[tile.id] : !!dayChecks[tile.id]}
                 onCheck={handleTileCheck}
+                onCheckStep={handleStepCheck}
                 onRemove={handleTileRemove}
                 onEdit={handleTileEdit}
                 onTogglePin={handleTogglePinHome}

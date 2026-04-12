@@ -5,7 +5,7 @@ import { useT } from '../../hooks/useTranslation';
 import { Ic } from '../shared/Ic';
 import { ExpandableText } from '../shared/ExpandableText';
 
-export const HomeTile = ({ tile, isChecked, onCheck, onRemove, onEdit, onTogglePin, habits, ideas, homeIdeas }) => {
+export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEdit, onTogglePin, habits, ideas, homeIdeas }) => {
   const { C } = useSettings();
   const t = useT();
   const [expanded, setExpanded] = useState(false);
@@ -23,14 +23,8 @@ export const HomeTile = ({ tile, isChecked, onCheck, onRemove, onEdit, onToggleP
   let emoji = null, fallbackIcon = null, name, description, showCheckbox = false, extraInfo = null, isOrphan = false, isPinned = false;
 
   if (tile.type === 'routine') {
-    emoji = tile.emoji || null;
-    fallbackIcon = "dumbbell";
+    fallbackIcon = "refresh";
     name = tile.name || "";
-    description = tile.description || "";
-    showCheckbox = tile.checkable;
-    if (tile.duration > 0) {
-      extraInfo = `${tile.duration} min`;
-    }
   } else if (tile.type === 'note') {
     const note = ideas?.find(i => i.id === tile.id);
     emoji = null;
@@ -80,13 +74,23 @@ export const HomeTile = ({ tile, isChecked, onCheck, onRemove, onEdit, onToggleP
     }
   }
 
+  // Step completion state for routines
+  const hasSteps = tile.type === 'routine' && tile.steps?.length > 0;
+  const stepCheckObj = hasSteps && typeof isChecked === 'object' ? isChecked : {};
+  const completedSteps = hasSteps ? Object.keys(stepCheckObj).filter(k => stepCheckObj[k]).length : 0;
+  const totalSteps = hasSteps ? tile.steps.length : 0;
+  const allStepsComplete = hasSteps && totalSteps > 0 && completedSteps === totalSteps;
+
+  // For non-step tiles, isChecked is boolean; for step routines, use allStepsComplete
+  const tileChecked = hasSteps ? allStepsComplete : !!isChecked;
+
   return (
     <div
       style={{
         display: "flex", alignItems: "flex-start", gap: 10,
         padding: "10px 12px", marginBottom: 6, borderRadius: 8, cursor: "pointer",
-        background: isOrphan ? "transparent" : isChecked ? `${C.green}0a` : C.surface,
-        opacity: isOrphan ? 0.45 : isChecked ? 0.65 : 1,
+        background: isOrphan ? "transparent" : tileChecked ? `${C.green}0a` : C.surface,
+        opacity: isOrphan ? 0.45 : tileChecked ? 0.65 : 1,
         transition: "all 0.2s",
       }}>
       {/* Emoji / Icon */}
@@ -98,15 +102,15 @@ export const HomeTile = ({ tile, isChecked, onCheck, onRemove, onEdit, onToggleP
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{
           fontWeight: 800, fontSize: 13, fontFamily: FONT_DISPLAY, letterSpacing: 0.3,
-          color: isChecked ? C.textMuted : C.text,
-          textDecoration: isChecked ? "line-through" : "none",
+          color: tileChecked ? C.textMuted : C.text,
+          textDecoration: tileChecked ? "line-through" : "none",
           overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
         }}>
           {name}
           {isPinned && <Ic n="pin" s={10} c={C.accent} style={{marginLeft:4, verticalAlign:"middle"}}/>}
-          {extraInfo && tile.type === 'routine' && (
-            <span style={{ fontWeight: 600, fontSize: 11, color: C.textMuted, marginLeft: 6 }}>
-              · {extraInfo}
+          {hasSteps && totalSteps > 0 && (
+            <span style={{ fontSize: 10, color: allStepsComplete ? C.green : C.textMuted, fontWeight: 700, fontFamily: FONT_DISPLAY, marginLeft: 6 }}>
+              {completedSteps}/{totalSteps}
             </span>
           )}
         </div>
@@ -120,6 +124,40 @@ export const HomeTile = ({ tile, isChecked, onCheck, onRemove, onEdit, onToggleP
           }}>
             {t("tod" + tile.timeOfDay.charAt(0).toUpperCase() + tile.timeOfDay.slice(1)) || tile.timeOfDay}
           </span>
+        )}
+
+        {/* Step checkboxes for routines */}
+        {hasSteps && (
+          <div style={{ marginTop: 6, display: "flex", flexDirection: "column", gap: 2 }}>
+            {tile.steps.map(step => {
+              const stepChecked = typeof isChecked === 'object' ? !!isChecked[step.id] : false;
+              return (
+                <button key={step.id}
+                  onClick={e => { e.stopPropagation(); onCheckStep?.(tile, step.id); }}
+                  style={{
+                    display: "flex", alignItems: "center", gap: 8, width: "100%",
+                    padding: "4px 0", background: "none", border: "none",
+                    cursor: "pointer", textAlign: "left",
+                  }}>
+                  <div style={{
+                    width: 18, height: 18, borderRadius: 4, flexShrink: 0,
+                    border: `2px solid ${stepChecked ? C.green : C.border}`,
+                    background: stepChecked ? C.green : "transparent",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    {stepChecked && <Ic n="check" s={12} c="#fff"/>}
+                  </div>
+                  <span style={{
+                    fontSize: 13, fontFamily: FONT_BODY, color: stepChecked ? C.textMuted : C.text,
+                    textDecoration: stepChecked ? "line-through" : "none",
+                    flex: 1,
+                  }}>
+                    {step.text}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         )}
 
         {/* Idea link */}
@@ -141,8 +179,8 @@ export const HomeTile = ({ tile, isChecked, onCheck, onRemove, onEdit, onToggleP
           </div>
         )}
 
-        {/* Description */}
-        {description && (
+        {/* Description (non-routine tiles only) */}
+        {description && tile.type !== 'routine' && (
           <ExpandableText
             text={description} maxLines={2} fontSize={11}
             color={C.textSec} lineHeight={1.4}
@@ -152,17 +190,17 @@ export const HomeTile = ({ tile, isChecked, onCheck, onRemove, onEdit, onToggleP
         )}
       </div>
 
-      {/* Checkbox */}
+      {/* Checkbox (goalhabit only — routines use step checkboxes) */}
       {showCheckbox && (
         <button onClick={e => { e.stopPropagation(); onCheck?.(tile); }}
           style={{
             width: 32, height: 32, borderRadius: 8, flexShrink: 0, cursor: "pointer",
             display: "flex", alignItems: "center", justifyContent: "center",
-            background: isChecked ? C.green : "transparent",
-            border: `2px solid ${isChecked ? C.green : C.border}`,
+            background: !!isChecked ? C.green : "transparent",
+            border: `2px solid ${!!isChecked ? C.green : C.border}`,
             transition: "all 0.15s", marginTop: 2,
           }}>
-          {isChecked && <Ic n="check" s={16} c="#fff"/>}
+          {!!isChecked && <Ic n="check" s={16} c="#fff"/>}
         </button>
       )}
 
