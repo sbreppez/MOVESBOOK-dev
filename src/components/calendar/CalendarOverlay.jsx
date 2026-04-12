@@ -229,8 +229,7 @@ export const CalendarOverlay = ({
             overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
             {event.title || t("note")}
           </span>
-          {event.pinned && <Ic n="pin" s={10} c={C.accent}/>}
-          {/* Three-dot menu */}
+                    {/* Three-dot menu */}
           <div ref={menuRef} style={{ flexShrink: 0, position: "relative" }}>
             <button onClick={e => { e.stopPropagation(); setMenu(m => !m); }}
               style={{ background: "none", border: "none", cursor: "pointer", color: C.textMuted, padding: 2 }}>
@@ -785,7 +784,7 @@ export const CalendarOverlay = ({
               if (setIdeas && editHomeNote.ideaId) {
                 setIdeas(prev => prev.map(i =>
                   i.id === editHomeNote.ideaId
-                    ? { ...i, title: fields.title, text: fields.text, link: fields.link, showDate: fields.showDate, pinned: fields.pinned, homeOnly: fields.homeOnly }
+                    ? { ...i, title: fields.title, text: fields.text, link: fields.link, showDate: fields.showDate, pinnedHome: fields.pinnedHome, homeOnly: fields.homeOnly }
                     : i
                 ));
               }
@@ -793,7 +792,7 @@ export const CalendarOverlay = ({
                 ...prev,
                 events: (prev.events || []).map(e =>
                   e.id === editHomeNote.id
-                    ? { ...e, title: fields.title, text: fields.text, link: fields.link, showDate: fields.showDate || e.date, pinned: fields.pinned, homeOnly: fields.homeOnly }
+                    ? { ...e, title: fields.title, text: fields.text, link: fields.link, showDate: fields.showDate || e.date, pinnedHome: fields.pinnedHome, homeOnly: fields.homeOnly }
                     : e
                 ),
               }));

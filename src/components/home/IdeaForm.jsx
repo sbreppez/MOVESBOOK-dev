@@ -15,7 +15,7 @@ export const IdeaForm = ({ idea, onSave, onCancel }) => {
     text: idea?.text || "",
     link: idea?.link || "",
     showDate: idea?.showDate || "",
-    pinned: idea?.pinned || false,
+    pinnedHome: idea?.pinnedHome || idea?.pinned || false,
     homeOnly: idea?.homeOnly !== false,
   });
 
@@ -27,7 +27,7 @@ export const IdeaForm = ({ idea, onSave, onCancel }) => {
       text: f.text.trim(),
       link: f.link.trim(),
       showDate: f.showDate || null,
-      pinned: f.pinned,
+      pinnedHome: f.pinnedHome,
       homeOnly: f.homeOnly,
     });
   };
@@ -83,7 +83,7 @@ export const IdeaForm = ({ idea, onSave, onCancel }) => {
       </div>
 
       {/* Pin the idea to Home */}
-      <button onClick={() => set("pinned")(!f.pinned)}
+      <button onClick={() => set("pinnedHome")(!f.pinnedHome)}
         style={{
           display: "flex", alignItems: "center", gap: 10, width: "100%",
           padding: "10px 12px", borderRadius: 8, cursor: "pointer",
@@ -91,11 +91,11 @@ export const IdeaForm = ({ idea, onSave, onCancel }) => {
         }}>
         <div style={{
           width: 20, height: 20, borderRadius: 5, flexShrink: 0,
-          border: `2px solid ${f.pinned ? C.green : C.border}`,
-          background: f.pinned ? C.green : "transparent",
+          border: `2px solid ${f.pinnedHome ? C.green : C.border}`,
+          background: f.pinnedHome ? C.green : "transparent",
           display: "flex", alignItems: "center", justifyContent: "center",
         }}>
-          {f.pinned && <Ic n="check" s={12} c="#fff"/>}
+          {f.pinnedHome && <Ic n="check" s={12} c="#fff"/>}
         </div>
         <span style={{ fontSize: 13, fontFamily: FONT_BODY, color: C.text }}>
           {t("pinIdeaToHome")}

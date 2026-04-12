@@ -103,10 +103,16 @@ export const HomePage = ({
   const [showManageRoutines, setShowManageRoutines] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
 
-  const todayTiles = useMemo(
-    () => getTilesForDate(homeStack, selectedDate, homeIdeas, ideas),
-    [homeStack, selectedDate, homeIdeas, ideas]
-  );
+  const todayTiles = useMemo(() => {
+    const tiles = getTilesForDate(homeStack, selectedDate, homeIdeas, ideas);
+    return [...tiles].sort((a, b) => {
+      const aPin = a.type === 'note' ? (ideas?.find(i => i.id === a.id)?.pinnedHome || false) : false;
+      const bPin = b.type === 'note' ? (ideas?.find(i => i.id === b.id)?.pinnedHome || false) : false;
+      if (aPin && !bPin) return -1;
+      if (!aPin && bPin) return 1;
+      return 0;
+    });
+  }, [homeStack, selectedDate, homeIdeas, ideas]);
 
   const dayChecks = homeChecks?.[selectedDate] || {};
   const isToday = selectedDate === todayStr;
@@ -386,7 +392,7 @@ export const HomePage = ({
 
   const handleCreateIdea = (fields) => {
     const id = Date.now().toString();
-    setIdeas(prev => [{ id, type: 'note', title: fields.title, text: fields.text, link: fields.link, showDate: fields.showDate || null, pinned: fields.pinned || false, homeOnly: fields.homeOnly !== false, createdDate: new Date().toISOString() }, ...prev]);
+    setIdeas(prev => [{ id, type: 'note', title: fields.title, text: fields.text, link: fields.link, showDate: fields.showDate || null, pinnedHome: fields.pinnedHome || false, homeOnly: fields.homeOnly !== false, createdDate: new Date().toISOString() }, ...prev]);
     setHomeStack(prev => ({ ...prev, defaultStack: [{ id, type: 'note' }, ...prev.defaultStack] }));
     if (fields.showDate && addCalendarEvent) {
       addCalendarEvent({

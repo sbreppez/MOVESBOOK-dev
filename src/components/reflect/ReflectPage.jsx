@@ -93,7 +93,7 @@ export const ReflectPage = ({
     }
     setLogEntry(null); setLogText(""); setLogLink("");
   };
-  const dup = id => { const orig = ideas.find(i => i.id === id); if (orig) setIdeas(p => [...p, { ...orig, id: Date.now(), title: (orig.title || "") + " (copy)", pinned: false }]); };
+  const dup = id => { const orig = ideas.find(i => i.id === id); if (orig) setIdeas(p => [...p, { ...orig, id: Date.now(), title: (orig.title || "") + " (copy)", pinnedNotes: false, pinnedHome: false }]); };
   const moveIdeaUp = (idx, list) => {
     if (idx === 0) return;
     setIdeas(prev => {
@@ -115,14 +115,14 @@ export const ReflectPage = ({
     });
   };
   const changeColor = (id, color) => setIdeas(p => p.map(i => i.id === id ? { ...i, color } : i));
-  const togglePin = (id) => setIdeas(p => p.map(i => i.id === id && i.type !== "goal" ? { ...i, pinned: !i.pinned } : i));
+  const togglePin = (id) => setIdeas(p => p.map(i => i.id === id && i.type !== "goal" ? { ...i, pinnedNotes: !i.pinnedNotes } : i));
 
   const q = search.toLowerCase().trim();
   const base = q ? ideas.filter(i => (i.title || "").toLowerCase().includes(q) || (i.text || "").toLowerCase().includes(q)) : ideas;
   const filtered = reorderMode ? base : [
     ...base.filter(i => i.type === "goal"),
-    ...base.filter(i => i.type !== "goal" && i.pinned),
-    ...base.filter(i => i.type !== "goal" && !i.pinned),
+    ...base.filter(i => i.type !== "goal" && (i.pinnedNotes || i.pinned)),
+    ...base.filter(i => i.type !== "goal" && !(i.pinnedNotes || i.pinned)),
   ];
 
   const goals = ideas.filter(i => i.type === "goal" || i.type === "target");

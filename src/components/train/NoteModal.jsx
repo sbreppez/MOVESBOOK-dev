@@ -16,13 +16,13 @@ export const NoteModal = ({ onClose, onSave, idea }) => {
   const [color, setColor] = useState(idea?.color || IDEA_COLORS[1]);
   const [link,  setLink]  = useState(idea?.link  || "");
   const [showDate, setShowDate] = useState(idea?.showDate || "");
-  const [pinned, setPinned] = useState(idea?.pinned || false);
+  const [pinnedNotes, setPinnedNotes] = useState(idea?.pinnedNotes || idea?.pinned || false);
   const [homeOnly, setHomeOnly] = useState(idea?.homeOnly !== false);
   const isEdit = !!idea;
   const handleSave = () => {
     if (!title.trim() && !text.trim()) return;
     onSave({ type:"note", title:title.trim(), text:text.trim(), color, link:ensureHttps(link.trim()),
-      showDate:showDate||null, pinned, homeOnly });
+      showDate:showDate||null, pinnedNotes, homeOnly });
     onClose();
   };
   const taStyle = { width:"100%", background:C.surface, border:`1px solid ${C.border}`, borderRadius:8,
@@ -79,18 +79,18 @@ export const NoteModal = ({ onClose, onSave, idea }) => {
           )}
         </div>
         <div style={{ marginBottom:14 }}>
-          <button onClick={()=>setPinned(!pinned)}
+          <button onClick={()=>setPinnedNotes(!pinnedNotes)}
             style={{ display:"flex", alignItems:"center", gap:10, width:"100%",
               padding:"6px 0", background:"transparent", border:"none",
               cursor:"pointer", textAlign:"left" }}>
             <div style={{ width:20, height:20, borderRadius:5, flexShrink:0,
-              border:`2px solid ${pinned?C.green:C.border}`,
-              background:pinned?C.green:"transparent",
+              border:`2px solid ${pinnedNotes?C.green:C.border}`,
+              background:pinnedNotes?C.green:"transparent",
               display:"flex", alignItems:"center", justifyContent:"center" }}>
-              {pinned && <Ic n="check" s={12} c="#fff"/>}
+              {pinnedNotes && <Ic n="check" s={12} c="#fff"/>}
             </div>
             <span style={{ fontSize:13, fontFamily:FONT_BODY, color:C.text }}>
-              {t("pinIdeaToHome")}
+              {t("pinToTop")}
             </span>
           </button>
         </div>

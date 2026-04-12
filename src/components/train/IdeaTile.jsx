@@ -26,7 +26,7 @@ export const IdeaTile = (props) => {
   const text   = idea.text  || "";
   const isGoal   = idea.type === "goal";
   const isTarget = idea.type === "target";
-  const isPinned = idea.pinned || isGoal || isTarget;
+  const isPinned = idea.pinnedNotes || idea.pinned || isGoal || isTarget;
   const isTile   = viewMode === "tiles";
   const typeIcon = isGoal ? "target" : isTarget ? "crosshair" : "fileText";
   const typeLabel = isGoal ? "GOAL" : isTarget ? "TARGET" : "NOTE";
