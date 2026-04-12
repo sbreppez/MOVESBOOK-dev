@@ -520,17 +520,31 @@ export const HomePage = ({
         {todayTiles.length >= 1 && (
           <div style={{ display: "flex", justifyContent: "flex-end", padding: "4px 16px 0", gap: 8 }}>
             {/* Select mode toggle */}
-            <button onClick={() => selectMode ? exitSelectMode() : setSelectMode(true)}
-              style={{
-                background: selectMode ? C.accent : "none",
-                border: "none", cursor: "pointer",
-                padding: "4px 8px", borderRadius: 5,
-                color: selectMode ? C.bg : C.textMuted,
-                fontSize: 13, fontWeight: 800,
-                fontFamily: FONT_DISPLAY, letterSpacing: 1,
-              }}>
-              {selectMode ? t("done") : t("select")}
-            </button>
+            {selectMode ? (
+              <>
+                {selectedIds.size > 0 && (
+                  <button onClick={() => setConfirmBulkDelete(true)}
+                    style={{ background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex", alignItems: "center", gap: 4 }}>
+                    <Ic n="trash" s={16} c={C.accent}/>
+                    <span style={{ fontSize: 11, color: C.accent, fontWeight: 700, fontFamily: FONT_DISPLAY }}>{selectedIds.size}</span>
+                  </button>
+                )}
+                <button onClick={exitSelectMode}
+                  style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
+                  <Ic n="x" s={16} c={C.textMuted}/>
+                </button>
+              </>
+            ) : (
+              <button onClick={() => setSelectMode(true)}
+                style={{
+                  background: "none", border: "none", cursor: "pointer",
+                  padding: "4px 8px", borderRadius: 5,
+                  color: C.textMuted, fontSize: 13, fontWeight: 800,
+                  fontFamily: FONT_DISPLAY, letterSpacing: 1,
+                }}>
+                {t("select")}
+              </button>
+            )}
             {/* Reorder toggle — hide during select mode */}
             {!selectMode && todayTiles.length >= 2 && (
               <button onClick={() => setShowReorder(r => !r)}
@@ -603,26 +617,6 @@ export const HomePage = ({
             </div>
           ))}
 
-          {/* Bulk select bar */}
-          {selectMode && selectedIds.size > 0 && (
-            <div style={{
-              display: "flex", gap: 8, padding: "12px 16px",
-              alignItems: "center", justifyContent: "space-between",
-            }}>
-              <span style={{ fontSize: 12, color: C.textSec, fontFamily: FONT_DISPLAY, fontWeight: 700 }}>
-                {selectedIds.size} {t("selected")}
-              </span>
-              <button onClick={() => setConfirmBulkDelete(true)}
-                style={{
-                  padding: "8px 16px", borderRadius: 8, cursor: "pointer",
-                  background: C.accent, border: "none",
-                  color: "#fff", fontSize: 12, fontWeight: 800,
-                  fontFamily: FONT_DISPLAY, letterSpacing: 0.5,
-                }}>
-                {t("deleteSelected")}
-              </button>
-            </div>
-          )}
 
         </div>
       </div>
