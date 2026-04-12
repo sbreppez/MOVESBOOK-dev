@@ -180,7 +180,9 @@ const DayRow = ({ entry, t, C }) => {
           {d.movesTrained > 0 && <span>{d.movesTrained} {t("movesTrainedLabel")}</span>}
           {d.movesAdded > 0 && <span>+{d.movesAdded} {t("movesAddedLabel")}</span>}
           {d.sessionsLogged > 0 && <span>{d.sessionsLogged} {t("sessionsCount")}</span>}
-          {d.routineCount > 0 && <span>{d.routineSteps}/{d.routineStepsTotal} {t("routineStepsLabel")}</span>}
+          {d.routines?.length > 0 && d.routines.map((r, i) => (
+            <span key={i}>{r.completed}/{r.total} {r.name}</span>
+          ))}
         </div>
       )}
     </div>

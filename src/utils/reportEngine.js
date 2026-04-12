@@ -52,10 +52,11 @@ export const computeDailyEntry = (date, { moves, reps, sparring, musicflow, cale
   const routineCount = routineEvents.length;
   const routineSteps = routineEvents.reduce((s, e) => s + (e.stepsCompleted || 0), 0);
   const routineStepsTotal = routineEvents.reduce((s, e) => s + (e.stepsTotal || 0), 0);
+  const routines = routineEvents.map(e => ({ name: e.title || "", completed: e.stepsCompleted || 0, total: e.stepsTotal || 0 }));
 
   const isRest = movesAdded === 0 && movesTrained === 0 && sessionsLogged === 0 && routineCount === 0;
 
-  return { date: d, movesAdded, movesTrained, sessionsLogged, isRest, routineCount, routineSteps, routineStepsTotal };
+  return { date: d, movesAdded, movesTrained, sessionsLogged, isRest, routineCount, routineSteps, routineStepsTotal, routines };
 };
 
 // ── Weekly Report ───────────────────────────────────────────────────────────
