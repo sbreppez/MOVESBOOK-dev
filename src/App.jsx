@@ -842,7 +842,7 @@ export default function App() {
         {!showTour&&(()=>{
           const anyOverlay = showRepCounter||showSparring||showComboMachine||showManageReminders||showRRR||showFlashCards||showLab||showProfile||showManual||showSettings||showStanceAssessment||showMusicFlow||showCompSim||showPostSessionPrompt||showCreate;
           const tabs = [{id:"home",icon:"home",label:tr("home")},{id:"moves",icon:"book",label:tr("vocab")},null,{id:"battle",icon:"sword",label:tr("battle")},{id:"reflect",icon:"barChart",label:tr("reflect")}];
-          const handleTabChange = (t) => { setTrainMenu(null); setTab(t); setAddTick(0); setAddTick2(0); setSubTab(t==="moves"?"moves":t==="battle"?"plan":t==="reflect"?"calendar":""); };
+          const handleTabChange = (t) => { setTab(t); setAddTick(0); setAddTick2(0); setSubTab(t==="moves"?"moves":t==="battle"?"plan":t==="reflect"?"calendar":""); };
           return (
           <div style={{ display:"flex", alignItems:"stretch",
             background:C.header, flexShrink:0, height:50, zIndex:100 }}>
