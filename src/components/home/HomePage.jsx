@@ -266,7 +266,7 @@ export const HomePage = ({
         return;
       }
     }
-    if (tile.type === 'routine' || tile.type === 'idea' || tile.type === 'note') {
+    if (tile.type === 'routine' || tile.type === 'idea' || tile.type === 'note' || tile.type === 'goalhabit') {
       setEditTile(tile);
     }
   };
@@ -736,6 +736,49 @@ export const HomePage = ({
           <IdeaForm idea={ideas?.find(i => i.id === editTile.id)} onSave={handleEditSave} onCancel={() => setEditTile(null)}/>
         </BottomSheet>
       )}
+      {editTile && editTile.type === 'goalhabit' && (() => {
+        const habit = habits?.find(h => String(h.id) === String(editTile.refId));
+        const goal = ideas?.find(i => String(i.id) === String(editTile.refId) && (i.type === 'goal' || i.type === 'target'));
+
+        if (habit) {
+          return (
+            <HabitModal
+              onClose={() => setEditTile(null)}
+              onSave={(fields) => {
+                setHabits(prev => prev.map(h =>
+                  String(h.id) === String(editTile.refId) ? { ...h, ...fields } : h
+                ));
+                setEditTile(null);
+              }}
+              habit={habit}
+            />
+          );
+        }
+
+        if (goal) {
+          return (
+            <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.6)", zIndex:10000, display:"flex", alignItems:"center", justifyContent:"center", padding:10 }}>
+              <GoalModal
+                onClose={() => setEditTile(null)}
+                onSave={(fields) => {
+                  setIdeas(prev => prev.map(i =>
+                    String(i.id) === String(editTile.refId) ? { ...i, ...fields } : i
+                  ));
+                  setEditTile(null);
+                }}
+                idea={goal}
+              />
+            </div>
+          );
+        }
+
+        setHomeStack(prev => ({
+          ...prev,
+          defaultStack: prev.defaultStack.filter(t => t.id !== editTile.id),
+        }));
+        setEditTile(null);
+        return null;
+      })()}
     </div>
   );
 };
