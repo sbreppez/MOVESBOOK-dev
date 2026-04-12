@@ -110,7 +110,7 @@ export const IdeaTile = (props) => {
     return (
       <div draggable={draggable} onDragStart={onDragStart} onDragOver={onDragOver} onDrop={onDrop}
         onClick={isGoal ? ()=>setExpanded(x=>!x) : undefined}
-        style={{ ...CARD_BASE(), background:C.surface, borderLeft:`4px solid ${color}`, cursor:isGoal?"pointer":"default" }}>
+        style={{ ...CARD_BASE(), background:C.surface, borderLeft:`4px solid ${color}`, cursor:isGoal?"pointer":"default", overflow:"visible" }}>
         <div style={CARD_BODY()}>
           {/* Title row */}
           <div style={{ display:"flex", alignItems:"flex-start", gap:6, marginBottom:6 }}>
