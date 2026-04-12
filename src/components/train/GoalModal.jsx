@@ -46,7 +46,7 @@ export const GoalModal = ({ onClose, onSave, idea }) => {
     : [{id:"goal",label:t("goal")}];
 
   return (
-    <div style={{ width:"100%", maxHeight:"92%", background:C.bg, borderRadius:16, display:"flex", flexDirection:"column", overflow:"hidden", boxShadow:"0 16px 48px rgba(0,0,0,0.5)" }}>
+    <div style={{ width:"100%", maxHeight:"92%", background:C.surface, borderRadius:16, display:"flex", flexDirection:"column", overflow:"hidden", boxShadow:"0 16px 48px rgba(0,0,0,0.5)" }}>
       {/* Header */}
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 16px", background:C.surface, borderBottom:`1px solid ${C.border}`, flexShrink:0 }}>
         <span style={{ fontWeight:900, fontSize:16, letterSpacing:2, fontFamily:FONT_DISPLAY, color:C.accent }}>{isEdit?t("editGoal"):t("newGoal")}</span>
@@ -100,13 +100,12 @@ export const GoalModal = ({ onClose, onSave, idea }) => {
         {/* ── GOAL TAB ── */}
         {activeTab==="goal"&&(
           <div>
-            {!isEdit&&(
-              <div style={{ display:"flex", alignItems:"flex-start", gap:8, padding:"10px 12px", background:`${C.accent}12`,
-                border:`1px solid ${C.accent}30`, borderRadius:8, marginBottom:18 }}>
-                <span style={{ flexShrink:0 }}><Ic n="book" s={16} c={C.textMuted}/></span>
-                <span style={{ fontSize:13, color:C.textSec, lineHeight:1.6 }}>
-                  {t("journalDesc").split(t("trainingJournal")).map((part,i,arr)=>i<arr.length-1?<React.Fragment key={i}>{part}<strong style={{color:C.text}}>{t("trainingJournal")}</strong></React.Fragment>:part)}
-                </span>
+            {!isEdit && (
+              <div style={{
+                fontSize: 11, color: C.textMuted, fontFamily: FONT_BODY,
+                lineHeight: 1.5, marginBottom: 14, fontStyle: "italic",
+              }}>
+                {t("goalHint")}
               </div>
             )}
             {/* Goal title */}
