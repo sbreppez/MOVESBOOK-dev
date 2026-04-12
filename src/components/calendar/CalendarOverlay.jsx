@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { CAT_COLORS, CATEGORY_DOMAIN_MAP, DOMAIN_COLORS } from '../../constants/categories';
@@ -8,6 +8,7 @@ import { EXERTION_OPTIONS, BODY_PARTS, BODY_STATES } from '../shared/BodyCheckIn
 import { SessionJournal } from './SessionJournal';
 import { computeAllDayMaps, getTasksForDay, getPrevDayTasks } from '../train/battlePrepHelpers';
 import { ReportsTimeline } from './ReportsTimeline';
+import { Modal } from '../shared/Modal';
 import { todayLocal, toLocalYMD } from '../../utils/dateUtils';
 
 const toYMD = (d) => {
@@ -42,6 +43,7 @@ export const CalendarOverlay = ({
   const [showTypePicker, setShowTypePicker] = useState(false);
   const [battlePrepPrompt, setBattlePrepPrompt] = useState(null);
   const [calView, setCalView] = useState("days");
+  const [confirmDeleteNote, setConfirmDeleteNote] = useState(null);
 
   useEffect(() => {
     if (onAddTrigger) { setSelectedDay(today); setShowTypePicker(true); setShowJournal(false); }
@@ -202,10 +204,20 @@ export const CalendarOverlay = ({
     );
   }
 
-  // ── Home-idea note tile (expandable, no edit button) ──
-  const HomeIdeaNote = ({ event, onDelete }) => {
+  // ── Home-idea note tile (expandable, three-dot menu) ──
+  const HomeIdeaNote = ({ event, onEdit, onDelete }) => {
     const [expanded, setExpanded] = useState(false);
+    const [menu, setMenu] = useState(false);
+    const menuRef = useRef(null);
     const hasText = event.text && event.text.trim();
+
+    useEffect(() => {
+      if (!menu) return;
+      const h = e => { if (menuRef.current && !menuRef.current.contains(e.target)) setMenu(false); };
+      document.addEventListener("pointerdown", h);
+      return () => document.removeEventListener("pointerdown", h);
+    }, [menu]);
+
     return (
       <div style={{ background: C.surfaceAlt, borderRadius: 8, marginBottom: 4, overflow: "hidden" }}>
         <div style={{ display: "flex", alignItems: "center", padding: "10px 12px", gap: 8 }}>
@@ -214,10 +226,34 @@ export const CalendarOverlay = ({
             overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
             {event.title || t("note")}
           </span>
-          <button onClick={() => onDelete()}
-            style={{ background: "none", border: "none", cursor: "pointer", padding: 4, flexShrink: 0 }}>
-            <Ic n="trash" s={14} c={C.textMuted}/>
-          </button>
+          {/* Three-dot menu */}
+          <div ref={menuRef} style={{ flexShrink: 0, position: "relative" }}>
+            <button onClick={e => { e.stopPropagation(); setMenu(m => !m); }}
+              style={{ background: "none", border: "none", cursor: "pointer", color: C.textMuted, padding: 2 }}>
+              <Ic n="more" s={13}/>
+            </button>
+            {menu && (
+              <div onClick={e => e.stopPropagation()}
+                style={{
+                  position: "absolute", top: 24, right: 0, background: C.bg,
+                  border: `1px solid ${C.border}`, borderRadius: 9, overflow: "hidden",
+                  zIndex: 9999, minWidth: 140, boxShadow: "0 8px 28px rgba(0,0,0,0.22)",
+                }}>
+                <button onClick={() => { setMenu(false); onEdit?.(event); }}
+                  style={{ width: "100%", padding: "9px 13px", background: "none", border: "none",
+                    cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
+                    color: C.text, fontSize: 12, fontFamily: "inherit" }}>
+                  <Ic n="edit" s={12} c={C.textSec}/>{t("edit")}
+                </button>
+                <button onClick={() => { setMenu(false); onDelete?.(event); }}
+                  style={{ width: "100%", padding: "9px 13px", background: "none", border: "none",
+                    cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
+                    color: C.accent, fontSize: 12, fontFamily: "inherit", borderTop: `1px solid ${C.border}` }}>
+                  <Ic n="trash" s={12} c={C.accent}/>{t("delete")}
+                </button>
+              </div>
+            )}
+          </div>
         </div>
         {hasText && (<>
           {expanded && (
@@ -511,7 +547,10 @@ export const CalendarOverlay = ({
                 <div style={sectionLabel}>{t("calendarEvents")}</div>
                 {dayData.calendarEvents.map(e => {
                   if (e.source === "home-idea") {
-                    return <HomeIdeaNote key={e.id} event={e} onDelete={() => handleDeleteEvent(e.id)} />;
+                    return <HomeIdeaNote key={e.id} event={e}
+                      onEdit={(evt) => { setEditEvent(evt); setShowJournal(true); }}
+                      onDelete={(evt) => setConfirmDeleteNote(evt)}
+                    />;
                   }
                   return (
                   <div key={e.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between",
@@ -730,6 +769,33 @@ export const CalendarOverlay = ({
           moves={moves} reps={reps} sparring={sparring} musicflow={musicflow}
           calendar={calendar} cats={cats} catColors={catColors}
           battleprep={battleprep} rivals={null} reports={reports}/>
+      )}
+
+      {/* Delete note confirmation modal */}
+      {confirmDeleteNote && (
+        <Modal onClose={() => setConfirmDeleteNote(null)}>
+          <div style={{ padding: 20, textAlign: "center" }}>
+            <Ic n="trash" s={28} c={C.accent}/>
+            <h3 style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 16, letterSpacing: 1, color: C.text, margin: "8px 0" }}>
+              {t("delete")}
+            </h3>
+            <p style={{ fontSize: 13, color: C.textSec, marginBottom: 16, lineHeight: 1.5 }}>
+              {t("deleteNoteConfirm") || "Delete this note?"}
+            </p>
+            <div style={{ display: "flex", gap: 8 }}>
+              <button onClick={() => setConfirmDeleteNote(null)}
+                style={{ flex: 1, padding: "10px", background: C.surfaceAlt, border: `1px solid ${C.border}`,
+                  borderRadius: 8, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 13, color: C.text }}>
+                {t("cancel")}
+              </button>
+              <button onClick={() => { handleDeleteEvent(confirmDeleteNote.id); setConfirmDeleteNote(null); }}
+                style={{ flex: 1, padding: "10px", background: C.accent, border: "none",
+                  borderRadius: 8, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 13, color: "#fff" }}>
+                {t("delete")}
+              </button>
+            </div>
+          </div>
+        </Modal>
       )}
     </div>
   );

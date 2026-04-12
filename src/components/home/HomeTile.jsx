@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { useSettings } from '../../hooks/useSettings';
 import { useT } from '../../hooks/useTranslation';
@@ -9,6 +9,15 @@ export const HomeTile = ({ tile, isChecked, onCheck, onRemove, onEdit, habits, i
   const { C } = useSettings();
   const t = useT();
   const [expanded, setExpanded] = useState(false);
+  const [menu, setMenu] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    if (!menu) return;
+    const h = e => { if (menuRef.current && !menuRef.current.contains(e.target)) setMenu(false); };
+    document.addEventListener("pointerdown", h);
+    return () => document.removeEventListener("pointerdown", h);
+  }, [menu]);
 
   // Resolve data based on tile type
   let emoji = null, fallbackIcon = null, name, description, showCheckbox = false, extraInfo = null, isOrphan = false;
@@ -72,7 +81,6 @@ export const HomeTile = ({ tile, isChecked, onCheck, onRemove, onEdit, habits, i
 
   return (
     <div
-      onClick={() => onEdit?.(tile)}
       style={{
         display: "flex", alignItems: "flex-start", gap: 10,
         padding: "10px 12px", marginBottom: 6, borderRadius: 8, cursor: "pointer",
@@ -156,16 +164,34 @@ export const HomeTile = ({ tile, isChecked, onCheck, onRemove, onEdit, habits, i
         </button>
       )}
 
-      {/* Remove X */}
-      <button onClick={e => { e.stopPropagation(); onRemove?.(tile); }}
-        style={{
-          width: 28, height: 28, borderRadius: 6, flexShrink: 0, cursor: "pointer",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          background: "transparent", border: "none", color: C.textMuted,
-          opacity: 0.5, marginTop: 2,
-        }}>
-        <Ic n="x" s={14} c={C.textMuted}/>
-      </button>
+      {/* Three-dot menu */}
+      <div ref={menuRef} style={{ flexShrink: 0, position: "relative" }}>
+        <button onClick={e => { e.stopPropagation(); setMenu(m => !m); }}
+          style={{ background: "none", border: "none", cursor: "pointer", color: C.textMuted, padding: 2 }}>
+          <Ic n="more" s={13}/>
+        </button>
+        {menu && (
+          <div onClick={e => e.stopPropagation()}
+            style={{
+              position: "absolute", top: 24, right: 0, background: C.bg,
+              border: `1px solid ${C.border}`, borderRadius: 9, overflow: "hidden",
+              zIndex: 9999, minWidth: 140, boxShadow: "0 8px 28px rgba(0,0,0,0.22)",
+            }}>
+            <button onClick={() => { setMenu(false); onEdit?.(tile); }}
+              style={{ width: "100%", padding: "9px 13px", background: "none", border: "none",
+                cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
+                color: C.text, fontSize: 12, fontFamily: "inherit" }}>
+              <Ic n="edit" s={12} c={C.textSec}/>{t("edit")}
+            </button>
+            <button onClick={() => { setMenu(false); onRemove?.(tile); }}
+              style={{ width: "100%", padding: "9px 13px", background: "none", border: "none",
+                cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
+                color: C.accent, fontSize: 12, fontFamily: "inherit", borderTop: `1px solid ${C.border}` }}>
+              <Ic n="trash" s={12} c={C.accent}/>{t("delete")}
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
