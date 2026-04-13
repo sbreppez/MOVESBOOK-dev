@@ -85,7 +85,13 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
   const parentMove = f.parentId ? allMoves.find(m => m.id === f.parentId) : null;
 
   return (
-    <Modal title={move?t("editMove"):t("addMove")} onClose={onClose}>
+    <Modal title={move?t("editMove"):t("addMove")} onClose={onClose}
+      footer={
+        <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
+          <Btn variant="secondary" onClick={onClose}>{t("cancel")}</Btn>
+          <Btn onClick={handleSave} disabled={!f.name}>{t("confirm")}</Btn>
+        </div>
+      }>
       <Sel label={t("categories")} value={f.category} onChange={set("category")} options={cats.map(c=>({value:c,label:c}))}/>
       <Inp label={t("name") + " *"} value={f.name} onChange={set("name")} placeholder={t("moveNamePlaceholder")}/>
 
@@ -294,11 +300,6 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
           </button>
         </div>
       )}
-
-      <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
-        <Btn variant="secondary" onClick={onClose}>{t("cancel")}</Btn>
-        <Btn onClick={handleSave} disabled={!f.name}>{t("confirm")}</Btn>
-      </div>
 
       {showAttrModal && (
         <AttributeModal
