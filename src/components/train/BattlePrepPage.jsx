@@ -432,14 +432,15 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
   };
 
   return (
-    <div style={{ background: C.surface, borderRadius: 8, overflow: "hidden" }}>
+    <div style={{ background: C.surface, borderRadius: 8, overflow: "hidden", borderLeft: `4px solid ${meta.color}` }}>
       {/* Collapsed header — always visible */}
       <button onClick={onToggleExpand}
-        style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "14px 14px",
+        style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "14px 16px 13px 16px",
           background: "none", border: "none", cursor: "pointer", textAlign: "left" }}>
+        <Ic n={isExpanded ? "chevD" : "chevR"} s={14} c={C.textMuted} />
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 2, flexWrap: "wrap" }}>
-            <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 16, letterSpacing: 0.5, color: C.text,
+            <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 16, letterSpacing: 0.5, color: C.text,
               overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{displayName}</span>
             <span style={{ fontSize: 10, fontFamily: FONT_DISPLAY, fontWeight: 700, background: `${meta.color}20`, color: meta.color, borderRadius: 4, padding: "2px 6px", flexShrink: 0 }}>{meta.icon} {meta.label}</span>
             {isBattleDay && <span style={{ fontSize: 10, fontFamily: FONT_DISPLAY, fontWeight: 900, background: `${meta.color}30`, color: meta.color, borderRadius: 4, padding: "2px 6px", flexShrink: 0, letterSpacing: 0.5 }}>{t("todayIsTheDay")}</span>}
@@ -469,7 +470,6 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
             <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: C.textSec }}>{t("planCompleted") || "Plan complete"}</div>
           )}
         </div>
-        <Ic n={isExpanded ? "chevD" : "chevR"} s={14} c={C.textMuted} />
       </button>
 
       {/* Expanded content */}
