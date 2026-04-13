@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Modal } from '../shared/Modal';
 import { Inp } from '../shared/Inp';
@@ -9,7 +10,6 @@ import { MasterySlider } from '../shared/MasterySlider';
 import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
 import { CATS, CAT_COLORS } from '../../constants/categories';
-import { useSettings } from '../../hooks/useSettings';
 import { AttributeChips } from './AttributeChips';
 import { AttributeModal } from '../modals/AttributeModal';
 import { masteryColor, lbl, inp } from '../../constants/styles';
@@ -27,18 +27,17 @@ const TENSION_ROLE_OPTS = [
   { key:"peak",  emoji:"\ud83d\udd25", label:"tensionPeak", hint:"peakHint" },
 ];
 
+const chipStyle = (active) => ({
+  border:`1.5px solid ${active ? C.accent : C.border}`, cursor:"pointer",
+  borderRadius:20, fontFamily:FONT_DISPLAY, fontWeight:700, letterSpacing:0.3,
+  fontSize:11, padding:"5px 12px", whiteSpace:"nowrap", transition:"all 0.15s",
+  background: active ? C.accent : C.surface,
+  color: active ? C.bg : C.textSec,
+});
+
+const sectionLabel = { fontSize:10, fontWeight:800, letterSpacing:1, color:C.textMuted, fontFamily:FONT_DISPLAY, marginBottom:6 };
+
 export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initialDesc="", cats=CATS, customAttrs=[], onAddAttr, allMoves=[], catColors=CAT_COLORS, isPremium }) => {
-  const { C } = useSettings();
-
-  const chipStyle = (active) => ({
-    border:`1.5px solid ${active ? C.accent : C.border}`, cursor:"pointer",
-    borderRadius:20, fontFamily:FONT_DISPLAY, fontWeight:700, letterSpacing:0.3,
-    fontSize:11, padding:"5px 12px", whiteSpace:"nowrap", transition:"all 0.15s",
-    background: active ? C.accent : C.surface,
-    color: active ? C.bg : C.textSec,
-  });
-
-  const sectionLabel = { fontSize:10, fontWeight:800, letterSpacing:1, color:C.textMuted, fontFamily:FONT_DISPLAY, marginBottom:6 };
   const t = useT();
   const [f,setF] = useState({ name:"", category:initialCat, description:initialDesc||"", link:"", mastery:50, date:todayLocal(), status:"wip", rotation:"", travelling:"", custom:"", attrs:{}, origin:"learned", musicEnergy:null, tensionRole:null, parentId:null, ...move });
   const set = k => v => setF(p=>({...p,[k]:v}));
