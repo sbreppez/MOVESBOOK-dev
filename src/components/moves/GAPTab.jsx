@@ -118,7 +118,7 @@ export const GAPTab = ({ moves, catColors=CAT_COLORS, setMoves, onDrill, setting
             const col = masteryColor(displayMastery);
             return (
               <div key={m.id} style={{ background:C.surface, border:"none", borderRadius:8,
-                borderLeft:`4px solid ${catCol}`, padding:"14px 16px" }}>
+                borderLeft:`4px solid ${catCol}`, padding:"14px 16px 13px 16px" }}>
                 {/* Top row: name + trained dot + drill */}
                 <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:4 }}>
                   <div style={{ flex:1, minWidth:0 }}>

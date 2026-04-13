@@ -56,10 +56,10 @@ export const CatTile = (props) => {
                   onClick={e=>e.stopPropagation()}
                   onBlur={()=>{ if(draft.trim()&&draft.trim()!==name)onRename(draft.trim()); setRenaming(false); }}
                   onKeyDown={e=>{ if(e.key==="Enter"&&draft.trim()){if(draft.trim()!==name)onRename(draft.trim());setRenaming(false);} if(e.key==="Escape"){setDraft(name);setRenaming(false);} }}
-                  style={{ fontWeight:800, fontSize:16, color:C.brown, letterSpacing:1.1, fontFamily:FONT_DISPLAY,
+                  style={{ fontWeight:700, fontSize:16, color:C.brown, letterSpacing:1.1, fontFamily:FONT_DISPLAY,
                     background:"transparent", border:"none", borderBottom:`2px solid ${C.accent}`, outline:"none", width:"90%", padding:"1px 0" }}/>
               ) : (
-                <div style={{ fontWeight:800, fontSize:16, color:C.brown, letterSpacing:1.1, fontFamily:FONT_DISPLAY, cursor:"pointer", lineHeight:1.2,
+                <div style={{ fontWeight:700, fontSize:16, color:C.brown, letterSpacing:1.1, fontFamily:FONT_DISPLAY, cursor:"pointer", lineHeight:1.2,
                   overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{name.toUpperCase()}</div>
               )}
               {showMoveCount&&<div style={{ fontSize:13, color:C.textMuted, marginTop:2 }}><span style={{color:C.textMuted,fontWeight:700}}>{total}</span> {moveCountStr(total).slice(String(total).length+1)}</div>}
@@ -98,8 +98,8 @@ export const CatTile = (props) => {
                   style={{ background:"none", border:"none", cursor:"pointer", color:color, fontSize:11, fontWeight:700,
                     padding:"4px 0 6px", fontFamily:FONT_DISPLAY, letterSpacing:0.5, display:"flex", alignItems:"center", gap:3 }}>
                   {expanded
-                    ? <Fragment><Ic n="chevD" s={10} c={color}/>{t("showLess")}</Fragment>
-                    : <Fragment><Ic n="chevR" s={10} c={color}/>{t("showMore")} ({moves.length-TILE_PREVIEW} more)</Fragment>}
+                    ? <Fragment><Ic n="chevD" s={14} c={color}/>{t("showLess")}</Fragment>
+                    : <Fragment><Ic n="chevR" s={14} c={color}/>{t("showMore")} ({moves.length-TILE_PREVIEW} more)</Fragment>}
                 </button>
               )}
             </div>
@@ -129,11 +129,11 @@ export const CatTile = (props) => {
           cursor:"default", overflow:"visible" }}>
 
         {/* Header row */}
-        <div style={{ display:"flex", alignItems:"center", gap:6, padding:"14px 16px" }}>
+        <div style={{ display:"flex", alignItems:"center", gap:6, padding:"14px 16px 13px 16px" }}>
           {/* Expand/collapse toggle */}
           <button onClick={e=>{e.stopPropagation();setExpanded(x=>!x);}}
             style={{ background:"none", border:"none", cursor:"pointer", display:"flex", alignItems:"center", padding:2, flexShrink:0 }}>
-            <Ic n={expanded?"chevD":"chevR"} s={13} c={C.textMuted}/>
+            <Ic n={expanded?"chevD":"chevR"} s={14} c={C.textMuted}/>
           </button>
           {/* Title — clicking opens category */}
           <div style={{ flex:1, minWidth:0 }} onClick={onClick}>
@@ -142,10 +142,10 @@ export const CatTile = (props) => {
                 onClick={e=>e.stopPropagation()}
                 onBlur={()=>{ if(draft.trim()&&draft.trim()!==name)onRename(draft.trim()); setRenaming(false); }}
                 onKeyDown={e=>{ if(e.key==="Enter"&&draft.trim()){if(draft.trim()!==name)onRename(draft.trim());setRenaming(false);} if(e.key==="Escape"){setDraft(name);setRenaming(false);} }}
-                style={{ fontWeight:800, fontSize:16, color:C.brown, letterSpacing:1.2, fontFamily:FONT_DISPLAY,
+                style={{ fontWeight:700, fontSize:16, color:C.brown, letterSpacing:1.2, fontFamily:FONT_DISPLAY,
                   background:"transparent", border:"none", borderBottom:`2px solid ${C.accent}`, outline:"none", width:"90%", padding:"1px 0" }}/>
             ) : (
-              <span style={{ fontWeight:800, fontSize:16, color:C.brown, letterSpacing:1.2, fontFamily:FONT_DISPLAY, cursor:"pointer",
+              <span style={{ fontWeight:700, fontSize:16, color:C.brown, letterSpacing:1.2, fontFamily:FONT_DISPLAY, cursor:"pointer",
                 overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", display:"block" }}>{name.toUpperCase()}</span>
             )}
           </div>

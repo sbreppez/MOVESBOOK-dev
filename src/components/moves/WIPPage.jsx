@@ -410,16 +410,16 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
             )}
             {/* ── Tiles view ── */}
             {setsView==="tiles" ? (
-              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8 }}>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:6 }}>
                 {sets.map(s=>{
                   const sColor=s.color||C.blue;
                   return (
                     <div key={s.id} onClick={()=>setEditSetModal(s)}
                       style={{ borderRadius:8, overflow:"hidden", background:C.surface, cursor:"pointer", position:"relative", borderLeft:`4px solid ${sColor}` }}>
-                      <div style={{ padding:"10px 10px 8px" }}>
+                      <div style={{ padding:"14px 16px 13px 16px" }}>
                         <div style={{ display:"flex", alignItems:"flex-start", gap:6, marginBottom:4 }}>
                           <div style={{ width:8, height:8, borderRadius:"50%", background:sColor, flexShrink:0, marginTop:3 }}/>
-                          <div style={{ fontWeight:800, fontSize:11, color:C.brown, fontFamily:FONT_DISPLAY, flex:1, lineHeight:1.3, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", minWidth:0 }}>{s.name}</div>
+                          <div style={{ fontWeight:700, fontSize:16, color:C.brown, fontFamily:FONT_DISPLAY, flex:1, lineHeight:1.3, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", minWidth:0 }}>{s.name}</div>
                           <button onClick={e=>{ e.stopPropagation(); setConfirmDeleteSet(s); }}
                             style={{ background:"none", border:"none", cursor:"pointer", padding:2, flexShrink:0, display:"flex", marginTop:-2, marginRight:-4 }}>
                             <Ic n="x" s={12} c={C.textMuted}/>
@@ -447,16 +447,16 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
                   return (
                     <div key={s.id} style={{ position:"relative", marginBottom:6, borderRadius:8,
                       overflow:"hidden", background:C.surface, borderLeft:`4px solid ${sColor}` }}>
-                      <div style={{ display:"flex", alignItems:"center", padding:"9px 10px", gap:6 }}>
+                      <div style={{ display:"flex", alignItems:"center", padding:"14px 16px 13px 16px", gap:6 }}>
                         {/* Expand/collapse */}
                         <button onClick={()=>setExpSets(p=>({...p,[s.id]:!isExp}))}
                           style={{ background:"none", border:"none", cursor:"pointer", padding:0, display:"flex", flexShrink:0 }}>
-                          <Ic n={isExp?"chevD":"chevR"} s={12} c={sColor}/>
+                          <Ic n={isExp?"chevD":"chevR"} s={14} c={sColor}/>
                         </button>
                         <div style={{ width:8, height:8, borderRadius:"50%", background:sColor, flexShrink:0 }}/>
                         {/* Name + subtitle */}
                         <div style={{ flex:1, minWidth:0, cursor:"pointer" }} onClick={()=>{ if(!reorderMode) setEditSetModal(s); }}>
-                          <div style={{ fontWeight:800, fontSize:13, color:C.brown, fontFamily:FONT_DISPLAY, letterSpacing:0.5, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{s.name}</div>
+                          <div style={{ fontWeight:700, fontSize:16, color:C.brown, fontFamily:FONT_DISPLAY, letterSpacing:0.5, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{s.name}</div>
                           <div style={{ fontSize:11, color:C.textMuted, marginTop:1,
                             overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
                             {moveCountStr((s.moveIds||[]).length)}
@@ -552,7 +552,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
         ) : (
           <div
             style={view==="tiles"
-              ? {display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,alignItems:"stretch"}
+              ? {display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,alignItems:"stretch"}
               : {display:"flex",flexDirection:"column",gap:6}}
             onDragOver={e=>e.preventDefault()}
             onDragLeave={e=>{ if(!e.currentTarget.contains(e.relatedTarget)) setCatDragOver(null); }}
