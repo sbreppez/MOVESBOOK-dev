@@ -28,7 +28,7 @@ import { MoveTree } from './MoveTree';
 export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains={}, setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore, onOpenRRR, onOpenCombine, onOpenMap, onOpenFlashCards, isPremium, staleCount=0, onBulkTrigger }) => {
   const t = useT();
   const { moveCountStr, resultCountStr } = usePlural();
-  const { settings:ctxSettings } = useSettings();
+  const { C, settings:ctxSettings } = useSettings();
   const st = {...ctxSettings,...settings};
   const [view,setView]=useState(st.defaultView||"list"); const [catView,setCatView]=useState("list");
   const [vocabTab,setVocabTab]=useState("moves"); // "moves" | "sets"
