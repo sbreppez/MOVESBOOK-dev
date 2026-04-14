@@ -50,7 +50,7 @@ export const AddCategoryModal = ({ onClose, onAdd, existingCats=[], existingColo
         </div>
       </div>
       <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:16, padding:"10px 14px", background:C.surfaceAlt, borderRadius:8, borderLeft:`4px solid ${color}` }}>
-        <span style={{ fontWeight:800, fontSize:16, color:C.brown, fontFamily:FONT_DISPLAY, letterSpacing:1.5 }}>{name.toUpperCase()||t("preview")}</span>
+        <span style={{ fontWeight:800, fontSize:16, color:C.brown, fontFamily:FONT_DISPLAY, letterSpacing:1.5 }}>{name||t("preview")}</span>
       </div>
       <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
         <Btn variant="secondary" onClick={onClose}>{t("cancel")}</Btn>

@@ -279,7 +279,7 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
               <div key={attr.id} style={{ marginBottom:10 }}>
                 <div style={{ fontSize:10, fontWeight:800, letterSpacing:1, color:C.textMuted,
                   fontFamily:FONT_DISPLAY, marginBottom:4 }}>
-                  {attr.name.toUpperCase()}{attr.multi ? " (multi)" : ""}
+                  {attr.name}{attr.multi ? " (multi)" : ""}
                 </div>
                 <AttributeChips
                   attr={attr}

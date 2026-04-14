@@ -60,7 +60,7 @@ export const CatTile = (props) => {
                     background:"transparent", border:"none", borderBottom:`2px solid ${C.accent}`, outline:"none", width:"90%", padding:"1px 0" }}/>
               ) : (
                 <div style={{ fontWeight:700, fontSize:16, color:C.brown, letterSpacing:1.1, fontFamily:FONT_DISPLAY, cursor:"pointer", lineHeight:1.2,
-                  overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{name.toUpperCase()}</div>
+                  overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{name}</div>
               )}
               {showMoveCount&&<div style={{ fontSize:13, color:C.textMuted, marginTop:2 }}><span style={{color:C.textMuted,fontWeight:700}}>{total}</span> {moveCountStr(total).slice(String(total).length+1)}</div>}
               {/* No progress bar on category tile header — by design */}
@@ -146,7 +146,7 @@ export const CatTile = (props) => {
                   background:"transparent", border:"none", borderBottom:`2px solid ${C.accent}`, outline:"none", width:"90%", padding:"1px 0" }}/>
             ) : (
               <span style={{ fontWeight:700, fontSize:16, color:C.brown, letterSpacing:1.2, fontFamily:FONT_DISPLAY, cursor:"pointer",
-                overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", display:"block" }}>{name.toUpperCase()}</span>
+                overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", display:"block" }}>{name}</span>
             )}
           </div>
           {/* Stats */}

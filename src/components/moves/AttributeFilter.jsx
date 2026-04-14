@@ -67,7 +67,7 @@ export const AttributeFilter = ({ customAttrs, activeFilters, setActiveFilters, 
         <div key={attr.id} style={{ marginBottom: 8 }}>
           <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: 1, color: C.textMuted,
             fontFamily: FONT_DISPLAY, marginBottom: 4 }}>
-            {attr.name.toUpperCase()}{attr.multi ? " (multi)" : ""}
+            {attr.name}{attr.multi ? " (multi)" : ""}
           </div>
           <AttributeChips
             attr={attr}
