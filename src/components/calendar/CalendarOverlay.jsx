@@ -24,6 +24,7 @@ const DAY_KEYS = ["sunS","monS","tueS","wedS","thuS","friS","satS"];
 
 export const CalendarOverlay = ({
   moves, setMoves, reps, sparring, musicflow, habits, ideas, setIdeas,
+  sets,
   calendar, setCalendar,
   cats, catColors, settings, onSettingsChange,
   addToast, initialDay,
@@ -195,6 +196,7 @@ export const CalendarOverlay = ({
           date={editEvent?.date || selectedDay || today}
           event={editEvent?.id ? editEvent : null}
           moves={moves}
+          sets={sets}
           cats={cats}
           catColors={catColors}
           settings={settings}

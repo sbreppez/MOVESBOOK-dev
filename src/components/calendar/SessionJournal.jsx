@@ -12,7 +12,7 @@ const SPECIAL_CHIP_KEYS = { Freestyle: "freestyleChip", Sets: "setsChip", Mobili
 const DURATION_PRESETS = [30, 45, 60, 90, 120];
 
 export const SessionJournal = ({
-  date, event, moves, cats, catColors,
+  date, event, moves, sets, cats, catColors,
   settings, onSettingsChange, initialType,
   onSave, onCancel,
 }) => {
@@ -24,6 +24,8 @@ export const SessionJournal = ({
   const [notes, setNotes] = useState(event?.notes || "");
   const [categories, setCategories] = useState(event?.categories || []);
   const [moveIds, setMoveIds] = useState(event?.moveIds || []);
+  const [setIds, setSetIds] = useState(event?.setIds || []);
+  const [showSetPicker, setShowSetPicker] = useState(false);
   const [workDescription, setWorkDescription] = useState(event?.workDescription || "");
   const [duration, setDuration] = useState(event?.duration || null);
   const [customDuration, setCustomDuration] = useState("");
@@ -118,6 +120,7 @@ export const SessionJournal = ({
       notes: notes.trim(),
       categories: type === "training" ? categories : [],
       moveIds: type === "training" ? moveIds : [],
+      setIds: type === "training" ? setIds : [],
       workDescription: type === "training" ? workDescription.trim() : "",
       duration: type === "training" ? duration : null,
       exertion: type === "training" ? exertion : null,
@@ -295,6 +298,75 @@ export const SessionJournal = ({
                         </span>
                       ))}
                     </div>
+                  )}
+
+                  {/* Sets picker */}
+                  {(sets||[]).length > 0 && (
+                    <>
+                      {!showSetPicker ? (
+                        <button onClick={() => setShowSetPicker(true)}
+                          style={{ background: "none", border: `1.5px dashed ${C.border}`, borderRadius: 8,
+                            padding: "8px 12px", cursor: "pointer", color: C.textMuted,
+                            fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11,
+                            letterSpacing: 0.3, width: "100%", textAlign: "left", marginBottom: 8 }}>
+                          {t("tagSpecificSets")}
+                        </button>
+                      ) : (
+                        <div style={{ borderRadius: 8, padding: 8,
+                          marginBottom: 8, maxHeight: 180, overflow: "auto" }}>
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
+                            <span style={{ fontSize: 10, fontFamily: FONT_DISPLAY, fontWeight: 700,
+                              color: C.textMuted, letterSpacing: 1, textTransform: "uppercase" }}>
+                              {t("sets")}
+                            </span>
+                            <button onClick={() => setShowSetPicker(false)}
+                              style={{ background: "none", border: "none", cursor: "pointer", padding: 2 }}>
+                              <Ic n="x" s={14} c={C.textMuted} />
+                            </button>
+                          </div>
+                          {(sets||[]).map(s => {
+                            const sel = setIds.includes(s.id);
+                            const sColor = s.color || C.blue;
+                            return (
+                              <button key={s.id} onClick={() => setSetIds(prev =>
+                                prev.includes(s.id) ? prev.filter(x => x !== s.id) : [...prev, s.id]
+                              )}
+                                style={{ display: "flex", alignItems: "center", gap: 6,
+                                  width: "100%", padding: "6px 6px", background: sel ? C.accent + "10" : "transparent",
+                                  border: "none", cursor: "pointer", borderRadius: 6, textAlign: "left" }}>
+                                <div style={{ width: 6, height: 6, borderRadius: "50%", background: sColor, flexShrink: 0 }} />
+                                <span style={{ fontSize: 13, color: C.text, flex: 1 }}>{s.name}</span>
+                                <span style={{ fontSize: 10, color: C.textMuted }}>{(s.moveIds||[]).length} moves</span>
+                                {sel && <Ic n="check" s={14} c={C.accent} />}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
+
+                      {/* Selected set pills */}
+                      {setIds.length > 0 && (
+                        <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginBottom: 8 }}>
+                          {setIds.map(sid => {
+                            const s = (sets||[]).find(x => x.id === sid);
+                            if (!s) return null;
+                            const sColor = s.color || C.blue;
+                            return (
+                              <span key={sid} style={{ display: "inline-flex", alignItems: "center", gap: 4,
+                                fontSize: 10, fontFamily: FONT_DISPLAY, fontWeight: 700,
+                                background: sColor + "18", color: sColor,
+                                borderRadius: 12, padding: "3px 8px" }}>
+                                {s.name}
+                                <button onClick={() => setSetIds(prev => prev.filter(x => x !== sid))}
+                                  style={{ background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex" }}>
+                                  <Ic n="x" s={10} c={sColor} />
+                                </button>
+                              </span>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </>
                   )}
 
                   {/* Free text */}

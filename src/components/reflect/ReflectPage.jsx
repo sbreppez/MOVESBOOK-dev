@@ -232,6 +232,7 @@ export const ReflectPage = ({
         <><SectionBrief desc={t("calendarBrief")} settings={settings}/>
         <CalendarOverlay inline
           moves={moves} setMoves={setMoves} reps={reps} sparring={sparring} musicflow={musicflow} habits={habits} ideas={ideas} setIdeas={setIdeas}
+          sets={sets}
           calendar={calendar} setCalendar={setCalendar}
           cats={cats} catColors={catColors} settings={settings} onSettingsChange={onSettingsChange}
           addToast={addToast} initialDay={initialDay}
