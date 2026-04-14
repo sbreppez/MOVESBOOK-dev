@@ -18,6 +18,7 @@ import { BattlePrepPage } from '../train/BattlePrepPage';
 import { PremiumGate } from '../shared/PremiumGate';
 import { SectionBrief } from '../shared/SectionBrief';
 import { computeDecay } from '../../utils/masteryDecay';
+import { ROLE_LEVEL, LEVEL_TO_ROLE, getTensionColors, getItemTension, ArcChart, getArcFeedback, ArcLegend } from '../shared/ArcVis';
 
 export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, addToast, freestyle, onFreestyleChange, rivals, onRivalsChange, addCalendarEvent, removeCalendarEvent, onSimulate, battleprep, setBattleprep, calendar, battlePrepSeed, onBattlePrepSeedUsed, onOpenSharedCalendar, isPremium }) => {
   const t = useT();
@@ -186,21 +187,6 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
   const dm = m => computeDecay(m, settings.decaySensitivity).displayMastery;
 
   // ── PLAN layout ─────────────────────────────────────────────────────────────
-  // ── Tension Role mapping ────────────────────────────────────────────────────
-  const ROLE_LEVEL = { flow:1, build:2, hit:3, peak:4 };
-  const TENSION_COLORS = { 1: C.textMuted, 2: C.blue, 3: C.yellow, 4: C.red };
-
-  const getItemTension = (item) => {
-    if (item.tensionOverride) return ROLE_LEVEL[item.tensionOverride] || 2;
-    if (item.type === "move") {
-      const m = getMove(item.refId);
-      if (m?.tensionRole) return ROLE_LEVEL[m.tensionRole] || 2;
-    }
-    return 2; // default build
-  };
-
-  const LEVEL_TO_ROLE = { 1:"flow", 2:"build", 3:"hit", 4:"peak" };
-
   const cycleItemTension = (roundId, entryId, itemIdx) => {
     setRounds(prev => prev.map(r => r.id !== roundId ? r : {
       ...r,
@@ -208,7 +194,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
         ...e,
         items: (e.items||[]).map((it, i) => {
           if (i !== itemIdx) return it;
-          const cur = getItemTension(it);
+          const cur = getItemTension(it, getMove);
           const next = (cur % 4) + 1;
           return { ...it, tensionOverride: LEVEL_TO_ROLE[next] };
         })
@@ -228,7 +214,8 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
   };
 
   const TensionDots = ({ level, onTap, onLongPress }) => {
-    const color = TENSION_COLORS[level] || TENSION_COLORS[2];
+    const TC = getTensionColors(C);
+    const color = TC[level] || TC[2];
     const longRef = useRef(null);
     return (
       <button
@@ -248,80 +235,8 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
     );
   };
 
-  const ArcVis = ({ items }) => {
-    if (!items || items.length < 2) return null;
-    const W = 200, H = 60, PAD_X = 16, PAD_Y = 8;
-    const plotW = W - PAD_X * 2, plotH = H - PAD_Y * 2;
-    const points = items.map((it, i) => {
-      const tension = getItemTension(it);
-      const x = PAD_X + (items.length === 1 ? plotW / 2 : (i / (items.length - 1)) * plotW);
-      const y = PAD_Y + plotH - (((tension - 1) / 3) * plotH);
-      return { x, y, tension };
-    });
-    const lineStr = points.map(p => `${p.x},${p.y}`).join(" ");
-    const areaStr = `${PAD_X},${H - PAD_Y} ${lineStr} ${W - PAD_X},${H - PAD_Y}`;
-    const gridYs = [1,2,3,4].map(v => PAD_Y + plotH - (((v - 1) / 3) * plotH));
-    return (
-      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none"
-        style={{ width:"100%", height:60, display:"block", padding:"0", boxSizing:"border-box" }}>
-        {gridYs.map((gy,i) => (
-          <line key={i} x1={PAD_X} y1={gy} x2={W - PAD_X} y2={gy}
-            stroke={C.border} strokeWidth={0.5} strokeOpacity={0.3}/>
-        ))}
-        <polygon points={areaStr} fill={C.accent} fillOpacity={0.1}/>
-        <polyline points={lineStr} fill="none" stroke={C.accent} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"/>
-        {points.map((p,i) => (
-          <circle key={i} cx={p.x} cy={p.y} r={3} fill={TENSION_COLORS[p.tension]}/>
-        ))}
-      </svg>
-    );
-  };
-
-  const getArcFeedback = (items) => {
-    if (!items || items.length < 3) return null;
-    const levels = items.map(it => getItemTension(it));
-    const allSame = levels.every(l => l === levels[0]);
-    if (allSame) return t("arcNoDynamics");
-    const hasPeak = levels.includes(4);
-    if (hasPeak) return t("arcBuild");
-    for (let i = 1; i < levels.length; i++) {
-      if (levels[i] >= 3 && levels[i - 1] >= 3) return t("arcBackToBack");
-    }
-    const last = levels[levels.length - 1];
-    if (last >= 3) return t("arcStrongCloser");
-    return null;
-  };
-
   // ── Arc legend (first-time) ───────────────────────────────────────────────
   const [arcLegendOpen, setArcLegendOpen] = useState(!(settings.arcLegendSeen));
-
-  const ArcLegend = () => {
-    const seen = settings.arcLegendSeen;
-    return (
-      <div style={{ margin:"4px 0 6px", padding:"8px 16px", background:C.surface, borderRadius:8, border:"none" }}>
-        <div onClick={()=>{ setArcLegendOpen(p=>!p); if(!seen && window.__MB_SETTINGS_SET__) window.__MB_SETTINGS_SET__(s=>({...s,arcLegendSeen:true})); }}
-          style={{ display:"flex", alignItems:"center", cursor:"pointer", gap:6 }}>
-          <Ic n={arcLegendOpen?"chevD":"chevR"} s={10} c={C.textMuted}/>
-          <span style={{ fontSize:10, fontWeight:800, letterSpacing:1, color:C.brownMid, fontFamily:FONT_DISPLAY }}>{t("roundArc")}</span>
-        </div>
-        {arcLegendOpen && (
-          <div style={{ marginTop:6 }}>
-            <div style={{ fontSize:13, color:C.textSec, fontStyle:"italic", fontFamily:FONT_BODY, lineHeight:1.4, marginBottom:6 }}>{t("roundArcExplain")}</div>
-            <div style={{ display:"flex", gap:10, flexWrap:"wrap", marginBottom:4 }}>
-              {[{e:"\ud83c\udf0a",n:1,l:"arcLegendFlow"},{e:"\ud83d\udcc8",n:2,l:"arcLegendBuild"},{e:"\ud83d\udca5",n:3,l:"arcLegendHit"},{e:"\ud83d\udd25",n:4,l:"arcLegendPeak"}].map(x=>(
-                <div key={x.n} style={{ display:"flex", alignItems:"center", gap:3, fontSize:11, color:C.textMuted }}>
-                  <span>{x.e}</span>
-                  {[1,2,3,4].map(i=><div key={i} style={{ width:5, height:5, borderRadius:"50%", background: i<=x.n ? TENSION_COLORS[x.n] : `${TENSION_COLORS[x.n]}33` }}/>)}
-                  <span>{t(x.l)}</span>
-                </div>
-              ))}
-            </div>
-            <div style={{ fontSize:11, color:C.textMuted, fontStyle:"italic" }}>{t("tapDotsToOverride")}</div>
-          </div>
-        )}
-      </div>
-    );
-  };
 
   const PlanView = () => {
     return (
@@ -498,7 +413,16 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
 
         {/* Rounds list */}
         <div style={{ flex:1, overflow:"auto", padding:"8px 16px" }}>
-          {isPremium && rounds.some(r => (r.entries||[]).some(e => (e.items||[]).filter(it=>it.type==="move").length >= 2)) && <ArcLegend/>}
+          {isPremium && rounds.some(r => (r.entries||[]).some(e => (e.items||[]).filter(it=>it.type==="move").length >= 2)) && (
+            <ArcLegend
+              open={arcLegendOpen}
+              onToggle={() => setArcLegendOpen(p => !p)}
+              onFirstSeen={!settings.arcLegendSeen ? () => {
+                if (window.__MB_SETTINGS_SET__) window.__MB_SETTINGS_SET__(s => ({...s, arcLegendSeen: true}));
+              } : null}
+              hintText={t("tapDotsToOverride")}
+            />
+          )}
           {rounds.length === 0 && (
             <div style={{ textAlign:"center", padding:40, color:C.textMuted }}>
               <Ic n="sword" s={32} c={C.textMuted}/>
@@ -547,7 +471,6 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
                 </div>
                 {/* Entries — expanded by default */}
                 {isOpen && (round.entries||[]).map(entry => {
-                  const moveItems = (entry.items||[]).filter(it => it.type === "move");
                   return (
                     <div key={entry.id}
                       style={{ borderTop:`1px solid ${C.borderLight}`, padding:"6px 12px 6px 28px" }}>
@@ -556,12 +479,19 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
                         <span style={{ fontSize:11, fontWeight:700, color:C.brownMid, fontFamily:FONT_DISPLAY, flex:1 }}>{entry.name}</span>
                         <span style={{ fontSize:10, color:C.textMuted }}>{(entry.items||[]).length} items</span>
                       </div>
-                      {moveItems.length >= 2 && <ArcVis items={entry.items}/>}
-                      {(() => { const fb = getArcFeedback(entry.items); return fb ? <div style={{ fontSize:10, color:C.textSec, fontStyle:"italic", padding:"2px 0 4px" }}>{fb}</div> : null; })()}
+                      {(() => {
+                        const arcLevels = (entry.items||[]).filter(it => it.type === "move").map(it => getItemTension(it, getMove));
+                        if (arcLevels.length < 2) return null;
+                        const fb = getArcFeedback(arcLevels, t);
+                        return <>
+                          <ArcChart levels={arcLevels} />
+                          {fb && <div style={{ fontSize:10, color:C.textSec, fontStyle:"italic", padding:"2px 0 4px" }}>{fb}</div>}
+                        </>;
+                      })()}
                       {(entry.items||[]).map((item,i) => {
                         const label = item.type==="move" ? getMove(item.refId)?.name : getSet(item.refId)?.name;
                         if (!label) return null;
-                        const tension = getItemTension(item);
+                        const tension = getItemTension(item, getMove);
                         return (
                           <div key={i} style={{ fontSize:10, color:C.textMuted, paddingLeft:14, paddingTop:2, display:"flex", alignItems:"center", gap:4 }}>
                             <span>·</span>
