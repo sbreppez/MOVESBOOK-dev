@@ -18,7 +18,7 @@ import { BattlePrepPage } from '../train/BattlePrepPage';
 import { PremiumGate } from '../shared/PremiumGate';
 import { SectionBrief } from '../shared/SectionBrief';
 import { computeDecay } from '../../utils/masteryDecay';
-import { ROLE_LEVEL, LEVEL_TO_ROLE, getTensionColors, getItemTension, ArcChart, getArcFeedback, ArcLegend } from '../shared/ArcVis';
+import { ROLE_LEVEL, LEVEL_TO_ROLE, getTensionColors, getItemTension, getMoveTension, ArcChart, getArcFeedback, ArcLegend } from '../shared/ArcVis';
 
 export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, addToast, freestyle, onFreestyleChange, rivals, onRivalsChange, addCalendarEvent, removeCalendarEvent, onSimulate, battleprep, setBattleprep, calendar, battlePrepSeed, onBattlePrepSeedUsed, onOpenSharedCalendar, isPremium }) => {
   const t = useT();
@@ -413,7 +413,18 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
 
         {/* Rounds list */}
         <div style={{ flex:1, overflow:"auto", padding:"8px 16px" }}>
-          {isPremium && rounds.some(r => (r.entries||[]).some(e => (e.items||[]).filter(it=>it.type==="move").length >= 2)) && (
+          {isPremium && rounds.some(r => (r.entries||[]).some(e => {
+            let count = 0;
+            for (const it of (e.items||[])) {
+              if (it.type === "move") count++;
+              else if (it.type === "set") {
+                const s = getSet(it.refId);
+                count += (s?.moveIds?.length || 0);
+              }
+              if (count >= 2) return true;
+            }
+            return false;
+          })) && (
             <ArcLegend
               open={arcLegendOpen}
               onToggle={() => setArcLegendOpen(p => !p)}
@@ -480,7 +491,15 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
                         <span style={{ fontSize:10, color:C.textMuted }}>{(entry.items||[]).length} items</span>
                       </div>
                       {(() => {
-                        const arcLevels = (entry.items||[]).filter(it => it.type === "move").map(it => getItemTension(it, getMove));
+                        const arcLevels = (entry.items||[]).flatMap(it => {
+                          if (it.type === "move") return [getItemTension(it, getMove)];
+                          if (it.type === "set") {
+                            const s = getSet(it.refId);
+                            if (!s?.moveIds?.length) return [];
+                            return s.moveIds.map(mid => getMoveTension(getMove(mid)));
+                          }
+                          return [];
+                        });
                         if (arcLevels.length < 2) return null;
                         const fb = getArcFeedback(arcLevels, t);
                         return <>
