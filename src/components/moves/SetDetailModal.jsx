@@ -12,6 +12,7 @@ import { usePlural } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
 import { masteryColor, lbl, inp } from '../../constants/styles';
 import { todayLocal } from '../../utils/dateUtils';
+import { ArcChart, getMoveTension, ArcLegend, getArcFeedback } from '../shared/ArcVis';
 
 const ensureHttps = (url) => {
   if (!url || !url.trim()) return "";
@@ -36,6 +37,7 @@ export const SetDetailModal = ({ item, onClose, onSave, type="set", allMoves=[],
   const [pickerQ, setPickerQ] = useState("");
   const localDragItem = useRef(null);
   const [localDragOver, setLocalDragOver] = useState(null);
+  const [arcLegendOpen, setArcLegendOpen] = useState(false);
   const isSet = type === "set";
 
   const handleSave = () => {
@@ -206,6 +208,25 @@ export const SetDetailModal = ({ item, onClose, onSave, type="set", allMoves=[],
         </div>
       )}
 
+      {/* Arc visualization — live updates as moves are added/reordered */}
+      {isSet && localIds.length >= 2 && (() => {
+        const levels = localIds.map(id => {
+          const m = allMoves.find(mv => mv.id === id);
+          return getMoveTension(m);
+        });
+        const feedback = getArcFeedback(levels, t);
+        return (
+          <div style={{ marginBottom: 16, marginTop: 8 }}>
+            <ArcChart levels={levels} />
+            {feedback && (
+              <div style={{ fontSize: 11, color: C.textSec, fontStyle: "italic", fontFamily: FONT_BODY, textAlign: "center", marginTop: 4 }}>
+                {feedback}
+              </div>
+            )}
+            <ArcLegend open={arcLegendOpen} onToggle={() => setArcLegendOpen(p => !p)} compact />
+          </div>
+        );
+      })()}
 
       {/* Mastery slider */}
       <div style={{ marginBottom:16 }}>
