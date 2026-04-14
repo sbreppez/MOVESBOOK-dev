@@ -21,7 +21,7 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
   const [screen, setScreen] = useState("selection");
 
   // Selection state
-  const eligibleSets = useMemo(() => sets.filter(s => (s.moveIds?.length || 0) > 0), [sets]);
+  const eligibleSets = useMemo(() => sets.filter(s => (s.moveIds?.length || 0) >= 2), [sets]);
   const [selectedIds, setSelectedIds] = useState(() => eligibleSets.map(s => s.id));
 
   // Playing state
@@ -138,8 +138,11 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
           </button>
         </div>
         <div style={scrollBody}>
-          <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: C.textMuted, margin: "0 0 16px", lineHeight: 1.5 }}>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: C.textMuted, margin: "0 0 6px", lineHeight: 1.5 }}>
             {t("flashCardsInstruction")}
+          </p>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 11, color: C.textMuted, margin: "0 0 16px", lineHeight: 1.4, fontStyle: "italic" }}>
+            {t("flashCardsMinMoves")}
           </p>
 
           {/* Select All / Deselect All */}

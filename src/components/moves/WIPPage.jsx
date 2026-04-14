@@ -449,7 +449,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
         ) : vocabTab==="sets" ? (
           <div>
             <SectionBrief desc={t("setsBrief")} stat={`${sets.length} sets`} settings={st}/>
-            {sets.filter(s=>(s.moveIds?.length||0)>0).length>=1&&onOpenFlashCards&&(
+            {sets.filter(s=>(s.moveIds?.length||0)>=2).length>=1&&onOpenFlashCards&&(
               <div style={{ padding:"8px 0 0", flexShrink:0 }}>
                 <button onClick={onOpenFlashCards}
                   style={{
