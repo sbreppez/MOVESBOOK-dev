@@ -10,7 +10,7 @@ import { computeDecay, showDecayArrow } from '../../utils/masteryDecay';
 import { todayLocal } from '../../utils/dateUtils';
 import { CATS, CAT_COLORS } from '../../constants/categories';
 
-export const MoveTile = ({ move, onClick, onEdit, onDelete, onDuplicate, onMove, allCats=CATS, catColors=CAT_COLORS, searchQuery="", onToggleTrainedToday }) => {
+export const MoveTile = ({ move, onClick, onEdit, onDelete, onDuplicate, onMove, allCats=CATS, catColors=CAT_COLORS, searchQuery="", onToggleTrainedToday, selectMode, isSelected }) => {
   const { settings } = useSettings();
   const t = useT();
   const [expanded, setExpanded] = useState(false);
@@ -21,7 +21,17 @@ export const MoveTile = ({ move, onClick, onEdit, onDelete, onDuplicate, onMove,
   const compact = settings.compactCards;
   return (
     <div onClick={onClick} style={{ position:"relative", background:C.surface, borderRadius:8,
-      padding: compact ? "7px 8px 5px" : "10px 10px 8px", cursor:"pointer", borderLeft:`4px solid ${catCol}` }}>
+      padding: compact ? "7px 8px 5px" : "10px 10px 8px", cursor:"pointer", borderLeft:`4px solid ${catCol}`,
+      outline: selectMode && isSelected ? `2px solid ${C.green}` : "none" }}>
+
+      {selectMode && (
+        <div style={{ position:"absolute", top:8, left:8, width:20, height:20, borderRadius:5,
+          border:`2px solid ${isSelected ? C.green : C.border}`,
+          background: isSelected ? C.green : "transparent",
+          display:"flex", alignItems:"center", justifyContent:"center", zIndex:2 }}>
+          {isSelected && <Ic n="check" s={12} c="#fff"/>}
+        </div>
+      )}
 
       {/* Main layout: two columns */}
       <div style={{ display:"flex", gap:10 }}>
@@ -65,7 +75,7 @@ export const MoveTile = ({ move, onClick, onEdit, onDelete, onDuplicate, onMove,
             )}
 
             {/* Trained today circle */}
-            {onToggleTrainedToday && (() => {
+            {!selectMode && onToggleTrainedToday && (() => {
               const isTrained = move.date === todayLocal();
               return <button onClick={e => { e.stopPropagation(); onToggleTrainedToday(move.id); }}
                 style={{ width:16, height:16, borderRadius:"50%", flexShrink:0, padding:0,

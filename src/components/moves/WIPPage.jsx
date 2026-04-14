@@ -68,6 +68,9 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   const [expSets,setExpSets]=useState({});
   const [confirmDeleteSet,setConfirmDeleteSet]=useState(null);
   const [confirmDeleteMove,setConfirmDeleteMove]=useState(null);
+  const [selectMode,setSelectMode]=useState(false);
+  const [selectedMoveIds,setSelectedMoveIds]=useState(new Set());
+  const [confirmBulkDeleteMoves,setConfirmBulkDeleteMoves]=useState(false);
   const [versionMove, setVersionMove] = useState(null);
   const [showFilter, setShowFilter] = useState(false);
   const [attrFilters, setAttrFilters] = useState({});
@@ -119,6 +122,8 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   const bulkImport=newMoves=>{ const w=newMoves.map(m=>({...m,id:Date.now()+Math.random(),status:m.status||"wip"})); setMoves(prev=>[...prev,...w]); };
   const delMove=id=>setMoves(prev=>prev.filter(m=>m.id!==id));
   const tryDelMove=m=>{ if(st.confirmDelete!==false) setConfirmDeleteMove(m); else delMove(m.id); };
+  const toggleMoveSelect=(moveId)=>{ setSelectedMoveIds(prev=>{ const next=new Set(prev); if(next.has(moveId)) next.delete(moveId); else next.add(moveId); return next; }); };
+  const exitMoveSelectMode=()=>{ setSelectMode(false); setSelectedMoveIds(new Set()); };
   const dupMove=m=>setMoves(prev=>[...prev,{...m,id:Date.now(),name:m.name+" (copy)"}]);
   const moveToCat=(id,cat)=>setMoves(prev=>prev.map(m=>m.id===id?{...m,category:cat}:m));
   const addCategory=(name,color)=>{ setCats(prev=>[...prev,name]); setCatColors(prev=>({...prev,[name]:color})); };
@@ -166,20 +171,42 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
       <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column" }}>
         <Crumbs items={[t("vocab"),openCat]}/>
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"6px 14px", borderBottom:`1px solid ${C.borderLight}`, background:C.surface, flexShrink:0 }}>
-          <button onClick={()=>{setOpenCat(null);setSearch("");setShowSearch(false);setCatReorderMode(false);}} style={{ background:"none", border:"none", cursor:"pointer", color:C.accent, fontSize:14, fontFamily:FONT_DISPLAY, fontWeight:700 }}>← Back</button>
+          <button onClick={()=>{exitMoveSelectMode();setOpenCat(null);setSearch("");setShowSearch(false);setCatReorderMode(false);}} style={{ background:"none", border:"none", cursor:"pointer", color:C.accent, fontSize:14, fontFamily:FONT_DISPLAY, fontWeight:700 }}>← Back</button>
           <div style={{ display:"flex", gap:3 }}>
-            {!catReorderMode&&customAttrs.length>0&&<button onClick={()=>setShowFilter(s=>!s)}
-              style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:showFilter?C.accent:C.textSec, position:"relative" }}>
-              <Ic n="filter" s={16}/>
-              {hasActiveFilters&&<div style={{ position:"absolute", top:2, right:2, width:6, height:6, borderRadius:"50%", background:C.accent }}/>}
-            </button>}
-            {!catReorderMode&&<button onClick={()=>{ setShowSearch(s=>!s); setSearch(""); }} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:showSearch?C.accent:C.textSec }}><Ic n="search" s={16}/></button>}
-            {!catReorderMode&&<button onClick={()=>setCatView(v=>v==="tiles"?"list":"tiles")} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textSec }}><Ic n={catView==="tiles"?"list":"grid"} s={16}/></button>}
-            {allCatMoves.length>1&&<button onClick={()=>{ const next=!catReorderMode; setCatReorderMode(next); if(next){ const ids=allCatMoves.map(m=>m.id); setMoves(prev=>{ const rest=prev.filter(m=>!ids.includes(m.id)); const ordered=ids.map(id=>prev.find(m=>m.id===id)).filter(Boolean); return [...ordered,...rest]; }); } if(!next && onSortChange) onSortChange("sortMoves","custom"); }}
-              style={{ background:"none", border:"none", cursor:"pointer", padding:4,
-                color:catReorderMode?C.accent:C.textMuted, fontSize:13, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>
-              {catReorderMode?"DONE":"⇅"}
-            </button>}
+            {selectMode ? (
+              <>
+                {selectedMoveIds.size>0&&(
+                  <button onClick={()=>setConfirmBulkDeleteMoves(true)}
+                    style={{ background:"none", border:"none", cursor:"pointer", padding:4, display:"flex", alignItems:"center", gap:4 }}>
+                    <Ic n="trash" s={16} c={C.accent}/>
+                    <span style={{ fontSize:11, color:C.accent, fontWeight:700, fontFamily:FONT_DISPLAY }}>{selectedMoveIds.size}</span>
+                  </button>
+                )}
+                <button onClick={exitMoveSelectMode}
+                  style={{ background:"none", border:"none", cursor:"pointer", padding:4 }}>
+                  <Ic n="x" s={16} c={C.textMuted}/>
+                </button>
+              </>
+            ) : (
+              <>
+                {!catReorderMode&&customAttrs.length>0&&<button onClick={()=>setShowFilter(s=>!s)}
+                  style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:showFilter?C.accent:C.textSec, position:"relative" }}>
+                  <Ic n="filter" s={16}/>
+                  {hasActiveFilters&&<div style={{ position:"absolute", top:2, right:2, width:6, height:6, borderRadius:"50%", background:C.accent }}/>}
+                </button>}
+                {!catReorderMode&&<button onClick={()=>{ setShowSearch(s=>!s); setSearch(""); }} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:showSearch?C.accent:C.textSec }}><Ic n="search" s={16}/></button>}
+                {!catReorderMode&&<button onClick={()=>setCatView(v=>v==="tiles"?"list":"tiles")} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textSec }}><Ic n={catView==="tiles"?"list":"grid"} s={16}/></button>}
+                {!catReorderMode&&allCatMoves.length>=2&&<button onClick={()=>setSelectMode(true)}
+                  style={{ background:"none", border:"none", cursor:"pointer", padding:4 }}>
+                  <Ic n="checkCircle" s={16} c={C.textMuted}/>
+                </button>}
+                {allCatMoves.length>1&&<button onClick={()=>{ const next=!catReorderMode; setCatReorderMode(next); if(next){ const ids=allCatMoves.map(m=>m.id); setMoves(prev=>{ const rest=prev.filter(m=>!ids.includes(m.id)); const ordered=ids.map(id=>prev.find(m=>m.id===id)).filter(Boolean); return [...ordered,...rest]; }); } if(!next && onSortChange) onSortChange("sortMoves","custom"); }}
+                  style={{ background:"none", border:"none", cursor:"pointer", padding:4,
+                    color:catReorderMode?C.accent:C.textMuted, fontSize:13, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>
+                  {catReorderMode?"DONE":"⇅"}
+                </button>}
+              </>
+            )}
           </div>
         </div>
         {showSearch&&(
@@ -228,11 +255,11 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
             </div>
           ) : catView==="tiles" ? (
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8 }}>
-              {catMoves.map(m=><MoveTile key={m.id} move={m} searchQuery={search} onClick={()=>setEditMove(m)} onEdit={()=>setEditMove(m)} onDelete={()=>tryDelMove(m)} onDuplicate={()=>dupMove(m)} onMove={cat=>moveToCat(m.id,cat)} allCats={cats} catColors={catColors} onToggleTrainedToday={handleToggleTrainedToday}/>)}
+              {catMoves.map(m=><MoveTile key={m.id} move={m} searchQuery={search} onClick={()=>selectMode?toggleMoveSelect(m.id):setEditMove(m)} onEdit={()=>setEditMove(m)} onDelete={()=>tryDelMove(m)} onDuplicate={()=>dupMove(m)} onMove={cat=>moveToCat(m.id,cat)} allCats={cats} catColors={catColors} onToggleTrainedToday={handleToggleTrainedToday} selectMode={selectMode} isSelected={selectedMoveIds.has(m.id)}/>)}
             </div>
           ) : (
             <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
-              {catMoves.map(m=><MoveListRow key={m.id} move={m} searchQuery={search} catColor={catColor} onEdit={()=>setEditMove(m)} onDelete={()=>tryDelMove(m)} onMove={cat=>moveToCat(m.id,cat)} allCats={cats} catColors={catColors} onToggleTrainedToday={handleToggleTrainedToday}/>)}
+              {catMoves.map(m=><MoveListRow key={m.id} move={m} searchQuery={search} catColor={catColor} onEdit={()=>selectMode?toggleMoveSelect(m.id):setEditMove(m)} onDelete={()=>tryDelMove(m)} onMove={cat=>moveToCat(m.id,cat)} allCats={cats} catColors={catColors} onToggleTrainedToday={handleToggleTrainedToday} selectMode={selectMode} isSelected={selectedMoveIds.has(m.id)}/>)}
             </div>
           )}
         </div>
@@ -252,6 +279,36 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
                 </button>
                 <button onClick={()=>{ delMove(confirmDeleteMove.id); setConfirmDeleteMove(null); }}
                   style={{ padding:"8px 16px", borderRadius:8, border:"none", background:C.accent, color:C.bg, fontSize:13, fontWeight:700, cursor:"pointer", fontFamily:FONT_BODY }}>
+                  {t("delete")}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        {confirmBulkDeleteMoves&&(
+          <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", zIndex:900, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
+            <div style={{ background:C.bg, borderRadius:16, width:"100%", maxWidth:320, padding:20, textAlign:"center", boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
+              <Ic n="trash" s={28} c={C.accent}/>
+              <h3 style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:1, color:C.text, margin:"8px 0" }}>
+                {t("deleteSelected")}
+              </h3>
+              <p style={{ fontSize:13, color:C.textSec, marginBottom:16, lineHeight:1.5 }}>
+                {selectedMoveIds.size} {t("itemsWillBeDeleted")}
+              </p>
+              <div style={{ display:"flex", gap:8 }}>
+                <button onClick={()=>setConfirmBulkDeleteMoves(false)}
+                  style={{ flex:1, padding:"10px", background:C.surfaceAlt, border:`1px solid ${C.border}`,
+                    borderRadius:8, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:13, color:C.text }}>
+                  {t("cancel")}
+                </button>
+                <button onClick={()=>{
+                  setMoves(prev=>prev.filter(m=>!selectedMoveIds.has(m.id)));
+                  setConfirmBulkDeleteMoves(false);
+                  exitMoveSelectMode();
+                  addToast({ icon:"trash", title:t("deleted") });
+                }}
+                  style={{ flex:1, padding:"10px", background:C.accent, border:"none",
+                    borderRadius:8, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:13, color:"#fff" }}>
                   {t("delete")}
                 </button>
               </div>
