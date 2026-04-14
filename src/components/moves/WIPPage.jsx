@@ -449,8 +449,23 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
         ) : vocabTab==="sets" ? (
           <div>
             <SectionBrief desc={t("setsBrief")} stat={`${sets.length} sets`} settings={st}/>
+            {sets.filter(s=>(s.moveIds?.length||0)>0).length>=1&&onOpenFlashCards&&(
+              <div style={{ padding:"8px 16px 0", flexShrink:0 }}>
+                <button onClick={onOpenFlashCards}
+                  style={{
+                    width:"100%", padding:14, borderRadius:12,
+                    border:`1px solid ${C.accent}`, background:"transparent",
+                    color:C.accent, cursor:"pointer",
+                    fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:13,
+                    letterSpacing:1,
+                    display:"flex", alignItems:"center", justifyContent:"center",
+                    gap:8, minHeight:44,
+                  }}>
+                  {t("flashCards")}
+                </button>
+              </div>
+            )}
             <div style={{ display:"flex", justifyContent:"flex-end", alignItems:"center", gap:8, padding:"5px 16px 3px" }}>
-              {sets.filter(s=>(s.moveIds?.length||0)>0).length>=1&&onOpenFlashCards&&<button onClick={onOpenFlashCards} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textMuted }}><Ic n="cards" s={16}/></button>}
               <button onClick={()=>setSetsView(v=>v==="list"?"tiles":"list")} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textMuted }}><Ic n={setsView==="list"?"grid":"list"} s={16}/></button>
               <button onClick={()=>setReorderMode(r=>!r)}
                 style={{ background:"none", border:"none", cursor:"pointer", padding:4,
