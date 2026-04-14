@@ -305,6 +305,29 @@ export const CalendarOverlay = ({
         </div>
       )}
 
+      {/* Log Session button — ghost/outline style, inline mode + days view only */}
+      {inline && (!isPremium || calView === "days") && (
+        <div style={{ padding:"8px 16px 0", flexShrink:0 }}>
+          <button onClick={() => {
+            setSelectedDay(today);
+            setEditEvent({ type: "training", date: today });
+            setShowTypePicker(false);
+            setShowJournal(true);
+          }}
+            style={{
+              width:"100%", padding:14, borderRadius:12,
+              border:`1px solid ${C.accent}`, background:"transparent",
+              color:C.accent, cursor:"pointer",
+              fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:13,
+              letterSpacing:1, textTransform:"uppercase",
+              display:"flex", alignItems:"center", justifyContent:"center",
+              gap:8, minHeight:44,
+            }}>
+            {t("logSession")}
+          </button>
+        </div>
+      )}
+
       {/* Days view */}
       {(!inline || calView === "days") && <>
       {/* Battle Prep prompt — shown after saving a future battle event */}
