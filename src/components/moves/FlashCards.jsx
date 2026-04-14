@@ -111,7 +111,7 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
 
   // ─── OVERLAY CONTAINER ───
   const overlay = {
-    position: "fixed", inset: 0, zIndex: 1000, background: C.bg,
+    position: "absolute", inset: 0, zIndex: 600, background: C.bg,
     display: "flex", flexDirection: "column", overflow: "hidden",
   };
 

@@ -450,7 +450,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
           <div>
             <SectionBrief desc={t("setsBrief")} stat={`${sets.length} sets`} settings={st}/>
             {sets.filter(s=>(s.moveIds?.length||0)>0).length>=1&&onOpenFlashCards&&(
-              <div style={{ padding:"8px 16px 0", flexShrink:0 }}>
+              <div style={{ padding:"8px 0 0", flexShrink:0 }}>
                 <button onClick={onOpenFlashCards}
                   style={{
                     width:"100%", padding:14, borderRadius:12,
@@ -458,6 +458,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
                     color:C.accent, cursor:"pointer",
                     fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:13,
                     letterSpacing:1,
+                    textTransform:"uppercase",
                     display:"flex", alignItems:"center", justifyContent:"center",
                     gap:8, minHeight:44,
                   }}>
