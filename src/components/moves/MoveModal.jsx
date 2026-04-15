@@ -41,7 +41,10 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
   const t = useT();
   const [f,setF] = useState({ name:"", category:initialCat, description:initialDesc||"", link:"", mastery:50, date:todayLocal(), status:"wip", rotation:"", travelling:"", custom:"", attrs:{}, origin:"learned", musicEnergy:null, tensionRole:null, parentId:null, ...move });
   const set = k => v => setF(p=>({...p,[k]:v}));
-  const handleSave = () => { if (f.name) { onSave(f); onClose(); } };
+  const [journalEntries, setJournalEntries] = useState(move?.journal || []);
+  const [newJournalText, setNewJournalText] = useState("");
+  const [showJournal, setShowJournal] = useState(false);
+  const handleSave = () => { if (f.name) { onSave({ ...f, journal: journalEntries }); onClose(); } };
   const [showMore, setShowMore] = useState(false);
   const [showAttrModal, setShowAttrModal] = useState(false);
   const [showBasedOn, setShowBasedOn] = useState(!!f.parentId);
@@ -298,6 +301,81 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
               color:C.accent, fontWeight:700, fontFamily:FONT_DISPLAY, padding:"4px 0" }}>
             + {t("addNewAttribute")}
           </button>
+        </div>
+      )}
+
+      {/* ── Move Journal ── */}
+      {move && (
+        <div style={{ marginTop: 12 }}>
+          <button onClick={() => setShowJournal(p => !p)}
+            style={{ display: "flex", alignItems: "center", gap: 6, width: "100%",
+              background: "none", border: "none", cursor: "pointer", padding: "6px 0" }}>
+            <Ic n={showJournal ? "chevD" : "chevR"} s={12} c={C.textMuted} />
+            <span style={{ ...sectionLabel, margin: 0 }}>
+              {t("moveJournal")} ({journalEntries.length})
+            </span>
+          </button>
+
+          {showJournal && (
+            <div style={{ marginTop: 6 }}>
+              {/* Add entry */}
+              <div style={{ display: "flex", gap: 6, marginBottom: 10 }}>
+                <textarea
+                  value={newJournalText}
+                  onChange={e => setNewJournalText(e.target.value)}
+                  placeholder={t("journalEntryPlaceholder")}
+                  rows={2}
+                  style={{ flex: 1, background: C.surfaceAlt, border: `1px solid ${C.border}`,
+                    borderRadius: 8, padding: "8px 10px", color: C.text, fontSize: 12,
+                    fontFamily: FONT_BODY, outline: "none", resize: "none", lineHeight: 1.4 }}
+                />
+                <button
+                  onClick={() => {
+                    if (!newJournalText.trim()) return;
+                    const entry = {
+                      id: Date.now(),
+                      date: todayLocal(),
+                      text: newJournalText.trim(),
+                    };
+                    setJournalEntries(prev => [entry, ...prev]);
+                    setNewJournalText("");
+                  }}
+                  disabled={!newJournalText.trim()}
+                  style={{ alignSelf: "flex-end", width: 36, height: 36, borderRadius: 8,
+                    background: newJournalText.trim() ? C.accent : C.surfaceAlt,
+                    border: "none", cursor: newJournalText.trim() ? "pointer" : "default",
+                    display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <Ic n="plus" s={16} c={newJournalText.trim() ? "#fff" : C.textMuted} />
+                </button>
+              </div>
+
+              {/* Entries list */}
+              {journalEntries.length === 0 ? (
+                <div style={{ fontSize: 11, color: C.textMuted, fontStyle: "italic", padding: "6px 0" }}>
+                  {t("noJournalEntries")}
+                </div>
+              ) : (
+                <div style={{ display: "flex", flexDirection: "column", gap: 4, maxHeight: 200, overflow: "auto" }}>
+                  {journalEntries.map(entry => (
+                    <div key={entry.id} style={{ background: C.surfaceAlt, borderRadius: 8, padding: "8px 10px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
+                        <span style={{ fontSize: 10, color: C.textMuted, fontFamily: FONT_DISPLAY, fontWeight: 700 }}>
+                          {entry.date}
+                        </span>
+                        <button onClick={() => setJournalEntries(prev => prev.filter(e => e.id !== entry.id))}
+                          style={{ background: "none", border: "none", cursor: "pointer", padding: 2 }}>
+                          <Ic n="x" s={10} c={C.textMuted} />
+                        </button>
+                      </div>
+                      <div style={{ fontSize: 12, color: C.text, fontFamily: FONT_BODY, lineHeight: 1.4 }}>
+                        {entry.text}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
 

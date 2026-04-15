@@ -1,5 +1,7 @@
 export const TRANSLATIONS = {
   en: {
+    // Move journal
+    moveJournal:"Move Journal", journalEntryPlaceholder:"What's changed? What did you notice?", noJournalEntries:"No entries yet — start tracking your progress",
     // Nav tabs
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE", home:"HOME", reflect:"REFLECT",
     // Sub-tabs
@@ -1222,6 +1224,7 @@ export const TRANSLATIONS = {
   },
 
   it: {
+    moveJournal:"Diario del Movimento", journalEntryPlaceholder:"Cosa è cambiato? Cosa hai notato?", noJournalEntries:"Nessuna voce — inizia a monitorare i progressi",
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE", home:"HOME", reflect:"RIFLETTI",
     plan:"PIANO", freestyle:"FREESTYLE", library:"LIBRERIA", stance:"POSTURA", prep:"PREP", goals:"OBIETTIVI", habits:"ABITUDINI", notes:"NOTE", calendar:"CALENDARIO",
     save:"Salva", cancel:"Annulla", delete:"Elimina", deleted:"Eliminato", done:"FATTO", confirm:"Conferma", exit:"Esci",
@@ -2394,6 +2397,7 @@ export const TRANSLATIONS = {
   },
 
   es: {
+    moveJournal:"Diario del Movimiento", journalEntryPlaceholder:"¿Qué cambió? ¿Qué notaste?", noJournalEntries:"Sin entradas — empieza a seguir tu progreso",
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE", home:"INICIO", reflect:"REFLEXIÓN",
     plan:"PLAN", freestyle:"FREESTYLE", library:"BIBLIOTECA", stance:"POSTURA", prep:"PREP", goals:"METAS", habits:"HÁBITOS", notes:"NOTAS", calendar:"CALENDARIO",
     save:"Guardar", cancel:"Cancelar", delete:"Eliminar", deleted:"Eliminado", done:"LISTO", confirm:"Confirmar", exit:"Salir",
@@ -3551,6 +3555,7 @@ export const TRANSLATIONS = {
   },
 
   fr: {
+    moveJournal:"Journal du Mouvement", journalEntryPlaceholder:"Qu'est-ce qui a changé ? Qu'as-tu remarqué ?", noJournalEntries:"Aucune entrée — commence à suivre tes progrès",
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE", home:"ACCUEIL", reflect:"BILAN",
     plan:"PLAN", freestyle:"FREESTYLE", library:"BIBLIOTHÈQUE", stance:"POSTURE", prep:"PRÉP", goals:"OBJECTIFS", habits:"HABITUDES", notes:"NOTES", calendar:"CALENDRIER",
     save:"Enregistrer", cancel:"Annuler", delete:"Supprimer", deleted:"Supprimé", done:"OK", confirm:"Confirmer", exit:"Quitter",
@@ -4708,6 +4713,7 @@ export const TRANSLATIONS = {
   },
 
   pt: {
+    moveJournal:"Diário do Movimento", journalEntryPlaceholder:"O que mudou? O que você notou?", noJournalEntries:"Sem entradas — comece a acompanhar seu progresso",
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE", home:"INÍCIO", reflect:"REFLEXÃO",
     plan:"PLANO", freestyle:"FREESTYLE", library:"BIBLIOTECA", stance:"POSTURA", prep:"PREP", goals:"METAS", habits:"HÁBITOS", notes:"NOTAS", calendar:"CALENDÁRIO",
     save:"Salvar", cancel:"Cancelar", delete:"Excluir", deleted:"Excluído", done:"PRONTO", confirm:"Confirmar", exit:"Sair",
@@ -5865,6 +5871,7 @@ export const TRANSLATIONS = {
   },
 
   de: {
+    moveJournal:"Bewegungstagebuch", journalEntryPlaceholder:"Was hat sich geändert? Was ist dir aufgefallen?", noJournalEntries:"Noch keine Einträge — verfolge deinen Fortschritt",
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE", home:"START", reflect:"RÜCKBLICK",
     plan:"PLAN", freestyle:"FREESTYLE", library:"BIBLIOTHEK", stance:"HALTUNG", prep:"VORB.", goals:"ZIELE", habits:"GEWOHNHEITEN", notes:"NOTIZEN", calendar:"KALENDER",
     save:"Speichern", cancel:"Abbrechen", delete:"Löschen", deleted:"Gelöscht", done:"FERTIG", confirm:"Bestätigen", exit:"Beenden",
@@ -7022,6 +7029,7 @@ export const TRANSLATIONS = {
   },
 
   ja: {
+    moveJournal:"ムーブジャーナル", journalEntryPlaceholder:"何が変わった？何に気づいた？", noJournalEntries:"まだエントリーなし — 進捗を記録しよう",
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE", home:"ホーム", reflect:"ふりかえり",
     plan:"プラン", freestyle:"フリースタイル", library:"ライブラリ", stance:"スタンス", prep:"準備", goals:"目標", habits:"習慣", notes:"ノート", calendar:"カレンダー",
     save:"保存", cancel:"キャンセル", delete:"削除", deleted:"削除済み", done:"完了", confirm:"確認", exit:"終了",
@@ -8180,6 +8188,7 @@ export const TRANSLATIONS = {
   },
 
   zh: {
+    moveJournal:"动作日记", journalEntryPlaceholder:"有什么变化？你注意到了什么？", noJournalEntries:"暂无记录 — 开始追踪你的进步",
     train:"训练", vocab:"动作", battle:"对战", home:"首页", reflect:"回顾",
     plan:"计划", freestyle:"FREESTYLE", library:"库", stance:"姿态", prep:"备战", goals:"目标", habits:"习惯", notes:"笔记", calendar:"日历",
     save:"保存", cancel:"取消", delete:"删除", deleted:"已删除", done:"完成", confirm:"确认", exit:"退出",
@@ -9336,6 +9345,7 @@ export const TRANSLATIONS = {
   },
 
   ru: {
+    moveJournal:"Журнал Движения", journalEntryPlaceholder:"Что изменилось? Что ты заметил?", noJournalEntries:"Пока нет записей — начни отслеживать прогресс",
     train:"ТРЕН", vocab:"МУВЫ", battle:"БАТТЛ", home:"ГЛАВНАЯ", reflect:"ОБЗОР",
     plan:"ПЛАН", freestyle:"ФРИСТАЙЛ", library:"БИБЛИОТЕКА", stance:"СТОЙКА", prep:"ПОДГ.", goals:"ЦЕЛИ", habits:"ПРИВЫЧКИ", notes:"ЗАМЕТКИ", calendar:"КАЛЕНДАРЬ",
     save:"Сохранить", cancel:"Отмена", delete:"Удалить", deleted:"Удалено", done:"ГОТОВО", confirm:"Подтвердить", exit:"Выйти",
@@ -10492,6 +10502,8 @@ export const TRANSLATIONS = {
   },
 
   ko: {
+    // Move journal
+    moveJournal:"무브 저널", journalEntryPlaceholder:"무엇이 바뀌었나? 무엇을 알아챘나?", noJournalEntries:"아직 항목 없음 — 진행 상황을 추적해 보세요",
     // Nav tabs
     train:"훈련", vocab:"무브", battle:"배틀", home:"홈", reflect:"돌아보기",
     // Sub-tabs
@@ -11683,6 +11695,8 @@ export const TRANSLATIONS = {
   },
 
   th: {
+    // Move journal
+    moveJournal:"บันทึกท่า", journalEntryPlaceholder:"อะไรเปลี่ยนไป? สังเกตเห็นอะไร?", noJournalEntries:"ยังไม่มีบันทึก — เริ่มติดตามความคืบหน้า",
     // Nav tabs
     train:"ฝึกซ้อม", vocab:"ท่า", battle:"แบทเทิล", home:"หน้าหลัก", reflect:"ทบทวน",
     // Sub-tabs
@@ -12861,6 +12875,8 @@ export const TRANSLATIONS = {
   },
 
   vi: {
+    // Move journal
+    moveJournal:"Nhật Ký Chiêu Thức", journalEntryPlaceholder:"Có gì thay đổi? Bạn nhận thấy gì?", noJournalEntries:"Chưa có mục nào — bắt đầu theo dõi tiến trình",
     // Nav tabs
     train:"LUYỆN TẬP", vocab:"ĐỘNG TÁC", battle:"BATTLE", home:"TRANG CHỦ", reflect:"NHÌN LẠI",
     // Sub-tabs
