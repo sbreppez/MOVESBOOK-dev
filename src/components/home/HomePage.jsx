@@ -9,7 +9,7 @@ import { GoalModal } from '../train/GoalModal';
 import { HabitModal } from '../train/HabitModal';
 import { MoveModal } from '../moves/MoveModal';
 import { BottomSheet } from '../shared/BottomSheet';
-import { FONT_DISPLAY } from '../../constants/fonts';
+import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { useSettings } from '../../hooks/useSettings';
 import { useT } from '../../hooks/useTranslation';
 import { Ic } from '../shared/Ic';
@@ -101,6 +101,8 @@ export const HomePage = ({
   const [confirmRemove, setConfirmRemove] = useState(null);
   const [journalGoalTile, setJournalGoalTile] = useState(null);
   const [editMoveFromHome, setEditMoveFromHome] = useState(null);
+  const [updatesMove, setUpdatesMove] = useState(null);
+  const [newUpdateText, setNewUpdateText] = useState("");
 
   // Feature 2: edit scope
   const [pendingEdit, setPendingEdit] = useState(null);
@@ -327,6 +329,14 @@ export const HomePage = ({
   const handleOpenJournal = (tile) => {
     const goal = ideas?.find(i => String(i.id) === String(tile.refId) && (i.type === 'goal' || i.type === 'target'));
     if (goal) setJournalGoalTile({ tile, goal });
+  };
+
+  const handleOpenUpdates = (tile) => {
+    const move = moves?.find(m => m.id === tile.moveId);
+    if (move) {
+      setUpdatesMove(move);
+      setNewUpdateText("");
+    }
   };
 
   // Feature 2: intercept save for recurring routines
@@ -638,6 +648,7 @@ export const HomePage = ({
                 onEdit={handleTileEdit}
                 onTogglePin={handleTogglePinHome}
                 onOpenJournal={handleOpenJournal}
+                onOpenUpdates={handleOpenUpdates}
                 selectMode={selectMode}
                 isSelected={selectedIds.has(tile.id)}
                 onToggleSelect={() => toggleSelect(tile.id)}
@@ -979,6 +990,101 @@ export const HomePage = ({
           catColors={catColors}
           isPremium={isPremium}
         />
+      )}
+
+      {/* Updates BottomSheet */}
+      {updatesMove && (
+        <BottomSheet open={true} onClose={() => setUpdatesMove(null)} title={updatesMove.name} maxHeight="85vh">
+          {/* Category tag */}
+          <div style={{ marginBottom: 10 }}>
+            <span style={{ fontSize: 10, fontFamily: FONT_DISPLAY, fontWeight: 700,
+              color: catColors?.[updatesMove.category] || C.accent, letterSpacing: 0.5, textTransform: "uppercase" }}>
+              {updatesMove.category}
+            </span>
+          </div>
+
+          {/* Description as context */}
+          {updatesMove.description && (
+            <div style={{ fontSize: 12, color: C.textSec, fontFamily: FONT_BODY, lineHeight: 1.4,
+              marginBottom: 12, padding: "8px 10px", background: C.surfaceAlt, borderRadius: 8 }}>
+              {updatesMove.description}
+            </div>
+          )}
+
+          {/* Add entry input */}
+          <div style={{ display: "flex", gap: 6, marginBottom: 12 }}>
+            <textarea
+              value={newUpdateText}
+              onChange={e => setNewUpdateText(e.target.value)}
+              placeholder={t("journalEntryPlaceholder")}
+              rows={2}
+              style={{ flex: 1, background: C.surfaceAlt, border: `1px solid ${C.border}`,
+                borderRadius: 8, padding: "8px 10px", color: C.text, fontSize: 12,
+                fontFamily: FONT_BODY, outline: "none", resize: "none", lineHeight: 1.4 }}
+            />
+            <button
+              onClick={() => {
+                if (!newUpdateText.trim()) return;
+                const entry = {
+                  id: Date.now(),
+                  date: todayLocal(),
+                  text: newUpdateText.trim(),
+                };
+                setMoves(prev => prev.map(m =>
+                  m.id === updatesMove.id
+                    ? { ...m, journal: [entry, ...(m.journal || [])] }
+                    : m
+                ));
+                setUpdatesMove(prev => prev ? { ...prev, journal: [entry, ...(prev.journal || [])] } : null);
+                setNewUpdateText("");
+              }}
+              disabled={!newUpdateText.trim()}
+              style={{ alignSelf: "flex-end", width: 36, height: 36, borderRadius: 8,
+                background: newUpdateText.trim() ? C.accent : C.surfaceAlt,
+                border: "none", cursor: newUpdateText.trim() ? "pointer" : "default",
+                display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <Ic n="plus" s={16} c={newUpdateText.trim() ? "#fff" : C.textMuted} />
+            </button>
+          </div>
+
+          {/* Entries list */}
+          {(updatesMove.journal || []).length === 0 ? (
+            <div style={{ fontSize: 11, color: C.textMuted, fontStyle: "italic", padding: "6px 0" }}>
+              {t("noJournalEntries")}
+            </div>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              {(updatesMove.journal || []).map(entry => (
+                <div key={entry.id} style={{ background: C.surfaceAlt, borderRadius: 8, padding: "8px 10px" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
+                    <span style={{ fontSize: 10, color: C.textMuted, fontFamily: FONT_DISPLAY, fontWeight: 700 }}>
+                      {entry.date}
+                    </span>
+                    <button onClick={() => {
+                      const updated = (updatesMove.journal || []).filter(e => e.id !== entry.id);
+                      setMoves(prev => prev.map(m =>
+                        m.id === updatesMove.id ? { ...m, journal: updated } : m
+                      ));
+                      setUpdatesMove(prev => prev ? { ...prev, journal: updated } : null);
+                    }}
+                      style={{ background: "none", border: "none", cursor: "pointer", padding: 2 }}>
+                      <Ic n="x" s={10} c={C.textMuted} />
+                    </button>
+                  </div>
+                  <div style={{ fontSize: 12, color: C.text, fontFamily: FONT_BODY, lineHeight: 1.4 }}>
+                    {entry.text}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Discoverability note */}
+          <div style={{ fontSize: 10, color: C.textMuted, fontStyle: "italic", fontFamily: FONT_BODY,
+            marginTop: 16, paddingTop: 10, borderTop: `1px solid ${C.borderLight}`, lineHeight: 1.4 }}>
+            {t("updatesAlsoInEdit")}
+          </div>
+        </BottomSheet>
       )}
 
       {journalGoalTile && (

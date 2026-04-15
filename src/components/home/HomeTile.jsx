@@ -5,7 +5,7 @@ import { useT } from '../../hooks/useTranslation';
 import { Ic } from '../shared/Ic';
 import { ExpandableText } from '../shared/ExpandableText';
 
-export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEdit, onTogglePin, onOpenJournal, selectMode, isSelected, onToggleSelect, habits, ideas, homeIdeas, moves }) => {
+export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEdit, onTogglePin, onOpenJournal, onOpenUpdates, selectMode, isSelected, onToggleSelect, habits, ideas, homeIdeas, moves }) => {
   const { C } = useSettings();
   const t = useT();
   const [expanded, setExpanded] = useState(false);
@@ -130,13 +130,17 @@ export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEd
       {/* Content */}
       <div style={{ flex: 1, minWidth: 0 }}>
         <div
-          onClick={isGoal && onOpenJournal ? (e) => { e.stopPropagation(); onOpenJournal(tile); } : undefined}
+          onClick={
+            isGoal && onOpenJournal ? (e) => { e.stopPropagation(); onOpenJournal(tile); }
+            : tile.type === 'moveUpdate' && onOpenUpdates ? (e) => { e.stopPropagation(); onOpenUpdates(tile); }
+            : undefined
+          }
           style={{
           fontWeight: 800, fontSize: 13, fontFamily: FONT_DISPLAY, letterSpacing: 0.3,
           color: tileChecked ? C.textMuted : C.text,
           textDecoration: tileChecked ? "line-through" : "none",
           overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-          cursor: isGoal ? "pointer" : undefined,
+          cursor: isGoal || tile.type === 'moveUpdate' ? "pointer" : undefined,
         }}>
           {name}
           {isPinned && <Ic n="pin" s={10} c={C.accent} style={{marginLeft:4, verticalAlign:"middle"}}/>}
@@ -253,7 +257,7 @@ export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEd
               style={{ width: "100%", padding: "9px 13px", background: "none", border: "none",
                 cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
                 color: C.text, fontSize: 12, fontFamily: "inherit" }}>
-              <Ic n="edit" s={12} c={C.textSec}/>{t("edit")}
+              <Ic n="edit" s={12} c={C.textSec}/>{tile.type === 'moveUpdate' ? t("editMoveDetails") : t("edit")}
             </button>
             {(tile.type === 'note' || tile.type === 'idea') && (
               <button onClick={() => { setMenu(false); onTogglePin?.(tile); }}
