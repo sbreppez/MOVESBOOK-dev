@@ -1,7 +1,7 @@
 export const TRANSLATIONS = {
   en: {
     // Move journal
-    moveJournal:"Move Journal", journalEntryPlaceholder:"What's changed? What did you notice?", noJournalEntries:"No entries yet — start tracking your progress",
+    updates:"Updates", journalEntryPlaceholder:"What's changed? What did you notice?", noJournalEntries:"No entries yet — start tracking your progress",
     // Nav tabs
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE", home:"HOME", reflect:"REFLECT",
     // Sub-tabs
@@ -1193,7 +1193,7 @@ export const TRANSLATIONS = {
     // HOME tiles
     addToToday:"ADD TO TODAY",dayStartsHere:"YOUR DAY STARTS HERE",dayStartsHereHint:"Tap + to add routines, ideas, or goals",
     addRoutine:"Add Routine",addIdea:"ADD IDEA",addGoalOrHabit:"ADD GOAL OR HABIT",
-    add:"ADD",addNoteTile:"Add Note",addGoal:"Add Goal",addHabit:"Add Habit",addMoveUpdate:"Move Update",pickAMove:"Pick a move",
+    add:"ADD",addNoteTile:"Add Note",addGoal:"Add Goal",addHabit:"Add Habit",addMoveUpdate:"Update a Move",pickAMove:"Pick a move",
     createNewRoutine:"Create new routine",noteHint:"This note will also appear in Calendar and Notes.",routineHint:"Completed steps will appear in Reflect \u2192 Reports.",
     routineName:"Name",routineDuration:"DURATION (MIN)",routineDescription:"DESCRIPTION",routineCheckable:"CHECKABLE",steps:"Steps",step:"Step",addStep:"Add step",
     ideaTitle:"Title",ideaText:"TEXT",ideaLink:"LINK",showIdeaOn:"Show the idea on the:",removeFromHere:"Remove from here",deleteEverywhere:"Delete everywhere",pastDateWarning:"This date is in the past",
@@ -1224,7 +1224,7 @@ export const TRANSLATIONS = {
   },
 
   it: {
-    moveJournal:"Diario del Movimento", journalEntryPlaceholder:"Cosa è cambiato? Cosa hai notato?", noJournalEntries:"Nessuna voce — inizia a monitorare i progressi",
+    updates:"Aggiornamenti", journalEntryPlaceholder:"Cosa è cambiato? Cosa hai notato?", noJournalEntries:"Nessuna voce — inizia a monitorare i progressi",
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE", home:"HOME", reflect:"RIFLETTI",
     plan:"PIANO", freestyle:"FREESTYLE", library:"LIBRERIA", stance:"POSTURA", prep:"PREP", goals:"OBIETTIVI", habits:"ABITUDINI", notes:"NOTE", calendar:"CALENDARIO",
     save:"Salva", cancel:"Annulla", delete:"Elimina", deleted:"Eliminato", done:"FATTO", confirm:"Conferma", exit:"Esci",
@@ -2366,7 +2366,7 @@ export const TRANSLATIONS = {
     today:"Oggi",
     addToToday:"AGGIUNGI A OGGI",dayStartsHere:"LA TUA GIORNATA INIZIA QUI",dayStartsHereHint:"Tocca + per aggiungere routine, idee o obiettivi",
     addRoutine:"Aggiungi Routine",addIdea:"AGGIUNGI IDEA",addGoalOrHabit:"AGGIUNGI OBIETTIVO O ABITUDINE",
-    add:"AGGIUNGI",addNoteTile:"Aggiungi Nota",addGoal:"Aggiungi Obiettivo",addHabit:"Aggiungi Abitudine",addMoveUpdate:"Aggiorna Movimento",pickAMove:"Scegli un movimento",
+    add:"AGGIUNGI",addNoteTile:"Aggiungi Nota",addGoal:"Aggiungi Obiettivo",addHabit:"Aggiungi Abitudine",addMoveUpdate:"Aggiorna un Movimento",pickAMove:"Scegli un movimento",
     createNewRoutine:"Crea nuova routine",noteHint:"Questa nota apparirà anche nel Calendario e nelle Note.",routineHint:"I passi completati appariranno in Rifletti \u2192 Report.",
     routineName:"Nome",routineDuration:"DURATA (MIN)",routineDescription:"DESCRIZIONE",routineCheckable:"SPUNTABILE",steps:"Passi",step:"Passo",addStep:"Aggiungi passo",
     ideaTitle:"Titolo",ideaText:"TESTO",ideaLink:"LINK",showIdeaOn:"Mostra l'idea il:",removeFromHere:"Rimuovi da qui",deleteEverywhere:"Elimina ovunque",pastDateWarning:"Questa data è nel passato",
@@ -2397,7 +2397,7 @@ export const TRANSLATIONS = {
   },
 
   es: {
-    moveJournal:"Diario del Movimiento", journalEntryPlaceholder:"¿Qué cambió? ¿Qué notaste?", noJournalEntries:"Sin entradas — empieza a seguir tu progreso",
+    updates:"Actualizaciones", journalEntryPlaceholder:"¿Qué cambió? ¿Qué notaste?", noJournalEntries:"Sin entradas — empieza a seguir tu progreso",
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE", home:"INICIO", reflect:"REFLEXIÓN",
     plan:"PLAN", freestyle:"FREESTYLE", library:"BIBLIOTECA", stance:"POSTURA", prep:"PREP", goals:"METAS", habits:"HÁBITOS", notes:"NOTAS", calendar:"CALENDARIO",
     save:"Guardar", cancel:"Cancelar", delete:"Eliminar", deleted:"Eliminado", done:"LISTO", confirm:"Confirmar", exit:"Salir",
@@ -3524,7 +3524,7 @@ export const TRANSLATIONS = {
     today:"Hoy",
     addToToday:"AÑADIR A HOY",dayStartsHere:"TU DÍA EMPIEZA AQUÍ",dayStartsHereHint:"Toca + para añadir rutinas, ideas u objetivos",
     addRoutine:"Añadir Rutina",addIdea:"AÑADIR IDEA",addGoalOrHabit:"AÑADIR OBJETIVO O HÁBITO",
-    add:"AGREGAR",addNoteTile:"Agregar Nota",addGoal:"Agregar Meta",addHabit:"Agregar Hábito",addMoveUpdate:"Actualizar Movimiento",pickAMove:"Elige un movimiento",
+    add:"AGREGAR",addNoteTile:"Agregar Nota",addGoal:"Agregar Meta",addHabit:"Agregar Hábito",addMoveUpdate:"Actualizar un Movimiento",pickAMove:"Elige un movimiento",
     createNewRoutine:"Crear nueva rutina",noteHint:"Esta nota también aparecerá en Calendario y Notas.",routineHint:"Los pasos completados aparecerán en Reflexionar \u2192 Informes.",
     routineName:"Nombre",routineDuration:"DURACIÓN (MIN)",routineDescription:"DESCRIPCIÓN",routineCheckable:"MARCABLE",steps:"Pasos",step:"Paso",addStep:"Agregar paso",
     ideaTitle:"Título",ideaText:"TEXTO",ideaLink:"ENLACE",showIdeaOn:"Mostrar la idea el:",removeFromHere:"Quitar de aquí",deleteEverywhere:"Eliminar en todas partes",pastDateWarning:"Esta fecha está en el pasado",
@@ -3555,7 +3555,7 @@ export const TRANSLATIONS = {
   },
 
   fr: {
-    moveJournal:"Journal du Mouvement", journalEntryPlaceholder:"Qu'est-ce qui a changé ? Qu'as-tu remarqué ?", noJournalEntries:"Aucune entrée — commence à suivre tes progrès",
+    updates:"Mises à jour", journalEntryPlaceholder:"Qu'est-ce qui a changé ? Qu'as-tu remarqué ?", noJournalEntries:"Aucune entrée — commence à suivre tes progrès",
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE", home:"ACCUEIL", reflect:"BILAN",
     plan:"PLAN", freestyle:"FREESTYLE", library:"BIBLIOTHÈQUE", stance:"POSTURE", prep:"PRÉP", goals:"OBJECTIFS", habits:"HABITUDES", notes:"NOTES", calendar:"CALENDRIER",
     save:"Enregistrer", cancel:"Annuler", delete:"Supprimer", deleted:"Supprimé", done:"OK", confirm:"Confirmer", exit:"Quitter",
@@ -4682,7 +4682,7 @@ export const TRANSLATIONS = {
     today:"Aujourd'hui",
     addToToday:"AJOUTER À AUJOURD'HUI",dayStartsHere:"VOTRE JOURNÉE COMMENCE ICI",dayStartsHereHint:"Appuyez sur + pour ajouter routines, idées ou objectifs",
     addRoutine:"Ajouter Routine",addIdea:"AJOUTER IDÉE",addGoalOrHabit:"AJOUTER OBJECTIF OU HABITUDE",
-    add:"AJOUTER",addNoteTile:"Ajouter Note",addGoal:"Ajouter Objectif",addHabit:"Ajouter Habitude",addMoveUpdate:"Mise à Jour Mouvement",pickAMove:"Choisis un mouvement",
+    add:"AJOUTER",addNoteTile:"Ajouter Note",addGoal:"Ajouter Objectif",addHabit:"Ajouter Habitude",addMoveUpdate:"Mettre à Jour un Mouvement",pickAMove:"Choisis un mouvement",
     createNewRoutine:"Créer une routine",noteHint:"Cette note apparaîtra aussi dans le Calendrier et les Notes.",routineHint:"Les étapes complétées apparaîtront dans Réfléchir \u2192 Rapports.",
     routineName:"Nom",routineDuration:"DURÉE (MIN)",routineDescription:"DESCRIPTION",routineCheckable:"COCHABLE",steps:"Étapes",step:"Étape",addStep:"Ajouter une étape",
     ideaTitle:"Titre",ideaText:"TEXTE",ideaLink:"LIEN",showIdeaOn:"Afficher l'idée le :",removeFromHere:"Retirer d'ici",deleteEverywhere:"Supprimer partout",pastDateWarning:"Cette date est dans le passé",
@@ -4713,7 +4713,7 @@ export const TRANSLATIONS = {
   },
 
   pt: {
-    moveJournal:"Diário do Movimento", journalEntryPlaceholder:"O que mudou? O que você notou?", noJournalEntries:"Sem entradas — comece a acompanhar seu progresso",
+    updates:"Atualizações", journalEntryPlaceholder:"O que mudou? O que você notou?", noJournalEntries:"Sem entradas — comece a acompanhar seu progresso",
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE", home:"INÍCIO", reflect:"REFLEXÃO",
     plan:"PLANO", freestyle:"FREESTYLE", library:"BIBLIOTECA", stance:"POSTURA", prep:"PREP", goals:"METAS", habits:"HÁBITOS", notes:"NOTAS", calendar:"CALENDÁRIO",
     save:"Salvar", cancel:"Cancelar", delete:"Excluir", deleted:"Excluído", done:"PRONTO", confirm:"Confirmar", exit:"Sair",
@@ -5840,7 +5840,7 @@ export const TRANSLATIONS = {
     today:"Hoje",
     addToToday:"ADICIONAR A HOJE",dayStartsHere:"SEU DIA COMEÇA AQUI",dayStartsHereHint:"Toque + para adicionar rotinas, ideias ou metas",
     addRoutine:"Adicionar Rotina",addIdea:"ADICIONAR IDEIA",addGoalOrHabit:"ADICIONAR META OU HÁBITO",
-    add:"ADICIONAR",addNoteTile:"Adicionar Nota",addGoal:"Adicionar Meta",addHabit:"Adicionar Hábito",addMoveUpdate:"Atualizar Movimento",pickAMove:"Escolha um movimento",
+    add:"ADICIONAR",addNoteTile:"Adicionar Nota",addGoal:"Adicionar Meta",addHabit:"Adicionar Hábito",addMoveUpdate:"Atualizar um Movimento",pickAMove:"Escolha um movimento",
     createNewRoutine:"Criar nova rotina",noteHint:"Esta nota também aparecerá no Calendário e nas Notas.",routineHint:"Os passos concluídos aparecerão em Refletir \u2192 Relatórios.",
     routineName:"Nome",routineDuration:"DURAÇÃO (MIN)",routineDescription:"DESCRIÇÃO",routineCheckable:"MARCÁVEL",steps:"Passos",step:"Passo",addStep:"Adicionar passo",
     ideaTitle:"Título",ideaText:"TEXTO",ideaLink:"LINK",showIdeaOn:"Mostrar a ideia em:",removeFromHere:"Remover daqui",deleteEverywhere:"Excluir em todos os lugares",pastDateWarning:"Esta data está no passado",
@@ -5871,7 +5871,7 @@ export const TRANSLATIONS = {
   },
 
   de: {
-    moveJournal:"Bewegungstagebuch", journalEntryPlaceholder:"Was hat sich geändert? Was ist dir aufgefallen?", noJournalEntries:"Noch keine Einträge — verfolge deinen Fortschritt",
+    updates:"Aktualisierungen", journalEntryPlaceholder:"Was hat sich geändert? Was ist dir aufgefallen?", noJournalEntries:"Noch keine Einträge — verfolge deinen Fortschritt",
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE", home:"START", reflect:"RÜCKBLICK",
     plan:"PLAN", freestyle:"FREESTYLE", library:"BIBLIOTHEK", stance:"HALTUNG", prep:"VORB.", goals:"ZIELE", habits:"GEWOHNHEITEN", notes:"NOTIZEN", calendar:"KALENDER",
     save:"Speichern", cancel:"Abbrechen", delete:"Löschen", deleted:"Gelöscht", done:"FERTIG", confirm:"Bestätigen", exit:"Beenden",
@@ -7029,7 +7029,7 @@ export const TRANSLATIONS = {
   },
 
   ja: {
-    moveJournal:"ムーブジャーナル", journalEntryPlaceholder:"何が変わった？何に気づいた？", noJournalEntries:"まだエントリーなし — 進捗を記録しよう",
+    updates:"アップデート", journalEntryPlaceholder:"何が変わった？何に気づいた？", noJournalEntries:"まだエントリーなし — 進捗を記録しよう",
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE", home:"ホーム", reflect:"ふりかえり",
     plan:"プラン", freestyle:"フリースタイル", library:"ライブラリ", stance:"スタンス", prep:"準備", goals:"目標", habits:"習慣", notes:"ノート", calendar:"カレンダー",
     save:"保存", cancel:"キャンセル", delete:"削除", deleted:"削除済み", done:"完了", confirm:"確認", exit:"終了",
@@ -8157,7 +8157,7 @@ export const TRANSLATIONS = {
     today:"今日",
     addToToday:"今日に追加",dayStartsHere:"今日はここから",dayStartsHereHint:"＋をタップしてルーティン、アイデア、目標を追加",
     addRoutine:"ルーティンを追加",addIdea:"アイデアを追加",addGoalOrHabit:"目標または習慣を追加",
-    add:"追加",addNoteTile:"メモを追加",addGoal:"目標を追加",addHabit:"習慣を追加",addMoveUpdate:"ムーブ更新",pickAMove:"ムーブを選択",
+    add:"追加",addNoteTile:"メモを追加",addGoal:"目標を追加",addHabit:"習慣を追加",addMoveUpdate:"ムーブを更新",pickAMove:"ムーブを選択",
     createNewRoutine:"新しいルーティンを作成",noteHint:"このメモはカレンダーとメモにも表示されます。",routineHint:"完了したステップはリフレクト → レポートに表示されます。",
     routineName:"名前",routineDuration:"時間（分）",routineDescription:"説明",routineCheckable:"チェック可能",steps:"ステップ",step:"ステップ",addStep:"ステップを追加",
     ideaTitle:"タイトル",ideaText:"テキスト",ideaLink:"リンク",showIdeaOn:"アイデアを表示する日:",removeFromHere:"ここから削除",deleteEverywhere:"すべてから削除",pastDateWarning:"この日付は過去です",
@@ -8188,7 +8188,7 @@ export const TRANSLATIONS = {
   },
 
   zh: {
-    moveJournal:"动作日记", journalEntryPlaceholder:"有什么变化？你注意到了什么？", noJournalEntries:"暂无记录 — 开始追踪你的进步",
+    updates:"更新", journalEntryPlaceholder:"有什么变化？你注意到了什么？", noJournalEntries:"暂无记录 — 开始追踪你的进步",
     train:"训练", vocab:"动作", battle:"对战", home:"首页", reflect:"回顾",
     plan:"计划", freestyle:"FREESTYLE", library:"库", stance:"姿态", prep:"备战", goals:"目标", habits:"习惯", notes:"笔记", calendar:"日历",
     save:"保存", cancel:"取消", delete:"删除", deleted:"已删除", done:"完成", confirm:"确认", exit:"退出",
@@ -9345,7 +9345,7 @@ export const TRANSLATIONS = {
   },
 
   ru: {
-    moveJournal:"Журнал Движения", journalEntryPlaceholder:"Что изменилось? Что ты заметил?", noJournalEntries:"Пока нет записей — начни отслеживать прогресс",
+    updates:"Обновления", journalEntryPlaceholder:"Что изменилось? Что ты заметил?", noJournalEntries:"Пока нет записей — начни отслеживать прогресс",
     train:"ТРЕН", vocab:"МУВЫ", battle:"БАТТЛ", home:"ГЛАВНАЯ", reflect:"ОБЗОР",
     plan:"ПЛАН", freestyle:"ФРИСТАЙЛ", library:"БИБЛИОТЕКА", stance:"СТОЙКА", prep:"ПОДГ.", goals:"ЦЕЛИ", habits:"ПРИВЫЧКИ", notes:"ЗАМЕТКИ", calendar:"КАЛЕНДАРЬ",
     save:"Сохранить", cancel:"Отмена", delete:"Удалить", deleted:"Удалено", done:"ГОТОВО", confirm:"Подтвердить", exit:"Выйти",
@@ -10503,7 +10503,7 @@ export const TRANSLATIONS = {
 
   ko: {
     // Move journal
-    moveJournal:"무브 저널", journalEntryPlaceholder:"무엇이 바뀌었나? 무엇을 알아챘나?", noJournalEntries:"아직 항목 없음 — 진행 상황을 추적해 보세요",
+    updates:"업데이트", journalEntryPlaceholder:"무엇이 바뀌었나? 무엇을 알아챘나?", noJournalEntries:"아직 항목 없음 — 진행 상황을 추적해 보세요",
     // Nav tabs
     train:"훈련", vocab:"무브", battle:"배틀", home:"홈", reflect:"돌아보기",
     // Sub-tabs
@@ -11696,7 +11696,7 @@ export const TRANSLATIONS = {
 
   th: {
     // Move journal
-    moveJournal:"บันทึกท่า", journalEntryPlaceholder:"อะไรเปลี่ยนไป? สังเกตเห็นอะไร?", noJournalEntries:"ยังไม่มีบันทึก — เริ่มติดตามความคืบหน้า",
+    updates:"อัปเดต", journalEntryPlaceholder:"อะไรเปลี่ยนไป? สังเกตเห็นอะไร?", noJournalEntries:"ยังไม่มีบันทึก — เริ่มติดตามความคืบหน้า",
     // Nav tabs
     train:"ฝึกซ้อม", vocab:"ท่า", battle:"แบทเทิล", home:"หน้าหลัก", reflect:"ทบทวน",
     // Sub-tabs
@@ -12876,7 +12876,7 @@ export const TRANSLATIONS = {
 
   vi: {
     // Move journal
-    moveJournal:"Nhật Ký Chiêu Thức", journalEntryPlaceholder:"Có gì thay đổi? Bạn nhận thấy gì?", noJournalEntries:"Chưa có mục nào — bắt đầu theo dõi tiến trình",
+    updates:"Cập Nhật", journalEntryPlaceholder:"Có gì thay đổi? Bạn nhận thấy gì?", noJournalEntries:"Chưa có mục nào — bắt đầu theo dõi tiến trình",
     // Nav tabs
     train:"LUYỆN TẬP", vocab:"ĐỘNG TÁC", battle:"BATTLE", home:"TRANG CHỦ", reflect:"NHÌN LẠI",
     // Sub-tabs

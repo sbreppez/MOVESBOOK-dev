@@ -43,7 +43,7 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
   const set = k => v => setF(p=>({...p,[k]:v}));
   const [journalEntries, setJournalEntries] = useState(move?.journal || []);
   const [newJournalText, setNewJournalText] = useState("");
-  const [showJournal, setShowJournal] = useState(false);
+  const [showJournal, setShowJournal] = useState((move?.journal || []).length > 0);
   const handleSave = () => { if (f.name) { onSave({ ...f, journal: journalEntries }); onClose(); } };
   const [showMore, setShowMore] = useState(false);
   const [showAttrModal, setShowAttrModal] = useState(false);
@@ -111,7 +111,7 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
         </div>
       )}
 
-      <Txtarea label={t("description")} value={f.description} onChange={set("description")} placeholder={t("describeMove")}/>
+      <Txtarea label={t("description")} value={f.description} onChange={set("description")} placeholder={t("describeMove")} autoExpand/>
       <div style={{ marginBottom:14 }}>
         <label style={lbl()}>{t("videoLink")}</label>
         {!f.link && <div style={{ fontSize:11, color:C.textMuted, fontStyle:"italic", marginTop:-2, marginBottom:5 }}>{t("videoLinkHint")}</div>}
@@ -312,7 +312,7 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
               background: "none", border: "none", cursor: "pointer", padding: "6px 0" }}>
             <Ic n={showJournal ? "chevD" : "chevR"} s={12} c={C.textMuted} />
             <span style={{ ...sectionLabel, margin: 0 }}>
-              {t("moveJournal")} ({journalEntries.length})
+              {t("updates")} ({journalEntries.length})
             </span>
           </button>
 
