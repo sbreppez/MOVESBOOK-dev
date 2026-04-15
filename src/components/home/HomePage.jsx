@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { WeekStrip } from './WeekStrip';
 import { HomeTile } from './HomeTile';
 import { HomeAddPicker } from './HomeAddPicker';
@@ -103,6 +103,7 @@ export const HomePage = ({
   const [editMoveFromHome, setEditMoveFromHome] = useState(null);
   const [updatesMove, setUpdatesMove] = useState(null);
   const [newUpdateText, setNewUpdateText] = useState("");
+  const updateTextareaRef = useRef(null);
 
   // Feature 2: edit scope
   const [pendingEdit, setPendingEdit] = useState(null);
@@ -709,6 +710,8 @@ export const HomePage = ({
               setHomeStack(prev => ({ ...prev, defaultStack: [{ id: tileId, type: "moveUpdate", moveId: m.id }, ...prev.defaultStack] }));
               setShowMoveUpdatePicker(false);
               setMoveUpdateSearch("");
+              setUpdatesMove(m);
+              setNewUpdateText("");
             }}
               style={{ display: "flex", alignItems: "center", gap: 10, width: "100%",
                 padding: "10px 12px", background: "none", border: "none", cursor: "pointer",
@@ -1011,16 +1014,27 @@ export const HomePage = ({
             </div>
           )}
 
+          {/* Discoverability note */}
+          <div style={{ fontSize: 11, color: C.textMuted, fontStyle: "italic", fontFamily: FONT_BODY,
+            marginBottom: 12, lineHeight: 1.4 }}>
+            {t("updatesAlsoInEdit")}
+          </div>
+
           {/* Add entry input */}
           <div style={{ display: "flex", gap: 6, marginBottom: 12 }}>
             <textarea
+              ref={updateTextareaRef}
               value={newUpdateText}
-              onChange={e => setNewUpdateText(e.target.value)}
-              placeholder={t("journalEntryPlaceholder")}
+              onChange={e => {
+                setNewUpdateText(e.target.value);
+                e.target.style.height = 'auto';
+                e.target.style.height = e.target.scrollHeight + 'px';
+              }}
+              placeholder={t("updatePlaceholder")}
               rows={2}
               style={{ flex: 1, background: C.surfaceAlt, border: `1px solid ${C.border}`,
                 borderRadius: 8, padding: "8px 10px", color: C.text, fontSize: 12,
-                fontFamily: FONT_BODY, outline: "none", resize: "none", lineHeight: 1.4 }}
+                fontFamily: FONT_BODY, outline: "none", resize: "none", overflow: "hidden", lineHeight: 1.4 }}
             />
             <button
               onClick={() => {
@@ -1037,6 +1051,7 @@ export const HomePage = ({
                 ));
                 setUpdatesMove(prev => prev ? { ...prev, journal: [entry, ...(prev.journal || [])] } : null);
                 setNewUpdateText("");
+                if (updateTextareaRef.current) updateTextareaRef.current.style.height = 'auto';
               }}
               disabled={!newUpdateText.trim()}
               style={{ alignSelf: "flex-end", width: 36, height: 36, borderRadius: 8,
@@ -1079,11 +1094,6 @@ export const HomePage = ({
             </div>
           )}
 
-          {/* Discoverability note */}
-          <div style={{ fontSize: 10, color: C.textMuted, fontStyle: "italic", fontFamily: FONT_BODY,
-            marginTop: 16, paddingTop: 10, borderTop: `1px solid ${C.borderLight}`, lineHeight: 1.4 }}>
-            {t("updatesAlsoInEdit")}
-          </div>
         </BottomSheet>
       )}
 

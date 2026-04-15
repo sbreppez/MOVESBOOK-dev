@@ -144,6 +144,12 @@ export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEd
         }}>
           {name}
           {isPinned && <Ic n="pin" s={10} c={C.accent} style={{marginLeft:4, verticalAlign:"middle"}}/>}
+          {tile.type === 'moveUpdate' && !isOrphan && (
+            <span style={{ fontSize: 9, color: C.yellow, fontWeight: 700, fontFamily: FONT_DISPLAY,
+              marginLeft: 5, letterSpacing: 0.3, verticalAlign: "middle" }}>
+              update
+            </span>
+          )}
           {hasSteps && totalSteps > 0 && (
             <span style={{ fontSize: 10, color: allStepsComplete ? C.green : C.textMuted, fontWeight: 700, fontFamily: FONT_DISPLAY, marginLeft: 6 }}>
               {completedSteps}/{totalSteps}
