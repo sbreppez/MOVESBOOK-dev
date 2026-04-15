@@ -5,7 +5,7 @@ import { useT } from '../../hooks/useTranslation';
 import { Ic } from '../shared/Ic';
 import { ExpandableText } from '../shared/ExpandableText';
 
-export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEdit, onTogglePin, onOpenJournal, selectMode, isSelected, onToggleSelect, habits, ideas, homeIdeas }) => {
+export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEdit, onTogglePin, onOpenJournal, selectMode, isSelected, onToggleSelect, habits, ideas, homeIdeas, moves }) => {
   const { C } = useSettings();
   const t = useT();
   const [expanded, setExpanded] = useState(false);
@@ -72,6 +72,20 @@ export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEd
         name = t("deleted") || "Deleted";
         description = "";
       }
+    }
+  } else if (tile.type === 'moveUpdate') {
+    const move = moves?.find(m => m.id === tile.moveId);
+    if (!move) {
+      isOrphan = true;
+      fallbackIcon = "info";
+      name = t("deleted") || "Deleted";
+      description = "";
+    } else {
+      fallbackIcon = "notebookPen";
+      name = move.name;
+      const latestEntry = (move.journal || []).slice().sort((a, b) => b.date.localeCompare(a.date))[0];
+      description = latestEntry ? `${latestEntry.date}: ${latestEntry.text}` : move.description || "";
+      extraInfo = move.category;
     }
   }
 

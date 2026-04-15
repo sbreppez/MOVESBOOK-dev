@@ -7,6 +7,7 @@ import { RoutineForm } from './RoutineForm';
 import { IdeaForm } from './IdeaForm';
 import { GoalModal } from '../train/GoalModal';
 import { HabitModal } from '../train/HabitModal';
+import { MoveModal } from '../moves/MoveModal';
 import { BottomSheet } from '../shared/BottomSheet';
 import { FONT_DISPLAY } from '../../constants/fonts';
 import { useSettings } from '../../hooks/useSettings';
@@ -50,7 +51,7 @@ function getTilesForDate(homeStack, selectedDate, homeIdeas, ideas) {
 }
 
 // Resolve a tile's display name for confirmations
-function resolveTileName(tile, homeIdeas, habits, ideas) {
+function resolveTileName(tile, homeIdeas, habits, ideas, moves) {
   if (tile.type === 'routine') return tile.name || "";
   if (tile.type === 'note') {
     const note = ideas?.find(i => i.id === tile.id);
@@ -65,6 +66,10 @@ function resolveTileName(tile, homeIdeas, habits, ideas) {
     if (habit) return habit.name || "";
     const goal = ideas?.find(i => String(i.id) === String(tile.refId));
     return goal?.title || "";
+  }
+  if (tile.type === 'moveUpdate') {
+    const move = moves?.find(m => m.id === tile.moveId);
+    return move?.name || "";
   }
   return "";
 }
@@ -95,6 +100,7 @@ export const HomePage = ({
   const [editTile, setEditTile] = useState(null);
   const [confirmRemove, setConfirmRemove] = useState(null);
   const [journalGoalTile, setJournalGoalTile] = useState(null);
+  const [editMoveFromHome, setEditMoveFromHome] = useState(null);
 
   // Feature 2: edit scope
   const [pendingEdit, setPendingEdit] = useState(null);
@@ -234,6 +240,16 @@ export const HomePage = ({
     const tile = confirmRemove;
     if (!tile) return;
 
+    if (tile.type === 'moveUpdate') {
+      // Just remove from Home — don't delete the move itself
+      setHomeStack(prev => ({
+        ...prev,
+        defaultStack: prev.defaultStack.filter(t => t.id !== tile.id),
+      }));
+      setConfirmRemove(null);
+      return;
+    }
+
     if (mode === "justToday") {
       setHomeStack(prev => {
         const overrides = { ...(prev.overrides || {}) };
@@ -289,6 +305,19 @@ export const HomePage = ({
         }));
         return;
       }
+    }
+    if (tile.type === 'moveUpdate') {
+      const move = moves?.find(m => m.id === tile.moveId);
+      if (move) {
+        setEditMoveFromHome(move);
+      } else {
+        // Orphan — move was deleted, remove tile
+        setHomeStack(prev => ({
+          ...prev,
+          defaultStack: prev.defaultStack.filter(t => t.id !== tile.id),
+        }));
+      }
+      return;
     }
     if (tile.type === 'routine' || tile.type === 'idea' || tile.type === 'note' || tile.type === 'goalhabit') {
       setEditTile(tile);
@@ -612,7 +641,7 @@ export const HomePage = ({
                 selectMode={selectMode}
                 isSelected={selectedIds.has(tile.id)}
                 onToggleSelect={() => toggleSelect(tile.id)}
-                habits={habits} ideas={ideas} homeIdeas={homeIdeas}
+                habits={habits} ideas={ideas} homeIdeas={homeIdeas} moves={moves}
               />
             </div>
           ))}
@@ -765,7 +794,7 @@ export const HomePage = ({
         <Modal title={t("confirm")} onClose={() => setConfirmRemove(null)}>
           <p style={{ color: C.textSec, fontSize: 13, lineHeight: 1.6, marginBottom: 16 }}>
             <span style={{ fontWeight: 700, color: C.text }}>
-              {resolveTileName(confirmRemove, homeIdeas, habits, ideas)}
+              {resolveTileName(confirmRemove, homeIdeas, habits, ideas, moves)}
             </span>
           </p>
           <div style={{ display: "flex", gap: 8, flexDirection: "column" }}>
@@ -797,6 +826,11 @@ export const HomePage = ({
               <Btn variant="secondary" onClick={() => doRemove("allDays")}>{t("removeFromHome")}</Btn>
               <Btn variant="primary" onClick={() => doRemove("deleteEntirely")}>{t("deleteEntirely")}</Btn>
             </>)}
+
+            {/* Move Update: Remove from Home only */}
+            {confirmRemove.type === 'moveUpdate' && (
+              <Btn variant="secondary" onClick={() => doRemove("removeFromHome")}>{t("removeFromHome")}</Btn>
+            )}
 
             <Btn variant="secondary" onClick={() => setConfirmRemove(null)}>{t("cancel")}</Btn>
           </div>
@@ -929,6 +963,23 @@ export const HomePage = ({
         setEditTile(null);
         return null;
       })()}
+
+      {editMoveFromHome && (
+        <MoveModal
+          move={editMoveFromHome}
+          cats={cats}
+          onClose={() => setEditMoveFromHome(null)}
+          onSave={(f) => {
+            setMoves(prev => prev.map(m => m.id === editMoveFromHome.id ? { ...m, ...f } : m));
+            setEditMoveFromHome(null);
+          }}
+          customAttrs={customAttrs}
+          onAddAttr={def => setCustomAttrs && setCustomAttrs(p => [...p, def])}
+          allMoves={moves}
+          catColors={catColors}
+          isPremium={isPremium}
+        />
+      )}
 
       {journalGoalTile && (
         <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.6)", zIndex:10000, display:"flex", alignItems:"center", justifyContent:"center", padding:10 }}>
