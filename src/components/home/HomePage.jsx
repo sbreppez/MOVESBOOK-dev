@@ -36,6 +36,7 @@ function getTilesForDate(homeStack, selectedDate, homeIdeas, ideas) {
       if (idea?.showDate && selectedDate < idea.showDate) return false;
       return true;
     }
+    if (tile.type === 'moveUpdate') return true;
     const r = tile.repeat || { type: "daily", days: [] };
     if (r.type === "daily") return true;
     if (r.type === "workdays") return dow >= 1 && dow <= 5;
@@ -74,6 +75,7 @@ export const HomePage = ({
   ideas, setIdeas, settings, onSettingsChange,
   homeStack, setHomeStack, homeIdeas, setHomeIdeas, homeChecks, setHomeChecks,
   onAddTrigger, addCalendarEvent, removeCalendarEvent, calendar,
+  moves, setMoves, cats, catColors, customAttrs, setCustomAttrs, isPremium,
 }) => {
   const { C } = useSettings();
   const t = useT();
@@ -81,6 +83,8 @@ export const HomePage = ({
   const [selectedDate, setSelectedDate] = useState(todayStr);
   const [showAddPicker, setShowAddPicker] = useState(false);
   const [addFormType, setAddFormType] = useState(null);
+  const [showMoveUpdatePicker, setShowMoveUpdatePicker] = useState(false);
+  const [moveUpdateSearch, setMoveUpdateSearch] = useState("");
 
   // + button: open HomeAddPicker
   useEffect(() => {
@@ -619,7 +623,13 @@ export const HomePage = ({
 
       {/* Add Picker */}
       <HomeAddPicker open={showAddPicker} onClose={() => setShowAddPicker(false)}
-        onAction={(type) => setAddFormType(type)}
+        onAction={(type) => {
+          if (type === "moveUpdate") {
+            setShowMoveUpdatePicker(true);
+          } else {
+            setAddFormType(type);
+          }
+        }}
       />
 
       {/* ── Create forms (opened from Add Picker tiles) ── */}
@@ -641,6 +651,38 @@ export const HomePage = ({
       {addFormType === "habit" && (
         <HabitModal onClose={() => setAddFormType(null)} onSave={handleCreateHabit}/>
       )}
+
+      {/* Move Update picker */}
+      <BottomSheet open={showMoveUpdatePicker} onClose={() => { setShowMoveUpdatePicker(false); setMoveUpdateSearch(""); }} title={t("pickAMove")}>
+        <div style={{ marginBottom: 8 }}>
+          <div style={{ display: "flex", alignItems: "center", background: C.bg, borderRadius: 7, padding: "5px 10px", gap: 6, border: `1px solid ${moveUpdateSearch ? C.accent : C.border}` }}>
+            <Ic n="search" s={13} c={C.textMuted}/>
+            <input autoFocus value={moveUpdateSearch} onChange={e => setMoveUpdateSearch(e.target.value)} placeholder={t("searchMoves")}
+              style={{ flex: 1, background: "none", border: "none", outline: "none", color: C.text, fontSize: 13, fontFamily: "inherit" }}/>
+            {moveUpdateSearch && <button onClick={() => setMoveUpdateSearch("")} style={{ background: "none", border: "none", cursor: "pointer", color: C.textMuted, padding: 0, display: "flex" }}><Ic n="x" s={13}/></button>}
+          </div>
+        </div>
+        <div style={{ maxHeight: 300, overflow: "auto" }}>
+          {(moves || []).filter(m => !moveUpdateSearch.trim() || m.name.toLowerCase().includes(moveUpdateSearch.toLowerCase())).map(m => (
+            <button key={m.id} onClick={() => {
+              const tileId = "mu_" + m.id + "_" + Date.now();
+              setHomeStack(prev => ({ ...prev, defaultStack: [{ id: tileId, type: "moveUpdate", moveId: m.id }, ...prev.defaultStack] }));
+              setShowMoveUpdatePicker(false);
+              setMoveUpdateSearch("");
+            }}
+              style={{ display: "flex", alignItems: "center", gap: 10, width: "100%",
+                padding: "10px 12px", background: "none", border: "none", cursor: "pointer",
+                borderBottom: `1px solid ${C.borderLight}`, textAlign: "left" }}>
+              <div style={{ width: 6, height: 6, borderRadius: "50%", background: catColors?.[m.category] || C.accent, flexShrink: 0 }}/>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 13, fontWeight: 700, fontFamily: FONT_DISPLAY, color: C.text,
+                  overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{m.name}</div>
+                <div style={{ fontSize: 10, color: C.textMuted }}>{m.category}</div>
+              </div>
+            </button>
+          ))}
+        </div>
+      </BottomSheet>
 
       {/* ── Feature 4: Gear Menu ── */}
       <BottomSheet open={showGearMenu} onClose={() => setShowGearMenu(false)} title={t("home")}>

@@ -14,6 +14,7 @@ export const HomeAddPicker = ({ open, onClose, onAction }) => {
     { icon: "list",     label: t("addRoutine"),  type: "routine" },
     { icon: "trophy",   label: t("addGoal"),     type: "goal" },
     { icon: "check",    label: t("addHabit"),    type: "habit" },
+    { icon: "notebookPen", label: t("addMoveUpdate"), type: "moveUpdate" },
   ];
 
   return (
