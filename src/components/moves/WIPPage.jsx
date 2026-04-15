@@ -24,6 +24,7 @@ import { PremiumGate } from '../shared/PremiumGate';
 import { SectionBrief } from '../shared/SectionBrief';
 import { BottomSheet } from '../shared/BottomSheet';
 import { MoveTree } from './MoveTree';
+import { DropdownPill } from '../shared/DropdownPill';
 
 export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains={}, setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore, onOpenRRR, onOpenCombine, onOpenMap, onOpenFlashCards, isPremium, staleCount=0, onBulkTrigger }) => {
   const t = useT();
@@ -74,6 +75,8 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   const [versionMove, setVersionMove] = useState(null);
   const [showFilter, setShowFilter] = useState(false);
   const [attrFilters, setAttrFilters] = useState({});
+  const [showAllMoves, setShowAllMoves] = useState(false);
+  const [allMovesFilters, setAllMovesFilters] = useState({ category: [], tensionRole: [], origin: [] });
   const setDragItem=useRef(null);
   const [setDragOver,setSetDragOver]=useState(null);
   const masteryColorWip = p => p<30?C.red:p<60?C.yellow:p<80?C.blue:C.green;
@@ -98,6 +101,19 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
         ? [...cats].sort((a,b)=>{ const pctA=inCat(a).length?masteredCount(a)/inCat(a).length:0; const pctB=inCat(b).length?masteredCount(b)/inCat(b).length:0; return pctB-pctA; })
         : cats // manual = insertion order
   );
+
+  // ── ALL MOVES filtered list ──
+  const allMovesFiltered = (() => {
+    if (!showAllMoves) return [];
+    let result = [...wipMoves];
+    const f = allMovesFilters;
+    if (f.category.length > 0) result = result.filter(m => f.category.includes(m.category));
+    if (f.tensionRole.length > 0) result = result.filter(m => f.tensionRole.includes(m.tensionRole));
+    if (f.origin.length > 0) result = result.filter(m => f.origin.includes(m.origin));
+    if (hasActiveFilters) result = filterMovesByAttrs(result, attrFilters, customAttrs);
+    if (search.trim()) result = result.filter(m => m.name.toLowerCase().includes(search.toLowerCase()));
+    return result.sort(sortFn);
+  })();
 
   const saveMove=(form,id)=>{
     if(id){
@@ -422,29 +438,145 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
           totalCount={moves.length} filteredCount={cats.reduce((sum,cat)=>sum+inCat(cat).length,0)} />
       )}
 
+      {vocabTab==="moves"&&(
+        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"5px 16px 3px" }}>
+          {/* Left side — view toggle */}
+          <button onClick={()=>{
+            const next = !showAllMoves;
+            setShowAllMoves(next);
+            if (!next) {
+              setAllMovesFilters({ category: [], tensionRole: [], origin: [] });
+              exitMoveSelectMode();
+            }
+          }}
+            style={{ background:"none", border:"none", cursor:"pointer", padding:0,
+              fontSize:11, fontWeight:700, fontFamily:FONT_DISPLAY,
+              color:C.accent, letterSpacing:0.3 }}>
+            {showAllMoves ? t("byCategory") : t("allMoves")}
+          </button>
+
+          {/* Right side — action buttons */}
+          <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+            {showAllMoves && selectMode ? (
+              <>
+                {selectedMoveIds.size>0&&(
+                  <button onClick={()=>setConfirmBulkDeleteMoves(true)}
+                    style={{ background:"none", border:"none", cursor:"pointer", padding:4, display:"flex", alignItems:"center", gap:4 }}>
+                    <Ic n="trash" s={16} c={C.accent}/>
+                    <span style={{ fontSize:11, color:C.accent, fontWeight:700, fontFamily:FONT_DISPLAY }}>{selectedMoveIds.size}</span>
+                  </button>
+                )}
+                <button onClick={exitMoveSelectMode}
+                  style={{ background:"none", border:"none", cursor:"pointer", padding:4 }}>
+                  <Ic n="x" s={16} c={C.textMuted}/>
+                </button>
+              </>
+            ) : showAllMoves ? (
+              <>
+                {customAttrs.length>0&&<button onClick={()=>setShowFilter(s=>!s)}
+                  style={{ background:"none", border:"none", cursor:"pointer", padding:4, position:"relative", color:C.textSec }}>
+                  <Ic n="filter" s={16}/>
+                  {hasActiveFilters&&<div style={{ position:"absolute", top:2, right:2, width:6, height:6, borderRadius:"50%", background:C.accent }}/>}
+                </button>}
+                <button onClick={()=>{ setShowSearch(s=>!s); setSearch(""); }}
+                  style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textSec }}>
+                  <Ic n="search" s={16}/>
+                </button>
+                {allMovesFiltered.length>=2&&<button onClick={()=>setSelectMode(true)}
+                  style={{ background:"none", border:"none", cursor:"pointer", padding:4 }}>
+                  <Ic n="checkCircle" s={16} c={C.textMuted}/>
+                </button>}
+              </>
+            ) : (
+              <>
+                {customAttrs.length>0&&<button onClick={()=>setShowFilter(s=>!s)}
+                  style={{ background:"none", border:"none", cursor:"pointer", padding:4, position:"relative", color:C.textSec }}>
+                  <Ic n="filter" s={16}/>
+                  {hasActiveFilters&&<div style={{ position:"absolute", top:2, right:2, width:6, height:6, borderRadius:"50%", background:C.accent }}/>}
+                </button>}
+                {(()=>{
+                  const modes = ["list","tiles",...(isPremium?["tree"]:[])];
+                  const icons = { list:"list", tiles:"grid", tree:"gitFork" };
+                  return <button onClick={()=>setView(modes[(modes.indexOf(view)+1)%modes.length])} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textSec }}><Ic n={icons[view]||"list"} s={16}/></button>;
+                })()}
+                <button onClick={()=>{ setShowSearch(s=>!s); setSearch(""); }} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textSec }}><Ic n="search" s={16}/></button>
+                {view!=="tree"&&<button onClick={()=>{ const next=!reorderMode; setReorderMode(next); if(next) setCats(sortedCats); if(!next && onSortChange) onSortChange("categorySort","manual"); }}
+                  style={{ background:"none", border:"none", cursor:"pointer", padding:4,
+                    color:reorderMode?C.accent:C.textMuted, fontSize:13, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>
+                  {reorderMode?"DONE":"⇅"}
+                </button>}
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {showAllMoves && vocabTab==="moves" && (
+        <div style={{ display:"flex", gap:8, padding:"6px 16px", overflowX:"auto",
+          scrollbarWidth:"none", WebkitOverflowScrolling:"touch",
+          borderBottom:`1px solid ${C.borderLight}` }}>
+          <DropdownPill
+            label={t("categories")}
+            value={allMovesFilters.category}
+            options={cats.map(c => ({ key: c, label: c, color: catColors[c] || C.accent }))}
+            onChange={v => setAllMovesFilters(p => ({...p, category: v}))}
+            defaultLabel={t("allCategories")}
+          />
+          <DropdownPill
+            label={t("tensionRole")}
+            value={allMovesFilters.tensionRole}
+            options={[
+              { key:"flow",  label: t("tensionFlow") },
+              { key:"build", label: t("tensionBuild") },
+              { key:"hit",   label: t("tensionHit") },
+              { key:"peak",  label: t("tensionPeak") },
+            ]}
+            onChange={v => setAllMovesFilters(p => ({...p, tensionRole: v}))}
+            defaultLabel={t("allRoles")}
+          />
+          <DropdownPill
+            label={t("origin")}
+            value={allMovesFilters.origin}
+            options={[
+              { key:"learned",  label: t("learned") },
+              { key:"version",  label: t("myVersion") },
+              { key:"creation", label: t("myCreation") },
+            ]}
+            onChange={v => setAllMovesFilters(p => ({...p, origin: v}))}
+            defaultLabel={t("allOrigins")}
+          />
+        </div>
+      )}
+
       <div style={{ flex:1, overflow:"auto", paddingTop: vocabTab==="gap" ? 0 : 10, paddingLeft: vocabTab==="gap" ? 0 : 16, paddingRight: vocabTab==="gap" ? 0 : 16, paddingBottom:76 }}>
         {vocabTab==="moves"&&<SectionBrief desc={t("libraryBrief")} stat={`${moves.length} moves across ${cats.length} categories`} settings={st}/>}
-        {vocabTab==="moves"&&(
-          <div style={{ display:"flex", justifyContent:"flex-end", alignItems:"center", gap:8, padding:"5px 16px 3px" }}>
-            {customAttrs.length>0&&<button onClick={()=>setShowFilter(s=>!s)}
-              style={{ background:"none", border:"none", cursor:"pointer", padding:4, position:"relative", color:C.textSec }}>
-              <Ic n="filter" s={16}/>
-              {hasActiveFilters&&<div style={{ position:"absolute", top:2, right:2, width:6, height:6, borderRadius:"50%", background:C.accent }}/>}
-            </button>}
-            {(()=>{
-              const modes = ["list","tiles",...(isPremium?["tree"]:[])];
-              const icons = { list:"list", tiles:"grid", tree:"gitFork" };
-              return <button onClick={()=>setView(modes[(modes.indexOf(view)+1)%modes.length])} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textSec }}><Ic n={icons[view]||"list"} s={16}/></button>;
-            })()}
-            <button onClick={()=>{ setShowSearch(s=>!s); setSearch(""); }} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textSec }}><Ic n="search" s={16}/></button>
-            {view!=="tree"&&<button onClick={()=>{ const next=!reorderMode; setReorderMode(next); if(next) setCats(sortedCats); if(!next && onSortChange) onSortChange("categorySort","manual"); }}
-              style={{ background:"none", border:"none", cursor:"pointer", padding:4,
-                color:reorderMode?C.accent:C.textMuted, fontSize:13, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>
-              {reorderMode?"DONE":"⇅"}
-            </button>}
-          </div>
-        )}
-        {vocabTab==="gap" ? (
+        {vocabTab==="moves"&&showAllMoves ? (
+          /* ── ALL MOVES flat list ── */
+          allMovesFiltered.length === 0 ? (
+            <div style={{ textAlign:"center", padding:30, color:C.textMuted }}>
+              <div style={{ marginBottom:8 }}><Ic n="filter" s={28} c={C.textMuted}/></div>
+              <p style={{ fontSize:13 }}>{t("noMovesMatchFilter")}</p>
+            </div>
+          ) : (
+            <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
+              {allMovesFiltered.map(m => (
+                <MoveListRow
+                  key={m.id}
+                  move={m}
+                  catColor={catColors[m.category] || C.accent}
+                  onEdit={() => selectMode ? toggleMoveSelect(m.id) : setEditMove(m)}
+                  onDelete={() => tryDelMove(m)}
+                  onMove={cat => moveToCat(m.id, cat)}
+                  allCats={cats}
+                  catColors={catColors}
+                  onToggleTrainedToday={handleToggleTrainedToday}
+                  selectMode={selectMode}
+                  isSelected={selectedMoveIds.has(m.id)}
+                />
+              ))}
+            </div>
+          )
+        ) : vocabTab==="gap" ? (
           isPremium ? <><SectionBrief desc={t("gapBrief")} settings={st}/><GAPTab moves={moves} catColors={catColors} setMoves={setMoves} onDrill={onDrill} settings={st} onTrainToday={handleToggleTrainedToday}/></> : <div style={{padding:20}}><PremiumGate feature="gap" addToast={addToast}/></div>
         ) : vocabTab==="sets" ? (
           <div>
@@ -725,6 +857,36 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
               </button>
               <button onClick={()=>{ delMove(confirmDeleteMove.id); setConfirmDeleteMove(null); }}
                 style={{ padding:"8px 16px", borderRadius:8, border:"none", background:C.accent, color:C.bg, fontSize:13, fontWeight:700, cursor:"pointer", fontFamily:FONT_BODY }}>
+                {t("delete")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {confirmBulkDeleteMoves && !openCat && (
+        <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", zIndex:900, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
+          <div style={{ background:C.bg, borderRadius:16, width:"100%", maxWidth:320, padding:20, textAlign:"center", boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
+            <Ic n="trash" s={28} c={C.accent}/>
+            <h3 style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:1, color:C.text, margin:"8px 0" }}>
+              {t("deleteSelected")}
+            </h3>
+            <p style={{ fontSize:13, color:C.textSec, marginBottom:16, lineHeight:1.5 }}>
+              {selectedMoveIds.size} {t("itemsWillBeDeleted")}
+            </p>
+            <div style={{ display:"flex", gap:8 }}>
+              <button onClick={()=>setConfirmBulkDeleteMoves(false)}
+                style={{ flex:1, padding:"10px", background:C.surfaceAlt, border:`1px solid ${C.border}`,
+                  borderRadius:8, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:13, color:C.text }}>
+                {t("cancel")}
+              </button>
+              <button onClick={()=>{
+                setMoves(prev=>prev.filter(m=>!selectedMoveIds.has(m.id)));
+                setConfirmBulkDeleteMoves(false);
+                exitMoveSelectMode();
+                addToast({ icon:"trash", title: t("deleted") });
+              }}
+                style={{ flex:1, padding:"10px", background:C.accent, border:"none",
+                  borderRadius:8, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:13, color:"#fff" }}>
                 {t("delete")}
               </button>
             </div>
