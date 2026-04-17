@@ -94,7 +94,10 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
   const [freestyleAddTick, setFreestyleAddTick] = useState(0);
   const [rivalsAddTick, setRivalsAddTick] = useState(0);
   const [prepAddTick, setPrepAddTick] = useState(0);
+  const lastAddTrigger = useRef(onAddTrigger);
   useEffect(()=>{
+    if(onAddTrigger===lastAddTrigger.current) return;
+    lastAddTrigger.current=onAddTrigger;
     if(!onAddTrigger) return;
     if(battleTab==="freestyle") setFreestyleAddTick(t=>t+1);
     else if(battleTab==="rivals") setRivalsAddTick(t=>t+1);
@@ -102,7 +105,10 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
     else if(battleTab==="plan") setAddingRound(true);
   },[onAddTrigger]);
   // onAddTrigger2 in Battle: "Add Move" opens freestyle picker regardless of sub-tab
+  const lastAddTrigger2 = useRef(onAddTrigger2);
   useEffect(()=>{
+    if(onAddTrigger2===lastAddTrigger2.current) return;
+    lastAddTrigger2.current=onAddTrigger2;
     if(!onAddTrigger2) return;
     setFreestyleAddTick(t=>t+1);
   },[onAddTrigger2]);

@@ -39,7 +39,10 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   const [openCat,setOpenCat]=useState(null);
   const [showAdd,setShowAdd]=useState(false); const [bulk,setBulk]=useState(false);
   const [showLibraryMenu,setShowLibraryMenu]=useState(false);
+  const lastAddTrigger = useRef(onAddTrigger);
   useEffect(()=>{
+    if(onAddTrigger===lastAddTrigger.current) return;
+    lastAddTrigger.current=onAddTrigger;
     if(!onAddTrigger) return;
     if(openCat) { setShowAdd(true); return; }
     if(vocabTab==="sets") setAddingSet(true);
@@ -60,8 +63,10 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   const moveMoveDown = (idx, list) => { if(idx===list.length-1) return; const ids=list.map(m=>m.id); setMoves(prev=>{ const n=[...prev]; const ai=n.findIndex(x=>x.id===ids[idx]); const bi=n.findIndex(x=>x.id===ids[idx+1]); [n[ai],n[bi]]=[n[bi],n[ai]]; return n; }); };
   const [addingSet,setAddingSet]=useState(false);
   // onAddTrigger2: Add Category (moves tab) or Add Set (sets tab)
-  useEffect(()=>{ if(onAddTrigger2) { if(vocabTab==="sets") setAddingSet(true); else setShowAddCat(true); } },[onAddTrigger2]);
-  useEffect(()=>{ if(onBulkTrigger) setBulk(true); },[onBulkTrigger]);
+  const lastAddTrigger2 = useRef(onAddTrigger2);
+  useEffect(()=>{ if(onAddTrigger2===lastAddTrigger2.current) return; lastAddTrigger2.current=onAddTrigger2; if(onAddTrigger2) { if(vocabTab==="sets") setAddingSet(true); else setShowAddCat(true); } },[onAddTrigger2]);
+  const lastBulkTrigger = useRef(onBulkTrigger);
+  useEffect(()=>{ if(onBulkTrigger===lastBulkTrigger.current) return; lastBulkTrigger.current=onBulkTrigger; if(onBulkTrigger) setBulk(true); },[onBulkTrigger]);
   const [editSetModal,setEditSetModal]=useState(null);
   const [setsView,setSetsView]=useState(st.defaultView==="tree"?"list":(st.defaultView||"list"));
   // Sync view states when the defaultView setting changes

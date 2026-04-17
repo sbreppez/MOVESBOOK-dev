@@ -92,7 +92,10 @@ export const HomePage = ({
   const [moveUpdateSearch, setMoveUpdateSearch] = useState("");
 
   // + button: open HomeAddPicker
+  const lastAddTrigger = useRef(onAddTrigger);
   useEffect(() => {
+    if (onAddTrigger === lastAddTrigger.current) return;
+    lastAddTrigger.current = onAddTrigger;
     if (!onAddTrigger) return;
     setShowAddPicker(true);
   }, [onAddTrigger]);
