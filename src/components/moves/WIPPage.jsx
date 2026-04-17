@@ -32,6 +32,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   const { C, settings:ctxSettings } = useSettings();
   const st = {...ctxSettings,...settings};
   const [view,setView]=useState(st.defaultView||"list"); const [catView,setCatView]=useState("list");
+  const showAllMoves = view === "all";
   const [vocabTab,setVocabTab]=useState("moves"); // "moves" | "sets"
   const setVocabTabAndNotify = (t) => { setVocabTab(t); if(onSubTabChange) onSubTabChange(t); };
   useEffect(()=>{ if(onSubTabChange) onSubTabChange("moves"); },[]);
@@ -71,6 +72,13 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   const [setsView,setSetsView]=useState(st.defaultView==="tree"?"list":(st.defaultView||"list"));
   // Sync view states when the defaultView setting changes
   useEffect(()=>{ setView(st.defaultView||"list"); setSetsView(st.defaultView==="tree"?"list":(st.defaultView||"list")); },[st.defaultView]);
+  // Cleanup when leaving ALL MOVES view: clear filters and exit select mode
+  useEffect(()=>{
+    if (view !== "all") {
+      setAllMovesFilters({ category: [], tensionRole: [], origin: [] });
+      exitMoveSelectMode();
+    }
+  },[view]);
   const [expSets,setExpSets]=useState({});
   const [confirmDeleteSet,setConfirmDeleteSet]=useState(null);
   const [confirmDeleteMove,setConfirmDeleteMove]=useState(null);
@@ -80,7 +88,6 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   const [versionMove, setVersionMove] = useState(null);
   const [showFilter, setShowFilter] = useState(false);
   const [attrFilters, setAttrFilters] = useState({});
-  const [showAllMoves, setShowAllMoves] = useState(false);
   const [allMovesFilters, setAllMovesFilters] = useState({ category: [], tensionRole: [], origin: [] });
   const setDragItem=useRef(null);
   const [setDragOver,setSetDragOver]=useState(null);
@@ -444,23 +451,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
       )}
 
       {vocabTab==="moves"&&(
-        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"5px 16px 3px" }}>
-          {/* Left side — view toggle */}
-          <button onClick={()=>{
-            const next = !showAllMoves;
-            setShowAllMoves(next);
-            if (!next) {
-              setAllMovesFilters({ category: [], tensionRole: [], origin: [] });
-              exitMoveSelectMode();
-            }
-          }}
-            style={{ background:"none", border:"none", cursor:"pointer", padding:0,
-              fontSize:11, fontWeight:700, fontFamily:FONT_DISPLAY,
-              color:C.accent, letterSpacing:0.3 }}>
-            {showAllMoves ? t("byCategory") : t("allMoves")}
-          </button>
-
-          {/* Right side — action buttons */}
+        <div style={{ display:"flex", justifyContent:"flex-end", alignItems:"center", padding:"5px 16px 3px" }}>
           <div style={{ display:"flex", alignItems:"center", gap:8 }}>
             {showAllMoves && selectMode ? (
               <>
@@ -476,22 +467,6 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
                   <Ic n="x" s={16} c={C.textMuted}/>
                 </button>
               </>
-            ) : showAllMoves ? (
-              <>
-                {customAttrs.length>0&&<button onClick={()=>setShowFilter(s=>!s)}
-                  style={{ background:"none", border:"none", cursor:"pointer", padding:4, position:"relative", color:C.textSec }}>
-                  <Ic n="filter" s={16}/>
-                  {hasActiveFilters&&<div style={{ position:"absolute", top:2, right:2, width:6, height:6, borderRadius:"50%", background:C.accent }}/>}
-                </button>}
-                <button onClick={()=>{ setShowSearch(s=>!s); setSearch(""); }}
-                  style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textSec }}>
-                  <Ic n="search" s={16}/>
-                </button>
-                {allMovesFiltered.length>=2&&<button onClick={()=>setSelectMode(true)}
-                  style={{ background:"none", border:"none", cursor:"pointer", padding:4 }}>
-                  <Ic n="checkCircle" s={16} c={C.textMuted}/>
-                </button>}
-              </>
             ) : (
               <>
                 {customAttrs.length>0&&<button onClick={()=>setShowFilter(s=>!s)}
@@ -499,17 +474,32 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
                   <Ic n="filter" s={16}/>
                   {hasActiveFilters&&<div style={{ position:"absolute", top:2, right:2, width:6, height:6, borderRadius:"50%", background:C.accent }}/>}
                 </button>}
+                <button
+                  disabled={view==="tree"||view==="all"}
+                  onClick={()=>{ const next=!reorderMode; setReorderMode(next); if(next) setCats(sortedCats); if(!next && onSortChange) onSortChange("categorySort","manual"); }}
+                  style={{ background:"none", border:"none",
+                    cursor:(view==="tree"||view==="all") ? "default" : "pointer",
+                    padding:4,
+                    color:reorderMode?C.accent:C.textMuted,
+                    fontSize:13, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:1,
+                    opacity:(view==="tree"||view==="all") ? 0.35 : 1 }}>
+                  {reorderMode?"DONE":"⇅"}
+                </button>
+                <button onClick={()=>{ setShowSearch(s=>!s); setSearch(""); }}
+                  style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textSec }}>
+                  <Ic n="search" s={16}/>
+                </button>
+                {view==="all" && allMovesFiltered.length>=2 && (
+                  <button onClick={()=>setSelectMode(true)}
+                    style={{ background:"none", border:"none", cursor:"pointer", padding:4 }}>
+                    <Ic n="checkCircle" s={16} c={C.textMuted}/>
+                  </button>
+                )}
                 {(()=>{
-                  const modes = ["list","tiles",...(isPremium?["tree"]:[])];
-                  const icons = { list:"list", tiles:"grid", tree:"gitFork" };
+                  const modes = ["list","tiles",...(isPremium?["tree"]:[]),"all"];
+                  const icons = { list:"list", tiles:"grid", tree:"gitFork", all:"cards" };
                   return <button onClick={()=>setView(modes[(modes.indexOf(view)+1)%modes.length])} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textSec }}><Ic n={icons[view]||"list"} s={16}/></button>;
                 })()}
-                <button onClick={()=>{ setShowSearch(s=>!s); setSearch(""); }} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textSec }}><Ic n="search" s={16}/></button>
-                {view!=="tree"&&<button onClick={()=>{ const next=!reorderMode; setReorderMode(next); if(next) setCats(sortedCats); if(!next && onSortChange) onSortChange("categorySort","manual"); }}
-                  style={{ background:"none", border:"none", cursor:"pointer", padding:4,
-                    color:reorderMode?C.accent:C.textMuted, fontSize:13, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>
-                  {reorderMode?"DONE":"⇅"}
-                </button>}
               </>
             )}
           </div>
@@ -517,8 +507,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
       )}
 
       {showAllMoves && vocabTab==="moves" && (
-        <div style={{ display:"flex", gap:8, padding:"6px 16px", overflowX:"auto",
-          scrollbarWidth:"none", WebkitOverflowScrolling:"touch",
+        <div style={{ display:"flex", flexWrap:"wrap", gap:8, padding:"6px 16px",
           borderBottom:`1px solid ${C.borderLight}` }}>
           <DropdownPill
             label={t("categories")}
