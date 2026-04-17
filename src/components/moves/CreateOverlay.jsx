@@ -9,9 +9,10 @@ const TOOLS = [
   { key: 'rrr',      title: 'RESTORE / REMIX / REBUILD', stripe: '#C4453E', descKey: 'rrrBrief' },
   { key: 'combine',  title: 'COMBINE',                   stripe: '#D4943A', descKey: 'combineBrief' },
   { key: 'map',      title: 'MAP',                       stripe: '#3A9E9E', descKey: 'mapBrief' },
+  { key: 'flow',     title: 'FLOW',                      stripe: '#8B6AAE', descKey: 'flowBrief' },
 ];
 
-export const CreateOverlay = ({ onOpenExplore, onOpenRRR, onOpenCombine, onOpenMap, onClose }) => {
+export const CreateOverlay = ({ onOpenExplore, onOpenRRR, onOpenCombine, onOpenMap, onOpenFlow, onClose }) => {
   const t = useT();
 
   const handlers = {
@@ -19,6 +20,7 @@ export const CreateOverlay = ({ onOpenExplore, onOpenRRR, onOpenCombine, onOpenM
     rrr: onOpenRRR,
     combine: onOpenCombine,
     map: onOpenMap,
+    flow: onOpenFlow,
   };
 
   return (
@@ -28,7 +30,7 @@ export const CreateOverlay = ({ onOpenExplore, onOpenRRR, onOpenCombine, onOpenM
         padding: '12px 14px 8px',
       }}>
         <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 16, letterSpacing: 2, color: C.text, textTransform: 'uppercase' }}>
-          {t('create')}
+          {t('creativeTools')}
         </div>
         <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}>
           <Ic n="x" s={18} c={C.textMuted} />

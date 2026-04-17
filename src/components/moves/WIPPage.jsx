@@ -26,7 +26,7 @@ import { BottomSheet } from '../shared/BottomSheet';
 import { MoveTree } from './MoveTree';
 import { DropdownPill } from '../shared/DropdownPill';
 
-export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains={}, setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore, onOpenRRR, onOpenCombine, onOpenMap, onOpenFlashCards, isPremium, staleCount=0, onBulkTrigger }) => {
+export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains={}, setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore, onOpenRRR, onOpenCombine, onOpenMap, onOpenFlashCards, onOpenTools, isPremium, staleCount=0, onBulkTrigger }) => {
   const t = useT();
   const { moveCountStr, resultCountStr } = usePlural();
   const { C, settings:ctxSettings } = useSettings();
@@ -918,7 +918,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
             {icon:"plus",label:t("addMoveMenu"),action:()=>{setShowLibraryMenu(false);setShowAdd(true);}},
             {icon:"cards",label:t("bulkImportMenu"),action:()=>{setShowLibraryMenu(false);setBulk(true);}},
             {icon:"folderPlus",label:t("addCategoryMenu"),action:()=>{setShowLibraryMenu(false);setShowAddCat(true);}},
-            {icon:"compass",label:t("tools"),action:()=>{setShowLibraryMenu(false);if(onOpenExplore)onOpenExplore();}},
+            {icon:"compass",label:t("creativeTools"),action:()=>{setShowLibraryMenu(false);if(onOpenTools)onOpenTools();}},
           ].map(opt=>(
             <button key={opt.icon} onClick={opt.action}
               style={{display:"flex",alignItems:"center",gap:12,width:"100%",
