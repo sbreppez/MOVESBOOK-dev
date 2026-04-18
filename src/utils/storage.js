@@ -20,6 +20,7 @@ export function migrateMove(m) {
     domains:     Array.isArray(m.domains) ? m.domains : [],
     prevDate:    m.prevDate    || null,
     parentId:    m.parentId    || null,
+    journal:     Array.isArray(m.journal) ? m.journal : [],
   };
 }
 

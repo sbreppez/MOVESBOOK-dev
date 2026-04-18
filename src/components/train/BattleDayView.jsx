@@ -223,8 +223,8 @@ const PreBattleSection = ({ plan, battle, dayMap, moves, sets, updatePlan, meta,
               <div key={move.id} style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 0", borderBottom: `1px solid ${C.borderLight}` }}>
                 <span style={{ flex: 1, fontSize: 13, fontFamily: FONT_BODY, color: C.text }}>{move.name}</span>
                 <span style={{ fontSize: 11, fontFamily: FONT_DISPLAY, fontWeight: 700, color: C.textSec }}>{move.mastery || 0}%</span>
-                {(move.videoLink || move.link) && (
-                  <button onClick={() => window.open(move.videoLink || move.link, "_blank")}
+                {move.link && (
+                  <button onClick={() => window.open(move.link, "_blank")}
                     style={{ background: "none", border: "none", cursor: "pointer", padding: 2 }}>
                     <Ic n="link" s={12} c={C.accent} />
                   </button>
