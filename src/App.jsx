@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect, useCallback, useMemo, Fragment } from 'react';
-import { C, buildPalette, FONT_SIZES, PRESET_COLORS } from './constants/colors';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { C, buildPalette, FONT_SIZES } from './constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from './constants/fonts';
 import { CATS, CAT_COLORS, INIT_MOVES, INIT_IDEAS, INIT_HABITS, INIT_SETS, INIT_ROUNDS, getInitIdeas, getInitHabits, getInitSets } from './constants/categories';
 import { SettingsCtx } from './hooks/useSettings';
@@ -34,7 +34,6 @@ import { MyStanceAssessment } from './components/stance/MyStanceAssessment';
 import { CompetitionSimulator } from './components/battle/CompetitionSimulator';
 import { FlowMap } from './components/battle/FlowMap';
 import { PostSessionPrompt } from './components/home/PostSessionPrompt';
-import { BottomSheet } from './components/shared/BottomSheet';
 import { CreateOverlay } from './components/moves/CreateOverlay';
 import { usePremium } from './hooks/usePremium';
 import { PremiumGate } from './components/shared/PremiumGate';
