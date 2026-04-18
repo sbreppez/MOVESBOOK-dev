@@ -1,6 +1,3 @@
-import { TRANSLATIONS } from './translations';
-import { todayLocal } from '../utils/dateUtils';
-
 export const CAT_COLORS = {
   Toprocks:       "#C4453E",
   Godowns:        "#8B6AAE",
@@ -40,32 +37,6 @@ export const IDEA_COLORS = [
 ];
 
 export const HABIT_COLORS = ["#C4453E","#4A90C4","#3D9E72","#D4943A","#8B6AAE","#6B7BA0","#3A9E9E"];
-
-export const INIT_MOVES = [
-  { id:101, name:"Indian Step",   category:"Toprocks",    mastery:78, description:"The Indian Step is a classic toprock — cross your right foot over your left while swinging your arms, then step back. Keep the rhythm bouncy and relaxed.", link:"", date:"2025-01-10", status:"wip", rotation:false, travelling:false },
-  { id:102, name:"Knee Drop",     category:"Godowns",     mastery:45, description:"The Knee Drop is a foundational go-down — from standing, swing one leg forward while dropping onto your trailing knee in one fluid motion. Protect your knee with pads when learning.", link:"", date:"2025-01-12", status:"wip",   rotation:false, travelling:false },
-  { id:103, name:"Six Steps",     category:"Footworks",   mastery:62, description:"Six Steps is the core footwork pattern of breaking — a six-count cycle that circles your legs around your supporting arms. Master this and everything else builds on top.", link:"", date:"2025-01-08", status:"wip",   rotation:false, travelling:false },
-  { id:104, name:"Backspin",      category:"Power Moves", mastery:22, description:"The Backspin is one of the first power moves to learn — spin horizontally on your back with legs tucked in or extended. Use your arms to initiate the rotation.", link:"", date:"2025-02-01", status:"wip",   rotation:true,  travelling:false },
-  { id:105, name:"Baby Freeze",   category:"Freezes",     mastery:91, description:"The Baby Freeze is the entry-level freeze — balance on one elbow planted in your hip while the other arm and your head form a tripod. Clean, compact, and essential.", link:"", date:"2025-01-20", status:"wip", rotation:false, travelling:false },
-];
-
-const _t = (lang, key) => TRANSLATIONS[lang]?.[key] ?? TRANSLATIONS.en?.[key] ?? key;
-
-export const getInitIdeas = (lang="en") => [];
-export const INIT_IDEAS = getInitIdeas("en");
-
-export const getInitHabits = (lang="en") => [
-  { id:601, name:_t(lang,"initHabit1Name"), frequency:"daily", createdDate: todayLocal(), checkIns:[], color:"#C4453E", why:_t(lang,"initHabit1Why"), timeOfDay:"anytime", notes:"" },
-  { id:602, name:_t(lang,"initHabit2Name"), frequency:"daily", createdDate: todayLocal(), checkIns:[], color:"#4A90C4", why:_t(lang,"initHabit2Why"), timeOfDay:"morning", notes:_t(lang,"initHabit2Notes") },
-];
-export const INIT_HABITS = getInitHabits("en");
-
-export const getInitSets = (lang="en") => [
-  { id:301, name:_t(lang,"initSet1Name"), color:"#4A90C4", notes:_t(lang,"initSet1Notes"), mastery:35, date:"2025-03-01" },
-  { id:302, name:_t(lang,"initSet2Name"), color:"#D4943A", notes:_t(lang,"initSet2Notes"), mastery:18, date:"2025-03-10" },
-  { id:303, name:_t(lang,"initSet3Name"), color:"#3D9E72", notes:_t(lang,"initSet3Notes"), mastery:52, date:"2025-03-15" },
-];
-export const INIT_SETS = getInitSets("en");
 
 export const INIT_ROUNDS = [
   { id:401, name:"Prelims",      color:"#6B7BA0", notes:"", date:"2025-03-01",

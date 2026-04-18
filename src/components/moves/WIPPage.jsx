@@ -255,9 +255,8 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
         <div style={{ flex:1, overflow:"auto", padding:10, paddingBottom:76 }}>
           {allCatMoves.length===0 ? (
             <div style={{ textAlign:"center", padding:40, color:C.textMuted }}>
-              <div style={{ marginBottom:8 }}><Ic n="list" s={32} c={C.textMuted}/></div>
-              <p style={{ fontSize:16, margin:"0 0 4px" }}>No moves yet in {openCat}</p>
-              <p style={{ fontSize:13 }}>Tap + to add your first move</p>
+              <div style={{ marginBottom:8 }}><Ic n="notebookPen" s={28} c={C.textMuted}/></div>
+              <p style={{ fontSize:13 }}>{t("emptyHintMoves")}</p>
             </div>
           ) : catMoves.length===0 ? (
             <div style={{ textAlign:"center", padding:30, color:C.textMuted }}><p style={{fontSize:13}}>No moves match "{search}"</p></div>
@@ -602,9 +601,8 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
             </div>
             {sets.length===0&&(
               <div style={{ textAlign:"center", padding:40, color:C.textMuted }}>
-                <div style={{ marginBottom:8 }}><Ic n="list" s={28} c={C.textMuted}/></div>
-                <p style={{ fontSize:13 }}>No sets yet — tap + to create one</p>
-                <p style={{ fontSize:11, marginTop:6, fontStyle:"italic" }}>Think of a Set like a Notion database — add your moves to it, then slot it into Battle rounds</p>
+                <div style={{ marginBottom:8 }}><Ic n="cards" s={28} c={C.textMuted}/></div>
+                <p style={{ fontSize:13 }}>{t("emptyHintSets")}</p>
               </div>
             )}
             {/* ── Tiles view ── */}

@@ -389,7 +389,7 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
             <div style={{ minHeight:36 }}/>
           )}
         </div>
-        {ideas.length===0&&<div style={{ textAlign:"center", padding:50, color:C.textMuted }}><div style={{ marginBottom:10 }}><Ic n="dumbbell" s={28} c={C.textMuted}/></div><p style={{fontSize:13}}>{t("emptyGoalsNotes")}</p></div>}
+        {ideas.length===0&&<div style={{ textAlign:"center", padding:40, color:C.textMuted }}><div style={{ marginBottom:8 }}><Ic n="paperclip" s={28} c={C.textMuted}/></div><p style={{fontSize:13}}>{t("emptyHintNotes")}</p></div>}
         {filtered.length===0&&search&&<div style={{ textAlign:"center", padding:30, color:C.textMuted }}><p style={{fontSize:13}}>{t("noResultsFor")} "{search}"</p></div>}
       </div>
       }

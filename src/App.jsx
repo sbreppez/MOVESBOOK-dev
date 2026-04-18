@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { C, buildPalette, FONT_SIZES } from './constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from './constants/fonts';
-import { CATS, CAT_COLORS, INIT_MOVES, INIT_IDEAS, INIT_HABITS, INIT_SETS, INIT_ROUNDS, getInitIdeas, getInitHabits, getInitSets } from './constants/categories';
+import { CATS, CAT_COLORS, INIT_ROUNDS } from './constants/categories';
 import { SettingsCtx } from './hooks/useSettings';
 import { TrainModalCtx } from './hooks/useTrainContext';
 import { TRANSLATIONS } from './constants/translations';
@@ -478,14 +478,14 @@ export default function App() {
         } catch {}
       } else {
         setFbUser(null);
-        setMoves(INIT_MOVES);
+        setMoves([]);
         setCats([...CATS]);
         setCatColors({...CAT_COLORS});
         setCatDomains({});
-        setSets(INIT_SETS);
+        setSets([]);
         setRounds(INIT_ROUNDS);
-        setIdeas(INIT_IDEAS);
-        setHabits(INIT_HABITS);
+        setIdeas([]);
+        setHabits([]);
         setProfile({ nickname:"", age:"", gender:"", goals:"", years:"",
           startYear:"", startMonth:"", startDay:"", why:"" });
         setCustomAttrs([]);

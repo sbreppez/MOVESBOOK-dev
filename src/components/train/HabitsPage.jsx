@@ -99,10 +99,9 @@ export const HabitsPage = ({ onAddTrigger, habits=[], setHabits=()=>{} }) => {
       {/* List */}
       <div style={{ flex:1, overflow:"auto", padding:"10px 12px", paddingBottom:76 }}>
         {habits.length===0&&(
-          <div style={{ textAlign:"center", padding:"40px 20px", color:C.textMuted }}>
-            <div style={{ marginBottom:8 }}><Ic n="fist" s={32} c={C.textMuted}/></div>
-            <div style={{ fontSize:13, fontWeight:700, fontFamily:FONT_DISPLAY, marginBottom:6 }}>{t("noHabitsYet")}</div>
-            <div style={{ fontSize:13 }}>{t("buildRoutine")}</div>
+          <div style={{ textAlign:"center", padding:40, color:C.textMuted }}>
+            <div style={{ marginBottom:8 }}><Ic n="calendarSync" s={28} c={C.textMuted}/></div>
+            <p style={{ fontSize:13 }}>{t("emptyHintHabits")}</p>
           </div>
         )}
         {view==="tiles" && !reorderMode ? (
