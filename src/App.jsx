@@ -96,9 +96,12 @@ export default function App() {
   const [rounds, setRounds] = useState(() => {
     try {
       const s = localStorage.getItem("mb_rounds");
-      if (s) { const p = JSON.parse(s); if (Array.isArray(p) && p.length > 0) return p; }
+      if (s !== null) {
+        const p = JSON.parse(s);
+        if (Array.isArray(p)) return p;
+      }
     } catch {}
-    return [];
+    return INIT_ROUNDS;
   });
   const [habits, setHabits] = useState(() => {
     try {
