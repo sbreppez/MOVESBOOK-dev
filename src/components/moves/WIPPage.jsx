@@ -553,12 +553,14 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
           ) : (
             <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
               {allMovesFiltered.map(m => (
-                <MoveListRow
+                <MoveTile
                   key={m.id}
                   move={m}
-                  catColor={catColors[m.category] || C.accent}
-                  onEdit={() => selectMode ? toggleMoveSelect(m.id) : setEditMove(m)}
+                  searchQuery={search}
+                  onClick={() => selectMode ? toggleMoveSelect(m.id) : setEditMove(m)}
+                  onEdit={() => setEditMove(m)}
                   onDelete={() => tryDelMove(m)}
+                  onDuplicate={() => dupMove(m)}
                   onMove={cat => moveToCat(m.id, cat)}
                   allCats={cats}
                   catColors={catColors}
