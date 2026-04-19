@@ -102,7 +102,9 @@ export const MoveTile = ({ move, onClick, onEdit, onDelete, onDuplicate, onMove,
         <button onClick={e => { e.stopPropagation(); setExpanded(x => !x); }}
           style={{ background:"none", border:"none", cursor:"pointer", padding:"4px 0 0",
             display:"flex", alignItems:"flex-start", gap:4, width:"100%", textAlign:"left" }}>
-          <Ic n={expanded ? "chevD" : "chevR"} s={12} c={C.textMuted} style={{ flexShrink:0, marginTop:1 }}/>
+          <span style={{ flexShrink:0, marginTop:1, display:"inline-flex" }}>
+            <Ic n={expanded ? "chevD" : "chevR"} s={12} c={C.textMuted}/>
+          </span>
           <div style={{ fontSize:11, color:C.textSec, lineHeight:1.4, flex:1,
             overflow:"hidden", textOverflow:"ellipsis",
             ...(expanded ? {} : { display:"-webkit-box", WebkitLineClamp:1, WebkitBoxOrient:"vertical" })
