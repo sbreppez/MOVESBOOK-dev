@@ -10,6 +10,7 @@ export const CAT_COLORS = {
   Custom:         "#6B7BA0",
 };
 export const CATS = Object.keys(CAT_COLORS);
+export const DEFAULT_CATS = ["Toprocks", "Footworks", "Power Moves", "Freezes"];
 
 export const CATEGORY_DOMAIN_MAP = {
   Toprocks:      { primary: 'performance', secondary: 'musicality' },

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { C, buildPalette, FONT_SIZES } from './constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from './constants/fonts';
-import { CATS, CAT_COLORS, INIT_ROUNDS } from './constants/categories';
+import { CATS, DEFAULT_CATS, CAT_COLORS, INIT_ROUNDS } from './constants/categories';
 import { SettingsCtx } from './hooks/useSettings';
 import { TrainModalCtx } from './hooks/useTrainContext';
 import { TRANSLATIONS } from './constants/translations';
@@ -70,7 +70,7 @@ export default function App() {
       const s = localStorage.getItem("mb_cats");
       if (s) { const p = JSON.parse(s); if (Array.isArray(p) && p.length > 0) return p; }
     } catch {}
-    return [...CATS];
+    return [...DEFAULT_CATS];
   });
   const [catColors, setCatColors] = useState(() => {
     try {
@@ -482,7 +482,7 @@ export default function App() {
       } else {
         setFbUser(null);
         setMoves([]);
-        setCats([...CATS]);
+        setCats([...DEFAULT_CATS]);
         setCatColors({...CAT_COLORS});
         setCatDomains({});
         setSets([]);
