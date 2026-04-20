@@ -485,25 +485,37 @@ export const CalendarOverlay = ({
               </button>
             </div>
 
-            {/* Type picker dropdown */}
-            {showTypePicker && (
-              <div style={{ background: C.surfaceAlt, borderRadius: 8, padding: 6, marginBottom: 8 }}>
+            <BottomSheet
+              open={showTypePicker}
+              onClose={() => setShowTypePicker(false)}
+              title={t("logSession")}
+            >
+              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                 {[
                   { type: "training", icon: "target", label: t("training") },
                   { type: "battle", icon: "swords", label: t("battleEvent") },
                   { type: "rest", icon: "pause", label: t("restDay") },
                   { type: "journal", icon: "mapPin", label: t("journalEvent") },
                 ].map(opt => (
-                  <button key={opt.type} onClick={() => openNewEvent(opt.type)}
-                    style={{ width: "100%", padding: "10px 12px", background: "none", border: "none",
-                      cursor: "pointer", display: "flex", alignItems: "center", gap: 10,
-                      color: C.text, fontSize: 13, fontFamily: FONT_DISPLAY, fontWeight: 700,
-                      letterSpacing: 0.5, borderRadius: 8 }}>
-                    <Ic n={opt.icon} s={16} c={C.textSec}/>{opt.label}
+                  <button
+                    key={opt.type}
+                    onClick={() => openNewEvent(opt.type)}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 12, width: "100%",
+                      padding: "14px 16px", borderRadius: 8, cursor: "pointer",
+                      background: C.surfaceAlt, border: "none", textAlign: "left",
+                    }}
+                  >
+                    <Ic n={opt.icon} s={18} c={C.textSec}/>
+                    <span style={{
+                      fontSize: 14, fontFamily: FONT_DISPLAY, fontWeight: 700, color: C.text
+                    }}>
+                      {opt.label}
+                    </span>
                   </button>
                 ))}
               </div>
-            )}
+            </BottomSheet>
 
             {/* Battle Prep Phases */}
             {(()=>{
