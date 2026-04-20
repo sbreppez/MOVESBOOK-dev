@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { C, buildPalette, FONT_SIZES } from './constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from './constants/fonts';
-import { CATS, DEFAULT_CATS, CAT_COLORS, INIT_ROUNDS } from './constants/categories';
+import { DEFAULT_CATS, CAT_COLORS, buildInitRounds } from './constants/categories';
 import { SettingsCtx } from './hooks/useSettings';
 import { TrainModalCtx } from './hooks/useTrainContext';
 import { TRANSLATIONS } from './constants/translations';
@@ -101,7 +101,7 @@ export default function App() {
         if (Array.isArray(p)) return p;
       }
     } catch {}
-    return INIT_ROUNDS;
+    return buildInitRounds();
   });
   const [habits, setHabits] = useState(() => {
     try {
@@ -486,7 +486,7 @@ export default function App() {
         setCatColors({...CAT_COLORS});
         setCatDomains({});
         setSets([]);
-        setRounds(INIT_ROUNDS);
+        setRounds(buildInitRounds());
         setIdeas([]);
         setHabits([]);
         setProfile({ nickname:"", age:"", gender:"", goals:"", years:"",
@@ -807,7 +807,7 @@ export default function App() {
             reminders={reminders} onRemindersChange={setReminders} addToast={addToast}
             onOpenManageReminders={()=>{ setShowProfile(false); setShowManageReminders(true); }}
             onNavigateToStance={()=>{ setShowProfile(false); setTab("reflect"); setSubTab("stance"); }}
-            settings={appSettings} onSettingsChange={setAppSettings} onClearMoves={()=>setMoves([])} onRestoreRounds={()=>setRounds(INIT_ROUNDS)} onRestartTour={()=>{setShowProfile(false);setShowTour(true);}} zoom={zoom} onZoomChange={handleZoomChange} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs}
+            settings={appSettings} onSettingsChange={setAppSettings} onClearMoves={()=>setMoves([])} onRestoreRounds={()=>setRounds(buildInitRounds())} onRestartTour={()=>{setShowProfile(false);setShowTour(true);}} zoom={zoom} onZoomChange={handleZoomChange} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs}
             onOpenManual={()=>{setShowProfile(false);setShowManual(true);}}
             profilePhoto={profilePhoto} onProfilePhotoChange={setProfilePhoto} fbUser={fbUser}/>}
           {showManual&&<ManualModal onClose={()=>setShowManual(false)}/>}
@@ -815,7 +815,7 @@ export default function App() {
             onClose={()=>setShowSettings(false)}
             settings={appSettings} onSave={setAppSettings}
             onClearMoves={()=>setMoves([])}
-            onRestoreRounds={()=>setRounds(INIT_ROUNDS)}
+            onRestoreRounds={()=>setRounds(buildInitRounds())}
             onRestartTour={()=>{setShowSettings(false);setShowTour(true);}}
             zoom={zoom} onZoomChange={handleZoomChange}
             customAttrs={customAttrs} setCustomAttrs={setCustomAttrs}

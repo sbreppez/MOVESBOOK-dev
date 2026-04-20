@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { PRESET_COLORS } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { lbl } from '../../constants/styles';
-import { INIT_ROUNDS } from '../../constants/categories';
+import { buildInitRounds } from '../../constants/categories';
 import { todayLocal } from '../../utils/dateUtils';
 import { useSettings } from '../../hooks/useSettings';
 import { useT, usePlural } from '../../hooks/useTranslation';
@@ -289,7 +289,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
             </p>
             <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
               <Btn variant="secondary" onClick={()=>setConfirmRestore(false)}>{t("cancel")}</Btn>
-              <Btn variant="danger" onClick={()=>{ setRounds(INIT_ROUNDS); setConfirmRestore(false); }}>{t("yesRestore")}</Btn>
+              <Btn variant="danger" onClick={()=>{ setRounds(buildInitRounds()); setConfirmRestore(false); }}>{t("yesRestore")}</Btn>
             </div>
           </Modal>
         )}
