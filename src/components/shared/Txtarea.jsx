@@ -16,6 +16,7 @@ export const Txtarea = ({ label, value, onChange, placeholder, rows=3, autoExpan
 
   useEffect(() => {
     if (autoExpand && textareaRef.current) autoResize(textareaRef.current);
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- autoResize is a closure recreated each render; including it would loop
   }, [local, autoExpand]);
 
   const handleChange = e => {

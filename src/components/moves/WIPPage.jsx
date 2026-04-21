@@ -35,7 +35,9 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   const showAllMoves = view === "all";
   const [vocabTab,setVocabTab]=useState("moves"); // "moves" | "sets"
   const setVocabTabAndNotify = (t) => { setVocabTab(t); if(onSubTabChange) onSubTabChange(t); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- fire-once mount notify
   useEffect(()=>{ if(onSubTabChange) onSubTabChange("moves"); },[]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- parentSubTab-only by intent; vocabTab read fresh on parentSubTab change
   useEffect(()=>{ if(parentSubTab==="gap"&&vocabTab!=="gap") { setVocabTab("gap"); setOpenCat(null); } },[parentSubTab]);
   const [openCat,setOpenCat]=useState(null);
   const [showAdd,setShowAdd]=useState(false); const [bulk,setBulk]=useState(false);
@@ -49,6 +51,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
     if(vocabTab==="sets") setAddingSet(true);
     else if(vocabTab==="gap") { if(onDrill) onDrill(null); }
     else setShowLibraryMenu(true);
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- ref-compare guard prevents re-fire; vocabTab/openCat read fresh from closure
   },[onAddTrigger]);
   const [editMove,setEditMove]=useState(null);
   // cats/catColors are now lifted to App — received as props
@@ -65,6 +68,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   const [addingSet,setAddingSet]=useState(false);
   // onAddTrigger2: Add Category (moves tab) or Add Set (sets tab)
   const lastAddTrigger2 = useRef(onAddTrigger2);
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- ref-compare guard prevents re-fire
   useEffect(()=>{ if(onAddTrigger2===lastAddTrigger2.current) return; lastAddTrigger2.current=onAddTrigger2; if(onAddTrigger2) { if(vocabTab==="sets") setAddingSet(true); else setShowAddCat(true); } },[onAddTrigger2]);
   const lastBulkTrigger = useRef(onBulkTrigger);
   useEffect(()=>{ if(onBulkTrigger===lastBulkTrigger.current) return; lastBulkTrigger.current=onBulkTrigger; if(onBulkTrigger) setBulk(true); },[onBulkTrigger]);
@@ -96,6 +100,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   // When an idea is pushed in from the Ideas tab, open the add modal with its text
   useEffect(()=>{
     if(pendingDesc){ setIdeaDesc(pendingDesc); setShowAdd(true); clearPendingDesc(); }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- pendingDesc-only by intent; clearPendingDesc called inside is stable
   },[pendingDesc]);
 
   const wipMoves=moves; // show all moves regardless of status

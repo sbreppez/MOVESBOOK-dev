@@ -68,6 +68,7 @@ export const Walkthrough = ({ onDone }) => {
       };
       tryFind(0);
     } else { setRect(null); }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- step-only by intent; current.target/type read fresh per step change
   }, [step]);
 
   const advance = () => {

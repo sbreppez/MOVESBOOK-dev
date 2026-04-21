@@ -67,7 +67,7 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
     // highest mastery first
     matches.sort((a,b) => (b.mastery||0) - (a.mastery||0));
     return matches[0];
-  }, [isAddMode, f.name, allMoves]);
+  }, [isAddMode, f.id, f.name, allMoves]);
 
   const confirmSuggest = (m) => {
     setF(p => ({...p, parentId: m.id}));

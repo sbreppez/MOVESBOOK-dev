@@ -3,8 +3,8 @@ import { FONT_BODY } from '../../constants/fonts';
 import { useSettings } from '../../hooks/useSettings';
 
 export const SectionBrief = ({ desc, stat, settings }) => {
-  if (settings?.showSectionDescriptions === false) return null;
   const { C } = useSettings();
+  if (settings?.showSectionDescriptions === false) return null;
   return (
     <div style={{ padding: "8px 16px 5px" }}>
       {desc && <div style={{ fontSize: 13, color: C.textSec, lineHeight: 1.5, fontFamily: FONT_BODY }}>{desc}</div>}

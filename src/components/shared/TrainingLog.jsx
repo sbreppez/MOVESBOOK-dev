@@ -30,6 +30,7 @@ export const TrainingLog = ({ value, onChange, framingKey, reflections, onReflec
       requestAnimationFrame(() => setOpacity(1));
     }, 2000);
     return () => clearTimeout(timer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- mount-only fade-in timer; reflections/onReflectionsChange must not retrigger the 2-second timer
   }, []);
 
   if (!visible) return null;

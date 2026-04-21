@@ -42,7 +42,7 @@ export default [
       ...reactHooks.configs.recommended.rules,
 
       'no-undef': 'error',
-      'react-hooks/rules-of-hooks': 'warn',
+      'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
 
       'no-unused-vars': ['warn', {

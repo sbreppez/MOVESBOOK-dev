@@ -32,6 +32,7 @@ export const ReflectPage = ({
   const [calendarAddTick, setCalendarAddTick] = useState(0);
   const [showInjuryHistory, setShowInjuryHistory] = useState(false);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- reflectTab-only by intent; onSubTabChange should be wrapped in useCallback at parent (deferred to Session B/C)
   useEffect(() => { if (onSubTabChange) onSubTabChange(reflectTab); }, [reflectTab]);
 
   // Sync external sub-tab navigation (e.g. from Profile "View Stance" link)
@@ -39,6 +40,7 @@ export const ReflectPage = ({
     if (parentSubTab && ["calendar","stance","goals","notes"].includes(parentSubTab) && parentSubTab !== reflectTab) {
       setReflectTab(parentSubTab);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- parentSubTab-only by intent; reflectTab compared to early-exit duplicates
   }, [parentSubTab]);
 
   // ── Goals/Notes state (replicated from IdeasPage) ──
@@ -66,6 +68,7 @@ export const ReflectPage = ({
       else if (reflectTab === "calendar") { setCalendarAddTick(t => t + 1); }
     }
     prevAddTrigger.current = onAddTrigger;
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- ref-compare guard prevents re-fire; reflectTab read fresh from closure
   }, [onAddTrigger]);
 
   // Auto-link target goals

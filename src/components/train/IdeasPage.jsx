@@ -32,11 +32,13 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
       else { setTypeChooser(true); }
     }
     prevAddTrigger.current = onAddTrigger;
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- ref-compare guard prevents re-fire; trainTab read fresh from closure
   },[onAddTrigger]);
   const [newType,    setNewType]    = useState(null);
   const { openModal } = useTrainModal();
   const [trainTab,   setTrainTab]   = useState("goals");
   // Report active sub-tab to parent for contextual + menu
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- trainTab-only by intent; onSubTabChange should be wrapped in useCallback at parent (deferred)
   useEffect(() => { if (onSubTabChange) onSubTabChange(trainTab); }, [trainTab]);
   // External navigation: Calendar → PREP
   useEffect(() => {
@@ -44,6 +46,7 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
       setTrainTab(externalTrainSubTab);
       if (onTrainSubTabUsed) onTrainSubTabUsed();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- externalTrainSubTab-only by intent; onTrainSubTabUsed call is the consume signal
   }, [externalTrainSubTab]);
   // Auto-link: sync move count to target goals that have autoLink=true
   const { settings: ideaSettings2 } = useSettings();

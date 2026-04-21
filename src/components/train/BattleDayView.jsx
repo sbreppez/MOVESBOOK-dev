@@ -516,7 +516,7 @@ const BattleShareCard = ({ plan, battle, meta, prepStats, reflection, onClose, t
     };
 
     draw();
-  }, [photo, plan, battle, meta, prepStats, reflection, resultObj, moodObj, battleDate, t]);
+  }, [photo, plan, meta, prepStats, reflection, resultObj, moodObj, battleDate, t]);
 
   useEffect(() => { generateCard(); }, [generateCard]);
 

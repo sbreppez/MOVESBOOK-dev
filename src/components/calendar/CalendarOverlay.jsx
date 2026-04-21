@@ -51,6 +51,7 @@ export const CalendarOverlay = ({
 
   useEffect(() => {
     if (onAddTrigger) { setSelectedDay(today); setShowTypePicker(true); setShowJournal(false); }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- onAddTrigger-only by intent; today value freshly captured per render
   }, [onAddTrigger]);
 
   const year = viewDate.getFullYear();

@@ -29,6 +29,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
   const [battleTab, setBattleTab] = useState("plan");
   const setBattleTabAndNotify = (t) => { setBattleTab(t); if(onSubTabChange) onSubTabChange(t); };
   // Notify parent of initial sub-tab
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- fire-once mount notify
   useEffect(()=>{ if(onSubTabChange) onSubTabChange("plan"); },[]);
 
   // ── PLAN sub-tab state ──────────────────────────────────────────────────────
@@ -103,6 +104,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
     else if(battleTab==="rivals") setRivalsAddTick(t=>t+1);
     else if(battleTab==="prep") setPrepAddTick(t=>t+1);
     else if(battleTab==="plan") setAddingRound(true);
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- ref-compare guard prevents re-fire; battleTab read fresh from closure on each onAddTrigger change
   },[onAddTrigger]);
   // onAddTrigger2 in Battle: "Add Move" opens freestyle picker regardless of sub-tab
   const lastAddTrigger2 = useRef(onAddTrigger2);
