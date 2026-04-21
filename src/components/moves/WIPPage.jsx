@@ -25,6 +25,7 @@ import { SectionBrief } from '../shared/SectionBrief';
 import { BottomSheet } from '../shared/BottomSheet';
 import { MoveTree } from './MoveTree';
 import { DropdownPill } from '../shared/DropdownPill';
+import { ConfirmDialog } from '../shared/ConfirmDialog';
 
 export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains={}, setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore, onOpenRRR, onOpenCombine, onOpenMap, onOpenFlashCards, onOpenTools, isPremium, staleCount=0, onBulkTrigger }) => {
   const t = useT();
@@ -297,55 +298,27 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
         </div>
         {showAdd&&<MoveModal initialCat={openCat} cats={cats} initialDesc={ideaDesc} onClose={()=>{setShowAdd(false);setIdeaDesc(null);}} onSave={f=>saveMove(f)} customAttrs={customAttrs} onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])} allMoves={moves} catColors={catColors} isPremium={isPremium}/>}
         {editMove&&<MoveModal move={editMove} cats={cats} onClose={()=>setEditMove(null)} onSave={f=>{saveMove(f,editMove.id);setEditMove(null);}} customAttrs={customAttrs} onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])} allMoves={moves} catColors={catColors} isPremium={isPremium}/>}
-        {confirmDeleteMove&&(
-          <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", zIndex:900, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
-            <div style={{ background:C.bg, borderRadius:16, width:"100%", maxWidth:320, padding:20, boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
-              <div style={{ fontWeight:900, fontSize:14, letterSpacing:1.5, fontFamily:FONT_DISPLAY, color:C.brown, marginBottom:8 }}>{t("deleteMove")}</div>
-              <p style={{ fontSize:13, color:C.textSec, marginBottom:16, lineHeight:1.5 }}>
-                {t("deleteMoveBody1")}<span style={{ color:C.text, fontWeight:700 }}>{confirmDeleteMove.name}</span>{t("deleteMoveBody2")}
-              </p>
-              <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
-                <button onClick={()=>setConfirmDeleteMove(null)}
-                  style={{ padding:"8px 16px", borderRadius:8, border:`1px solid ${C.border}`, background:"none", color:C.textSec, fontSize:13, cursor:"pointer", fontFamily:FONT_BODY }}>
-                  {t("cancel")}
-                </button>
-                <button onClick={()=>{ delMove(confirmDeleteMove.id); setConfirmDeleteMove(null); }}
-                  style={{ padding:"8px 16px", borderRadius:8, border:"none", background:C.accent, color:C.bg, fontSize:13, fontWeight:700, cursor:"pointer", fontFamily:FONT_BODY }}>
-                  {t("delete")}
-                </button>
-              </div>
-            </div>
-          </div>
+        {confirmDeleteMove && (
+          <ConfirmDialog
+            title={t("deleteMove")}
+            body={<>{t("deleteMoveBody1")}<span style={{ color:C.text, fontWeight:700 }}>{confirmDeleteMove.name}</span>{t("deleteMoveBody2")}</>}
+            onCancel={() => setConfirmDeleteMove(null)}
+            onConfirm={() => { delMove(confirmDeleteMove.id); setConfirmDeleteMove(null); }}
+          />
         )}
-        {confirmBulkDeleteMoves&&(
-          <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", zIndex:900, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
-            <div style={{ background:C.bg, borderRadius:16, width:"100%", maxWidth:320, padding:20, textAlign:"center", boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
-              <Ic n="trash" s={28} c={C.accent}/>
-              <h3 style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:1, color:C.text, margin:"8px 0" }}>
-                {t("deleteSelected")}
-              </h3>
-              <p style={{ fontSize:13, color:C.textSec, marginBottom:16, lineHeight:1.5 }}>
-                {selectedMoveIds.size} {t("itemsWillBeDeleted")}
-              </p>
-              <div style={{ display:"flex", gap:8 }}>
-                <button onClick={()=>setConfirmBulkDeleteMoves(false)}
-                  style={{ flex:1, padding:"10px", background:C.surfaceAlt, border:`1px solid ${C.border}`,
-                    borderRadius:8, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:13, color:C.text }}>
-                  {t("cancel")}
-                </button>
-                <button onClick={()=>{
-                  setMoves(prev=>prev.filter(m=>!selectedMoveIds.has(m.id)));
-                  setConfirmBulkDeleteMoves(false);
-                  exitMoveSelectMode();
-                  addToast({ icon:"trash", title:t("deleted") });
-                }}
-                  style={{ flex:1, padding:"10px", background:C.accent, border:"none",
-                    borderRadius:8, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:13, color:"#fff" }}>
-                  {t("delete")}
-                </button>
-              </div>
-            </div>
-          </div>
+        {confirmBulkDeleteMoves && (
+          <ConfirmDialog
+            title={t("deleteSelected")}
+            icon="trash"
+            body={<>{selectedMoveIds.size} {t("itemsWillBeDeleted")}</>}
+            onCancel={() => setConfirmBulkDeleteMoves(false)}
+            onConfirm={() => {
+              setMoves(prev => prev.filter(m => !selectedMoveIds.has(m.id)));
+              setConfirmBulkDeleteMoves(false);
+              exitMoveSelectMode();
+              addToast({ icon: "trash", title: t("deleted") });
+            }}
+          />
         )}
       </div>
     );
@@ -822,75 +795,38 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
       {editSetModal&&<SetDetailModal type="set" item={editSetModal} onClose={()=>setEditSetModal(null)}
         allMoves={moves} allSets={sets}
         onSave={fields=>setSets(p=>p.map(s=>s.id===editSetModal.id?{...s,...fields}:s))}/>}
-      {confirmDeleteSet&&(
-        <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", zIndex:900, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
-          <div style={{ background:C.bg, borderRadius:16, width:"100%", maxWidth:320, padding:20, boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
-            <div style={{ fontWeight:900, fontSize:14, letterSpacing:1.5, fontFamily:FONT_DISPLAY, color:C.brown, marginBottom:8 }}>DELETE SET?</div>
-            <p style={{ fontSize:13, color:C.textSec, marginBottom:16, lineHeight:1.5 }}>
-              "<span style={{ color:C.text, fontWeight:700 }}>{confirmDeleteSet.name}</span>" will be permanently deleted. This can't be undone.
-            </p>
-            <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
-              <button onClick={()=>setConfirmDeleteSet(null)}
-                style={{ padding:"8px 16px", borderRadius:8, border:`1px solid ${C.border}`, background:"none", color:C.textSec, fontSize:13, cursor:"pointer", fontFamily:FONT_BODY }}>
-                Cancel
-              </button>
-              <button onClick={()=>{ setSets(p=>p.filter(x=>x.id!==confirmDeleteSet.id)); setConfirmDeleteSet(null); }}
-                style={{ padding:"8px 16px", borderRadius:8, border:"none", background:C.accent, color:C.bg, fontSize:13, fontWeight:700, cursor:"pointer", fontFamily:FONT_BODY }}>
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
+      {confirmDeleteSet && (
+        <ConfirmDialog
+          title={t("deleteSet")}
+          body={<>&quot;<span style={{ color:C.text, fontWeight:700 }}>{confirmDeleteSet.name}</span>&quot; {t("deleteSetBody")}</>}
+          onCancel={() => setConfirmDeleteSet(null)}
+          onConfirm={() => {
+            setSets(p => p.filter(x => x.id !== confirmDeleteSet.id));
+            setConfirmDeleteSet(null);
+          }}
+        />
       )}
-      {confirmDeleteMove&&(
-        <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", zIndex:900, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
-          <div style={{ background:C.bg, borderRadius:16, width:"100%", maxWidth:320, padding:20, boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
-            <div style={{ fontWeight:900, fontSize:14, letterSpacing:1.5, fontFamily:FONT_DISPLAY, color:C.brown, marginBottom:8 }}>{t("deleteMove")}</div>
-            <p style={{ fontSize:13, color:C.textSec, marginBottom:16, lineHeight:1.5 }}>
-              {t("deleteMoveBody1")}<span style={{ color:C.text, fontWeight:700 }}>{confirmDeleteMove.name}</span>{t("deleteMoveBody2")}
-            </p>
-            <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
-              <button onClick={()=>setConfirmDeleteMove(null)}
-                style={{ padding:"8px 16px", borderRadius:8, border:`1px solid ${C.border}`, background:"none", color:C.textSec, fontSize:13, cursor:"pointer", fontFamily:FONT_BODY }}>
-                {t("cancel")}
-              </button>
-              <button onClick={()=>{ delMove(confirmDeleteMove.id); setConfirmDeleteMove(null); }}
-                style={{ padding:"8px 16px", borderRadius:8, border:"none", background:C.accent, color:C.bg, fontSize:13, fontWeight:700, cursor:"pointer", fontFamily:FONT_BODY }}>
-                {t("delete")}
-              </button>
-            </div>
-          </div>
-        </div>
+      {confirmDeleteMove && (
+        <ConfirmDialog
+          title={t("deleteMove")}
+          body={<>{t("deleteMoveBody1")}<span style={{ color:C.text, fontWeight:700 }}>{confirmDeleteMove.name}</span>{t("deleteMoveBody2")}</>}
+          onCancel={() => setConfirmDeleteMove(null)}
+          onConfirm={() => { delMove(confirmDeleteMove.id); setConfirmDeleteMove(null); }}
+        />
       )}
       {confirmBulkDeleteMoves && !openCat && (
-        <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", zIndex:900, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
-          <div style={{ background:C.bg, borderRadius:16, width:"100%", maxWidth:320, padding:20, textAlign:"center", boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
-            <Ic n="trash" s={28} c={C.accent}/>
-            <h3 style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:1, color:C.text, margin:"8px 0" }}>
-              {t("deleteSelected")}
-            </h3>
-            <p style={{ fontSize:13, color:C.textSec, marginBottom:16, lineHeight:1.5 }}>
-              {selectedMoveIds.size} {t("itemsWillBeDeleted")}
-            </p>
-            <div style={{ display:"flex", gap:8 }}>
-              <button onClick={()=>setConfirmBulkDeleteMoves(false)}
-                style={{ flex:1, padding:"10px", background:C.surfaceAlt, border:`1px solid ${C.border}`,
-                  borderRadius:8, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:13, color:C.text }}>
-                {t("cancel")}
-              </button>
-              <button onClick={()=>{
-                setMoves(prev=>prev.filter(m=>!selectedMoveIds.has(m.id)));
-                setConfirmBulkDeleteMoves(false);
-                exitMoveSelectMode();
-                addToast({ icon:"trash", title: t("deleted") });
-              }}
-                style={{ flex:1, padding:"10px", background:C.accent, border:"none",
-                  borderRadius:8, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:13, color:"#fff" }}>
-                {t("delete")}
-              </button>
-            </div>
-          </div>
-        </div>
+        <ConfirmDialog
+          title={t("deleteSelected")}
+          icon="trash"
+          body={<>{selectedMoveIds.size} {t("itemsWillBeDeleted")}</>}
+          onCancel={() => setConfirmBulkDeleteMoves(false)}
+          onConfirm={() => {
+            setMoves(prev => prev.filter(m => !selectedMoveIds.has(m.id)));
+            setConfirmBulkDeleteMoves(false);
+            exitMoveSelectMode();
+            addToast({ icon: "trash", title: t("deleted") });
+          }}
+        />
       )}
       {showAddCat&&<AddCategoryModal onClose={()=>setShowAddCat(false)} onAdd={addCategory} existingCats={cats} existingColors={catColors}/>}
       {/* MoveModal at root level — for "Add to Move" arriving from Ideas tab */}
