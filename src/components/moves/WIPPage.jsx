@@ -26,6 +26,7 @@ import { BottomSheet } from '../shared/BottomSheet';
 import { MoveTree } from './MoveTree';
 import { DropdownPill } from '../shared/DropdownPill';
 import { ConfirmDialog } from '../shared/ConfirmDialog';
+import { VocabTabBar } from './VocabTabBar';
 
 export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains={}, setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore, onOpenRRR, onOpenCombine, onOpenMap, onOpenFlashCards, onOpenTools, isPremium, staleCount=0, onBulkTrigger }) => {
   const t = useT();
@@ -390,23 +391,12 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
         </div>
       )}
 
-      <div style={{ display:"flex", alignItems:"center", padding:"6px 14px", flexShrink:0 }}>
-        {/* MOVES / SETS sub-tabs */}
-        <div style={{ display:"flex", gap:0 }}>
-          {[["moves",t("library")],["sets","SETS"],["gap","GAP"]].map(([id,label])=>(
-            <button key={id} onClick={()=>setVocabTabAndNotify(id)}
-              style={{ padding:"4px 10px", background:"none", border:"none", cursor:"pointer",
-                fontSize:14, fontWeight:800, letterSpacing:1.5, fontFamily:FONT_DISPLAY, textTransform:"uppercase",
-                color: vocabTab===id ? C.text : C.textMuted,
-                display:"inline-flex", alignItems:"center", gap:4 }}>
-              <span style={{ borderBottom: vocabTab===id ? `2px solid ${C.accent}` : "2px solid transparent", paddingBottom:3 }}>
-                {label}
-              </span>
-              {id==="gap"&&staleCount>0&&isPremium&&<span style={{ width:6, height:6, borderRadius:3, background:C.red, flexShrink:0 }}/>}
-            </button>
-          ))}
-        </div>
-      </div>
+      <VocabTabBar
+        vocabTab={vocabTab}
+        onChange={setVocabTabAndNotify}
+        staleCount={staleCount}
+        isPremium={isPremium}
+      />
 
       {showSearch&&(
         <div style={{ padding:"6px 14px", background:C.surface, borderBottom:`1px solid ${C.borderLight}` }}>
