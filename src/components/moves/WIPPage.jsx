@@ -108,7 +108,6 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
     confirmBulkDeleteMoves,
     setConfirmDeleteMove,
     setSelectMode,
-    setSelectedMoveIds,
     setConfirmBulkDeleteMoves,
     saveMove,
     handleToggleTrainedToday,
