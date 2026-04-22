@@ -31,6 +31,7 @@ import { VersionTrackingPrompt } from './VersionTrackingPrompt';
 import { useVersionPrompt } from '../../hooks/useVersionPrompt';
 import { useAllMovesFilter } from '../../hooks/useAllMovesFilter';
 import { useWipTriggers } from '../../hooks/useWipTriggers';
+import { useSearchFilter } from '../../hooks/useSearchFilter';
 import { AllMovesView } from './AllMovesView';
 
 export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains={}, setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore, onOpenRRR, onOpenCombine, onOpenMap, onOpenFlashCards, onOpenTools, isPremium, staleCount=0, onBulkTrigger }) => {
@@ -53,8 +54,6 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   // cats/catColors are now lifted to App — received as props
   const [showAddCat,setShowAddCat]=useState(false);
   const [ideaDesc,setIdeaDesc]=useState(null);
-  const [search,setSearch]=useState("");
-  const [showSearch,setShowSearch]=useState(false);
   const catDragItem=useRef(null);
   const [catDragOver,setCatDragOver]=useState(null);
   const [reorderMode, setReorderMode] = useState(false);
@@ -91,6 +90,11 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   const hasActiveFilters = Object.keys(attrFilters).some(k => { const v=attrFilters[k]; return Array.isArray(v)?v.length>0:v!==""&&v!=null; });
   const inCat=cat=>{ let filtered=[...wipMoves.filter(m=>m.category===cat)]; if(hasActiveFilters) filtered=filterMovesByAttrs(filtered,attrFilters,customAttrs); return filtered.sort(sortFn); };
   const masteredCount=cat=>inCat(cat).filter(m=>m.mastery>=80).length;
+
+  const { search, setSearch, showSearch, setShowSearch, searchResults } = useSearchFilter({
+    cats,
+    inCat,
+  });
 
   const sortedCats = reorderMode ? cats : (
     st.categorySort==="name"
@@ -330,14 +334,6 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
       </div>
     );
   }
-
-  // — search across both categories and moves inside them —
-  const searchResults = search.trim() ? (() => {
-    const q = search.toLowerCase();
-    const catHits = cats.filter(c => c.toLowerCase().includes(q));
-    const moveHits = cats.flatMap(cat => inCat(cat).filter(m => m.name.toLowerCase().includes(q)).map(m => ({ ...m, _cat: cat })));
-    return { catHits, moveHits };
-  })() : null;
 
   return (
     <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column" }}>
