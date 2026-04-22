@@ -24,12 +24,13 @@ import { PremiumGate } from '../shared/PremiumGate';
 import { SectionBrief } from '../shared/SectionBrief';
 import { BottomSheet } from '../shared/BottomSheet';
 import { MoveTree } from './MoveTree';
-import { DropdownPill } from '../shared/DropdownPill';
 import { ConfirmDialog } from '../shared/ConfirmDialog';
 import { VocabTabBar } from './VocabTabBar';
 import { LibraryMenuSheet } from './LibraryMenuSheet';
 import { VersionTrackingPrompt } from './VersionTrackingPrompt';
 import { useVersionPrompt } from '../../hooks/useVersionPrompt';
+import { useAllMovesFilter } from '../../hooks/useAllMovesFilter';
+import { AllMovesView } from './AllMovesView';
 
 export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains={}, setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore, onOpenRRR, onOpenCombine, onOpenMap, onOpenFlashCards, onOpenTools, isPremium, staleCount=0, onBulkTrigger }) => {
   const t = useT();
@@ -81,13 +82,6 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   const [setsView,setSetsView]=useState(st.defaultView==="tree"?"list":(st.defaultView||"list"));
   // Sync view states when the defaultView setting changes
   useEffect(()=>{ setView(st.defaultView||"list"); setSetsView(st.defaultView==="tree"?"list":(st.defaultView||"list")); },[st.defaultView]);
-  // Cleanup when leaving ALL MOVES view: clear filters and exit select mode
-  useEffect(()=>{
-    if (view !== "all") {
-      setAllMovesFilters({ category: [], tensionRole: [], origin: [] });
-      exitMoveSelectMode();
-    }
-  },[view]);
   const [expSets,setExpSets]=useState({});
   const [confirmDeleteSet,setConfirmDeleteSet]=useState(null);
   const [confirmDeleteMove,setConfirmDeleteMove]=useState(null);
@@ -96,7 +90,6 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   const [confirmBulkDeleteMoves,setConfirmBulkDeleteMoves]=useState(false);
   const [showFilter, setShowFilter] = useState(false);
   const [attrFilters, setAttrFilters] = useState({});
-  const [allMovesFilters, setAllMovesFilters] = useState({ category: [], tensionRole: [], origin: [] });
   const setDragItem=useRef(null);
   const [setDragOver,setSetDragOver]=useState(null);
   const masteryColorWip = p => p<30?C.red:p<60?C.yellow:p<80?C.blue:C.green;
@@ -122,19 +115,6 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
         ? [...cats].sort((a,b)=>{ const pctA=inCat(a).length?masteredCount(a)/inCat(a).length:0; const pctB=inCat(b).length?masteredCount(b)/inCat(b).length:0; return pctB-pctA; })
         : cats // manual = insertion order
   );
-
-  // ── ALL MOVES filtered list ──
-  const allMovesFiltered = (() => {
-    if (!showAllMoves) return [];
-    let result = [...wipMoves];
-    const f = allMovesFilters;
-    if (f.category.length > 0) result = result.filter(m => f.category.includes(m.category));
-    if (f.tensionRole.length > 0) result = result.filter(m => f.tensionRole.includes(m.tensionRole));
-    if (f.origin.length > 0) result = result.filter(m => f.origin.includes(m.origin));
-    if (hasActiveFilters) result = filterMovesByAttrs(result, attrFilters, customAttrs);
-    if (search.trim()) result = result.filter(m => m.name.toLowerCase().includes(search.toLowerCase()));
-    return result.sort(sortFn);
-  })();
 
   const saveMove=(form,id)=>{
     if(id){
@@ -163,6 +143,18 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   const exitMoveSelectMode=()=>{ setSelectMode(false); setSelectedMoveIds(new Set()); };
   const dupMove=m=>setMoves(prev=>[...prev,{...m,id:Date.now(),name:m.name+" (copy)"}]);
   const moveToCat=(id,cat)=>setMoves(prev=>prev.map(m=>m.id===id?{...m,category:cat}:m));
+
+  const { allMovesFilters, setAllMovesFilters, allMovesFiltered } = useAllMovesFilter({
+    view,
+    wipMoves,
+    sortFn,
+    hasActiveFilters,
+    attrFilters,
+    customAttrs,
+    search,
+    exitMoveSelectMode,
+  });
+
   const addCategory=(name,color)=>{ setCats(prev=>[...prev,name]); setCatColors(prev=>({...prev,[name]:color})); };
   const dupCategory=(name)=>{ const newName=name+" (copy)"; setCats(prev=>[...prev,newName]); setCatColors(prev=>({...prev,[newName]:prev[name]||C.accent})); };
   const moveCatUp   = (idx) => { if(idx===0) return; setCats(prev=>{ const n=[...prev]; [n[idx],n[idx-1]]=[n[idx-1],n[idx]]; return n; }); };
@@ -445,72 +437,25 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
         </div>
       )}
 
-      {showAllMoves && vocabTab==="moves" && (
-        <div style={{ display:"flex", flexWrap:"wrap", gap:8, padding:"6px 16px",
-          borderBottom:`1px solid ${C.borderLight}` }}>
-          <DropdownPill
-            label={t("categories")}
-            value={allMovesFilters.category}
-            options={cats.map(c => ({ key: c, label: c, color: catColors[c] || C.accent }))}
-            onChange={v => setAllMovesFilters(p => ({...p, category: v}))}
-            defaultLabel={t("allCategories")}
-          />
-          <DropdownPill
-            label={t("tensionRole")}
-            value={allMovesFilters.tensionRole}
-            options={[
-              { key:"flow",  label: t("tensionFlow") },
-              { key:"build", label: t("tensionBuild") },
-              { key:"hit",   label: t("tensionHit") },
-              { key:"peak",  label: t("tensionPeak") },
-            ]}
-            onChange={v => setAllMovesFilters(p => ({...p, tensionRole: v}))}
-            defaultLabel={t("allRoles")}
-          />
-          <DropdownPill
-            label={t("origin")}
-            value={allMovesFilters.origin}
-            options={[
-              { key:"learned",  label: t("learned") },
-              { key:"version",  label: t("myVersion") },
-              { key:"creation", label: t("myCreation") },
-            ]}
-            onChange={v => setAllMovesFilters(p => ({...p, origin: v}))}
-            defaultLabel={t("allOrigins")}
-          />
-        </div>
-      )}
-
       <div style={{ flex:1, overflow:"auto", paddingTop: vocabTab==="gap" ? 0 : 10, paddingLeft: vocabTab==="gap" ? 0 : 16, paddingRight: vocabTab==="gap" ? 0 : 16, paddingBottom:76 }}>
         {vocabTab==="moves"&&<SectionBrief desc={t("libraryBrief")} stat={`${moves.length} moves across ${cats.length} categories`} settings={st}/>}
         {vocabTab==="moves"&&showAllMoves ? (
-          /* ── ALL MOVES flat list ── */
-          allMovesFiltered.length === 0 ? (
-            <div style={{ textAlign:"center", padding:30, color:C.textMuted }}>
-              <div style={{ marginBottom:8 }}><Ic n="filter" s={28} c={C.textMuted}/></div>
-              <p style={{ fontSize:13 }}>{t("noMovesMatchFilter")}</p>
-            </div>
-          ) : (
-            <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
-              {allMovesFiltered.map(m => (
-                <MoveTile
-                  key={m.id}
-                  move={m}
-                  searchQuery={search}
-                  onClick={() => selectMode ? toggleMoveSelect(m.id) : setEditMove(m)}
-                  onEdit={() => setEditMove(m)}
-                  onDelete={() => tryDelMove(m)}
-                  onDuplicate={() => dupMove(m)}
-                  onMove={cat => moveToCat(m.id, cat)}
-                  allCats={cats}
-                  catColors={catColors}
-                  onToggleTrainedToday={handleToggleTrainedToday}
-                  selectMode={selectMode}
-                  isSelected={selectedMoveIds.has(m.id)}
-                />
-              ))}
-            </div>
-          )
+          <AllMovesView
+            allMovesFilters={allMovesFilters}
+            setAllMovesFilters={setAllMovesFilters}
+            allMovesFiltered={allMovesFiltered}
+            cats={cats}
+            catColors={catColors}
+            search={search}
+            selectMode={selectMode}
+            selectedMoveIds={selectedMoveIds}
+            onToggleSelect={toggleMoveSelect}
+            onEditMove={setEditMove}
+            onDeleteMove={tryDelMove}
+            onDuplicateMove={dupMove}
+            onMoveToCat={moveToCat}
+            onToggleTrainedToday={handleToggleTrainedToday}
+          />
         ) : vocabTab==="gap" ? (
           isPremium ? <><SectionBrief desc={t("gapBrief")} settings={st}/><GAPTab moves={moves} catColors={catColors} setMoves={setMoves} onDrill={onDrill} settings={st} onTrainToday={handleToggleTrainedToday}/></> : <div style={{padding:20}}><PremiumGate feature="gap" addToast={addToast}/></div>
         ) : vocabTab==="sets" ? (
