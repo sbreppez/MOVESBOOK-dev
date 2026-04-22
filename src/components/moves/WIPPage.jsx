@@ -200,6 +200,20 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
     });
   };
 
+  const {
+    versionEligible,
+    versionMove,
+    openVersion,
+    closeVersion,
+    dismissVersion,
+    VERSION_CHIPS,
+  } = useVersionPrompt({
+    moves,
+    vocabTab,
+    versionPromptsShown: st.versionPromptsShown,
+    onSettingsChange,
+  });
+
   if(openCat){
     const allCatMoves=inCat(openCat);
     const catColor=catColors[openCat]||C.accent;
@@ -334,20 +348,6 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
     const moveHits = cats.flatMap(cat => inCat(cat).filter(m => m.name.toLowerCase().includes(q)).map(m => ({ ...m, _cat: cat })));
     return { catHits, moveHits };
   })() : null;
-
-  const {
-    versionEligible,
-    versionMove,
-    openVersion,
-    closeVersion,
-    dismissVersion,
-    VERSION_CHIPS,
-  } = useVersionPrompt({
-    moves,
-    vocabTab,
-    versionPromptsShown: st.versionPromptsShown,
-    onSettingsChange,
-  });
 
   return (
     <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column" }}>
