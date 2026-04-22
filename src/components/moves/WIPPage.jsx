@@ -32,6 +32,7 @@ import { useVersionPrompt } from '../../hooks/useVersionPrompt';
 import { useAllMovesFilter } from '../../hooks/useAllMovesFilter';
 import { useWipTriggers } from '../../hooks/useWipTriggers';
 import { useSearchFilter } from '../../hooks/useSearchFilter';
+import { useMoveCrud } from '../../hooks/useMoveCrud';
 import { AllMovesView } from './AllMovesView';
 
 export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains={}, setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore, onOpenRRR, onOpenCombine, onOpenMap, onOpenFlashCards, onOpenTools, isPremium, staleCount=0, onBulkTrigger }) => {
@@ -67,10 +68,6 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   useEffect(()=>{ setView(st.defaultView||"list"); setSetsView(st.defaultView==="tree"?"list":(st.defaultView||"list")); },[st.defaultView]);
   const [expSets,setExpSets]=useState({});
   const [confirmDeleteSet,setConfirmDeleteSet]=useState(null);
-  const [confirmDeleteMove,setConfirmDeleteMove]=useState(null);
-  const [selectMode,setSelectMode]=useState(false);
-  const [selectedMoveIds,setSelectedMoveIds]=useState(new Set());
-  const [confirmBulkDeleteMoves,setConfirmBulkDeleteMoves]=useState(false);
   const [showFilter, setShowFilter] = useState(false);
   const [attrFilters, setAttrFilters] = useState({});
   const setDragItem=useRef(null);
@@ -104,33 +101,26 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
         : cats // manual = insertion order
   );
 
-  const saveMove=(form,id)=>{
-    if(id){
-      setMoves(prev=>prev.map(m=>m.id===id?{...m,...form}:m));
-    } else {
-      setMoves(prev=>[...prev,{...form, id:Date.now(), status:form.status||"wip"}]);
-    }
-  };
-  const handleToggleTrainedToday = (id) => {
-    const today = todayLocal();
-    const move = moves.find(m => m.id === id);
-    if (!move) return;
-    const isToday = move.date === today;
-    setMoves(prev => prev.map(m => {
-      if (m.id !== id) return m;
-      return isToday
-        ? { ...m, date: m.prevDate || null, prevDate: null }
-        : { ...m, prevDate: m.date, date: today };
-    }));
-    addToast({ icon: isToday ? "refresh" : "check", title: t(isToday ? "unmarkedToday" : "markedTrainedToday") });
-  };
-  const bulkImport=newMoves=>{ const w=newMoves.map(m=>({...m,id:Date.now()+Math.random(),status:m.status||"wip"})); setMoves(prev=>[...prev,...w]); };
-  const delMove=id=>setMoves(prev=>prev.filter(m=>m.id!==id));
-  const tryDelMove=m=>{ if(st.confirmDelete!==false) setConfirmDeleteMove(m); else delMove(m.id); };
-  const toggleMoveSelect=(moveId)=>{ setSelectedMoveIds(prev=>{ const next=new Set(prev); if(next.has(moveId)) next.delete(moveId); else next.add(moveId); return next; }); };
-  const exitMoveSelectMode=()=>{ setSelectMode(false); setSelectedMoveIds(new Set()); };
-  const dupMove=m=>setMoves(prev=>[...prev,{...m,id:Date.now(),name:m.name+" (copy)"}]);
-  const moveToCat=(id,cat)=>setMoves(prev=>prev.map(m=>m.id===id?{...m,category:cat}:m));
+  const {
+    confirmDeleteMove,
+    selectMode,
+    selectedMoveIds,
+    confirmBulkDeleteMoves,
+    setConfirmDeleteMove,
+    setSelectMode,
+    setSelectedMoveIds,
+    setConfirmBulkDeleteMoves,
+    saveMove,
+    handleToggleTrainedToday,
+    bulkImport,
+    delMove,
+    tryDelMove,
+    dupMove,
+    moveToCat,
+    toggleMoveSelect,
+    exitMoveSelectMode,
+    bulkDeleteSelected,
+  } = useMoveCrud({ moves, setMoves, addToast, t, st });
 
   const { allMovesFilters, setAllMovesFilters, allMovesFiltered } = useAllMovesFilter({
     view,
@@ -323,12 +313,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
             icon="trash"
             body={<>{selectedMoveIds.size} {t("itemsWillBeDeleted")}</>}
             onCancel={() => setConfirmBulkDeleteMoves(false)}
-            onConfirm={() => {
-              setMoves(prev => prev.filter(m => !selectedMoveIds.has(m.id)));
-              setConfirmBulkDeleteMoves(false);
-              exitMoveSelectMode();
-              addToast({ icon: "trash", title: t("deleted") });
-            }}
+            onConfirm={bulkDeleteSelected}
           />
         )}
       </div>
@@ -721,12 +706,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
           icon="trash"
           body={<>{selectedMoveIds.size} {t("itemsWillBeDeleted")}</>}
           onCancel={() => setConfirmBulkDeleteMoves(false)}
-          onConfirm={() => {
-            setMoves(prev => prev.filter(m => !selectedMoveIds.has(m.id)));
-            setConfirmBulkDeleteMoves(false);
-            exitMoveSelectMode();
-            addToast({ icon: "trash", title: t("deleted") });
-          }}
+          onConfirm={bulkDeleteSelected}
         />
       )}
       {showAddCat&&<AddCategoryModal onClose={()=>setShowAddCat(false)} onAdd={addCategory} existingCats={cats} existingColors={catColors}/>}
