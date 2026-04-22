@@ -30,6 +30,7 @@ import { LibraryMenuSheet } from './LibraryMenuSheet';
 import { VersionTrackingPrompt } from './VersionTrackingPrompt';
 import { useVersionPrompt } from '../../hooks/useVersionPrompt';
 import { useAllMovesFilter } from '../../hooks/useAllMovesFilter';
+import { useWipTriggers } from '../../hooks/useWipTriggers';
 import { AllMovesView } from './AllMovesView';
 
 export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains={}, setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore, onOpenRRR, onOpenCombine, onOpenMap, onOpenFlashCards, onOpenTools, isPremium, staleCount=0, onBulkTrigger }) => {
@@ -48,17 +49,6 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   const [openCat,setOpenCat]=useState(null);
   const [showAdd,setShowAdd]=useState(false); const [bulk,setBulk]=useState(false);
   const [showLibraryMenu,setShowLibraryMenu]=useState(false);
-  const lastAddTrigger = useRef(onAddTrigger);
-  useEffect(()=>{
-    if(onAddTrigger===lastAddTrigger.current) return;
-    lastAddTrigger.current=onAddTrigger;
-    if(!onAddTrigger) return;
-    if(openCat) { setShowAdd(true); return; }
-    if(vocabTab==="sets") setAddingSet(true);
-    else if(vocabTab==="gap") { if(onDrill) onDrill(null); }
-    else setShowLibraryMenu(true);
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- ref-compare guard prevents re-fire; vocabTab/openCat read fresh from closure
-  },[onAddTrigger]);
   const [editMove,setEditMove]=useState(null);
   // cats/catColors are now lifted to App — received as props
   const [showAddCat,setShowAddCat]=useState(false);
@@ -72,12 +62,6 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   const moveMoveUp   = (idx, list) => { if(idx===0) return; const ids=list.map(m=>m.id); setMoves(prev=>{ const n=[...prev]; const ai=n.findIndex(x=>x.id===ids[idx]); const bi=n.findIndex(x=>x.id===ids[idx-1]); [n[ai],n[bi]]=[n[bi],n[ai]]; return n; }); };
   const moveMoveDown = (idx, list) => { if(idx===list.length-1) return; const ids=list.map(m=>m.id); setMoves(prev=>{ const n=[...prev]; const ai=n.findIndex(x=>x.id===ids[idx]); const bi=n.findIndex(x=>x.id===ids[idx+1]); [n[ai],n[bi]]=[n[bi],n[ai]]; return n; }); };
   const [addingSet,setAddingSet]=useState(false);
-  // onAddTrigger2: Add Category (moves tab) or Add Set (sets tab)
-  const lastAddTrigger2 = useRef(onAddTrigger2);
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- ref-compare guard prevents re-fire
-  useEffect(()=>{ if(onAddTrigger2===lastAddTrigger2.current) return; lastAddTrigger2.current=onAddTrigger2; if(onAddTrigger2) { if(vocabTab==="sets") setAddingSet(true); else setShowAddCat(true); } },[onAddTrigger2]);
-  const lastBulkTrigger = useRef(onBulkTrigger);
-  useEffect(()=>{ if(onBulkTrigger===lastBulkTrigger.current) return; lastBulkTrigger.current=onBulkTrigger; if(onBulkTrigger) setBulk(true); },[onBulkTrigger]);
   const [editSetModal,setEditSetModal]=useState(null);
   const [setsView,setSetsView]=useState(st.defaultView==="tree"?"list":(st.defaultView||"list"));
   // Sync view states when the defaultView setting changes
@@ -204,6 +188,20 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
     vocabTab,
     versionPromptsShown: st.versionPromptsShown,
     onSettingsChange,
+  });
+
+  useWipTriggers({
+    onAddTrigger,
+    onAddTrigger2,
+    onBulkTrigger,
+    openCat,
+    vocabTab,
+    setShowAdd,
+    setAddingSet,
+    setShowLibraryMenu,
+    setShowAddCat,
+    setBulk,
+    onDrill,
   });
 
   if(openCat){
