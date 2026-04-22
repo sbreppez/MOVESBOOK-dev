@@ -33,6 +33,7 @@ import { useAllMovesFilter } from '../../hooks/useAllMovesFilter';
 import { useWipTriggers } from '../../hooks/useWipTriggers';
 import { useSearchFilter } from '../../hooks/useSearchFilter';
 import { useMoveCrud } from '../../hooks/useMoveCrud';
+import { useCategoryCrud } from '../../hooks/useCategoryCrud';
 import { AllMovesView } from './AllMovesView';
 
 export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains={}, setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore, onOpenRRR, onOpenCombine, onOpenMap, onOpenFlashCards, onOpenTools, isPremium, staleCount=0, onBulkTrigger }) => {
@@ -55,8 +56,6 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   // cats/catColors are now lifted to App — received as props
   const [showAddCat,setShowAddCat]=useState(false);
   const [ideaDesc,setIdeaDesc]=useState(null);
-  const catDragItem=useRef(null);
-  const [catDragOver,setCatDragOver]=useState(null);
   const [reorderMode, setReorderMode] = useState(false);
   const [catReorderMode, setCatReorderMode] = useState(false);
   const moveMoveUp   = (idx, list) => { if(idx===0) return; const ids=list.map(m=>m.id); setMoves(prev=>{ const n=[...prev]; const ai=n.findIndex(x=>x.id===ids[idx]); const bi=n.findIndex(x=>x.id===ids[idx-1]); [n[ai],n[bi]]=[n[bi],n[ai]]; return n; }); };
@@ -132,42 +131,30 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
     exitMoveSelectMode,
   });
 
-  const addCategory=(name,color)=>{ setCats(prev=>[...prev,name]); setCatColors(prev=>({...prev,[name]:color})); };
-  const dupCategory=(name)=>{ const newName=name+" (copy)"; setCats(prev=>[...prev,newName]); setCatColors(prev=>({...prev,[newName]:prev[name]||C.accent})); };
-  const moveCatUp   = (idx) => { if(idx===0) return; setCats(prev=>{ const n=[...prev]; [n[idx],n[idx-1]]=[n[idx-1],n[idx]]; return n; }); };
-  const moveCatDown = (idx) => { setCats(prev=>{ if(idx>=prev.length-1) return prev; const n=[...prev]; [n[idx],n[idx+1]]=[n[idx+1],n[idx]]; return n; }); };
+  const {
+    addCategory,
+    dupCategory,
+    moveCatUp,
+    moveCatDown,
+    changeCatColor,
+    renameCategory,
+    catDragItem,
+    catDragOver,
+    setCatDragOver,
+    handleCatDragStart,
+    handleCatDragOver,
+    handleCatDrop,
+  } = useCategoryCrud({
+    cats,
+    setCats,
+    catColors,
+    setCatColors,
+    setMoves,
+    categorySort: st.categorySort,
+    defaultColor: C.accent,
+  });
   const moveSetUp   = (idx) => { if(idx===0) return; setSets(prev=>{ const n=[...prev]; [n[idx],n[idx-1]]=[n[idx-1],n[idx]]; return n; }); };
   const moveSetDown = (idx) => { setSets(prev=>{ if(idx>=prev.length-1) return prev; const n=[...prev]; [n[idx],n[idx+1]]=[n[idx+1],n[idx]]; return n; }); };
-  const changeCatColor=(name,color)=>setCatColors(prev=>({...prev,[name]:color}));
-  const renameCategory=(oldName,newName)=>{
-    if(!newName.trim()||newName===oldName) return;
-
-    setCats(prev=>prev.map(c=>c===oldName?newName:c));
-    setCatColors(prev=>{ const next={...prev}; if(next[oldName]!==undefined){ next[newName]=next[oldName]; delete next[oldName]; } return next; });
-    setMoves(prev=>{
-      const updated = prev.map(m=>m.category===oldName?{...m,category:newName}:m);
-      return updated;
-    });
-  };
-  const handleCatDragStart=(idx)=>{ catDragItem.current=idx; };
-  const handleCatDragOver=(e,idx)=>{ e.preventDefault(); setCatDragOver(idx); };
-  const handleCatDrop=(targetIdx)=>{
-    const from=catDragItem.current;
-    setCatDragOver(null);
-    if(from===null||from===targetIdx) return;
-    catDragItem.current=null;
-    setCats(prev=>{
-      // Recompute sort on latest cats to avoid stale closure
-      const sorted = st.categorySort==="name"
-        ? [...prev].sort((a,b)=>a.localeCompare(b))
-        : prev; // manual or progress — use current order
-      const next=[...sorted];
-      const [moved]=next.splice(from,1);
-      const insertAt = from < targetIdx ? targetIdx-1 : targetIdx;
-      next.splice(insertAt,0,moved);
-      return next;
-    });
-  };
 
   const {
     versionEligible,
