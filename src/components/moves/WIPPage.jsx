@@ -27,6 +27,7 @@ import { MoveTree } from './MoveTree';
 import { DropdownPill } from '../shared/DropdownPill';
 import { ConfirmDialog } from '../shared/ConfirmDialog';
 import { VocabTabBar } from './VocabTabBar';
+import { LibraryMenuSheet } from './LibraryMenuSheet';
 
 export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains={}, setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore, onOpenRRR, onOpenCombine, onOpenMap, onOpenFlashCards, onOpenTools, isPremium, staleCount=0, onBulkTrigger }) => {
   const t = useT();
@@ -837,26 +838,14 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
         move={{ name: `${versionMove.name} (v2)`, category: versionMove.category, origin:"version", parentId: versionMove.id, mastery:0 }}
       />}
       {bulk&&<BulkModal onClose={()=>setBulk(false)} onImport={bulkImport} cats={cats}/>}
-      <BottomSheet open={showLibraryMenu} onClose={()=>setShowLibraryMenu(false)} title={t("addToLibraryTitle")}>
-        <div style={{display:"flex",flexDirection:"column",gap:6}}>
-          {[
-            {icon:"plus",label:t("addMoveMenu"),action:()=>{setShowLibraryMenu(false);setShowAdd(true);}},
-            {icon:"cards",label:t("bulkImportMenu"),action:()=>{setShowLibraryMenu(false);setBulk(true);}},
-            {icon:"folderPlus",label:t("addCategoryMenu"),action:()=>{setShowLibraryMenu(false);setShowAddCat(true);}},
-            {icon:"compass",label:t("creativeTools"),action:()=>{setShowLibraryMenu(false);if(onOpenTools)onOpenTools();}},
-          ].map(opt=>(
-            <button key={opt.icon} onClick={opt.action}
-              style={{display:"flex",alignItems:"center",gap:12,width:"100%",
-                padding:"14px 16px",borderRadius:8,cursor:"pointer",
-                background:C.surfaceAlt,border:"none",textAlign:"left"}}>
-              <Ic n={opt.icon} s={18} c={C.textSec}/>
-              <span style={{fontSize:14,fontFamily:FONT_DISPLAY,fontWeight:700,color:C.text}}>
-                {opt.label}
-              </span>
-            </button>
-          ))}
-        </div>
-      </BottomSheet>
+      <LibraryMenuSheet
+        open={showLibraryMenu}
+        onClose={() => setShowLibraryMenu(false)}
+        onAddMove={() => setShowAdd(true)}
+        onBulkImport={() => setBulk(true)}
+        onAddCategory={() => setShowAddCat(true)}
+        onOpenTools={onOpenTools}
+      />
     </div>
   );
 };
