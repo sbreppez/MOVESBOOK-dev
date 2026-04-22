@@ -28,6 +28,8 @@ import { DropdownPill } from '../shared/DropdownPill';
 import { ConfirmDialog } from '../shared/ConfirmDialog';
 import { VocabTabBar } from './VocabTabBar';
 import { LibraryMenuSheet } from './LibraryMenuSheet';
+import { VersionTrackingPrompt } from './VersionTrackingPrompt';
+import { useVersionPrompt } from '../../hooks/useVersionPrompt';
 
 export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains={}, setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore, onOpenRRR, onOpenCombine, onOpenMap, onOpenFlashCards, onOpenTools, isPremium, staleCount=0, onBulkTrigger }) => {
   const t = useT();
@@ -92,7 +94,6 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   const [selectMode,setSelectMode]=useState(false);
   const [selectedMoveIds,setSelectedMoveIds]=useState(new Set());
   const [confirmBulkDeleteMoves,setConfirmBulkDeleteMoves]=useState(false);
-  const [versionMove, setVersionMove] = useState(null);
   const [showFilter, setShowFilter] = useState(false);
   const [attrFilters, setAttrFilters] = useState({});
   const [allMovesFilters, setAllMovesFilters] = useState({ category: [], tensionRole: [], origin: [] });
@@ -334,26 +335,19 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
     return { catHits, moveHits };
   })() : null;
 
-  // ── Version tracking prompt ──
-  const versionShown = st.versionPromptsShown || [];
-  const today = new Date();
-  const versionEligible = vocabTab === "moves" ? moves.find(m => {
-    if ((m.mastery || 0) < 75) return false;
-    if (versionShown.includes(m.id)) return false;
-    if (!m.date) return false;
-    const d = new Date(m.date);
-    return (today - d) / (1000*60*60*24) >= 30;
-  }) : null;
-  const dismissVersion = (id) => {
-    if (onSettingsChange) onSettingsChange(p => ({...p, versionPromptsShown: [...(p.versionPromptsShown||[]), id]}));
-  };
-  const VERSION_CHIPS = [
-    { key:"entry", label:"changeEntry" },
-    { key:"exit", label:"changeExit" },
-    { key:"speed", label:"changeSpeed" },
-    { key:"level", label:"changeLevel" },
-    { key:"mirror", label:"mirrorIt" },
-  ];
+  const {
+    versionEligible,
+    versionMove,
+    openVersion,
+    closeVersion,
+    dismissVersion,
+    VERSION_CHIPS,
+  } = useVersionPrompt({
+    moves,
+    vocabTab,
+    versionPromptsShown: st.versionPromptsShown,
+    onSettingsChange,
+  });
 
   return (
     <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column" }}>
@@ -361,35 +355,12 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
         <ReminderBlock reminders={reminders} onRemindersChange={onRemindersChange} addToast={addToast} onOpenManage={onOpenManageReminders}/>
       )}
 
-      {/* ── Version tracking prompt ── */}
       {versionEligible && !openCat && vocabTab === "moves" && (
-        <div style={{ margin:"6px 14px", padding:14, background:C.surfaceAlt, borderRadius:8, position:"relative" }}>
-          <button onClick={() => dismissVersion(versionEligible.id)}
-            style={{ position:"absolute", top:8, right:8, background:"none", border:"none", cursor:"pointer", padding:2, display:"flex" }}>
-            <Ic n="x" s={14} c={C.textMuted}/>
-          </button>
-          <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:14, color:C.text, marginBottom:8 }}>
-            <span style={{ color:C.accent }}>{versionEligible.name}</span> — {t("createVariation")}
-          </div>
-          <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
-            {VERSION_CHIPS.map(ch => (
-              <button key={ch.key} onClick={() => {
-                dismissVersion(versionEligible.id);
-                setVersionMove({ ...versionEligible, _versionChip: ch.key });
-              }}
-                style={{ border:`1.5px solid ${C.border}`, cursor:"pointer", borderRadius:20, fontFamily:FONT_DISPLAY, fontWeight:700, letterSpacing:0.3, fontSize:11, padding:"4px 10px", whiteSpace:"nowrap", transition:"all 0.15s", background:C.surface, color:C.textSec }}>
-                {t(ch.label)}
-              </button>
-            ))}
-            <button onClick={() => {
-              dismissVersion(versionEligible.id);
-              setVersionMove({ ...versionEligible, _versionChip: null });
-            }}
-              style={{ border:`1.5px solid ${C.accent}`, cursor:"pointer", borderRadius:20, fontFamily:FONT_DISPLAY, fontWeight:700, letterSpacing:0.3, fontSize:11, padding:"4px 10px", whiteSpace:"nowrap", transition:"all 0.15s", background:C.accent+"18", color:C.accent }}>
-              + {t("createOwnVersion")}
-            </button>
-          </div>
-        </div>
+        <VersionTrackingPrompt
+          move={versionEligible}
+          onDismiss={dismissVersion}
+          onCreateVariation={openVersion}
+        />
       )}
 
       <VocabTabBar
@@ -825,18 +796,31 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
       {/* EditMove at root level — for tree/search views where openCat is null */}
       {!openCat&&editMove&&<MoveModal move={editMove} cats={cats} onClose={()=>setEditMove(null)} onSave={f=>{saveMove(f,editMove.id);setEditMove(null);}} customAttrs={customAttrs} onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])} allMoves={moves} catColors={catColors} isPremium={isPremium}/>}
       {/* Version move modal — triggered by version tracking prompt */}
-      {versionMove&&<MoveModal
-        initialCat={versionMove.category}
-        cats={cats}
-        initialDesc={versionMove._versionChip ? t(VERSION_CHIPS.find(c=>c.key===versionMove._versionChip)?.label||"") : ""}
-        onClose={()=>setVersionMove(null)}
-        onSave={f=>{ saveMove({...f, origin:"version", parentId:versionMove.id}); setVersionMove(null); }}
-        customAttrs={customAttrs}
-        onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])}
-        allMoves={moves}
-        catColors={catColors}
-        move={{ name: `${versionMove.name} (v2)`, category: versionMove.category, origin:"version", parentId: versionMove.id, mastery:0 }}
-      />}
+      {versionMove && (
+        <MoveModal
+          initialCat={versionMove.category}
+          cats={cats}
+          initialDesc={versionMove._versionChip
+            ? t(VERSION_CHIPS.find(c => c.key === versionMove._versionChip)?.label || "")
+            : ""}
+          onSave={f => {
+            saveMove({ ...f, origin: "version", parentId: versionMove.id });
+            closeVersion();
+          }}
+          onClose={closeVersion}
+          customAttrs={customAttrs}
+          onAddAttr={def => setCustomAttrs && setCustomAttrs(p => [...p, def])}
+          allMoves={moves}
+          catColors={catColors}
+          move={{
+            name: `${versionMove.name} (v2)`,
+            category: versionMove.category,
+            origin: "version",
+            parentId: versionMove.id,
+            mastery: 0,
+          }}
+        />
+      )}
       {bulk&&<BulkModal onClose={()=>setBulk(false)} onImport={bulkImport} cats={cats}/>}
       <LibraryMenuSheet
         open={showLibraryMenu}
