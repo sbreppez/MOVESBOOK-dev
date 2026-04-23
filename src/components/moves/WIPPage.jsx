@@ -35,6 +35,7 @@ import { useSearchFilter } from '../../hooks/useSearchFilter';
 import { useMoveCrud } from '../../hooks/useMoveCrud';
 import { useCategoryCrud } from '../../hooks/useCategoryCrud';
 import { AllMovesView } from './AllMovesView';
+import { SearchResultsView } from './SearchResultsView';
 
 export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains={}, setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore, onOpenRRR, onOpenCombine, onOpenMap, onOpenFlashCards, onOpenTools, isPremium, staleCount=0, onBulkTrigger }) => {
   const t = useT();
@@ -561,42 +562,23 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
               </div>
             )}
           </div>
-        ) : searchResults ? <Fragment>
-          {/* Category hits */}
-          {searchResults.catHits.length>0&&<Fragment>
-            <div style={{ fontSize:11, fontWeight:800, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY, marginBottom:6 }}>{t("categories")}</div>
-            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginBottom:14 }}>
-              {searchResults.catHits.map(cat=>(
-                <CatTile key={cat} name={cat} color={catColors[cat]||C.accent} total={inCat(cat).length} mastered={masteredCount(cat)}
-                  moves={inCat(cat)} viewMode="tiles"
-                  showMastery={st.showMastery} showMoveCount={st.showMoveCount}
-                  onClick={()=>setOpenCat(cat)}
-                  onDelete={()=>setCats(prev=>prev.filter(c=>c!==cat))}
-                  onRename={n=>renameCategory(cat,n)}
-                  onDuplicate={()=>dupCategory(cat)}
-                  onChangeColor={col=>changeCatColor(cat,col)}/>
-              ))}
-            </div>
-          </Fragment>}
-          {/* Move hits */}
-          {searchResults.moveHits.length>0&&<Fragment>
-            <div style={{ fontSize:11, fontWeight:800, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY, marginBottom:6 }}>{t("moves")}</div>
-            <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
-              {searchResults.moveHits.map(m=>(
-                <div key={m.id} onClick={()=>{ setOpenCat(m._cat); setEditMove(m); }}
-                  style={{ background:C.bg, border:`1px solid ${C.border}`, borderRadius:8, padding:"9px 12px", display:"flex", alignItems:"center", gap:8, cursor:"pointer", borderLeft:`4px solid ${catColors[m._cat]||C.accent}` }}>
-                  <div style={{ flex:1, minWidth:0 }}>
-                    <div style={{ fontWeight:700, fontSize:13, color:C.text, fontFamily:FONT_DISPLAY, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}><Highlight text={m.name} query={search}/></div>
-                    <div style={{ fontSize:11, color:C.textMuted, marginTop:1 }}>{m._cat}</div>
-                  </div>
-                  <span style={{ fontSize:11, color:masteryColor(m.mastery), fontWeight:700 }}>{m.mastery}%</span>
-                </div>
-              ))}
-            </div>
-          </Fragment>}
-          {searchResults.catHits.length===0&&searchResults.moveHits.length===0&&
-            <div style={{ textAlign:"center", padding:30, color:C.textMuted }}><p style={{fontSize:13}}>Nothing matches "{search}"</p></div>}
-        </Fragment> : view==="tree" ? (
+        ) : searchResults ? (
+          <SearchResultsView
+            searchResults={searchResults}
+            search={search}
+            catColors={catColors}
+            setCats={setCats}
+            renameCategory={renameCategory}
+            dupCategory={dupCategory}
+            changeCatColor={changeCatColor}
+            inCat={inCat}
+            masteredCount={masteredCount}
+            setOpenCat={setOpenCat}
+            setEditMove={setEditMove}
+            showMastery={st.showMastery}
+            showMoveCount={st.showMoveCount}
+          />
+        ) : view==="tree" ? (
           <MoveTree moves={hasActiveFilters ? filterMovesByAttrs(wipMoves, attrFilters, customAttrs) : wipMoves} catColors={catColors} onEdit={m=>setEditMove(m)} settings={st}/>
         ) : (
           <div
