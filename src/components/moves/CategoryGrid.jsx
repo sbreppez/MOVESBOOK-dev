@@ -13,7 +13,6 @@ export const CategoryGrid = ({
   showMoveCount,
   setOpenCat,
   setCats,
-  setCatReorderMode,
   renameCategory,
   dupCategory,
   changeCatColor,
@@ -103,10 +102,7 @@ export const CategoryGrid = ({
               viewMode={view}
               showMastery={showMastery}
               showMoveCount={showMoveCount}
-              onClick={() => {
-                if (!reorderMode) setOpenCat(cat);
-                setCatReorderMode(false);
-              }}
+              onClick={() => { if (!reorderMode) setOpenCat(cat); }}
               onDelete={() => setCats(prev => prev.filter(c => c !== cat))}
               onRename={n => renameCategory(cat, n)}
               onDuplicate={() => dupCategory(cat)}
