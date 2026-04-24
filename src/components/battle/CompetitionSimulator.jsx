@@ -226,6 +226,7 @@ export const CompetitionSimulator = ({
     }, 100);
 
     return () => clearInterval(timerRef.current);
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- phase+screen only by intent; startNextRound is not memoized and adding it would tear down/rebuild the 100ms interval every render
   }, [phase, screen]);
 
   // ── Wait period timer ──
@@ -242,6 +243,7 @@ export const CompetitionSimulator = ({
       }
     }, 1000);
     return () => clearInterval(waitTimerRef.current);
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- screen+waitStart only by intent; advanceToNextBracket is not memoized and adding it would tear down/rebuild the wait-period interval every render
   }, [screen, waitStart]);
 
   // ── Get move references for a bracket ──
@@ -573,7 +575,8 @@ export const CompetitionSimulator = ({
       } else {
         drawContent(ctx, W, H);
       }
-    }, [sharePhoto, completedSession]);
+    // Inner-component useCallback — outer values captured via closure; deps list has no effect here because parent re-renders remount this whole component (ShareCard is defined inside render body, flagged for later hoisting)
+    }, []);
 
     const drawContent = (ctx, W, H) => {
       // Logo

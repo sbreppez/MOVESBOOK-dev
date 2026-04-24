@@ -92,7 +92,7 @@ export const BattlePrepSetup = ({ initialPreset, battleprep, setBattleprep, move
   const customPhasesValid = customPhases.every(p => p.name.trim()) && customPhasesSum === 100;
 
   // ── Move grouping ──
-  const allMoves = moves || [];
+  const allMoves = useMemo(() => moves || [], [moves]);
   const allMoveIds = useMemo(() => allMoves.map(m => m.id), [allMoves]);
   const groupedMoves = useMemo(() => {
     const groups = {};

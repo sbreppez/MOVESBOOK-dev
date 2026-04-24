@@ -387,11 +387,11 @@ const BattleShareCard = ({ plan, battle, meta, prepStats, reflection, onClose, t
   const [photo, setPhoto] = useState(null);
   const [generated, setGenerated] = useState(false);
 
-  const resultObj = BATTLE_RESULTS.find(r => r.key === reflection?.result) || {};
-  const moodObj = BATTLE_MOODS.find(m => m.key === reflection?.mood) || {};
   const battleDate = new Date(battle.date + "T00:00:00").toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
 
   const generateCard = useCallback(() => {
+    const resultObj = BATTLE_RESULTS.find(r => r.key === reflection?.result) || {};
+    const moodObj = BATTLE_MOODS.find(m => m.key === reflection?.mood) || {};
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -516,7 +516,7 @@ const BattleShareCard = ({ plan, battle, meta, prepStats, reflection, onClose, t
     };
 
     draw();
-  }, [photo, plan, meta, prepStats, reflection, resultObj, moodObj, battleDate, t]);
+  }, [photo, plan, meta, prepStats, reflection, battleDate, t]);
 
   useEffect(() => { generateCard(); }, [generateCard]);
 
