@@ -50,7 +50,7 @@ export const FlowMap = ({ moves, cats, catColors, flowmap, onFlowmapChange, comb
   // Custom picker state
   const [customSelected, setCustomSelected] = useState([]);
 
-  const pairings = flowmap.pairings || {};
+  const pairings = useMemo(() => flowmap.pairings || {}, [flowmap.pairings]);
 
   // Build full transition list: defaults + custom stored + unique from pairings
   const allTransitions = useMemo(() => {
@@ -111,7 +111,7 @@ export const FlowMap = ({ moves, cats, catColors, flowmap, onFlowmapChange, comb
   }, [moves]);
 
   // ── Helpers ───────────────────────────────────────────────────────────────
-  const getPairing = (aId, bId) => pairings[`${aId}→${bId}`] || {};
+  const getPairing = useCallback((aId, bId) => pairings[`${aId}→${bId}`] || {}, [pairings]);
 
   const setPairing = useCallback((aId, bId, update) => {
     const key = `${aId}→${bId}`;
@@ -129,7 +129,7 @@ export const FlowMap = ({ moves, cats, catColors, flowmap, onFlowmapChange, comb
     const idx = STATES.indexOf(cur);
     const next = STATES[(idx + 1) % STATES.length];
     setPairing(aId, bId, { state: next });
-  }, [pairings, setPairing]);
+  }, [getPairing, setPairing]);
 
   const pickRandomUnexplored = () => {
     if (allUnexplored.length === 0) return;
