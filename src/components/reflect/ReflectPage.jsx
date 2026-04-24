@@ -80,7 +80,7 @@ export const ReflectPage = ({
       const cnt = m ? JSON.parse(m).length : 0;
       setIdeas(p => p.map(i => (i.type === "target" && i.autoLink) ? { ...i, current: cnt } : i));
     } catch {}
-  }, [ideaSettings.targetAutoLink]);
+  }, [ideaSettings.targetAutoLink, setIdeas]);
 
   const addIdea = (fields) => setIdeas(p => [...p, { id: Date.now(), ...fields }]);
   const del = id => setIdeas(p => p.filter(i => i.id !== id));

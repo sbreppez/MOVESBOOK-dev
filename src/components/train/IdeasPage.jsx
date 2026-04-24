@@ -58,7 +58,7 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
       const cnt = m ? JSON.parse(m).length : 0;
       setIdeas(p => p.map(i => (i.type==="target" && i.autoLink) ? {...i, current:cnt} : i));
     } catch {}
-  }, [ideaSettings2.targetAutoLink]);
+  }, [ideaSettings2.targetAutoLink, setIdeas]);
   const [search,     setSearch]     = useState("");
   const [showSearch, setShowSearch] = useState(false);
   const [reorderMode, setReorderMode] = useState(false);

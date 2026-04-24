@@ -89,7 +89,7 @@ export const MusicFlow = ({ musicflow, onMusicflowChange, onUpdateSession, refle
       onUpdateSession(savedSession.id, { reflection: reflection.trim() });
     }, 800);
     return () => clearTimeout(reflectionTimer.current);
-  }, [reflection, savedSession]);
+  }, [reflection, savedSession, onUpdateSession]);
 
   const flushReflection = () => {
     clearTimeout(reflectionTimer.current);

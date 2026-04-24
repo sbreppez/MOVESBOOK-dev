@@ -200,6 +200,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
     }, 100);
 
     return () => clearInterval(timerRef.current);
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- phase-only by intent; startNextRound is not memoized and adding it would tear down/rebuild the 100ms interval on every render
   }, [phase]);
 
   // ── Check if session should end ──

@@ -38,6 +38,7 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onUpdateSess
   useEffect(() => () => { if (resetTimeout.current) clearTimeout(resetTimeout.current); }, []);
 
   // Auto-start with preselected move (from DRILL button)
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- mount-only: auto-start from DRILL-button seed; re-running on preselectedMove changes would restart an in-progress session
   useEffect(() => { if (preselectedMove) startCounting(preselectedMove); }, []);
 
   // Debounced reflection save
@@ -48,7 +49,7 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onUpdateSess
       onUpdateSession(savedSession.id, { reflection: reflection.trim() });
     }, 800);
     return () => clearTimeout(reflectionTimer.current);
-  }, [reflection, savedSession]);
+  }, [reflection, savedSession, onUpdateSession]);
 
   const flushReflection = () => {
     clearTimeout(reflectionTimer.current);
