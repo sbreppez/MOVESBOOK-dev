@@ -18,12 +18,12 @@ export const useAllMovesFilter = ({
   });
 
   // Cleanup when leaving ALL MOVES view: clear filters and exit select mode
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- view-only by intent; exitMoveSelectMode is stable
   useEffect(() => {
     if (view !== "all") {
       setAllMovesFilters({ category: [], tensionRole: [], origin: [] });
       exitMoveSelectMode();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- view-only by intent; exitMoveSelectMode is not memoized in useMoveCrud (adding it would re-fire every render and loop setAllMovesFilters)
   }, [view]);
 
   const showAllMoves = view === "all";

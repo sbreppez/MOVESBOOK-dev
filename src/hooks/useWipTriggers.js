@@ -26,7 +26,6 @@ export const useWipTriggers = ({
   }, [onAddTrigger]);
 
   const lastAddTrigger2 = useRef(onAddTrigger2);
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- ref-compare guard prevents re-fire
   useEffect(() => {
     if (onAddTrigger2 === lastAddTrigger2.current) return;
     lastAddTrigger2.current = onAddTrigger2;
@@ -34,6 +33,7 @@ export const useWipTriggers = ({
       if (vocabTab === "sets") setAddingSet(true);
       else setShowAddCat(true);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- ref-compare guard prevents re-fire; vocabTab read fresh from closure
   }, [onAddTrigger2]);
 
   const lastBulkTrigger = useRef(onBulkTrigger);
@@ -41,5 +41,6 @@ export const useWipTriggers = ({
     if (onBulkTrigger === lastBulkTrigger.current) return;
     lastBulkTrigger.current = onBulkTrigger;
     if (onBulkTrigger) setBulk(true);
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- ref-compare guard prevents re-fire
   }, [onBulkTrigger]);
 };
