@@ -174,48 +174,73 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
     onDrill,
   });
 
+  const confirmDialogs = (
+    <>
+      {confirmDeleteMove && (
+        <ConfirmDialog
+          title={t("deleteMove")}
+          body={<>{t("deleteMoveBody1")}<span style={{ color:C.text, fontWeight:700 }}>{confirmDeleteMove.name}</span>{t("deleteMoveBody2")}</>}
+          onCancel={() => setConfirmDeleteMove(null)}
+          onConfirm={() => { delMove(confirmDeleteMove.id); setConfirmDeleteMove(null); }}
+        />
+      )}
+      {confirmBulkDeleteMoves && (
+        <ConfirmDialog
+          title={t("deleteSelected")}
+          icon="trash"
+          body={<>{selectedMoveIds.size} {t("itemsWillBeDeleted")}</>}
+          onCancel={() => setConfirmBulkDeleteMoves(false)}
+          onConfirm={bulkDeleteSelected}
+        />
+      )}
+    </>
+  );
+
   if (openCat) {
     return (
-      <CategoryDetailView
-        cat={openCat}
-        onBack={() => setOpenCat(null)}
-        moves={moves}
-        setMoves={setMoves}
-        cats={cats}
-        catColors={catColors}
-        inCat={inCat}
-        customAttrs={customAttrs}
-        setCustomAttrs={setCustomAttrs}
-        isPremium={isPremium}
-        onSortChange={onSortChange}
-        search={search}
-        setSearch={setSearch}
-        showSearch={showSearch}
-        setShowSearch={setShowSearch}
-        showFilter={showFilter}
-        setShowFilter={setShowFilter}
-        hasActiveFilters={hasActiveFilters}
-        attrFilters={attrFilters}
-        setAttrFilters={setAttrFilters}
-        showAdd={showAdd}
-        setShowAdd={setShowAdd}
-        editMove={editMove}
-        setEditMove={setEditMove}
-        ideaDesc={ideaDesc}
-        setIdeaDesc={setIdeaDesc}
-        selectMode={selectMode}
-        setSelectMode={setSelectMode}
-        selectedMoveIds={selectedMoveIds}
-        setConfirmDeleteMove={setConfirmDeleteMove}
-        setConfirmBulkDeleteMoves={setConfirmBulkDeleteMoves}
-        saveMove={saveMove}
-        tryDelMove={tryDelMove}
-        dupMove={dupMove}
-        moveToCat={moveToCat}
-        handleToggleTrainedToday={handleToggleTrainedToday}
-        toggleMoveSelect={toggleMoveSelect}
-        exitMoveSelectMode={exitMoveSelectMode}
-      />
+      <>
+        <CategoryDetailView
+          cat={openCat}
+          onBack={() => setOpenCat(null)}
+          moves={moves}
+          setMoves={setMoves}
+          cats={cats}
+          catColors={catColors}
+          inCat={inCat}
+          customAttrs={customAttrs}
+          setCustomAttrs={setCustomAttrs}
+          isPremium={isPremium}
+          onSortChange={onSortChange}
+          search={search}
+          setSearch={setSearch}
+          showSearch={showSearch}
+          setShowSearch={setShowSearch}
+          showFilter={showFilter}
+          setShowFilter={setShowFilter}
+          hasActiveFilters={hasActiveFilters}
+          attrFilters={attrFilters}
+          setAttrFilters={setAttrFilters}
+          showAdd={showAdd}
+          setShowAdd={setShowAdd}
+          editMove={editMove}
+          setEditMove={setEditMove}
+          ideaDesc={ideaDesc}
+          setIdeaDesc={setIdeaDesc}
+          selectMode={selectMode}
+          setSelectMode={setSelectMode}
+          selectedMoveIds={selectedMoveIds}
+          setConfirmDeleteMove={setConfirmDeleteMove}
+          setConfirmBulkDeleteMoves={setConfirmBulkDeleteMoves}
+          saveMove={saveMove}
+          tryDelMove={tryDelMove}
+          dupMove={dupMove}
+          moveToCat={moveToCat}
+          handleToggleTrainedToday={handleToggleTrainedToday}
+          toggleMoveSelect={toggleMoveSelect}
+          exitMoveSelectMode={exitMoveSelectMode}
+        />
+        {confirmDialogs}
+      </>
     );
   }
 
@@ -354,23 +379,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
           />
         )}
       </div>
-      {confirmDeleteMove && (
-        <ConfirmDialog
-          title={t("deleteMove")}
-          body={<>{t("deleteMoveBody1")}<span style={{ color:C.text, fontWeight:700 }}>{confirmDeleteMove.name}</span>{t("deleteMoveBody2")}</>}
-          onCancel={() => setConfirmDeleteMove(null)}
-          onConfirm={() => { delMove(confirmDeleteMove.id); setConfirmDeleteMove(null); }}
-        />
-      )}
-      {confirmBulkDeleteMoves && (
-        <ConfirmDialog
-          title={t("deleteSelected")}
-          icon="trash"
-          body={<>{selectedMoveIds.size} {t("itemsWillBeDeleted")}</>}
-          onCancel={() => setConfirmBulkDeleteMoves(false)}
-          onConfirm={bulkDeleteSelected}
-        />
-      )}
+      {confirmDialogs}
       {showAddCat&&<AddCategoryModal onClose={()=>setShowAddCat(false)} onAdd={addCategory} existingCats={cats} existingColors={catColors}/>}
       {/* MoveModal at root level — for "Add to Move" arriving from Ideas tab */}
       {showAdd&&<MoveModal initialCat={cats[0]||""} cats={cats} initialDesc={ideaDesc} onClose={()=>{setShowAdd(false);setIdeaDesc(null);}} onSave={f=>saveMove(f)} customAttrs={customAttrs} onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])} allMoves={moves} catColors={catColors} isPremium={isPremium}/>}
