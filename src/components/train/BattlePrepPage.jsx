@@ -22,7 +22,7 @@ const PRESET_IDS = ["smoke", "prove", "mark", "custom"];
 
 export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToast, calendar, battlePrepSeed, onBattlePrepSeedUsed, addCalendarEvent, removeCalendarEvent, onAddTrigger, onOpenSharedCalendar }) => {
   const t = useT();
-  const plans = battleprep?.plans || [];
+  const plans = useMemo(() => battleprep?.plans || [], [battleprep?.plans]);
   const today = toYMD(new Date());
 
   const [showSetup, setShowSetup] = useState(false);
@@ -42,7 +42,7 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
       setShowSetup(true);
       if (onBattlePrepSeedUsed) onBattlePrepSeedUsed();
     }
-  }, [battlePrepSeed]);
+  }, [battlePrepSeed, onBattlePrepSeedUsed]);
 
   // Handle + menu "Add Battle" trigger
   const prevAddTrigger = useRef(onAddTrigger);
@@ -348,7 +348,7 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
     setEditEventUrl(plan.eventUrl || "");
     setEditLocation(plan.location || "");
     setEditTrainingDays([...(plan.trainingDays || [])]);
-  }, [plan.id, plan.eventName, plan.planName]);
+  }, [plan.id, plan.eventName, plan.planName, plan.eventUrl, plan.location, plan.trainingDays]);
 
   const handleSaveEdit = () => {
     setBattleprep(prev => ({
