@@ -53,6 +53,8 @@ function migrateBattlePrep(bp) {
   return { plans: [], history: bp.history || [] };
 }
 
+const DEFAULT_TRANSITIONS = ["Thread","Jump","Counter Spin","Slide","Sweep","Touch Foot","Kick","Hop","Roll","Twist","Drop","Spin Through"];
+
 export default function App() {
   const initLang = (() => { try { return JSON.parse(localStorage.getItem("mb_settings"))?.language || "en"; } catch { return "en"; } })();
   const [tab,setTab]=useState(()=>{ try { const st=localStorage.getItem("mb_settings"); if(st){ const p=JSON.parse(st); if(p.defaultTab){ const m={"wip":"moves","ideas":"home","ready":"battle","train":"home","vocab":"moves"}; const mapped=m[p.defaultTab]||p.defaultTab; const valid=["home","moves","battle","reflect"]; return valid.includes(mapped)?mapped:"home"; } } } catch {} return "home"; });
@@ -133,7 +135,6 @@ export default function App() {
   const [sparring, setSparring] = useState(() => {
     try { const s=localStorage.getItem("mb_sparring"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { sessions:[], records:{} };
   });
-  const DEFAULT_TRANSITIONS = ["Thread","Jump","Counter Spin","Slide","Sweep","Touch Foot","Kick","Hop","Roll","Twist","Drop","Spin Through"];
   const [combos, setCombos] = useState(() => {
     try { const s=localStorage.getItem("mb_combos"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { transitions:[...DEFAULT_TRANSITIONS], selectedMoveIds:null };
   });
@@ -527,6 +528,7 @@ export default function App() {
     let migBlocks = [];
     try { const raw = localStorage.getItem("mb_blocks"); if (raw) { const p = JSON.parse(raw); if (Array.isArray(p)) migBlocks = p; } } catch {}
     runHomeMigration(migBlocks, habits, ideas, homeStack, setHomeStack);
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- one-shot mount migration; homeMigRef.current guard enforces idempotence; habits/ideas/homeStack are read as the mount-time snapshot, not reactive triggers
   }, []);
 
   // ── Migrate old rotation/travelling to custom attributes (one-time) ──
@@ -535,6 +537,7 @@ export default function App() {
       const result = migrateOldAttributes(moves, customAttrs);
       if(result.customAttrs.length>0){ setCustomAttrs(result.customAttrs); setMoves(result.moves); }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- one-shot mount migration; condition (`customAttrs.length===0 && moves.some(...)`) self-guards from re-triggering after migration; intentionally reads mount-time snapshot
   },[]);
 
   const [toasts,setToasts]=useState([]);
@@ -579,8 +582,10 @@ export default function App() {
 
   // ── Local translation function (App is above SettingsCtx.Provider, can't use useT) ──
   const _lang = appSettings.language || "en";
-  const _dict = TRANSLATIONS[_lang] || TRANSLATIONS.en;
-  const tr = (key) => _dict[key] ?? TRANSLATIONS.en[key] ?? key;
+  const tr = useCallback((key) => {
+    const dict = TRANSLATIONS[_lang] || TRANSLATIONS.en;
+    return dict[key] ?? TRANSLATIONS.en[key] ?? key;
+  }, [_lang]);
 
   // ── Apply theme: mutate the shared C object so all components re-read it ──
   const newPalette = buildPalette(appSettings.theme);
@@ -619,6 +624,7 @@ export default function App() {
       setReports(prev => ({ ...prev, milestones:[...prev.milestones, ...newMs] }));
     }
     milestonesInitRef.current = true;
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally narrow deps: uses `.length` values as proxies for list-growth triggers to avoid running on every unrelated state change. Full-object deps would re-fire on any move/sparring/calendar mutation (perf) and risk a loop with milestonesShown being updated inside. Known limitation: milestones that depend on non-count data (e.g. mastery thresholds) may not trigger on the exact update — audit detectMilestones for non-count milestone types if this matters (tracked separately from #41).
   }, [moves.length, sparring?.sessions?.length, battleprep?.history?.length, reps.length, musicflow?.sessions?.length, fbUser]);
 
   const addCalendarEvent = useCallback((eventData, { silent = false } = {}) => {
