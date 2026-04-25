@@ -238,8 +238,8 @@ export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEd
           style={{
             width: 32, height: 32, borderRadius: 8, flexShrink: 0, cursor: "pointer",
             display: "flex", alignItems: "center", justifyContent: "center",
-            background: !!isChecked ? C.green : "transparent",
-            border: `2px solid ${!!isChecked ? C.green : C.border}`,
+            background: isChecked ? C.green : "transparent",
+            border: `2px solid ${isChecked ? C.green : C.border}`,
             transition: "all 0.15s", marginTop: 2,
           }}>
           {!!isChecked && <Ic n="check" s={16} c="#fff"/>}

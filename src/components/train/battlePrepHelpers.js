@@ -115,7 +115,7 @@ export const getDayOfWeek = (dateStr) => {
 // Enumerate all dates from start to end (inclusive)
 export const enumDates = (start, end) => {
   const result = [];
-  let cur = new Date(start + "T00:00:00");
+  const cur = new Date(start + "T00:00:00");
   const endD = new Date(end + "T00:00:00");
   while (cur <= endD) {
     result.push(toYMD(cur));
@@ -130,7 +130,7 @@ function distributeTrainingPhases(trainingDayDates, phaseConfig, startSessionNum
   const alloc = phaseConfig.map(p => ({ ...p, days: Math.round(total * p.pct) }));
 
   // Fix rounding
-  let sum = alloc.reduce((s, p) => s + p.days, 0);
+  const sum = alloc.reduce((s, p) => s + p.days, 0);
   if (sum < total) alloc[0].days += (total - sum);
   else if (sum > total) {
     let excess = sum - total;

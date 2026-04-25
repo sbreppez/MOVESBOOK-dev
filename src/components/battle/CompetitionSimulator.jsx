@@ -341,7 +341,7 @@ export const CompetitionSimulator = ({
   // ── End bracket early ──
   const handleEndBracketEarly = (e) => {
     e.stopPropagation();
-    let log = [...currentBracketLog];
+    const log = [...currentBracketLog];
     if (phase === "work" && workStart) {
       const workMs = Date.now() - workStart;
       const workSecs = Math.round(workMs / 1000);

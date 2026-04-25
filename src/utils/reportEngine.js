@@ -294,7 +294,7 @@ export const buildTimeline = (monthsBack, data, milestones) => {
 
   // Monthly tiles
   const monthSet = new Set();
-  let cursor = new Date(startDate);
+  const cursor = new Date(startDate);
   while (cursor <= today) {
     const y = cursor.getFullYear();
     const m = cursor.getMonth();
@@ -312,7 +312,7 @@ export const buildTimeline = (monthsBack, data, milestones) => {
 
   // Weekly tiles
   const weekSet = new Set();
-  let dayCursor = new Date(startDate);
+  const dayCursor = new Date(startDate);
   while (dayCursor <= today) {
     const ds = toLocalYMD(dayCursor);
     const monday = getMonday(ds);
@@ -333,7 +333,7 @@ export const buildTimeline = (monthsBack, data, milestones) => {
 
   // Daily entries (only for the current month to keep timeline manageable)
   const currentMonthStart = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-01`;
-  let dayPtr = new Date(currentMonthStart + "T00:00:00");
+  const dayPtr = new Date(currentMonthStart + "T00:00:00");
   while (dayPtr <= today) {
     const ds = toLocalYMD(dayPtr);
     const daily = computeDailyEntry(ds, data);

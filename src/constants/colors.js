@@ -50,7 +50,7 @@ export const buildPalette = (theme) => {
 
 // Mutable palette object — shared across all modules via ES module singleton
 // App.jsx calls Object.assign(C, buildPalette(theme)) to update in-place
-export let C = buildPalette("light");
+export const C = buildPalette("light");
 
 export const FONT_SIZES = { small: 0.88, medium: 1, large: 1.14 };
 

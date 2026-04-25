@@ -282,7 +282,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
   // ── End session manually ──
   const handleEndSession = (e) => {
     e.stopPropagation();
-    let log = [...roundLog];
+    const log = [...roundLog];
     // If in work phase, save current round
     if (phase === "work" && workStart) {
       const workMs = Date.now() - workStart;
