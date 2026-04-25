@@ -25,7 +25,7 @@ export const MoveListRow = ({ move, catColor, onEdit, onDelete, onMove: _onMove,
         </div>
       )}
       <div style={{ flex:1, minWidth:0 }}>
-        <span style={{ color:C.text, fontSize:14, fontWeight:600, fontFamily:FONT_DISPLAY,
+        <span style={{ display:"block", color:C.text, fontSize:14, fontWeight:600, fontFamily:FONT_DISPLAY,
           overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{move.name}</span>
         {move.description&&<div style={{ fontSize:11, color:C.textSec, marginTop:2, lineHeight:1.4,
           overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{move.description}</div>}

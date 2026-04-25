@@ -23,17 +23,17 @@ export const MoveTile = ({ move, onClick, onEdit: _onEdit, onDelete: _onDelete, 
       padding: compact ? "7px 8px 5px" : "10px 10px 8px", cursor:"pointer", borderLeft:`4px solid ${catCol}`,
       outline: selectMode && isSelected ? `2px solid ${C.green}` : "none" }}>
 
-      {selectMode && (
-        <div style={{ position:"absolute", top:8, left:8, width:20, height:20, borderRadius:5,
-          border:`2px solid ${isSelected ? C.green : C.border}`,
-          background: isSelected ? C.green : "transparent",
-          display:"flex", alignItems:"center", justifyContent:"center", zIndex:2 }}>
-          {isSelected && <Ic n="check" s={12} c="#fff"/>}
-        </div>
-      )}
-
-      {/* Main layout: two columns */}
+      {/* Main layout: checkbox (in selectMode) + two columns */}
       <div style={{ display:"flex", gap:10 }}>
+
+        {selectMode && (
+          <div style={{ flexShrink:0, alignSelf:"flex-start", width:20, height:20, borderRadius:5,
+            border:`2px solid ${isSelected ? C.green : C.border}`,
+            background: isSelected ? C.green : "transparent",
+            display:"flex", alignItems:"center", justifyContent:"center" }}>
+            {isSelected && <Ic n="check" s={12} c="#fff"/>}
+          </div>
+        )}
 
         {/* LEFT COLUMN — name, tension role */}
         <div style={{ flex:1, minWidth:0 }}>
