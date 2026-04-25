@@ -414,7 +414,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
                   </button>}
                   {/* Title */}
                   <span onClick={()=>{ if(!reorderRounds) setEditRound(round); }}
-                    style={{ flex:1, fontWeight:800, fontSize:16, color:C.brown, fontFamily:FONT_DISPLAY, letterSpacing:1.2, cursor:reorderRounds?"default":"pointer" }}>
+                    style={{ flex:1, fontWeight:700, fontSize:16, color:C.brown, fontFamily:FONT_DISPLAY, letterSpacing:1.2, cursor:reorderRounds?"default":"pointer" }}>
                     {round.name}
                   </span>
                   {!reorderRounds&&<span style={{ fontSize:13, color:C.textMuted, fontWeight:400, fontFamily:FONT_DISPLAY, flexShrink:0 }}>
