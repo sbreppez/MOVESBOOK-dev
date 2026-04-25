@@ -854,7 +854,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
               {t("removeChipConfirm")}
             </div>
             <div style={{ fontFamily: FONT_BODY, fontSize: 13, color: C.textSec, marginBottom: 16 }}>
-              "{confirmRemove.chip}"
+              &quot;{confirmRemove.chip}&quot;
             </div>
             <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
               <button onClick={() => setConfirmRemove(null)}

@@ -693,7 +693,7 @@ export const CalendarOverlay = ({
                     </div>
                     {r.reflection && (
                       <div style={{ fontSize: 11, color: C.textMuted, fontStyle: "italic", marginTop: 2 }}>
-                        "{r.reflection}"
+                        &quot;{r.reflection}&quot;
                       </div>
                     )}
                   </div>
@@ -713,7 +713,7 @@ export const CalendarOverlay = ({
                     {s.notes && <span style={{ marginLeft: 8, fontStyle: "italic" }}>{s.notes}</span>}
                     {s.reflection && (
                       <div style={{ fontSize: 11, color: C.textMuted, fontStyle: "italic", marginTop: 2 }}>
-                        "{s.reflection}"
+                        &quot;{s.reflection}&quot;
                       </div>
                     )}
                   </div>
@@ -733,7 +733,7 @@ export const CalendarOverlay = ({
                     <span style={{ marginLeft: 8 }}>Stage {s.stageReached}</span>
                     {s.reflection && (
                       <div style={{ fontSize: 11, color: C.textMuted, fontStyle: "italic", marginTop: 2 }}>
-                        "{s.reflection}"
+                        &quot;{s.reflection}&quot;
                       </div>
                     )}
                   </div>

@@ -63,7 +63,7 @@ export const SearchResultsView = ({
         </div>
       </Fragment>}
       {catHits.length===0&&moveHits.length===0&&
-        <div style={{ textAlign:"center", padding:30, color:C.textMuted }}><p style={{fontSize:13}}>{t("searchNoResults")} "{search}"</p></div>}
+        <div style={{ textAlign:"center", padding:30, color:C.textMuted }}><p style={{fontSize:13}}>{t("searchNoResults")} &quot;{search}&quot;</p></div>}
     </>
   );
 };

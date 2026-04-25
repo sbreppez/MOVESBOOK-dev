@@ -190,7 +190,7 @@ export const SetDetailModal = ({ item, onClose, onSave, type="set", allMoves=[],
                   );
                 })}
                 {allMoves.filter(m=>!q||m.name.toLowerCase().includes(q)).length===0&&(
-                  <div style={{ padding:"16px", textAlign:"center", color:C.textMuted, fontSize:11 }}>No moves match "{pickerQ}"</div>
+                  <div style={{ padding:"16px", textAlign:"center", color:C.textMuted, fontSize:11 }}>No moves match &quot;{pickerQ}&quot;</div>
                 )}
               </div>
               {/* Done button */}

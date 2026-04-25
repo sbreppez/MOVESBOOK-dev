@@ -86,7 +86,7 @@ export const ManualModal = ({ onClose }) => {
         </div>
         {q&&(
           <div style={{ fontSize:11, color:C.textMuted, marginTop:6, fontFamily:FONT_DISPLAY }}>
-            {resultCountStr(filtered.reduce((acc,s)=>acc+s.items.length,0))} for "{search}"
+            {resultCountStr(filtered.reduce((acc,s)=>acc+s.items.length,0))} for &quot;{search}&quot;
           </div>
         )}
       </div>

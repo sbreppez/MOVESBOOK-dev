@@ -285,7 +285,7 @@ export const EditRoundView = ({ round, onSave, onClose, getMove, getSet, setPick
           <div style={{ background:C.bg, borderRadius:16, width:"100%", maxWidth:300, padding:20, boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
             <div style={{ fontWeight:900, fontSize:14, letterSpacing:1.5, fontFamily:FONT_DISPLAY, color:C.brown, marginBottom:8 }}>DELETE ENTRY?</div>
             <p style={{ fontSize:13, color:C.textSec, marginBottom:16, lineHeight:1.5 }}>
-              "<span style={{ color:C.text, fontWeight:700 }}>{confirmDeleteEntry.name}</span>" and its {itemCountStr((confirmDeleteEntry.items||[]).length)} will be removed.
+              &quot;<span style={{ color:C.text, fontWeight:700 }}>{confirmDeleteEntry.name}</span>&quot; and its {itemCountStr((confirmDeleteEntry.items||[]).length)} will be removed.
             </p>
             <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
               <button onClick={()=>setConfirmDeleteEntry(null)}

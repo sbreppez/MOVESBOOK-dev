@@ -136,7 +136,7 @@ export const CategoryDetailView = ({
             <p style={{ fontSize:13 }}>{t("emptyHintMoves")}</p>
           </div>
         ) : catMoves.length===0 ? (
-          <div style={{ textAlign:"center", padding:30, color:C.textMuted }}><p style={{fontSize:13}}>{t("noMovesMatchSearch")} "{search}"</p></div>
+          <div style={{ textAlign:"center", padding:30, color:C.textMuted }}><p style={{fontSize:13}}>{t("noMovesMatchSearch")} &quot;{search}&quot;</p></div>
         ) : catReorderMode ? (
           <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
             {allCatMoves.map((m,idx)=>(

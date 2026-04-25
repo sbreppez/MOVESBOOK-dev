@@ -375,7 +375,7 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
           )}
         </div>
         {ideas.length===0&&<div style={{ textAlign:"center", padding:40, color:C.textMuted }}><div style={{ marginBottom:8 }}><Ic n="paperclip" s={28} c={C.textMuted}/></div><p style={{fontSize:13}}>{t("emptyHintNotes")}</p></div>}
-        {filtered.length===0&&search&&<div style={{ textAlign:"center", padding:30, color:C.textMuted }}><p style={{fontSize:13}}>{t("noResultsFor")} "{search}"</p></div>}
+        {filtered.length===0&&search&&<div style={{ textAlign:"center", padding:30, color:C.textMuted }}><p style={{fontSize:13}}>{t("noResultsFor")} &quot;{search}&quot;</p></div>}
       </div>
       }
       {typeChooser&&<TypeChooserModal onClose={()=>setTypeChooser(false)} onChoose={t=>{ setTypeChooser(false); setTrainTab((t==="goal"||t==="target")?"goals":"notes"); openModal(t, null, addIdea); }}/>}
