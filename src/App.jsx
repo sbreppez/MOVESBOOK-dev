@@ -785,10 +785,12 @@ export default function App() {
             onLabChange={setLab}
             onSaveMove={(moveData)=>{ setMoves(prev=>[...prev,{...moveData, id:Date.now()}]); }}
             addToast={addToast} addCalendarEvent={addCalendarEvent}
-            onClose={()=>setShowLab(false)}/>}
+            onClose={()=>setShowLab(false)}
+            onBack={()=>{setShowLab(false);setShowCreate(true);}}/>}
           {showRRR&&<RestoreRemixRebuild moves={moves} catColors={catColors} rrr={rrr}
             onRRRChange={setRRR} addToast={addToast} addCalendarEvent={addCalendarEvent}
-            onClose={()=>setShowRRR(false)}/>}
+            onClose={()=>setShowRRR(false)}
+            onBack={()=>{setShowRRR(false);setShowCreate(true);}}/>}
           {showFlashCards&&<FlashCards sets={sets} moves={moves} flashcards={flashcards}
             onFlashcardsChange={setFlashcards} addCalendarEvent={addCalendarEvent} addToast={addToast}
             onClose={()=>setShowFlashCards(false)}/>}
@@ -798,7 +800,7 @@ export default function App() {
             onSaveMove={(moveData)=>{ setMoves(prev=>[...prev,{...moveData, id:Date.now()}]); }}
             onSaveSet={(fields)=>{ setSets(p=>[...p,{id:Date.now(),...fields}]); }}
             addToast={addToast}
-            onClose={()=>setShowFlowMap(false)}/>}
+            onBack={()=>{setShowFlowMap(false);setShowCreate(true);}}/>}
           {showMusicFlow&&<MusicFlow musicflow={musicflow} onMusicflowChange={(updater)=>{lastSessionSaved.current=true;setMusicflow(updater);}}
             onUpdateSession={onUpdateMusicflowSession}
             reflections={reflections} onReflectionsChange={setReflections}

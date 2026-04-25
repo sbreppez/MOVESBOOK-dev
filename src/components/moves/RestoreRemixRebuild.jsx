@@ -7,6 +7,15 @@ import { useT } from '../../hooks/useTranslation';
 import { todayLocal } from '../../utils/dateUtils';
 import { useSettings } from '../../hooks/useSettings';
 import { SectionBrief } from '../shared/SectionBrief';
+import {
+  toolModeTileStyle,
+  toolModeTitleStyle,
+  toolModeDescStyle,
+  toolListContainerStyle,
+  toolHeaderStyle,
+  toolHeaderTitleStyle,
+  toolBackButtonStyle,
+} from './toolModeTile.styles';
 
 // ── Audio ───────────────────────────────────────────────────────────────────
 let _audioCtx = null;
@@ -28,9 +37,9 @@ const beep = (freq, dur, vol) => {
 
 // ── Mode definitions ────────────────────────────────────────────────────────
 const MODES = [
-  { key: "restore", color: () => C.blue   },
-  { key: "remix",   color: () => C.yellow },
-  { key: "rebuild", color: () => C.accent },
+  { key: "restore", color: () => C.blue,   stripe: () => CAT_COLORS.Footworks      },
+  { key: "remix",   color: () => C.yellow, stripe: () => CAT_COLORS["Power Moves"] },
+  { key: "rebuild", color: () => C.accent, stripe: () => CAT_COLORS.Toprocks       },
 ];
 
 const modeColor = (key) => {
@@ -108,7 +117,7 @@ const TIMER_OPTIONS = [
 ];
 
 // ── Component ───────────────────────────────────────────────────────────────
-export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToast: _addToast, addCalendarEvent, onClose }) => {
+export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToast: _addToast, addCalendarEvent, onClose, onBack }) => {
   const t = useT();
   const { settings } = useSettings();
   const showMastery = settings.showMastery === true;
@@ -321,57 +330,53 @@ export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToa
     <div style={{ position:"absolute", inset:0, zIndex:500, background:C.bg, display:"flex", flexDirection:"column", overflow:"hidden" }}>
 
       {/* ── Header bar ── */}
-      <div style={{ display:"flex", alignItems:"center", padding:"10px 13px", borderBottom:`1px solid ${C.border}`, flexShrink:0 }}>
-        {screen !== "modes" ? (
+      {screen === "modes" ? (
+        <div style={toolHeaderStyle(C)}>
+          <button onClick={onBack} style={toolBackButtonStyle(C)}>
+            ← {t("back")}
+          </button>
+          <span style={toolHeaderTitleStyle(C)}>
+            {t("restoreRemixRebuild")}
+          </span>
+        </div>
+      ) : (
+        <div style={{ display:"flex", alignItems:"center", padding:"10px 13px", borderBottom:`1px solid ${C.border}`, flexShrink:0 }}>
           <button onClick={handleBack} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.text, display:"flex" }}>
             <Ic n="arrow-left" s={18} c={C.text}/>
           </button>
-        ) : (
-          <div style={{ width:26 }}/>
-        )}
-        <div style={{ flex:1, textAlign:"center", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:14, letterSpacing:1.5, color: screen !== "modes" ? mc : C.text, textTransform:"uppercase" }}>
-          {screen === "modes" && t("restoreRemixRebuild")}
-          {screen === "picker" && t(mode)}
-          {screen === "prompt" && t(mode)}
-          {screen === "summary" && t(mode)}
+          <div style={{ flex:1, textAlign:"center", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:14, letterSpacing:1.5, color: mc, textTransform:"uppercase" }}>
+            {t(mode)}
+          </div>
+          <button onClick={onClose} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textMuted, display:"flex" }}>
+            <Ic n="x" s={18} c={C.textMuted}/>
+          </button>
         </div>
-        <button onClick={onClose} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textMuted, display:"flex" }}>
-          <Ic n="x" s={18} c={C.textMuted}/>
-        </button>
-      </div>
+      )}
 
       {/* ── Content area ── */}
       <div style={{ flex:1, overflowY:"auto", padding:"16px 14px" }}>
 
         {/* ════════ MODE SELECTOR ════════ */}
         {screen === "modes" && (
-          <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
+          <>
             <SectionBrief desc={t("rrrBrief")} stat={t("rrrBriefStat")} settings={settings}/>
-            {MODES.map(m => {
-              const c = m.color();
-              const isLast = rrr?.lastUsed?.mode === m.key;
-              return (
-                <button key={m.key} onClick={() => goToMode(m.key)}
-                  style={{
-                    background:C.surface, borderRadius:14,
-                    border: isLast ? `2px solid ${c}4d` : `1px solid ${C.border}`,
-                    padding:"20px 20px 20px 24px", textAlign:"left", cursor:"pointer",
-                    display:"flex", alignItems:"flex-start", gap:16, position:"relative", overflow:"hidden",
-                  }}>
-                  {/* Left colour bar */}
-                  <div style={{ position:"absolute", left:0, top:0, bottom:0, width:4, background:c }}/>
-                  <div>
-                    <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:18, letterSpacing:1.5, color:c }}>
+            <div style={toolListContainerStyle}>
+              {MODES.map(m => {
+                const stripe = m.stripe();
+                return (
+                  <button key={m.key} onClick={() => goToMode(m.key)}
+                    style={toolModeTileStyle(stripe, C)}>
+                    <div style={toolModeTitleStyle(stripe)}>
                       {t(m.key)}
                     </div>
-                    <div style={{ fontFamily:FONT_BODY, fontSize:13, color:C.textMuted, fontStyle:"italic", marginTop:4, lineHeight:1.5 }}>
+                    <div style={toolModeDescStyle(C)}>
                       {t(m.key + "Desc")}
                     </div>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
+                  </button>
+                );
+              })}
+            </div>
+          </>
         )}
 
         {/* ════════ MOVE PICKER ════════ */}

@@ -7,6 +7,15 @@ import { todayLocal } from '../../utils/dateUtils';
 import { useT } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
 import { SectionBrief } from '../shared/SectionBrief';
+import {
+  toolModeTileStyle,
+  toolModeTitleStyle,
+  toolModeDescStyle,
+  toolListContainerStyle,
+  toolHeaderStyle,
+  toolHeaderTitleStyle,
+  toolBackButtonStyle,
+} from './toolModeTile.styles';
 
 // ── Audio ───────────────────────────────────────────────────────────────────
 let _audioCtx = null;
@@ -55,7 +64,7 @@ const emptyTech = () => {
 };
 
 // ── Main Component ──────────────────────────────────────────────────────────
-export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addToast: _addToast, onClose, addCalendarEvent }) => {
+export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addToast: _addToast, onClose, onBack, addCalendarEvent }) => {
   const t = useT();
   const { settings: ctxSettings } = useSettings();
 
@@ -394,32 +403,25 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
   // ── Render: Mode Select Screen ────────────────────────────────────────────
   const renderModeSelect = () => {
     const modes = [
-      { key: "technical",  icon: "wrench",   color: C.blue,   desc: "technicalDesc" },
-      { key: "conceptual", icon: "sparkles", color: C.yellow, desc: "conceptualDesc" },
-      { key: "collide",    icon: "target",   color: C.red,    desc: "collideDesc" },
-      { key: "grow",       icon: "target",   color: C.green,  desc: "growDesc" },
+      { key: "technical",  stripe: CAT_COLORS.Footworks,      desc: "technicalDesc" },
+      { key: "conceptual", stripe: CAT_COLORS["Power Moves"], desc: "conceptualDesc" },
+      { key: "collide",    stripe: CAT_COLORS.Toprocks,       desc: "collideDesc" },
+      { key: "grow",       stripe: CAT_COLORS.Freezes,        desc: "growDesc" },
     ];
     return (
-      <div style={{ display: "flex", flexDirection: "column", gap: 14, padding: "20px 0" }}>
+      <div style={toolListContainerStyle}>
         {modes.map(m => (
           <button key={m.key}
             onClick={() => {
               if (m.key === "grow") { setMode("grow"); setScreen("pickSeed"); }
               else { setMode(m.key); setScreen("workspace"); }
             }}
-            style={{
-              background: C.surface, borderRadius: 16,
-              padding: "22px 20px", cursor: "pointer", textAlign: "left",
-              transition: "all 0.15s", display: "flex", alignItems: "center", gap: 16,
-            }}>
-            <Ic n={m.icon} s={32} c={m.color}/>
-            <div>
-              <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 16, color: m.color, letterSpacing: 1 }}>
-                {t(m.key).toUpperCase()}
-              </div>
-              <div style={{ fontFamily: FONT_BODY, fontSize: 13, color: C.textSec, marginTop: 4 }}>
-                {t(m.desc)}
-              </div>
+            style={toolModeTileStyle(m.stripe, C)}>
+            <div style={toolModeTitleStyle(m.stripe)}>
+              {t(m.key).toUpperCase()}
+            </div>
+            <div style={toolModeDescStyle(C)}>
+              {t(m.desc)}
             </div>
           </button>
         ))}
@@ -721,17 +723,28 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
   return (
     <div style={{ position: "absolute", inset: 0, zIndex: 500, background: C.bg, display: "flex", flexDirection: "column", overflow: "hidden" }}>
       {/* Header */}
-      <div style={{
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        padding: "13px 18px", borderBottom: `1px solid ${C.border}`, background: C.header, flexShrink: 0,
-      }}>
-        <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 16, color: C.brown, letterSpacing: 1 }}>
-          {t("explore")}
-        </span>
-        <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex" }}>
-          <Ic n="x" s={20} c={C.textMuted} />
-        </button>
-      </div>
+      {screen === "select" ? (
+        <div style={toolHeaderStyle(C)}>
+          <button onClick={onBack} style={toolBackButtonStyle(C)}>
+            ← {t("back")}
+          </button>
+          <span style={toolHeaderTitleStyle(C)}>
+            {t("explore")}
+          </span>
+        </div>
+      ) : (
+        <div style={{
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          padding: "13px 18px", borderBottom: `1px solid ${C.border}`, background: C.header, flexShrink: 0,
+        }}>
+          <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 16, color: C.brown, letterSpacing: 1 }}>
+            {t("explore")}
+          </span>
+          <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex" }}>
+            <Ic n="x" s={20} c={C.textMuted} />
+          </button>
+        </div>
+      )}
 
       {/* Saved flash */}
       {savedFlash && (

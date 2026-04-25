@@ -6,6 +6,16 @@ import { useT } from '../../hooks/useTranslation';
 import { todayLocal } from '../../utils/dateUtils';
 import { useSettings } from '../../hooks/useSettings';
 import { SectionBrief } from '../shared/SectionBrief';
+import { CAT_COLORS } from '../../constants/categories';
+import {
+  toolModeTileStyle,
+  toolModeTitleStyle,
+  toolModeDescStyle,
+  toolListContainerStyle,
+  toolHeaderStyle,
+  toolHeaderTitleStyle,
+  toolBackButtonStyle,
+} from '../moves/toolModeTile.styles';
 
 const DEFAULT_TRANSITIONS = ["Thread","Jump","Counter Spin","Slide","Sweep","Touch Foot","Kick","Hop","Roll","Twist","Drop","Spin Through"];
 
@@ -34,7 +44,7 @@ const IMPACT_LEVELS = [
 const IMPACT_TENSION = { 1: "low", 2: "low", 3: "mid", 4: "high", 5: "peak" };
 
 // ── Main Component ──────────────────────────────────────────────────────────
-export const FlowMap = ({ moves, cats, catColors, flowmap, onFlowmapChange, combos, onSaveMove, onSaveSet: _onSaveSet, addToast, onClose }) => {
+export const FlowMap = ({ moves, cats, catColors, flowmap, onFlowmapChange, combos, onSaveMove, onSaveSet: _onSaveSet, addToast, onBack }) => {
   const t = useT();
   const { settings: ctxSettings } = useSettings();
 
@@ -189,7 +199,14 @@ export const FlowMap = ({ moves, cats, catColors, flowmap, onFlowmapChange, comb
     const stColors = STATE_COLORS(C);
     return (
       <div style={overlay}>
-        <Header title={t("map")} onBack={onClose} />
+        <div style={toolHeaderStyle(C)}>
+          <button onClick={onBack} style={toolBackButtonStyle(C)}>
+            ← {t("back")}
+          </button>
+          <span style={toolHeaderTitleStyle(C)}>
+            {t("map")}
+          </span>
+        </div>
         <div style={scrollArea}>
           <SectionBrief desc={t("mapBrief")} stat={totalPossible > 0 ? t("connectionsExplored").replace("{count}", totalEvaluated).replace("{total}", totalPossible).replace("{percent}", explorePct) : null} settings={ctxSettings}/>
 
@@ -233,22 +250,19 @@ export const FlowMap = ({ moves, cats, catColors, flowmap, onFlowmapChange, comb
           )}
 
           {/* Pick mode cards */}
-          {[
-            { icon: "grid", key: "withinCategory", descKey: "withinCategoryDesc", subKey: "withinDesc", action: () => setScreen("pickWithin") },
-            { icon: "shuffle", key: "betweenCategories", descKey: "betweenCategoriesDesc", subKey: "betweenDesc", action: () => { setBetweenStep(1); setRowCat(null); setScreen("pickBetween"); } },
-            { icon: "edit", key: "customPick", descKey: "customPickDesc", subKey: "customDesc", action: () => { setCustomSelected([]); setScreen("pickCustom"); } },
-          ].map(({ icon, key, descKey, subKey, action }) => (
-            <div key={key} style={cardStyle} onClick={action}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <Ic n={icon} s={22} c={C.textSec}/>
-                <div>
-                  <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 16, letterSpacing: 0.5, color: C.text }}>{t(key)}</div>
-                  <div style={{ fontSize: 11, color: C.textSec, marginTop: 2 }}>{t(descKey)}</div>
-                  <div style={{ fontSize: 11, color: C.textMuted, marginTop: 2, fontStyle: "italic", fontFamily: FONT_BODY }}>{t(subKey)}</div>
-                </div>
-              </div>
-            </div>
-          ))}
+          <div style={toolListContainerStyle}>
+            {[
+              { key: "withinCategory",     stripe: CAT_COLORS.Blowups, descKey: "withinCategoryDesc",     subKey: "withinDesc",  action: () => setScreen("pickWithin") },
+              { key: "betweenCategories",  stripe: CAT_COLORS.Godowns, descKey: "betweenCategoriesDesc",  subKey: "betweenDesc", action: () => { setBetweenStep(1); setRowCat(null); setScreen("pickBetween"); } },
+              { key: "customPick",         stripe: CAT_COLORS.Custom,  descKey: "customPickDesc",         subKey: "customDesc",  action: () => { setCustomSelected([]); setScreen("pickCustom"); } },
+            ].map(({ key, stripe, descKey, subKey, action }) => (
+              <button key={key} style={toolModeTileStyle(stripe, C)} onClick={action}>
+                <div style={toolModeTitleStyle(stripe)}>{t(key)}</div>
+                <div style={toolModeDescStyle(C)}>{t(descKey)}</div>
+                <div style={{ fontFamily: FONT_BODY, fontSize: 11, color: C.textMuted, marginTop: 2, fontStyle: "italic" }}>{t(subKey)}</div>
+              </button>
+            ))}
+          </div>
 
           {totalEvaluated === 0 && allUnexplored.length === 0 && moves.length < 2 && (
             <div style={{ textAlign: "center", color: C.textMuted, marginTop: 40, fontSize: 13 }}>{t("noPairingsYet")}</div>
