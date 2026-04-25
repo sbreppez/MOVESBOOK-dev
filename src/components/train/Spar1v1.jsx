@@ -4,7 +4,6 @@ import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
-import { BottomSheet } from '../shared/BottomSheet';
 import { todayLocal } from '../../utils/dateUtils';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────

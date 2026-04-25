@@ -1,6 +1,5 @@
 import React, { useState, Fragment } from 'react';
 import { C } from '../../constants/colors';
-import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Modal } from '../shared/Modal';
 import { Btn } from '../shared/Btn';
 import { Txtarea } from '../shared/Txtarea';
@@ -8,7 +7,6 @@ import { Sel } from '../shared/Sel';
 import { MasterySlider } from '../shared/MasterySlider';
 import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
-import { useSettings } from '../../hooks/useSettings';
 import { CATS } from '../../constants/categories';
 import { todayLocal } from '../../utils/dateUtils';
 

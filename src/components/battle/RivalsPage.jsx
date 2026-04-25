@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, Fragment } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { lbl, inp } from '../../constants/styles';
 import { Ic } from '../shared/Ic';

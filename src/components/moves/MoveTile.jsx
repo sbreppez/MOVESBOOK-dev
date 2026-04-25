@@ -1,9 +1,9 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import { C } from '../../constants/colors';
 import { FONT_DISPLAY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
 import { Highlight } from '../shared/Highlight';
-import { masteryColor, CARD_BASE, CARD_BODY } from '../../constants/styles';
+import { masteryColor } from '../../constants/styles';
 import { useSettings } from '../../hooks/useSettings';
 import { useT } from '../../hooks/useTranslation';
 import { computeDecay, showDecayArrow } from '../../utils/masteryDecay';

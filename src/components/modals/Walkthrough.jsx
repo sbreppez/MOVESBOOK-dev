@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FONT_DISPLAY, FONT_BODY } from "../../constants/fonts";
+import { FONT_DISPLAY } from "../../constants/fonts";
 import { Ic } from "../shared/Ic";
 import { useT } from "../../hooks/useTranslation";
 

@@ -3,7 +3,7 @@ import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
 import { CAT_COLORS } from '../../constants/categories';
-import { PRESET_META, DEFAULT_CHECKLIST, BATTLE_MOODS, BATTLE_RESULTS, getPreparationStats, toYMD } from './battlePrepHelpers';
+import { PRESET_META, DEFAULT_CHECKLIST, BATTLE_MOODS, BATTLE_RESULTS, getPreparationStats } from './battlePrepHelpers';
 import { compressImage } from '../../utils/imageUtils';
 
 // ── Battle Day View ─────────────────────────────────────────────────────────

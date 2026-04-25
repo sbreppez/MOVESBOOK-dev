@@ -1,6 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import { C } from '../../constants/colors';
-import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
+import { FONT_DISPLAY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';

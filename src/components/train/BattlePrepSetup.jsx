@@ -3,7 +3,7 @@ import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
-import { PRESET_META, PRESET_CONFIGS, toYMD, enumDates, getDayOfWeek, daysBetween, computeDayMap } from './battlePrepHelpers';
+import { PRESET_META, toYMD, enumDates, getDayOfWeek, computeDayMap } from './battlePrepHelpers';
 
 const DAY_LABELS = ["S","M","T","W","T","F","S"];
 

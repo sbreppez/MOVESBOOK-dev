@@ -4,10 +4,8 @@ import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { CARD_BASE, CARD_BODY } from '../../constants/styles';
 import { IDEA_COLORS } from '../../constants/categories';
 import { Ic } from '../shared/Ic';
-import { Btn } from '../shared/Btn';
 import { Highlight } from '../shared/Highlight';
 import { useT } from '../../hooks/useTranslation';
-import { usePlural } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
 import { targetProgress, goalTimeProgress } from './helpers';
 

@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import { C } from "../../constants/colors";
-import { FONT_DISPLAY, FONT_BODY } from "../../constants/fonts";
+import { FONT_DISPLAY } from "../../constants/fonts";
 import { compressImage } from "../../utils/imageUtils";
 
 const DOMAINS = ["musicality","performance","technique","variety","creativity","personality"];

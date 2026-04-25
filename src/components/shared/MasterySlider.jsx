@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { C } from '../../constants/colors';
 import { masteryColor, masteryLabel, lbl } from '../../constants/styles';
 import { useT } from '../../hooks/useTranslation';

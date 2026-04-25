@@ -1,5 +1,4 @@
 import React, { Fragment, useState, useEffect, useRef } from 'react';
-import { C } from '../../constants/colors';
 import { FONT_DISPLAY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
 import { Modal } from '../shared/Modal';

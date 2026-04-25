@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { lbl } from '../../constants/styles';
 import { IDEA_COLORS } from '../../constants/categories';
-import { Modal } from '../shared/Modal';
 import { Btn } from '../shared/Btn';
 import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';

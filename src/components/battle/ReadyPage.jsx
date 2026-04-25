@@ -18,7 +18,7 @@ import { BattlePrepPage } from '../train/BattlePrepPage';
 import { PremiumGate } from '../shared/PremiumGate';
 import { SectionBrief } from '../shared/SectionBrief';
 import { computeDecay } from '../../utils/masteryDecay';
-import { ROLE_LEVEL, LEVEL_TO_ROLE, getTensionColors, getItemTension, getMoveTension, ArcChart, getArcFeedback, ArcLegend } from '../shared/ArcVis';
+import { LEVEL_TO_ROLE, getTensionColors, getItemTension, getMoveTension, ArcChart, getArcFeedback, ArcLegend } from '../shared/ArcVis';
 
 export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, addToast, freestyle, onFreestyleChange, rivals, onRivalsChange, addCalendarEvent, removeCalendarEvent, onSimulate, battleprep, setBattleprep, calendar, battlePrepSeed, onBattlePrepSeedUsed, onOpenSharedCalendar, isPremium }) => {
   const t = useT();

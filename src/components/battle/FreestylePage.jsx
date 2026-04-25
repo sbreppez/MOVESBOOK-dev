@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
-import { PRESET_COLORS } from '../../constants/colors';
 import { CAT_COLORS } from '../../constants/categories';
 import { masteryColor } from '../../constants/styles';
 import { computeDecay } from '../../utils/masteryDecay';

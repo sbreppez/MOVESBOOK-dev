@@ -4,7 +4,7 @@ import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
 import { Modal } from '../shared/Modal';
 import { useT } from '../../hooks/useTranslation';
-import { PRESET_META, PRESET_CONFIGS, computeDayMap, computeAllDayMaps, getPlanStats, getTasksForDay, getPrevDayTasks, daysBetween, toYMD } from './battlePrepHelpers';
+import { PRESET_META, computeDayMap, computeAllDayMaps, getPlanStats, getTasksForDay, getPrevDayTasks, daysBetween, toYMD } from './battlePrepHelpers';
 import { BattlePrepSetup } from './BattlePrepSetup';
 import { BattleDayView } from './BattleDayView';
 import { BattleHistoryView } from './BattleHistoryView';

@@ -1,12 +1,10 @@
 import React, { useState, useRef } from 'react';
-import { C, PRESET_COLORS } from '../../constants/colors';
+import { PRESET_COLORS } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Modal } from '../shared/Modal';
 import { Inp } from '../shared/Inp';
-import { Txtarea } from '../shared/Txtarea';
 import { Btn } from '../shared/Btn';
 import { Ic } from '../shared/Ic';
-import { MasterySlider } from '../shared/MasterySlider';
 import { useT } from '../../hooks/useTranslation';
 import { usePlural } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
