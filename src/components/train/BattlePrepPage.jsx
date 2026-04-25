@@ -720,7 +720,7 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
 };
 
 // ── Day Detail Component ──
-const DayDetail = ({ dateStr, dayMap, plan, today, onToggleTask, t, getDay }) => {
+const DayDetail = ({ dateStr, dayMap: _dayMap, plan, today, onToggleTask, t, getDay }) => {
   const { info, tasks } = getDay(dateStr);
   if (!info) return null;
   const completed = plan.completedTasks || {};

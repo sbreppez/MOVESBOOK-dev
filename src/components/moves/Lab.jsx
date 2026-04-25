@@ -57,7 +57,7 @@ const emptyTech = () => {
 };
 
 // ── Main Component ──────────────────────────────────────────────────────────
-export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addToast, onClose, addCalendarEvent }) => {
+export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addToast: _addToast, onClose, addCalendarEvent }) => {
   const t = useT();
   const { settings: ctxSettings } = useSettings();
 

@@ -7,7 +7,7 @@ import { PRESET_META, toYMD, enumDates, getDayOfWeek, computeDayMap } from './ba
 
 const DAY_LABELS = ["S","M","T","W","T","F","S"];
 
-export const BattlePrepSetup = ({ initialPreset, battleprep, setBattleprep, moves, sets, onGenerated, onCancel, calendar, seedData, addCalendarEvent }) => {
+export const BattlePrepSetup = ({ initialPreset, battleprep: _battleprep, setBattleprep, moves, sets, onGenerated, onCancel, calendar, seedData, addCalendarEvent }) => {
   const t = useT();
   const [step, setStep] = useState(initialPreset ? 2 : 1);
   const [preset, setPreset] = useState(initialPreset || null);

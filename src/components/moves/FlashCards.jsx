@@ -14,7 +14,7 @@ function shuffle(arr) {
   return a;
 }
 
-export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCalendarEvent, addToast, onClose }) => {
+export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCalendarEvent, addToast: _addToast, onClose }) => {
   const t = useT();
 
   // Screens: selection | playing | summary

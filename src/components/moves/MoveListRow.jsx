@@ -7,7 +7,7 @@ import { useSettings } from '../../hooks/useSettings';
 import { computeDecay, showDecayArrow } from '../../utils/masteryDecay';
 import { todayLocal } from '../../utils/dateUtils';
 
-export const MoveListRow = ({ move, catColor, onEdit, onDelete, onMove, allCats, catColors, onToggleTrainedToday, selectMode, isSelected }) => {
+export const MoveListRow = ({ move, catColor, onEdit, onDelete, onMove: _onMove, allCats: _allCats, catColors: _catColors, onToggleTrainedToday, selectMode, isSelected }) => {
   const { settings } = useSettings();
   const { displayMastery } = computeDecay(move, settings.decaySensitivity);
   const hasDecayArrow = showDecayArrow(move, settings.decaySensitivity);

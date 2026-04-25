@@ -10,7 +10,7 @@ import { computeDecay, showDecayArrow } from '../../utils/masteryDecay';
 import { todayLocal } from '../../utils/dateUtils';
 import { CATS, CAT_COLORS } from '../../constants/categories';
 
-export const MoveTile = ({ move, onClick, onEdit, onDelete, onDuplicate, onMove, allCats=CATS, catColors=CAT_COLORS, searchQuery="", onToggleTrainedToday, selectMode, isSelected }) => {
+export const MoveTile = ({ move, onClick, onEdit: _onEdit, onDelete: _onDelete, onDuplicate: _onDuplicate, onMove: _onMove, allCats: _allCats=CATS, catColors=CAT_COLORS, searchQuery="", onToggleTrainedToday, selectMode, isSelected }) => {
   const { settings } = useSettings();
   const t = useT();
   const [expanded, setExpanded] = useState(false);

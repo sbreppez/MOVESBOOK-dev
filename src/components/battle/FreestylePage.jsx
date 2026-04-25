@@ -134,7 +134,7 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
   const toggle     = (id) => setToUse(p=>p.map(i=>i.id===id ? {...i, checked:!i.checked} : i));
   const removeItem = (id) => setToUse(p=>p.filter(i=>i.id!==id));
   const moveFreestyleUp   = (idx) => { setToUse(prev=>{ const unc=prev.filter(i=>!i.checked); const chk=prev.filter(i=>i.checked); if(idx===0) return prev; const n=[...unc]; [n[idx],n[idx-1]]=[n[idx-1],n[idx]]; return [...n,...chk]; }); };
-  const moveFreestyleDown = (idx, len) => { setToUse(prev=>{ const unc=prev.filter(i=>!i.checked); const chk=prev.filter(i=>i.checked); if(idx>=unc.length-1) return prev; const n=[...unc]; [n[idx],n[idx+1]]=[n[idx+1],n[idx]]; return [...n,...chk]; }); };
+  const moveFreestyleDown = (idx, _len) => { setToUse(prev=>{ const unc=prev.filter(i=>!i.checked); const chk=prev.filter(i=>i.checked); if(idx>=unc.length-1) return prev; const n=[...unc]; [n[idx],n[idx+1]]=[n[idx+1],n[idx]]; return [...n,...chk]; }); };
   const reset      = ()  => { setToUse([]); setConfirmReset(false); };
 
   // Picker helpers

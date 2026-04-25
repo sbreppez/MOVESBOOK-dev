@@ -34,7 +34,7 @@ const IMPACT_LEVELS = [
 const IMPACT_TENSION = { 1: "low", 2: "low", 3: "mid", 4: "high", 5: "peak" };
 
 // ── Main Component ──────────────────────────────────────────────────────────
-export const FlowMap = ({ moves, cats, catColors, flowmap, onFlowmapChange, combos, onSaveMove, onSaveSet, addToast, onClose }) => {
+export const FlowMap = ({ moves, cats, catColors, flowmap, onFlowmapChange, combos, onSaveMove, onSaveSet: _onSaveSet, addToast, onClose }) => {
   const t = useT();
   const { settings: ctxSettings } = useSettings();
 
@@ -446,7 +446,7 @@ const HeatLegend = ({ C, t }) => {
 // ════════════════════════════════════════════════════════════════════════════
 // GRID VIEW
 // ════════════════════════════════════════════════════════════════════════════
-const GridView = ({ rows, cols, isSelfGrid, pairings, catColors, viewMode, C, t, onCycleState, onDoubleTap }) => {
+const GridView = ({ rows, cols, isSelfGrid, pairings, catColors, viewMode, C, t: _t, onCycleState, onDoubleTap }) => {
   const containerRef = useRef(null);
   const tapTimerRef = useRef({});
 

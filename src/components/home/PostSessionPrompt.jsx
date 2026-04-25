@@ -5,7 +5,7 @@ import { useT } from '../../hooks/useTranslation';
 import { Modal } from '../shared/Modal';
 import { Btn } from '../shared/Btn';
 
-export const PostSessionPrompt = ({ presession, setPresession, onClose }) => {
+export const PostSessionPrompt = ({ presession: _presession, setPresession, onClose }) => {
   const { C } = useSettings();
   const t = useT();
   const [noteNext, setNoteNext] = useState("");

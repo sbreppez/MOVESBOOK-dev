@@ -110,7 +110,7 @@ export const CategoryGrid = ({
               draggable={false}
               onDragStart={() => {}}
               onDragOver={e => e.preventDefault()}
-              onDrop={e => { }}
+              onDrop={_e => { }}
               isDraggingOver={false}
             />
           </div>

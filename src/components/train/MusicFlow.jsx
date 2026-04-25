@@ -23,7 +23,7 @@ const fmtTime = (ms) => {
   return `${m}:${s}`;
 };
 
-export const MusicFlow = ({ musicflow, onMusicflowChange, onUpdateSession, reflections, onReflectionsChange, addToast, addCalendarEvent, onClose }) => {
+export const MusicFlow = ({ musicflow: _musicflow, onMusicflowChange, onUpdateSession, reflections, onReflectionsChange, addToast, addCalendarEvent, onClose }) => {
   const t = useT();
 
   const [screen, setScreen] = useState("active");

@@ -853,7 +853,7 @@ export default function App() {
           return (
           <div style={{ display:"flex", alignItems:"stretch",
             background:C.header, flexShrink:0, height:50, zIndex:100 }}>
-            {tabs.map((tb,i)=>{
+            {tabs.map((tb,_i)=>{
               if(!tb) return (
                 <div key="plus" style={{ flex:"0 0 64px", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", position:"relative" }}>
                   <button id="tour-add-btn" onClick={handlePlusPress}

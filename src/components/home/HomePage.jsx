@@ -76,8 +76,8 @@ function resolveTileName(tile, homeIdeas, habits, ideas, moves) {
 
 export const HomePage = ({
   habits, setHabits,
-  injuries, setInjuries, presession, setPresession,
-  ideas, setIdeas, settings, onSettingsChange,
+  injuries: _injuries, setInjuries: _setInjuries, presession, setPresession,
+  ideas, setIdeas, settings, onSettingsChange: _onSettingsChange,
   homeStack, setHomeStack, homeIdeas, setHomeIdeas, homeChecks, setHomeChecks,
   onAddTrigger, addCalendarEvent, removeCalendarEvent, calendar,
   moves, setMoves, cats, catColors, customAttrs, setCustomAttrs, isPremium,

@@ -1,9 +1,9 @@
 import { useRef, useState } from 'react';
 
 export const useCategoryCrud = ({
-  cats,
+  cats: _cats,
   setCats,
-  catColors,
+  catColors: _catColors,
   setCatColors,
   setMoves,
   categorySort,

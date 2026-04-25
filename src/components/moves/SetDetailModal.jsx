@@ -19,7 +19,7 @@ const ensureHttps = (url) => {
   return "https://" + u;
 };
 
-export const SetDetailModal = ({ item, onClose, onSave, type="set", allMoves=[], allSets=[] }) => {
+export const SetDetailModal = ({ item, onClose, onSave, type="set", allMoves=[], allSets: _allSets=[] }) => {
   const t = useT();
   const { moveCountStr } = usePlural();
   const { C } = useSettings();

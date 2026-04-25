@@ -73,7 +73,7 @@ const TreeNode = ({ node, depth, catColors, onEdit, collapsed, toggleCollapse, i
   );
 };
 
-export const MoveTree = ({ moves, catColors, onEdit, settings = {} }) => {
+export const MoveTree = ({ moves, catColors, onEdit, settings: _settings = {} }) => {
   const t = useT();
   const [collapsed, setCollapsed] = useState(new Set());
 

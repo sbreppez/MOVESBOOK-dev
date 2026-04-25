@@ -19,7 +19,7 @@ export const ReflectPage = ({
   ideas, setIdeas, moves, setMoves, reps, sparring, musicflow, habits,
   calendar, setCalendar, cats, catColors, settings, onSettingsChange,
   addToast, stance, battleprep, onToggleBattlePrepTask,
-  onOpenStanceAssessment, addCalendarEvent, removeCalendarEvent,
+  onOpenStanceAssessment, addCalendarEvent: _addCalendarEvent, removeCalendarEvent: _removeCalendarEvent,
   onSubTabChange, onGoToPrep, initialDay, initialMonth, sets, onAddTrigger, parentSubTab, reports, injuries,
   isPremium
 }) => {

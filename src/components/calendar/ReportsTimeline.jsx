@@ -38,7 +38,7 @@ export const ReportsTimeline = ({ moves, reps, sparring, musicflow, calendar, ca
 
   return (
     <div style={{ flex:1, overflow:"auto", padding:"10px 14px 80px" }}>
-      {timeline.map((entry, idx) => {
+      {timeline.map((entry, _idx) => {
         if (entry.type === "month") return <MonthTile key={`m-${entry.date}`} entry={entry} t={t} C={C} catColors={catColors}/>;
         if (entry.type === "week") return <WeekTile key={`w-${entry.date}`} entry={entry} t={t} C={C} catColors={catColors}/>;
         return <DayRow key={`d-${entry.date}`} entry={entry} t={t} C={C}/>;

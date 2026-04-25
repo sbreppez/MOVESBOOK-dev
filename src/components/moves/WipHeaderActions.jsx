@@ -8,9 +8,9 @@ export const WipHeaderActions = ({
   view, setView,
   reorderMode, setReorderMode,
   sortedCats, setCats, onSortChange,
-  customAttrs, showFilter, setShowFilter, hasActiveFilters,
+  customAttrs, showFilter: _showFilter, setShowFilter, hasActiveFilters,
   selectMode, setSelectMode, selectedCount, setConfirmBulkDeleteMoves, exitMoveSelectMode,
-  showSearch, setShowSearch, setSearch,
+  showSearch: _showSearch, setShowSearch, setSearch,
   isPremium,
   allMovesFilteredLength,
 }) => {

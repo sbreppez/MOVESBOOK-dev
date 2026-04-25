@@ -70,7 +70,7 @@ export const BattleDayView = ({ plan, battle, dayMap, moves, sets, updatePlan, s
 };
 
 // ── Pre-Battle Section ──────────────────────────────────────────────────────
-const PreBattleSection = ({ plan, battle, dayMap, moves, sets, updatePlan, meta, prepStats, onBattleComplete, t, today }) => {
+const PreBattleSection = ({ plan, battle: _battle, dayMap: _dayMap, moves, sets: _sets, updatePlan, meta, prepStats, onBattleComplete, t, today: _today }) => {
   // Checklist state — initialize from plan or defaults
   const [checklist, setChecklist] = useState(() => {
     if (plan.battleDay?.checklist?.length) return plan.battleDay.checklist;
@@ -265,7 +265,7 @@ const PreBattleSection = ({ plan, battle, dayMap, moves, sets, updatePlan, meta,
 };
 
 // ── Post-Battle Reflection ──────────────────────────────────────────────────
-const PostBattleReflection = ({ plan, battle, meta, prepStats, mood, setMood, result, setResult, takeaway, setTakeaway, whatWorked, setWhatWorked, needsWork, setNeedsWork, changeTraining, setChangeTraining, setBattleprep, addToast, onSaved, t, today }) => {
+const PostBattleReflection = ({ plan, battle, meta, prepStats: _prepStats, mood, setMood, result, setResult, takeaway, setTakeaway, whatWorked, setWhatWorked, needsWork, setNeedsWork, changeTraining, setChangeTraining, setBattleprep, addToast, onSaved, t, today }) => {
 
   const handleSave = () => {
     if (!mood || !result) {
@@ -381,7 +381,7 @@ const PostBattleReflection = ({ plan, battle, meta, prepStats, mood, setMood, re
 };
 
 // ── Battle Share Card ───────────────────────────────────────────────────────
-const BattleShareCard = ({ plan, battle, meta, prepStats, reflection, onClose, t, today }) => {
+const BattleShareCard = ({ plan, battle, meta, prepStats, reflection, onClose, t, today: _today }) => {
   const canvasRef = useRef(null);
   const photoInputRef = useRef(null);
   const [photo, setPhoto] = useState(null);
@@ -429,7 +429,7 @@ const BattleShareCard = ({ plan, battle, meta, prepStats, reflection, onClose, t
       setGenerated(true);
     };
 
-    const drawContent = (ctx, W, H) => {
+    const drawContent = (ctx, W, _H) => {
       // MOVESBOOK branding
       ctx.textAlign = "center";
       ctx.font = `900 32px 'Barlow Condensed', sans-serif`;

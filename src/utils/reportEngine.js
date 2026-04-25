@@ -220,7 +220,7 @@ const MILESTONE_DEFS = [
   { id: "foundation-30",   check: s => s.foundationAbove30, label: "foundationStrong" },
 ];
 
-export const detectMilestones = ({ moves, sparring, battleprep, reps, musicflow, cats, calendar }, existingMilestones) => {
+export const detectMilestones = ({ moves, sparring, battleprep, reps, musicflow, cats, calendar: _calendar }, existingMilestones) => {
   const existingIds = new Set((existingMilestones || []).map(m => m.id));
   const today = todayLocal();
   const monthStr = today.slice(0, 7);

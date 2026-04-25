@@ -5,7 +5,7 @@ import { Ic } from "../shared/Ic";
 import { useT } from "../../hooks/useTranslation";
 import { ShareCardOverlay } from "../shared/ShareCardOverlay";
 
-export const DevelopmentStory = ({ moves, sparring, calendar }) => {
+export const DevelopmentStory = ({ moves, sparring: _sparring, calendar: _calendar }) => {
   const t = useT();
   const [showShare, setShowShare] = useState(false);
 

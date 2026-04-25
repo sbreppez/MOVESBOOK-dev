@@ -23,7 +23,7 @@ export const CategoryDetailView = ({
   ideaDesc, setIdeaDesc,
   selectMode, setSelectMode,
   selectedMoveIds,
-  setConfirmDeleteMove, setConfirmBulkDeleteMoves,
+  setConfirmDeleteMove: _setConfirmDeleteMove, setConfirmBulkDeleteMoves,
   saveMove, tryDelMove, dupMove, moveToCat,
   handleToggleTrainedToday, toggleMoveSelect,
   exitMoveSelectMode,

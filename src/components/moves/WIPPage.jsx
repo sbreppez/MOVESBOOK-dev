@@ -29,7 +29,7 @@ import { SetsView } from './SetsView';
 import { WipHeaderActions } from './WipHeaderActions';
 import { CategoryDetailView } from './CategoryDetailView';
 
-export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains={}, setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore, onOpenRRR, onOpenCombine, onOpenMap, onOpenFlashCards, onOpenTools, isPremium, staleCount=0, onBulkTrigger }) => {
+export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains: _catDomains={}, setCatDomains: _setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore: _onOpenExplore, onOpenRRR: _onOpenRRR, onOpenCombine: _onOpenCombine, onOpenMap: _onOpenMap, onOpenFlashCards, onOpenTools, isPremium, staleCount=0, onBulkTrigger }) => {
   const t = useT();
   const { moveCountStr, resultCountStr } = usePlural();
   const { C, settings:ctxSettings } = useSettings();
@@ -68,7 +68,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   const wipMoves=moves; // show all moves regardless of status
   const sortFn = st.sortMoves==="name" ? (a,b)=>a.name.localeCompare(b.name)
     : st.sortMoves==="mastery" ? (a,b)=>b.mastery-a.mastery
-    : (a,b)=>0; // custom/date = insertion order
+    : (_a,_b)=>0; // custom/date = insertion order
   const hasActiveFilters = Object.keys(attrFilters).some(k => { const v=attrFilters[k]; return Array.isArray(v)?v.length>0:v!==""&&v!=null; });
   const inCat=cat=>{ let filtered=[...wipMoves.filter(m=>m.category===cat)]; if(hasActiveFilters) filtered=filterMovesByAttrs(filtered,attrFilters,customAttrs); return filtered.sort(sortFn); };
   const masteredCount=cat=>inCat(cat).filter(m=>m.mastery>=80).length;

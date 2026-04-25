@@ -108,7 +108,7 @@ const TIMER_OPTIONS = [
 ];
 
 // ── Component ───────────────────────────────────────────────────────────────
-export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToast, addCalendarEvent, onClose }) => {
+export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToast: _addToast, addCalendarEvent, onClose }) => {
   const t = useT();
   const { settings } = useSettings();
   const showMastery = settings.showMastery === true;
