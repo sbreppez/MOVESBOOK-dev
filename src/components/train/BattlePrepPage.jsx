@@ -430,6 +430,27 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
       .sort((a, b) => b.date.localeCompare(a.date)),
   [plan.battles]);
 
+  const completedBattlesSection = completedBattles.length > 0 ? (
+    <div style={{ marginBottom: 10 }}>
+      <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, letterSpacing: 1, color: C.textMuted, marginBottom: 6 }}>
+        {t("completedBattles") || "COMPLETED BATTLES"}
+      </div>
+      {completedBattles.map(b => {
+        const dateLabel = new Date(b.date + "T00:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+        return (
+          <div key={b.id} style={{ display: "flex", alignItems: "center", gap: 8, padding: "7px 6px", borderBottom: `1px solid ${C.borderLight}` }}>
+            <Ic n="sword" s={12} c={C.textMuted} />
+            <span style={{ flex: 1, fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: C.text }}>{dateLabel}</span>
+            <button onClick={() => setShareCardBattle(b)}
+              style={{ padding: "5px 10px", background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 6, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, letterSpacing: 0.5, color: C.textSec, display: "flex", alignItems: "center", gap: 4 }}>
+              <Ic n="share" s={11} c={C.textSec} /> {t("shareCard")}
+            </button>
+          </div>
+        );
+      })}
+    </div>
+  ) : null;
+
   const getDay = (dateStr) => {
     const info = dayMap[dateStr];
     if (!info) return { info: null, tasks: [] };
@@ -493,6 +514,7 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
             moves={moves || []} sets={sets || []}
             updatePlan={updatePlan} setBattleprep={setBattleprep}
             addToast={addToast} t={t} today={today} />
+          {completedBattlesSection}
         </div>
       )}
       {isExpanded && !isBattleDay && (
@@ -545,26 +567,7 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
           </div>
 
           {/* ── COMPLETED BATTLES — Share Card re-entry ── */}
-          {completedBattles.length > 0 && (
-            <div style={{ marginBottom: 10 }}>
-              <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, letterSpacing: 1, color: C.textMuted, marginBottom: 6 }}>
-                {t("completedBattles") || "COMPLETED BATTLES"}
-              </div>
-              {completedBattles.map(b => {
-                const dateLabel = new Date(b.date + "T00:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
-                return (
-                  <div key={b.id} style={{ display: "flex", alignItems: "center", gap: 8, padding: "7px 6px", borderBottom: `1px solid ${C.borderLight}` }}>
-                    <Ic n="sword" s={12} c={C.textMuted} />
-                    <span style={{ flex: 1, fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: C.text }}>{dateLabel}</span>
-                    <button onClick={() => setShareCardBattle(b)}
-                      style={{ padding: "5px 10px", background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 6, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, letterSpacing: 0.5, color: C.textSec, display: "flex", alignItems: "center", gap: 4 }}>
-                      <Ic n="share" s={11} c={C.textSec} /> {t("shareCard")}
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          )}
+          {completedBattlesSection}
 
           {/* ── EDIT PLAN PANEL ── */}
           {isEditing && (
@@ -707,22 +710,6 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
             </Modal>
           )}
 
-          {/* Share Card overlay — re-render saved reflection */}
-          {shareCardBattle && (
-            <Modal title={t("shareCard")} onClose={() => setShareCardBattle(null)}>
-              <BattleShareCard
-                plan={plan}
-                battle={shareCardBattle}
-                meta={meta}
-                prepStats={getPreparationStats(plan, dayMap, shareCardBattle.date)}
-                reflection={shareCardBattle.reflection}
-                onClose={() => setShareCardBattle(null)}
-                t={t}
-                today={today}
-              />
-            </Modal>
-          )}
-
           {/* Phase legend */}
           {!isEditing && (
             <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 8 }}>
@@ -765,6 +752,22 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
             </div>
           )}
         </div>
+      )}
+
+      {/* Share Card overlay — re-render saved reflection */}
+      {shareCardBattle && (
+        <Modal title={t("shareCard")} onClose={() => setShareCardBattle(null)}>
+          <BattleShareCard
+            plan={plan}
+            battle={shareCardBattle}
+            meta={meta}
+            prepStats={getPreparationStats(plan, dayMap, shareCardBattle.date)}
+            reflection={shareCardBattle.reflection}
+            onClose={() => setShareCardBattle(null)}
+            t={t}
+            today={today}
+          />
+        </Modal>
       )}
     </div>
   );
