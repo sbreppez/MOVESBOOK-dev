@@ -12,7 +12,7 @@ import { computeDecay } from '../../utils/masteryDecay';
 
 const TILE_PREVIEW = 4; // number of moves shown before "show more"
 export const CatTile = (props) => {
-  const { name, color, total, moves=[], viewMode="tiles", showMastery=true, showMoveCount=true, onClick, onDelete, onRename, onDuplicate, draggable, onDragStart, onDragOver, onDrop } = props;
+  const { name, color, total, moves=[], viewMode="tiles", showMastery=true, showMoveCount=true, onClick, onDelete, onRename, onDuplicate } = props;
   const t = useT();
   const [delBodyPre, delBodyPost] = t("deleteCategoryBody").split("{name}");
   const { moveCountStr } = usePlural();
@@ -42,8 +42,6 @@ export const CatTile = (props) => {
     return (
       <Fragment>
         <div
-          draggable={draggable}
-          onDragStart={onDragStart} onDragOver={onDragOver} onDrop={onDrop}
           style={{ ...CARD_BASE(), background:C.surface, borderLeft:`4px solid ${color}`, cursor:"default" }}>
           <div style={CARD_BODY()}>
 
@@ -123,8 +121,6 @@ export const CatTile = (props) => {
   return (
     <Fragment>
       <div
-        draggable={draggable}
-        onDragStart={onDragStart} onDragOver={onDragOver} onDrop={onDrop}
         style={{ position:"relative", background:C.surface, borderRadius:8, borderLeft:`4px solid ${color}`,
           cursor:"default", overflow:"visible" }}>
 

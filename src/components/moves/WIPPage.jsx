@@ -121,10 +121,6 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
     moveCatDown,
     changeCatColor,
     renameCategory,
-    catDragItem,
-    catDragOver,
-    setCatDragOver,
-    handleCatDrop,
   } = useCategoryCrud({
     cats,
     setCats,
@@ -361,10 +357,6 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
             changeCatColor={changeCatColor}
             moveCatUp={moveCatUp}
             moveCatDown={moveCatDown}
-            catDragOver={catDragOver}
-            setCatDragOver={setCatDragOver}
-            catDragItem={catDragItem}
-            handleCatDrop={handleCatDrop}
           />
         )}
       </div>

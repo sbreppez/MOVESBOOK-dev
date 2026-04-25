@@ -1,17 +1,12 @@
-import { useRef, useState } from 'react';
-
 export const useCategoryCrud = ({
   cats: _cats,
   setCats,
   catColors: _catColors,
   setCatColors,
   setMoves,
-  categorySort,
+  categorySort: _categorySort,
   defaultColor,
 }) => {
-  const catDragItem = useRef(null);
-  const [catDragOver, setCatDragOver] = useState(null);
-
   const addCategory = (name, color) => {
     setCats(prev => [...prev, name]);
     setCatColors(prev => ({ ...prev, [name]: color }));
@@ -59,33 +54,6 @@ export const useCategoryCrud = ({
     setMoves(prev => prev.map(m => m.category === oldName ? { ...m, category: newName } : m));
   };
 
-  const handleCatDragStart = (idx) => {
-    catDragItem.current = idx;
-  };
-
-  const handleCatDragOver = (e, idx) => {
-    e.preventDefault();
-    setCatDragOver(idx);
-  };
-
-  const handleCatDrop = (targetIdx) => {
-    const from = catDragItem.current;
-    setCatDragOver(null);
-    if (from === null || from === targetIdx) return;
-    catDragItem.current = null;
-    setCats(prev => {
-      // Recompute sort on latest cats to avoid stale closure
-      const sorted = categorySort === "name"
-        ? [...prev].sort((a, b) => a.localeCompare(b))
-        : prev; // manual or progress — use current order
-      const next = [...sorted];
-      const [moved] = next.splice(from, 1);
-      const insertAt = from < targetIdx ? targetIdx - 1 : targetIdx;
-      next.splice(insertAt, 0, moved);
-      return next;
-    });
-  };
-
   return {
     addCategory,
     dupCategory,
@@ -93,11 +61,5 @@ export const useCategoryCrud = ({
     moveCatDown,
     changeCatColor,
     renameCategory,
-    catDragItem,
-    catDragOver,
-    setCatDragOver,
-    handleCatDragStart,
-    handleCatDragOver,
-    handleCatDrop,
   };
 };

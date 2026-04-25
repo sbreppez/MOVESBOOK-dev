@@ -18,10 +18,6 @@ export const CategoryGrid = ({
   changeCatColor,
   moveCatUp,
   moveCatDown,
-  catDragOver,
-  setCatDragOver,
-  catDragItem,
-  handleCatDrop,
 }) => {
   const { C } = useSettings();
 
@@ -39,40 +35,12 @@ export const CategoryGrid = ({
       style={view === "tiles"
         ? { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, alignItems: "stretch" }
         : { display: "flex", flexDirection: "column", gap: 6 }}
-      onDragOver={e => e.preventDefault()}
-      onDragLeave={e => { if (!e.currentTarget.contains(e.relatedTarget)) setCatDragOver(null); }}
     >
       {sortedCats.map((cat, idx) => (
         <div
           key={cat}
-          onDragOver={e => {
-            e.preventDefault();
-            e.stopPropagation();
-            if (!reorderMode && catDragItem.current !== null) setCatDragOver(idx);
-          }}
-          onDragLeave={e => {
-            if (!e.currentTarget.contains(e.relatedTarget)) {
-              setCatDragOver(d => d === idx ? null : d);
-            }
-          }}
-          onDrop={e => {
-            e.preventDefault();
-            e.stopPropagation();
-            if (!reorderMode) handleCatDrop(idx);
-          }}
           style={{ display: "flex", flexDirection: "column", position: "relative" }}
         >
-          {catDragOver === idx
-            && !reorderMode
-            && catDragItem.current !== null
-            && catDragItem.current !== idx
-            && (
-              <div style={{
-                height: 2, borderRadius: 1, background: C.accent,
-                margin: view === "tiles" ? "0 2px 4px" : "2px 6px 4px",
-              }} />
-            )}
-
           {reorderMode && (
             <div style={{
               position: "absolute", right: 6, top: "50%",
@@ -107,41 +75,10 @@ export const CategoryGrid = ({
               onRename={n => renameCategory(cat, n)}
               onDuplicate={() => dupCategory(cat)}
               onChangeColor={col => changeCatColor(cat, col)}
-              draggable={false}
-              onDragStart={() => {}}
-              onDragOver={e => e.preventDefault()}
-              onDrop={_e => { }}
-              isDraggingOver={false}
             />
           </div>
         </div>
       ))}
-
-      {/* End-of-list sentinel — list view only, lets items drop to last spot */}
-      {view !== "tiles" && sortedCats.length > 0 && (
-        <div
-          onDragOver={e => {
-            e.preventDefault();
-            e.stopPropagation();
-            setCatDragOver(sortedCats.length);
-          }}
-          onDragLeave={e => {
-            if (!e.currentTarget.contains(e.relatedTarget)) setCatDragOver(null);
-          }}
-          onDrop={e => {
-            e.stopPropagation();
-            handleCatDrop(sortedCats.length);
-          }}
-          style={{ minHeight: 36, display: "flex", alignItems: "flex-start", paddingTop: 2 }}
-        >
-          {catDragOver === sortedCats.length && (
-            <div style={{
-              height: 2, borderRadius: 1, background: C.accent,
-              flex: 1, margin: "0 6px",
-            }} />
-          )}
-        </div>
-      )}
     </div>
   );
 };
