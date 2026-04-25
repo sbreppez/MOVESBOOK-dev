@@ -57,23 +57,6 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
 
   const sortedAttrs = [...customAttrs].sort((a,b) => (a.order||0) - (b.order||0));
 
-  // ── Auto-suggest: find existing move whose name is contained in typed name ──
-  const isAddMode = !move;
-  const autoSuggest = useMemo(() => {
-    if (!isAddMode || !f.name || f.name.length < 3) return null;
-    const lower = f.name.toLowerCase();
-    const matches = allMoves.filter(m => m.id !== f.id && lower.includes(m.name.toLowerCase()) && m.name.length >= 3);
-    if (!matches.length) return null;
-    // highest mastery first
-    matches.sort((a,b) => (b.mastery||0) - (a.mastery||0));
-    return matches[0];
-  }, [isAddMode, f.id, f.name, allMoves]);
-
-  const confirmSuggest = (m) => {
-    setF(p => ({...p, parentId: m.id}));
-    setShowBasedOn(true);
-  };
-
   // ── Based On: filtered move list ──
   const basedOnMoves = useMemo(() => {
     let pool = allMoves.filter(m => m.id !== (move?.id || f.id));
@@ -97,19 +80,6 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
       }>
       <Sel label={t("categories")} value={f.category} onChange={set("category")} options={cats.map(c=>({value:c,label:c}))}/>
       <Inp label={t("name") + " *"} value={f.name} onChange={set("name")} placeholder={t("moveNamePlaceholder")}/>
-
-      {/* ── Auto-suggest (premium) ── */}
-      {isPremium && isAddMode && autoSuggest && !f.parentId && (
-        <div style={{ display:"flex", alignItems:"center", gap:8, padding:"6px 10px", background:C.surfaceAlt, borderRadius:8, marginTop:-4, marginBottom:8, border:`1px solid ${C.borderLight}` }}>
-          <span style={{ fontSize:11, color:C.textSec, flex:1 }}>
-            {t("basedOnSuggestion").replace("{name}", autoSuggest.name)}
-          </span>
-          <button onClick={() => confirmSuggest(autoSuggest)}
-            style={{ background:C.accent, border:"none", borderRadius:6, width:28, height:28, cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center" }}>
-            <Ic n="check" s={14} c="#fff"/>
-          </button>
-        </div>
-      )}
 
       <Txtarea label={t("description")} value={f.description} onChange={set("description")} placeholder={t("describeMove")} autoExpand/>
       <div style={{ marginBottom:14 }}>
