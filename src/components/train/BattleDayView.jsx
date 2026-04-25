@@ -385,7 +385,7 @@ const BattleShareCard = ({ plan, battle, meta, prepStats, reflection, onClose, t
   const canvasRef = useRef(null);
   const photoInputRef = useRef(null);
   const [photo, setPhoto] = useState(null);
-  const [generated, setGenerated] = useState(false);
+  const [, setGenerated] = useState(false);
 
   const battleDate = new Date(battle.date + "T00:00:00").toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
 
@@ -505,7 +505,7 @@ const BattleShareCard = ({ plan, battle, meta, prepStats, reflection, onClose, t
       if (reflection?.takeaway) {
         ctx.font = `italic 26px 'Barlow', sans-serif`;
         ctx.fillStyle = "#b3b3b3";
-        const tw = wrapText(ctx, `"${reflection.takeaway}"`, W / 2, 830, W - 120, 34);
+        wrapText(ctx, `"${reflection.takeaway}"`, W / 2, 830, W - 120, 34);
       }
 
       // Footer
@@ -544,7 +544,7 @@ const BattleShareCard = ({ plan, battle, meta, prepStats, reflection, onClose, t
       a.href = url; a.download = "battle-card.png";
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
       URL.revokeObjectURL(url);
-    } catch (err) {
+    } catch {
       // User cancelled share
     }
   };
@@ -757,7 +757,7 @@ const PlanCompletionCard = ({ plan, meta, dayMap, setBattleprep, addToast, onClo
       a.href = url; a.download = "plan-complete.png";
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
       URL.revokeObjectURL(url);
-    } catch (err) { /* User cancelled share */ }
+    } catch { /* User cancelled share */ }
   };
 
   if (showShareCard) {

@@ -18,7 +18,6 @@ const TOD_KEYS = { morning: "todMorning", midday: "todMidday", afternoon: "todAf
 export const RoutineForm = ({ routine, onSave, onCancel }) => {
   const { C } = useSettings();
   const t = useT();
-  const isEdit = !!routine;
 
   const [f, setF] = useState({
     name: routine?.name || "",

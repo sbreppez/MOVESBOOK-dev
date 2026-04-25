@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { C } from '../../constants/colors';
 import { FONT_DISPLAY } from '../../constants/fonts';
-import { masteryColor } from '../../constants/styles';
 import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
 import { CAT_COLORS } from '../../constants/categories';
@@ -115,7 +114,6 @@ export const GAPTab = ({ moves, catColors=CAT_COLORS, setMoves, onDrill, setting
             const catCol = catColors[m.category] || C.accent;
             const isTrained = m.date === today;
             const { displayMastery } = computeDecay(m, settings.decaySensitivity);
-            const col = masteryColor(displayMastery);
             return (
               <div key={m.id} style={{ background:C.surface, border:"none", borderRadius:8,
                 borderLeft:`4px solid ${catCol}`, padding:"14px 16px 13px 16px" }}>

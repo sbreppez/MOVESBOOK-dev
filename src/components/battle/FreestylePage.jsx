@@ -17,7 +17,6 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
   const { moveCountStr } = usePlural();
   const { C } = useSettings();
   const showMastery   = settings.showMastery  !== false;
-  const showMoveCount = settings.showMoveCount !== false;
   const dm = m => computeDecay(m, settings.decaySensitivity).displayMastery;
   const [reorderMode, setReorderMode] = useState(false);
 
@@ -105,8 +104,6 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
   const [pickerSearch, setPickerSearch] = useState("");
   const [pickerSel,    setPickerSel]    = useState([]);
   const [expCats,      setExpCats]      = useState({});
-  const toUseDragItem = useRef(null);
-  const [toUseDragOver, setToUseDragOver] = useState(null);
 
   const getMoveById = id => moves.find(m=>m.id===id);
   const getSetById  = id => sets.find(s=>s.id===id);
@@ -114,18 +111,6 @@ export const FreestylePage = ({ moves, sets=[], settings={}, onAddTrigger, addTo
   useEffect(() => {
     try { localStorage.setItem("mb_freestyle_list", JSON.stringify(toUse)); } catch {}
   }, [toUse]);
-
-  const handleToUseReorderDrop = toIdx => {
-    if (toUseDragItem.current===null||toUseDragItem.current===toIdx) { setToUseDragOver(null); toUseDragItem.current=null; return; }
-    const uncheckedItems = toUse.filter(i=>!i.checked);
-    const checkedItems   = toUse.filter(i=>i.checked);
-    const arr = [...uncheckedItems];
-    const [moved] = arr.splice(toUseDragItem.current, 1);
-    const adj = toUseDragItem.current < toIdx ? toIdx-1 : toIdx;
-    arr.splice(adj, 0, moved);
-    setToUse([...arr, ...checkedItems]);
-    toUseDragItem.current=null; setToUseDragOver(null);
-  };
 
   const addToUse = (refId, type="move") => {
     if (toUse.find(i=>i.refId===refId)) return;

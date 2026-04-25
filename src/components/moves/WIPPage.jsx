@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, Fragment } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { Ic } from '../shared/Ic';
 import { useT, usePlural } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
@@ -31,7 +31,7 @@ import { CategoryDetailView } from './CategoryDetailView';
 
 export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains: _catDomains={}, setCatDomains: _setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore: _onOpenExplore, onOpenRRR: _onOpenRRR, onOpenCombine: _onOpenCombine, onOpenMap: _onOpenMap, onOpenFlashCards, onOpenTools, isPremium, staleCount=0, onBulkTrigger }) => {
   const t = useT();
-  const { moveCountStr, resultCountStr } = usePlural();
+  const { moveCountStr } = usePlural();
   const { C, settings:ctxSettings } = useSettings();
   const st = {...ctxSettings,...settings};
   const [view,setView]=useState(st.defaultView||"list");
@@ -55,9 +55,6 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   useEffect(()=>{ setView(st.defaultView||"list"); },[st.defaultView]);
   const [showFilter, setShowFilter] = useState(false);
   const [attrFilters, setAttrFilters] = useState({});
-  const setDragItem=useRef(null);
-  const [setDragOver,setSetDragOver]=useState(null);
-  const masteryColorWip = p => p<30?C.red:p<60?C.yellow:p<80?C.blue:C.green;
 
   // When an idea is pushed in from the Ideas tab, open the add modal with its text
   useEffect(()=>{
@@ -127,8 +124,6 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
     catDragItem,
     catDragOver,
     setCatDragOver,
-    handleCatDragStart,
-    handleCatDragOver,
     handleCatDrop,
   } = useCategoryCrud({
     cats,

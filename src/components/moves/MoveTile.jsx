@@ -6,7 +6,7 @@ import { Highlight } from '../shared/Highlight';
 import { masteryColor } from '../../constants/styles';
 import { useSettings } from '../../hooks/useSettings';
 import { useT } from '../../hooks/useTranslation';
-import { computeDecay, showDecayArrow } from '../../utils/masteryDecay';
+import { computeDecay } from '../../utils/masteryDecay';
 import { todayLocal } from '../../utils/dateUtils';
 import { CATS, CAT_COLORS } from '../../constants/categories';
 
@@ -15,7 +15,6 @@ export const MoveTile = ({ move, onClick, onEdit: _onEdit, onDelete: _onDelete, 
   const t = useT();
   const [expanded, setExpanded] = useState(false);
   const { displayMastery } = computeDecay(move, settings.decaySensitivity);
-  const hasDecayArrow = showDecayArrow(move, settings.decaySensitivity);
   const col=masteryColor(displayMastery), catCol=catColors[move.category]||C.accent;
   const showMastery = settings.showMastery !== false;
   const compact = settings.compactCards;

@@ -109,8 +109,6 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
   const [prBroken, setPrBroken] = useState(null);
   const [showShareCard, setShowShareCard] = useState(false);
   const [sharePhoto, setSharePhoto] = useState(null);
-  const canvasRef = useRef(null);
-  const photoInputRef = useRef(null);
   const [completedSession, setCompletedSession] = useState(null);
 
   // ── Pending PR detection (shown on done screen before save) ──
@@ -202,13 +200,6 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
     return () => clearInterval(timerRef.current);
   // eslint-disable-next-line react-hooks/exhaustive-deps -- phase-only by intent; startNextRound is not memoized and adding it would tear down/rebuild the 100ms interval on every render
   }, [phase]);
-
-  // ── Check if session should end ──
-  const shouldEndSession = useCallback(() => {
-    if (mode === "rounds" && roundNum >= targetRounds) return true;
-    if (mode === "time" && sessionElapsed >= timeLimit * 60 * 1000) return true;
-    return false;
-  }, [mode, roundNum, targetRounds, timeLimit, sessionElapsed]);
 
   // ── Start first round ──
   const handleTapToStart = () => {

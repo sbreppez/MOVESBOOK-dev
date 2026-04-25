@@ -48,8 +48,6 @@ const CONCEPT_CHIPS = {
 const TECH_CATS = Object.keys(TECH_CHIPS);
 const CONCEPT_CATS = Object.keys(CONCEPT_CHIPS);
 
-const TIP_KEYS = ["labTip1","labTip2","labTip3","labTip4","labTip5"];
-
 const emptyTech = () => {
   const o = {};
   TECH_CATS.forEach(k => o[k] = null);
@@ -68,7 +66,6 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
   const [seedMove, setSeedMove] = useState(null);
   const [techSel, setTechSel] = useState(emptyTech);
   const [conceptSel, setConceptSel] = useState({ category: null, value: null });
-  const [tipIdx, setTipIdx] = useState(() => Math.floor(Math.random() * TIP_KEYS.length));
 
   // Timer
   const [timerState, setTimerState] = useState("idle"); // "idle"|"running"|"done"

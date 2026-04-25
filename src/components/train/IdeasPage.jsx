@@ -17,11 +17,10 @@ import { todayLocal, toLocalYMD } from '../../utils/dateUtils';
 
 export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[], setHabits=()=>{}, calendar, onOpenCalendarJournal, battleprep, setBattleprep, moves, sets, addToast, externalTrainSubTab, onTrainSubTabUsed, battlePrepSeed, onBattlePrepSeedUsed, addCalendarEvent, removeCalendarEvent, onSubTabChange, onOpenSharedCalendar }) => {
   const t = useT();
-  const { resultCountStr, dayCountStr } = usePlural();
+  const { resultCountStr } = usePlural();
   const { settings: ideaSettings } = useSettings();
   const [view,       setView]       = useState("list");
   useEffect(() => { setView("list"); }, []);
-  const [editIdea,   setEditIdea]   = useState(null);
   const [typeChooser,setTypeChooser]= useState(false);
   const prevAddTrigger = useRef(onAddTrigger);
   useEffect(()=>{
@@ -34,7 +33,6 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
     prevAddTrigger.current = onAddTrigger;
   // eslint-disable-next-line react-hooks/exhaustive-deps -- ref-compare guard prevents re-fire; trainTab read fresh from closure
   },[onAddTrigger]);
-  const [newType,    setNewType]    = useState(null);
   const { openModal } = useTrainModal();
   const [trainTab,   setTrainTab]   = useState("goals");
   // Report active sub-tab to parent for contextual + menu
@@ -63,8 +61,6 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
   const [showSearch, setShowSearch] = useState(false);
   const [reorderMode, setReorderMode] = useState(false);
 
-  const dragItem = useRef(null);
-  const [dragOver,    setDragOver]    = useState(null);
   const [confirmDel,  setConfirmDel]  = useState(null); // holds idea to delete
   const [hintDismissed, setHintDismissed] = useState(() => {
     try { return localStorage.getItem("mb_hint_goal_journal") === "1"; } catch { return false; }
@@ -126,20 +122,6 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
   };
   const changeColor = (id, color) => setIdeas(p=>p.map(i=>i.id===id?{...i,color}:i));
   const togglePin   = (id) => setIdeas(p=>p.map(i=>i.id===id&&i.type!=="goal"?{...i,pinned:!i.pinned}:i));
-
-  const handleDragStart = (idx) => { dragItem.current = idx; };
-  const handleDrop = (targetIdx) => {
-    const from = dragItem.current;
-    setDragOver(null);
-    if (from === null || from === targetIdx) return;
-    setIdeas(prev => {
-      const next = [...prev];
-      const [moved] = next.splice(from, 1);
-      const insertAt = from < targetIdx ? targetIdx - 1 : targetIdx;
-      next.splice(insertAt, 0, moved);
-      return next;
-    });
-  };
 
   const q = search.toLowerCase().trim();
   const base = q ? ideas.filter(i=>(i.title||"").toLowerCase().includes(q)||(i.text||"").toLowerCase().includes(q)) : ideas;

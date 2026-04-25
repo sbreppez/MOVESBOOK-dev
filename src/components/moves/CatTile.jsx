@@ -12,7 +12,7 @@ import { computeDecay } from '../../utils/masteryDecay';
 
 const TILE_PREVIEW = 4; // number of moves shown before "show more"
 export const CatTile = (props) => {
-  const { name, color, total, mastered, moves=[], viewMode="tiles", showMastery=true, showMoveCount=true, onClick, onDelete, onRename, onDuplicate, onChangeColor, draggable, onDragStart, onDragOver, onDrop, isDraggingOver } = props;
+  const { name, color, total, moves=[], viewMode="tiles", showMastery=true, showMoveCount=true, onClick, onDelete, onRename, onDuplicate, draggable, onDragStart, onDragOver, onDrop } = props;
   const t = useT();
   const { moveCountStr } = usePlural();
   const settings = useSettings();

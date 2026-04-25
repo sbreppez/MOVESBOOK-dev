@@ -327,7 +327,6 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
   const currentPhase = dayMap[today] || null;
   const stats = useMemo(() => getPlanStats(plan, dayMap), [plan, dayMap]);
   const displayName = plan.eventName || plan.planName;
-  const phaseColor = currentPhase?.phaseColor || C.textMuted;
 
   // Battle day detection
   const todayBattle = useMemo(() => (plan.battles || []).find(b => b.date === today && !b.completed), [plan.battles, today]);

@@ -22,7 +22,7 @@ import { LEVEL_TO_ROLE, getTensionColors, getItemTension, getMoveTension, ArcCha
 
 export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, addToast, freestyle, onFreestyleChange, rivals, onRivalsChange, addCalendarEvent, removeCalendarEvent, onSimulate, battleprep, setBattleprep, calendar, battlePrepSeed, onBattlePrepSeedUsed, onOpenSharedCalendar, isPremium }) => {
   const t = useT();
-  const { moveCountStr, itemCountStr, roundCountStr, entryCountStr } = usePlural();
+  const { roundCountStr, entryCountStr } = usePlural();
   const { C } = useSettings();
   const showMastery   = settings.showMastery  === true;
   const showMoveCount = settings.showMoveCount === true;
@@ -34,7 +34,6 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
 
   // ── PLAN sub-tab state ──────────────────────────────────────────────────────
   const [expRounds, setExpRounds] = useState({});
-  const [expEntries, setExpEntries] = useState({});
   const [editRound, setEditRound] = useState(null);
   const [addingRound, setAddingRound] = useState(false);
   const [confirmRestore, setConfirmRestore] = useState(false);
@@ -139,56 +138,8 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
   const deleteRound = rid => setRounds(p => p.filter(r => r.id !== rid));
   const updateRound = (rid, fields) => setRounds(p => p.map(r => r.id === rid ? {...r,...fields} : r));
 
-  const addEntry = rid => setRounds(p => p.map(r => {
-    if (r.id !== rid) return r;
-    const n = (r.entries||[]).length + 1;
-    return {...r, entries:[...(r.entries||[]), { id: Date.now(), name:t("entryPrefix")+" "+n, items:[] }]};
-  }));
-  const removeEntry = (rid, eid) => setRounds(p => p.map(r =>
-    r.id !== rid ? r : {...r, entries: (r.entries||[]).filter(e => e.id !== eid)}
-  ));
-  const addItemToEntry = (rid, eid, items) => setRounds(p => p.map(r => {
-    if (r.id !== rid) return r;
-    return {...r, entries: (r.entries||[]).map(e => {
-      if (e.id !== eid) return e;
-      const existing = new Set((e.items||[]).map(i => i.type+":"+i.refId));
-      const toAdd = items.filter(i => !existing.has(i.type+":"+i.refId));
-      return {...e, items:[...e.items, ...toAdd]};
-    })};
-  }));
-  const removeItemFromEntry = (rid, eid, idx) => setRounds(p => p.map(r =>
-    r.id !== rid ? r : {...r, entries: (r.entries||[]).map(e =>
-      e.id !== eid ? e : {...e, items: (e.items||[]).filter((_,i) => i !== idx)}
-    )}
-  ));
-  const reorderEntryItems = (rid, eid, fromIdx, toIdx) => setRounds(p => p.map(r => {
-    if (r.id !== rid) return r;
-    return {...r, entries: (r.entries||[]).map(e => {
-      if (e.id !== eid) return e;
-      const items = [...e.items];
-      const [moved] = items.splice(fromIdx, 1);
-      const adj = fromIdx < toIdx ? toIdx - 1 : toIdx;
-      items.splice(adj, 0, moved);
-      return {...e, items};
-    })};
-  }));
-
-  // find which entry in a round already contains an item
-  const findDupes = (round, type, refId) => {
-    const found = [];
-    (round.entries||[]).forEach(e => {
-      if (e.items.some(i => i.type === type && i.refId === refId)) found.push(e.name);
-    });
-    return found;
-  };
-
-  // ── Drag within entry items ─────────────────────────────────────────────────
-  const entryDragItem = useRef(null);
-  const [entryDragOver, setEntryDragOver] = useState(null);
-
   // ── Sets CRUD ────────────────────────────────────────────────────────────────
   const addSet = name => setSets(p => [...p, { id:Date.now(), name, color:PRESET_COLORS[1], notes:"", mastery:0, date:todayLocal() }]);
-  const deleteSet = sid => setSets(p => p.filter(s => s.id !== sid));
   const updateSet = (sid, fields) => setSets(p => p.map(s => s.id === sid ? {...s,...fields} : s));
 
   const masteryColorLocal = p => p < 30 ? C.red : p < 60 ? C.yellow : p < 80 ? C.blue : C.green;
@@ -547,7 +498,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
   // ── Vocab Picker overlay ─────────────────────────────────────────────────────
   const VocabPicker = ({ pickerState }) => {
     const t = useT();
-  const { entryId, applyLocal } = pickerState;
+  const { entryId } = pickerState;
     const q = pickerSearch.toLowerCase().trim();
     const toggleSel = (type, refId) => {
       const key = type+":"+refId;

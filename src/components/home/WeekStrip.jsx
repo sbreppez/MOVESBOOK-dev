@@ -1,14 +1,12 @@
 import React from 'react';
 import { FONT_DISPLAY } from '../../constants/fonts';
 import { useSettings } from '../../hooks/useSettings';
-import { useT } from '../../hooks/useTranslation';
 import { todayLocal, toLocalYMD } from '../../utils/dateUtils';
 
 const DAY_LETTERS = ['S','M','T','W','T','F','S'];
 
 export const WeekStrip = ({ selectedDate, onSelectDate }) => {
   const { C } = useSettings();
-  const t = useT();
   const todayStr = todayLocal();
 
   const days = [];
@@ -28,7 +26,6 @@ export const WeekStrip = ({ selectedDate, onSelectDate }) => {
       {days.map(({ dateStr, dayNum, dow }) => {
         const isToday = dateStr === todayStr;
         const isSelected = dateStr === selectedDate;
-        const isActive = isToday || isSelected;
         return (
           <button key={dateStr} onClick={() => onSelectDate(dateStr)}
             style={{

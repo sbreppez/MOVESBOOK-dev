@@ -62,7 +62,7 @@ export const computeDailyEntry = (date, { moves, reps, sparring, musicflow, cale
 // ── Weekly Report ───────────────────────────────────────────────────────────
 
 export const computeWeeklyReport = (weekStart, data) => {
-  const { moves, reps, sparring, musicflow, calendar, cats } = data;
+  const { moves, reps, sparring, musicflow, calendar } = data;
   const weekEnd = addDays(weekStart, 6);
   let sessionCount = 0, movesAdded = 0, routineCount = 0, routineSteps = 0, routineStepsTotal = 0;
   const catCounts = {};
@@ -103,7 +103,7 @@ export const computeWeeklyReport = (weekStart, data) => {
 // ── Monthly Report ──────────────────────────────────────────────────────────
 
 export const computeMonthlyReport = (year, month, data) => {
-  const { moves, reps, sparring, musicflow, calendar, cats, battleprep, rivals } = data;
+  const { moves, reps, sparring, musicflow, calendar, battleprep } = data;
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const monthStr = `${year}-${String(month + 1).padStart(2, "0")}`;
 
@@ -276,7 +276,6 @@ export const detectMilestones = ({ moves, sparring, battleprep, reps, musicflow,
 
 export const buildTimeline = (monthsBack, data, milestones) => {
   const today = new Date();
-  const todayStr = todayLocal();
   const entries = [];
 
   // Determine date range

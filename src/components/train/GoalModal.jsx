@@ -24,7 +24,7 @@ export const GoalModal = ({ onClose, onSave, idea }) => {
   const [sessionLen,   setSessionLen]   = useState(idea?.sessionLength || "");
   const [trainWhere,   setTrainWhere]   = useState(idea?.trainWhere   || "");
   const [obstacles,    setObstacles]    = useState(idea?.obstacles    || "");
-  const [color,        setColor]        = useState(idea?.color        || IDEA_COLORS[0]);
+  const [color]                         = useState(idea?.color        || IDEA_COLORS[0]);
   const [journal,      setJournal]      = useState(idea?.journal      || []);
   const [link,         setLink]         = useState(idea?.link         || "");
   const handleSave = () => {

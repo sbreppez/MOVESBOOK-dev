@@ -56,7 +56,6 @@ function migrateBattlePrep(bp) {
 const DEFAULT_TRANSITIONS = ["Thread","Jump","Counter Spin","Slide","Sweep","Touch Foot","Kick","Hop","Roll","Twist","Drop","Spin Through"];
 
 export default function App() {
-  const initLang = (() => { try { return JSON.parse(localStorage.getItem("mb_settings"))?.language || "en"; } catch { return "en"; } })();
   const [tab,setTab]=useState(()=>{ try { const st=localStorage.getItem("mb_settings"); if(st){ const p=JSON.parse(st); if(p.defaultTab){ const m={"wip":"moves","ideas":"home","ready":"battle","train":"home","vocab":"moves"}; const mapped=m[p.defaultTab]||p.defaultTab; const valid=["home","moves","battle","reflect"]; return valid.includes(mapped)?mapped:"home"; } } } catch {} return "home"; });
 
   // ── Data state ─────────────────────────────────────────────────────────────
@@ -233,7 +232,7 @@ export default function App() {
   const [showPostSessionPrompt, setShowPostSessionPrompt] = useState(false);
   // showPlusSheet removed — each page handles + via onAddTrigger
   const [showCreate, setShowCreate] = useState(false);
-  const [bulkTrigger, setBulkTrigger] = useState(0);
+  const [bulkTrigger] = useState(0);
   const lastSessionSaved = useRef(false);
 
   // ── Persist to localStorage on every change ────────────────────────────────
@@ -545,12 +544,11 @@ export default function App() {
 
   const [zoom, setZoom] = useState(()=>{ try { const s=localStorage.getItem("mb_settings"); if(s){ const p=JSON.parse(s); if(p.zoom) return p.zoom; } } catch{} return 1; });
   const handleZoomChange = (val) => { setZoom(val); setAppSettings(p=>({...p, zoom:val})); };
-  const zoomMin=0.6, zoomMax=1.4, zoomStep=0.1;
   const [addTick, setAddTick] = useState(0);
   const [subTab, setSubTab] = useState("moves"); // tracks active sub-tab across pages
   const [battlePrepSeed, setBattlePrepSeed] = useState(null); // { date, eventName } seed from Calendar
   const [calendarInitialMonth, setCalendarInitialMonth] = useState(null); // { year, month } for shared calendar
-  const [calendarInitialDay,setCalendarInitialDay]=useState(null);
+  const [calendarInitialDay]=useState(null);
   const [trainModal,  setTrainModal]  = useState({});
   const [showManual,   setShowManual]   =useState(false);
   const [showSettings, setShowSettings] =useState(false);

@@ -81,8 +81,6 @@ export const FeedbackModal = ({ onClose, inline }) => {
     }
   };
 
-  const isDark = useSettings().settings?.theme === "dark";
-
   const textareaStyle = {
     width:"100%", background:C.surfaceAlt, border:`1px solid ${C.border}`, borderRadius:8,
     padding:"10px 12px", color:C.text, fontSize:13, fontFamily:FONT_BODY, resize:"vertical",

@@ -28,7 +28,7 @@ export const SetDetailModal = ({ item, onClose, onSave, type="set", allMoves=[],
   const [link,    setLink]    = useState(item.link   || "");
   const [mastery, setMastery] = useState(item.mastery ?? 0);
   const [details, setDetails] = useState(item.details || "");
-  const [notes,   setNotes]   = useState(item.notes  || "");
+  const [notes]   = useState(item.notes  || "");
   const [date,    setDate]    = useState(item.date   || todayLocal());
   const [localIds, setLocalIds] = useState(type==="set" ? (item.moveIds||[]) : (item.setIds||[]));
   const [pickerOpen, setPickerOpen] = useState(false);

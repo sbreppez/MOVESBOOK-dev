@@ -13,7 +13,7 @@ export const HabitModal = ({ onClose, onSave, habit }) => {
   const isEdit = !!habit;
   const [name,      setName]      = useState(habit?.name      || "");
   const [frequency, setFrequency] = useState(habit?.frequency || "daily");
-  const [color,     setColor]     = useState(habit?.color     || HABIT_COLORS[0]);
+  const [color]                   = useState(habit?.color     || HABIT_COLORS[0]);
   const [why,       setWhy]       = useState(habit?.why       || "");
   const [notes,     setNotes]     = useState(habit?.notes     || "");
   const [timeOfDay, setTimeOfDay] = useState(habit?.timeOfDay || "anytime");

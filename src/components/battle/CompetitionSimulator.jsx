@@ -107,7 +107,7 @@ export const CompetitionSimulator = ({
   const [activeBracketIdx, setActiveBracketIdx] = useState(0);
   const [phase, setPhase] = useState("ready");
   const [roundNum, setRoundNum] = useState(0);
-  const [roundLog, setRoundLog] = useState([]);
+  const [, setRoundLog] = useState([]);
   const [workStart, setWorkStart] = useState(null);
   const [workElapsed, setWorkElapsed] = useState(0);
   const [restTotal, setRestTotal] = useState(0);
@@ -146,7 +146,6 @@ export const CompetitionSimulator = ({
   const [showShareCard, setShowShareCard] = useState(false);
   const [sharePhoto, setSharePhoto] = useState(null);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
-  const canvasRef = useRef(null);
   const photoInputRef = useRef(null);
 
   // ── Derived values ──
@@ -1165,7 +1164,6 @@ export const CompetitionSimulator = ({
 
   if (screen === "waiting") {
     const secLeft = Math.ceil(waitRemaining / 1000);
-    const minsLeft = Math.ceil(secLeft / 60);
     const isWarning5 = secLeft <= 300 && secLeft > 120;
     const isWarning2 = secLeft <= 120 && secLeft > 30;
     const isBattleMode = secLeft <= 30;

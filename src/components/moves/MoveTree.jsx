@@ -5,19 +5,6 @@ import { masteryColor } from '../../constants/styles';
 import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
 
-const OriginBadge = ({ origin }) => {
-  if (!origin) return null;
-  const map = { learned: { label: "L", bg: C.textMuted }, version: { label: "V", bg: C.blue }, creation: { label: "C", bg: C.green } };
-  const cfg = map[origin];
-  if (!cfg) return null;
-  return (
-    <span style={{ fontSize: 10, fontWeight: 700, fontFamily: FONT_DISPLAY, borderRadius: 6,
-      padding: "1px 6px", background: cfg.bg, color: "#fff", letterSpacing: 0.5, flexShrink: 0 }}>
-      {cfg.label}
-    </span>
-  );
-};
-
 const TreeNode = ({ node, depth, catColors, onEdit, collapsed, toggleCollapse, isLast }) => {
   const hasChildren = node.children && node.children.length > 0;
   const isCollapsed = collapsed.has(node.move.id);
