@@ -14,6 +14,7 @@ const TILE_PREVIEW = 4; // number of moves shown before "show more"
 export const CatTile = (props) => {
   const { name, color, total, moves=[], viewMode="tiles", showMastery=true, showMoveCount=true, onClick, onDelete, onRename, onDuplicate, draggable, onDragStart, onDragOver, onDrop } = props;
   const t = useT();
+  const [delBodyPre, delBodyPost] = t("deleteCategoryBody").split("{name}");
   const { moveCountStr } = usePlural();
   const settings = useSettings();
   const dm = (m) => computeDecay(m, settings.decaySensitivity).displayMastery;
@@ -108,7 +109,7 @@ export const CatTile = (props) => {
         </div>{/* end CARD_BASE */}
 
         {confirmDel&&<Modal title={t("deleteCategory")} onClose={()=>setConfirmDel(false)}>
-          <p style={{ color:C.textSec, marginBottom:20, lineHeight:1.6 }}>Delete <strong style={{color:C.text}}>{name}</strong>? All moves inside will be deleted too.</p>
+          <p style={{ color:C.textSec, marginBottom:20, lineHeight:1.6 }}>{delBodyPre}<strong style={{color:C.text}}>{name}</strong>{delBodyPost}</p>
           <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
             <Btn variant="secondary" onClick={()=>setConfirmDel(false)}>{t("keepIt")}</Btn>
             <Btn variant="danger" onClick={()=>{onDelete();setConfirmDel(false);}}>{t("delete")}</Btn>
@@ -184,7 +185,7 @@ export const CatTile = (props) => {
       </div>
 
       {confirmDel&&<Modal title={t("deleteCategory")} onClose={()=>setConfirmDel(false)}>
-        <p style={{ color:C.textSec, marginBottom:20, lineHeight:1.6 }}>Delete <strong style={{color:C.text}}>{name}</strong>? All moves inside will be deleted too.</p>
+        <p style={{ color:C.textSec, marginBottom:20, lineHeight:1.6 }}>{delBodyPre}<strong style={{color:C.text}}>{name}</strong>{delBodyPost}</p>
         <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
           <Btn variant="secondary" onClick={()=>setConfirmDel(false)}>{t("keepIt")}</Btn>
           <Btn variant="danger" onClick={()=>{onDelete();setConfirmDel(false);}}>{t("delete")}</Btn>
