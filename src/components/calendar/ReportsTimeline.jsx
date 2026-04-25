@@ -14,7 +14,7 @@ const formatShortDate = (dateStr) => {
   return `${months[d.getMonth()]} ${d.getDate()}`;
 };
 
-export const ReportsTimeline = ({ moves, reps, sparring, musicflow, calendar, cats, catColors, battleprep, rivals, reports }) => {
+export const ReportsTimeline = ({ moves, reps, sparring, musicflow, calendar, cats, catColors, battleprep, rivals, reports, onSelectDay }) => {
   const t = useT();
   const { C } = useSettings();
   const [monthsBack, setMonthsBack] = useState(3);
@@ -41,7 +41,7 @@ export const ReportsTimeline = ({ moves, reps, sparring, musicflow, calendar, ca
       {timeline.map((entry, _idx) => {
         if (entry.type === "month") return <MonthTile key={`m-${entry.date}`} entry={entry} t={t} C={C} catColors={catColors}/>;
         if (entry.type === "week") return <WeekTile key={`w-${entry.date}`} entry={entry} t={t} C={C} catColors={catColors}/>;
-        return <DayRow key={`d-${entry.date}`} entry={entry} t={t} C={C}/>;
+        return <DayRow key={`d-${entry.date}`} entry={entry} t={t} C={C} onSelectDay={onSelectDay}/>;
       })}
 
       <button onClick={() => setMonthsBack(prev => prev + 3)}
@@ -164,13 +164,16 @@ const WeekTile = ({ entry, t, C, catColors }) => {
 
 // ── Daily Row ───────────────────────────────────────────────────────────────
 
-const DayRow = ({ entry, t, C }) => {
+const DayRow = ({ entry, t, C, onSelectDay }) => {
   const d = entry.data;
   const dateLabel = formatShortDate(entry.date);
+  const tappable = !d.isRest && !!onSelectDay;
 
   return (
-    <div style={{ display:"flex", alignItems:"center", gap:8, padding:"6px 0",
-      borderBottom:`1px solid ${C.borderLight}` }}>
+    <div onClick={tappable ? () => onSelectDay(entry.date) : undefined}
+      style={{ display:"flex", alignItems:"center", gap:8, padding:"6px 0",
+      borderBottom:`1px solid ${C.borderLight}`,
+      cursor: tappable ? "pointer" : "default" }}>
       <span style={{ fontSize:11, fontWeight:700, color:C.textMuted, fontFamily:FONT_DISPLAY,
         minWidth:48 }}>{dateLabel}</span>
       {d.isRest ? (

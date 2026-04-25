@@ -813,7 +813,8 @@ export const CalendarOverlay = ({
         <ReportsTimeline
           moves={moves} reps={reps} sparring={sparring} musicflow={musicflow}
           calendar={calendar} cats={cats} catColors={catColors}
-          battleprep={battleprep} rivals={null} reports={reports}/>
+          battleprep={battleprep} rivals={null} reports={reports}
+          onSelectDay={(dateStr) => { setCalView("days"); setSelectedDay(dateStr); setShowTypePicker(false); }}/>
       )}
 
       {/* Edit home-idea note */}
