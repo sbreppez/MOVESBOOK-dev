@@ -381,7 +381,7 @@ const PostBattleReflection = ({ plan, battle, meta, prepStats: _prepStats, mood,
 };
 
 // ── Battle Share Card ───────────────────────────────────────────────────────
-const BattleShareCard = ({ plan, battle, meta, prepStats, reflection, onClose, t, today: _today }) => {
+export const BattleShareCard = ({ plan, battle, meta, prepStats, reflection, onClose, t, today: _today }) => {
   const canvasRef = useRef(null);
   const photoInputRef = useRef(null);
   const [photo, setPhoto] = useState(null);
