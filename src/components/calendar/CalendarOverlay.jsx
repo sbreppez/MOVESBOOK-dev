@@ -48,9 +48,13 @@ export const CalendarOverlay = ({
   const [calView, setCalView] = useState("days");
   const [confirmDeleteNote, setConfirmDeleteNote] = useState(null);
   const [editHomeNote, setEditHomeNote] = useState(null);
+  const prevAddTrigger = useRef(onAddTrigger);
 
   useEffect(() => {
-    if (onAddTrigger) { setSelectedDay(today); setShowTypePicker(true); setShowJournal(false); }
+    if (onAddTrigger !== prevAddTrigger.current && onAddTrigger > 0) {
+      setSelectedDay(today); setShowTypePicker(true); setShowJournal(false);
+    }
+    prevAddTrigger.current = onAddTrigger;
   // eslint-disable-next-line react-hooks/exhaustive-deps -- onAddTrigger-only by intent; today value freshly captured per render
   }, [onAddTrigger]);
 
