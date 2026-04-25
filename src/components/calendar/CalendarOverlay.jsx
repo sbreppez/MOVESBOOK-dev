@@ -534,6 +534,7 @@ export const CalendarOverlay = ({
                   <div style={sectionLabel}>{t("prepPhases") || "PREP PHASES"}</div>
                   {Object.values(byPlan).map(entry => {
                     const isBattle = entry.type === "battle";
+                    const isFutureBattle = isBattle && selectedDay >= today && onGoToPrep;
                     const plan = (battleprep?.plans || []).find(p => p.id === entry.planId);
                     const dayMapInfo = plan ? (() => {
                       const dm = allDayMaps.find(d => d.planId === plan.id);
@@ -550,7 +551,9 @@ export const CalendarOverlay = ({
                           <span style={{ fontSize: 10, fontFamily: FONT_DISPLAY, fontWeight: 700, background: `${entry.phaseColor}25`, color: entry.phaseColor, borderRadius: 4, padding: "1px 6px" }}>{entry.phase}</span>
                         </div>
                         {isBattle && (
-                          <div style={{ textAlign: "center", padding: "8px 0 4px" }}>
+                          <div
+                            onClick={isFutureBattle ? () => onGoToPrep({ focus: "plan", planId: entry.planId, date: selectedDay }) : undefined}
+                            style={{ textAlign: "center", padding: "8px 0 4px", cursor: isFutureBattle ? "pointer" : undefined }}>
                             <span style={{ fontSize: 20 }}>{"\u2694\uFE0F"}</span>
                             <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 11, letterSpacing: 1, color: C.red, marginTop: 2 }}>{t("battleDay")}</div>
                           </div>

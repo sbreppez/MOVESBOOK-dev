@@ -37,11 +37,17 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
 
   // Handle incoming seed from Calendar → Prep
   useEffect(() => {
-    if (battlePrepSeed) {
+    if (!battlePrepSeed) return;
+    if (battlePrepSeed.focus === "plan" && battlePrepSeed.planId) {
+      setExpandedPlanId(battlePrepSeed.planId);
+      if (battlePrepSeed.date) {
+        setSelectedDayByPlan(prev => ({ ...prev, [battlePrepSeed.planId]: battlePrepSeed.date }));
+      }
+    } else {
       setSeedData(battlePrepSeed);
       setShowSetup(true);
-      if (onBattlePrepSeedUsed) onBattlePrepSeedUsed();
     }
+    if (onBattlePrepSeedUsed) onBattlePrepSeedUsed();
   }, [battlePrepSeed, onBattlePrepSeedUsed]);
 
   // Handle + menu "Add Battle" trigger

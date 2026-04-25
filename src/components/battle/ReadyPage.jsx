@@ -32,6 +32,10 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
   // eslint-disable-next-line react-hooks/exhaustive-deps -- fire-once mount notify
   useEffect(()=>{ if(onSubTabChange) onSubTabChange("plan"); },[]);
 
+  // Switch to PREP sub-tab whenever a seed arrives (from Calendar)
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally only depends on seed identity
+  useEffect(() => { if (battlePrepSeed) setBattleTabAndNotify("prep"); }, [battlePrepSeed]);
+
   // ── PLAN sub-tab state ──────────────────────────────────────────────────────
   const [expRounds, setExpRounds] = useState({});
   const [editRound, setEditRound] = useState(null);

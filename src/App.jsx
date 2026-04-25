@@ -546,7 +546,8 @@ export default function App() {
   const handleZoomChange = (val) => { setZoom(val); setAppSettings(p=>({...p, zoom:val})); };
   const [addTick, setAddTick] = useState(0);
   const [subTab, setSubTab] = useState("moves"); // tracks active sub-tab across pages
-  const [battlePrepSeed, setBattlePrepSeed] = useState(null); // { date, eventName } seed from Calendar
+  // Polymorphic: { date, eventName } opens setup modal | { focus: "plan", planId, date } expands existing plan
+  const [battlePrepSeed, setBattlePrepSeed] = useState(null);
   const [calendarInitialMonth, setCalendarInitialMonth] = useState(null); // { year, month } for shared calendar
   const [calendarInitialDay]=useState(null);
   const [trainModal,  setTrainModal]  = useState({});
