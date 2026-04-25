@@ -54,7 +54,7 @@ export default [
       'react/no-unescaped-entities': 'warn',
       'react/jsx-key': 'warn',
       'react/display-name': 'warn',
-      'no-empty': 'warn',
+      'no-empty': ['warn', { allowEmptyCatch: true }],
       'no-constant-condition': 'warn',
       'no-unreachable': 'warn',
       'prefer-const': 'warn',
