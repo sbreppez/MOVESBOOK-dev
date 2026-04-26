@@ -123,7 +123,7 @@ export const GoalModal = ({ onClose, onSave, idea }) => {
                 style={{ ...inputStyle, border:`1.5px solid ${C.accent}`, fontSize:14, fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:0.5 }}/>
             </div>
 
-            <Txtarea label={t("whyQuestion")} hint="How will it benefit your current situation?" minHeight="20vh"
+            <Txtarea label={t("whyQuestion")} hint="How will it benefit your current situation?" minHeight="120px"
               value={why} onChange={setWhy} placeholder="This goal matters because…" autoExpand/>
 
             {/* BY WHEN — date picker */}
