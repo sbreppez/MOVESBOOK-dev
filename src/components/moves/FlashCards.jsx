@@ -117,12 +117,12 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
 
   const header = {
     display: "flex", alignItems: "center", justifyContent: "space-between",
-    padding: "12px 16px", borderBottom: `1px solid ${C.border}`, background: C.surface, flexShrink: 0,
+    padding: "12px 14px 8px", flexShrink: 0,
   };
 
   const headerTitle = {
-    fontFamily: FONT_DISPLAY, fontSize: 16, fontWeight: 800, letterSpacing: 1.5,
-    textTransform: "uppercase", color: C.text,
+    fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 16, letterSpacing: 2,
+    color: C.text, textTransform: "uppercase",
   };
 
   const scrollBody = { flex: 1, overflowY: "auto", padding: "16px" };
@@ -133,8 +133,8 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
       <div style={overlay}>
         <div style={header}>
           <span style={headerTitle}>{t("flashCards")}</span>
-          <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", padding: 6 }}>
-            <Ic n="x" s={20} c={C.textMuted} />
+          <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
+            <Ic n="x" s={18} c={C.textMuted} />
           </button>
         </div>
         <div style={scrollBody}>
@@ -159,8 +159,8 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
             return (
               <button key={s.id} onClick={() => toggleSelect(s.id)}
                 style={{ display: "flex", alignItems: "center", gap: 12, width: "100%",
-                  padding: "12px 10px", background: checked ? `${C.accent}12` : "none",
-                  border: `1px solid ${checked ? C.accent : C.border}`, borderRadius: 8,
+                  padding: "12px 10px", background: checked ? `${C.accent}12` : C.surface,
+                  border: "none", borderRadius: 8,
                   cursor: "pointer", marginBottom: 8, minHeight: 44 }}>
                 {/* Checkbox */}
                 <div style={{ width: 22, height: 22, borderRadius: 5, border: `2px solid ${checked ? C.accent : C.textMuted}`,
@@ -187,7 +187,7 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
 
           {/* Start button */}
           <button onClick={startGame} disabled={selectedIds.length < 2}
-            style={{ width: "100%", padding: "14px 0", borderRadius: 12, border: "none", cursor: selectedIds.length < 2 ? "default" : "pointer",
+            style={{ width: "100%", padding: "14px 0", borderRadius: 8, border: "none", cursor: selectedIds.length < 2 ? "default" : "pointer",
               background: selectedIds.length < 2 ? C.surfaceAlt : C.accent, color: selectedIds.length < 2 ? C.textMuted : "#fff",
               fontFamily: FONT_DISPLAY, fontSize: 16, fontWeight: 800, letterSpacing: 1.5, textTransform: "uppercase",
               marginTop: 8, opacity: selectedIds.length < 2 ? 0.5 : 1, minHeight: 48 }}>
@@ -226,7 +226,7 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
               {/* Front */}
               <div style={{
                 position: "absolute", inset: 0, backfaceVisibility: "hidden",
-                background: C.surface, border: `1px solid ${C.border}`, borderRadius: 16,
+                background: C.surface, borderRadius: 8,
                 display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
                 padding: 24,
               }}>
@@ -245,7 +245,7 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
               <div style={{
                 position: "absolute", inset: 0, backfaceVisibility: "hidden",
                 transform: "rotateY(180deg)",
-                background: C.surface, border: `1px solid ${C.border}`, borderRadius: 16,
+                background: C.surface, borderRadius: 8,
                 display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-start",
                 padding: 24, overflowY: "auto",
               }}>
@@ -274,13 +274,13 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
           {flipped && (
             <div style={{ display: "flex", gap: 16, width: "100%", maxWidth: 360 }}>
               <button onClick={() => handleAnswer(false)}
-                style={{ flex: 1, padding: "14px 0", borderRadius: 12, border: "none", cursor: "pointer",
+                style={{ flex: 1, padding: "14px 0", borderRadius: 8, border: "none", cursor: "pointer",
                   background: `${C.red}22`, color: C.red,
                   fontFamily: FONT_DISPLAY, fontSize: 14, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase", minHeight: 48 }}>
                 {t("missedIt")}
               </button>
               <button onClick={() => handleAnswer(true)}
-                style={{ flex: 1, padding: "14px 0", borderRadius: 12, border: "none", cursor: "pointer",
+                style={{ flex: 1, padding: "14px 0", borderRadius: 8, border: "none", cursor: "pointer",
                   background: C.green, color: "#fff",
                   fontFamily: FONT_DISPLAY, fontSize: 14, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase", minHeight: 48 }}>
                 {t("gotIt")}
@@ -298,8 +298,8 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
       <div style={overlay}>
         <div style={header}>
           <span style={headerTitle}>{t("flashCards")}</span>
-          <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", padding: 6 }}>
-            <Ic n="x" s={20} c={C.textMuted} />
+          <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
+            <Ic n="x" s={18} c={C.textMuted} />
           </button>
         </div>
         <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "24px 16px", gap: 20 }}>
@@ -332,7 +332,7 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
               </div>
               {missedSets.map(s => (
                 <div key={s.id} style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 10px",
-                  background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, marginBottom: 6 }}>
+                  background: C.surface, borderRadius: 8, marginBottom: 6 }}>
                   <div style={{ width: 10, height: 10, borderRadius: "50%", background: s.color || C.accent }} />
                   <span style={{ fontFamily: FONT_BODY, fontSize: 13, color: C.text }}>{s.name}</span>
                 </div>
@@ -344,14 +344,14 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
           <div style={{ width: "100%", maxWidth: 360, display: "flex", flexDirection: "column", gap: 10, marginTop: 12 }}>
             {missedSets.length > 0 && (
               <button onClick={retryMissed}
-                style={{ width: "100%", padding: "14px 0", borderRadius: 12, border: `1.5px solid ${C.accent}`,
+                style={{ width: "100%", padding: "14px 0", borderRadius: 8, border: `1.5px solid ${C.accent}`,
                   background: "transparent", color: C.accent, cursor: "pointer",
                   fontFamily: FONT_DISPLAY, fontSize: 14, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase", minHeight: 48 }}>
                 {t("retryMissed")}
               </button>
             )}
             <button onClick={onClose}
-              style={{ width: "100%", padding: "14px 0", borderRadius: 12, border: "none",
+              style={{ width: "100%", padding: "14px 0", borderRadius: 8, border: "none",
                 background: C.accent, color: "#fff", cursor: "pointer",
                 fontFamily: FONT_DISPLAY, fontSize: 14, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase", minHeight: 48 }}>
               {t("flashCardsDone")}
