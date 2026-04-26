@@ -114,6 +114,10 @@ Rooted in the golden ratio (√φ ≈ 1.272). Four core steps plus two practical
 | M+ | 14px | Tab/sub-tab labels, date headers, emphasis labels |
 | L | 16px | Tile titles, category names, card headers, day numbers |
 | XL | 21px | App logo, page-level titles |
+| HERO-S | 28px | Timers, mid-stat displays, screen-anchor numbers (use sparingly) |
+| HERO-L | 56px | Hero stat displays — single-number summaries (NEW BEST score, milestone count) |
+
+Hero sizes use FONT_DISPLAY with fontWeight 800-900. Used sparingly — typically one HERO instance per screen. Sizes 18/20/22/24/32 are NOT in the system; if a layout reaches for these, snap to the nearest defined step (typically 21 for headers or 28 for hero numbers). Drift values exist in older components and are tracked as design debt.
 
 ### Font weights
 | Weight | Use |
@@ -548,6 +552,8 @@ For any element, find its role and read across:
 | Button text | 13 | 800 | DISPLAY | (varies) | 1 |
 | Input text | 14 | 400 | BODY | text | 0 |
 | Chip text | 11 | 700 | DISPLAY | text/accent | 0.5 |
+| Timer / mid-stat | 28 | 800-900 | DISPLAY | text | 0 |
+| Hero summary number | 56 | 800-900 | DISPLAY | text or accent | 0 |
 
 ---
 
