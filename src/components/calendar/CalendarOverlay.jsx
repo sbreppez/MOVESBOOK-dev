@@ -315,8 +315,7 @@ export const CalendarOverlay = ({
       {inline && (!isPremium || calView === "days") && (
         <div style={{ padding:"8px 16px 0", flexShrink:0 }}>
           <button onClick={() => {
-            setSelectedDay(today);
-            setEditEvent({ type: "training", date: today });
+            setEditEvent({ type: "training", date: selectedDay });
             setShowTypePicker(false);
             setShowJournal(true);
           }}
