@@ -4,6 +4,7 @@ import { lbl, inp } from '../../constants/styles';
 import { Ic } from '../shared/Ic';
 import { Btn } from '../shared/Btn';
 import { Modal } from '../shared/Modal';
+import { Txtarea } from '../shared/Txtarea';
 import { BottomSheet } from '../shared/BottomSheet';
 import { useT } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
@@ -351,18 +352,30 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
             <label style={lbl()}>{t("eventName")}</label>
             <input value={battleForm.event} onChange={e => setBattleForm(p => ({...p, event: e.target.value}))} placeholder={t("eventPlaceholder")} style={inp()}/>
           </div>
-          <div style={{ marginBottom:14 }}>
-            <label style={lbl()}>{t("howDidItGo")}</label>
-            <textarea value={battleForm.howDidItGo} onChange={e => setBattleForm(p => ({...p, howDidItGo: e.target.value}))} placeholder={t("howDidItGoPlaceholder")} rows={3} style={{ ...inp(), resize:"vertical" }}/>
-          </div>
-          <div style={{ marginBottom:14 }}>
-            <label style={lbl()}>{t("whatSurprised")}</label>
-            <textarea value={battleForm.whatSurprised} onChange={e => setBattleForm(p => ({...p, whatSurprised: e.target.value}))} placeholder={t("whatSurprisedPlaceholder")} rows={2} style={{ ...inp(), resize:"vertical" }}/>
-          </div>
-          <div style={{ marginBottom:14 }}>
-            <label style={lbl()}>{t("trainingNext")}</label>
-            <textarea value={battleForm.trainingNext} onChange={e => setBattleForm(p => ({...p, trainingNext: e.target.value}))} placeholder={t("trainingNextPlaceholder")} rows={2} style={{ ...inp(), resize:"vertical" }}/>
-          </div>
+          <Txtarea
+            label={t("howDidItGo")}
+            value={battleForm.howDidItGo}
+            onChange={v => setBattleForm(p => ({...p, howDidItGo: v}))}
+            placeholder={t("howDidItGoPlaceholder")}
+            rows={3}
+            autoExpand
+          />
+          <Txtarea
+            label={t("whatSurprised")}
+            value={battleForm.whatSurprised}
+            onChange={v => setBattleForm(p => ({...p, whatSurprised: v}))}
+            placeholder={t("whatSurprisedPlaceholder")}
+            rows={2}
+            autoExpand
+          />
+          <Txtarea
+            label={t("trainingNext")}
+            value={battleForm.trainingNext}
+            onChange={v => setBattleForm(p => ({...p, trainingNext: v}))}
+            placeholder={t("trainingNextPlaceholder")}
+            rows={2}
+            autoExpand
+          />
           <button onClick={handleSaveBattle} disabled={!battleForm.result}
             style={{ width:"100%", padding:"12px 0", borderRadius:8, border:"none",
               background: battleForm.result ? C.accent : C.surfaceAlt,
@@ -496,16 +509,24 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
         </div>
 
         {/* Signature Moves */}
-        <div style={{ marginBottom:14 }}>
-          <label style={lbl()}>{t("signatureMovesLabel")}</label>
-          <textarea value={f.signatureMoves} onChange={e => setF(prev => ({ ...prev, signatureMoves: e.target.value }))} placeholder={t("signatureMovesPlaceholder")} rows={3} style={{ ...inp(), resize:"vertical" }}/>
-        </div>
+        <Txtarea
+          label={t("signatureMovesLabel")}
+          value={f.signatureMoves}
+          onChange={v => setF(prev => ({ ...prev, signatureMoves: v }))}
+          placeholder={t("signatureMovesPlaceholder")}
+          rows={3}
+          autoExpand
+        />
 
         {/* Game Plan */}
-        <div style={{ marginBottom:14 }}>
-          <label style={lbl()}>{t("gamePlanLabel")}</label>
-          <textarea value={f.gamePlan} onChange={e => setF(prev => ({ ...prev, gamePlan: e.target.value }))} placeholder={t("gamePlanPlaceholder")} rows={3} style={{ ...inp(), resize:"vertical" }}/>
-        </div>
+        <Txtarea
+          label={t("gamePlanLabel")}
+          value={f.gamePlan}
+          onChange={v => setF(prev => ({ ...prev, gamePlan: v }))}
+          placeholder={t("gamePlanPlaceholder")}
+          rows={3}
+          autoExpand
+        />
 
         {/* Confidence */}
         <div style={{ marginBottom:14 }}>
@@ -544,10 +565,14 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
         </div>
 
         {/* Sparring Journal */}
-        <div style={{ marginBottom:14 }}>
-          <label style={lbl()}>{t("sparringJournalLabel")}</label>
-          <textarea value={f.sparringJournal} onChange={e => setF(prev => ({ ...prev, sparringJournal: e.target.value }))} placeholder={t("sparringJournalPlaceholder")} rows={3} style={{ ...inp(), resize:"vertical" }}/>
-        </div>
+        <Txtarea
+          label={t("sparringJournalLabel")}
+          value={f.sparringJournal}
+          onChange={v => setF(prev => ({ ...prev, sparringJournal: v }))}
+          placeholder={t("sparringJournalPlaceholder")}
+          rows={3}
+          autoExpand
+        />
 
         {/* Video References */}
         <div style={{ marginBottom:14 }}>

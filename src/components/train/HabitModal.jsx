@@ -4,6 +4,7 @@ import { lbl } from '../../constants/styles';
 import { HABIT_COLORS } from '../../constants/categories';
 import { Modal } from '../shared/Modal';
 import { Btn } from '../shared/Btn';
+import { Txtarea } from '../shared/Txtarea';
 import { useT } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
 
@@ -90,12 +91,14 @@ export const HabitModal = ({ onClose, onSave, habit }) => {
       </div>
 
       {/* Notes */}
-      <div style={{ marginBottom:14 }}>
-        <label style={lbl()}>NOTES <span style={{ fontWeight:400, fontSize:10, color:C.textMuted }}>{t("notesOptional")}</span></label>
-        <textarea value={notes} onChange={e=>setNotes(e.target.value)} rows={3}
-          placeholder={t("notesHabitPlaceholder")}
-          style={{ ...inputStyle, resize:"vertical" }}/>
-      </div>
+      <Txtarea
+        label={<>NOTES <span style={{ fontWeight:400, fontSize:10, color:C.textMuted }}>{t("notesOptional")}</span></>}
+        value={notes}
+        onChange={setNotes}
+        rows={3}
+        placeholder={t("notesHabitPlaceholder")}
+        autoExpand
+      />
 
       <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
         <Btn variant="secondary" onClick={onClose}>{t("cancel")}</Btn>

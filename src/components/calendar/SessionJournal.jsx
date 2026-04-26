@@ -4,6 +4,7 @@ import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { CAT_COLORS } from '../../constants/categories';
 import { useT } from '../../hooks/useTranslation';
 import { Ic } from '../shared/Ic';
+import { Txtarea } from '../shared/Txtarea';
 import { BodyCheckIn } from '../shared/BodyCheckIn';
 import { todayLocal } from '../../utils/dateUtils';
 
@@ -438,14 +439,12 @@ export const SessionJournal = ({
               {/* Section 4: Notes */}
               {sectionHeader(t("sessionNotes"), secNotes, () => toggleSection("notes", secNotes, setSecNotes))}
               {secNotes && (
-                <textarea
+                <Txtarea
                   value={notes}
-                  onChange={e => setNotes(e.target.value)}
+                  onChange={setNotes}
                   placeholder={t("notesPlaceholder")}
                   rows={3}
-                  style={{ width: "100%", background: C.surfaceAlt, border: `1px solid ${C.border}`,
-                    borderRadius: 8, padding: "8px 10px", color: C.text, fontSize: 13,
-                    fontFamily: FONT_BODY, outline: "none", resize: "vertical" }}
+                  autoExpand
                 />
               )}
             </>
@@ -463,14 +462,12 @@ export const SessionJournal = ({
                     borderRadius: 8, padding: "8px 10px", color: C.text, fontSize: 13,
                     fontFamily: FONT_BODY, fontWeight: 600, outline: "none", marginBottom: 8 }}
                 />
-                <textarea
+                <Txtarea
                   value={notes}
-                  onChange={e => setNotes(e.target.value)}
+                  onChange={setNotes}
                   placeholder={t("notesPlaceholder")}
                   rows={2}
-                  style={{ width: "100%", background: C.surfaceAlt, border: `1px solid ${C.border}`,
-                    borderRadius: 8, padding: "8px 10px", color: C.text, fontSize: 13,
-                    fontFamily: FONT_BODY, outline: "none", resize: "vertical", marginBottom: 8 }}
+                  autoExpand
                 />
               </div>
               {/* Event link */}
@@ -508,14 +505,12 @@ export const SessionJournal = ({
                   borderRadius: 8, padding: "8px 10px", color: C.text, fontSize: 13,
                   fontFamily: FONT_BODY, fontWeight: 600, outline: "none", marginBottom: 8 }}
               />
-              <textarea
+              <Txtarea
                 value={notes}
-                onChange={e => setNotes(e.target.value)}
+                onChange={setNotes}
                 placeholder={t("notesPlaceholder")}
                 rows={3}
-                style={{ width: "100%", background: C.surfaceAlt, border: `1px solid ${C.border}`,
-                  borderRadius: 8, padding: "8px 10px", color: C.text, fontSize: 13,
-                  fontFamily: FONT_BODY, outline: "none", resize: "vertical" }}
+                autoExpand
               />
             </>
           )}

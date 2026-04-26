@@ -3,6 +3,7 @@ import { PRESET_COLORS } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Modal } from '../shared/Modal';
 import { Inp } from '../shared/Inp';
+import { Txtarea } from '../shared/Txtarea';
 import { Btn } from '../shared/Btn';
 import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
@@ -70,14 +71,14 @@ export const SetDetailModal = ({ item, onClose, onSave, type="set", allMoves=[],
       <Inp label="NAME *" value={name} onChange={setName} placeholder={isSet ? "e.g. Opening Set…" : "e.g. Top 16…"}/>
 
       {/* Details */}
-      <div style={{ marginBottom:16 }}>
-        <label style={lbl()}>{t("detailsLabel")}</label>
-        <textarea value={details} onChange={e=>setDetails(e.target.value)} rows={2}
-          placeholder={isSet ? "Describe this set — style, purpose, context…" : "Describe this round…"}
-          style={{ width:"100%", background:C.surface, border:`1px solid ${C.border}`, borderRadius:8,
-            padding:"9px 12px", color:C.text, fontSize:13, outline:"none", resize:"vertical",
-            fontFamily:FONT_BODY, lineHeight:1.5 }}/>
-      </div>
+      <Txtarea
+        label={t("detailsLabel")}
+        value={details}
+        onChange={setDetails}
+        rows={2}
+        placeholder={isSet ? "Describe this set — style, purpose, context…" : "Describe this round…"}
+        autoExpand
+      />
 
       {/* Colour */}
       <div style={{ marginBottom:16 }}>

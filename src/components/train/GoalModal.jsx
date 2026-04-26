@@ -8,7 +8,7 @@ import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
 import { ensureHttps } from './helpers';
 import { todayLocal } from '../../utils/dateUtils';
-import { GoalField } from './GoalField';
+import { Txtarea } from '../shared/Txtarea';
 import { JournalEntryCard } from './JournalEntryCard';
 import { JournalEntryInput } from './JournalEntryInput';
 
@@ -123,8 +123,8 @@ export const GoalModal = ({ onClose, onSave, idea }) => {
                 style={{ ...inputStyle, border:`1.5px solid ${C.accent}`, fontSize:14, fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:0.5 }}/>
             </div>
 
-            <GoalField label={t("whyQuestion")} hint="How will it benefit your current situation?" minHeight="20vh"
-              value={why} onChange={setWhy} placeholder="This goal matters because…"/>
+            <Txtarea label={t("whyQuestion")} hint="How will it benefit your current situation?" minHeight="20vh"
+              value={why} onChange={setWhy} placeholder="This goal matters because…" autoExpand/>
 
             {/* BY WHEN — date picker */}
             <div style={{ marginBottom:18 }}>
@@ -170,8 +170,8 @@ export const GoalModal = ({ onClose, onSave, idea }) => {
               </div>
             </div>
 
-            <GoalField label={t("obstaclesAnticipate")} hint="Write all possible hurdles and setbacks you might face on the journey"
-              value={obstacles} onChange={setObstacles} rows={3} placeholder={t("obstaclesPlaceholder")}/>
+            <Txtarea label={t("obstaclesAnticipate")} hint="Write all possible hurdles and setbacks you might face on the journey"
+              value={obstacles} onChange={setObstacles} rows={3} placeholder={t("obstaclesPlaceholder")} autoExpand/>
 
             {/* Link */}
             <div style={{ marginBottom:14 }}>

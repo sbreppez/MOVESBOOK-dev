@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { C } from '../../constants/colors';
 import { lbl, inp } from '../../constants/styles';
 
-export const Txtarea = ({ label, value, onChange, placeholder, rows=3, autoExpand=false }) => {
+export const Txtarea = ({ label, hint, value, onChange, placeholder, rows=3, autoExpand=false, minHeight }) => {
   const [local, setLocal] = useState(value);
   const onChangeRef = useRef(onChange);
   const textareaRef = useRef(null);
@@ -16,7 +17,6 @@ export const Txtarea = ({ label, value, onChange, placeholder, rows=3, autoExpan
 
   useEffect(() => {
     if (autoExpand && textareaRef.current) autoResize(textareaRef.current);
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- autoResize is a closure recreated each render; including it would loop
   }, [local, autoExpand]);
 
   const handleChange = e => {
@@ -28,14 +28,15 @@ export const Txtarea = ({ label, value, onChange, placeholder, rows=3, autoExpan
 
   return (
     <div style={{ marginBottom:14 }}>
-      <label style={lbl()}>{label}</label>
+      {label && <label style={lbl()}>{label}</label>}
+      {hint && <div style={{ fontSize:11, color:C.textMuted, marginBottom:5, fontStyle:"italic" }}>{hint}</div>}
       <textarea
         ref={textareaRef}
         value={local}
         onChange={handleChange}
         placeholder={placeholder}
         rows={rows}
-        style={{ ...inp(), resize: autoExpand ? "none" : "vertical", overflow: autoExpand ? "hidden" : undefined }}
+        style={{ ...inp(), resize: autoExpand ? "none" : "vertical", overflow: autoExpand ? "hidden" : undefined, ...(minHeight ? { minHeight } : {}) }}
       />
     </div>
   );
