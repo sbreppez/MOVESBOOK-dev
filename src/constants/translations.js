@@ -386,7 +386,7 @@ export const TRANSLATIONS = {
     showTimer:"SHOW", hideTimer:"HIDE", elapsed:"ELAPSED", remaining:"REMAINING",
     // Combo Machine
     comboMachine:"COMBO MACHINE", spin:"SPIN", spinAgain:"SPIN AGAIN",
-    saveAsSet:"✓ SAVE AS SET", warmUp:"WARM UP", cypherCat:"CYPHER CAT",
+    saveAsSet:"✓ SAVE AS SET", warmUp:"WARM UP", cypherCat:"CYPHER CAT", cypherLevel:"Cypher Level",
     battleMode:"BATTLE MODE", lifeOrDeath:"LIFE OR DEATH",
     selectMoves:"SELECT MOVES FROM LIBRARY", manageTransitions:"MANAGE TRANSITIONS",
     comboSaved:"Combo saved as set!", setName:"Set name", lockToKeep:"Lock to keep on respin",
@@ -1562,7 +1562,7 @@ export const TRANSLATIONS = {
     showTimer:"MOSTRA", hideTimer:"NASCONDI", elapsed:"TRASCORSO", remaining:"RIMANENTE",
     // Combo Machine
     comboMachine:"COMBO MACHINE", spin:"GIRA", spinAgain:"RIGIRA",
-    saveAsSet:"✓ SALVA COME SET", warmUp:"RISCALDAMENTO", cypherCat:"CYPHER CAT",
+    saveAsSet:"✓ SALVA COME SET", warmUp:"RISCALDAMENTO", cypherCat:"CYPHER CAT", cypherLevel:"Livello Cypher",
     battleMode:"MODALITÀ BATTLE", lifeOrDeath:"VITA O MORTE",
     selectMoves:"SELEZIONA MOSSE DALLA LIBRERIA", manageTransitions:"GESTISCI TRANSIZIONI",
     comboSaved:"Combo salvata come set!", setName:"Nome del set", lockToKeep:"Blocca per mantenere al prossimo giro",
@@ -2716,7 +2716,7 @@ export const TRANSLATIONS = {
     showTimer:"MOSTRAR", hideTimer:"OCULTAR", elapsed:"TRANSCURRIDO", remaining:"RESTANTE",
     // Combo Machine
     comboMachine:"COMBO MACHINE", spin:"GIRAR", spinAgain:"GIRAR DE NUEVO",
-    saveAsSet:"✓ GUARDAR COMO SET", warmUp:"CALENTAMIENTO", cypherCat:"CYPHER CAT",
+    saveAsSet:"✓ GUARDAR COMO SET", warmUp:"CALENTAMIENTO", cypherCat:"CYPHER CAT", cypherLevel:"Nivel Cypher",
     battleMode:"MODO BATTLE", lifeOrDeath:"VIDA O MUERTE",
     selectMoves:"SELECCIONAR MOVIMIENTOS", manageTransitions:"GESTIONAR TRANSICIONES",
     comboSaved:"¡Combo guardado como set!", setName:"Nombre del set", lockToKeep:"Bloquear para mantener al regirar",
@@ -3870,7 +3870,7 @@ export const TRANSLATIONS = {
     showTimer:"AFFICHER", hideTimer:"MASQUER", elapsed:"ÉCOULÉ", remaining:"RESTANT",
     // Combo Machine
     comboMachine:"COMBO MACHINE", spin:"TOURNER", spinAgain:"RETOURNER",
-    saveAsSet:"✓ SAUVEGARDER EN SET", warmUp:"ÉCHAUFFEMENT", cypherCat:"CYPHER CAT",
+    saveAsSet:"✓ SAUVEGARDER EN SET", warmUp:"ÉCHAUFFEMENT", cypherCat:"CYPHER CAT", cypherLevel:"Niveau Cypher",
     battleMode:"MODE BATTLE", lifeOrDeath:"VIE OU MORT",
     selectMoves:"SÉLECTIONNER DES MOUVEMENTS", manageTransitions:"GÉRER LES TRANSITIONS",
     comboSaved:"Combo sauvegardé en set !", setName:"Nom du set", lockToKeep:"Verrouiller pour garder au prochain tour",
@@ -5024,7 +5024,7 @@ export const TRANSLATIONS = {
     showTimer:"MOSTRAR", hideTimer:"OCULTAR", elapsed:"DECORRIDO", remaining:"RESTANTE",
     // Combo Machine
     comboMachine:"COMBO MACHINE", spin:"GIRAR", spinAgain:"GIRAR NOVAMENTE",
-    saveAsSet:"✓ SALVAR COMO SET", warmUp:"AQUECIMENTO", cypherCat:"CYPHER CAT",
+    saveAsSet:"✓ SALVAR COMO SET", warmUp:"AQUECIMENTO", cypherCat:"CYPHER CAT", cypherLevel:"Nível Cypher",
     battleMode:"MODO BATTLE", lifeOrDeath:"VIDA OU MORTE",
     selectMoves:"SELECIONAR MOVIMENTOS", manageTransitions:"GERENCIAR TRANSIÇÕES",
     comboSaved:"Combo salvo como set!", setName:"Nome do set", lockToKeep:"Bloqueie para manter na próxima girada",
@@ -6178,7 +6178,7 @@ export const TRANSLATIONS = {
     showTimer:"ZEIGEN", hideTimer:"VERSTECKEN", elapsed:"VERGANGEN", remaining:"VERBLEIBEND",
     // Combo Machine
     comboMachine:"COMBO MACHINE", spin:"DREHEN", spinAgain:"NOCHMAL DREHEN",
-    saveAsSet:"✓ ALS SET SPEICHERN", warmUp:"AUFWÄRMEN", cypherCat:"CYPHER CAT",
+    saveAsSet:"✓ ALS SET SPEICHERN", warmUp:"AUFWÄRMEN", cypherCat:"CYPHER CAT", cypherLevel:"Cypher-Level",
     battleMode:"BATTLE-MODUS", lifeOrDeath:"LEBEN ODER TOD",
     selectMoves:"MOVES AUSWÄHLEN", manageTransitions:"ÜBERGÄNGE VERWALTEN",
     comboSaved:"Combo als Set gespeichert!", setName:"Set-Name", lockToKeep:"Sperren zum Beibehalten",
@@ -7333,7 +7333,7 @@ export const TRANSLATIONS = {
     showTimer:"表示", hideTimer:"非表示", elapsed:"経過", remaining:"残り",
     // Combo Machine
     comboMachine:"コンボマシン", spin:"スピン", spinAgain:"もう一度スピン",
-    saveAsSet:"✓ セットとして保存", warmUp:"ウォームアップ", cypherCat:"サイファーキャット",
+    saveAsSet:"✓ セットとして保存", warmUp:"ウォームアップ", cypherCat:"サイファーキャット", cypherLevel:"サイファーレベル",
     battleMode:"バトルモード", lifeOrDeath:"ライフ・オア・デス",
     selectMoves:"ライブラリからムーブを選択", manageTransitions:"トランジションを管理",
     comboSaved:"コンボをセットとして保存しました！", setName:"セット名", lockToKeep:"リスピン時に保持するためロック",
@@ -8486,7 +8486,7 @@ export const TRANSLATIONS = {
     showTimer:"显示", hideTimer:"隐藏", elapsed:"已过", remaining:"剩余",
     // Combo Machine
     comboMachine:"组合机器", spin:"旋转", spinAgain:"再次旋转",
-    saveAsSet:"✓ 保存为套路", warmUp:"热身", cypherCat:"斗舞猫",
+    saveAsSet:"✓ 保存为套路", warmUp:"热身", cypherCat:"斗舞猫", cypherLevel:"斗舞等级",
     battleMode:"战斗模式", lifeOrDeath:"生死模式",
     selectMoves:"从库中选择动作", manageTransitions:"管理过渡动作",
     comboSaved:"组合已保存为套路！", setName:"套路名称", lockToKeep:"锁定以在下次旋转时保留",
@@ -9639,7 +9639,7 @@ export const TRANSLATIONS = {
     showTimer:"ПОКАЗАТЬ", hideTimer:"СКРЫТЬ", elapsed:"ПРОШЛО", remaining:"ОСТАЛОСЬ",
     // Combo Machine
     comboMachine:"КОМБО-МАШИНА", spin:"КРУТИТЬ", spinAgain:"КРУТИТЬ СНОВА",
-    saveAsSet:"✓ СОХРАНИТЬ КАК СЕТ", warmUp:"РАЗМИНКА", cypherCat:"САЙФЕР КЭТ",
+    saveAsSet:"✓ СОХРАНИТЬ КАК СЕТ", warmUp:"РАЗМИНКА", cypherCat:"САЙФЕР КЭТ", cypherLevel:"Уровень сайфера",
     battleMode:"РЕЖИМ БАТТЛА", lifeOrDeath:"ЖИЗНЬ ИЛИ СМЕРТЬ",
     selectMoves:"ВЫБРАТЬ ДВИЖЕНИЯ", manageTransitions:"УПРАВЛЕНИЕ ПЕРЕХОДАМИ",
     comboSaved:"Комбо сохранено как сет!", setName:"Название сета", lockToKeep:"Заблокируйте для сохранения при повторе",
@@ -10828,7 +10828,7 @@ export const TRANSLATIONS = {
     showTimer:"표시", hideTimer:"숨김", elapsed:"경과", remaining:"남은",
     // Combo Machine
     comboMachine:"콤보 머신", spin:"스핀", spinAgain:"다시 스핀",
-    saveAsSet:"✓ 세트로 저장", warmUp:"워밍업", cypherCat:"사이퍼 캣",
+    saveAsSet:"✓ 세트로 저장", warmUp:"워밍업", cypherCat:"사이퍼 캣", cypherLevel:"사이퍼 레벨",
     battleMode:"배틀 모드", lifeOrDeath:"라이프 오어 데스",
     selectMoves:"라이브러리에서 무브 선택", manageTransitions:"트랜지션 관리",
     comboSaved:"콤보가 세트로 저장되었습니다!", setName:"세트 이름", lockToKeep:"리스핀 시 유지하려면 잠금",
@@ -12034,7 +12034,7 @@ export const TRANSLATIONS = {
     showTimer:"แสดง", hideTimer:"ซ่อน", elapsed:"ผ่านไป", remaining:"เหลือ",
     // Combo Machine
     comboMachine:"เครื่องสร้างคอมโบ", spin:"หมุน", spinAgain:"หมุนอีกครั้ง",
-    saveAsSet:"✓ บันทึกเป็นเซ็ต", warmUp:"วอร์มอัพ", cypherCat:"ไซเฟอร์แคท",
+    saveAsSet:"✓ บันทึกเป็นเซ็ต", warmUp:"วอร์มอัพ", cypherCat:"ไซเฟอร์แคท", cypherLevel:"ระดับไซเฟอร์",
     battleMode:"โหมดแบทเทิล", lifeOrDeath:"เป็นตาย",
     selectMoves:"เลือกท่าจากคลัง", manageTransitions:"จัดการท่าเชื่อม",
     comboSaved:"บันทึกคอมโบเป็นเซ็ตแล้ว!", setName:"ชื่อเซ็ต", lockToKeep:"ล็อคเพื่อคงไว้เมื่อหมุนใหม่",
@@ -13217,7 +13217,7 @@ export const TRANSLATIONS = {
     showTimer:"HIỆN", hideTimer:"ẨN", elapsed:"ĐÃ QUA", remaining:"CÒN LẠI",
     // Combo Machine
     comboMachine:"MÁY COMBO", spin:"QUAY", spinAgain:"QUAY LẠI",
-    saveAsSet:"✓ LƯU THÀNH SET", warmUp:"KHỞI ĐỘNG", cypherCat:"CYPHER CAT",
+    saveAsSet:"✓ LƯU THÀNH SET", warmUp:"KHỞI ĐỘNG", cypherCat:"CYPHER CAT", cypherLevel:"Cấp độ Cypher",
     battleMode:"CHẾ ĐỘ BATTLE", lifeOrDeath:"SỐNG HOẶC CHẾT",
     selectMoves:"CHỌN ĐỘNG TÁC TỪ THƯ VIỆN", manageTransitions:"QUẢN LÝ CHUYỂN TIẾP",
     comboSaved:"Đã lưu combo thành set!", setName:"Tên set", lockToKeep:"Khóa để giữ khi quay lại",

@@ -42,7 +42,7 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
 
   const tier = TIERS[moveCount];
   const tierColor = C[tier.color];
-  const tierLabel = t(tier.key) + (tier.plus ? "+" : "");
+  const tierLabel = `${t("cypherLevel")} ${moveCount}`;
 
   const getCatColor = (cat) => catColors?.[cat] || CAT_COLORS[cat] || C.textMuted;
 
@@ -232,7 +232,7 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"10px 16px", borderBottom:`1px solid ${C.borderLight}`, flexShrink:0 }}>
         {/* Tier badge */}
         <div style={{ display:"flex", alignItems:"center", background:`${tierColor}18`, borderRadius:10, padding:"5px 14px" }}>
-          <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:16, letterSpacing:1.5, color:tierColor }}>{tierLabel}</span>
+          <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:13, letterSpacing:1.5, color:tierColor }}>{tierLabel}</span>
         </div>
         {/* Counter */}
         <div style={{ display:"flex", alignItems:"center", gap:10 }}>
