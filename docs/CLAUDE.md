@@ -11,3 +11,4 @@ Before starting any task, read these files:
 - Verify changes with a build check after every modification: `npx vite build --mode development 2>&1 | tail -5`
 - All new UI strings require translation keys in ALL 12 languages: en, it, es, fr, pt, de, ja, zh, ru, ko, vi, th
 - Only use icon names that exist in `src/components/shared/Ic.jsx` — check before adding any icon
+- For tasks touching auth, share, download, camera, external URLs, or `index.html` bootstrap, read `docs/CAPACITOR_COMPATIBILITY.md` first.
