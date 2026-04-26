@@ -122,11 +122,13 @@ Hero sizes use FONT_DISPLAY with fontWeight 800-900. Used sparingly — typicall
 ### Font weights
 | Weight | Use |
 |--------|-----|
-| 900 | Logo, page titles |
-| 800 | Tab labels, sub-tab labels, category names, tile titles, chip labels |
-| 700 | Emphasis numbers, button text, counts |
+| 900 | Logo, page titles, hero numbers |
+| 800 | Tab labels, sub-tab labels, modal/section headers |
+| 700 | Tile titles, category names, chip labels, emphasis numbers, button text, counts |
 | 600 | Secondary emphasis |
 | 400 | Body text, descriptions, paragraphs |
+
+Tile titles (CatTile, MoveTile, round tiles, set tiles, GAP tiles) consistently use 700 with `fontSize: 16` and `fontFamily: FONT_DISPLAY`. Modal/section headers (Modal, SettingsModal, ProfileModal, IdeasPage section labels) use 800. Hero numbers use 900.
 
 ### Letter spacing
 | Value | Use |
