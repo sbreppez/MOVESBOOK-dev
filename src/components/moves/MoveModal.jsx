@@ -45,7 +45,6 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
   const [newJournalText, setNewJournalText] = useState("");
   const [showJournal, setShowJournal] = useState((move?.journal || []).length > 0);
   const handleSave = () => { if (f.name) { onSave({ ...f, journal: journalEntries }); onClose(); } };
-  const [showMore, setShowMore] = useState(false);
   const [showAttrModal, setShowAttrModal] = useState(false);
   const [showBasedOn, setShowBasedOn] = useState(!!f.parentId);
   const [basedOnFilter, setBasedOnFilter] = useState(f.category || "");
@@ -236,16 +235,10 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
         </div>
       </div>
 
-      {/* ── More Details (Custom Attributes) ── */}
-      <button onClick={() => setShowMore(s => !s)}
-        style={{ background:"none", border:"none", cursor:"pointer", display:"flex",
-          alignItems:"center", gap:6, color:C.textMuted, fontSize:11, fontFamily:FONT_DISPLAY,
-          fontWeight:700, letterSpacing:0.5, padding:"8px 0", marginBottom:4 }}>
-        <Ic n={showMore ? "chevD" : "chevR"} s={12} c={C.textMuted} />
-        {showMore ? t("hideDetails") : t("moreDetails")}
-      </button>
-
-      {showMore && (
+      {/* ── Attributes (always visible) ── */}
+      <div style={{ marginTop:8, marginBottom:4 }}>
+        <div style={sectionLabel}>{t("attributes")}</div>
+        <div style={{ fontSize:11, color:C.textMuted, fontStyle:"italic", marginBottom:6 }}>{t("attributesHint")}</div>
         <div style={{ background:C.surfaceAlt, borderRadius:10, padding:12, marginBottom:12,
           border:`1px solid ${C.borderLight}` }}>
           {sortedAttrs.length > 0 ? (
@@ -273,7 +266,7 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
             + {t("addNewAttribute")}
           </button>
         </div>
-      )}
+      </div>
 
       {/* ── Move Journal ── */}
       {move && (
