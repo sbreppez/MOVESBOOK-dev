@@ -219,41 +219,42 @@ firebase.initializeApp({
         window.__MB_DB__.load(user.uid).then(function(data) {
           localStorage.setItem('mb_data_version','5');
           if (data) {
-            if (data.moves)    { try { const p=JSON.parse(data.moves);    if(Array.isArray(p)&&p.length>0)    localStorage.setItem('mb_moves',    data.moves);    } catch{} }
-            if (data.sets)     { try { const p=JSON.parse(data.sets);     if(Array.isArray(p)&&p.length>0)    localStorage.setItem('mb_sets',     data.sets);     } catch{} }
-            if (data.rounds)   { try { const p=JSON.parse(data.rounds);   if(Array.isArray(p)&&p.length>0)    localStorage.setItem('mb_rounds',   data.rounds);   } catch{} }
-            if (data.ideas)    { try { const p=JSON.parse(data.ideas);    if(Array.isArray(p)&&p.length>0)    localStorage.setItem('mb_ideas',    data.ideas);    } catch{} }
-            if (data.habits)   { try { const p=JSON.parse(data.habits);   if(Array.isArray(p)&&p.length>0)    localStorage.setItem('mb_habits',   data.habits);   } catch{} }
-            if (data.cats)     { try { const p=JSON.parse(data.cats);     if(Array.isArray(p)&&p.length>0)    localStorage.setItem('mb_cats',     data.cats);     } catch{} }
-            if (data.profile)  { try { const pp=JSON.parse(data.profile); if(pp&&Object.values(pp).some(v=>v)) localStorage.setItem('mb_profile',  data.profile);  } catch{} }
+            if (data.moves)    { try { const p=JSON.parse(data.moves);    if(Array.isArray(p)&&p.length>0)    localStorage.setItem('mb_moves',    data.moves);    } catch(e){ console.warn('[MB] sync load parse fail:', 'moves', e); } }
+            if (data.sets)     { try { const p=JSON.parse(data.sets);     if(Array.isArray(p)&&p.length>0)    localStorage.setItem('mb_sets',     data.sets);     } catch(e){ console.warn('[MB] sync load parse fail:', 'sets', e); } }
+            if (data.rounds)   { try { const p=JSON.parse(data.rounds);   if(Array.isArray(p)&&p.length>0)    localStorage.setItem('mb_rounds',   data.rounds);   } catch(e){ console.warn('[MB] sync load parse fail:', 'rounds', e); } }
+            if (data.ideas)    { try { const p=JSON.parse(data.ideas);    if(Array.isArray(p)&&p.length>0)    localStorage.setItem('mb_ideas',    data.ideas);    } catch(e){ console.warn('[MB] sync load parse fail:', 'ideas', e); } }
+            if (data.habits)   { try { const p=JSON.parse(data.habits);   if(Array.isArray(p)&&p.length>0)    localStorage.setItem('mb_habits',   data.habits);   } catch(e){ console.warn('[MB] sync load parse fail:', 'habits', e); } }
+            if (data.cats)     { try { const p=JSON.parse(data.cats);     if(Array.isArray(p)&&p.length>0)    localStorage.setItem('mb_cats',     data.cats);     } catch(e){ console.warn('[MB] sync load parse fail:', 'cats', e); } }
+            if (data.profile)  { try { const pp=JSON.parse(data.profile); if(pp&&Object.values(pp).some(v=>v)) localStorage.setItem('mb_profile',  data.profile);  } catch(e){ console.warn('[MB] sync load parse fail:', 'profile', e); } }
             if (data.settings)   localStorage.setItem('mb_settings',   data.settings);
             if (data.templates)  localStorage.setItem('mb_templates',  data.templates);
             if (data.catColors)  localStorage.setItem('mb_cat_colors', data.catColors);
-            if (data.customAttrs) { try { var _ca=JSON.parse(data.customAttrs); if(Array.isArray(_ca)) localStorage.setItem('mb_custom_attrs', data.customAttrs); } catch(e){} }
-            if (data.rivals)      { try { const p=JSON.parse(data.rivals);      if(Array.isArray(p))            localStorage.setItem('mb_rivals',      data.rivals);      } catch{} }
-            if (data.reps)        { try { const p=JSON.parse(data.reps);        if(Array.isArray(p))            localStorage.setItem('mb_reps',        data.reps);        } catch{} }
-            if (data.sparring)    { try { const p=JSON.parse(data.sparring);    if(p&&typeof p==="object") localStorage.setItem('mb_sparring',    data.sparring);    } catch{} }
-            if (data.combos)      { try { const p=JSON.parse(data.combos);      if(p&&typeof p==="object") localStorage.setItem('mb_combos',      data.combos);      } catch{} }
-            if (data.lab)         { try { const p=JSON.parse(data.lab);         if(p&&typeof p==="object") localStorage.setItem('mb_lab',         data.lab);         } catch{} }
-            if (data.rrr)         { try { const p=JSON.parse(data.rrr);         if(p&&typeof p==="object") localStorage.setItem('mb_rrr',         data.rrr);         } catch{} }
-            if (data.reminders)   { try { const p=JSON.parse(data.reminders);   if(p&&typeof p==="object") localStorage.setItem('mb_reminders',   data.reminders);   } catch{} }
-            if (data.calendar)    { try { const p=JSON.parse(data.calendar);    if(p&&typeof p==="object") localStorage.setItem('mb_calendar',    data.calendar);    } catch{} }
-            if (data.stance)      { try { const p=JSON.parse(data.stance);      if(p&&typeof p==="object") localStorage.setItem('mb_stance',      data.stance);      } catch{} }
-            if (data.musicflow)   { try { const p=JSON.parse(data.musicflow);   if(p&&typeof p==="object") localStorage.setItem('mb_musicflow',   data.musicflow);   } catch{} }
-            if (data.freestyle)   { try { const p=JSON.parse(data.freestyle);   if(p&&typeof p==="object") localStorage.setItem('mb_freestyle',   data.freestyle);   } catch{} }
-            if (data.reflections) { try { const p=JSON.parse(data.reflections); if(p&&typeof p==="object") localStorage.setItem('mb_reflections', data.reflections); } catch{} }
-            if (data.battleprep)  { try { const p=JSON.parse(data.battleprep);  if(p&&typeof p==="object") localStorage.setItem('mb_battleprep',  data.battleprep);  } catch{} }
-            if (data.flowmap)     { try { const p=JSON.parse(data.flowmap);     if(p&&typeof p==="object") localStorage.setItem('mb_flowmap',     data.flowmap);     } catch{} }
-            if (data.catDomains)  { try { const p=JSON.parse(data.catDomains);  if(p&&typeof p==="object") localStorage.setItem('mb_cat_domains', data.catDomains);  } catch{} }
-            if (data.reports)     { try { const p=JSON.parse(data.reports);     if(p&&typeof p==="object") localStorage.setItem('mb_reports',     data.reports);     } catch{} }
-            if (data.milestonesShown) { try { const p=JSON.parse(data.milestonesShown); if(Array.isArray(p)) localStorage.setItem('mb_milestones_shown', data.milestonesShown); } catch{} }
-            if (data.presession)  { try { const p=JSON.parse(data.presession);  if(p&&typeof p==="object") localStorage.setItem('mb_presession',  data.presession);  } catch{} }
-            if (data.injuries)    { try { const p=JSON.parse(data.injuries);    if(Array.isArray(p))            localStorage.setItem('mb_injuries',    data.injuries);    } catch{} }
-            if (data.profilePhoto) { var _pp = data.profilePhoto; if (_pp && _pp !== 'null' && _pp !== '"null"') { try { _pp = JSON.parse(_pp); } catch(e){} while(typeof _pp==='string'&&_pp.charAt(0)==='"'&&_pp.charAt(_pp.length-1)==='"'){try{var _pp2=JSON.parse(_pp);if(_pp2===_pp)break;_pp=_pp2;}catch(e){break;}} if(typeof _pp==='string'&&_pp.indexOf('data:')===0) localStorage.setItem('mb_profile_photo',_pp); else localStorage.removeItem('mb_profile_photo'); } }
+            if (data.customAttrs) { try { var _ca=JSON.parse(data.customAttrs); if(Array.isArray(_ca)) localStorage.setItem('mb_custom_attrs', data.customAttrs); } catch(e){ console.warn('[MB] sync load parse fail:', 'customAttrs', e); } }
+            if (data.rivals)      { try { const p=JSON.parse(data.rivals);      if(Array.isArray(p))            localStorage.setItem('mb_rivals',      data.rivals);      } catch(e){ console.warn('[MB] sync load parse fail:', 'rivals', e); } }
+            if (data.reps)        { try { const p=JSON.parse(data.reps);        if(Array.isArray(p))            localStorage.setItem('mb_reps',        data.reps);        } catch(e){ console.warn('[MB] sync load parse fail:', 'reps', e); } }
+            if (data.sparring)    { try { const p=JSON.parse(data.sparring);    if(p&&typeof p==="object") localStorage.setItem('mb_sparring',    data.sparring);    } catch(e){ console.warn('[MB] sync load parse fail:', 'sparring', e); } }
+            if (data.combos)      { try { const p=JSON.parse(data.combos);      if(p&&typeof p==="object") localStorage.setItem('mb_combos',      data.combos);      } catch(e){ console.warn('[MB] sync load parse fail:', 'combos', e); } }
+            if (data.lab)         { try { const p=JSON.parse(data.lab);         if(p&&typeof p==="object") localStorage.setItem('mb_lab',         data.lab);         } catch(e){ console.warn('[MB] sync load parse fail:', 'lab', e); } }
+            if (data.rrr)         { try { const p=JSON.parse(data.rrr);         if(p&&typeof p==="object") localStorage.setItem('mb_rrr',         data.rrr);         } catch(e){ console.warn('[MB] sync load parse fail:', 'rrr', e); } }
+            if (data.reminders)   { try { const p=JSON.parse(data.reminders);   if(p&&typeof p==="object") localStorage.setItem('mb_reminders',   data.reminders);   } catch(e){ console.warn('[MB] sync load parse fail:', 'reminders', e); } }
+            if (data.calendar)    { try { const p=JSON.parse(data.calendar);    if(p&&typeof p==="object") localStorage.setItem('mb_calendar',    data.calendar);    } catch(e){ console.warn('[MB] sync load parse fail:', 'calendar', e); } }
+            if (data.stance)      { try { const p=JSON.parse(data.stance);      if(p&&typeof p==="object") localStorage.setItem('mb_stance',      data.stance);      } catch(e){ console.warn('[MB] sync load parse fail:', 'stance', e); } }
+            if (data.musicflow)   { try { const p=JSON.parse(data.musicflow);   if(p&&typeof p==="object") localStorage.setItem('mb_musicflow',   data.musicflow);   } catch(e){ console.warn('[MB] sync load parse fail:', 'musicflow', e); } }
+            if (data.freestyle)   { try { const p=JSON.parse(data.freestyle);   if(p&&typeof p==="object") localStorage.setItem('mb_freestyle',   data.freestyle);   } catch(e){ console.warn('[MB] sync load parse fail:', 'freestyle', e); } }
+            if (data.reflections) { try { const p=JSON.parse(data.reflections); if(p&&typeof p==="object") localStorage.setItem('mb_reflections', data.reflections); } catch(e){ console.warn('[MB] sync load parse fail:', 'reflections', e); } }
+            if (data.battleprep)  { try { const p=JSON.parse(data.battleprep);  if(p&&typeof p==="object") localStorage.setItem('mb_battleprep',  data.battleprep);  } catch(e){ console.warn('[MB] sync load parse fail:', 'battleprep', e); } }
+            if (data.flowmap)     { try { const p=JSON.parse(data.flowmap);     if(p&&typeof p==="object") localStorage.setItem('mb_flowmap',     data.flowmap);     } catch(e){ console.warn('[MB] sync load parse fail:', 'flowmap', e); } }
+            if (data.catDomains)  { try { const p=JSON.parse(data.catDomains);  if(p&&typeof p==="object") localStorage.setItem('mb_cat_domains', data.catDomains);  } catch(e){ console.warn('[MB] sync load parse fail:', 'catDomains', e); } }
+            if (data.reports)     { try { const p=JSON.parse(data.reports);     if(p&&typeof p==="object") localStorage.setItem('mb_reports',     data.reports);     } catch(e){ console.warn('[MB] sync load parse fail:', 'reports', e); } }
+            if (data.milestonesShown) { try { const p=JSON.parse(data.milestonesShown); if(Array.isArray(p)) localStorage.setItem('mb_milestones_shown', data.milestonesShown); } catch(e){ console.warn('[MB] sync load parse fail:', 'milestonesShown', e); } }
+            if (data.presession)  { try { const p=JSON.parse(data.presession);  if(p&&typeof p==="object") localStorage.setItem('mb_presession',  data.presession);  } catch(e){ console.warn('[MB] sync load parse fail:', 'presession', e); } }
+            if (data.injuries)    { try { const p=JSON.parse(data.injuries);    if(Array.isArray(p))            localStorage.setItem('mb_injuries',    data.injuries);    } catch(e){ console.warn('[MB] sync load parse fail:', 'injuries', e); } }
+            if (data.profilePhoto) { var _pp = data.profilePhoto; if (_pp && _pp !== 'null' && _pp !== '"null"') { try { _pp = JSON.parse(_pp); } catch(e){ console.warn('[MB] sync load parse fail:', 'profilePhoto', e); } while(typeof _pp==='string'&&_pp.charAt(0)==='"'&&_pp.charAt(_pp.length-1)==='"'){try{var _pp2=JSON.parse(_pp);if(_pp2===_pp)break;_pp=_pp2;}catch(e){break;}} if(typeof _pp==='string'&&_pp.indexOf('data:')===0) localStorage.setItem('mb_profile_photo',_pp); else localStorage.removeItem('mb_profile_photo'); } }
           }
           if (loginDiv) { loginDiv.style.opacity='0'; setTimeout(function(){ loginDiv.style.display='none'; },300); }
           window.dispatchEvent(new Event('mb-auth-resolved'));
-        }).catch(function(){
+        }).catch(function(e){
+          console.warn('[MB] sync load failed (Firestore unreachable or data corrupt):', e);
           localStorage.setItem('mb_data_version','5');
           if (loginDiv) { loginDiv.style.opacity='0'; setTimeout(function(){ loginDiv.style.display='none'; },300); }
           window.dispatchEvent(new Event('mb-auth-resolved'));
@@ -264,9 +265,9 @@ firebase.initializeApp({
           try {
             if (d.moves)    localStorage.setItem('mb_moves',    d.moves);
             if (d.sets)     localStorage.setItem('mb_sets',     d.sets);
-            if (d.rounds) { try { const pr=JSON.parse(d.rounds); if(pr.length>0) localStorage.setItem('mb_rounds', d.rounds); } catch{} }
+            if (d.rounds) { try { const pr=JSON.parse(d.rounds); if(pr.length>0) localStorage.setItem('mb_rounds', d.rounds); } catch(e){ console.warn('[MB] sync subscribe parse fail:', 'rounds', e); } }
             if (d.ideas)    localStorage.setItem('mb_ideas',    d.ideas);
-            if (d.profile)  { try { const pp=JSON.parse(d.profile); if(pp&&Object.values(pp).some(v=>v)) localStorage.setItem('mb_profile', d.profile); } catch{} }
+            if (d.profile)  { try { const pp=JSON.parse(d.profile); if(pp&&Object.values(pp).some(v=>v)) localStorage.setItem('mb_profile', d.profile); } catch(e){ console.warn('[MB] sync subscribe parse fail:', 'profile', e); } }
             if (d.settings) localStorage.setItem('mb_settings', d.settings);
             if (d.habits)     localStorage.setItem('mb_habits',     d.habits);
             if (d.templates)  localStorage.setItem('mb_templates',  d.templates);
@@ -292,8 +293,8 @@ firebase.initializeApp({
             if (d.milestonesShown) localStorage.setItem('mb_milestones_shown', d.milestonesShown);
             if (d.presession)  localStorage.setItem('mb_presession',  d.presession);
             if (d.injuries)    localStorage.setItem('mb_injuries',    d.injuries);
-            if (d.profilePhoto) { var _sp=d.profilePhoto; if(_sp&&_sp!=='null'&&_sp!=='"null"'){try{_sp=JSON.parse(_sp);}catch(e){}while(typeof _sp==='string'&&_sp.charAt(0)==='"'&&_sp.charAt(_sp.length-1)==='"'){try{var _sp2=JSON.parse(_sp);if(_sp2===_sp)break;_sp=_sp2;}catch(e){break;}}if(typeof _sp==='string'&&_sp.indexOf('data:')===0)localStorage.setItem('mb_profile_photo',_sp);else localStorage.removeItem('mb_profile_photo');} }
-          } catch(e){}
+            if (d.profilePhoto) { var _sp=d.profilePhoto; if(_sp&&_sp!=='null'&&_sp!=='"null"'){try{_sp=JSON.parse(_sp);}catch(e){console.warn('[MB] sync subscribe parse fail:', 'profilePhoto', e);}while(typeof _sp==='string'&&_sp.charAt(0)==='"'&&_sp.charAt(_sp.length-1)==='"'){try{var _sp2=JSON.parse(_sp);if(_sp2===_sp)break;_sp=_sp2;}catch(e){break;}}if(typeof _sp==='string'&&_sp.indexOf('data:')===0)localStorage.setItem('mb_profile_photo',_sp);else localStorage.removeItem('mb_profile_photo');} }
+          } catch(e){ console.warn('[MB] sync subscribe handler crashed:', e); }
         });
       } else {
         window.__MB_USER__ = null;
