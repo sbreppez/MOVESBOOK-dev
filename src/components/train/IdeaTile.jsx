@@ -211,6 +211,28 @@ export const IdeaTile = (props) => {
                       <p style={{ fontSize:11, color:C.textSec, margin:0, lineHeight:1.5 }}>{idea.obstacles}</p>
                     </div>
                   )}
+                  {idea.journal && idea.journal.length > 0 && (() => {
+                    const latest = idea.journal[0];
+                    return (
+                      <div>
+                        <div style={{ fontSize:10, fontWeight:800, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY, marginBottom:3 }}>
+                          {t("latestNote")}
+                        </div>
+                        <div style={{ fontSize:9, fontWeight:700, color:C.textMuted, fontFamily:FONT_DISPLAY, letterSpacing:0.5, marginBottom:2 }}>
+                          {latest.date}
+                        </div>
+                        <p style={{ fontSize:11, color:C.textSec, margin:0, lineHeight:1.5,
+                          overflow:"hidden", display:"-webkit-box", WebkitLineClamp:3, WebkitBoxOrient:"vertical" }}>
+                          {latest.text}
+                        </p>
+                        {idea.journal.length > 1 && (
+                          <div style={{ fontSize:10, color:C.textMuted, fontStyle:"italic", marginTop:3 }}>
+                            + {idea.journal.length - 1} {t("moreEntries")}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })()}
                   <div style={{ fontSize:10, color:C.textMuted, textAlign:"center", marginTop:2 }}>tap to collapse</div>
                 </div>
               )}
@@ -352,6 +374,28 @@ export const IdeaTile = (props) => {
                 )}
                 {(idea.daysPerWeek||idea.sessionLength||idea.trainWhere)&&<div><span style={{ fontSize:10, fontWeight:800, color:C.textMuted, letterSpacing:1, fontFamily:FONT_DISPLAY }}>{t("commitments")}</span><p style={{ fontSize:13, color:C.textSec, marginTop:2 }}>{[idea.daysPerWeek,idea.sessionLength,idea.trainWhere].filter(Boolean).join(" · ")}</p></div>}
                 {idea.obstacles&&<div><span style={{ fontSize:10, fontWeight:800, color:C.textMuted, letterSpacing:1, fontFamily:FONT_DISPLAY }}>{t("obstacles")}</span><p style={{ fontSize:13, color:C.textSec, marginTop:2 }}>{idea.obstacles}</p></div>}
+                {idea.journal && idea.journal.length > 0 && (() => {
+                  const latest = idea.journal[0];
+                  return (
+                    <div>
+                      <span style={{ fontSize:10, fontWeight:800, color:C.textMuted, letterSpacing:1, fontFamily:FONT_DISPLAY }}>
+                        {t("latestNote")}
+                      </span>
+                      <div style={{ fontSize:11, fontWeight:700, color:C.textMuted, fontFamily:FONT_DISPLAY, letterSpacing:0.5, marginTop:2 }}>
+                        {latest.date}
+                      </div>
+                      <p style={{ fontSize:13, color:C.textSec, margin:"2px 0 0 0", lineHeight:1.5,
+                        overflow:"hidden", display:"-webkit-box", WebkitLineClamp:3, WebkitBoxOrient:"vertical" }}>
+                        {latest.text}
+                      </p>
+                      {idea.journal.length > 1 && (
+                        <div style={{ fontSize:11, color:C.textMuted, fontStyle:"italic", marginTop:3 }}>
+                          + {idea.journal.length - 1} {t("moreEntries")}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
               </div>
             ) : (
               <Fragment>
