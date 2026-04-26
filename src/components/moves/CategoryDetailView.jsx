@@ -97,15 +97,15 @@ export const CategoryDetailView = ({
                 <Ic n="filter" s={16}/>
                 {hasActiveFilters&&<div style={{ position:"absolute", top:2, right:2, width:6, height:6, borderRadius:"50%", background:C.accent }}/>}
               </button>}
-              {!catReorderMode&&<button onClick={()=>{ setShowSearch(s=>!s); setSearch(""); }} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:showSearch?C.accent:C.textSec }}><Ic n="search" s={16}/></button>}
-              {!catReorderMode&&allCatMoves.length>=2&&<button onClick={()=>setSelectMode(true)}
-                style={{ background:"none", border:"none", cursor:"pointer", padding:4 }}>
-                <Ic n="checkCircle" s={16} c={C.textMuted}/>
-              </button>}
               {allCatMoves.length>1&&<button onClick={()=>{ const next=!catReorderMode; setCatReorderMode(next); if(next){ const ids=allCatMoves.map(m=>m.id); setMoves(prev=>{ const rest=prev.filter(m=>!ids.includes(m.id)); const ordered=ids.map(id=>prev.find(m=>m.id===id)).filter(Boolean); return [...ordered,...rest]; }); } if(!next && onSortChange) onSortChange("sortMoves","custom"); }}
                 style={{ background:"none", border:"none", cursor:"pointer", padding:4,
                   color:catReorderMode?C.accent:C.textMuted, fontSize:13, fontWeight:800, fontFamily:FONT_DISPLAY, letterSpacing:1 }}>
                 {catReorderMode ? t("done") : "⇅"}
+              </button>}
+              {!catReorderMode&&<button onClick={()=>{ setShowSearch(s=>!s); setSearch(""); }} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:showSearch?C.accent:C.textSec }}><Ic n="search" s={16}/></button>}
+              {!catReorderMode&&allCatMoves.length>=2&&<button onClick={()=>setSelectMode(true)}
+                style={{ background:"none", border:"none", cursor:"pointer", padding:4 }}>
+                <Ic n="checkCircle" s={16} c={C.textMuted}/>
               </button>}
             </>
           )}
