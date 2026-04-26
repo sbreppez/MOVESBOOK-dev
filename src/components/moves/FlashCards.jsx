@@ -159,7 +159,7 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
             return (
               <button key={s.id} onClick={() => toggleSelect(s.id)}
                 style={{ display: "flex", alignItems: "center", gap: 12, width: "100%",
-                  padding: "12px 10px", background: checked ? `${C.accent}12` : C.surface,
+                  padding: "12px 10px", background: checked ? `${C.accent}18` : C.surface,
                   border: "none", borderRadius: 8,
                   cursor: "pointer", marginBottom: 8, minHeight: 44 }}>
                 {/* Checkbox */}
@@ -275,7 +275,7 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
             <div style={{ display: "flex", gap: 16, width: "100%", maxWidth: 360 }}>
               <button onClick={() => handleAnswer(false)}
                 style={{ flex: 1, padding: "14px 0", borderRadius: 8, border: "none", cursor: "pointer",
-                  background: `${C.red}22`, color: C.red,
+                  background: `${C.red}18`, color: C.red,
                   fontFamily: FONT_DISPLAY, fontSize: 14, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase", minHeight: 48 }}>
                 {t("missedIt")}
               </button>
@@ -316,7 +316,7 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
 
           {/* New Best badge */}
           {isNewBest && (
-            <div style={{ padding: "8px 20px", borderRadius: 20, background: `${C.accent}22`, border: `1.5px solid ${C.accent}` }}>
+            <div style={{ padding: "8px 20px", borderRadius: 20, background: `${C.accent}18`, border: `1.5px solid ${C.accent}` }}>
               <span style={{ fontFamily: FONT_DISPLAY, fontSize: 14, fontWeight: 800, color: C.accent, letterSpacing: 1, textTransform: "uppercase" }}>
                 ⭐ {t("newBest")}
               </span>
