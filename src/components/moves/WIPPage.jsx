@@ -22,6 +22,7 @@ import { useWipTriggers } from '../../hooks/useWipTriggers';
 import { useSearchFilter } from '../../hooks/useSearchFilter';
 import { useMoveCrud } from '../../hooks/useMoveCrud';
 import { useCategoryCrud } from '../../hooks/useCategoryCrud';
+import { useResponsive } from '../../hooks/useResponsive';
 import { AllMovesView } from './AllMovesView';
 import { SearchResultsView } from './SearchResultsView';
 import { CategoryGrid } from './CategoryGrid';
@@ -53,6 +54,10 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   const [addingSet,setAddingSet]=useState(false);
   // Sync view state when the defaultView setting changes
   useEffect(()=>{ setView(st.defaultView||"list"); },[st.defaultView]);
+  // Fallback for phone: tiles view doesn't ship on phones — drop to list
+  const { isPhone } = useResponsive();
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- isPhone+view-only by intent; setView is stable
+  useEffect(()=>{ if (isPhone && view === "tiles") setView("list"); },[isPhone, view]);
   const [showFilter, setShowFilter] = useState(false);
   const [attrFilters, setAttrFilters] = useState({});
 

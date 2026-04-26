@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSettings } from '../../hooks/useSettings';
 import { useT } from '../../hooks/useTranslation';
+import { useResponsive } from '../../hooks/useResponsive';
 import { FONT_DISPLAY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
 
@@ -16,6 +17,7 @@ export const WipHeaderActions = ({
 }) => {
   const { C } = useSettings();
   const t = useT();
+  const { isPhone } = useResponsive();
   const showAllMoves = view === "all";
   const reorderDisabled = view === "tree" || view === "all";
 
@@ -65,7 +67,10 @@ export const WipHeaderActions = ({
               </button>
             )}
             {(()=>{
-              const modes = ["list","tiles",...(isPremium?["tree"]:[]),"all"];
+              // Phone (< 520px) excludes "tiles" — tile view wastes vertical space on narrow screens
+              const modes = isPhone
+                ? ["list","all",...(isPremium?["tree"]:[])]
+                : ["list","tiles",...(isPremium?["tree"]:[]),"all"];
               const icons = { list:"list", tiles:"grid", tree:"gitFork", all:"cards" };
               return <button onClick={()=>setView(modes[(modes.indexOf(view)+1)%modes.length])} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textSec }}><Ic n={icons[view]||"list"} s={16}/></button>;
             })()}
