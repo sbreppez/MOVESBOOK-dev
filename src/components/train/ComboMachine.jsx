@@ -461,7 +461,7 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
 
       {/* Save modal */}
       {saveModal && (
-        <div style={{ position:"fixed", inset:0, zIndex:600, background:"rgba(0,0,0,0.5)", display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}
+        <div style={{ position:"absolute", inset:0, zIndex:600, background:"rgba(0,0,0,0.5)", display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}
           onClick={() => setSaveModal(false)}>
           <div onClick={e => e.stopPropagation()}
             style={{ background:C.bg, borderRadius:16, padding:24, width:"100%", maxWidth:380, border:`1px solid ${C.border}` }}>
