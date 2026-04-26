@@ -520,62 +520,72 @@ const MovePicker = ({ moves, catColors, combos, onCombosChange, onBack }) => {
     onBack();
   };
 
+  const allSelected = selected.size === allIds.length;
+  const toggleAll = () => setSelected(allSelected ? new Set() : new Set(allIds));
+
   return (
     <div style={{ position:"absolute", inset:0, zIndex:500, background:C.bg, display:"flex", flexDirection:"column", fontFamily:FONT_BODY }}>
-      {/* Header */}
-      <div style={{ display:"flex", alignItems:"center", padding:"14px 16px", borderBottom:`1px solid ${C.border}`, background:C.header, flexShrink:0 }}>
-        <button onClick={onBack} style={{ background:"none", border:"none", cursor:"pointer", padding:6, marginRight:8 }}>
-          <Ic n="chevR" s={20} c={C.headerText} />
+      {/* Header — FlashCards-style: no border, no surface fill */}
+      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"12px 14px 8px", flexShrink:0 }}>
+        <button onClick={onBack} style={{ background:"none", border:"none", cursor:"pointer", padding:4, display:"flex" }}>
+          <Ic n="chevL" s={18} c={C.textMuted} />
         </button>
-        <span style={{ flex:1, fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:14, letterSpacing:1.2, color:C.headerText }}>{t("selectMoves")}</span>
-        <button onClick={selectAll}
-          style={{ background:"none", border:`1.5px solid ${C.border}`, borderRadius:8, padding:"5px 12px", cursor:"pointer",
-            fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:10, color:C.textSec, letterSpacing:0.5 }}>
-          ALL
-        </button>
+        <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:2, color:C.text, textTransform:"uppercase" }}>{t("selectMoves")}</span>
+        <span style={{ width:26 }}/>{/* spacer to balance back button */}
       </div>
 
       {/* Search */}
-      <div style={{ padding:"10px 16px", borderBottom:`1px solid ${C.borderLight}`, flexShrink:0 }}>
+      <div style={{ padding:"6px 16px 8px", flexShrink:0 }}>
         <div style={{ display:"flex", alignItems:"center", gap:8, background:C.surface, border:`1.5px solid ${C.border}`, borderRadius:8, padding:"8px 12px" }}>
           <Ic n="search" s={14} c={C.textMuted}/>
           <input value={search} onChange={e => setSearch(e.target.value)} placeholder={t("search")}
             style={{ flex:1, border:"none", background:"transparent", color:C.text, fontFamily:FONT_BODY, fontSize:13, outline:"none" }}/>
         </div>
-        <div style={{ marginTop:6, fontSize:11, color:C.textMuted }}>{selected.size} / {moves.length}</div>
       </div>
 
-      {/* List */}
-      <div style={{ flex:1, overflowY:"auto", WebkitOverflowScrolling:"touch" }}>
-        {filtered.map(m => (
-          <div key={m.id} onClick={() => toggle(m.id)}
-            style={{ display:"flex", alignItems:"center", gap:10, padding:"10px 16px",
-              borderBottom:`1px solid ${C.borderLight}`, cursor:"pointer",
-              background: selected.has(m.id) ? `${getCatColor(m.category)}10` : "transparent" }}>
-            {/* Checkbox */}
-            <div style={{
-              width:22, height:22, borderRadius:6, border:`2px solid ${selected.has(m.id) ? C.accent : C.border}`,
-              background: selected.has(m.id) ? C.accent : "transparent",
-              display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0
-            }}>
-              {selected.has(m.id) && <Ic n="check" s={14} c="#fff"/>}
-            </div>
-            {/* Color bar */}
-            <div style={{ width:4, height:28, borderRadius:2, background:getCatColor(m.category), flexShrink:0 }}/>
-            {/* Info */}
-            <div style={{ flex:1, minWidth:0 }}>
-              <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:13, color:C.text, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{m.name}</div>
-              <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:10, color:getCatColor(m.category), letterSpacing:0.5 }}>{m.category}</div>
-            </div>
-          </div>
-        ))}
+      {/* Select All / count — FlashCards link style */}
+      <div style={{ padding:"0 16px 6px", display:"flex", alignItems:"center", justifyContent:"space-between", flexShrink:0 }}>
+        <button onClick={toggleAll}
+          style={{ background:"none", border:"none", cursor:"pointer", padding:"6px 0",
+            fontFamily:FONT_DISPLAY, fontSize:11, fontWeight:700, letterSpacing:1, textTransform:"uppercase", color:C.accent }}>
+          {allSelected ? t("deselectAll") : t("selectAll")}
+        </button>
+        <span style={{ fontSize:11, color:C.textMuted }}>{selected.size} / {moves.length}</span>
       </div>
 
-      {/* Done */}
-      <div style={{ padding:"12px 16px", borderTop:`1px solid ${C.border}`, flexShrink:0 }}>
+      {/* List — tile-style, item color carries identity */}
+      <div style={{ flex:1, overflowY:"auto", WebkitOverflowScrolling:"touch", padding:"4px 16px 12px" }}>
+        {filtered.map(m => {
+          const checked = selected.has(m.id);
+          const catColor = getCatColor(m.category);
+          return (
+            <button key={m.id} onClick={() => toggle(m.id)}
+              style={{ display:"flex", alignItems:"center", gap:12, width:"100%",
+                padding:"12px 12px 12px 14px",
+                background: checked ? `${catColor}18` : C.surface,
+                border:"none", borderLeft:`4px solid ${catColor}`, borderRadius:8,
+                cursor:"pointer", marginBottom:6, minHeight:44 }}>
+              {/* Checkbox */}
+              <div style={{ width:22, height:22, borderRadius:5, border:`2px solid ${checked ? catColor : C.textMuted}`,
+                background: checked ? catColor : "transparent",
+                display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
+                {checked && <Ic n="check" s={14} c="#fff"/>}
+              </div>
+              {/* Info — name in category color, subtitle muted */}
+              <div style={{ flex:1, minWidth:0, textAlign:"left" }}>
+                <div style={{ fontFamily:FONT_DISPLAY, fontSize:14, fontWeight:700, color:catColor, letterSpacing:0.3, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{m.name}</div>
+                <div style={{ fontFamily:FONT_BODY, fontSize:11, color:C.textMuted }}>{m.category}</div>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Done — FlashCards Start button parity */}
+      <div style={{ padding:"12px 16px", flexShrink:0 }}>
         <button onClick={done}
           style={{ width:"100%", padding:14, borderRadius:8, border:"none", background:C.accent, color:"#fff",
-            fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:13, letterSpacing:1.5, cursor:"pointer" }}>
+            fontFamily:FONT_DISPLAY, fontWeight:800, fontSize:16, letterSpacing:1.5, cursor:"pointer", textTransform:"uppercase", minHeight:48 }}>
           {t("done")}
         </button>
       </div>
