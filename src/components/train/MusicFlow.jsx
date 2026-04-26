@@ -26,21 +26,18 @@ const fmtTime = (ms) => {
 export const MusicFlow = ({ musicflow: _musicflow, onMusicflowChange, onUpdateSession, reflections, onReflectionsChange, addToast, addCalendarEvent, onClose }) => {
   const t = useT();
 
-  const [screen, setScreen] = useState("active");
-  const [timerStart] = useState(() => Date.now());
+  const [screen, setScreen] = useState("intro");
+  const [timerStart, setTimerStart] = useState(() => Date.now());
   const [elapsed, setElapsed] = useState(0);
   const [promptIdx, setPromptIdx] = useState(0);
   const [promptOpacity, setPromptOpacity] = useState(0);
   const [promptCount, setPromptCount] = useState(0);
   const [savedSession, setSavedSession] = useState(null);
   const [reflection, setReflection] = useState("");
-  const [introVisible, setIntroVisible] = useState(true);
-  const [introOpacity, setIntroOpacity] = useState(1);
 
   const fadeInRef = useRef(null);
   const fadeOutRef = useRef(null);
   const advanceRef = useRef(null);
-  const introRef = useRef(null);
   const reflectionTimer = useRef(null);
 
   // ── Count-up timer ──
@@ -50,18 +47,9 @@ export const MusicFlow = ({ musicflow: _musicflow, onMusicflowChange, onUpdateSe
     return () => clearInterval(iv);
   }, [screen, timerStart]);
 
-  // ── Intro fade-out after 5 seconds ──
+  // ── Prompt cycling with fade ──
   useEffect(() => {
-    introRef.current = setTimeout(() => {
-      setIntroOpacity(0);
-      setTimeout(() => setIntroVisible(false), 500);
-    }, 5000);
-    return () => clearTimeout(introRef.current);
-  }, []);
-
-  // ── Prompt cycling with fade (delayed until intro is gone) ──
-  useEffect(() => {
-    if (screen !== "active" || introVisible) return;
+    if (screen !== "active") return;
 
     setPromptOpacity(0);
 
@@ -127,6 +115,57 @@ export const MusicFlow = ({ musicflow: _musicflow, onMusicflowChange, onUpdateSe
     setScreen("done");
   };
 
+  // ── Intro Screen ──
+  if (screen === "intro") {
+    return (
+      <div style={{ position:"absolute", inset:0, zIndex:500, background:C.bg,
+        display:"flex", flexDirection:"column", overflow:"hidden" }}>
+
+        {/* Header — clean, FlashCards-style */}
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between",
+          padding:"12px 14px 8px", flexShrink:0 }}>
+          <span style={{ width:26 }}/>{/* spacer to balance close */}
+          <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:2,
+            color:C.text, textTransform:"uppercase" }}>{t("flow")}</span>
+          <button onClick={onClose} style={{ background:"none", border:"none", cursor:"pointer", padding:4 }}>
+            <Ic n="x" s={18} c={C.textMuted}/>
+          </button>
+        </div>
+
+        {/* Body — what it is + what happens + what user needs */}
+        <div style={{ flex:1, padding:"24px 24px", display:"flex", flexDirection:"column",
+          alignItems:"center", justifyContent:"center", gap:22, textAlign:"center" }}>
+
+          {/* Brief — what it is */}
+          <div style={{ fontFamily:FONT_BODY, fontSize:15, color:C.text, lineHeight:1.5, maxWidth:340 }}>
+            {t("flowBrief")}
+          </div>
+
+          {/* What's about to happen */}
+          <div style={{ fontFamily:FONT_BODY, fontSize:13, color:C.textSec, lineHeight:1.5, maxWidth:340 }}>
+            {t("musicFlowIntro2")}
+          </div>
+
+          {/* What you need to do */}
+          <div style={{ fontFamily:FONT_BODY, fontSize:13, color:C.textMuted, lineHeight:1.5,
+            fontStyle:"italic", maxWidth:340 }}>
+            {t("musicFlowIntro1")}
+          </div>
+        </div>
+
+        {/* Start CTA */}
+        <div style={{ padding:"12px 16px 24px", flexShrink:0 }}>
+          <button onClick={() => { setTimerStart(Date.now()); setElapsed(0); setScreen("active"); }}
+            style={{ width:"100%", padding:14, borderRadius:8, border:"none", background:C.accent, color:"#fff",
+              fontFamily:FONT_DISPLAY, fontWeight:800, fontSize:16, letterSpacing:1.5,
+              cursor:"pointer", textTransform:"uppercase", minHeight:48 }}>
+            {t("startFlow")}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   // ── Active Screen ──
   if (screen === "active") {
     const stage = getStage(promptCount);
@@ -159,25 +198,11 @@ export const MusicFlow = ({ musicflow: _musicflow, onMusicflowChange, onUpdateSe
         {/* Prompt area */}
         <div style={{ flex:1, display:"flex", alignItems:"center", justifyContent:"center",
           padding:"0 32px" }}>
-          {introVisible ? (
-            <div style={{ opacity:introOpacity, transition:"opacity 0.5s ease-in-out",
-              textAlign:"center" }}>
-              <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:18, color:C.text,
-                lineHeight:1.5 }}>
-                {t("musicFlowIntro1")}
-              </div>
-              <div style={{ fontFamily:FONT_BODY, fontSize:13, color:C.textMuted, marginTop:8,
-                lineHeight:1.5 }}>
-                {t("musicFlowIntro2")}
-              </div>
-            </div>
-          ) : (
-            <div style={{ opacity:promptOpacity, transition:"opacity 0.5s ease-in-out",
-              fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:22, color:C.text,
-              textAlign:"center", lineHeight:1.5, maxWidth:340 }}>
-              {t(PROMPT_KEYS[promptIdx])}
-            </div>
-          )}
+          <div style={{ opacity:promptOpacity, transition:"opacity 0.5s ease-in-out",
+            fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:22, color:C.text,
+            textAlign:"center", lineHeight:1.5, maxWidth:340 }}>
+            {t(PROMPT_KEYS[promptIdx])}
+          </div>
         </div>
 
         {/* Done button */}
