@@ -1,6 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
+import { Txtarea } from '../shared/Txtarea';
 import { useT } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
 import { ensureHttps } from './helpers';
@@ -32,8 +33,12 @@ export const JournalEntryCard = ({ entry, onDelete, onUpdate }) => {
       </div>
       {editing ? (
         <div>
-          <textarea value={text} onChange={e=>setText(e.target.value)} rows={3}
-            style={{ ...inputStyle, resize:"vertical", marginBottom:6, lineHeight:1.5 }}/>
+          <Txtarea
+            value={text}
+            onChange={setText}
+            rows={3}
+            autoExpand
+          />
           <input value={link} onChange={e=>setLink(e.target.value)}
             placeholder={t("videoRefLink")}
             style={{ ...inputStyle, marginBottom:8 }}/>
