@@ -99,6 +99,7 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
       {/* ── Based On (parent move) — premium ── */}
       {isPremium && <div style={{ marginBottom:8 }}>
         <label style={lbl()}>{t("basedOn")}</label>
+        <div style={{ fontSize:11, color:C.textMuted, fontStyle:"italic", marginTop:-2, marginBottom:5 }}>{t("basedOnHint")}</div>
         {!showBasedOn && !f.parentId ? (
           <button onClick={() => setShowBasedOn(true)}
             style={{ background:"none", border:"none", cursor:"pointer", padding:0,
