@@ -138,6 +138,9 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
           </button>
         </div>
         <div style={scrollBody}>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: C.textSec, margin: "0 0 4px", lineHeight: 1.5 }}>
+            {t("flashCardsBrief")}
+          </p>
           <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: C.textMuted, margin: "0 0 6px", lineHeight: 1.5 }}>
             {t("flashCardsInstruction")}
           </p>
