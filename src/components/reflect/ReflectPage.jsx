@@ -20,7 +20,7 @@ export const ReflectPage = ({
   calendar, setCalendar, cats, catColors, settings, onSettingsChange,
   addToast, stance, battleprep, onToggleBattlePrepTask,
   onOpenStanceAssessment, addCalendarEvent: _addCalendarEvent, removeCalendarEvent: _removeCalendarEvent,
-  onSubTabChange, onGoToPrep, initialDay, initialMonth, sets, onAddTrigger, parentSubTab, reports, injuries,
+  onSubTabChange, onGoToPrep, initialMonth, sets, onAddTrigger, parentSubTab, reports, injuries,
   isPremium
 }) => {
   const t = useT();
@@ -238,7 +238,7 @@ export const ReflectPage = ({
           sets={sets}
           calendar={calendar} setCalendar={setCalendar}
           cats={cats} catColors={catColors} settings={settings} onSettingsChange={onSettingsChange}
-          addToast={addToast} initialDay={initialDay}
+          addToast={addToast}
           onGoToPrep={onGoToPrep}
           battleprep={battleprep} initialMonth={initialMonth}
           onToggleBattlePrepTask={onToggleBattlePrepTask}

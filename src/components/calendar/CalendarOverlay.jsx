@@ -27,7 +27,7 @@ export const CalendarOverlay = ({
   sets,
   calendar, setCalendar,
   cats, catColors, settings, onSettingsChange,
-  addToast, initialDay,
+  addToast,
   onClose, onGoToPrep,
   battleprep, onToggleBattlePrepTask, initialMonth,
   inline, onAddTrigger, reports, isPremium,
@@ -37,11 +37,10 @@ export const CalendarOverlay = ({
 
   const [viewDate, setViewDate] = useState(() => {
     if (initialMonth) return new Date(initialMonth.year, initialMonth.month, 1);
-    if (initialDay) return new Date(initialDay + "T00:00:00");
     return new Date();
   });
-  const [selectedDay, setSelectedDay] = useState(initialDay || today);
-  const [showJournal, setShowJournal] = useState(!!initialDay);
+  const [selectedDay, setSelectedDay] = useState(today);
+  const [showJournal, setShowJournal] = useState(false);
   const [editEvent, setEditEvent] = useState(null);
   const [showTypePicker, setShowTypePicker] = useState(false);
   const [battlePrepPrompt, setBattlePrepPrompt] = useState(null);
