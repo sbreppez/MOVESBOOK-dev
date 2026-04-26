@@ -25,8 +25,7 @@ const TreeNode = ({ node, depth, catColors, onEdit, collapsed, toggleCollapse, i
       {/* Node card */}
       <div onClick={() => onEdit(m)}
         style={{ display: "flex", alignItems: "center", gap: 8, background: C.surface,
-          borderTop: `1px solid ${C.borderLight}`, borderRight: `1px solid ${C.borderLight}`,
-          borderBottom: `1px solid ${C.borderLight}`, borderLeft: `4px solid ${catCol}`,
+          borderLeft: `4px solid ${catCol}`,
           borderRadius: 8, padding: "10px 14px", cursor: "pointer", marginBottom: 6 }}>
         {hasChildren && (
           <button onClick={e => { e.stopPropagation(); toggleCollapse(m.id); }}
@@ -165,8 +164,7 @@ export const MoveTree = ({ moves, catColors, onEdit, settings: _settings = {} })
           return (
             <div key={m.id} onClick={() => onEdit(m)}
               style={{ display: "flex", alignItems: "center", gap: 8, background: C.surface,
-                borderTop: `1px solid ${C.borderLight}`, borderRight: `1px solid ${C.borderLight}`,
-                borderBottom: `1px solid ${C.borderLight}`, borderLeft: `4px solid ${catCol}`,
+                borderLeft: `4px solid ${catCol}`,
                 borderRadius: 8, padding: "10px 14px", cursor: "pointer", marginBottom: 6 }}>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontWeight: 700, fontSize: 14, color: C.text, fontFamily: FONT_DISPLAY,
