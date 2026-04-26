@@ -39,7 +39,7 @@ const sectionLabel = { fontSize:10, fontWeight:800, letterSpacing:1, color:C.tex
 
 export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initialDesc="", cats=CATS, customAttrs=[], onAddAttr, allMoves=[], catColors=CAT_COLORS, isPremium }) => {
   const t = useT();
-  const [f,setF] = useState({ name:"", category:initialCat, description:initialDesc||"", link:"", mastery:50, date:todayLocal(), status:"wip", rotation:"", travelling:"", custom:"", attrs:{}, origin:"learned", musicEnergy:null, tensionRole:null, parentId:null, ...move });
+  const [f,setF] = useState({ name:"", category:initialCat, description:initialDesc||"", link:"", mastery:50, date:todayLocal(), rotation:"", travelling:"", custom:"", attrs:{}, origin:"learned", musicEnergy:null, tensionRole:null, parentId:null, ...move });
   const set = k => v => setF(p=>({...p,[k]:v}));
   const [journalEntries, setJournalEntries] = useState(move?.journal || []);
   const [newJournalText, setNewJournalText] = useState("");

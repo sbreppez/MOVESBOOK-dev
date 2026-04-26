@@ -7,7 +7,6 @@ export function migrateMove(m) {
     name:        m.name        || "",
     category:    m.category    || "Footworks",
     mastery:     typeof m.mastery === "number" ? m.mastery : 0,
-    status:      "wip",
     description: m.description || "",
     notes:       m.notes       || "",
     link:        m.link        || "",

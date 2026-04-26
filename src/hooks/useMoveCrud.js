@@ -11,7 +11,7 @@ export const useMoveCrud = ({ moves, setMoves, addToast, t, st }) => {
     if (id) {
       setMoves(prev => prev.map(m => m.id === id ? { ...m, ...form } : m));
     } else {
-      setMoves(prev => [...prev, { ...form, id: Date.now(), status: form.status || "wip" }]);
+      setMoves(prev => [...prev, { ...form, id: Date.now() }]);
     }
   };
 
@@ -36,7 +36,6 @@ export const useMoveCrud = ({ moves, setMoves, addToast, t, st }) => {
     const w = newMoves.map(m => ({
       ...m,
       id: Date.now() + Math.random(),
-      status: m.status || "wip",
     }));
     setMoves(prev => [...prev, ...w]);
   };
