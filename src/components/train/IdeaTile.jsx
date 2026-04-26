@@ -99,7 +99,7 @@ export const IdeaTile = (props) => {
           {IDEA_COLORS.map(pc=>(
             <button key={pc} onClick={()=>{ onChangeColor(pc); setMenu(false); setSubColor(false); }}
               style={{ width:24, height:24, borderRadius:5, background:pc, cursor:"pointer", outline:"none",
-                border: pc===color ? `2.5px solid ${C.brown}` : `1.5px solid transparent` }}/>
+                border: pc===color ? `2.5px solid ${C.text}` : `1.5px solid transparent` }}/>
           ))}
         </div>
       </>)}

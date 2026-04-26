@@ -54,10 +54,10 @@ export const CatTile = (props) => {
                   onClick={e=>e.stopPropagation()}
                   onBlur={()=>{ if(draft.trim()&&draft.trim()!==name)onRename(draft.trim()); setRenaming(false); }}
                   onKeyDown={e=>{ if(e.key==="Enter"&&draft.trim()){if(draft.trim()!==name)onRename(draft.trim());setRenaming(false);} if(e.key==="Escape"){setDraft(name);setRenaming(false);} }}
-                  style={{ fontWeight:700, fontSize:16, color:C.brown, letterSpacing:1.1, fontFamily:FONT_DISPLAY,
+                  style={{ fontWeight:700, fontSize:16, color:C.text, letterSpacing:1.1, fontFamily:FONT_DISPLAY,
                     background:"transparent", border:"none", borderBottom:`2px solid ${C.accent}`, outline:"none", width:"90%", padding:"1px 0" }}/>
               ) : (
-                <div style={{ fontWeight:700, fontSize:16, color:C.brown, letterSpacing:1.1, fontFamily:FONT_DISPLAY, cursor:"pointer", lineHeight:1.2,
+                <div style={{ fontWeight:700, fontSize:16, color:C.text, letterSpacing:1.1, fontFamily:FONT_DISPLAY, cursor:"pointer", lineHeight:1.2,
                   overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{name}</div>
               )}
               {showMoveCount&&<div style={{ fontSize:13, color:C.textMuted, marginTop:2 }}><span style={{color:C.textMuted,fontWeight:700}}>{total}</span> {moveCountStr(total).slice(String(total).length+1)}</div>}
@@ -138,10 +138,10 @@ export const CatTile = (props) => {
                 onClick={e=>e.stopPropagation()}
                 onBlur={()=>{ if(draft.trim()&&draft.trim()!==name)onRename(draft.trim()); setRenaming(false); }}
                 onKeyDown={e=>{ if(e.key==="Enter"&&draft.trim()){if(draft.trim()!==name)onRename(draft.trim());setRenaming(false);} if(e.key==="Escape"){setDraft(name);setRenaming(false);} }}
-                style={{ fontWeight:700, fontSize:16, color:C.brown, letterSpacing:1.2, fontFamily:FONT_DISPLAY,
+                style={{ fontWeight:700, fontSize:16, color:C.text, letterSpacing:1.2, fontFamily:FONT_DISPLAY,
                   background:"transparent", border:"none", borderBottom:`2px solid ${C.accent}`, outline:"none", width:"90%", padding:"1px 0" }}/>
             ) : (
-              <span style={{ fontWeight:700, fontSize:16, color:C.brown, letterSpacing:1.2, fontFamily:FONT_DISPLAY, cursor:"pointer",
+              <span style={{ fontWeight:700, fontSize:16, color:C.text, letterSpacing:1.2, fontFamily:FONT_DISPLAY, cursor:"pointer",
                 overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", display:"block" }}>{name}</span>
             )}
           </div>
