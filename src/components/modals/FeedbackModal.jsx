@@ -21,6 +21,7 @@ export const FeedbackModal = ({ onClose, inline }) => {
   const [battleImp,  setBattleImp]  = useState("");
   const [feeling,    setFeeling]    = useState("");
   const [status,     setStatus]     = useState("idle");
+  const [errorMsg,   setErrorMsg]   = useState("");
 
   const EMAILJS_PUBLIC  = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
   const EMAILJS_SERVICE = import.meta.env.VITE_EMAILJS_SERVICE_ID;
@@ -47,7 +48,12 @@ export const FeedbackModal = ({ onClose, inline }) => {
 
   const handleSubmit = async () => {
     if (!canSubmit) return;
+    if (typeof window.emailjs === "undefined") {
+      setStatus("unavailable");
+      return;
+    }
     setStatus("sending");
+    setErrorMsg("");
     const body = [
       "=== MOVESBOOK FEEDBACK ===",
       "",
@@ -77,6 +83,7 @@ export const FeedbackModal = ({ onClose, inline }) => {
       setStatus("sent");
     } catch(e) {
       console.error("EmailJS error:", e);
+      setErrorMsg(String(e?.message || e || "").slice(0, 120));
       setStatus("error");
     }
   };
@@ -242,8 +249,20 @@ export const FeedbackModal = ({ onClose, inline }) => {
         <div style={{ padding:"12px 18px", borderTop:`1px solid ${C.border}`,
           flexShrink:0, background:C.surface }}>
           {status === "error" && (
+            <>
+              <div style={{ fontSize:13, color:C.red, marginBottom:errorMsg ? 4 : 8, textAlign:"center" }}>
+                {t("somethingWentWrong")}
+              </div>
+              {errorMsg && (
+                <div style={{ fontSize:11, color:C.textMuted, marginBottom:8, textAlign:"center", fontFamily:"monospace", wordBreak:"break-word" }}>
+                  {errorMsg}
+                </div>
+              )}
+            </>
+          )}
+          {status === "unavailable" && (
             <div style={{ fontSize:13, color:C.red, marginBottom:8, textAlign:"center" }}>
-              {t("somethingWentWrong")}
+              {t("feedbackServiceUnavailable")}
             </div>
           )}
           {!canSubmit && (
