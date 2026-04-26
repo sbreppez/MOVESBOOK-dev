@@ -8,15 +8,15 @@ import { useSettings } from '../../hooks/useSettings';
 import { SectionBrief } from '../shared/SectionBrief';
 import { todayLocal } from '../../utils/dateUtils';
 
-// ── Difficulty tiers ────────────────────────────────────────────────────────
+// Rainbow palette per move count — cold (violet) to warm (red)
 const TIERS = {
-  3: { key:"warmUp",      emoji:"\u{1F525}", color:"green"  },
-  4: { key:"warmUp",      emoji:"\u{1F525}", color:"green",  plus:true },
-  5: { key:"cypherCat",   emoji:"\u{1F431}", color:"yellow" },
-  6: { key:"cypherCat",   emoji:"\u{1F431}", color:"yellow", plus:true },
-  7: { key:"battleMode",  emoji:"\u2694\uFE0F", color:"blue" },
-  8: { key:"battleMode",  emoji:"\u2694\uFE0F", color:"blue",  plus:true },
-  9: { key:"lifeOrDeath", emoji:"\u{1F480}", color:"red"    },
+  3: { color: CAT_COLORS.Godowns        }, // violet — coldest
+  4: { color: CAT_COLORS.Footworks      }, // blue
+  5: { color: CAT_COLORS.Blowups        }, // teal
+  6: { color: CAT_COLORS.Freezes        }, // green
+  7: { color: CAT_COLORS["Power Moves"] }, // amber
+  8: { color: CAT_COLORS.Transitions    }, // orange
+  9: { color: CAT_COLORS.Toprocks       }, // red — warmest
 };
 
 const DEFAULT_TRANSITIONS = ["Thread","Jump","Counter Spin","Slide","Sweep","Touch Foot","Kick","Hop","Roll","Twist","Drop","Spin Through"];
@@ -41,8 +41,7 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
   const tier = TIERS[moveCount];
-  const tierColor = C[tier.color];
-  const tierLabel = `${t("cypherLevel")} ${moveCount}`;
+  const tierColor = tier.color;
 
   const getCatColor = (cat) => catColors?.[cat] || CAT_COLORS[cat] || C.textMuted;
 
@@ -228,12 +227,10 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
 
       <SectionBrief desc={t("combineBrief")} stat={`${moves.length} moves in your library`} settings={ctxSettings}/>
 
-      {/* Difficulty bar */}
-      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"10px 16px", borderBottom:`1px solid ${C.borderLight}`, flexShrink:0 }}>
-        {/* Tier badge */}
-        <div style={{ display:"flex", alignItems:"center", background:`${tierColor}18`, borderRadius:10, padding:"5px 14px" }}>
-          <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:13, letterSpacing:1.5, color:tierColor }}>{tierLabel}</span>
-        </div>
+      {/* Difficulty bar — SELECT [N] MOVES */}
+      <div style={{ display:"grid", gridTemplateColumns:"1fr auto 1fr", alignItems:"center", padding:"10px 16px", borderBottom:`1px solid ${C.borderLight}`, flexShrink:0 }}>
+        {/* Left label */}
+        <span style={{ justifySelf:"start", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:1.5, color:C.text, textTransform:"uppercase" }}>{t("select")}</span>
         {/* Counter */}
         <div style={{ display:"flex", alignItems:"center", gap:10 }}>
           <button onClick={() => changeCount(-1)} disabled={moveCount <= 3}
@@ -241,13 +238,15 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
               display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", opacity:moveCount<=3?0.3:1 }}>
             <Ic n="minus" s={16} c={C.text}/>
           </button>
-          <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:32, color:C.text, minWidth:30, textAlign:"center" }}>{moveCount}</span>
+          <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:32, color:tierColor, minWidth:30, textAlign:"center", transition:"color 0.2s" }}>{moveCount}</span>
           <button onClick={() => changeCount(1)} disabled={moveCount >= 9}
             style={{ width:38, height:38, borderRadius:10, border:`2px solid ${C.border}`, background:C.surface,
               display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", opacity:moveCount>=9?0.3:1 }}>
             <Ic n="plus" s={16} c={C.text}/>
           </button>
         </div>
+        {/* Right label */}
+        <span style={{ justifySelf:"end", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:1.5, color:C.text, textTransform:"uppercase" }}>{t("moves")}</span>
       </div>
 
       {/* Mode toggle: RANDOM | BRANCH DRILL */}
