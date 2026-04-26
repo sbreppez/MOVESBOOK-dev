@@ -421,7 +421,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
                     style={{ flex:1, fontWeight:700, fontSize:16, color:C.brown, fontFamily:FONT_DISPLAY, letterSpacing:1.2, cursor:reorderRounds?"default":"pointer" }}>
                     {round.name}
                   </span>
-                  {!reorderRounds&&<span style={{ fontSize:13, color:C.textMuted, fontWeight:400, fontFamily:FONT_DISPLAY, flexShrink:0 }}>
+                  {!reorderRounds&&<span style={{ fontSize:13, color:C.textMuted, flexShrink:0 }}>
                     {entryCountStr(entryCount)}
                   </span>}
                   {!reorderRounds&&<button onClick={()=>setEditRound(round)}
