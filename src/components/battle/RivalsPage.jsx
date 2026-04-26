@@ -62,7 +62,7 @@ const normalizeRival = (r) => r ? ({
   battles:[], videoRefs:[], strongDomains:[], ...r,
 }) : null;
 
-export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, addCalendarEvent }) => {
+export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, addCalendarEvent, onOpenSparring }) => {
   const t = useT();
   const { C } = useSettings();
   const [peopleTab, setPeopleTab] = useState("rivals");
@@ -751,6 +751,24 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
           </button>
         </div>
       </div>
+
+      {/* Start Sparring — ghost button, rivals tab only */}
+      {peopleTab === "rivals" && onOpenSparring && (
+        <div style={{ padding:"8px 16px 0", flexShrink:0 }}>
+          <button onClick={onOpenSparring}
+            style={{
+              width:"100%", padding:14, borderRadius:8,
+              border:`1px solid ${C.accent}`, background:"transparent",
+              color:C.accent, cursor:"pointer",
+              fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:13,
+              letterSpacing:1, textTransform:"uppercase",
+              display:"flex", alignItems:"center", justifyContent:"center",
+              gap:8, minHeight:44,
+            }}>
+            {t("startSparring")}
+          </button>
+        </div>
+      )}
 
       {/* Card list */}
       <div style={{ flex:1, overflow:"auto" }}>
