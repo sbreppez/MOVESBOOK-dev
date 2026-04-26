@@ -227,10 +227,10 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
 
       <SectionBrief desc={t("combineBrief")} stat={`${moves.length} moves in your library`} settings={ctxSettings}/>
 
-      {/* Difficulty bar — SELECT [N] MOVES */}
-      <div style={{ display:"grid", gridTemplateColumns:"1fr auto 1fr", alignItems:"center", padding:"10px 16px", borderBottom:`1px solid ${C.borderLight}`, flexShrink:0 }}>
+      {/* Difficulty bar — COMBINE [N] MOVES, centered as a group */}
+      <div style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:18, padding:"10px 16px", borderBottom:`1px solid ${C.borderLight}`, flexShrink:0 }}>
         {/* Left label */}
-        <span style={{ justifySelf:"start", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:1.5, color:C.text, textTransform:"uppercase" }}>{t("select")}</span>
+        <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:1.5, color:C.text, textTransform:"uppercase" }}>{t("combine")}</span>
         {/* Counter */}
         <div style={{ display:"flex", alignItems:"center", gap:10 }}>
           <button onClick={() => changeCount(-1)} disabled={moveCount <= 3}
@@ -246,7 +246,7 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
           </button>
         </div>
         {/* Right label */}
-        <span style={{ justifySelf:"end", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:1.5, color:C.text, textTransform:"uppercase" }}>{t("moves")}</span>
+        <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:1.5, color:C.text, textTransform:"uppercase" }}>{t("moves")}</span>
       </div>
 
       {/* Mode toggle: RANDOM | BRANCH DRILL */}
