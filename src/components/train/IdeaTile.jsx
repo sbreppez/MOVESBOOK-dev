@@ -33,6 +33,8 @@ export const IdeaTile = (props) => {
   const isTile   = viewMode === "tiles";
   const typeIcon = isGoal ? "target" : isTarget ? "crosshair" : "fileText";
   const typeLabel = isGoal ? "GOAL" : isTarget ? "TARGET" : "NOTE";
+  // Goal with only title (no fields filled) → expanded view would render blank. Show empty state instead.
+  const isGoalEmpty = isGoal && !idea.why && !idea.daysPerWeek && !idea.sessionLength && !idea.trainWhere && !idea.obstacles && !(idea.steps && idea.steps.some(s => s)) && !(idea.journal && idea.journal.length > 0);
 
   const renderMenu = (posStyle={right:0}) => (
     <div onClick={e=>e.stopPropagation()}
@@ -189,6 +191,7 @@ export const IdeaTile = (props) => {
               )}
               {expanded&&(
                 <div style={{ marginTop:10, borderTop:`1px solid ${C.borderLight}`, paddingTop:8, display:"flex", flexDirection:"column", gap:8 }}>
+                  {isGoalEmpty && <div style={{ fontSize:11, color:C.textMuted, fontStyle:"italic", textAlign:"center", padding:"4px 0" }}>{t("emptyGoalDetails")}</div>}
                   {idea.why&&(
                     <div>
                       <div style={{ fontSize:10, fontWeight:800, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY, marginBottom:3 }}>WHY</div>
@@ -362,6 +365,7 @@ export const IdeaTile = (props) => {
               </div>
             ) : isGoal ? (
               <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+                {isGoalEmpty && <div style={{ fontSize:11, color:C.textMuted, fontStyle:"italic", textAlign:"center", padding:"4px 0" }}>{t("emptyGoalDetails")}</div>}
                 {idea.why&&<div><span style={{ fontSize:10, fontWeight:800, color:C.textMuted, letterSpacing:1, fontFamily:FONT_DISPLAY }}>{t("whyGoal")}</span><p style={{ fontSize:13, color:C.textSec, marginTop:2 }}>{idea.why}</p></div>}
                 {idea.steps&&idea.steps.filter(s=>s).length>0&&(
                   <div><span style={{ fontSize:10, fontWeight:800, color:C.textMuted, letterSpacing:1, fontFamily:FONT_DISPLAY }}>{t("threeMainSteps")}</span>
