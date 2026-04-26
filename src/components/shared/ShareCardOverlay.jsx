@@ -67,7 +67,7 @@ export const ShareCardOverlay = ({ type, data, onClose, t }) => {
         grad.addColorStop(1, "rgba(10,10,10,0.95)");
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, W, H);
-      } catch {}
+      } catch(e) { console.warn("[MB] ShareCardOverlay canvas draw failed:", e); }
     }
 
     // Branding top-left
@@ -128,7 +128,7 @@ export const ShareCardOverlay = ({ type, data, onClose, t }) => {
       a.click();
       URL.revokeObjectURL(url);
       onClose();
-    } catch {}
+    } catch(e) { console.warn("[MB] ShareCardOverlay fallback download failed (Capacitor: needs @capacitor/share):", e); }
   };
 
   return (

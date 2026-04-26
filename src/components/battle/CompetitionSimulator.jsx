@@ -654,7 +654,7 @@ export const CompetitionSimulator = ({
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
         setShowShareCard(false);
-      } catch {}
+      } catch(e) { console.warn("[MB] CompetitionSimulator share fallback download failed (Capacitor: needs @capacitor/share):", e); }
     };
 
     const handlePhotoInput = async (e) => {

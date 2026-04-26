@@ -79,7 +79,7 @@ export const ReflectPage = ({
       const m = localStorage.getItem("mb_moves");
       const cnt = m ? JSON.parse(m).length : 0;
       setIdeas(p => p.map(i => (i.type === "target" && i.autoLink) ? { ...i, current: cnt } : i));
-    } catch {}
+    } catch(e) { console.warn("[MB] target autolink failed (mb_moves parse):", e); }
   }, [ideaSettings.targetAutoLink, setIdeas]);
 
   const addIdea = (fields) => setIdeas(p => [...p, { id: Date.now(), ...fields }]);

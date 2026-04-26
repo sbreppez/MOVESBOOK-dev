@@ -384,7 +384,7 @@ export const Spar1v1 = ({ sparring, onSaveSession, addCalendarEvent, rivals, onR
       a.download = filename;
       a.click();
       URL.revokeObjectURL(url);
-    } catch {}
+    } catch(e) { console.warn("[MB] Spar1v1 share fallback download failed (Capacitor: needs @capacitor/share):", e); }
   };
 
   // ── Add person after save ──

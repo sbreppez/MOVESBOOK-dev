@@ -1044,7 +1044,7 @@ const ShareCard = ({ session, mode, prBroken, photo, onPhotoChange, onClose, t }
         grad.addColorStop(1, "rgba(10,10,10,0.95)");
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, W, H);
-      } catch {}
+      } catch(e) { console.warn("[MB] Sparring share-card canvas draw failed:", e); }
     }
 
     // Branding
@@ -1121,7 +1121,7 @@ const ShareCard = ({ session, mode, prBroken, photo, onPhotoChange, onClose, t }
       a.click();
       URL.revokeObjectURL(url);
       onClose();
-    } catch {}
+    } catch(e) { console.warn("[MB] Sparring share fallback download failed (Capacitor: needs @capacitor/share):", e); }
   };
 
   return (

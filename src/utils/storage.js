@@ -37,7 +37,9 @@ export function saveLocal(key, val) {
   try {
     localStorage.setItem(key, JSON.stringify(val));
     localStorage.setItem("mb_data_version", SCHEMA_VERSION);
-  } catch {}
+  } catch(e) {
+    console.warn("[MB] localStorage write failed (likely quota):", key, e);
+  }
 }
 
 export function debounce(fn, ms) {
