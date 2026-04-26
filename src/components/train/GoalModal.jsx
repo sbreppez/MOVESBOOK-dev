@@ -49,7 +49,7 @@ export const GoalModal = ({ onClose, onSave, idea }) => {
     <div style={{ width:"100%", maxHeight:"92%", background:C.surface, borderRadius:16, display:"flex", flexDirection:"column", overflow:"hidden", boxShadow:"0 16px 48px rgba(0,0,0,0.5)" }}>
       {/* Header */}
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 16px", background:C.surface, borderBottom:`1px solid ${C.border}`, flexShrink:0 }}>
-        <span style={{ fontWeight:900, fontSize:16, letterSpacing:2, fontFamily:FONT_DISPLAY, color:C.accent }}>{isEdit?t("editGoal"):t("newGoal")}</span>
+        <span style={{ fontWeight:900, fontSize:16, letterSpacing:2, fontFamily:FONT_DISPLAY, color:C.text }}>{isEdit?t("editGoal"):t("newGoal")}</span>
         <div style={{ display:"flex", gap:8 }}>
           <Btn variant="secondary" onClick={onClose}>{t("cancel")}</Btn>
           <Btn onClick={handleSave} disabled={!title.trim()}>{t("save")}</Btn>
@@ -64,7 +64,7 @@ export const GoalModal = ({ onClose, onSave, idea }) => {
             return (
               <button key={t.id} onClick={()=>setActiveTab(t.id)}
                 style={{ flex:1, padding:"10px 6px", border:"none", cursor:"pointer", background:on?C.bg:"transparent",
-                  color:on?C.accent:C.textSec, borderBottom:`3px solid ${on?C.accent:"transparent"}`,
+                  color:on?C.text:C.textMuted, borderBottom:`3px solid ${on?C.accent:"transparent"}`,
                   fontSize:11, fontWeight:800, letterSpacing:1.5, fontFamily:FONT_DISPLAY }}>
                 {t.label}
               </button>

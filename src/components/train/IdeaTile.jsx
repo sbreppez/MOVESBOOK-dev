@@ -115,7 +115,7 @@ export const IdeaTile = (props) => {
             {/* Type icon */}
             <span style={{ flexShrink:0, paddingTop:1 }} title={typeLabel}><Ic n={typeIcon} s={14}/></span>
             <div style={{ flex:1, minWidth:0, display:"flex", alignItems:"center", gap:4 }} onClick={onEdit}>
-              <div style={{ fontWeight:800, fontSize:13, color: isGoal ? C.accent : C.brown, letterSpacing:1.1, fontFamily:FONT_DISPLAY, cursor:"pointer", lineHeight:1.3, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
+              <div style={{ fontWeight:800, fontSize:13, color: C.text, letterSpacing:1.1, fontFamily:FONT_DISPLAY, cursor:"pointer", lineHeight:1.3, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
                 <Highlight text={title.toUpperCase()} query={searchQuery}/>
               </div>
               {isPinned && !isGoal && !isTarget && <Ic n="pin" s={10} c={C.accent} style={{flexShrink:0}}/>}
@@ -143,7 +143,7 @@ export const IdeaTile = (props) => {
               {/* Big counter */}
               <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:6 }}>
                 <div style={{ fontFamily:FONT_DISPLAY }}>
-                  <span style={{ fontSize:22, fontWeight:900, color }}>{onIncrTarget ? idea.current||0 : idea.current||0}</span>
+                  <span style={{ fontSize:22, fontWeight:900, color:C.text }}>{onIncrTarget ? idea.current||0 : idea.current||0}</span>
                   <span style={{ fontSize:11, color:C.textMuted, marginLeft:3 }}>/ {idea.target} {idea.unit}</span>
                 </div>
                 <div style={{ display:"flex", gap:4 }}>
@@ -151,8 +151,8 @@ export const IdeaTile = (props) => {
                     style={{ width:26, height:26, borderRadius:6, border:`1px solid ${C.border}`, background:C.surface,
                       fontSize:14, cursor:"pointer", color:C.textSec, fontWeight:700, display:"flex", alignItems:"center", justifyContent:"center" }}>{"−"}</button>
                   <button onClick={e=>{ e.stopPropagation(); onIncrTarget&&onIncrTarget(); }}
-                    style={{ width:26, height:26, borderRadius:6, border:`1px solid ${color}`, background:`${color}20`,
-                      fontSize:14, cursor:"pointer", color, fontWeight:700, display:"flex", alignItems:"center", justifyContent:"center" }}>+</button>
+                    style={{ width:26, height:26, borderRadius:6, border:`1px solid ${C.accent}`, background:`${C.accent}20`,
+                      fontSize:14, cursor:"pointer", color:C.accent, fontWeight:700, display:"flex", alignItems:"center", justifyContent:"center" }}>+</button>
                 </div>
               </div>
               {/* Progress bar — red→green */}
@@ -178,7 +178,7 @@ export const IdeaTile = (props) => {
                 <div style={{ marginTop:6 }}>
                   {(expanded ? idea.steps.filter(s=>s) : idea.steps.filter(s=>s).slice(0,2)).map((s,i)=>(
                     <div key={i} style={{ fontSize:11, color:C.textSec, display:"flex", gap:5, marginTop:3 }}>
-                      <span style={{ color:color, fontWeight:800, fontFamily:FONT_DISPLAY, flexShrink:0 }}>{i+1}.</span>
+                      <span style={{ color:C.textMuted, fontWeight:800, fontFamily:FONT_DISPLAY, flexShrink:0 }}>{i+1}.</span>
                       <span style={{ overflow:expanded?"visible":"hidden", textOverflow:"ellipsis", whiteSpace:expanded?"normal":"nowrap" }}>{s}</span>
                     </div>
                   ))}
@@ -199,7 +199,7 @@ export const IdeaTile = (props) => {
                     <div>
                       <div style={{ fontSize:10, fontWeight:800, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY, marginBottom:4 }}>COMMITMENTS</div>
                       <div style={{ display:"flex", flexWrap:"wrap", gap:4 }}>
-                        {idea.daysPerWeek&&<span style={{ fontSize:10, color, background:`${color}18`, borderRadius:4, padding:"2px 7px", fontFamily:FONT_DISPLAY, fontWeight:700 }}><Ic n="calendar" s={10}/> {idea.daysPerWeek}</span>}
+                        {idea.daysPerWeek&&<span style={{ fontSize:10, color:C.textSec, background:C.surfaceAlt, borderRadius:4, padding:"2px 7px", fontFamily:FONT_DISPLAY, fontWeight:700 }}><Ic n="calendar" s={10}/> {idea.daysPerWeek}</span>}
                         {idea.sessionLength&&<span style={{ fontSize:10, color:C.textSec, background:C.surfaceAlt, borderRadius:4, padding:"2px 7px", fontFamily:FONT_DISPLAY }}><Ic n="timer" s={10}/> {idea.sessionLength}</span>}
                         {idea.trainWhere&&<span style={{ fontSize:10, color:C.textSec, background:C.surfaceAlt, borderRadius:4, padding:"2px 7px", fontFamily:FONT_DISPLAY }}><Ic n="mapPin" s={10}/> {idea.trainWhere}</span>}
                       </div>
@@ -223,20 +223,20 @@ export const IdeaTile = (props) => {
           )}
           {(isGoal||isTarget)&&onShowJournalHint&&(
             <div onClick={e=>{e.stopPropagation(); onDismissHint&&onDismissHint();}}
-              style={{ marginTop:6, padding:"5px 8px", background:`${color}18`, borderRadius:6,
+              style={{ marginTop:6, padding:"5px 8px", background:C.surfaceAlt, borderRadius:6,
                 display:"flex", alignItems:"center", gap:5, cursor:"pointer", minWidth:0 }}>
-              <Ic n="book" s={11} c={C.textSec}/>
-              <span style={{ fontSize:10, color, fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:0.3,
+              <Ic n="book" s={11} c={C.textMuted}/>
+              <span style={{ fontSize:10, color:C.textMuted, fontWeight:700, fontFamily:FONT_DISPLAY, letterSpacing:0.3,
                 overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", flex:1 }}>
                 {t("journalHint")}
               </span>
-              <Ic n="x" s={10} c={color}/>
+              <Ic n="x" s={10} c={C.textMuted}/>
             </div>
           )}
           <button onClick={e=>{e.stopPropagation();onEdit();}}
-            style={{ background:"none", border:"none", cursor:"pointer", color:color, fontSize:11, fontWeight:700,
+            style={{ background:"none", border:"none", cursor:"pointer", color:C.textMuted, fontSize:11, fontWeight:700,
               padding:"5px 0 0", fontFamily:FONT_DISPLAY, display:"flex", alignItems:"center", gap:3, alignSelf:"flex-start" }}>
-            <Ic n="chevR" s={10} c={color}/>{t("openBtn")}
+            <Ic n="chevR" s={10} c={C.textMuted}/>{t("openBtn")}
           </button>
         </div>
       </div>
@@ -259,7 +259,7 @@ export const IdeaTile = (props) => {
           {/* Type icon */}
           <span style={{ flexShrink:0 }} title={typeLabel}><Ic n={typeIcon} s={13}/></span>
           <div style={{ flex:1, minWidth:0 }} onClick={onEdit}>
-            <span style={{ fontWeight:800, fontSize:14, color: isGoal ? C.accent : C.brown, letterSpacing:1.2, fontFamily:FONT_DISPLAY, cursor:"pointer", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", display:"flex", alignItems:"center" }}>
+            <span style={{ fontWeight:800, fontSize:14, color: C.text, letterSpacing:1.2, fontFamily:FONT_DISPLAY, cursor:"pointer", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", display:"flex", alignItems:"center" }}>
               <Highlight text={title.toUpperCase()} query={searchQuery}/>
               {isPinned && !isGoal && !isTarget && <Ic n="pin" s={10} c={C.accent} style={{flexShrink:0, marginLeft:4}}/>}
             </span>
@@ -314,7 +314,7 @@ export const IdeaTile = (props) => {
                 {/* Counter row */}
                 <div style={{ display:"flex", alignItems:"center", gap:14 }}>
                   <div style={{ fontFamily:FONT_DISPLAY }}>
-                    <span style={{ fontSize:28, fontWeight:900, color }}>{idea.current||0}</span>
+                    <span style={{ fontSize:28, fontWeight:900, color:C.text }}>{idea.current||0}</span>
                     <span style={{ fontSize:13, color:C.textMuted, marginLeft:4 }}>/ {idea.target} {idea.unit}</span>
                   </div>
                   <div style={{ display:"flex", gap:6 }}>
@@ -322,8 +322,8 @@ export const IdeaTile = (props) => {
                       style={{ width:32, height:32, borderRadius:8, border:`1px solid ${C.border}`, background:C.surface,
                         fontSize:16, cursor:"pointer", color:C.textSec, fontWeight:700 }}>{"−"}</button>
                     <button onClick={e=>{ e.stopPropagation(); onIncrTarget&&onIncrTarget(); }}
-                      style={{ width:32, height:32, borderRadius:8, border:`1px solid ${color}`, background:`${color}20`,
-                        fontSize:16, cursor:"pointer", color, fontWeight:700 }}>+</button>
+                      style={{ width:32, height:32, borderRadius:8, border:`1px solid ${C.accent}`, background:`${C.accent}20`,
+                        fontSize:16, cursor:"pointer", color:C.accent, fontWeight:700 }}>+</button>
                   </div>
                 </div>
                 {/* Progress bar */}
@@ -345,7 +345,7 @@ export const IdeaTile = (props) => {
                   <div><span style={{ fontSize:10, fontWeight:800, color:C.textMuted, letterSpacing:1, fontFamily:FONT_DISPLAY }}>{t("threeMainSteps")}</span>
                     {idea.steps.filter(s=>s).map((s,i)=>(
                       <div key={i} style={{ fontSize:13, color:C.textSec, display:"flex", gap:5, marginTop:3 }}>
-                        <span style={{ color, fontWeight:800, fontFamily:FONT_DISPLAY, flexShrink:0 }}>{i+1}.</span><span>{s}</span>
+                        <span style={{ color:C.textMuted, fontWeight:800, fontFamily:FONT_DISPLAY, flexShrink:0 }}>{i+1}.</span><span>{s}</span>
                       </div>
                     ))}
                   </div>
