@@ -243,7 +243,9 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
               <option value="custom">{t("customSort")}</option>
               <option value="date">{t("dateAdded")}</option>
               <option value="name">{t("alphabetical")}</option>
+              <option value="nameDesc">{t("alphabeticalRev")}</option>
               <option value="mastery">{t("masteryPct")}</option>
+              <option value="masteryLow">{t("masteryRev")}</option>
             </select>
           )}
 
