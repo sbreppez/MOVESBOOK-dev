@@ -67,7 +67,7 @@ export const MusicFlow = ({ musicflow: _musicflow, onMusicflowChange, onUpdateSe
       clearTimeout(fadeOutRef.current);
       clearTimeout(advanceRef.current);
     };
-  }, [screen, promptIdx, introVisible]);
+  }, [screen, promptIdx]);
 
   // Debounced reflection save
   useEffect(() => {
