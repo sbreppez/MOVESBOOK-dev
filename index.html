@@ -306,6 +306,7 @@ firebase.initializeApp({
          'mb_presession','mb_injuries','mb_profile_photo'].forEach(function(k){ localStorage.removeItem(k); });
         if (loginDiv) { loginDiv.style.display='flex'; loginDiv.style.opacity='1'; }
         if (_unsubSnap) { _unsubSnap(); _unsubSnap=null; }
+        window.dispatchEvent(new Event('mb-auth-resolved'));
       }
     });
 
