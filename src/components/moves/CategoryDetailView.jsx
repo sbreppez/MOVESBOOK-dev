@@ -5,7 +5,6 @@ import { FONT_DISPLAY } from '../../constants/fonts';
 import { Crumbs } from '../shared/Crumbs';
 import { Ic } from '../shared/Ic';
 import { MoveModal } from './MoveModal';
-import { MoveTile } from './MoveTile';
 import { MoveListRow } from './MoveListRow';
 import { AttributeFilter } from './AttributeFilter';
 
@@ -32,7 +31,6 @@ export const CategoryDetailView = ({
   const t = useT();
   const { resultCountStr } = usePlural();
 
-  const [catView, setCatView] = useState("list");
   const [catReorderMode, setCatReorderMode] = useState(false);
 
   const allCatMoves = inCat(cat);
@@ -100,7 +98,6 @@ export const CategoryDetailView = ({
                 {hasActiveFilters&&<div style={{ position:"absolute", top:2, right:2, width:6, height:6, borderRadius:"50%", background:C.accent }}/>}
               </button>}
               {!catReorderMode&&<button onClick={()=>{ setShowSearch(s=>!s); setSearch(""); }} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:showSearch?C.accent:C.textSec }}><Ic n="search" s={16}/></button>}
-              {!catReorderMode&&<button onClick={()=>setCatView(v=>v==="tiles"?"list":"tiles")} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textSec }}><Ic n={catView==="tiles"?"list":"grid"} s={16}/></button>}
               {!catReorderMode&&allCatMoves.length>=2&&<button onClick={()=>setSelectMode(true)}
                 style={{ background:"none", border:"none", cursor:"pointer", padding:4 }}>
                 <Ic n="checkCircle" s={16} c={C.textMuted}/>
@@ -155,10 +152,6 @@ export const CategoryDetailView = ({
                 <MoveListRow move={m} catColor={catColor} onEdit={()=>setEditMove(m)} onDelete={()=>tryDelMove(m)} onMove={c=>moveToCat(m.id,c)} allCats={cats} catColors={catColors} onToggleTrainedToday={handleToggleTrainedToday}/>
               </div>
             ))}
-          </div>
-        ) : catView==="tiles" ? (
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8 }}>
-            {catMoves.map(m=><MoveTile key={m.id} move={m} searchQuery={search} onClick={()=>selectMode?toggleMoveSelect(m.id):setEditMove(m)} onEdit={()=>setEditMove(m)} onDelete={()=>tryDelMove(m)} onDuplicate={()=>dupMove(m)} onMove={c=>moveToCat(m.id,c)} allCats={cats} catColors={catColors} onToggleTrainedToday={handleToggleTrainedToday} selectMode={selectMode} isSelected={selectedMoveIds.has(m.id)}/>)}
           </div>
         ) : (
           <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
