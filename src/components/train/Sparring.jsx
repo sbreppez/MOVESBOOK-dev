@@ -108,6 +108,8 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
   const [bodyStatus, setBodyStatus] = useState(null);
   const [prBroken, setPrBroken] = useState(null);
   const [showShareCard, setShowShareCard] = useState(false);
+  const [historyShareSession, setHistoryShareSession] = useState(null);
+  const [historySharePhoto, setHistorySharePhoto] = useState(null);
   const [sharePhoto, setSharePhoto] = useState(null);
   const [completedSession, setCompletedSession] = useState(null);
 
@@ -353,6 +355,10 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
         prs.push({ type: "longestDeath", value: totalSec });
       }
     }
+
+    // Persist the broken PR so the share card stays reachable from
+    // session history (#98). prs[0] = first PR broken in this session.
+    session.prBroken = prs[0] || null;
 
     const updatedSparring = {
       sessions: [session, ...(sparring.sessions || [])],
@@ -987,6 +993,14 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
                       </div>
                     </div>
                   </div>
+                  {s.prBroken && (
+                    <button onClick={() => { setHistorySharePhoto(null); setHistoryShareSession(s); }}
+                      style={{ background:"none", border:`1px solid ${C.accent}`, color:C.accent, cursor:"pointer",
+                        borderRadius:8, padding:"6px 12px", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:10,
+                        letterSpacing:1, textTransform:"uppercase", display:"flex", alignItems:"center", gap:4 }}>
+                      <Ic n="share" s={11} c={C.accent}/> {t("share")}
+                    </button>
+                  )}
                 </div>
                 {s.roundLog && s.roundLog.length > 0 && (
                   <div style={{ display:"flex", gap:4, flexWrap:"wrap", marginTop:8 }}>
@@ -1001,6 +1015,18 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
             );
           })}
         </div>
+        {/* Re-open share card for any session that broke a PR (#98) */}
+        {historyShareSession && (
+          <ShareCard
+            session={historyShareSession}
+            mode={historyShareSession.mode}
+            prBroken={historyShareSession.prBroken}
+            photo={historySharePhoto}
+            onPhotoChange={setHistorySharePhoto}
+            onClose={() => { setHistoryShareSession(null); setHistorySharePhoto(null); }}
+            t={t}
+          />
+        )}
       </div>
     );
   }
