@@ -156,22 +156,21 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
           {/* Set list */}
           {eligibleSets.map(s => {
             const checked = selectedIds.includes(s.id);
+            const setColor = s.color || C.accent;
             return (
               <button key={s.id} onClick={() => toggleSelect(s.id)}
                 style={{ display: "flex", alignItems: "center", gap: 12, width: "100%",
-                  padding: "12px 10px", background: checked ? `${C.accent}18` : C.surface,
-                  border: "none", borderRadius: 8,
+                  padding: "12px 12px 12px 14px", background: checked ? `${setColor}18` : C.surface,
+                  border: "none", borderLeft: `4px solid ${setColor}`, borderRadius: 8,
                   cursor: "pointer", marginBottom: 8, minHeight: 44 }}>
                 {/* Checkbox */}
-                <div style={{ width: 22, height: 22, borderRadius: 5, border: `2px solid ${checked ? C.accent : C.textMuted}`,
-                  background: checked ? C.accent : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <div style={{ width: 22, height: 22, borderRadius: 5, border: `2px solid ${checked ? setColor : C.textMuted}`,
+                  background: checked ? setColor : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                   {checked && <Ic n="check" s={14} c="#fff" />}
                 </div>
-                {/* Color dot */}
-                <div style={{ width: 12, height: 12, borderRadius: "50%", background: s.color || C.accent, flexShrink: 0 }} />
-                {/* Name + count */}
+                {/* Name + count — set name in set color, FONT_DISPLAY (Creative Tools pattern) */}
                 <div style={{ flex: 1, textAlign: "left" }}>
-                  <div style={{ fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: C.text }}>{s.name}</div>
+                  <div style={{ fontFamily: FONT_DISPLAY, fontSize: 14, fontWeight: 700, color: setColor, letterSpacing: 0.3 }}>{s.name}</div>
                   <div style={{ fontFamily: FONT_BODY, fontSize: 11, color: C.textMuted }}>{s.moveIds?.length || 0} moves</div>
                 </div>
               </button>
