@@ -22,9 +22,9 @@ export const FeedbackModal = ({ onClose, inline }) => {
   const [feeling,    setFeeling]    = useState("");
   const [status,     setStatus]     = useState("idle");
 
-  const EMAILJS_PUBLIC  = "0ooV7LLWpYQPKlY6d";
-  const EMAILJS_SERVICE = "service_3bmzxw4";
-  const EMAILJS_TEMPLATE= "template_skmmjbi";
+  const EMAILJS_PUBLIC  = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+  const EMAILJS_SERVICE = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+  const EMAILJS_TEMPLATE= import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
 
   const toggleCheck = (val, list, setList) => {
     setList(p => p.includes(val) ? p.filter(x=>x!==val) : [...p, val]);

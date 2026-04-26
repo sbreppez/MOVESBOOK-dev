@@ -5,3 +5,11 @@ dist/
 # ESLint
 .eslintcache
 lint-report.txt
+
+# Env files (per-environment config; never commit real values)
+.env
+.env.local
+.env.development
+.env.production
+functions/.env
+functions/.env.*

@@ -42,17 +42,17 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
   <script>
     // ╔══════════════════════════════════════════════════════════════╗
-    // ║  DEV FIREBASE CONFIG — replace with your dev project values ║
-    // ║  Get these from: Firebase Console → Project Settings → Web  ║
+    // ║  Firebase config is injected from .env at build time.       ║
+    // ║  See .env.example for the required VITE_FIREBASE_* keys.    ║
     // ╚══════════════════════════════════════════════════════════════╝
 firebase.initializeApp({
-  apiKey: "AIzaSyBvvp3Uo2lt1CgngXD2WFL4VzPGJN26tsQ",
-  authDomain: "movesbook-dev.firebaseapp.com",
-  projectId: "movesbook-dev",
-  storageBucket: "movesbook-dev.firebasestorage.app",
-  messagingSenderId: "466420149799",
-  appId: "1:466420149799:web:953823a2bbe9e7958f2802",
-  measurementId: "G-SB46GKFY9P"
+  apiKey: "%VITE_FIREBASE_API_KEY%",
+  authDomain: "%VITE_FIREBASE_AUTH_DOMAIN%",
+  projectId: "%VITE_FIREBASE_PROJECT_ID%",
+  storageBucket: "%VITE_FIREBASE_STORAGE_BUCKET%",
+  messagingSenderId: "%VITE_FIREBASE_MESSAGING_SENDER_ID%",
+  appId: "%VITE_FIREBASE_APP_ID%",
+  measurementId: "%VITE_FIREBASE_MEASUREMENT_ID%"
     });
     var _fbAuth     = firebase.auth();
     var _fbDb       = firebase.firestore();
@@ -311,53 +311,9 @@ firebase.initializeApp({
     if (!_devBypass) document.addEventListener('DOMContentLoaded', _buildLoginWall);
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-  <script>emailjs.init("0ooV7LLWpYQPKlY6d");</script>
+  <script>emailjs.init("%VITE_EMAILJS_PUBLIC_KEY%");</script>
 </head>
 <body>
-  <script>
-    // ── Password gate ──────────────────────────────────────────────────────
-    if (localStorage.getItem('mb_access') !== 'true') {
-      document.write(
-        '<style>' +
-        '#mb-gate{position:fixed;inset:0;background:#121212;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100000;font-family:"Barlow Condensed",sans-serif}' +
-        '#mb-gate h1{font-size:32px;font-weight:900;letter-spacing:5px;margin:0 0 8px}' +
-        '#mb-gate h1 span{color:#cf0000}' +
-        '#mb-gate .sub{color:#7a7a7a;font-size:13px;letter-spacing:3px;text-transform:uppercase;margin:0 0 40px;font-family:"Barlow",sans-serif}' +
-        '#mb-gate input{font-family:"Barlow",sans-serif;font-size:15px;padding:12px 18px;border-radius:10px;border:1px solid #3a3a3a;background:#1e1e1e;color:#fff;width:240px;outline:none;margin-bottom:12px;text-align:center;box-sizing:border-box}' +
-        '#mb-gate input:focus{border-color:#e53935}' +
-        '#mb-gate input::placeholder{color:#555}' +
-        '#mb-gate button{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:14px;padding:10px 32px;border-radius:10px;border:none;background:#e53935;color:#fff;cursor:pointer;text-transform:uppercase;letter-spacing:1.5px}' +
-        '#mb-gate .err{color:#e53935;font-size:13px;margin-top:14px;font-family:"Barlow",sans-serif;min-height:18px}' +
-        '</style>' +
-        '<div id="mb-gate">' +
-          '<h1><span>MOVES</span><span style="color:#fff">BOOK</span></h1>' +
-          '<p class="sub">COMING SOON</p>' +
-          '<input type="password" id="mb-gate-pw" placeholder="Enter access code" autocomplete="off"/>' +
-          '<button id="mb-gate-btn">Enter</button>' +
-          '<p class="err" id="mb-gate-err"></p>' +
-        '</div>'
-      );
-      document.addEventListener('DOMContentLoaded', function() {
-        var gateDiv = document.getElementById('mb-gate');
-        if (!gateDiv) return;
-        function _gateSubmit() {
-          var pw = document.getElementById('mb-gate-pw').value;
-          if (pw === 'movesbook2026') {
-            localStorage.setItem('mb_access', 'true');
-            gateDiv.remove();
-          } else {
-            var errEl = document.getElementById('mb-gate-err');
-            errEl.textContent = 'Incorrect';
-            setTimeout(function() { errEl.textContent = ''; }, 1500);
-          }
-        }
-        document.getElementById('mb-gate-btn').onclick = _gateSubmit;
-        document.getElementById('mb-gate-pw').addEventListener('keydown', function(e) {
-          if (e.key === 'Enter') _gateSubmit();
-        });
-      });
-    }
-  </script>
   <div id="splash">
     <div class="logo">MOVES<b>BOOK</b></div>
     <div class="bar-wrap"><div class="bar-fill"></div></div>
