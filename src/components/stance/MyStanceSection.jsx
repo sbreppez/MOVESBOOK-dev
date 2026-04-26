@@ -273,7 +273,7 @@ export const MyStanceSection = ({ moves, stance, sparring, calendar, onOpenAsses
             </div>
             {/* Origin breakdown */}
             <div style={statLine}>
-              {vocab.learned} {t("learned")} · {vocab.versions} {t("yourVersions")} · {vocab.creations} {t("yourCreations")}
+              {vocab.learned} {t("foundational")} · {vocab.versions} {t("yourVersions")} · {vocab.creations} {t("yourCreations")}
             </div>
             {/* Battle-ready and variations */}
             <div style={statLine}>

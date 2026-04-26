@@ -32,7 +32,7 @@ export const AllMovesView = ({
   ];
 
   const originOptions = [
-    { key: "learned",  label: t("learned") },
+    { key: "learned",  label: t("foundational") },
     { key: "version",  label: t("myVersion") },
     { key: "creation", label: t("myCreation") },
   ];

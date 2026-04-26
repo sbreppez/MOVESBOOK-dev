@@ -17,8 +17,8 @@ import { todayLocal } from '../../utils/dateUtils';
 
 const DOMAIN_OPTS = ["musicality","performance","technique","variety","creativity","personality"];
 const ORIGIN_KEYS = ["learned","version","creation"];
-const ORIGIN_HINTS = { learned:"learnedHint", version:"myVersionHint", creation:"myCreationHint" };
-const ORIGIN_LABELS = { learned:"learned", version:"myVersion", creation:"myCreation" };
+const ORIGIN_HINTS = { learned:"foundationalHint", version:"myVersionHint", creation:"myCreationHint" };
+const ORIGIN_LABELS = { learned:"foundational", version:"myVersion", creation:"myCreation" };
 
 const TENSION_ROLE_OPTS = [
   { key:"flow",  emoji:"\ud83c\udf0a", label:"tensionFlow", hint:"flowHint" },

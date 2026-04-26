@@ -935,7 +935,7 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
               </div>
               <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                 {[
-                  { key: "learned", label: t("learned") || "Learned" },
+                  { key: "learned", label: t("foundational") || "Foundational" },
                   { key: "version", label: t("myVersion") || "My Version" },
                   { key: "creation", label: t("myCreation") || "My Creation" },
                 ].map(o => {
