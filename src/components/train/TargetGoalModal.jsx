@@ -104,6 +104,14 @@ export const TargetGoalModal = ({ onClose, onSave, idea, moves=[] }) => {
         {activeTab==="target"&&(
           <div>
             {!isEdit&&(
+              <div style={{
+                fontSize: 11, color: C.textMuted, fontFamily: FONT_BODY,
+                lineHeight: 1.5, marginBottom: 14, fontStyle: "italic",
+              }}>
+                {t("targetDesc")}
+              </div>
+            )}
+            {!isEdit&&(
               <div style={{ display:"flex", alignItems:"flex-start", gap:8, padding:"10px 12px", background:`${C.accent}12`,
                 border:`1px solid ${C.accent}30`, borderRadius:8, marginBottom:18 }}>
                 <span style={{ flexShrink:0 }}><Ic n="book" s={16} c={C.textMuted}/></span>

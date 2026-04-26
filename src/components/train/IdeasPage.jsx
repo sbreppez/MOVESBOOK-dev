@@ -9,7 +9,7 @@ import { useT, usePlural } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
 import { useTrainModal } from '../../hooks/useTrainContext';
 import { ensureHttps } from './helpers';
-import { TypeChooserModal } from './TypeChooserModal';
+import { TypeChooserSheet } from './TypeChooserSheet';
 import { IdeaTile } from './IdeaTile';
 import { HabitsPage } from './HabitsPage';
 import { BattlePrepPage } from './BattlePrepPage';
@@ -378,7 +378,7 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
         {filtered.length===0&&search&&<div style={{ textAlign:"center", padding:30, color:C.textMuted }}><p style={{fontSize:13}}>{t("noResultsFor")} &quot;{search}&quot;</p></div>}
       </div>
       }
-      {typeChooser&&<TypeChooserModal onClose={()=>setTypeChooser(false)} onChoose={t=>{ setTypeChooser(false); setTrainTab((t==="goal"||t==="target")?"goals":"notes"); openModal(t, null, addIdea); }}/>}
+      <TypeChooserSheet open={typeChooser} onClose={()=>setTypeChooser(false)} onChoose={t=>{ setTypeChooser(false); setTrainTab((t==="goal"||t==="target")?"goals":"notes"); openModal(t, null, addIdea); }}/>
       {logEntry&&(
         <Modal title={t("logProgress")} onClose={()=>{ confirmLogEntry(logEntry.id); }}>
           <div style={{ marginBottom:6 }}>

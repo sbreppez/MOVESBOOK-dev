@@ -6,6 +6,8 @@ import { PreSessionIntel } from './PreSessionIntel';
 import { RoutineForm } from './RoutineForm';
 import { IdeaForm } from './IdeaForm';
 import { GoalModal } from '../train/GoalModal';
+import { TargetGoalModal } from '../train/TargetGoalModal';
+import { TypeChooserSheet } from '../train/TypeChooserSheet';
 import { HabitModal } from '../train/HabitModal';
 import { MoveModal } from '../moves/MoveModal';
 import { BottomSheet } from '../shared/BottomSheet';
@@ -88,6 +90,7 @@ export const HomePage = ({
   const [selectedDate, setSelectedDate] = useState(todayStr);
   const [showAddPicker, setShowAddPicker] = useState(false);
   const [addFormType, setAddFormType] = useState(null);
+  const [homeTypeChooser, setHomeTypeChooser] = useState(false);
   const [showMoveUpdatePicker, setShowMoveUpdatePicker] = useState(false);
   const [moveUpdateSearch, setMoveUpdateSearch] = useState("");
 
@@ -668,13 +671,14 @@ export const HomePage = ({
       {/* Add Picker */}
       <HomeAddPicker open={showAddPicker} onClose={() => setShowAddPicker(false)}
         onAction={(type) => {
-          if (type === "moveUpdate") {
-            setShowMoveUpdatePicker(true);
-          } else {
-            setAddFormType(type);
-          }
+          if (type === "moveUpdate") setShowMoveUpdatePicker(true);
+          else if (type === "goal") setHomeTypeChooser(true);
+          else setAddFormType(type);
         }}
       />
+
+      <TypeChooserSheet open={homeTypeChooser} onClose={() => setHomeTypeChooser(false)}
+        onChoose={tp => { setHomeTypeChooser(false); setAddFormType(tp); }}/>
 
       {/* ── Create forms (opened from Add Picker tiles) ── */}
       {addFormType === "routine" && (
@@ -690,6 +694,11 @@ export const HomePage = ({
       {addFormType === "goal" && (
         <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.6)", zIndex:10000, display:"flex", alignItems:"center", justifyContent:"center", padding:10 }}>
           <GoalModal onClose={() => setAddFormType(null)} onSave={handleCreateGoal}/>
+        </div>
+      )}
+      {addFormType === "target" && (
+        <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.6)", zIndex:10000, display:"flex", alignItems:"center", justifyContent:"center", padding:10 }}>
+          <TargetGoalModal moves={moves} onClose={() => setAddFormType(null)} onSave={handleCreateGoal}/>
         </div>
       )}
       {addFormType === "habit" && (

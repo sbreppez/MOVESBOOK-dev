@@ -5,23 +5,20 @@ import { useT } from '../../hooks/useTranslation';
 import { Ic } from '../shared/Ic';
 import { BottomSheet } from '../shared/BottomSheet';
 
-export const HomeAddPicker = ({ open, onClose, onAction }) => {
+export const TypeChooserSheet = ({ open, onClose, onChoose }) => {
   const { C } = useSettings();
   const t = useT();
 
   const tiles = [
-    { icon: "fileText", label: t("addNoteTile"), type: "idea" },
-    { icon: "list",     label: t("addRoutine"),  type: "routine" },
-    { icon: "trophy",   label: t("addGoalOrTarget"), type: "goal" },
-    { icon: "check",    label: t("addHabit"),    type: "habit" },
-    { icon: "notebookPen", label: t("addMoveUpdate"), type: "moveUpdate" },
+    { icon: "target",    label: t("newGoal"),   type: "goal" },
+    { icon: "crosshair", label: t("newTarget"), type: "target" },
   ];
 
   return (
-    <BottomSheet open={open} onClose={onClose} title={t("add")}>
+    <BottomSheet open={open} onClose={onClose} title={t("addGoalOrTarget")}>
       <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
         {tiles.map((tile, i) => (
-          <button key={i} onClick={() => { onClose(); onAction(tile.type); }}
+          <button key={i} onClick={() => { onClose(); onChoose(tile.type); }}
             style={{
               display: "flex", alignItems: "center", gap: 12, width: "100%",
               padding: "14px 16px", borderRadius: 8, cursor: "pointer",

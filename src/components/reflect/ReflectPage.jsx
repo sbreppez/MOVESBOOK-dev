@@ -12,7 +12,7 @@ import { DevelopmentStory } from '../stance/DevelopmentStory';
 import { IdeaTile } from '../train/IdeaTile';
 import { PremiumGate } from '../shared/PremiumGate';
 import { SectionBrief } from '../shared/SectionBrief';
-import { TypeChooserModal } from '../train/TypeChooserModal';
+import { TypeChooserSheet } from '../train/TypeChooserSheet';
 import { ensureHttps } from '../train/helpers';
 
 export const ReflectPage = ({
@@ -320,7 +320,7 @@ export const ReflectPage = ({
       )}
 
       {/* Type chooser for adding goals */}
-      {typeChooser && <TypeChooserModal onClose={() => setTypeChooser(false)} onChoose={tp => { setTypeChooser(false); openModal(tp, null, addIdea); }} />}
+      <TypeChooserSheet open={typeChooser} onClose={() => setTypeChooser(false)} onChoose={tp => { setTypeChooser(false); openModal(tp, null, addIdea); }} />
 
       {/* Delete confirmation */}
       {confirmDel && (

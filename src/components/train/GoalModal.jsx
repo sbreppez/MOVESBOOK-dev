@@ -105,6 +105,14 @@ export const GoalModal = ({ onClose, onSave, idea }) => {
                 fontSize: 11, color: C.textMuted, fontFamily: FONT_BODY,
                 lineHeight: 1.5, marginBottom: 14, fontStyle: "italic",
               }}>
+                {t("goalDesc")}
+              </div>
+            )}
+            {!isEdit && (
+              <div style={{
+                fontSize: 11, color: C.textMuted, fontFamily: FONT_BODY,
+                lineHeight: 1.5, marginBottom: 14, fontStyle: "italic",
+              }}>
                 {t("goalHint")}
               </div>
             )}
