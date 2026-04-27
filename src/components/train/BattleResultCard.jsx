@@ -2,7 +2,7 @@ import React from 'react';
 import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
-import { BATTLE_MOODS, BATTLE_RESULTS } from './battlePrepHelpers';
+import { BATTLE_RESULTS } from './battlePrepHelpers';
 
 /**
  * Renders a single battle result row with optional inline-expand reflection.
@@ -23,7 +23,9 @@ export const BattleResultCard = ({ battle, t, expanded, onToggle, onOpen }) => {
   if (!battle?.reflection) return null;
 
   const ref = battle.reflection;
-  const moodObj = BATTLE_MOODS.find(m => m.key === ref.mood) || {};
+  // Mood emoji removed from the compact row per #144 (visual declutter).
+  // Mood is still stored on battle.reflection.mood; future redesign of the
+  // expanded reflection (#145) will surface it as a label/chip if useful.
   const resultObj = BATTLE_RESULTS.find(r => r.key === ref.result) || {};
   const battleDateLabel = new Date(battle.date + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" });
 
@@ -42,7 +44,6 @@ export const BattleResultCard = ({ battle, t, expanded, onToggle, onOpen }) => {
           padding: "10px 14px", background: "none", border: "none",
           cursor: isInteractive ? "pointer" : "default", textAlign: "left",
         }}>
-        <span style={{ fontSize: 18 }}>{moodObj.emoji || ""}</span>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
             <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: C.text }}>

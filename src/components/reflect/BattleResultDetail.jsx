@@ -2,6 +2,7 @@ import React from 'react';
 import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { BottomSheet } from '../shared/BottomSheet';
+import { Ic } from '../shared/Ic';
 import { BattleResultCard } from '../train/BattleResultCard';
 import { BattlePrepArcSummary } from './BattlePrepArcSummary';
 import { PRESET_META } from '../train/battlePrepHelpers';
@@ -37,7 +38,7 @@ export const BattleResultDetail = ({ open, battle, plan, dayMap, onClose, onLogR
   // Render an empty BottomSheet when no battle is selected so the parent can
   // keep `open` purely tied to a state setter without guarding.
   if (!battle) {
-    return <BottomSheet open={open} onClose={onClose} title={t("battleResultDetail")} titleIcon={"⚔️"} />;
+    return <BottomSheet open={open} onClose={onClose} title={t("battleResultDetail")} titleIcon={<Ic n="swords" s={14} c={C.text} />} />;
   }
 
   const meta = plan ? (PRESET_META[plan.preset] || PRESET_META.smoke) : null;
@@ -54,7 +55,7 @@ export const BattleResultDetail = ({ open, battle, plan, dayMap, onClose, onLogR
   const showPrepArc = !!(plan && dayMap);
 
   return (
-    <BottomSheet open={open} onClose={onClose} title={title} titleIcon={"⚔️"}>
+    <BottomSheet open={open} onClose={onClose} title={title} titleIcon={<Ic n="swords" s={14} c={C.text} />}>
       {/* Plan meta strip — only when plan info is available */}
       {plan && (
         <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 0 12px", flexWrap: "wrap" }}>

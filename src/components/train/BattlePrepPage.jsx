@@ -257,7 +257,7 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
           fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 11, letterSpacing: 2,
           color: C.textSec, textAlign: "center", marginBottom: 12, display: "flex",
           alignItems: "center", justifyContent: "center", gap: 6 }}>
-        {"\u{1F4C5}"} {t("viewFullCalendar")}
+        <Ic n="calendarIc" s={14} c={C.textSec} /> {t("viewFullCalendar")}
       </button>
 
       {/* Battle cards */}
@@ -691,7 +691,7 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
             </div>
           ) : isBattleDay ? (
             <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: meta.color, letterSpacing: 0.3 }}>
-              {"\u2694\uFE0F"} {t("battleDay")}
+              <Ic n="swords" s={12} c={meta.color} /> {t("battleDay")}
             </div>
           ) : nextBattle ? (
             <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, letterSpacing: 0.3 }}>
@@ -756,7 +756,7 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
           <div style={{ display: "flex", gap: 6, marginBottom: 10 }}>
             <button onClick={onOpenCalendar}
               style={{ flex: 1, padding: "7px 8px", background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 8, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, letterSpacing: 0.5, color: C.textMuted, display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
-              {"\u{1F4C5}"} {t("calendarView") || "CALENDAR"}
+              <Ic n="calendarIc" s={12} c={C.textMuted} /> {t("calendarView") || "CALENDAR"}
             </button>
             {isPastPlan ? (
               // Past plan: EDIT PLAN is irrelevant -> swap to BATTLE RESULTS
@@ -879,7 +879,7 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
                 <button onClick={() => setConfirmReset(true)}
                   style={{ display: "block", margin: "0 auto 10px", background: "none", border: "none",
                     cursor: "pointer", fontFamily: FONT_BODY, fontSize: 11, color: C.textMuted }}>
-                  {"\u21BA"} {t("resetToDefault") || "Reset to default schedule"}
+                  <Ic n="refresh" s={11} c={C.textMuted} /> {t("resetToDefault") || "Reset to default schedule"}
                 </button>
               )}
 
@@ -911,7 +911,7 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
           {confirmReset && (
             <Modal onClose={() => setConfirmReset(false)}>
               <div style={{ padding: 20, textAlign: "center" }}>
-                <span style={{ fontSize: 28 }}>{"\u21BA"}</span>
+                <Ic n="refresh" s={20} c={C.text} />
                 <h3 style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 14, letterSpacing: 1, color: C.text, margin: "8px 0" }}>
                   {t("resetToDefault") || "Reset to default"}
                 </h3>
@@ -954,7 +954,7 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
                       <div style={{ width: 7, height: 7, borderRadius: "50%", background: info.phaseColor, flexShrink: 0 }} />
                       <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: isToday ? C.accent : C.text, minWidth: 85 }}>{dateLabel}</span>
                       <span style={{ fontSize: 8, fontFamily: FONT_DISPLAY, fontWeight: 700, background: `${info.phaseColor}20`, color: info.phaseColor, borderRadius: 4, padding: "1px 5px", letterSpacing: 0.5 }}>
-                        {info.type === "battle" ? "\u2694\uFE0F BATTLE" : info.type === "training" ? (info.session ? `S${info.session}` : info.phase) : "REST"}
+                        {info.type === "battle" ? "BATTLE" : info.type === "training" ? (info.session ? `S${info.session}` : info.phase) : "REST"}
                       </span>
                       <span style={{ flex: 1, fontSize: 10, fontFamily: FONT_DISPLAY, fontWeight: 700, color: C.textMuted, textAlign: "right" }}>{info.phase}</span>
                       {isOverridden && <span style={{ fontSize: 8, color: C.accent }}>*</span>}
@@ -1009,7 +1009,7 @@ const DayDetail = ({ dateStr, dayMap: _dayMap, plan, today, onToggleTask, t, get
       </div>
       {isBattle && (
         <div style={{ textAlign: "center", padding: "10px 0" }}>
-          <span style={{ fontSize: 28 }}>{"\u2694\uFE0F"}</span>
+          <Ic n="swords" s={20} c={C.red} />
           <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 14, letterSpacing: 1, color: C.red, marginTop: 3 }}>{t("battleDay")}</div>
           {info.eventName && <div style={{ fontSize: 11, color: C.textSec, marginTop: 2 }}>{info.eventName}</div>}
         </div>

@@ -429,7 +429,7 @@ export const CalendarOverlay = ({
                   fontFamily: FONT_DISPLAY, fontWeight: isToday ? 900 : 600,
                   fontSize: 13, color: isToday ? C.accent : C.text, lineHeight: 1,
                 }}>
-                  {isBattleDay ? "\u2694\uFE0F" : dayNum}
+                  {isBattleDay ? <Ic n="swords" s={12} c={isToday ? C.accent : C.text} /> : dayNum}
                 </span>
                 {isBattleDay && <span style={{ fontSize: 8, fontFamily: FONT_DISPLAY, fontWeight: 700, color: C.text, lineHeight: 1 }}>{dayNum}</span>}
                 {dots.length > 0 && (
@@ -567,7 +567,7 @@ export const CalendarOverlay = ({
                           <div
                             onClick={onBattleTileClick}
                             style={{ textAlign: "center", padding: "8px 0 4px", cursor: onBattleTileClick ? "pointer" : undefined }}>
-                            <span style={{ fontSize: 20 }}>{"\u2694\uFE0F"}</span>
+                            <Ic n="swords" s={20} c={C.red} />
                             <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 11, letterSpacing: 1, color: C.red, marginTop: 2 }}>{t("battleDay")}</div>
                             {(entry.eventName || plan?.eventName || plan?.planName) && (
                               <div style={{ fontFamily: FONT_BODY, fontSize: 11, color: C.textSec, marginTop: 2 }}>

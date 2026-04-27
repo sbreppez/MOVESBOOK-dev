@@ -84,7 +84,7 @@ export const BattlePrepArcSummary = ({ plan, battle, dayMap, t }) => {
                   background: `${C.red}15`, color: C.red,
                   borderRadius: 4, padding: "1px 6px",
                 }}>
-                  {"⚔️"} {t("battleDay")}
+                  <Ic n="swords" s={10} c={C.red} /> {t("battleDay")}
                 </span>
               )}
             </div>
