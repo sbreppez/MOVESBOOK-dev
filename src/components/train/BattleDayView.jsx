@@ -614,7 +614,7 @@ const CLOSING_MESSAGES = {
   custom: "yourPlanYourWay",
 };
 
-const PlanCompletionCard = ({ plan, meta, dayMap, setBattleprep, addToast, onClose, t, today }) => {
+const PlanCompletionCard = ({ plan, meta, dayMap, addToast, onClose, t, today }) => {
   const canvasRef = useRef(null);
   const [showShareCard, setShowShareCard] = useState(false);
 
@@ -654,11 +654,10 @@ const PlanCompletionCard = ({ plan, meta, dayMap, setBattleprep, addToast, onClo
   }, [plan, dayMap]);
 
   const handleDone = () => {
-    setBattleprep(prev => ({
-      ...prev,
-      plans: (prev.plans || []).filter(p => p.id !== plan.id),
-      history: [...(prev.history || []), { ...plan, status: "completed", endDate: today, completedDate: today }],
-    }));
+    // Plans stay in `battleprep.plans` regardless of completion. Past plans
+    // are surfaced in BattlePrepPage's PAST BATTLES section so the user can
+    // revisit prep arc + reflection at any time. battleprep.history is now
+    // reserved for explicitly cancelled plans (trash button) only. (#141)
     addToast({ icon: "check", title: t("planComplete") || "Plan complete" });
     onClose();
   };

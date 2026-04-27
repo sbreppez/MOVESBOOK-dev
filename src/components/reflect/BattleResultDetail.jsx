@@ -3,6 +3,7 @@ import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { BottomSheet } from '../shared/BottomSheet';
 import { BattleResultCard } from '../train/BattleResultCard';
+import { BattlePrepArcSummary } from './BattlePrepArcSummary';
 import { PRESET_META } from '../train/battlePrepHelpers';
 
 /**
@@ -32,7 +33,7 @@ import { PRESET_META } from '../train/battlePrepHelpers';
  *    at reflection phase. Only called when both plan and battle are present.
  *  - t: translation function.
  */
-export const BattleResultDetail = ({ open, battle, plan, onClose, onLogReflection, t }) => {
+export const BattleResultDetail = ({ open, battle, plan, dayMap, onClose, onLogReflection, t }) => {
   // Render an empty BottomSheet when no battle is selected so the parent can
   // keep `open` purely tied to a state setter without guarding.
   if (!battle) {
@@ -43,6 +44,10 @@ export const BattleResultDetail = ({ open, battle, plan, onClose, onLogReflectio
   const title = battle.eventName || plan?.eventName || plan?.planName || t("battleResultDetail");
   const hasReflection = !!battle.reflection;
   const canLogReflection = !!(plan && battle.id && typeof onLogReflection === "function");
+  // Show prep arc when both plan + dayMap are available. Manual battle
+  // events (no battleprep linkage) and direct calls without dayMap fall
+  // back to the reflection-only view as before (#133 behavior).
+  const showPrepArc = !!(plan && dayMap);
 
   return (
     <BottomSheet open={open} onClose={onClose} title={title} titleIcon={"⚔️"}>
@@ -65,6 +70,12 @@ export const BattleResultDetail = ({ open, battle, plan, onClose, onLogReflectio
             </span>
           )}
         </div>
+      )}
+
+      {/* Prep arc — only shown when plan + dayMap supplied (battle came from
+          battleprep flow, not a manual calendar event) */}
+      {showPrepArc && (
+        <BattlePrepArcSummary plan={plan} battle={battle} dayMap={dayMap} t={t} />
       )}
 
       {hasReflection ? (

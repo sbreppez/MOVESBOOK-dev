@@ -6,7 +6,7 @@ import { useT } from '../../hooks/useTranslation';
 import { Ic } from '../shared/Ic';
 import { EXERTION_OPTIONS, BODY_PARTS, BODY_STATES } from '../shared/BodyCheckIn';
 import { SessionJournal } from './SessionJournal';
-import { computeAllDayMaps, getTasksForDay, getPrevDayTasks } from '../train/battlePrepHelpers';
+import { computeAllDayMaps, computeDayMap, getTasksForDay, getPrevDayTasks } from '../train/battlePrepHelpers';
 import { ReportsTimeline } from './ReportsTimeline';
 import { Modal } from '../shared/Modal';
 import { BottomSheet } from '../shared/BottomSheet';
@@ -541,16 +541,16 @@ export const CalendarOverlay = ({
                     //   past          -> open BattleResultDetail (empty state if no reflection)
                     const isFutureBattle = isBattle && selectedDay >= today && onGoToPrep;
                     const isPastBattle = isBattle && selectedDay < today && !!matchingBattle;
+                    // Full plan dayMap (not just selectedDay entry) — passed to
+                    // BattleResultDetail so it can render the prep-arc summary. (#141)
+                    const fullPlanDayMap = plan ? (allDayMaps.find(d => d.planId === plan.id)?.dayMap || null) : null;
                     const onBattleTileClick = isFutureBattle
                       ? () => onGoToPrep({ focus: "plan", planId: entry.planId, date: selectedDay })
                       : isPastBattle
-                        ? () => setDetailBattle({ battle: matchingBattle, plan })
+                        ? () => setDetailBattle({ battle: matchingBattle, plan, dayMap: fullPlanDayMap })
                         : undefined;
-                    const dayMapInfo = plan ? (() => {
-                      const dm = allDayMaps.find(d => d.planId === plan.id);
-                      return dm?.dayMap?.[selectedDay];
-                    })() : null;
-                    const prevKeys = plan && dayMapInfo ? getPrevDayTasks(plan.id, selectedDay, allDayMaps.find(d => d.planId === plan.id)?.dayMap || {}) : [];
+                    const dayMapInfo = fullPlanDayMap ? fullPlanDayMap[selectedDay] : null;
+                    const prevKeys = plan && dayMapInfo ? getPrevDayTasks(plan.id, selectedDay, fullPlanDayMap || {}) : [];
                     const tasks = plan && dayMapInfo ? getTasksForDay(plan.id, selectedDay, dayMapInfo, prevKeys) : [];
                     const completed = plan?.completedTasks || {};
                     return (
@@ -566,6 +566,11 @@ export const CalendarOverlay = ({
                             style={{ textAlign: "center", padding: "8px 0 4px", cursor: onBattleTileClick ? "pointer" : undefined }}>
                             <span style={{ fontSize: 20 }}>{"\u2694\uFE0F"}</span>
                             <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 11, letterSpacing: 1, color: C.red, marginTop: 2 }}>{t("battleDay")}</div>
+                            {(entry.eventName || plan?.eventName || plan?.planName) && (
+                              <div style={{ fontFamily: FONT_BODY, fontSize: 11, color: C.textSec, marginTop: 2 }}>
+                                {entry.eventName || plan?.eventName || plan?.planName}
+                              </div>
+                            )}
                           </div>
                         )}
                         {!isBattle && tasks.map((task, i) => {
@@ -673,9 +678,17 @@ export const CalendarOverlay = ({
                               const b = (p.battles || []).find(bb => bb.date === e.date);
                               if (b) { foundBattle = b; foundPlan = p; break; }
                             }
+                            // Get full plan dayMap for the prep arc render. Prefer
+                            // precomputed (active plans); fall back to computeDayMap
+                            // for history plans that aren't in allDayMaps. (#141)
+                            const foundDayMap = foundPlan
+                              ? (allDayMaps.find(d => d.planId === foundPlan.id)?.dayMap
+                                || computeDayMap(foundPlan).dayMap)
+                              : null;
                             setDetailBattle({
                               battle: foundBattle || { date: e.date, id: null, eventName: e.title, reflection: null },
                               plan: foundPlan,
+                              dayMap: foundDayMap,
                             });
                           }}
                           style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
@@ -916,6 +929,7 @@ export const CalendarOverlay = ({
         open={!!detailBattle}
         battle={detailBattle?.battle}
         plan={detailBattle?.plan}
+        dayMap={detailBattle?.dayMap}
         onClose={() => setDetailBattle(null)}
         onLogReflection={({ planId, battleId: _battleId }) => {
           // Deep-link to BattleDayView's reflection phase. App.jsx routes

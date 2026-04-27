@@ -4,10 +4,11 @@ import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
 import { Modal } from '../shared/Modal';
 import { useT } from '../../hooks/useTranslation';
-import { PRESET_META, computeDayMap, computeAllDayMaps, getPlanStats, getTasksForDay, getPrevDayTasks, daysBetween, toYMD, getPreparationStats } from './battlePrepHelpers';
+import { PRESET_META, computeDayMap, computeAllDayMaps, getPlanStats, getTasksForDay, getPrevDayTasks, daysBetween, toYMD, getPreparationStats, BATTLE_RESULTS } from './battlePrepHelpers';
 import { BattlePrepSetup } from './BattlePrepSetup';
 import { BattleDayView, BattleShareCard } from './BattleDayView';
 import { BattleHistoryView } from './BattleHistoryView';
+import { BattleResultDetail } from '../reflect/BattleResultDetail';
 
 const DAY_LABELS = ["S","M","T","W","T","F","S"];
 
@@ -39,6 +40,10 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
   // CTA), then cleared by BattleCard once consumed so subsequent remounts
   // don't re-apply.
   const [pendingPhase, setPendingPhase] = useState(null); // { planId, battleId, phase } | null
+  // Selected past battle for BattleResultDetail BottomSheet. Rendered at
+  // BattlePrepPage root so a single sheet serves all entry points
+  // (past-plan BATTLE RESULTS button + multi-battle plan past-battle rows).
+  const [detailBattle, setDetailBattle] = useState(null); // { battle, plan, dayMap } | null
 
   // Handle incoming seed from Calendar → Prep
   useEffect(() => {
@@ -169,6 +174,28 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
     });
   }, [plans, today]);
 
+  // Group plans by state: active (any battle still upcoming) above the PAST
+  // BATTLES divider, past (all battles past) below. Past plans sorted by
+  // most-recent battle date desc so the latest milestone reads first. (#141)
+  const { activePlans, pastPlans } = useMemo(() => {
+    const active = [];
+    const past = [];
+    sortedPlans.forEach(plan => {
+      const battles = plan.battles || [];
+      // Empty plan (no battles yet) stays in active group.
+      if (!battles.length) { active.push(plan); return; }
+      const allPast = battles.every(b => b.date < today);
+      if (allPast) past.push(plan);
+      else active.push(plan);
+    });
+    past.sort((a, b) => {
+      const aLast = (a.battles || []).reduce((m, x) => x.date > m ? x.date : m, "");
+      const bLast = (b.battles || []).reduce((m, x) => x.date > m ? x.date : m, "");
+      return bLast.localeCompare(aLast);
+    });
+    return { activePlans: active, pastPlans: past };
+  }, [sortedPlans, today]);
+
   // ── HISTORY view ──
   if (showHistory) {
     return <BattleHistoryView
@@ -232,7 +259,7 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
 
       {/* Battle cards */}
       <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-        {sortedPlans.map(plan => {
+        {activePlans.map(plan => {
           const dmData = allDayMaps.find(d => d.planId === plan.id);
           return (
           <BattleCard
@@ -245,6 +272,8 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
             selectedDay={selectedDayByPlan[plan.id] || null}
             pendingPhase={pendingPhase?.planId === plan.id ? pendingPhase : null}
             onPendingPhaseConsumed={() => setPendingPhase(null)}
+            isPastPlan={false}
+            onOpenBattleResult={({ battle, dayMap }) => setDetailBattle({ battle, plan, dayMap })}
             onToggleExpand={() => setExpandedPlanId(expandedPlanId === plan.id ? null : plan.id)}
             onToggleEdit={() => setEditingPlanId(editingPlanId === plan.id ? null : plan.id)}
             onSelectDay={(day) => setSelectedDayByPlan(prev => ({ ...prev, [plan.id]: prev[plan.id] === day ? null : day }))}
@@ -295,6 +324,62 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
             </div>
           );
         })}
+
+        {/* PAST BATTLES divider — separates active plans (above) from past
+            plans (below). Past plans stay in battleprep.plans forever; the
+            divider is purely a UI grouping. (#141) */}
+        {pastPlans.length > 0 && (
+          <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "12px 0 4px" }}>
+            <div style={{ flex: 1, height: 1, background: C.borderLight }} />
+            <span style={{
+              fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 11,
+              letterSpacing: 2, color: C.textMuted,
+            }}>
+              {t("pastBattles")}
+            </span>
+            <div style={{ flex: 1, height: 1, background: C.borderLight }} />
+          </div>
+        )}
+
+        {pastPlans.map(plan => {
+          const dmData = allDayMaps.find(d => d.planId === plan.id);
+          return (
+          <BattleCard
+            key={plan.id}
+            plan={plan}
+            precomputedDayMap={dmData?.dayMap}
+            precomputedPhaseSummary={dmData?.phaseSummary}
+            isExpanded={expandedPlanId === plan.id}
+            isEditing={editingPlanId === plan.id}
+            selectedDay={selectedDayByPlan[plan.id] || null}
+            pendingPhase={pendingPhase?.planId === plan.id ? pendingPhase : null}
+            onPendingPhaseConsumed={() => setPendingPhase(null)}
+            isPastPlan={true}
+            onOpenBattleResult={({ battle, dayMap }) => setDetailBattle({ battle, plan, dayMap })}
+            onToggleExpand={() => setExpandedPlanId(expandedPlanId === plan.id ? null : plan.id)}
+            onToggleEdit={() => setEditingPlanId(editingPlanId === plan.id ? null : plan.id)}
+            onSelectDay={(day) => setSelectedDayByPlan(prev => ({ ...prev, [plan.id]: prev[plan.id] === day ? null : day }))}
+            onToggleTask={(dateStr, idx) => toggleTask(plan.id, dateStr, idx)}
+            onDelete={() => setConfirmDeleteId(plan.id)}
+            onOpenCalendar={() => {
+              const firstBattle = (plan.battles || []).sort((a, b) => a.date.localeCompare(b.date))[0];
+              if (firstBattle && onOpenSharedCalendar) {
+                const d = new Date(firstBattle.date + "T00:00:00");
+                onOpenSharedCalendar({ year: d.getFullYear(), month: d.getMonth() });
+              } else if (onOpenSharedCalendar) {
+                onOpenSharedCalendar();
+              }
+            }}
+            updatePlan={updatePlan}
+            setBattleprep={setBattleprep}
+            addToast={addToast}
+            t={t}
+            today={today}
+            moves={moves}
+            sets={sets}
+          />
+          );
+        })}
       </div>
 
       {/* History link */}
@@ -321,6 +406,27 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
           </div>
         </Modal>
       )}
+      {/* Battle result detail — shared sheet for past-plan BATTLE RESULTS button
+          and any per-battle row tap (multi-battle plans). onLogReflection
+          deep-links locally via pendingPhase since we're already on this page. */}
+      <BattleResultDetail
+        open={!!detailBattle}
+        battle={detailBattle?.battle}
+        plan={detailBattle?.plan}
+        dayMap={detailBattle?.dayMap}
+        onClose={() => setDetailBattle(null)}
+        onLogReflection={({ planId, battleId }) => {
+          const date = detailBattle?.battle?.date;
+          setDetailBattle(null);
+          if (planId && date) {
+            setExpandedPlanId(planId);
+            setSelectedDayByPlan(prev => ({ ...prev, [planId]: date }));
+            setPendingPhase({ planId, battleId, phase: "reflection" });
+          }
+        }}
+        t={t}
+      />
+
       {/* Delete confirmation modal — unplanned calendar battle */}
       {confirmDeleteUnplanned && (
         <Modal onClose={() => setConfirmDeleteUnplanned(null)}>
@@ -340,7 +446,7 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
 };
 
 // ── Battle Card Component ──
-const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpanded, isEditing, selectedDay, pendingPhase, onPendingPhaseConsumed, onToggleExpand, onToggleEdit, onSelectDay, onToggleTask, onDelete, onOpenCalendar, updatePlan, setBattleprep, addToast, t, today, moves, sets }) => {
+const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpanded, isEditing, selectedDay, pendingPhase, onPendingPhaseConsumed, isPastPlan, onOpenBattleResult, onToggleExpand, onToggleEdit, onSelectDay, onToggleTask, onDelete, onOpenCalendar, updatePlan, setBattleprep, addToast, t, today, moves, sets }) => {
   const meta = PRESET_META[plan.preset] || PRESET_META.smoke;
   const dayMap = precomputedDayMap || computeDayMap(plan).dayMap;
   const phaseSummary = precomputedPhaseSummary || computeDayMap(plan).phaseSummary;
@@ -465,28 +571,47 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
   const allDates = useMemo(() => Object.keys(dayMap).sort(), [dayMap]);
   const futureDates = allDates.filter(d => d >= today);
 
-  // Completed battles with logged reflections (for Share Card re-entry)
-  const completedBattles = useMemo(() =>
+  // Past battles in this plan — broadened from "completed + reflection
+  // logged" to "any past battle by date" so unlogged past battles are also
+  // surfaced (#141). Each row is tappable into BattleResultDetail; SHARE
+  // button is gated on a logged reflection (canvas needs the data).
+  const pastBattles = useMemo(() =>
     (plan.battles || [])
-      .filter(b => b.completed && b.reflection != null && b.reflectionLogged === true)
+      .filter(b => b.date < today)
       .sort((a, b) => b.date.localeCompare(a.date)),
-  [plan.battles]);
+  [plan.battles, today]);
 
-  const completedBattlesSection = completedBattles.length > 0 ? (
+  // Latest past battle — used by past-plan card's BATTLE RESULTS button
+  // (opens its detail) and ranking chip in the header.
+  const latestPastBattle = pastBattles[0] || null;
+  const rankingResult = useMemo(() => {
+    if (!latestPastBattle?.reflection?.result) return null;
+    return BATTLE_RESULTS.find(r => r.key === latestPastBattle.reflection.result) || null;
+  }, [latestPastBattle]);
+
+  const pastBattlesSection = pastBattles.length > 0 ? (
     <div style={{ marginBottom: 10 }}>
       <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, letterSpacing: 1, color: C.textMuted, marginBottom: 6 }}>
-        {t("completedBattles") || "COMPLETED BATTLES"}
+        {t("pastBattles")}
       </div>
-      {completedBattles.map(b => {
+      {pastBattles.map(b => {
         const dateLabel = new Date(b.date + "T00:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+        const isLogged = b.reflectionLogged === true && b.reflection != null;
         return (
           <div key={b.id} style={{ display: "flex", alignItems: "center", gap: 8, padding: "7px 6px", borderBottom: `1px solid ${C.borderLight}` }}>
-            <Ic n="sword" s={12} c={C.textMuted} />
-            <span style={{ flex: 1, fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: C.text }}>{dateLabel}</span>
-            <button onClick={() => setShareCardBattle(b)}
-              style={{ padding: "5px 10px", background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 6, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, letterSpacing: 0.5, color: C.textSec, display: "flex", alignItems: "center", gap: 4 }}>
-              <Ic n="share" s={11} c={C.textSec} /> {t("shareCard")}
+            <button
+              onClick={() => onOpenBattleResult && onOpenBattleResult({ battle: b, dayMap })}
+              style={{ flex: 1, display: "flex", alignItems: "center", gap: 8, background: "none", border: "none", cursor: "pointer", padding: 0, textAlign: "left", minWidth: 0 }}>
+              <Ic n="sword" s={12} c={C.textMuted} />
+              <span style={{ flex: 1, fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: C.text }}>{dateLabel}</span>
+              <Ic n="eye" s={12} c={C.textMuted} />
             </button>
+            {isLogged && (
+              <button onClick={() => setShareCardBattle(b)}
+                style={{ padding: "5px 10px", background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 6, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, letterSpacing: 0.5, color: C.textSec, display: "flex", alignItems: "center", gap: 4 }}>
+                <Ic n="share" s={11} c={C.textSec} /> {t("shareCard")}
+              </button>
+            )}
           </div>
         );
       })}
@@ -530,7 +655,26 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
           {battleDateStr && !isBattleDay && (
             <div style={{ fontSize: 11, fontFamily: FONT_BODY, color: C.textSec, marginBottom: 2 }}>{battleDateStr}</div>
           )}
-          {isBattleDay ? (
+          {isPastPlan ? (
+            // Past plan header: show ranking chip from latest reflection,
+            // or "Not logged" placeholder if reflection wasn't filled. (#141)
+            <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, letterSpacing: 0.3, display: "flex", alignItems: "center", gap: 6 }}>
+              {rankingResult ? (
+                <span style={{
+                  fontSize: 10, fontFamily: FONT_DISPLAY, fontWeight: 700,
+                  background: `${rankingResult.color || C.textMuted}20`,
+                  color: rankingResult.color || C.textMuted,
+                  borderRadius: 4, padding: "2px 8px",
+                }}>
+                  {t(rankingResult.labelKey) || latestPastBattle.reflection.result}
+                </span>
+              ) : (
+                <span style={{ fontSize: 11, fontFamily: FONT_BODY, color: C.textMuted, fontStyle: "italic" }}>
+                  {t("notLogged")}
+                </span>
+              )}
+            </div>
+          ) : isBattleDay ? (
             <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: meta.color, letterSpacing: 0.3 }}>
               {"\u2694\uFE0F"} {t("battleDay")}
             </div>
@@ -557,7 +701,7 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
             updatePlan={updatePlan} setBattleprep={setBattleprep}
             addToast={addToast} t={t} today={today}
             initialPhase={matchingPhase} />
-          {completedBattlesSection}
+          {pastBattlesSection}
         </div>
       )}
       {isExpanded && !showBattleDayView && (
@@ -599,10 +743,24 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
               style={{ flex: 1, padding: "7px 8px", background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 8, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, letterSpacing: 0.5, color: C.textMuted, display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
               {"\u{1F4C5}"} {t("calendarView") || "CALENDAR"}
             </button>
-            <button onClick={onToggleEdit}
-              style={{ flex: 1, padding: "7px 8px", background: isEditing ? `${C.accent}15` : C.surfaceAlt, border: `1px solid ${isEditing ? C.accent : C.border}`, borderRadius: 8, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, letterSpacing: 0.5, color: isEditing ? C.accent : C.textMuted, display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
-              <Ic n="edit" s={12} c={isEditing ? C.accent : C.textMuted} /> {t("editPlan") || "EDIT"}
-            </button>
+            {isPastPlan ? (
+              // Past plan: EDIT PLAN is irrelevant -> swap to BATTLE RESULTS
+              // which opens the detail BottomSheet for the latest battle. (#141)
+              <button
+                onClick={() => {
+                  if (latestPastBattle && onOpenBattleResult) {
+                    onOpenBattleResult({ battle: latestPastBattle, dayMap });
+                  }
+                }}
+                style={{ flex: 1, padding: "7px 8px", background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 8, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, letterSpacing: 0.5, color: C.textMuted, display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
+                <Ic n="eye" s={12} c={C.textMuted} /> {t("battleResults")}
+              </button>
+            ) : (
+              <button onClick={onToggleEdit}
+                style={{ flex: 1, padding: "7px 8px", background: isEditing ? `${C.accent}15` : C.surfaceAlt, border: `1px solid ${isEditing ? C.accent : C.border}`, borderRadius: 8, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, letterSpacing: 0.5, color: isEditing ? C.accent : C.textMuted, display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
+                <Ic n="edit" s={12} c={isEditing ? C.accent : C.textMuted} /> {t("editPlan") || "EDIT"}
+              </button>
+            )}
             <button onClick={onDelete}
               style={{ padding: "7px 10px", background: `${C.red}10`, border: `1px solid ${C.red}30`, borderRadius: 8, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <Ic n="trash" s={12} c={C.red} />
@@ -610,7 +768,7 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
           </div>
 
           {/* ── COMPLETED BATTLES — Share Card re-entry ── */}
-          {completedBattlesSection}
+          {pastBattlesSection}
 
           {/* ── EDIT PLAN PANEL ── */}
           {isEditing && (
