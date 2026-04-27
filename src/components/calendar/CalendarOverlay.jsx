@@ -11,6 +11,7 @@ import { ReportsTimeline } from './ReportsTimeline';
 import { Modal } from '../shared/Modal';
 import { BottomSheet } from '../shared/BottomSheet';
 import { IdeaForm } from '../home/IdeaForm';
+import { BattleResultDetail } from '../reflect/BattleResultDetail';
 import { todayLocal, toLocalYMD } from '../../utils/dateUtils';
 
 const toYMD = (d) => {
@@ -47,6 +48,7 @@ export const CalendarOverlay = ({
   const [calView, setCalView] = useState("days");
   const [confirmDeleteNote, setConfirmDeleteNote] = useState(null);
   const [editHomeNote, setEditHomeNote] = useState(null);
+  const [detailBattle, setDetailBattle] = useState(null); // { battle, plan } | null
   const prevAddTrigger = useRef(onAddTrigger);
 
   useEffect(() => {
@@ -532,8 +534,18 @@ export const CalendarOverlay = ({
                   <div style={sectionLabel}>{t("prepPhases") || "PREP PHASES"}</div>
                   {Object.values(byPlan).map(entry => {
                     const isBattle = entry.type === "battle";
-                    const isFutureBattle = isBattle && selectedDay >= today && onGoToPrep;
                     const plan = (battleprep?.plans || []).find(p => p.id === entry.planId);
+                    const matchingBattle = isBattle && plan ? (plan.battles || []).find(b => b.date === selectedDay) : null;
+                    // Routing for the BATTLE DAY tile tap:
+                    //   future/today  -> open BattleDayView prep flow via onGoToPrep
+                    //   past          -> open BattleResultDetail (empty state if no reflection)
+                    const isFutureBattle = isBattle && selectedDay >= today && onGoToPrep;
+                    const isPastBattle = isBattle && selectedDay < today && !!matchingBattle;
+                    const onBattleTileClick = isFutureBattle
+                      ? () => onGoToPrep({ focus: "plan", planId: entry.planId, date: selectedDay })
+                      : isPastBattle
+                        ? () => setDetailBattle({ battle: matchingBattle, plan })
+                        : undefined;
                     const dayMapInfo = plan ? (() => {
                       const dm = allDayMaps.find(d => d.planId === plan.id);
                       return dm?.dayMap?.[selectedDay];
@@ -550,8 +562,8 @@ export const CalendarOverlay = ({
                         </div>
                         {isBattle && (
                           <div
-                            onClick={isFutureBattle ? () => onGoToPrep({ focus: "plan", planId: entry.planId, date: selectedDay }) : undefined}
-                            style={{ textAlign: "center", padding: "8px 0 4px", cursor: isFutureBattle ? "pointer" : undefined }}>
+                            onClick={onBattleTileClick}
+                            style={{ textAlign: "center", padding: "8px 0 4px", cursor: onBattleTileClick ? "pointer" : undefined }}>
                             <span style={{ fontSize: 20 }}>{"\u2694\uFE0F"}</span>
                             <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 11, letterSpacing: 1, color: C.red, marginTop: 2 }}>{t("battleDay")}</div>
                           </div>
@@ -646,10 +658,35 @@ export const CalendarOverlay = ({
                       )}
                     </div>
                     <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
-                      <button onClick={() => { setEditEvent(e); setShowJournal(true); }}
-                        style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
-                        <Ic n="edit" s={14} c={C.textMuted} />
-                      </button>
+                      {e.type === "battle" ? (
+                        // Battle events: replace edit pencil with results eye.
+                        // Look for a matching battleprep battle (active or
+                        // history) by date; if absent, open BattleResultDetail
+                        // with a synthetic battle so the empty state still
+                        // shows (CTA hidden when there's no plan/battleId).
+                        <button
+                          onClick={() => {
+                            const allPlans = [...(battleprep?.plans || []), ...(battleprep?.history || [])];
+                            let foundBattle = null;
+                            let foundPlan = null;
+                            for (const p of allPlans) {
+                              const b = (p.battles || []).find(bb => bb.date === e.date);
+                              if (b) { foundBattle = b; foundPlan = p; break; }
+                            }
+                            setDetailBattle({
+                              battle: foundBattle || { date: e.date, id: null, eventName: e.title, reflection: null },
+                              plan: foundPlan,
+                            });
+                          }}
+                          style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
+                          <Ic n="eye" s={14} c={C.textMuted} />
+                        </button>
+                      ) : (
+                        <button onClick={() => { setEditEvent(e); setShowJournal(true); }}
+                          style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
+                          <Ic n="edit" s={14} c={C.textMuted} />
+                        </button>
+                      )}
                       <button onClick={() => handleDeleteEvent(e.id)}
                         style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
                         <Ic n="trash" s={14} c={C.textMuted} />
@@ -873,6 +910,26 @@ export const CalendarOverlay = ({
           </div>
         </Modal>
       )}
+
+      {/* Battle result detail */}
+      <BattleResultDetail
+        open={!!detailBattle}
+        battle={detailBattle?.battle}
+        plan={detailBattle?.plan}
+        onClose={() => setDetailBattle(null)}
+        onLogReflection={({ planId, battleId: _battleId }) => {
+          // Deep-link to BattleDayView's reflection phase. App.jsx routes
+          // this to setBattlePrepSeed + setTab("battle"); BattlePrepPage
+          // then expands the plan, selects the day, and pushes
+          // initialPhase="reflection" down to BattleDayView.
+          const date = detailBattle?.battle?.date;
+          setDetailBattle(null);
+          if (onGoToPrep && planId && date) {
+            onGoToPrep({ focus: "plan", planId, date, phase: "reflection" });
+          }
+        }}
+        t={t}
+      />
     </div>
   );
 };

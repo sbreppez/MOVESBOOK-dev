@@ -34,6 +34,11 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
   const [confirmDeleteUnplanned, setConfirmDeleteUnplanned] = useState(null); // calendar event to delete
   const [showHistory, setShowHistory] = useState(false);
+  // Deep-link target for BattleDayView's initial phase. Set when a seed
+  // arrives with `phase` (e.g., from CalendarOverlay's "LOG REFLECTION"
+  // CTA), then cleared by BattleCard once consumed so subsequent remounts
+  // don't re-apply.
+  const [pendingPhase, setPendingPhase] = useState(null); // { planId, battleId, phase } | null
 
   // Handle incoming seed from Calendar → Prep
   useEffect(() => {
@@ -43,12 +48,19 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
       if (battlePrepSeed.date) {
         setSelectedDayByPlan(prev => ({ ...prev, [battlePrepSeed.planId]: battlePrepSeed.date }));
       }
+      if (battlePrepSeed.phase) {
+        const seedPlan = plans.find(p => p.id === battlePrepSeed.planId);
+        const seedBattle = seedPlan?.battles?.find(b => b.date === battlePrepSeed.date);
+        if (seedBattle) {
+          setPendingPhase({ planId: seedPlan.id, battleId: seedBattle.id, phase: battlePrepSeed.phase });
+        }
+      }
     } else {
       setSeedData(battlePrepSeed);
       setShowSetup(true);
     }
     if (onBattlePrepSeedUsed) onBattlePrepSeedUsed();
-  }, [battlePrepSeed, onBattlePrepSeedUsed]);
+  }, [battlePrepSeed, onBattlePrepSeedUsed, plans]);
 
   // Handle + menu "Add Battle" trigger
   const prevAddTrigger = useRef(onAddTrigger);
@@ -231,6 +243,8 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
             isExpanded={expandedPlanId === plan.id}
             isEditing={editingPlanId === plan.id}
             selectedDay={selectedDayByPlan[plan.id] || null}
+            pendingPhase={pendingPhase?.planId === plan.id ? pendingPhase : null}
+            onPendingPhaseConsumed={() => setPendingPhase(null)}
             onToggleExpand={() => setExpandedPlanId(expandedPlanId === plan.id ? null : plan.id)}
             onToggleEdit={() => setEditingPlanId(editingPlanId === plan.id ? null : plan.id)}
             onSelectDay={(day) => setSelectedDayByPlan(prev => ({ ...prev, [plan.id]: prev[plan.id] === day ? null : day }))}
@@ -326,7 +340,7 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
 };
 
 // ── Battle Card Component ──
-const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpanded, isEditing, selectedDay, onToggleExpand, onToggleEdit, onSelectDay, onToggleTask, onDelete, onOpenCalendar, updatePlan, setBattleprep, addToast, t, today, moves, sets }) => {
+const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpanded, isEditing, selectedDay, pendingPhase, onPendingPhaseConsumed, onToggleExpand, onToggleEdit, onSelectDay, onToggleTask, onDelete, onOpenCalendar, updatePlan, setBattleprep, addToast, t, today, moves, sets }) => {
   const meta = PRESET_META[plan.preset] || PRESET_META.smoke;
   const dayMap = precomputedDayMap || computeDayMap(plan).dayMap;
   const phaseSummary = precomputedPhaseSummary || computeDayMap(plan).phaseSummary;
@@ -337,6 +351,34 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
   // Battle day detection
   const todayBattle = useMemo(() => (plan.battles || []).find(b => b.date === today && !b.completed), [plan.battles, today]);
   const isBattleDay = currentPhase?.type === "battle" && !!todayBattle;
+  // A battle whose date matches `selectedDay` (past or future). Lets
+  // BattleDayView open for any tapped battle, not just today's — needed for
+  // the CalendarOverlay deep-link that lands on a past unlogged battle so
+  // the user can log reflection (initialPhase="reflection").
+  const selectedBattle = useMemo(() => {
+    if (!selectedDay) return null;
+    return (plan.battles || []).find(b => b.date === selectedDay) || null;
+  }, [plan.battles, selectedDay]);
+  // Prefer today's battle when relevant, otherwise the explicitly selected
+  // one. todayBattle's filter (`!b.completed`) keeps today's pre-battle UX
+  // intact; selectedBattle has no such filter so already-logged past
+  // battles can still be inspected.
+  const battleToShow = todayBattle || selectedBattle;
+  const showBattleDayView = (isBattleDay && !!todayBattle) || !!selectedBattle;
+  // Deep-link from CalendarOverlay's "LOG REFLECTION" CTA — match seed's
+  // pendingPhase against the battle we're about to render.
+  const matchingPhase = pendingPhase && battleToShow && pendingPhase.battleId === battleToShow.id
+    ? pendingPhase.phase
+    : undefined;
+  // Clear the pending phase once BattleDayView has mounted with it so a
+  // later remount (e.g., user collapses then re-expands) doesn't re-apply.
+  // BattleDayView's useState initializer has already captured initialPhase
+  // by the time this effect fires.
+  useEffect(() => {
+    if (matchingPhase && typeof onPendingPhaseConsumed === "function") {
+      onPendingPhaseConsumed();
+    }
+  }, [matchingPhase, onPendingPhaseConsumed]);
 
   // Edit state
   const [editEventName, setEditEventName] = useState(plan.eventName || "");
@@ -507,17 +549,18 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
       </button>
 
       {/* Expanded content */}
-      {isExpanded && isBattleDay && todayBattle && (
+      {isExpanded && showBattleDayView && battleToShow && (
         <div style={{ borderTop: `1px solid ${C.border}`, padding: "10px 12px 14px" }}>
           <BattleDayView
-            plan={plan} battle={todayBattle} dayMap={dayMap}
+            plan={plan} battle={battleToShow} dayMap={dayMap}
             moves={moves || []} sets={sets || []}
             updatePlan={updatePlan} setBattleprep={setBattleprep}
-            addToast={addToast} t={t} today={today} />
+            addToast={addToast} t={t} today={today}
+            initialPhase={matchingPhase} />
           {completedBattlesSection}
         </div>
       )}
-      {isExpanded && !isBattleDay && (
+      {isExpanded && !showBattleDayView && (
         <div style={{ borderTop: `1px solid ${C.border}`, padding: "0 12px 14px" }}>
           {/* Phase progress bar */}
           {phaseSummary.length > 0 && (

@@ -8,8 +8,21 @@ import { compressImage } from '../../utils/imageUtils';
 
 // ── Battle Day View ─────────────────────────────────────────────────────────
 // Flow: pre-battle → reflection → share card → (plan complete if last battle) → done
-export const BattleDayView = ({ plan, battle, dayMap, moves, sets, updatePlan, setBattleprep, addToast, t, today }) => {
-  const [phase, setPhase] = useState("pre"); // "pre" | "reflection" | "shareCard" | "planComplete" | "done"
+//
+// `initialPhase` lets callers deep-link directly into a phase — e.g.,
+// CalendarOverlay's BattleResultDetail "LOG REFLECTION" CTA opens this view
+// at "reflection" instead of forcing the user through the prep section first.
+// Defaults to "pre" when unset.
+export const BattleDayView = ({ plan, battle, dayMap, moves, sets, updatePlan, setBattleprep, addToast, t, today, initialPhase }) => {
+  const [phase, setPhase] = useState(initialPhase || "pre"); // "pre" | "reflection" | "shareCard" | "planComplete" | "done"
+  // If the parent supplies a fresh `initialPhase` after mount (e.g., a new
+  // deep-link arrives while this BattleDayView is already mounted for the
+  // same battle), honor it. Won't fire when initialPhase becomes undefined
+  // (parent clears pendingPhase post-consume), so the user's manual phase
+  // progress is preserved.
+  useEffect(() => {
+    if (initialPhase) setPhase(initialPhase);
+  }, [initialPhase]);
   const meta = PRESET_META[plan.preset] || PRESET_META.smoke;
 
   // Reflection state
