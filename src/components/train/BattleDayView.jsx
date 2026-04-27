@@ -394,7 +394,7 @@ const PostBattleReflection = ({ plan, battle, meta, prepStats: _prepStats, mood,
 };
 
 // ── Battle Share Card ───────────────────────────────────────────────────────
-export const BattleShareCard = ({ plan, battle, meta, prepStats, reflection, onClose, t, today: _today }) => {
+export const BattleShareCard = ({ plan, battle, meta, prepStats: _prepStats, reflection, onClose, t, today: _today }) => {
   const canvasRef = useRef(null);
   const photoInputRef = useRef(null);
   const [photo, setPhoto] = useState(null);
@@ -404,7 +404,9 @@ export const BattleShareCard = ({ plan, battle, meta, prepStats, reflection, onC
 
   const generateCard = useCallback(() => {
     const resultObj = BATTLE_RESULTS.find(r => r.key === reflection?.result) || {};
-    const moodObj = BATTLE_MOODS.find(m => m.key === reflection?.mood) || {};
+    // moodObj removed -- mood emoji/label dropped from BattleShareCard
+    // per #101 redesign. Mood is still saved on reflection; will resurface
+    // in the post-battle reflection redesign (#145) if useful.
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -416,20 +418,24 @@ export const BattleShareCard = ({ plan, battle, meta, prepStats, reflection, onC
       ctx.fillStyle = "#0a0a0a";
       ctx.fillRect(0, 0, W, H);
 
-      // Photo overlay if exists
+      // Photo overlay if exists. Photo at high opacity (#142 photo too
+      // dark fix); gradient darkens only edges where text sits.
       if (photo) {
         const img = new Image();
         img.onload = () => {
-          ctx.globalAlpha = 0.4;
+          ctx.globalAlpha = 0.85;
           const scale = Math.max(W / img.width, H / img.height);
           const dw = img.width * scale, dh = img.height * scale;
           ctx.drawImage(img, (W - dw) / 2, (H - dh) / 2, dw, dh);
           ctx.globalAlpha = 1.0;
-          // Gradient overlay
+          // Edge-only gradient: darker at top + bottom for text contrast,
+          // mostly transparent through the middle so the photo reads.
           const grad = ctx.createLinearGradient(0, 0, 0, H);
-          grad.addColorStop(0, "rgba(10,10,10,0.3)");
-          grad.addColorStop(0.5, "rgba(10,10,10,0.6)");
-          grad.addColorStop(1, "rgba(10,10,10,0.95)");
+          grad.addColorStop(0,    "rgba(10,10,10,0.55)");
+          grad.addColorStop(0.25, "rgba(10,10,10,0.15)");
+          grad.addColorStop(0.60, "rgba(10,10,10,0.10)");
+          grad.addColorStop(0.82, "rgba(10,10,10,0.30)");
+          grad.addColorStop(1,    "rgba(10,10,10,0.70)");
           ctx.fillStyle = grad;
           ctx.fillRect(0, 0, W, H);
           drawContent(ctx, W, H);
@@ -443,18 +449,25 @@ export const BattleShareCard = ({ plan, battle, meta, prepStats, reflection, onC
     };
 
     const drawContent = (ctx, W, _H) => {
-      // MOVESBOOK branding
-      ctx.textAlign = "center";
+      // ── TOP ZONE ────────────────────────────────────────────────────
+      // MOVESBOOK logo — joined (MOVES red + BOOK white, no gap).
+      // Measure widths and position end-to-end so the brand reads as one
+      // word per #101 spec.
+      ctx.textAlign = "left";
       ctx.font = `900 32px 'Barlow Condensed', sans-serif`;
+      const movesW = ctx.measureText("MOVES").width;
+      const bookW = ctx.measureText("BOOK").width;
+      const totalW = movesW + bookW;
+      const startX = (W - totalW) / 2;
       ctx.fillStyle = "#cf0000";
-      ctx.fillText("MOVES", W / 2 - 40, 80);
+      ctx.fillText("MOVES", startX, 80);
       ctx.fillStyle = "#ffffff";
-      ctx.fillText("BOOK", W / 2 + 50, 80);
+      ctx.fillText("BOOK", startX + movesW, 80);
+      ctx.textAlign = "center";
 
-      // Preset badge
+      // Preset badge — label only (no icon).
       ctx.font = `700 20px 'Barlow Condensed', sans-serif`;
-      ctx.fillStyle = meta.color;
-      const badgeText = `${meta.icon} ${meta.label}`;
+      const badgeText = meta.label;
       const bw = ctx.measureText(badgeText).width + 24;
       const bx = (W - bw) / 2;
       ctx.globalAlpha = 0.2;
@@ -469,67 +482,44 @@ export const BattleShareCard = ({ plan, battle, meta, prepStats, reflection, onC
       ctx.font = `900 64px 'Barlow Condensed', sans-serif`;
       ctx.fillStyle = "#ffffff";
       const eventName = plan.eventName || plan.planName || "Battle";
-      ctx.fillText(eventName, W / 2, 260);
+      ctx.fillText(eventName, W / 2, 240);
 
-      // Date
+      // Battle date
       ctx.font = `700 28px 'Barlow', sans-serif`;
       ctx.fillStyle = "#b3b3b3";
-      ctx.fillText(battleDate, W / 2, 310);
+      ctx.fillText(battleDate, W / 2, 290);
 
-      // Result badge
-      const resultLabel = t(resultObj.labelKey) || reflection?.result || "";
-      const rColor = resultObj.color || "#7a7a7a";
-      ctx.font = `900 36px 'Barlow Condensed', sans-serif`;
-      const rw = ctx.measureText(resultLabel).width + 40;
-      const rx = (W - rw) / 2;
-      ctx.fillStyle = rColor;
-      roundRect(ctx, rx, 380, rw, 56, 12);
-      ctx.fill();
-      ctx.fillStyle = "#ffffff";
-      ctx.fillText(resultLabel, W / 2, 418);
-
-      // Mood emoji
-      ctx.font = "100px serif";
-      ctx.fillText(moodObj.emoji || "", W / 2, 550);
-
-      // Mood label
-      ctx.font = `700 24px 'Barlow', sans-serif`;
-      ctx.fillStyle = "#b3b3b3";
-      ctx.fillText(t(moodObj.labelKey) || "", W / 2, 590);
-
-      // Stats grid
-      const statsY = 680;
-      const stats = [
-        { val: `${prepStats.completedSessions}/${prepStats.totalSessions}`, label: t("sessionsCompleted") },
-        { val: `${prepStats.prepWeeks}`, label: t("prepWeeksLabel") },
-      ];
-      const colW = W / 2;
-      stats.forEach((s, i) => {
-        const cx = colW * i + colW / 2;
-        ctx.font = `900 48px 'Barlow Condensed', sans-serif`;
-        ctx.fillStyle = "#ffffff";
-        ctx.fillText(s.val, cx, statsY);
-        ctx.font = `700 18px 'Barlow', sans-serif`;
-        ctx.fillStyle = "#7a7a7a";
-        ctx.fillText(s.label, cx, statsY + 30);
-      });
-
-      // Takeaway
+      // ── MIDDLE ZONE ─────────────────────────────────────────────────
+      // Photo dominates. Optional takeaway quote, lower middle.
       if (reflection?.takeaway) {
         ctx.font = `italic 26px 'Barlow', sans-serif`;
-        ctx.fillStyle = "#b3b3b3";
-        wrapText(ctx, `"${reflection.takeaway}"`, W / 2, 830, W - 120, 34);
+        ctx.fillStyle = "#e6e6e6";
+        wrapText(ctx, `"${reflection.takeaway}"`, W / 2, 870, W - 120, 36);
       }
 
-      // Footer
+      // ── BOTTOM ZONE ─────────────────────────────────────────────────
+      // Result badge (TOP 8 etc.) above the URL footer.
+      const resultLabel = t(resultObj.labelKey) || reflection?.result || "";
+      if (resultLabel) {
+        const rColor = resultObj.color || "#7a7a7a";
+        ctx.font = `900 36px 'Barlow Condensed', sans-serif`;
+        const rw = ctx.measureText(resultLabel).width + 40;
+        const rx = (W - rw) / 2;
+        ctx.fillStyle = rColor;
+        roundRect(ctx, rx, 1150, rw, 56, 12);
+        ctx.fill();
+        ctx.fillStyle = "#ffffff";
+        ctx.fillText(resultLabel, W / 2, 1188);
+      }
+
+      // URL footer
       ctx.font = `700 20px 'Barlow', sans-serif`;
-      ctx.fillStyle = "#7a7a7a";
-      ctx.fillText(battleDate, W / 2, 1250);
-      ctx.fillText("movesbook.vercel.app", W / 2, 1290);
+      ctx.fillStyle = "#b3b3b3";
+      ctx.fillText("movesbook.app", W / 2, 1280);
     };
 
     draw();
-  }, [photo, plan, meta, prepStats, reflection, battleDate, t]);
+  }, [photo, plan, meta, reflection, battleDate, t]);
 
   useEffect(() => { generateCard(); }, [generateCard]);
 
@@ -674,78 +664,73 @@ const PlanCompletionCard = ({ plan, meta, dayMap, addToast, onClose, t, today })
     ctx.fillStyle = "#0a0a0a";
     ctx.fillRect(0, 0, W, H);
 
-    // MOVESBOOK branding
-    ctx.textAlign = "center";
+    // MOVESBOOK branding -- joined (no gap between MOVES and BOOK).
+    ctx.textAlign = "left";
     ctx.font = `900 32px 'Barlow Condensed', sans-serif`;
+    const movesW = ctx.measureText("MOVES").width;
+    const bookW = ctx.measureText("BOOK").width;
+    const totalW = movesW + bookW;
+    const startX = (W - totalW) / 2;
     ctx.fillStyle = "#cf0000";
-    ctx.fillText("MOVES", W / 2 - 40, 70);
+    ctx.fillText("MOVES", startX, 70);
     ctx.fillStyle = "#ffffff";
-    ctx.fillText("BOOK", W / 2 + 50, 70);
+    ctx.fillText("BOOK", startX + movesW, 70);
+    ctx.textAlign = "center";
 
-    // Flag + PLAN COMPLETE
-    ctx.font = "48px serif";
-    ctx.fillText("\u{1F3C1}", W / 2, 150);
+    // PLAN COMPLETE header (flag emoji removed per #144)
     ctx.font = `900 44px 'Barlow Condensed', sans-serif`;
     ctx.fillStyle = "#ffffff";
-    ctx.fillText(t("planComplete") || "PLAN COMPLETE", W / 2, 210);
+    ctx.fillText(t("planComplete") || "PLAN COMPLETE", W / 2, 170);
 
-    // Plan name + preset badge
+    // Plan name + preset badge (label only, no icon)
     ctx.font = `900 36px 'Barlow Condensed', sans-serif`;
     ctx.fillStyle = "#ffffff";
-    ctx.fillText(plan.eventName || plan.planName || "Battle Plan", W / 2, 290);
+    ctx.fillText(plan.eventName || plan.planName || "Battle Plan", W / 2, 250);
 
     ctx.font = `700 20px 'Barlow Condensed', sans-serif`;
-    ctx.fillStyle = meta.color;
-    const badgeText = `${meta.icon} ${meta.label}`;
+    const badgeText = meta.label;
     const bw = ctx.measureText(badgeText).width + 24;
     ctx.globalAlpha = 0.2;
-    roundRect(ctx, (W - bw) / 2, 310, bw, 30, 6);
+    ctx.fillStyle = meta.color;
+    roundRect(ctx, (W - bw) / 2, 280, bw, 30, 6);
     ctx.fill();
     ctx.globalAlpha = 1.0;
     ctx.fillStyle = meta.color;
-    ctx.fillText(badgeText, W / 2, 333);
+    ctx.fillText(badgeText, W / 2, 303);
 
     // Date range
     ctx.font = `700 22px 'Barlow', sans-serif`;
     ctx.fillStyle = "#b3b3b3";
-    ctx.fillText(dateRange, W / 2, 385);
+    ctx.fillText(dateRange, W / 2, 360);
 
-    // Stats grid 2x2
-    const gridY = 460;
+    // Stats row -- 3 cells (resultEmojis cell removed; results live in
+    // each battle's Battle Results detail per #141).
+    const gridY = 470;
     const gridData = [
       { val: `${stats.completedSessions}`, label: t("sessionsCompleted") || "Sessions" },
       { val: `${stats.battleCount}`, label: t("battlesFought") || "Battles" },
       { val: `${stats.trainingDays}`, label: t("totalTrainingDays") || "Training days" },
-      { val: stats.resultEmojis || "\u2694\uFE0F", label: t("resultsLabel") || "Results" },
     ];
-    const colW = W / 2;
+    const colW = W / gridData.length;
     gridData.forEach((s, i) => {
-      const col = i % 2;
-      const row = Math.floor(i / 2);
-      const cx = colW * col + colW / 2;
-      const cy = gridY + row * 100;
-      if (i === 3) {
-        // Results row uses emoji, smaller font
-        ctx.font = "36px serif";
-      } else {
-        ctx.font = `900 48px 'Barlow Condensed', sans-serif`;
-      }
+      const cx = colW * i + colW / 2;
+      ctx.font = `900 56px 'Barlow Condensed', sans-serif`;
       ctx.fillStyle = "#ffffff";
-      ctx.fillText(s.val, cx, cy);
+      ctx.fillText(s.val, cx, gridY);
       ctx.font = `700 18px 'Barlow', sans-serif`;
       ctx.fillStyle = "#7a7a7a";
-      ctx.fillText(s.label, cx, cy + 30);
+      ctx.fillText(s.label, cx, gridY + 32);
     });
 
     // Closing message
     ctx.font = `italic 24px 'Barlow', sans-serif`;
     ctx.fillStyle = "#b3b3b3";
-    wrapText(ctx, closingMsg, W / 2, 740, W - 120, 32);
+    wrapText(ctx, closingMsg, W / 2, 700, W - 120, 32);
 
     // Footer
     ctx.font = `700 20px 'Barlow', sans-serif`;
-    ctx.fillStyle = "#7a7a7a";
-    ctx.fillText("movesbook.vercel.app", W / 2, 1020);
+    ctx.fillStyle = "#b3b3b3";
+    ctx.fillText("movesbook.app", W / 2, 1020);
   }, [plan, meta, stats, dateRange, closingMsg, t]);
 
   useEffect(() => {

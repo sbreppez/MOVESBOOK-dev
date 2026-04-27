@@ -1058,27 +1058,34 @@ const ShareCard = ({ session, mode, prBroken, photo, onPhotoChange, onClose, t }
         const img = new Image();
         img.src = photo;
         await new Promise((res, rej) => { img.onload = res; img.onerror = rej; });
-        ctx.globalAlpha = 0.4;
+        ctx.globalAlpha = 0.85;
         const scale = Math.max(W / img.width, H / img.height);
         const dw = img.width * scale, dh = img.height * scale;
         ctx.drawImage(img, (W - dw) / 2, (H - dh) / 2, dw, dh);
         ctx.globalAlpha = 1.0;
-        // Gradient overlay
+        // Edge-only gradient: darken top + bottom for text contrast,
+        // mostly transparent through the middle so the photo reads. (#142)
         const grad = ctx.createLinearGradient(0, 0, 0, H);
-        grad.addColorStop(0, "rgba(10,10,10,0.3)");
-        grad.addColorStop(0.5, "rgba(10,10,10,0.6)");
-        grad.addColorStop(1, "rgba(10,10,10,0.95)");
+        grad.addColorStop(0,    "rgba(10,10,10,0.55)");
+        grad.addColorStop(0.25, "rgba(10,10,10,0.15)");
+        grad.addColorStop(0.60, "rgba(10,10,10,0.10)");
+        grad.addColorStop(0.82, "rgba(10,10,10,0.30)");
+        grad.addColorStop(1,    "rgba(10,10,10,0.70)");
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, W, H);
       } catch(e) { console.warn("[MB] Sparring share-card canvas draw failed:", e); }
     }
 
-    // Branding
+    // Branding -- joined and centered (no gap between MOVES and BOOK).
     ctx.font = "bold 32px 'Barlow Condensed', sans-serif";
+    ctx.textAlign = "left";
+    const movesW_brand = ctx.measureText("MOVES").width;
+    const bookW_brand = ctx.measureText("BOOK").width;
+    const startX_brand = (W - movesW_brand - bookW_brand) / 2;
     ctx.fillStyle = "#cf0000";
-    ctx.fillText("MOVES", 60, 80);
+    ctx.fillText("MOVES", startX_brand, 80);
     ctx.fillStyle = "#ffffff";
-    ctx.fillText("BOOK", 60 + ctx.measureText("MOVES").width, 80);
+    ctx.fillText("BOOK", startX_brand + movesW_brand, 80);
 
     // PR label
     ctx.font = "900 48px 'Barlow Condensed', sans-serif";
@@ -1114,7 +1121,7 @@ const ShareCard = ({ session, mode, prBroken, photo, onPhotoChange, onClose, t }
     ctx.font = "500 24px 'Barlow', sans-serif";
     ctx.fillStyle = "#7a7a7a";
     ctx.fillText(new Date().toLocaleDateString(), W / 2, H * 0.88);
-    ctx.fillText("movesbook.vercel.app", W / 2, H * 0.92);
+    ctx.fillText("movesbook.app", W / 2, H * 0.92);
 
     ctx.textAlign = "start";
   }, [photo, session, mode, prBroken]);
