@@ -233,7 +233,7 @@ const PreBattleSection = ({ plan, battle: _battle, dayMap: _dayMap, moves, sets:
               <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, letterSpacing: 0.5, color: C.textMuted }}>{cat}</span>
             </div>
             {catMoves.map(move => (
-              <div key={move.id} style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 0", borderBottom: `1px solid ${C.borderLight}` }}>
+              <div key={move.id} style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 0", marginBottom: 2 }}>
                 <span style={{ flex: 1, fontSize: 13, fontFamily: FONT_BODY, color: C.text }}>{move.name}</span>
                 <span style={{ fontSize: 11, fontFamily: FONT_DISPLAY, fontWeight: 700, color: C.textSec }}>{move.mastery || 0}%</span>
                 {move.link && (
@@ -879,7 +879,7 @@ const ChecklistRow = ({ done, icon, text, onToggle }) => (
     style={{
       display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "7px 2px",
       background: "none", border: "none", cursor: "pointer",
-      borderBottom: `1px solid ${C.borderLight}`, textAlign: "left",
+      textAlign: "left", marginBottom: 4,
     }}>
     <div style={{
       width: 20, height: 20, borderRadius: 5,
@@ -913,7 +913,7 @@ const Accordion = ({ title, count, expanded, onToggle, children }) => (
       <Ic n={expanded ? "chevD" : "chevR"} s={12} c={C.textMuted} />
     </button>
     {expanded && (
-      <div style={{ borderTop: `1px solid ${C.borderLight}`, padding: "10px 14px 12px" }}>
+      <div style={{ padding: "10px 14px 12px" }}>
         {children}
       </div>
     )}

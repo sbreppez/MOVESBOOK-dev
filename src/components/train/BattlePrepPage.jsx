@@ -613,7 +613,7 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
         const dateLabel = new Date(b.date + "T00:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
         const isLogged = b.reflectionLogged === true && b.reflection != null;
         return (
-          <div key={b.id} style={{ display: "flex", alignItems: "center", gap: 8, padding: "7px 6px", borderBottom: `1px solid ${C.borderLight}` }}>
+          <div key={b.id} style={{ display: "flex", alignItems: "center", gap: 8, padding: "7px 6px", marginBottom: 4 }}>
             <button
               onClick={() => onOpenBattleResult && onOpenBattleResult({ battle: b, dayMap })}
               style={{ flex: 1, display: "flex", alignItems: "center", gap: 8, background: "none", border: "none", cursor: "pointer", padding: 0, textAlign: "left", minWidth: 0 }}>
@@ -709,7 +709,7 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
 
       {/* Expanded content */}
       {isExpanded && showBattleDayView && battleToShow && (
-        <div style={{ borderTop: `1px solid ${C.border}`, padding: "10px 12px 14px" }}>
+        <div style={{ padding: "10px 12px 14px" }}>
           <BattleDayView
             plan={plan} battle={battleToShow} dayMap={dayMap}
             moves={moves || []} sets={sets || []}
@@ -720,7 +720,7 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
         </div>
       )}
       {isExpanded && !showBattleDayView && (
-        <div style={{ borderTop: `1px solid ${C.border}`, padding: "0 12px 14px" }}>
+        <div style={{ padding: "0 12px 14px" }}>
           {/* Phase progress bar */}
           {phaseSummary.length > 0 && (
             <div style={{ display: "flex", height: 5, borderRadius: 3, overflow: "hidden", background: C.surfaceAlt, margin: "10px 0 8px" }}>
@@ -950,7 +950,7 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
                 const dateLabel = new Date(ds + "T00:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
                 return (
                   <div key={ds}>
-                    <button onClick={() => onSelectDay(ds)} style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "9px 6px", background: isSel ? C.surfaceAlt : "transparent", border: "none", borderBottom: `1px solid ${C.borderLight}`, cursor: "pointer", textAlign: "left" }}>
+                    <button onClick={() => onSelectDay(ds)} style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "9px 6px", background: isSel ? C.surfaceAlt : "transparent", border: "none", cursor: "pointer", textAlign: "left" }}>
                       <div style={{ width: 7, height: 7, borderRadius: "50%", background: info.phaseColor, flexShrink: 0 }} />
                       <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: isToday ? C.accent : C.text, minWidth: 85 }}>{dateLabel}</span>
                       <span style={{ fontSize: 8, fontFamily: FONT_DISPLAY, fontWeight: 700, background: `${info.phaseColor}20`, color: info.phaseColor, borderRadius: 4, padding: "1px 5px", letterSpacing: 0.5 }}>
