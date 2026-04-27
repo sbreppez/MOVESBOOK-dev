@@ -945,6 +945,16 @@ export const CalendarOverlay = ({
             onGoToPrep({ focus: "plan", planId, date, phase: "reflection" });
           }
         }}
+        onOpenPrep={({ planId }) => {
+          // Deep-link to BattleDayView's pre phase (no `phase` field) so
+          // the user lands on the prep checklist + Battle Complete flow.
+          // (#147 -- LOG REFLECTION is gated on battle.completed.)
+          const date = detailBattle?.battle?.date;
+          setDetailBattle(null);
+          if (onGoToPrep && planId && date) {
+            onGoToPrep({ focus: "plan", planId, date });
+          }
+        }}
         t={t}
       />
     </div>

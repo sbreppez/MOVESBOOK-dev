@@ -33,7 +33,7 @@ import { PRESET_META } from '../train/battlePrepHelpers';
  *    at reflection phase. Only called when both plan and battle are present.
  *  - t: translation function.
  */
-export const BattleResultDetail = ({ open, battle, plan, dayMap, onClose, onLogReflection, t }) => {
+export const BattleResultDetail = ({ open, battle, plan, dayMap, onClose, onLogReflection, onOpenPrep, t }) => {
   // Render an empty BottomSheet when no battle is selected so the parent can
   // keep `open` purely tied to a state setter without guarding.
   if (!battle) {
@@ -43,7 +43,11 @@ export const BattleResultDetail = ({ open, battle, plan, dayMap, onClose, onLogR
   const meta = plan ? (PRESET_META[plan.preset] || PRESET_META.smoke) : null;
   const title = battle.eventName || plan?.eventName || plan?.planName || t("battleResultDetail");
   const hasReflection = !!battle.reflection;
-  const canLogReflection = !!(plan && battle.id && typeof onLogReflection === "function");
+  // CTA gating (#147): LOG REFLECTION is offered only when the user has
+  // pressed Battle Complete (battle.completed=true). Otherwise the empty
+  // state nudges them through the prep flow first via OPEN PREP.
+  const canLogReflection = !!(plan && battle.id && typeof onLogReflection === "function" && battle.completed);
+  const canOpenPrep = !!(plan && battle.date && typeof onOpenPrep === "function" && !battle.completed);
   // Show prep arc when both plan + dayMap are available. Manual battle
   // events (no battleprep linkage) and direct calls without dayMap fall
   // back to the reflection-only view as before (#133 behavior).
@@ -84,11 +88,17 @@ export const BattleResultDetail = ({ open, battle, plan, dayMap, onClose, onLogR
           <BattleResultCard battle={battle} plan={plan} t={t} expanded={true} />
         </div>
       ) : (
-        // Empty state — message + CTA to log reflection
+        // Empty state — message + CTA. The CTA forks on battle.completed:
+        //   - completed: LOG REFLECTION (deep-links to BattleDayView at
+        //     reflection phase).
+        //   - not completed: OPEN PREP (deep-links to BattleDayView at
+        //     pre phase, where Battle Complete is pressed). Forces the
+        //     user through prep closure before they can reflect. (#147)
+        //   - manual events / no plan: message only, no CTA.
         <div style={{ padding: "16px 4px 8px", textAlign: "center" }}>
           <div style={{ fontSize: 28, marginBottom: 8 }}>{"⚔️"}</div>
           <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: C.textSec, lineHeight: 1.5, margin: "0 0 16px" }}>
-            {t("noReflectionLogged")}
+            {canOpenPrep ? t("markBattleCompleteFirst") : t("noReflectionLogged")}
           </p>
           {canLogReflection && (
             <button
@@ -101,6 +111,19 @@ export const BattleResultDetail = ({ open, battle, plan, dayMap, onClose, onLogR
                 letterSpacing: 1.5,
               }}>
               {t("logReflectionCta")}
+            </button>
+          )}
+          {canOpenPrep && (
+            <button
+              onClick={() => onOpenPrep({ planId: plan.id })}
+              style={{
+                width: "100%", padding: "12px 16px",
+                background: C.accent, color: "#fff", border: "none",
+                borderRadius: 8, cursor: "pointer",
+                fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 13,
+                letterSpacing: 1.5,
+              }}>
+              {t("openPrepCta")}
             </button>
           )}
         </div>

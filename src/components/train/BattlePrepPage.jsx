@@ -427,6 +427,16 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
             setPendingPhase({ planId, battleId, phase: "reflection" });
           }
         }}
+        onOpenPrep={({ planId }) => {
+          // Land in BattleDayView at "pre" phase (no setPendingPhase) so
+          // the user can press Battle Complete first. (#147)
+          const date = detailBattle?.battle?.date;
+          setDetailBattle(null);
+          if (planId && date) {
+            setExpandedPlanId(planId);
+            setSelectedDayByPlan(prev => ({ ...prev, [planId]: date }));
+          }
+        }}
         t={t}
       />
 
