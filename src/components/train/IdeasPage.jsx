@@ -171,7 +171,7 @@ export const IdeasPage = ({ onAddMove, onAddTrigger, ideas, setIdeas, habits=[],
         let reminderBattle = null, reminderPlan = null;
         for (const plan of plans) {
           for (const b of (plan.battles || [])) {
-            if (b.date < todayStr && !b.reflectionLogged
+            if ((b.date < todayStr || b.completed) && !b.reflectionLogged
               && (b.reminderDismissCount || 0) < 3
               && b.lastDismissDate !== todayStr) {
               if (!reminderBattle || b.date > reminderBattle.date) {

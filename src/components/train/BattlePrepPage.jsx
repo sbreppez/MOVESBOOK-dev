@@ -184,7 +184,10 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
       const battles = plan.battles || [];
       // Empty plan (no battles yet) stays in active group.
       if (!battles.length) { active.push(plan); return; }
-      const allPast = battles.every(b => b.date < today);
+      // Manual completion (Battle Complete button) overrides date-based
+      // detection: a battle marked completed today already counts as past
+      // for grouping purposes. (#146)
+      const allPast = battles.every(b => b.date < today || b.completed);
       if (allPast) past.push(plan);
       else active.push(plan);
     });
@@ -577,7 +580,9 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
   // button is gated on a logged reflection (canvas needs the data).
   const pastBattles = useMemo(() =>
     (plan.battles || [])
-      .filter(b => b.date < today)
+      // Date-past OR manually completed (#146 -- Battle Complete button
+      // moves a today battle into the past treatment immediately).
+      .filter(b => b.date < today || b.completed)
       .sort((a, b) => b.date.localeCompare(a.date)),
   [plan.battles, today]);
 

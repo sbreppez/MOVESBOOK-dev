@@ -539,8 +539,11 @@ export const CalendarOverlay = ({
                     // Routing for the BATTLE DAY tile tap:
                     //   future/today  -> open BattleDayView prep flow via onGoToPrep
                     //   past          -> open BattleResultDetail (empty state if no reflection)
-                    const isFutureBattle = isBattle && selectedDay >= today && onGoToPrep;
-                    const isPastBattle = isBattle && selectedDay < today && !!matchingBattle;
+                    // Manual completion (Battle Complete button) overrides
+                    // date: a today battle already marked completed routes to
+                    // the past detail sheet instead of the prep flow. (#146)
+                    const isFutureBattle = isBattle && selectedDay >= today && !matchingBattle?.completed && onGoToPrep;
+                    const isPastBattle = isBattle && (selectedDay < today || !!matchingBattle?.completed) && !!matchingBattle;
                     // Full plan dayMap (not just selectedDay entry) — passed to
                     // BattleResultDetail so it can render the prep-arc summary. (#141)
                     const fullPlanDayMap = plan ? (allDayMaps.find(d => d.planId === plan.id)?.dayMap || null) : null;
