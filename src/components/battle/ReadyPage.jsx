@@ -202,12 +202,24 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
   const [arcLegendOpen, setArcLegendOpen] = useState(!(settings.arcLegendSeen));
 
   const PlanView = () => {
+    // At-a-glance summary: how many rounds, how many entries to fight to
+    // win the comp. (#154)
+    const entriesTotal = rounds.reduce((n, r) => n + (r.entries?.length || 0), 0);
     return (
       <div style={{ flex:1, display:"flex", flexDirection:"column", overflow:"hidden" }}>
-        <SectionBrief desc={t("battlePlanBrief")} stat={`${rounds.length} rounds configured`} settings={settings}/>
-        {/* Header */}
+        <SectionBrief desc={t("battlePlanBrief")} settings={settings}/>
+        {/* Header — ROUNDS / ENTRIES counts inline + action icons. (#154) */}
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"8px 16px", flexShrink:0 }}>
-          <span style={{ fontSize:14, fontWeight:800, letterSpacing:1.5, color:C.brownMid, fontFamily:FONT_DISPLAY }}>{t("rounds")}</span>
+          <div style={{ display:"flex", alignItems:"center", gap:18 }}>
+            <div style={{ display:"flex", alignItems:"baseline", gap:6 }}>
+              <span style={{ fontSize:14, fontWeight:800, letterSpacing:1.5, color:C.brownMid, fontFamily:FONT_DISPLAY }}>{t("rounds")}</span>
+              <span style={{ fontSize:16, fontWeight:900, color:C.text, fontFamily:FONT_DISPLAY }}>{rounds.length}</span>
+            </div>
+            <div style={{ display:"flex", alignItems:"baseline", gap:6 }}>
+              <span style={{ fontSize:14, fontWeight:800, letterSpacing:1.5, color:C.brownMid, fontFamily:FONT_DISPLAY }}>{t("entries")}</span>
+              <span style={{ fontSize:16, fontWeight:900, color:C.text, fontFamily:FONT_DISPLAY }}>{entriesTotal}</span>
+            </div>
+          </div>
           <div style={{ display:"flex", alignItems:"center", gap:8 }}>
             <button onClick={()=>setConfirmRestore(true)}
               style={{ background:"none", border:"none", cursor:"pointer", padding:4 }}
