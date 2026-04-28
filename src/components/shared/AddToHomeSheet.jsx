@@ -9,6 +9,7 @@ import { NoteModal } from '../train/NoteModal';
 import { GoalModal } from '../train/GoalModal';
 import { TargetGoalModal } from '../train/TargetGoalModal';
 import { HabitModal } from '../train/HabitModal';
+import { computeDayMap } from '../train/battlePrepHelpers';
 import { todayLocal } from '../../utils/dateUtils';
 
 export const AddToHomeSheet = ({
@@ -22,18 +23,25 @@ export const AddToHomeSheet = ({
   const [modal, setModal] = useState(null);
 
   const nextTrainingDay = useMemo(() => {
-    const today = todayLocal();
-    const plans = battleprep?.plans || [];
-    const activePlan = plans.find(p => {
-      if (p?.archived) return false;
-      const battles = p?.battles || [];
-      return battles.some(b => b?.date >= today);
-    });
-    if (!activePlan?.dailyTasks) return "";
-    const upcoming = Object.keys(activePlan.dailyTasks)
-      .filter(d => d >= today)
-      .sort();
-    return upcoming[0] || "";
+    try {
+      const today = todayLocal();
+      const plans = battleprep?.plans || [];
+      const activePlan = plans.find(p => {
+        if (p?.archived) return false;
+        const battles = p?.battles || [];
+        return battles.some(b => b?.date >= today);
+      });
+      if (!activePlan) return "";
+      const { dayMap } = computeDayMap(activePlan);
+      if (!dayMap) return "";
+      const futureTrainingDays = Object.keys(dayMap)
+        .filter(d => d >= today && dayMap[d]?.type === "training")
+        .sort();
+      return futureTrainingDays[0] || "";
+    } catch (e) {
+      console.warn("[MB] AddToHomeSheet next training day lookup failed:", e);
+      return "";
+    }
   }, [battleprep]);
 
   const closeAll = () => {
