@@ -8,11 +8,11 @@ import { Txtarea } from '../shared/Txtarea';
 import { useT } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
 
-export const HabitModal = ({ onClose, onSave, habit }) => {
+export const HabitModal = ({ onClose, onSave, habit, prefill }) => {
   const { C } = useSettings();
   const t = useT();
   const isEdit = !!habit;
-  const [name,      setName]      = useState(habit?.name      || "");
+  const [name,      setName]      = useState(habit?.name      || prefill?.name || "");
   const [frequency, setFrequency] = useState(habit?.frequency || "daily");
   const [color]                   = useState(habit?.color     || HABIT_COLORS[0]);
   const [why,       setWhy]       = useState(habit?.why       || "");

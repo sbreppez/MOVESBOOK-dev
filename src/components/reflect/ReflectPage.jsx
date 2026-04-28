@@ -13,13 +13,15 @@ import { IdeaTile } from '../train/IdeaTile';
 import { PremiumGate } from '../shared/PremiumGate';
 import { SectionBrief } from '../shared/SectionBrief';
 import { TypeChooserSheet } from '../train/TypeChooserSheet';
+import { AddToHomeSheet } from '../shared/AddToHomeSheet';
 import { ensureHttps } from '../train/helpers';
 
 export const ReflectPage = ({
-  ideas, setIdeas, moves, setMoves, reps, sparring, musicflow, habits,
+  ideas, setIdeas, moves, setMoves, reps, sparring, musicflow, habits, setHabits,
+  homeStack: _homeStack, setHomeStack, homeIdeas: _homeIdeas, setHomeIdeas: _setHomeIdeas,
   calendar, setCalendar, cats, catColors, settings, onSettingsChange,
   addToast, stance, battleprep, onToggleBattlePrepTask,
-  onOpenStanceAssessment, addCalendarEvent: _addCalendarEvent, removeCalendarEvent: _removeCalendarEvent,
+  onOpenStanceAssessment, addCalendarEvent, removeCalendarEvent: _removeCalendarEvent,
   onSubTabChange, onGoToPrep, initialMonth, sets, onAddTrigger, parentSubTab, reports, injuries,
   isPremium
 }) => {
@@ -31,6 +33,7 @@ export const ReflectPage = ({
   const [showStanceConfirm, setShowStanceConfirm] = useState(false);
   const [calendarAddTick, setCalendarAddTick] = useState(0);
   const [showInjuryHistory, setShowInjuryHistory] = useState(false);
+  const [addToHomeContext, setAddToHomeContext] = useState(null);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps -- reflectTab-only by intent; onSubTabChange should be wrapped in useCallback at parent (deferred to Session B/C)
   useEffect(() => { if (onSubTabChange) onSubTabChange(reflectTab); }, [reflectTab]);
@@ -307,6 +310,21 @@ export const ReflectPage = ({
                           {inj.description && <div style={{ fontSize:11, color:C.textSec, fontFamily:FONT_BODY, lineHeight:1.4 }}>{inj.description}</div>}
                           {inj.cause && <div style={{ fontSize:11, color:C.textMuted, fontFamily:FONT_BODY, marginTop:2 }}>{t("whatCausedIt")}: {inj.cause}</div>}
                           {inj.treatment && <div style={{ fontSize:11, color:C.textMuted, fontFamily:FONT_BODY, marginTop:2 }}>{t("treatmentPlan")}: {inj.treatment}</div>}
+                          <div style={{ display:"flex", justifyContent:"flex-end", marginTop:6 }}>
+                            <button
+                              onClick={() => {
+                                const sideTxt = inj.side ? `${t(inj.side === "left" ? "leftSide" : "rightSide")} ` : "";
+                                const ctx = `${t("resolvedInjuryContext")}: ${sideTxt}${inj.bodyPart}${dur ? `, ${dur} ${t("daysInjured")}` : ""}`;
+                                setAddToHomeContext(ctx);
+                              }}
+                              style={{ background:"transparent", border:`1px solid ${C.accent}`,
+                                color:C.accent, borderRadius:8, padding:"6px 12px",
+                                fontSize:11, fontWeight:800, fontFamily:FONT_DISPLAY,
+                                letterSpacing:1, textTransform:"uppercase",
+                                display:"flex", alignItems:"center", gap:6, cursor:"pointer" }}>
+                              <Ic n="plus" s={12} c={C.accent}/>{t("addToHome")}
+                            </button>
+                          </div>
                         </div>
                       );
                     })}
@@ -321,6 +339,19 @@ export const ReflectPage = ({
 
       {/* Type chooser for adding goals */}
       <TypeChooserSheet open={typeChooser} onClose={() => setTypeChooser(false)} onChoose={tp => { setTypeChooser(false); openModal(tp, null, addIdea); }} />
+
+      {/* Add-to-Home sheet (REFLECT → HOME loop arrow) */}
+      <AddToHomeSheet
+        open={!!addToHomeContext}
+        context={addToHomeContext || ""}
+        onClose={() => setAddToHomeContext(null)}
+        setIdeas={setIdeas}
+        setHomeStack={setHomeStack}
+        setHabits={setHabits}
+        addCalendarEvent={addCalendarEvent}
+        battleprep={battleprep}
+        addToast={addToast}
+      />
 
       {/* Delete confirmation */}
       {confirmDel && (

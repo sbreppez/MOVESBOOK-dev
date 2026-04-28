@@ -11,13 +11,13 @@ import { todayLocal } from '../../utils/dateUtils';
 import { JournalEntryCard } from './JournalEntryCard';
 import { JournalEntryInput } from './JournalEntryInput';
 
-export const TargetGoalModal = ({ onClose, onSave, idea, moves=[] }) => {
+export const TargetGoalModal = ({ onClose, onSave, idea, moves=[], prefill }) => {
   const { C, settings } = useSettings();
   const t = useT();
   const isEdit = !!idea;
   const autoLinkEnabled = settings.targetAutoLink === true;
   const [activeTab, setActiveTab] = useState(isEdit ? "journal" : "target");
-  const [title,    setTitle]    = useState(idea?.title    || "");
+  const [title,    setTitle]    = useState(idea?.title    || prefill?.title || "");
   const [target,   setTarget]   = useState(idea?.target   || 10);
   const [targetRaw, setTargetRaw] = useState(String(idea?.target || 10));
   const [unit,     setUnit]     = useState(idea?.unit     || "moves");

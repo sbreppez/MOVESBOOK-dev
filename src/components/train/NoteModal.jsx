@@ -9,14 +9,14 @@ import { useSettings } from '../../hooks/useSettings';
 import { ensureHttps } from './helpers';
 import { todayLocal } from '../../utils/dateUtils';
 
-export const NoteModal = ({ onClose, onSave, idea }) => {
+export const NoteModal = ({ onClose, onSave, idea, prefill }) => {
   const t = useT();
   const { C } = useSettings();
-  const [title, setTitle] = useState(idea?.title || "");
-  const [text,  setText]  = useState(idea?.text  || "");
+  const [title, setTitle] = useState(idea?.title || prefill?.title || "");
+  const [text,  setText]  = useState(idea?.text  || prefill?.text  || "");
   const [color, setColor] = useState(idea?.color || IDEA_COLORS[1]);
   const [link,  setLink]  = useState(idea?.link  || "");
-  const [showDate, setShowDate] = useState(idea?.showDate || "");
+  const [showDate, setShowDate] = useState(idea?.showDate || prefill?.showDate || "");
   const textRef = useRef(null);
   const autoResize = (el) => { if (!el) return; el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; };
   useEffect(() => { if (textRef.current) autoResize(textRef.current); }, []);

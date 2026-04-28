@@ -12,11 +12,11 @@ import { Txtarea } from '../shared/Txtarea';
 import { JournalEntryCard } from './JournalEntryCard';
 import { JournalEntryInput } from './JournalEntryInput';
 
-export const GoalModal = ({ onClose, onSave, idea }) => {
+export const GoalModal = ({ onClose, onSave, idea, prefill }) => {
   const t = useT();
   const isEdit = !!idea;
   const [activeTab,    setActiveTab]    = useState(isEdit ? "journal" : "goal");
-  const [title,        setTitle]        = useState(idea?.title        || "");
+  const [title,        setTitle]        = useState(idea?.title        || prefill?.title || "");
   const [why,          setWhy]          = useState(idea?.why          || "");
   const [byWhen,       setByWhen]       = useState(idea?.byWhen       || "");
   const [steps,        setSteps]        = useState(idea?.steps        || ["","",""]);
