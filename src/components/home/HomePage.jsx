@@ -140,19 +140,74 @@ export const HomePage = ({
   const [showManageRoutines, setShowManageRoutines] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
 
-  const todayTiles = useMemo(() => {
+  const sections = useMemo(() => {
     const tiles = getTilesForDate(homeStack, selectedDate, homeIdeas, ideas);
-    return [...tiles].sort((a, b) => {
-      const aPin = a.type === 'note' ? (ideas?.find(i => i.id === a.id)?.pinnedHome || false) : false;
-      const bPin = b.type === 'note' ? (ideas?.find(i => i.id === b.id)?.pinnedHome || false) : false;
-      if (aPin && !bPin) return -1;
-      if (!aPin && bPin) return 1;
-      return 0;
+
+    const today = [];
+    const notes = [];
+    const goals = [];
+
+    tiles.forEach(tile => {
+      if (tile.type === 'routine' || tile.type === 'moveUpdate') {
+        today.push(tile);
+        return;
+      }
+      if (tile.type === 'goalhabit') {
+        const habit = habits?.find(h => String(h.id) === String(tile.refId));
+        if (habit) today.push(tile);
+        else goals.push(tile);
+        return;
+      }
+      if (tile.type === 'note' || tile.type === 'idea') {
+        const note = tile.type === 'note'
+          ? ideas?.find(i => i.id === tile.id)
+          : homeIdeas?.find(i => i.id === tile.id);
+        if (note?.showDate === selectedDate) today.push(tile);
+        else notes.push(tile);
+        return;
+      }
+      today.push(tile);
     });
-  }, [homeStack, selectedDate, homeIdeas, ideas]);
+
+    notes.sort((a, b) => {
+      const aN = ideas?.find(i => i.id === a.id);
+      const bN = ideas?.find(i => i.id === b.id);
+      const aPin = aN?.pinnedHome ? 1 : 0;
+      const bPin = bN?.pinnedHome ? 1 : 0;
+      return bPin - aPin;
+    });
+
+    return { today, notes, goals };
+  }, [homeStack, selectedDate, homeIdeas, ideas, habits]);
+
+  const totalTiles = sections.today.length + sections.notes.length + sections.goals.length;
+
+  // Filter + search state (L2)
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const [sectionFilter, setSectionFilter] = useState(() => {
+    try {
+      const s = localStorage.getItem("mb_home_filter");
+      if (s) {
+        const p = JSON.parse(s);
+        if (p && typeof p === "object") {
+          return { today: p.today !== false, notes: p.notes !== false, goals: p.goals !== false };
+        }
+      }
+    } catch {}
+    return { today: true, notes: true, goals: true };
+  });
+
+  useEffect(() => {
+    try { localStorage.setItem("mb_home_filter", JSON.stringify(sectionFilter)); } catch {}
+  }, [sectionFilter]);
 
   const dayChecks = homeChecks?.[selectedDate] || {};
   const isToday = selectedDate === todayStr;
+
+  // Reset search on date change (filter persists by design)
+  useEffect(() => { setSearchOpen(false); setSearch(""); }, [selectedDate]);
 
   const dateLabel = useMemo(() => {
     const d = new Date(selectedDate + "T12:00:00");
@@ -161,7 +216,7 @@ export const HomePage = ({
     return `${month.toUpperCase()} ${d.getFullYear()}`;
   }, [selectedDate, settings?.language]);
 
-  const isBreakingDay = isToday && todayTiles.some(tile =>
+  const isBreakingDay = isToday && sections.today.some(tile =>
     tile.type === 'routine' && (/break/i.test(tile.name))
   );
 
@@ -559,45 +614,81 @@ export const HomePage = ({
       <WeekStrip selectedDate={selectedDate} onSelectDate={setSelectedDate}/>
       <SectionBrief desc={t("homeBrief")} settings={settings}/>
 
-      {/* Select/Reorder bar — OUTSIDE scroll container, always visible */}
-      {todayTiles.length >= 1 && (
-        <div style={{ display: "flex", justifyContent: "flex-end", padding: "4px 16px 0", gap: 8, flexShrink: 0 }}>
-          {/* Select mode toggle */}
-          {selectMode ? (
-            <>
-              {selectedIds.size > 0 && (
-                <button onClick={() => setConfirmBulkDelete(true)}
-                  style={{ background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex", alignItems: "center", gap: 4 }}>
-                  <Ic n="trash" s={16} c={C.accent}/>
-                  <span style={{ fontSize: 11, color: C.accent, fontWeight: 700, fontFamily: FONT_DISPLAY }}>{selectedIds.size}</span>
-                </button>
-              )}
-              <button onClick={exitSelectMode}
-                style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
-                <Ic n="x" s={16} c={C.textMuted}/>
-              </button>
-            </>
-          ) : (
-            <button onClick={() => setSelectMode(true)}
+      {/* Toolbar row — Filter+Search left, Select+Reorder right */}
+      {totalTiles >= 1 && (
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "4px 16px 0", flexShrink: 0 }}>
+          <div style={{ display: "flex", gap: 8 }}>
+            <button onClick={() => setFilterOpen(true)}
               style={{ background: "none", border: "none", cursor: "pointer", padding: 4,
-                color: C.textMuted }}>
-              <Ic n="checkCircle" s={16} c={C.textMuted}/>
+                color: (sectionFilter.today && sectionFilter.notes && sectionFilter.goals) ? C.textMuted : C.accent }}>
+              <Ic n="filter" s={16}/>
             </button>
-          )}
-          {/* Reorder toggle — hide during select mode */}
-          {!selectMode && todayTiles.length >= 2 && (
-            <button onClick={() => setShowReorder(r => !r)}
-              style={{
-                background: showReorder ? C.accent : "none",
-                border: "none", cursor: "pointer",
-                padding: "4px 8px", borderRadius: 5,
-                color: showReorder ? C.bg : C.textMuted,
-                fontSize: 13, fontWeight: 800,
-                fontFamily: FONT_DISPLAY, letterSpacing: 1,
-              }}>
-              {showReorder ? t("done") : "⇅"}
+            <button onClick={() => { setSearchOpen(s => !s); if (searchOpen) setSearch(""); }}
+              style={{ background: "none", border: "none", cursor: "pointer", padding: 4,
+                color: searchOpen ? C.accent : C.textMuted }}>
+              <Ic n="search" s={16}/>
             </button>
-          )}
+          </div>
+          <div style={{ display: "flex", gap: 8 }}>
+            {/* Select mode toggle */}
+            {selectMode ? (
+              <>
+                {selectedIds.size > 0 && (
+                  <button onClick={() => setConfirmBulkDelete(true)}
+                    style={{ background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex", alignItems: "center", gap: 4 }}>
+                    <Ic n="trash" s={16} c={C.accent}/>
+                    <span style={{ fontSize: 11, color: C.accent, fontWeight: 700, fontFamily: FONT_DISPLAY }}>{selectedIds.size}</span>
+                  </button>
+                )}
+                <button onClick={exitSelectMode}
+                  style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
+                  <Ic n="x" s={16} c={C.textMuted}/>
+                </button>
+              </>
+            ) : (
+              <button onClick={() => setSelectMode(true)}
+                style={{ background: "none", border: "none", cursor: "pointer", padding: 4,
+                  color: C.textMuted }}>
+                <Ic n="checkCircle" s={16} c={C.textMuted}/>
+              </button>
+            )}
+            {/* Reorder toggle — hide during select mode */}
+            {!selectMode && totalTiles >= 2 && (
+              <button onClick={() => setShowReorder(r => !r)}
+                style={{
+                  background: showReorder ? C.accent : "none",
+                  border: "none", cursor: "pointer",
+                  padding: "4px 8px", borderRadius: 5,
+                  color: showReorder ? C.bg : C.textMuted,
+                  fontSize: 13, fontWeight: 800,
+                  fontFamily: FONT_DISPLAY, letterSpacing: 1,
+                }}>
+                {showReorder ? t("done") : "⇅"}
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Search bar */}
+      {searchOpen && totalTiles >= 1 && (
+        <div style={{ padding: "6px 14px", background: C.surface, borderBottom: `1px solid ${C.borderLight}`, flexShrink: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", background: C.bg,
+            borderRadius: 7, padding: "5px 10px", gap: 6,
+            border: `1px solid ${search ? C.accent : C.border}` }}>
+            <Ic n="search" s={13} c={C.textMuted}/>
+            <input autoFocus value={search} onChange={e => setSearch(e.target.value)}
+              placeholder={t("search")}
+              style={{ flex: 1, background: "none", border: "none", outline: "none",
+                color: C.text, fontSize: 13, fontFamily: "inherit" }}/>
+            {search && (
+              <button onClick={() => setSearch("")}
+                style={{ background: "none", border: "none", cursor: "pointer",
+                  color: C.textMuted, padding: 0, display: "flex" }}>
+                <Ic n="x" s={13}/>
+              </button>
+            )}
+          </div>
         </div>
       )}
 
@@ -608,9 +699,9 @@ export const HomePage = ({
           <PreSessionIntel presession={presession} setPresession={setPresession}/>
         )}
 
-        {/* Tile stack */}
+        {/* Tile stack — sectioned (TODAY / NOTES / GOALS) */}
         <div style={{ padding: "6px 12px" }}>
-          {todayTiles.length === 0 && (
+          {totalTiles === 0 && (
             <div style={{ textAlign: "center", padding: "40px 20px", color: C.textMuted }}>
               <div style={{ marginBottom: 10 }}><Ic n="sun" s={32} c={C.textMuted}/></div>
               <div style={{ fontSize: 14, fontWeight: 800, fontFamily: FONT_DISPLAY, marginBottom: 6, textTransform: "uppercase" }}>
@@ -620,51 +711,88 @@ export const HomePage = ({
             </div>
           )}
 
-          {todayTiles.map((tile, idx) => (
-            <div key={tile.id} style={{ position: "relative" }}>
-              {showReorder && (
-                <div style={{
-                  position: "absolute", right: 6, top: "50%", transform: "translateY(-50%)",
-                  zIndex: 10, display: "flex", flexDirection: "column", gap: 2,
-                }}>
-                  <button onClick={() => moveTileUp(tile.id)} disabled={idx === 0}
-                    style={{
-                      width: 26, height: 26, borderRadius: 6,
-                      border: `1px solid ${C.border}`, background: C.bg,
-                      cursor: idx === 0 ? "default" : "pointer",
-                      color: idx === 0 ? C.border : C.accent,
-                      fontSize: 14, fontWeight: 700,
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                    }}>▲</button>
-                  <button onClick={() => moveTileDown(tile.id)} disabled={idx === todayTiles.length - 1}
-                    style={{
-                      width: 26, height: 26, borderRadius: 6,
-                      border: `1px solid ${C.border}`, background: C.bg,
-                      cursor: idx === todayTiles.length - 1 ? "default" : "pointer",
-                      color: idx === todayTiles.length - 1 ? C.border : C.accent,
-                      fontSize: 14, fontWeight: 700,
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                    }}>▼</button>
+          {totalTiles > 0 && (() => {
+            const q = search.toLowerCase().trim();
+            const matches = (tile) => {
+              if (!q) return true;
+              const name = resolveTileName(tile, homeIdeas, habits, ideas, moves).toLowerCase();
+              return name.includes(q);
+            };
+
+            const visibleSections = [
+              { key: 'today', label: t('sectionToday'), tiles: sectionFilter.today ? sections.today.filter(matches) : [] },
+              { key: 'notes', label: t('sectionNotes'), tiles: sectionFilter.notes ? sections.notes.filter(matches) : [] },
+              { key: 'goals', label: t('sectionGoals'), tiles: sectionFilter.goals ? sections.goals.filter(matches) : [] },
+            ];
+
+            const totalVisible = visibleSections.reduce((sum, s) => sum + s.tiles.length, 0);
+
+            if (totalVisible === 0 && q) {
+              return (
+                <div style={{ textAlign: "center", padding: 30, color: C.textMuted }}>
+                  <p style={{ fontSize: 13 }}>{t("noResultsFor")} &quot;{search}&quot;</p>
                 </div>
-              )}
-              <HomeTile tile={tile}
-                isChecked={tile.type === 'routine' && tile.steps?.length > 0 ? dayChecks[tile.id] : !!dayChecks[tile.id]}
-                onCheck={handleTileCheck}
-                onCheckStep={handleStepCheck}
-                onRemove={handleTileRemove}
-                onEdit={handleTileEdit}
-                onTogglePin={handleTogglePinHome}
-                onOpenJournal={handleOpenJournal}
-                onOpenUpdates={handleOpenUpdates}
-                selectMode={selectMode}
-                isSelected={selectedIds.has(tile.id)}
-                onToggleSelect={() => toggleSelect(tile.id)}
-                habits={habits} ideas={ideas} homeIdeas={homeIdeas} moves={moves}
-              />
-            </div>
-          ))}
+              );
+            }
 
-
+            return visibleSections.map(sec => {
+              if (sec.tiles.length === 0) return null;
+              return (
+                <div key={sec.key} style={{ marginBottom: 8 }}>
+                  <div style={{
+                    fontSize: 10, fontWeight: 800, fontFamily: FONT_DISPLAY,
+                    letterSpacing: 1.5, textTransform: "uppercase",
+                    color: C.textMuted, padding: "8px 4px 4px",
+                  }}>
+                    {sec.label} · {sec.tiles.length}
+                  </div>
+                  {sec.tiles.map((tile, idx) => (
+                    <div key={tile.id} style={{ position: "relative" }}>
+                      {showReorder && (
+                        <div style={{
+                          position: "absolute", right: 6, top: "50%", transform: "translateY(-50%)",
+                          zIndex: 10, display: "flex", flexDirection: "column", gap: 2,
+                        }}>
+                          <button onClick={() => moveTileUp(tile.id)} disabled={idx === 0}
+                            style={{
+                              width: 26, height: 26, borderRadius: 6,
+                              border: `1px solid ${C.border}`, background: C.bg,
+                              cursor: idx === 0 ? "default" : "pointer",
+                              color: idx === 0 ? C.border : C.accent,
+                              fontSize: 14, fontWeight: 700,
+                              display: "flex", alignItems: "center", justifyContent: "center",
+                            }}>▲</button>
+                          <button onClick={() => moveTileDown(tile.id)} disabled={idx === sec.tiles.length - 1}
+                            style={{
+                              width: 26, height: 26, borderRadius: 6,
+                              border: `1px solid ${C.border}`, background: C.bg,
+                              cursor: idx === sec.tiles.length - 1 ? "default" : "pointer",
+                              color: idx === sec.tiles.length - 1 ? C.border : C.accent,
+                              fontSize: 14, fontWeight: 700,
+                              display: "flex", alignItems: "center", justifyContent: "center",
+                            }}>▼</button>
+                        </div>
+                      )}
+                      <HomeTile tile={tile}
+                        isChecked={tile.type === 'routine' && tile.steps?.length > 0 ? dayChecks[tile.id] : !!dayChecks[tile.id]}
+                        onCheck={handleTileCheck}
+                        onCheckStep={handleStepCheck}
+                        onRemove={handleTileRemove}
+                        onEdit={handleTileEdit}
+                        onTogglePin={handleTogglePinHome}
+                        onOpenJournal={handleOpenJournal}
+                        onOpenUpdates={handleOpenUpdates}
+                        selectMode={selectMode}
+                        isSelected={selectedIds.has(tile.id)}
+                        onToggleSelect={() => toggleSelect(tile.id)}
+                        habits={habits} ideas={ideas} homeIdeas={homeIdeas} moves={moves}
+                      />
+                    </div>
+                  ))}
+                </div>
+              );
+            });
+          })()}
         </div>
       </div>
 
@@ -733,6 +861,38 @@ export const HomePage = ({
                 <div style={{ fontSize: 13, fontWeight: 700, fontFamily: FONT_DISPLAY, color: C.text,
                   overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{m.name}</div>
                 <div style={{ fontSize: 10, color: C.textMuted }}>{m.category}</div>
+              </div>
+            </button>
+          ))}
+        </div>
+      </BottomSheet>
+
+      {/* ── Filter BottomSheet (L2) ── */}
+      <BottomSheet open={filterOpen} onClose={() => setFilterOpen(false)} title={t("filterSections")}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+          {[
+            { key: 'today', label: t('sectionToday'), count: sections.today.length },
+            { key: 'notes', label: t('sectionNotes'), count: sections.notes.length },
+            { key: 'goals', label: t('sectionGoals'), count: sections.goals.length },
+          ].map(row => (
+            <button key={row.key}
+              onClick={() => setSectionFilter(prev => ({ ...prev, [row.key]: !prev[row.key] }))}
+              style={{
+                display: "flex", alignItems: "center", justifyContent: "space-between",
+                width: "100%", padding: "14px 16px", borderRadius: 8, cursor: "pointer",
+                background: C.surface, border: "none", textAlign: "left",
+              }}>
+              <span style={{ fontSize: 13, fontFamily: FONT_DISPLAY, fontWeight: 800,
+                letterSpacing: 1.5, textTransform: "uppercase", color: C.text }}>
+                {row.label} <span style={{ color: C.textMuted, fontWeight: 400, marginLeft: 4 }}>· {row.count}</span>
+              </span>
+              <div style={{
+                width: 18, height: 18, borderRadius: 4,
+                border: sectionFilter[row.key] ? `2px solid ${C.green}` : `2px solid ${C.border}`,
+                background: sectionFilter[row.key] ? C.green : "transparent",
+                display: "flex", alignItems: "center", justifyContent: "center",
+              }}>
+                {sectionFilter[row.key] && <Ic n="check" s={12} c="#fff"/>}
               </div>
             </button>
           ))}
@@ -888,8 +1048,9 @@ export const HomePage = ({
                   defaultStack: (prev.defaultStack || []).filter(t => !ids.includes(t.id)),
                 }));
                 // Delete underlying data for each tile
+                const allVisibleTiles = [...sections.today, ...sections.notes, ...sections.goals];
                 ids.forEach(tileId => {
-                  const tile = todayTiles.find(t => t.id === tileId);
+                  const tile = allVisibleTiles.find(t => t.id === tileId);
                   if (!tile) return;
                   if (tile.type === 'note') {
                     setIdeas(prev => prev.filter(i => i.id !== tileId));

@@ -530,6 +530,57 @@ export default function App() {
   // eslint-disable-next-line react-hooks/exhaustive-deps -- one-shot mount migration; homeMigRef.current guard enforces idempotence; habits/ideas/homeStack are read as the mount-time snapshot, not reactive triggers
   }, []);
 
+  // ── Migrate legacy homeIdeas → ideas (one-time, idempotent) — Session L2 ──
+  useEffect(() => {
+    try {
+      const migrated = localStorage.getItem("mb_home_ideas_migrated");
+      if (migrated === "1") return;
+
+      const raw = localStorage.getItem("mb_home_ideas");
+      if (!raw) {
+        localStorage.setItem("mb_home_ideas_migrated", "1");
+        return;
+      }
+
+      const legacyIdeas = JSON.parse(raw);
+      if (!Array.isArray(legacyIdeas) || legacyIdeas.length === 0) {
+        localStorage.setItem("mb_home_ideas_migrated", "1");
+        return;
+      }
+
+      const newNotes = legacyIdeas.map(li => ({
+        id: li.id,
+        type: "note",
+        title: li.title || "",
+        text: li.text || "",
+        link: li.link || "",
+        showDate: li.showDate || null,
+        pinnedHome: li.pinnedHome || false,
+        createdDate: li.createdDate || new Date().toISOString(),
+      }));
+
+      setIdeas(prev => {
+        const existingIds = new Set(prev.map(i => i.id));
+        const additions = newNotes.filter(n => !existingIds.has(n.id));
+        return [...additions, ...prev];
+      });
+
+      setHomeStack(prev => ({
+        ...prev,
+        defaultStack: (prev.defaultStack || []).map(t =>
+          t.type === "idea" ? { ...t, type: "note" } : t
+        ),
+      }));
+
+      setHomeIdeas([]);
+      localStorage.removeItem("mb_home_ideas");
+      localStorage.setItem("mb_home_ideas_migrated", "1");
+    } catch (e) {
+      console.warn("[MB] homeIdeas migration failed:", e);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- one-shot mount migration; mb_home_ideas_migrated localStorage flag enforces idempotence
+  }, []);
+
   // ── Migrate old rotation/travelling to custom attributes (one-time) ──
   useEffect(()=>{
     if(customAttrs.length===0 && moves.some(m=>m.rotation===true||m.travelling===true)){
