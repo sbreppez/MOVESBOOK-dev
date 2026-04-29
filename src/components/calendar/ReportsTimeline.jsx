@@ -14,7 +14,7 @@ const formatShortDate = (dateStr) => {
   return `${months[d.getMonth()]} ${d.getDate()}`;
 };
 
-export const ReportsTimeline = ({ moves, reps, sparring, musicflow, calendar, cats, catColors, battleprep, rivals, reports, onSelectDay }) => {
+export const ReportsTimeline = ({ moves, reps, sparring, musicflow, calendar, cats, catColors, battleprep, rivals, reports, onSelectDay, onAddToHome }) => {
   const t = useT();
   const { C } = useSettings();
   const [monthsBack, setMonthsBack] = useState(3);
@@ -39,8 +39,8 @@ export const ReportsTimeline = ({ moves, reps, sparring, musicflow, calendar, ca
   return (
     <div style={{ flex:1, overflow:"auto", padding:"10px 14px 80px" }}>
       {timeline.map((entry, _idx) => {
-        if (entry.type === "month") return <MonthTile key={`m-${entry.date}`} entry={entry} t={t} C={C} catColors={catColors}/>;
-        if (entry.type === "week") return <WeekTile key={`w-${entry.date}`} entry={entry} t={t} C={C} catColors={catColors}/>;
+        if (entry.type === "month") return <MonthTile key={`m-${entry.date}`} entry={entry} t={t} C={C} catColors={catColors} onAddToHome={onAddToHome}/>;
+        if (entry.type === "week") return <WeekTile key={`w-${entry.date}`} entry={entry} t={t} C={C} catColors={catColors} onAddToHome={onAddToHome}/>;
         return <DayRow key={`d-${entry.date}`} entry={entry} t={t} C={C} onSelectDay={onSelectDay}/>;
       })}
 
@@ -56,7 +56,7 @@ export const ReportsTimeline = ({ moves, reps, sparring, musicflow, calendar, ca
 
 // ── Monthly Tile ────────────────────────────────────────────────────────────
 
-const MonthTile = ({ entry, t, C, catColors }) => {
+const MonthTile = ({ entry, t, C, catColors, onAddToHome }) => {
   const d = entry.data;
   const date = new Date(entry.date + "T00:00:00");
   const monthKey = MONTH_KEYS[date.getMonth()];
@@ -110,13 +110,26 @@ const MonthTile = ({ entry, t, C, catColors }) => {
           {d.narrative}
         </p>
       )}
+
+      {onAddToHome && (
+        <div style={{ display:"flex", justifyContent:"flex-end", marginTop:10 }}>
+          <button onClick={() => onAddToHome(`${t("monthlyReportContext")} ${monthName} ${year}`)}
+            style={{ background:"transparent", border:`1px solid ${C.accent}`,
+              color:C.accent, borderRadius:8, padding:"6px 12px",
+              fontSize:11, fontWeight:800, fontFamily:FONT_DISPLAY,
+              letterSpacing:1, textTransform:"uppercase",
+              display:"flex", alignItems:"center", gap:6, cursor:"pointer" }}>
+            <Ic n="plus" s={12} c={C.accent}/>{t("addToHome")}
+          </button>
+        </div>
+      )}
     </div>
   );
 };
 
 // ── Weekly Tile ─────────────────────────────────────────────────────────────
 
-const WeekTile = ({ entry, t, C, catColors }) => {
+const WeekTile = ({ entry, t, C, catColors, onAddToHome }) => {
   const d = entry.data;
   const dateLabel = formatShortDate(entry.date);
 
@@ -156,6 +169,19 @@ const WeekTile = ({ entry, t, C, catColors }) => {
               {m.val ? `${m.val} ${t("movesInVocab")}` : t(m.label)}
             </span>
           ))}
+        </div>
+      )}
+
+      {onAddToHome && (
+        <div style={{ display:"flex", justifyContent:"flex-end", marginTop:8 }}>
+          <button onClick={() => onAddToHome(`${t("weeklyReportContext")} ${dateLabel}`)}
+            style={{ background:"transparent", border:`1px solid ${C.accent}`,
+              color:C.accent, borderRadius:8, padding:"5px 10px",
+              fontSize:10, fontWeight:800, fontFamily:FONT_DISPLAY,
+              letterSpacing:1, textTransform:"uppercase",
+              display:"flex", alignItems:"center", gap:6, cursor:"pointer" }}>
+            <Ic n="plus" s={11} c={C.accent}/>{t("addToHome")}
+          </button>
         </div>
       )}
     </div>

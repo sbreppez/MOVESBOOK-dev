@@ -130,7 +130,7 @@ const fmtSecs = (s) => {
 };
 
 // ── Component ──
-export const MyStanceSection = ({ moves, stance, sparring, calendar, onOpenAssessment }) => {
+export const MyStanceSection = ({ moves, stance, sparring, calendar, onOpenAssessment, onAddToHome }) => {
   const { C } = useSettings();
   const t = useT();
   const [showShare, setShowShare] = useState(false);
@@ -238,6 +238,16 @@ export const MyStanceSection = ({ moves, stance, sparring, calendar, onOpenAsses
               <div style={{ display:"flex", alignItems:"center", gap:8 }}>
                 <span style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:14, color:C.text }}>{cur}</span>
                 <span style={{ fontSize:13, color:arrowColor, fontWeight:700 }}>{arrow}</span>
+                {onAddToHome && (
+                  <button onClick={(e) => {
+                    e.stopPropagation();
+                    onAddToHome(`${t("stanceContext")}: ${t(d)} ${cur} ${arrow}`);
+                  }} style={{ background:"none", border:"none", cursor:"pointer",
+                    padding:4, marginLeft:2, display:"flex", alignItems:"center" }}
+                    aria-label={t("addToHome")}>
+                    <Ic n="plus" s={12} c={C.textMuted}/>
+                  </button>
+                )}
               </div>
             </div>
           );

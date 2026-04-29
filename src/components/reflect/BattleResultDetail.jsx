@@ -34,7 +34,7 @@ import { PRESET_META } from '../train/battlePrepHelpers';
  *    at reflection phase. Only called when both plan and battle are present.
  *  - t: translation function.
  */
-export const BattleResultDetail = ({ open, battle, plan, dayMap, onClose, onLogReflection, onOpenPrep, t }) => {
+export const BattleResultDetail = ({ open, battle, plan, dayMap, onClose, onLogReflection, onOpenPrep, onAddToHome, t }) => {
   // Render an empty BottomSheet when no battle is selected so the parent can
   // keep `open` purely tied to a state setter without guarding.
   if (!battle) {
@@ -84,10 +84,27 @@ export const BattleResultDetail = ({ open, battle, plan, dayMap, onClose, onLogR
       )}
 
       {hasReflection ? (
-        // Always-expanded card — read-only full reflection
-        <div style={{ background: C.surface, borderRadius: 8, overflow: "hidden" }}>
-          <BattleResultCard battle={battle} plan={plan} t={t} expanded={true} />
-        </div>
+        <>
+          {/* Always-expanded card — read-only full reflection */}
+          <div style={{ background: C.surface, borderRadius: 8, overflow: "hidden" }}>
+            <BattleResultCard battle={battle} plan={plan} t={t} expanded={true} />
+          </div>
+          {onAddToHome && (
+            <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 12 }}>
+              <button
+                onClick={() => onAddToHome(`${t("battleResultContext")}: ${title}`)}
+                style={{
+                  background: "transparent", border: `1px solid ${C.accent}`,
+                  color: C.accent, borderRadius: 8, padding: "6px 12px",
+                  fontSize: 11, fontWeight: 800, fontFamily: FONT_DISPLAY,
+                  letterSpacing: 1, textTransform: "uppercase",
+                  display: "flex", alignItems: "center", gap: 6, cursor: "pointer",
+                }}>
+                <Ic n="plus" s={12} c={C.accent}/>{t("addToHome")}
+              </button>
+            </div>
+          )}
+        </>
       ) : (
         // Empty state — message + CTA. The CTA forks on battle.completed:
         //   - completed: LOG REFLECTION (deep-links to BattleDayView at

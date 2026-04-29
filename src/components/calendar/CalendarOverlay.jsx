@@ -7,7 +7,6 @@ import { Ic } from '../shared/Ic';
 import { EXERTION_OPTIONS, BODY_PARTS, BODY_STATES } from '../shared/BodyCheckIn';
 import { SessionJournal } from './SessionJournal';
 import { computeAllDayMaps, computeDayMap, getTasksForDay, getPrevDayTasks } from '../train/battlePrepHelpers';
-import { ReportsTimeline } from './ReportsTimeline';
 import { Modal } from '../shared/Modal';
 import { BottomSheet } from '../shared/BottomSheet';
 import { IdeaForm } from '../home/IdeaForm';
@@ -31,7 +30,8 @@ export const CalendarOverlay = ({
   addToast,
   onClose, onGoToPrep,
   battleprep, onToggleBattlePrepTask, initialMonth,
-  inline, onAddTrigger, reports, isPremium,
+  inline, onAddTrigger, reports: _reports, isPremium,
+  onAddToHome,
 }) => {
   const t = useT();
   const today = todayLocal();
@@ -45,7 +45,6 @@ export const CalendarOverlay = ({
   const [editEvent, setEditEvent] = useState(null);
   const [showTypePicker, setShowTypePicker] = useState(false);
   const [battlePrepPrompt, setBattlePrepPrompt] = useState(null);
-  const [calView, setCalView] = useState("days");
   const [confirmDeleteNote, setConfirmDeleteNote] = useState(null);
   const [editHomeNote, setEditHomeNote] = useState(null);
   const [detailBattle, setDetailBattle] = useState(null); // { battle, plan } | null
@@ -296,25 +295,8 @@ export const CalendarOverlay = ({
         </button>
       </div>}
 
-      {/* Days / Reports toggle — inline mode only, hidden when single option */}
-      {inline && isPremium && (
-        <div style={{ display: "flex", gap: 8, padding: "8px 16px", flexShrink: 0 }}>
-          {[["days", t("calDays")], ["reports", t("calReports")]].map(([id, label]) => {
-            const on = calView === id;
-            return (
-              <button key={id} onClick={() => setCalView(id)}
-                style={{ background: "none", border: "none", cursor: "pointer", padding: "4px 0",
-                  fontFamily: FONT_DISPLAY, fontWeight: 800, fontSize: 14, letterSpacing: 1.5,
-                  textTransform: "uppercase", color: on ? C.text : C.textMuted }}>
-                <span style={{ borderBottom: `2px solid ${on ? C.accent : "transparent"}`, paddingBottom: 3 }}>{label}</span>
-              </button>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Log Session button — ghost/outline style, inline mode + days view only */}
-      {inline && (!isPremium || calView === "days") && (
+      {/* Log Session button — ghost/outline style, inline mode only */}
+      {inline && (
         <div style={{ padding:"8px 16px 0", flexShrink:0 }}>
           <button onClick={() => {
             setEditEvent({ type: "training", date: selectedDay });
@@ -336,7 +318,7 @@ export const CalendarOverlay = ({
       )}
 
       {/* Days view */}
-      {(!inline || calView === "days") && <>
+      {<>
       {/* Battle Prep prompt — shown after saving a future battle event */}
       {battlePrepPrompt && (
         <div style={{ margin: "8px 12px", background: `${C.accent}10`, border: `1px solid ${C.accent}30`,
@@ -862,15 +844,6 @@ export const CalendarOverlay = ({
       </div>
       </>}
 
-      {/* Reports timeline */}
-      {inline && calView === "reports" && (
-        <ReportsTimeline
-          moves={moves} reps={reps} sparring={sparring} musicflow={musicflow}
-          calendar={calendar} cats={cats} catColors={catColors}
-          battleprep={battleprep} rivals={null} reports={reports}
-          onSelectDay={(dateStr) => { setCalView("days"); setSelectedDay(dateStr); setShowTypePicker(false); }}/>
-      )}
-
       {/* Edit home-idea note */}
       {editHomeNote && (
         <BottomSheet open={true} onClose={() => setEditHomeNote(null)} title={t("editNote")}>
@@ -955,6 +928,7 @@ export const CalendarOverlay = ({
             onGoToPrep({ focus: "plan", planId, date });
           }
         }}
+        onAddToHome={onAddToHome}
         t={t}
       />
     </div>

@@ -28,9 +28,14 @@ function getTilesForDate(homeStack, selectedDate, homeIdeas, ideas) {
 
   const base = (homeStack.defaultStack || []).filter(tile => {
     if (removed.includes(tile.id)) return false;
-    if (tile.type === 'goalhabit') return true;
+    if (tile.type === 'goalhabit') {
+      const ref = ideas?.find(i => String(i.id) === String(tile.refId));
+      if (ref?.archived) return false;
+      return true;
+    }
     if (tile.type === 'note') {
       const note = ideas?.find(i => i.id === tile.id);
+      if (note?.archived) return false;
       if (note?.showDate && selectedDate < note.showDate) return false;
       return true;
     }
@@ -83,6 +88,7 @@ export const HomePage = ({
   homeStack, setHomeStack, homeIdeas, setHomeIdeas, homeChecks, setHomeChecks,
   onAddTrigger, addCalendarEvent, removeCalendarEvent, calendar,
   moves, setMoves, cats, catColors, customAttrs, setCustomAttrs, isPremium,
+  addToast,
 }) => {
   const { C } = useSettings();
   const t = useT();
@@ -134,6 +140,67 @@ export const HomePage = ({
   const exitSelectMode = () => {
     setSelectMode(false);
     setSelectedIds(new Set());
+  };
+
+  const handleSingleArchive = (tile) => {
+    const archive = (id) => {
+      setIdeas(prev => prev.map(i =>
+        String(i.id) === String(id)
+          ? { ...i, archived: true, archivedDate: new Date().toISOString() }
+          : i
+      ));
+    };
+    let archivedCount = 0;
+    if (tile.type === 'note') {
+      archive(tile.id);
+      archivedCount = 1;
+    } else if (tile.type === 'goalhabit') {
+      const ref = ideas?.find(i => String(i.id) === String(tile.refId) && (i.type === 'goal' || i.type === 'target'));
+      if (ref) {
+        archive(tile.refId);
+        archivedCount = 1;
+      }
+    }
+    if (archivedCount > 0) {
+      addToast?.({ icon: "archive", title: t("archivedFromHome") });
+    }
+  };
+
+  const handleBulkArchive = () => {
+    const tilesNow = sections.today.concat(sections.notes, sections.goals);
+    const selected = tilesNow.filter(tile => selectedIds.has(tile.id));
+    let archivable = 0;
+    let skipped = 0;
+    setIdeas(prev => {
+      let next = prev;
+      selected.forEach(tile => {
+        if (tile.type === 'note') {
+          next = next.map(i => String(i.id) === String(tile.id)
+            ? { ...i, archived: true, archivedDate: new Date().toISOString() }
+            : i);
+          archivable++;
+        } else if (tile.type === 'goalhabit') {
+          const ref = prev.find(i => String(i.id) === String(tile.refId) && (i.type === 'goal' || i.type === 'target'));
+          if (ref) {
+            next = next.map(i => String(i.id) === String(tile.refId)
+              ? { ...i, archived: true, archivedDate: new Date().toISOString() }
+              : i);
+            archivable++;
+          } else {
+            skipped++;
+          }
+        } else {
+          skipped++;
+        }
+      });
+      return next;
+    });
+    exitSelectMode();
+    if (archivable > 0 && skipped > 0) {
+      addToast?.({ icon: "archive", title: t("archivedSomeOfSelected").replace("{n}", archivable).replace("{total}", archivable + skipped) });
+    } else if (archivable > 0) {
+      addToast?.({ icon: "archive", title: t("archivedItemsCount").replace("{n}", archivable) });
+    }
   };
 
   // Feature 4: manage routines + reset confirm
@@ -634,6 +701,13 @@ export const HomePage = ({
             {selectMode ? (
               <>
                 {selectedIds.size > 0 && (
+                  <button onClick={handleBulkArchive}
+                    style={{ background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex", alignItems: "center", gap: 4 }}
+                    aria-label={t("archive")}>
+                    <Ic n="archive" s={16} c={C.textSec}/>
+                  </button>
+                )}
+                {selectedIds.size > 0 && (
                   <button onClick={() => setConfirmBulkDelete(true)}
                     style={{ background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex", alignItems: "center", gap: 4 }}>
                     <Ic n="trash" s={16} c={C.accent}/>
@@ -780,6 +854,7 @@ export const HomePage = ({
                         onRemove={handleTileRemove}
                         onEdit={handleTileEdit}
                         onTogglePin={handleTogglePinHome}
+                        onArchive={handleSingleArchive}
                         onOpenJournal={handleOpenJournal}
                         onOpenUpdates={handleOpenUpdates}
                         selectMode={selectMode}
