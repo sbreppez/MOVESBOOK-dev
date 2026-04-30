@@ -220,10 +220,6 @@ export default function App() {
     try { const s=localStorage.getItem("mb_home_stack"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{}
     return { defaultStack:[], overrides:{} };
   });
-  const [homeIdeas, setHomeIdeas] = useState(() => {
-    try { const s=localStorage.getItem("mb_home_ideas"); if(s){const p=JSON.parse(s); if(Array.isArray(p)) return p;} } catch{}
-    return [];
-  });
   const [homeChecks, setHomeChecks] = useState(() => {
     try { const s=localStorage.getItem("mb_home_checks"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{}
     return {};
@@ -274,7 +270,6 @@ export default function App() {
   useEffect(()=>{ saveLocal("mb_presession", presession); },[presession]);
   useEffect(()=>{ saveLocal("mb_injuries", injuries); },[injuries]);
   useEffect(()=>{ saveLocal("mb_home_stack", homeStack); },[homeStack]);
-  useEffect(()=>{ saveLocal("mb_home_ideas", homeIdeas); },[homeIdeas]);
   useEffect(()=>{ saveLocal("mb_home_checks", homeChecks); },[homeChecks]);
   useEffect(()=>{ saveLocal("mb_ideas",   ideas);
     const timer = setTimeout(() => {
@@ -326,7 +321,6 @@ export default function App() {
       presession:  save("presession"),
       injuries:    save("injuries"),
       homeStack:   save("homeStack"),
-      homeIdeas:   save("homeIdeas"),
       homeChecks:  save("homeChecks"),
       profilePhoto: save("profilePhoto"),
     };
@@ -361,7 +355,6 @@ export default function App() {
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.presession?.(fbUser.uid, presession); },[presession, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.injuries?.(fbUser.uid, injuries); },[injuries, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.homeStack?.(fbUser.uid, homeStack); },[homeStack, fbUser]);
-  useEffect(()=>{ if(fbUser?.uid) dbSave.current.homeIdeas?.(fbUser.uid, homeIdeas); },[homeIdeas, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.homeChecks?.(fbUser.uid, homeChecks); },[homeChecks, fbUser]);
   useEffect(()=>{ if(fbUser?.uid && profilePhoto && profilePhoto.startsWith('data:')) dbSave.current.profilePhoto?.(fbUser.uid, profilePhoto); },[profilePhoto, fbUser]);
 
@@ -452,8 +445,6 @@ export default function App() {
           if (inj) { try { const p=JSON.parse(inj); if(Array.isArray(p)) setInjuries(p); } catch {} }
           const hs = localStorage.getItem("mb_home_stack");
           if (hs) { try { const p=JSON.parse(hs); if(p&&typeof p==="object") setHomeStack(p); } catch {} }
-          const hi = localStorage.getItem("mb_home_ideas");
-          if (hi) { try { const p=JSON.parse(hi); if(Array.isArray(p)) setHomeIdeas(p); } catch {} }
           const hc = localStorage.getItem("mb_home_checks");
           if (hc) { try { const p=JSON.parse(hc); if(p&&typeof p==="object") setHomeChecks(p); } catch {} }
           const ppho = unwrapPhoto(localStorage.getItem("mb_profile_photo"));
@@ -509,7 +500,6 @@ export default function App() {
         setMilestonesShown([]);
         milestonesInitRef.current = false;
         setHomeStack({ defaultStack:[], overrides:{} });
-        setHomeIdeas([]);
         setHomeChecks({});
       }
     }
@@ -528,57 +518,6 @@ export default function App() {
     try { const raw = localStorage.getItem("mb_blocks"); if (raw) { const p = JSON.parse(raw); if (Array.isArray(p)) migBlocks = p; } } catch {}
     runHomeMigration(migBlocks, habits, ideas, homeStack, setHomeStack);
   // eslint-disable-next-line react-hooks/exhaustive-deps -- one-shot mount migration; homeMigRef.current guard enforces idempotence; habits/ideas/homeStack are read as the mount-time snapshot, not reactive triggers
-  }, []);
-
-  // ── Migrate legacy homeIdeas → ideas (one-time, idempotent) — Session L2 ──
-  useEffect(() => {
-    try {
-      const migrated = localStorage.getItem("mb_home_ideas_migrated");
-      if (migrated === "1") return;
-
-      const raw = localStorage.getItem("mb_home_ideas");
-      if (!raw) {
-        localStorage.setItem("mb_home_ideas_migrated", "1");
-        return;
-      }
-
-      const legacyIdeas = JSON.parse(raw);
-      if (!Array.isArray(legacyIdeas) || legacyIdeas.length === 0) {
-        localStorage.setItem("mb_home_ideas_migrated", "1");
-        return;
-      }
-
-      const newNotes = legacyIdeas.map(li => ({
-        id: li.id,
-        type: "note",
-        title: li.title || "",
-        text: li.text || "",
-        link: li.link || "",
-        showDate: li.showDate || null,
-        pinnedHome: li.pinnedHome || false,
-        createdDate: li.createdDate || new Date().toISOString(),
-      }));
-
-      setIdeas(prev => {
-        const existingIds = new Set(prev.map(i => i.id));
-        const additions = newNotes.filter(n => !existingIds.has(n.id));
-        return [...additions, ...prev];
-      });
-
-      setHomeStack(prev => ({
-        ...prev,
-        defaultStack: (prev.defaultStack || []).map(t =>
-          t.type === "idea" ? { ...t, type: "note" } : t
-        ),
-      }));
-
-      setHomeIdeas([]);
-      localStorage.removeItem("mb_home_ideas");
-      localStorage.setItem("mb_home_ideas_migrated", "1");
-    } catch (e) {
-      console.warn("[MB] homeIdeas migration failed:", e);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- one-shot mount migration; mb_home_ideas_migrated localStorage flag enforces idempotence
   }, []);
 
   // ── Migrate pinnedNotes → pinnedHome (one-time, idempotent) — Session L3a ──
@@ -803,10 +742,10 @@ export default function App() {
             </div>
           )}
           <TrainModalCtx.Provider value={{ openModal:(type,idea,onSave)=>{ setTrainModal({type,idea,onSave}); } }}>
-            {tab==="home" && !showCreate && <HomePage habits={habits} setHabits={setHabits} injuries={injuries} setInjuries={setInjuries} presession={presession} setPresession={setPresession} ideas={ideas} setIdeas={setIdeas} settings={appSettings} onSettingsChange={setAppSettings} homeStack={homeStack} setHomeStack={setHomeStack} homeIdeas={homeIdeas} setHomeIdeas={setHomeIdeas} homeChecks={homeChecks} setHomeChecks={setHomeChecks} onAddTrigger={addTick} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} calendar={calendar} moves={moves} setMoves={setMovesGrad} cats={cats} catColors={catColors} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} isPremium={isPremium} addToast={addToast}/>}
+            {tab==="home" && !showCreate && <HomePage habits={habits} setHabits={setHabits} injuries={injuries} setInjuries={setInjuries} presession={presession} setPresession={setPresession} ideas={ideas} setIdeas={setIdeas} settings={appSettings} onSettingsChange={setAppSettings} homeStack={homeStack} setHomeStack={setHomeStack} homeChecks={homeChecks} setHomeChecks={setHomeChecks} onAddTrigger={addTick} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} calendar={calendar} moves={moves} setMoves={setMovesGrad} cats={cats} catColors={catColors} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} isPremium={isPremium} addToast={addToast}/>}
             {tab==="moves" && !showCreate && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} catDomains={catDomains} setCatDomains={setCatDomains} sets={sets} setSets={setSets} addToast={addToast} settings={appSettings} onSettingsChange={setAppSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} reminders={reminders} onRemindersChange={setReminders} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}} onOpenManageReminders={()=>setShowManageReminders(true)} isPremium={isPremium} staleCount={staleCount} onOpenExplore={()=>{if(!isPremium){setGatedFeature("explore");return;}setShowLab(true);}} onOpenRRR={()=>{if(!isPremium){setGatedFeature("rrr");return;}setShowRRR(true);}} onOpenCombine={()=>{if(!isPremium){setGatedFeature("combine");return;}setShowComboMachine(true);}} onOpenMap={()=>{if(!isPremium){setGatedFeature("map");return;}setShowFlowMap(true);}} onOpenFlashCards={()=>{if(!isPremium){setGatedFeature("flashCards");return;}setShowFlashCards(true);}} onOpenTools={()=>setShowCreate(true)} onOpenFlow={()=>{if(!isPremium){setGatedFeature("flow");return;}setShowMusicFlow(true);}} onBulkTrigger={bulkTrigger}/>}
             {tab==="battle" && !showCreate && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} addToast={addToast} freestyle={freestyle} onFreestyleChange={setFreestyle} rivals={rivals} onRivalsChange={setRivals} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} isPremium={isPremium} onSimulate={()=>{if(!isPremium){setGatedFeature("compSim");return;}setShowCompSim(true);}} onOpenSparring={()=>setShowSparring(true)} battleprep={battleprep} setBattleprep={setBattleprep} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={()=>setBattlePrepSeed(null)} onOpenSharedCalendar={(im)=>{setCalendarInitialMonth(im||null); setTab("reflect"); setSubTab("calendar");}}/>}
-            {tab==="reflect" && !showCreate && <ReflectPage isPremium={isPremium} ideas={ideas} setIdeas={setIdeas} moves={moves} setMoves={setMovesGrad} reps={reps} sparring={sparring} musicflow={musicflow} habits={habits} setHabits={setHabits} homeStack={homeStack} setHomeStack={setHomeStack} homeIdeas={homeIdeas} setHomeIdeas={setHomeIdeas} calendar={calendar} setCalendar={setCalendar} cats={cats} catColors={catColors} settings={appSettings} onSettingsChange={setAppSettings} addToast={addToast} stance={stance} battleprep={battleprep} onToggleBattlePrepTask={(planId,dateStr,taskIdx)=>{setBattleprep(prev=>{const plans=(prev.plans||[]).map(p=>{if(p.id!==planId) return p;const key=dateStr+"-"+taskIdx;return {...p, completedTasks:{...(p.completedTasks||{}), [key]:!(p.completedTasks||{})[key]}};});return {...prev, plans};});}} onOpenStanceAssessment={()=>setShowStanceAssessment(true)} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onSubTabChange={setSubTab} onGoToPrep={(seed)=>{setBattlePrepSeed(seed);setTab("battle");}} initialMonth={calendarInitialMonth} sets={sets} onAddTrigger={addTick} parentSubTab={subTab} reports={reports} injuries={injuries}/>}
+            {tab==="reflect" && !showCreate && <ReflectPage isPremium={isPremium} ideas={ideas} setIdeas={setIdeas} moves={moves} setMoves={setMovesGrad} reps={reps} sparring={sparring} musicflow={musicflow} habits={habits} setHabits={setHabits} homeStack={homeStack} setHomeStack={setHomeStack} calendar={calendar} setCalendar={setCalendar} cats={cats} catColors={catColors} settings={appSettings} onSettingsChange={setAppSettings} addToast={addToast} stance={stance} battleprep={battleprep} onToggleBattlePrepTask={(planId,dateStr,taskIdx)=>{setBattleprep(prev=>{const plans=(prev.plans||[]).map(p=>{if(p.id!==planId) return p;const key=dateStr+"-"+taskIdx;return {...p, completedTasks:{...(p.completedTasks||{}), [key]:!(p.completedTasks||{})[key]}};});return {...prev, plans};});}} onOpenStanceAssessment={()=>setShowStanceAssessment(true)} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onSubTabChange={setSubTab} onGoToPrep={(seed)=>{setBattlePrepSeed(seed);setTab("battle");}} initialMonth={calendarInitialMonth} sets={sets} onAddTrigger={addTick} parentSubTab={subTab} reports={reports} injuries={injuries}/>}
           </TrainModalCtx.Provider>
           {showRepCounter&&<RepCounter moves={moves} catColors={catColors} reps={reps}
             preselectedMove={repCounterPreselect}

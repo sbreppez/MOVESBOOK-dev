@@ -5,7 +5,7 @@ import { useT } from '../../hooks/useTranslation';
 import { Ic } from '../shared/Ic';
 import { ExpandableText } from '../shared/ExpandableText';
 
-export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEdit, onTogglePin, onArchive, onOpenJournal, onOpenUpdates, selectMode, isSelected, onToggleSelect, habits, ideas, homeIdeas, moves }) => {
+export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEdit, onTogglePin, onArchive, onOpenJournal, onOpenUpdates, selectMode, isSelected, onToggleSelect, habits, ideas, moves }) => {
   const { C } = useSettings();
   const t = useT();
   const [expanded, setExpanded] = useState(false);
@@ -34,15 +34,6 @@ export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEd
     isPinned = note?.pinnedHome || false;
     if (note?.link) {
       extraInfo = note.link;
-    }
-  } else if (tile.type === 'idea') {
-    const idea = homeIdeas?.find(i => i.id === tile.id);
-    emoji = idea?.emoji || null;
-    fallbackIcon = "bulb";
-    name = idea?.title || "";
-    description = idea?.text || "";
-    if (idea?.link) {
-      extraInfo = idea.link;
     }
   } else if (tile.type === 'goalhabit') {
     const habit = habits?.find(h => String(h.id) === String(tile.refId));
@@ -202,8 +193,8 @@ export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEd
           </div>
         )}
 
-        {/* Idea link */}
-        {(tile.type === 'idea' || tile.type === 'note') && extraInfo && (
+        {/* Note link */}
+        {tile.type === 'note' && extraInfo && (
           <button onClick={e => { e.stopPropagation(); window.open(extraInfo, "_blank"); }}
             style={{
               display: "inline-flex", alignItems: "center", gap: 3,
@@ -265,7 +256,7 @@ export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEd
                 color: C.text, fontSize: 12, fontFamily: "inherit" }}>
               <Ic n="edit" s={12} c={C.textSec}/>{tile.type === 'moveUpdate' ? t("editMoveDetails") : t("edit")}
             </button>
-            {(tile.type === 'note' || tile.type === 'idea') && (
+            {tile.type === 'note' && (
               <button onClick={() => { setMenu(false); onTogglePin?.(tile); }}
                 style={{ width: "100%", padding: "9px 13px", background: "none", border: "none",
                   cursor: "pointer", display: "flex", alignItems: "center", gap: 8,

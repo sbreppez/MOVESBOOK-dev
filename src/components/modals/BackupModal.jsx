@@ -24,7 +24,7 @@ const BACKUP_KEYS = {
   // Body & prep
   presession: "mb_presession", injuries: "mb_injuries",
   // HOME tiles
-  homeStack: "mb_home_stack", homeIdeas: "mb_home_ideas", homeChecks: "mb_home_checks",
+  homeStack: "mb_home_stack", homeChecks: "mb_home_checks",
   // Profile photo
   profilePhoto: "mb_profile_photo",
 };

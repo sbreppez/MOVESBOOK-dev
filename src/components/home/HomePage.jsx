@@ -20,7 +20,7 @@ import { Btn } from '../shared/Btn';
 import { SectionBrief } from '../shared/SectionBrief';
 import { todayLocal } from '../../utils/dateUtils';
 
-function getTilesForDate(homeStack, selectedDate, homeIdeas, ideas) {
+function getTilesForDate(homeStack, selectedDate, ideas) {
   if (!homeStack) return [];
   const dow = new Date(selectedDate + "T12:00:00").getDay();
   const overrides = homeStack.overrides?.[selectedDate] || {};
@@ -39,11 +39,6 @@ function getTilesForDate(homeStack, selectedDate, homeIdeas, ideas) {
       if (note?.showDate && selectedDate < note.showDate) return false;
       return true;
     }
-    if (tile.type === 'idea') {
-      const idea = homeIdeas?.find(i => i.id === tile.id);
-      if (idea?.showDate && selectedDate < idea.showDate) return false;
-      return true;
-    }
     if (tile.type === 'moveUpdate') return true;
     const r = tile.repeat || { type: "daily", days: [] };
     if (r.type === "daily") return true;
@@ -58,15 +53,11 @@ function getTilesForDate(homeStack, selectedDate, homeIdeas, ideas) {
 }
 
 // Resolve a tile's display name for confirmations
-function resolveTileName(tile, homeIdeas, habits, ideas, moves) {
+function resolveTileName(tile, habits, ideas, moves) {
   if (tile.type === 'routine') return tile.name || "";
   if (tile.type === 'note') {
     const note = ideas?.find(i => i.id === tile.id);
     return note?.title || note?.text?.slice(0, 60) || "";
-  }
-  if (tile.type === 'idea') {
-    const idea = homeIdeas?.find(i => i.id === tile.id);
-    return idea?.title || idea?.text?.slice(0, 60) || "";
   }
   if (tile.type === 'goalhabit') {
     const habit = habits?.find(h => String(h.id) === String(tile.refId));
@@ -85,7 +76,7 @@ export const HomePage = ({
   habits, setHabits,
   injuries: _injuries, setInjuries: _setInjuries, presession, setPresession,
   ideas, setIdeas, settings, onSettingsChange: _onSettingsChange,
-  homeStack, setHomeStack, homeIdeas, setHomeIdeas, homeChecks, setHomeChecks,
+  homeStack, setHomeStack, homeChecks, setHomeChecks,
   onAddTrigger, addCalendarEvent, removeCalendarEvent, calendar,
   moves, setMoves, cats, catColors, customAttrs, setCustomAttrs, isPremium,
   addToast,
@@ -208,7 +199,7 @@ export const HomePage = ({
   const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   const sections = useMemo(() => {
-    const tiles = getTilesForDate(homeStack, selectedDate, homeIdeas, ideas);
+    const tiles = getTilesForDate(homeStack, selectedDate, ideas);
 
     const today = [];
     const notes = [];
@@ -225,10 +216,8 @@ export const HomePage = ({
         else goals.push(tile);
         return;
       }
-      if (tile.type === 'note' || tile.type === 'idea') {
-        const note = tile.type === 'note'
-          ? ideas?.find(i => i.id === tile.id)
-          : homeIdeas?.find(i => i.id === tile.id);
+      if (tile.type === 'note') {
+        const note = ideas?.find(i => i.id === tile.id);
         if (note?.showDate === selectedDate) today.push(tile);
         else notes.push(tile);
         return;
@@ -245,7 +234,7 @@ export const HomePage = ({
     });
 
     return { today, notes, goals };
-  }, [homeStack, selectedDate, homeIdeas, ideas, habits]);
+  }, [homeStack, selectedDate, ideas, habits]);
 
   const totalTiles = sections.today.length + sections.notes.length + sections.goals.length;
 
@@ -410,10 +399,6 @@ export const HomePage = ({
         ...prev,
         defaultStack: prev.defaultStack.filter(t => t.id !== tile.id),
       }));
-      if (tile.type === 'idea') {
-        setHomeIdeas(prev => prev.filter(i => i.id !== tile.id));
-        // TODO: remove linked calendar event (needs calendar state to find eventId by ideaId)
-      }
       if (tile.type === 'note') {
         setIdeas(prev => prev.filter(i => i.id !== tile.id));
         // TODO: remove linked calendar events by ideaId (removeCalendarEvent filters by event.id, not ideaId)
@@ -450,7 +435,7 @@ export const HomePage = ({
       }
       return;
     }
-    if (tile.type === 'routine' || tile.type === 'idea' || tile.type === 'note' || tile.type === 'goalhabit') {
+    if (tile.type === 'routine' || tile.type === 'note' || tile.type === 'goalhabit') {
       setEditTile(tile);
     }
   };
@@ -504,25 +489,6 @@ export const HomePage = ({
           ),
         }));
       }
-    } else if (editTile.type === 'idea') {
-      const oldIdea = homeIdeas?.find(i => i.id === editTile.id);
-      setHomeIdeas(prev => prev.map(i =>
-        i.id === editTile.id ? { ...i, ...fields } : i
-      ));
-      // Add calendar event if showDate changed or was added
-      const oldDate = oldIdea?.showDate;
-      const newDate = fields.showDate;
-      if (oldDate !== newDate && newDate && addCalendarEvent) {
-        addCalendarEvent({
-          date: newDate,
-          type: "journal",
-          title: fields.title || oldIdea?.title || "Idea",
-          text: fields.text || "",
-          source: "home-idea",
-          ideaId: editTile.id,
-        }, { silent: true });
-      }
-      // TODO: remove old calendar event when date changes/removed (needs calendar state access)
     } else if (editTile.type === 'note') {
       const oldNote = ideas?.find(i => i.id === editTile.id);
       setIdeas(prev => prev.map(i =>
@@ -789,7 +755,7 @@ export const HomePage = ({
             const q = search.toLowerCase().trim();
             const matches = (tile) => {
               if (!q) return true;
-              const name = resolveTileName(tile, homeIdeas, habits, ideas, moves).toLowerCase();
+              const name = resolveTileName(tile, habits, ideas, moves).toLowerCase();
               return name.includes(q);
             };
 
@@ -860,7 +826,7 @@ export const HomePage = ({
                         selectMode={selectMode}
                         isSelected={selectedIds.has(tile.id)}
                         onToggleSelect={() => toggleSelect(tile.id)}
-                        habits={habits} ideas={ideas} homeIdeas={homeIdeas} moves={moves}
+                        habits={habits} ideas={ideas} moves={moves}
                       />
                     </div>
                   ))}
@@ -1055,7 +1021,7 @@ export const HomePage = ({
         <Modal title={t("confirm")} onClose={() => setConfirmRemove(null)}>
           <p style={{ color: C.textSec, fontSize: 13, lineHeight: 1.6, marginBottom: 16 }}>
             <span style={{ fontWeight: 700, color: C.text }}>
-              {resolveTileName(confirmRemove, homeIdeas, habits, ideas, moves)}
+              {resolveTileName(confirmRemove, habits, ideas, moves)}
             </span>
           </p>
           <div style={{ display: "flex", gap: 8, flexDirection: "column" }}>
@@ -1069,12 +1035,6 @@ export const HomePage = ({
             {confirmRemove.type === 'routine' && (confirmRemove.repeat?.type === 'none' || !confirmRemove.repeat) && (
               <Btn variant="primary" onClick={() => doRemove("allDays")}>{t("deletePermanently")}</Btn>
             )}
-
-            {/* Idea: Just today + Delete permanently */}
-            {confirmRemove.type === 'idea' && (<>
-              <Btn variant="secondary" onClick={() => doRemove("justToday")}>{t("justToday")}</Btn>
-              <Btn variant="primary" onClick={() => doRemove("allDays")}>{t("deletePermanently")}</Btn>
-            </>)}
 
             {/* Note: Remove from here + Delete everywhere */}
             {confirmRemove.type === 'note' && (<>
@@ -1129,8 +1089,6 @@ export const HomePage = ({
                   if (!tile) return;
                   if (tile.type === 'note') {
                     setIdeas(prev => prev.filter(i => i.id !== tileId));
-                  } else if (tile.type === 'idea') {
-                    setHomeIdeas(prev => prev.filter(i => i.id !== tileId));
                   } else if (tile.type === 'goalhabit' && tile.refId) {
                     const isHabit = habits?.some(h => String(h.id) === String(tile.refId));
                     if (isHabit) {
@@ -1170,11 +1128,6 @@ export const HomePage = ({
       {editTile && editTile.type === 'routine' && (
         <BottomSheet open={true} onClose={() => setEditTile(null)} title={t("editRoutine")}>
           <RoutineForm routine={editTile} onSave={handleEditSave} onCancel={() => setEditTile(null)}/>
-        </BottomSheet>
-      )}
-      {editTile && editTile.type === 'idea' && (
-        <BottomSheet open={true} onClose={() => setEditTile(null)} title={t("editNote")}>
-          <IdeaForm idea={homeIdeas?.find(i => i.id === editTile.id)} onSave={handleEditSave} onCancel={() => setEditTile(null)}/>
         </BottomSheet>
       )}
       {editTile && editTile.type === 'note' && (

@@ -22,7 +22,7 @@ const daysBetween = (d1, d2) => {
 
 export const ReflectPage = ({
   ideas, setIdeas, moves, setMoves, reps, sparring, musicflow, habits, setHabits,
-  homeStack: _homeStack, setHomeStack, homeIdeas: _homeIdeas, setHomeIdeas: _setHomeIdeas,
+  homeStack: _homeStack, setHomeStack,
   calendar, setCalendar, cats, catColors, settings, onSettingsChange,
   addToast, stance, battleprep, onToggleBattlePrepTask,
   onOpenStanceAssessment, addCalendarEvent, removeCalendarEvent: _removeCalendarEvent,
