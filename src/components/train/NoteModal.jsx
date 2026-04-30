@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { lbl } from '../../constants/styles';
-import { IDEA_COLORS } from '../../constants/categories';
 import { Btn } from '../shared/Btn';
 import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
@@ -9,12 +8,11 @@ import { useSettings } from '../../hooks/useSettings';
 import { ensureHttps } from './helpers';
 import { todayLocal } from '../../utils/dateUtils';
 
-export const NoteModal = ({ onClose, onSave, idea, prefill }) => {
+export const NoteModal = ({ onClose, onSave, idea, prefill, headerLabel }) => {
   const t = useT();
   const { C } = useSettings();
   const [title, setTitle] = useState(idea?.title || prefill?.title || "");
   const [text,  setText]  = useState(idea?.text  || prefill?.text  || "");
-  const [color, setColor] = useState(idea?.color || IDEA_COLORS[1]);
   const [link,  setLink]  = useState(idea?.link  || "");
   const [showDate, setShowDate] = useState(idea?.showDate || prefill?.showDate || "");
   const textRef = useRef(null);
@@ -23,7 +21,7 @@ export const NoteModal = ({ onClose, onSave, idea, prefill }) => {
   const isEdit = !!idea;
   const handleSave = () => {
     if (!title.trim() && !text.trim()) return;
-    onSave({ type:"note", title:title.trim(), text:text.trim(), color, link:ensureHttps(link.trim()),
+    onSave({ type:"note", title:title.trim(), text:text.trim(), link:ensureHttps(link.trim()),
       showDate:showDate||null });
     onClose();
   };
@@ -33,7 +31,7 @@ export const NoteModal = ({ onClose, onSave, idea, prefill }) => {
   return (
     <div style={{ width:"100%", maxHeight:"90%", background:C.surface, borderRadius:16, display:"flex", flexDirection:"column", overflow:"hidden", boxShadow:"0 16px 48px rgba(0,0,0,0.5)" }}>
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 16px", background:C.surface, borderBottom:`1px solid ${C.border}`, flexShrink:0 }}>
-        <span style={{ fontWeight:900, fontSize:16, letterSpacing:2, fontFamily:FONT_DISPLAY, color:C.text }}>{isEdit?t("editNote"):t("newNote")}</span>
+        <span style={{ fontWeight:900, fontSize:16, letterSpacing:2, fontFamily:FONT_DISPLAY, color:C.text }}>{headerLabel || (isEdit?t("editNote"):t("newNote"))}</span>
         <div style={{ display:"flex", gap:8 }}>
           <Btn variant="secondary" onClick={onClose}>{t("cancel")}</Btn>
           <Btn onClick={handleSave} disabled={!title.trim()&&!text.trim()}>{t("save")}</Btn>
@@ -79,15 +77,6 @@ export const NoteModal = ({ onClose, onSave, idea, prefill }) => {
               {t("pastDateWarning")}
             </div>
           )}
-        </div>
-        <div style={{ marginBottom:14 }}>
-          <label style={lbl()}>{t("colour")}</label>
-          <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginTop:6 }}>
-            {IDEA_COLORS.map(c=>(
-              <button key={c} onClick={()=>setColor(c)} style={{ width:30, height:30, borderRadius:6, background:c, cursor:"pointer", outline:"none",
-                border: color===c ? `3px solid ${C.brown}` : `2px solid transparent` }}/>
-            ))}
-          </div>
         </div>
       </div>
     </div>

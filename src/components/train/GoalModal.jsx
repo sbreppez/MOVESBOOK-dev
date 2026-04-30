@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { lbl } from '../../constants/styles';
-import { IDEA_COLORS } from '../../constants/categories';
 import { Btn } from '../shared/Btn';
 import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
@@ -24,14 +23,13 @@ export const GoalModal = ({ onClose, onSave, idea, prefill }) => {
   const [sessionLen,   setSessionLen]   = useState(idea?.sessionLength || "");
   const [trainWhere,   setTrainWhere]   = useState(idea?.trainWhere   || "");
   const [obstacles,    setObstacles]    = useState(idea?.obstacles    || "");
-  const [color]                         = useState(idea?.color        || IDEA_COLORS[0]);
   const [journal,      setJournal]      = useState(idea?.journal      || []);
   const [link,         setLink]         = useState(idea?.link         || "");
   const handleSave = () => {
     if (!title.trim()) return;
     onSave({ type:"goal", pinned:true, title:title.trim(), why, byWhen,
       steps, daysPerWeek, sessionLength:sessionLen, trainWhere,
-      obstacles, color, journal, link:ensureHttps(link.trim()), text:"",
+      obstacles, journal, link:ensureHttps(link.trim()), text:"",
       createdDate: idea?.createdDate || todayLocal() });
     onClose();
   };

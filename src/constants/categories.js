@@ -34,11 +34,6 @@ export const DOMAIN_COLORS = {
   personality: '#3D9E72',
 };
 
-export const IDEA_COLORS = [
-  "#C4453E","#D46A52","#D4943A","#8A6B54","#3D9E72","#3A9E9E",
-  "#4A90C4","#6B7BA0","#8B6AAE","#7A5C8A","#B07A5E","#5A8A72",
-];
-
 export const HABIT_COLORS = ["#C4453E","#4A90C4","#3D9E72","#D4943A","#8B6AAE","#6B7BA0","#3A9E9E"];
 
 export const buildInitRounds = () => {

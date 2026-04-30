@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { lbl } from '../../constants/styles';
-import { IDEA_COLORS } from '../../constants/categories';
 import { Btn } from '../shared/Btn';
 import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
@@ -25,7 +24,6 @@ export const TargetGoalModal = ({ onClose, onSave, idea, moves=[], prefill }) =>
   const [byWhen,   setByWhen]   = useState(idea?.byWhen   || "");
   const [link,     setLink]     = useState(idea?.link     || "");
   const [autoLink, setAutoLink] = useState(idea?.autoLink || false);
-  const [color,    setColor]    = useState(idea?.color    || IDEA_COLORS[0]);
   const [journal,  setJournal]  = useState(idea?.journal  || []);
   const effectiveCurrent = autoLink && autoLinkEnabled ? moves.length : current;
 
@@ -33,7 +31,7 @@ export const TargetGoalModal = ({ onClose, onSave, idea, moves=[], prefill }) =>
     if (!title.trim()) return;
     onSave({ type:"target", pinned:true, title:title.trim(),
       target, unit:unit.trim()||"items", current:effectiveCurrent,
-      byWhen, link: ensureHttps(link.trim()), autoLink, color, journal, text:"",
+      byWhen, link: ensureHttps(link.trim()), autoLink, journal, text:"",
       createdDate: idea?.createdDate || todayLocal()
     });
     onClose();
@@ -179,16 +177,6 @@ export const TargetGoalModal = ({ onClose, onSave, idea, moves=[], prefill }) =>
               <input value={link} onChange={e=>setLink(e.target.value)}
                 placeholder="https://youtube.com/…"
                 style={inputStyle}/>
-            </div>
-            <div style={{ marginBottom:14 }}>
-              <label style={lbl()}>{t("colour")}</label>
-              <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginTop:6 }}>
-                {IDEA_COLORS.map(c=>(
-                  <button key={c} onClick={()=>setColor(c)}
-                    style={{ width:30, height:30, borderRadius:6, background:c, cursor:"pointer", outline:"none",
-                      border: color===c ? `3px solid ${C.brown}` : "2px solid transparent" }}/>
-                ))}
-              </div>
             </div>
           </div>
         )}

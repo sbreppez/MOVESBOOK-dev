@@ -120,7 +120,7 @@ export const TRANSLATIONS = {
     deleteCat:"Delete", direction:"DIRECTION OF ROTATION",
     createNote:"CREATE A NOTE",
     // UI labels
-    back:"Back", changeColour:"Change colour", categoryNameLabel:"CATEGORY NAME",
+    back:"Back", categoryNameLabel:"CATEGORY NAME",
     categoryExists:"A category with this name already exists.",
     addAnyway:"Add anyway", goBack:"Go back", keepIt:"Keep it",
     showLess:"show less", showMore:"show more",
@@ -1226,7 +1226,7 @@ export const TRANSLATIONS = {
     // HOME blackboard sections (L2)
     sectionToday:"TODAY", sectionNotes:"NOTES", sectionGoals:"GOALS", filterSections:"Filter sections",
     // AddToHome (Reflect → Home)
-    addToHome:"Add to Home", addToHomeAsNote:"Note", addToHomeAsGoal:"Goal", addToHomeAsHabit:"Habit", addToHomeContext:"From Reflect:", resolvedInjuryContext:"Resolved injury",
+    addToHome:"Add to Home", addNoteToHome:"Add a Note to Home", resolvedInjuryContext:"Resolved injury",
     reports:"REPORTS", history:"HISTORY", reportsBrief:"Your training data over time, in patterns you can read.", historyBrief:"Resolved injuries and archived items live here.", noHistoryYet:"Nothing in your history yet.", archive:"Archive", archived:"Archived", archivedFromHome:"Moved to History", archivedItemsCount:"Archived {n} items", archivedSomeOfSelected:"Archived {n} of {total}", archivedGoalContext:"Archived goal", archivedNoteContext:"Archived note", stanceContext:"Stance", battleResultContext:"Battle", weeklyReportContext:"Week of", monthlyReportContext:"Month of", yearlyReportContext:"Year",
   },
 
@@ -1335,7 +1335,7 @@ export const TRANSLATIONS = {
     linkOnCard:"Link video sulla scheda", linkOnCardInside:"Solo interno",
     linkOnCardDesc:"Mostra un'icona link rapido sulla scheda del movimento",
     linkOnCardBoth:"Interno & esterno",
-    back:"Indietro", changeColour:"Cambia colore", categoryNameLabel:"NOME CATEGORIA",
+    back:"Indietro", categoryNameLabel:"NOME CATEGORIA",
     categoryExists:"Una categoria con questo nome esiste già.",
     addAnyway:"Aggiungi comunque", goBack:"Torna indietro", keepIt:"Mantieni",
     showLess:"mostra meno", showMore:"mostra di più",
@@ -2406,7 +2406,7 @@ export const TRANSLATIONS = {
     // HOME blackboard sections (L2)
     sectionToday:"OGGI", sectionNotes:"NOTE", sectionGoals:"OBIETTIVI", filterSections:"Filtra sezioni",
     // AddToHome (Rifletti → Home)
-    addToHome:"Aggiungi a Home", addToHomeAsNote:"Nota", addToHomeAsGoal:"Obiettivo", addToHomeAsHabit:"Abitudine", addToHomeContext:"Da Rifletti:", resolvedInjuryContext:"Infortunio risolto",
+    addToHome:"Aggiungi a Home", addNoteToHome:"Aggiungi una nota a Home", resolvedInjuryContext:"Infortunio risolto",
     reports:"REPORT", history:"STORICO", reportsBrief:"I tuoi dati di allenamento nel tempo, in schemi leggibili.", historyBrief:"Infortuni risolti e elementi archiviati vivono qui.", noHistoryYet:"Niente ancora nel tuo storico.", archive:"Archivia", archived:"Archiviato", archivedFromHome:"Spostato nello Storico", archivedItemsCount:"Archiviati {n} elementi", archivedSomeOfSelected:"Archiviati {n} di {total}", archivedGoalContext:"Obiettivo archiviato", archivedNoteContext:"Nota archiviata", stanceContext:"Posizione", battleResultContext:"Battaglia", weeklyReportContext:"Settimana del", monthlyReportContext:"Mese di", yearlyReportContext:"Anno",
   },
 
@@ -2515,7 +2515,7 @@ export const TRANSLATIONS = {
     linkOnCard:"Enlace de video en la tarjeta", linkOnCardInside:"Solo interior",
     linkOnCardDesc:"Mostrar un icono de enlace rápido en la tarjeta del movimiento",
     linkOnCardBoth:"Interior y exterior",
-    back:"Atrás", changeColour:"Cambiar color", categoryNameLabel:"NOMBRE DE CATEGORÍA",
+    back:"Atrás", categoryNameLabel:"NOMBRE DE CATEGORÍA",
     categoryExists:"Ya existe una categoría con este nombre.",
     addAnyway:"Agregar de todos modos", goBack:"Volver", keepIt:"Mantener",
     showLess:"mostrar menos", showMore:"mostrar más",
@@ -3575,7 +3575,7 @@ export const TRANSLATIONS = {
     // HOME blackboard sections (L2)
     sectionToday:"HOY", sectionNotes:"NOTAS", sectionGoals:"METAS", filterSections:"Filtrar secciones",
     // AddToHome (Reflexión → Inicio)
-    addToHome:"Agregar a Inicio", addToHomeAsNote:"Nota", addToHomeAsGoal:"Meta", addToHomeAsHabit:"Hábito", addToHomeContext:"De Reflexión:", resolvedInjuryContext:"Lesión resuelta",
+    addToHome:"Agregar a Inicio", addNoteToHome:"Añadir una nota a Home", resolvedInjuryContext:"Lesión resuelta",
     reports:"INFORMES", history:"HISTORIAL", reportsBrief:"Tus datos de entrenamiento a lo largo del tiempo, en patrones legibles.", historyBrief:"Las lesiones resueltas y los elementos archivados viven aquí.", noHistoryYet:"Aún nada en tu historial.", archive:"Archivar", archived:"Archivado", archivedFromHome:"Movido al Historial", archivedItemsCount:"Archivados {n} elementos", archivedSomeOfSelected:"Archivados {n} de {total}", archivedGoalContext:"Meta archivada", archivedNoteContext:"Nota archivada", stanceContext:"Postura", battleResultContext:"Batalla", weeklyReportContext:"Semana del", monthlyReportContext:"Mes de", yearlyReportContext:"Año",
   },
 
@@ -3684,7 +3684,7 @@ export const TRANSLATIONS = {
     linkOnCard:"Lien vidéo sur la carte", linkOnCardInside:"Intérieur uniquement",
     linkOnCardDesc:"Afficher une icône de lien rapide sur la carte du mouvement",
     linkOnCardBoth:"Intérieur & extérieur",
-    back:"Retour", changeColour:"Changer la couleur", categoryNameLabel:"NOM DE CATÉGORIE",
+    back:"Retour", categoryNameLabel:"NOM DE CATÉGORIE",
     categoryExists:"Une catégorie avec ce nom existe déjà.",
     addAnyway:"Ajouter quand même", goBack:"Revenir", keepIt:"Garder",
     showLess:"voir moins", showMore:"voir plus",
@@ -4744,7 +4744,7 @@ export const TRANSLATIONS = {
     // HOME blackboard sections (L2)
     sectionToday:"AUJOURD'HUI", sectionNotes:"NOTES", sectionGoals:"OBJECTIFS", filterSections:"Filtrer les sections",
     // AddToHome (Réflexion → Accueil)
-    addToHome:"Ajouter à l'accueil", addToHomeAsNote:"Note", addToHomeAsGoal:"Objectif", addToHomeAsHabit:"Habitude", addToHomeContext:"Depuis Réflexion :", resolvedInjuryContext:"Blessure guérie",
+    addToHome:"Ajouter à l'accueil", addNoteToHome:"Ajouter une note à Home", resolvedInjuryContext:"Blessure guérie",
     reports:"RAPPORTS", history:"HISTORIQUE", reportsBrief:"Tes données d'entraînement dans le temps, en motifs lisibles.", historyBrief:"Les blessures guéries et les éléments archivés vivent ici.", noHistoryYet:"Rien encore dans ton historique.", archive:"Archiver", archived:"Archivé", archivedFromHome:"Déplacé vers l'Historique", archivedItemsCount:"Archivés {n} éléments", archivedSomeOfSelected:"Archivés {n} sur {total}", archivedGoalContext:"Objectif archivé", archivedNoteContext:"Note archivée", stanceContext:"Posture", battleResultContext:"Battle", weeklyReportContext:"Semaine du", monthlyReportContext:"Mois de", yearlyReportContext:"Année",
   },
 
@@ -4853,7 +4853,7 @@ export const TRANSLATIONS = {
     linkOnCard:"Link de vídeo no cartão", linkOnCardInside:"Apenas interior",
     linkOnCardDesc:"Mostrar um ícone de link rápido no cartão do movimento",
     linkOnCardBoth:"Interior & exterior",
-    back:"Voltar", changeColour:"Mudar cor", categoryNameLabel:"NOME DA CATEGORIA",
+    back:"Voltar", categoryNameLabel:"NOME DA CATEGORIA",
     categoryExists:"Uma categoria com este nome já existe.",
     addAnyway:"Adicionar mesmo assim", goBack:"Voltar", keepIt:"Manter",
     showLess:"mostrar menos", showMore:"mostrar mais",
@@ -5913,7 +5913,7 @@ export const TRANSLATIONS = {
     // HOME blackboard sections (L2)
     sectionToday:"HOJE", sectionNotes:"NOTAS", sectionGoals:"METAS", filterSections:"Filtrar seções",
     // AddToHome (Reflexão → Início)
-    addToHome:"Adicionar ao Início", addToHomeAsNote:"Nota", addToHomeAsGoal:"Meta", addToHomeAsHabit:"Hábito", addToHomeContext:"De Reflexão:", resolvedInjuryContext:"Lesão resolvida",
+    addToHome:"Adicionar ao Início", addNoteToHome:"Adicionar uma nota ao Home", resolvedInjuryContext:"Lesão resolvida",
     reports:"RELATÓRIOS", history:"HISTÓRICO", reportsBrief:"Seus dados de treino ao longo do tempo, em padrões legíveis.", historyBrief:"Lesões resolvidas e itens arquivados vivem aqui.", noHistoryYet:"Nada ainda no seu histórico.", archive:"Arquivar", archived:"Arquivado", archivedFromHome:"Movido para o Histórico", archivedItemsCount:"Arquivados {n} itens", archivedSomeOfSelected:"Arquivados {n} de {total}", archivedGoalContext:"Meta arquivada", archivedNoteContext:"Nota arquivada", stanceContext:"Postura", battleResultContext:"Batalha", weeklyReportContext:"Semana de", monthlyReportContext:"Mês de", yearlyReportContext:"Ano",
   },
 
@@ -6022,7 +6022,7 @@ export const TRANSLATIONS = {
     linkOnCard:"Video-Link auf Karte", linkOnCardInside:"Nur innen",
     linkOnCardDesc:"Ein Schnelllink-Symbol auf der Bewegungskarte anzeigen",
     linkOnCardBoth:"Innen & außen",
-    back:"Zurück", changeColour:"Farbe ändern", categoryNameLabel:"KATEGORIENAME",
+    back:"Zurück", categoryNameLabel:"KATEGORIENAME",
     categoryExists:"Eine Kategorie mit diesem Namen existiert bereits.",
     addAnyway:"Trotzdem hinzufügen", goBack:"Zurück", keepIt:"Behalten",
     showLess:"weniger zeigen", showMore:"mehr zeigen",
@@ -7082,7 +7082,7 @@ export const TRANSLATIONS = {
     // HOME blackboard sections (L2)
     sectionToday:"HEUTE", sectionNotes:"NOTIZEN", sectionGoals:"ZIELE", filterSections:"Abschnitte filtern",
     // AddToHome (Reflexion → Home)
-    addToHome:"Zu Home hinzufügen", addToHomeAsNote:"Notiz", addToHomeAsGoal:"Ziel", addToHomeAsHabit:"Gewohnheit", addToHomeContext:"Aus Reflexion:", resolvedInjuryContext:"Verletzung verheilt",
+    addToHome:"Zu Home hinzufügen", addNoteToHome:"Notiz zu Home hinzufügen", resolvedInjuryContext:"Verletzung verheilt",
     reports:"BERICHTE", history:"VERLAUF", reportsBrief:"Deine Trainingsdaten über die Zeit, in lesbaren Mustern.", historyBrief:"Verheilte Verletzungen und archivierte Einträge leben hier.", noHistoryYet:"Noch nichts in deinem Verlauf.", archive:"Archivieren", archived:"Archiviert", archivedFromHome:"In den Verlauf verschoben", archivedItemsCount:"{n} Einträge archiviert", archivedSomeOfSelected:"{n} von {total} archiviert", archivedGoalContext:"Archiviertes Ziel", archivedNoteContext:"Archivierte Notiz", stanceContext:"Haltung", battleResultContext:"Battle", weeklyReportContext:"Woche vom", monthlyReportContext:"Monat", yearlyReportContext:"Jahr",
   },
 
@@ -7192,7 +7192,7 @@ export const TRANSLATIONS = {
     linkOnCardDesc:"ムーブカード上にクイックオープンリンクアイコンを表示",
     linkOnCardInside:"内部のみ",
     linkOnCardBoth:"内部 & 外部",
-    back:"戻る", changeColour:"色を変更", categoryNameLabel:"カテゴリ名",
+    back:"戻る", categoryNameLabel:"カテゴリ名",
     categoryExists:"この名前のカテゴリは既に存在します。",
     addAnyway:"とにかく追加", goBack:"戻る", keepIt:"そのまま",
     showLess:"折りたたむ", showMore:"もっと見る",
@@ -8252,7 +8252,7 @@ export const TRANSLATIONS = {
     // HOME blackboard sections (L2)
     sectionToday:"今日", sectionNotes:"メモ", sectionGoals:"目標", filterSections:"セクションをフィルター",
     // AddToHome (Reflect → Home)
-    addToHome:"ホームに追加", addToHomeAsNote:"メモ", addToHomeAsGoal:"目標", addToHomeAsHabit:"習慣", addToHomeContext:"Reflectから:", resolvedInjuryContext:"治癒した怪我",
+    addToHome:"ホームに追加", addNoteToHome:"Homeにメモを追加", resolvedInjuryContext:"治癒した怪我",
     reports:"レポート", history:"履歴", reportsBrief:"時間をかけたトレーニングデータを、読みやすいパターンで。", historyBrief:"治癒した怪我とアーカイブされたアイテムはここに表示されます。", noHistoryYet:"履歴はまだありません。", archive:"アーカイブ", archived:"アーカイブ済み", archivedFromHome:"履歴に移動しました", archivedItemsCount:"{n}件をアーカイブしました", archivedSomeOfSelected:"{total}件中{n}件をアーカイブしました", archivedGoalContext:"アーカイブされた目標", archivedNoteContext:"アーカイブされたメモ", stanceContext:"スタンス", battleResultContext:"バトル", weeklyReportContext:"週", monthlyReportContext:"月", yearlyReportContext:"年",
   },
 
@@ -8360,7 +8360,7 @@ export const TRANSLATIONS = {
     noRoundsYet:"还没有回合", saveSettings:"保存设置",
     deleteCat:"删除", direction:"旋转方向",
     createNote:"创建笔记",
-    back:"返回", changeColour:"更换颜色", categoryNameLabel:"分类名称",
+    back:"返回", categoryNameLabel:"分类名称",
     categoryExists:"已存在同名分类。",
     addAnyway:"仍然添加", goBack:"返回", keepIt:"保留",
     showLess:"收起", showMore:"展开",
@@ -9420,7 +9420,7 @@ export const TRANSLATIONS = {
     // HOME blackboard sections (L2)
     sectionToday:"今天", sectionNotes:"笔记", sectionGoals:"目标", filterSections:"筛选板块",
     // AddToHome (Reflect → Home)
-    addToHome:"添加到首页", addToHomeAsNote:"笔记", addToHomeAsGoal:"目标", addToHomeAsHabit:"习惯", addToHomeContext:"来自反思:", resolvedInjuryContext:"已恢复的伤病",
+    addToHome:"添加到首页", addNoteToHome:"添加笔记到Home", resolvedInjuryContext:"已恢复的伤病",
     reports:"报告", history:"历史", reportsBrief:"你的训练数据随时间的变化，以可读的模式呈现。", historyBrief:"已恢复的伤病和归档项目存放在这里。", noHistoryYet:"历史中还没有内容。", archive:"归档", archived:"已归档", archivedFromHome:"已移至历史", archivedItemsCount:"已归档{n}项", archivedSomeOfSelected:"已归档{n}/{total}项", archivedGoalContext:"已归档目标", archivedNoteContext:"已归档笔记", stanceContext:"姿态", battleResultContext:"对战", weeklyReportContext:"周", monthlyReportContext:"月", yearlyReportContext:"年",
   },
 
@@ -9528,7 +9528,7 @@ export const TRANSLATIONS = {
     noRoundsYet:"Раундов пока нет", saveSettings:"Сохранить настройки",
     deleteCat:"Удалить", direction:"НАПРАВЛЕНИЕ ВРАЩЕНИЯ",
     createNote:"СОЗДАТЬ ЗАМЕТКУ",
-    back:"Назад", changeColour:"Изменить цвет", categoryNameLabel:"НАЗВАНИЕ КАТЕГОРИИ",
+    back:"Назад", categoryNameLabel:"НАЗВАНИЕ КАТЕГОРИИ",
     categoryExists:"Категория с таким названием уже существует.",
     addAnyway:"Добавить всё равно", goBack:"Вернуться", keepIt:"Оставить",
     showLess:"свернуть", showMore:"развернуть",
@@ -10588,7 +10588,7 @@ export const TRANSLATIONS = {
     // HOME blackboard sections (L2)
     sectionToday:"СЕГОДНЯ", sectionNotes:"ЗАМЕТКИ", sectionGoals:"ЦЕЛИ", filterSections:"Фильтр разделов",
     // AddToHome (Рефлексия → Главная)
-    addToHome:"Добавить на главную", addToHomeAsNote:"Заметка", addToHomeAsGoal:"Цель", addToHomeAsHabit:"Привычка", addToHomeContext:"Из Рефлексии:", resolvedInjuryContext:"Заживлённая травма",
+    addToHome:"Добавить на главную", addNoteToHome:"Добавить заметку в Home", resolvedInjuryContext:"Заживлённая травма",
     reports:"ОТЧЁТЫ", history:"ИСТОРИЯ", reportsBrief:"Твои данные тренировок во времени, в читаемых паттернах.", historyBrief:"Заживлённые травмы и архивные элементы живут здесь.", noHistoryYet:"В истории пока ничего нет.", archive:"Архивировать", archived:"Архивировано", archivedFromHome:"Перемещено в Историю", archivedItemsCount:"Архивировано {n}", archivedSomeOfSelected:"Архивировано {n} из {total}", archivedGoalContext:"Архивная цель", archivedNoteContext:"Архивная заметка", stanceContext:"Позиция", battleResultContext:"Battle", weeklyReportContext:"Неделя с", monthlyReportContext:"Месяц", yearlyReportContext:"Год",
   },
 
@@ -10713,7 +10713,7 @@ export const TRANSLATIONS = {
     deleteCat:"삭제", direction:"회전 방향",
     createNote:"노트 만들기",
     // UI labels
-    back:"뒤로", changeColour:"색상 변경", categoryNameLabel:"카테고리 이름",
+    back:"뒤로", categoryNameLabel:"카테고리 이름",
     categoryExists:"같은 이름의 카테고리가 이미 있어.",
     addAnyway:"그래도 추가", goBack:"돌아가기", keepIt:"유지",
     showLess:"접기", showMore:"더 보기",
@@ -11792,7 +11792,7 @@ export const TRANSLATIONS = {
     // HOME blackboard sections (L2)
     sectionToday:"오늘", sectionNotes:"메모", sectionGoals:"목표", filterSections:"섹션 필터",
     // AddToHome (Reflect → Home)
-    addToHome:"홈에 추가", addToHomeAsNote:"메모", addToHomeAsGoal:"목표", addToHomeAsHabit:"습관", addToHomeContext:"Reflect에서:", resolvedInjuryContext:"회복된 부상",
+    addToHome:"홈에 추가", addNoteToHome:"Home에 메모 추가", resolvedInjuryContext:"회복된 부상",
     reports:"리포트", history:"기록", reportsBrief:"시간에 따른 훈련 데이터를 읽기 쉬운 패턴으로.", historyBrief:"회복된 부상과 보관된 항목이 여기에 있습니다.", noHistoryYet:"아직 기록이 없습니다.", archive:"보관", archived:"보관됨", archivedFromHome:"기록으로 이동됨", archivedItemsCount:"{n}개 항목 보관됨", archivedSomeOfSelected:"{total}개 중 {n}개 보관됨", archivedGoalContext:"보관된 목표", archivedNoteContext:"보관된 메모", stanceContext:"스탠스", battleResultContext:"배틀", weeklyReportContext:"주차", monthlyReportContext:"월", yearlyReportContext:"연도",
   },
 
@@ -11917,7 +11917,7 @@ export const TRANSLATIONS = {
     deleteCat:"ลบ", direction:"ทิศทางการหมุน",
     createNote:"สร้างบันทึก",
     // UI labels
-    back:"กลับ", changeColour:"เปลี่ยนสี", categoryNameLabel:"ชื่อหมวดหมู่",
+    back:"กลับ", categoryNameLabel:"ชื่อหมวดหมู่",
     categoryExists:"มีหมวดหมู่ชื่อนี้อยู่แล้ว",
     addAnyway:"เพิ่มอยู่ดี", goBack:"กลับ", keepIt:"เก็บไว้",
     showLess:"แสดงน้อยลง", showMore:"แสดงเพิ่มเติม",
@@ -12991,7 +12991,7 @@ export const TRANSLATIONS = {
     // HOME blackboard sections (L2)
     sectionToday:"วันนี้", sectionNotes:"บันทึก", sectionGoals:"เป้าหมาย", filterSections:"กรองส่วน",
     // AddToHome (Reflect → Home)
-    addToHome:"เพิ่มไปยังหน้าหลัก", addToHomeAsNote:"บันทึก", addToHomeAsGoal:"เป้าหมาย", addToHomeAsHabit:"นิสัย", addToHomeContext:"จาก Reflect:", resolvedInjuryContext:"การบาดเจ็บที่หายแล้ว",
+    addToHome:"เพิ่มไปยังหน้าหลัก", addNoteToHome:"เพิ่มโน้ตไปที่ Home", resolvedInjuryContext:"การบาดเจ็บที่หายแล้ว",
     reports:"รายงาน", history:"ประวัติ", reportsBrief:"ข้อมูลการฝึกของคุณตลอดเวลา ในรูปแบบที่อ่านได้", historyBrief:"การบาดเจ็บที่หายแล้วและรายการที่เก็บถาวรอยู่ที่นี่", noHistoryYet:"ยังไม่มีอะไรในประวัติ", archive:"เก็บถาวร", archived:"เก็บถาวรแล้ว", archivedFromHome:"ย้ายไปยังประวัติ", archivedItemsCount:"เก็บถาวร {n} รายการ", archivedSomeOfSelected:"เก็บถาวร {n} จาก {total}", archivedGoalContext:"เป้าหมายที่เก็บถาวร", archivedNoteContext:"บันทึกที่เก็บถาวร", stanceContext:"ท่าทาง", battleResultContext:"การต่อสู้", weeklyReportContext:"สัปดาห์ที่", monthlyReportContext:"เดือน", yearlyReportContext:"ปี",
   },
 
@@ -13116,7 +13116,7 @@ export const TRANSLATIONS = {
     deleteCat:"Xóa", direction:"HƯỚNG XOAY",
     createNote:"TẠO GHI CHÚ",
     // UI labels
-    back:"Quay lại", changeColour:"Đổi màu", categoryNameLabel:"TÊN DANH MỤC",
+    back:"Quay lại", categoryNameLabel:"TÊN DANH MỤC",
     categoryExists:"Danh mục với tên này đã tồn tại.",
     addAnyway:"Vẫn thêm", goBack:"Quay lại", keepIt:"Giữ lại",
     showLess:"ẩn bớt", showMore:"xem thêm",
@@ -14211,7 +14211,7 @@ export const TRANSLATIONS = {
     // HOME blackboard sections (L2)
     sectionToday:"HÔM NAY", sectionNotes:"GHI CHÚ", sectionGoals:"MỤC TIÊU", filterSections:"Lọc các mục",
     // AddToHome (Reflect → Home)
-    addToHome:"Thêm vào Trang chủ", addToHomeAsNote:"Ghi chú", addToHomeAsGoal:"Mục tiêu", addToHomeAsHabit:"Thói quen", addToHomeContext:"Từ Reflect:", resolvedInjuryContext:"Chấn thương đã hồi phục",
+    addToHome:"Thêm vào Trang chủ", addNoteToHome:"Thêm ghi chú vào Home", resolvedInjuryContext:"Chấn thương đã hồi phục",
     reports:"BÁO CÁO", history:"LỊCH SỬ", reportsBrief:"Dữ liệu tập luyện của bạn theo thời gian, theo các mẫu dễ đọc.", historyBrief:"Các chấn thương đã hồi phục và mục đã lưu trữ ở đây.", noHistoryYet:"Chưa có gì trong lịch sử của bạn.", archive:"Lưu trữ", archived:"Đã lưu trữ", archivedFromHome:"Đã chuyển vào Lịch sử", archivedItemsCount:"Đã lưu trữ {n} mục", archivedSomeOfSelected:"Đã lưu trữ {n} trong {total}", archivedGoalContext:"Mục tiêu đã lưu trữ", archivedNoteContext:"Ghi chú đã lưu trữ", stanceContext:"Thế đứng", battleResultContext:"Battle", weeklyReportContext:"Tuần", monthlyReportContext:"Tháng", yearlyReportContext:"Năm",
   },
 };

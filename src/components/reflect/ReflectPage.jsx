@@ -11,7 +11,8 @@ import { MyStanceSection } from '../stance/MyStanceSection';
 import { DevelopmentStory } from '../stance/DevelopmentStory';
 import { PremiumGate } from '../shared/PremiumGate';
 import { SectionBrief } from '../shared/SectionBrief';
-import { AddToHomeSheet } from '../shared/AddToHomeSheet';
+import { NoteModal } from '../train/NoteModal';
+import { getNextTrainingDay } from '../../utils/nextTrainingDay';
 
 const SUB_TABS = ["calendar", "stance", "reports", "history"];
 
@@ -157,6 +158,28 @@ export const ReflectPage = ({
     );
   };
 
+  const handleSaveAddToHomeNote = (fields) => {
+    const id = Date.now().toString();
+    setIdeas(prev => [{
+      id, type: 'note', title: fields.title, text: fields.text,
+      link: fields.link, showDate: fields.showDate || null,
+      createdDate: new Date().toISOString(),
+    }, ...prev]);
+    setHomeStack(prev => ({
+      ...prev,
+      defaultStack: [{ id, type: 'note' }, ...(prev.defaultStack || [])],
+    }));
+    if (fields.showDate && addCalendarEvent) {
+      addCalendarEvent({
+        date: fields.showDate, type: "journal",
+        title: fields.title || "Note", text: fields.text || "",
+        source: "home-idea", ideaId: id,
+      }, { silent: true });
+    }
+    if (addToast) addToast({ icon: "home", title: t("addNoteToHome") });
+    setAddToHomeContext(null);
+  };
+
   return (
     <div style={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column" }}>
       {/* Sub-tab nav */}
@@ -238,18 +261,24 @@ export const ReflectPage = ({
         </>
       )}
 
-      {/* Add-to-Home sheet (REFLECT → HOME loop arrow) */}
-      <AddToHomeSheet
-        open={!!addToHomeContext}
-        context={addToHomeContext || ""}
-        onClose={() => setAddToHomeContext(null)}
-        setIdeas={setIdeas}
-        setHomeStack={setHomeStack}
-        setHabits={setHabits}
-        addCalendarEvent={addCalendarEvent}
-        battleprep={battleprep}
-        addToast={addToast}
-      />
+      {/* Add-to-Home → direct note capture (REFLECT → HOME loop arrow) */}
+      {addToHomeContext && (
+        <div style={{
+          position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)",
+          zIndex: 10000, display: "flex", alignItems: "center",
+          justifyContent: "center", padding: 10,
+        }}>
+          <NoteModal
+            headerLabel={t("addNoteToHome")}
+            prefill={{
+              title: addToHomeContext,
+              showDate: getNextTrainingDay(battleprep),
+            }}
+            onClose={() => setAddToHomeContext(null)}
+            onSave={handleSaveAddToHomeNote}
+          />
+        </div>
+      )}
 
       {/* Stance assessment confirmation */}
       {showStanceConfirm && (
