@@ -875,7 +875,7 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
                 {t("saveInCategory")}
               </div>
               <div style={{
-                borderRadius: 8, border: `1px solid ${C.border}`, overflow: "hidden",
+                borderRadius: 8, overflow: "hidden",
                 maxHeight: 200, overflowY: "auto"
               }}>
                 {(cats || []).map((cat, i) => {

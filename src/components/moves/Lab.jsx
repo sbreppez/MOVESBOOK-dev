@@ -586,7 +586,6 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
         {/* Live Preview */}
         <div style={{
           background: C.surfaceAlt, borderRadius: 8, padding: "14px 16px", marginBottom: 20,
-          border: `1px solid ${C.border}`,
         }}>
           <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10, color: C.textMuted, letterSpacing: 1, marginBottom: 6 }}>
             {t("livePreview")}

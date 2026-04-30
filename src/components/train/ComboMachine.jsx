@@ -288,9 +288,10 @@ export const ComboMachine = ({ moves, catColors, combos, onCombosChange, onSaveS
               {movesWithChildren.map(m => (
                 <button key={m.id} onClick={() => { setBranchRoot(m); setSlots([]); setHasSpun(false); setVisibleCards(new Set()); }}
                   style={{
-                    background:C.surface, border:`1.5px solid ${C.border}`, borderRadius:8,
+                    background:C.surface, borderRadius:8,
                     padding:"8px 12px", cursor:"pointer", textAlign:"left",
                     display:"flex", alignItems:"center", justifyContent:"space-between",
+                    border:"none",
                   }}>
                   <span style={{ fontFamily:FONT_BODY, fontSize:13, color:C.text }}>{m.name}</span>
                   <span style={{ fontFamily:FONT_DISPLAY, fontSize:10, color:C.textMuted }}>

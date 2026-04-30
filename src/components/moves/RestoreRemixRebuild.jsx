@@ -482,7 +482,7 @@ export const RestoreRemixRebuild = ({ moves, catColors, rrr, onRRRChange, addToa
 
             {/* Prompt card */}
             <div style={{
-              background:C.surface, borderRadius:14, padding:20, margin:"16px 0",
+              background:C.surface, borderRadius:8, padding:20, margin:"16px 0",
               width:"100%", boxSizing:"border-box",
               opacity: promptFade ? 1 : 0, transition:"opacity 0.2s",
             }}>
