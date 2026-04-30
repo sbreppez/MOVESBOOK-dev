@@ -220,8 +220,7 @@ export const ReflectPage = ({
           <div style={{ flex: 1, overflow: "auto", padding: 16 }}>
             <SectionBrief desc={t("stanceBrief")} settings={settings}/>
             <MyStanceSection moves={moves || []} stance={stance} sparring={sparring} calendar={calendar}
-              onOpenAssessment={onOpenStanceAssessment}
-              onAddToHome={(ctx) => setAddToHomeContext(ctx)} />
+              onOpenAssessment={onOpenStanceAssessment} />
             <DevelopmentStory moves={moves || []} sparring={sparring} calendar={calendar} />
           </div>
         ) : <div style={{padding:20}}><PremiumGate feature="myStance" addToast={addToast}/></div>
