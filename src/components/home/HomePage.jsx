@@ -354,56 +354,28 @@ export const HomePage = ({
     }
   };
 
-  // ── Feature 1: Smart remove ──────────────────────────────────────────────
+  // ── Feature 1: Remove tile ──────────────────────────────────────────────
 
-  const doRemove = (mode) => {
+  const doRemove = () => {
     const tile = confirmRemove;
     if (!tile) return;
 
-    if (tile.type === 'moveUpdate') {
-      // Just remove from Home — don't delete the move itself
-      setHomeStack(prev => ({
-        ...prev,
-        defaultStack: prev.defaultStack.filter(t => t.id !== tile.id),
-      }));
-      setConfirmRemove(null);
-      return;
+    setHomeStack(prev => ({
+      ...prev,
+      defaultStack: prev.defaultStack.filter(t => t.id !== tile.id),
+    }));
+
+    if (tile.type === 'goalhabit' && tile.refId) {
+      const isHabit = habits?.some(h => String(h.id) === String(tile.refId));
+      if (isHabit) {
+        setHabits(prev => prev.filter(h => String(h.id) !== String(tile.refId)));
+      } else if (setIdeas) {
+        setIdeas(prev => prev.filter(i => String(i.id) !== String(tile.refId)));
+      }
+    } else if (tile.type === 'note') {
+      setIdeas(prev => prev.filter(i => i.id !== tile.id));
     }
 
-    if (mode === "justToday") {
-      setHomeStack(prev => {
-        const overrides = { ...(prev.overrides || {}) };
-        const dayOvr = { ...(overrides[selectedDate] || {}) };
-        dayOvr.removed = [...(dayOvr.removed || []), tile.id];
-        overrides[selectedDate] = dayOvr;
-        return { ...prev, overrides };
-      });
-    } else if (mode === "deleteEntirely") {
-      // Remove tile from HOME
-      setHomeStack(prev => ({
-        ...prev,
-        defaultStack: prev.defaultStack.filter(t => t.id !== tile.id),
-      }));
-      // Delete underlying data
-      if (tile.refId) {
-        const isHabit = habits?.some(h => String(h.id) === String(tile.refId));
-        if (isHabit) {
-          setHabits(prev => prev.filter(h => String(h.id) !== String(tile.refId)));
-        } else if (setIdeas) {
-          setIdeas(prev => prev.filter(i => String(i.id) !== String(tile.refId)));
-        }
-      }
-    } else {
-      // "allDays" — remove from defaultStack permanently
-      setHomeStack(prev => ({
-        ...prev,
-        defaultStack: prev.defaultStack.filter(t => t.id !== tile.id),
-      }));
-      if (tile.type === 'note') {
-        setIdeas(prev => prev.filter(i => i.id !== tile.id));
-        // TODO: remove linked calendar events by ideaId (removeCalendarEvent filters by event.id, not ideaId)
-      }
-    }
     setConfirmRemove(null);
   };
 
@@ -1016,7 +988,7 @@ export const HomePage = ({
         )}
       </BottomSheet>
 
-      {/* ── Feature 1: Smart remove confirmation ── */}
+      {/* ── Remove tile confirmation ── */}
       {confirmRemove && (
         <Modal title={t("confirm")} onClose={() => setConfirmRemove(null)}>
           <p style={{ color: C.textSec, fontSize: 13, lineHeight: 1.6, marginBottom: 16 }}>
@@ -1025,34 +997,7 @@ export const HomePage = ({
             </span>
           </p>
           <div style={{ display: "flex", gap: 8, flexDirection: "column" }}>
-            {/* Recurring routine: Just today + All days */}
-            {confirmRemove.type === 'routine' && confirmRemove.repeat?.type !== 'none' && (<>
-              <Btn variant="secondary" onClick={() => doRemove("justToday")}>{t("justToday")}</Btn>
-              <Btn variant="primary" onClick={() => doRemove("allDays")}>{t("deletePermanently")}</Btn>
-            </>)}
-
-            {/* Non-recurring routine: Delete permanently only */}
-            {confirmRemove.type === 'routine' && (confirmRemove.repeat?.type === 'none' || !confirmRemove.repeat) && (
-              <Btn variant="primary" onClick={() => doRemove("allDays")}>{t("deletePermanently")}</Btn>
-            )}
-
-            {/* Note: Remove from here + Delete everywhere */}
-            {confirmRemove.type === 'note' && (<>
-              <Btn variant="secondary" onClick={() => doRemove("justToday")}>{t("removeFromHere")}</Btn>
-              <Btn variant="primary" onClick={() => doRemove("allDays")}>{t("deleteEverywhere")}</Btn>
-            </>)}
-
-            {/* Goal/Habit: Remove from HOME + Delete entirely */}
-            {confirmRemove.type === 'goalhabit' && (<>
-              <Btn variant="secondary" onClick={() => doRemove("allDays")}>{t("removeFromHome")}</Btn>
-              <Btn variant="primary" onClick={() => doRemove("deleteEntirely")}>{t("deleteEntirely")}</Btn>
-            </>)}
-
-            {/* Move Update: Remove from Home only */}
-            {confirmRemove.type === 'moveUpdate' && (
-              <Btn variant="secondary" onClick={() => doRemove("removeFromHome")}>{t("removeFromHome")}</Btn>
-            )}
-
+            <Btn variant="primary" onClick={() => doRemove()}>{t("removeFromHome")}</Btn>
             <Btn variant="secondary" onClick={() => setConfirmRemove(null)}>{t("cancel")}</Btn>
           </div>
         </Modal>
