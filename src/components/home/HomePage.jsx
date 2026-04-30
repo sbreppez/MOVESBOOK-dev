@@ -16,6 +16,7 @@ import { useSettings } from '../../hooks/useSettings';
 import { useT } from '../../hooks/useTranslation';
 import { Ic } from '../shared/Ic';
 import { Modal } from '../shared/Modal';
+import { ConfirmDialog } from '../shared/ConfirmDialog';
 import { Btn } from '../shared/Btn';
 import { SectionBrief } from '../shared/SectionBrief';
 import { todayLocal } from '../../utils/dateUtils';
@@ -990,17 +991,13 @@ export const HomePage = ({
 
       {/* ── Remove tile confirmation ── */}
       {confirmRemove && (
-        <Modal title={t("confirm")} onClose={() => setConfirmRemove(null)}>
-          <p style={{ color: C.textSec, fontSize: 13, lineHeight: 1.6, marginBottom: 16 }}>
-            <span style={{ fontWeight: 700, color: C.text }}>
-              {resolveTileName(confirmRemove, habits, ideas, moves)}
-            </span>
-          </p>
-          <div style={{ display: "flex", gap: 8, flexDirection: "column" }}>
-            <Btn variant="primary" onClick={() => doRemove()}>{t("removeFromHome")}</Btn>
-            <Btn variant="secondary" onClick={() => setConfirmRemove(null)}>{t("cancel")}</Btn>
-          </div>
-        </Modal>
+        <ConfirmDialog
+          title={t("removeFromHomeQ")}
+          body={<>{t("removeFromHomeBody1")}<span style={{ color: C.text, fontWeight: 700 }}>{resolveTileName(confirmRemove, habits, ideas, moves)}</span>{t("removeFromHomeBody2")}</>}
+          confirmLabel={t("removeFromHome")}
+          onCancel={() => setConfirmRemove(null)}
+          onConfirm={() => doRemove()}
+        />
       )}
 
       {/* ── Feature 5: Bulk delete confirmation ── */}
