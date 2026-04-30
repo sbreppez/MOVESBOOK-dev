@@ -48,24 +48,25 @@ export const TargetGoalModal = ({ onClose, onSave, idea, moves=[], prefill }) =>
 
   return (
     <div style={{ width:"100%", maxHeight:"92%", background:C.bg, borderRadius:16, display:"flex", flexDirection:"column", overflow:"hidden", boxShadow:"0 16px 48px rgba(0,0,0,0.5)" }}>
-      {/* Header */}
-      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 16px", background:C.surface, borderBottom:`1px solid ${C.border}`, flexShrink:0 }}>
-        <span style={{ fontWeight:900, fontSize:16, letterSpacing:2, fontFamily:FONT_DISPLAY, color:C.accent }}>{isEdit?t("editTarget"):t("newTarget")}</span>
-        <div style={{ display:"flex", gap:8 }}>
-          <Btn variant="secondary" onClick={onClose}>{t("cancel")}</Btn>
-          <Btn onClick={handleSave} disabled={!title.trim()}>{t("save")}</Btn>
+      {/* Header — title + helper, no buttons */}
+      <div style={{ padding:"16px 20px 12px", flexShrink:0 }}>
+        <div style={{ fontWeight:900, fontSize:16, letterSpacing:1.5, fontFamily:FONT_DISPLAY, color:C.text }}>
+          {isEdit ? t("editTarget") : t("newTarget")}
+        </div>
+        <div style={{ fontSize:12, color:C.textMuted, fontFamily:FONT_BODY, fontStyle:"italic", lineHeight:1.5, marginTop:4 }}>
+          {t("targetModalHelper")}
         </div>
       </div>
 
       {/* Tabs — only when editing */}
-      {isEdit&&(
-        <div style={{ display:"flex", background:C.surface, borderBottom:`2px solid ${C.border}`, flexShrink:0 }}>
+      {isEdit && (
+        <div style={{ display:"flex", background:C.bg, borderBottom:`2px solid ${C.border}`, flexShrink:0 }}>
           {tabs.map(tb=>{
             const on = activeTab===tb.id;
             return (
               <button key={tb.id} onClick={()=>setActiveTab(tb.id)}
-                style={{ flex:1, padding:"10px 6px", border:"none", cursor:"pointer", background:on?C.bg:"transparent",
-                  color:on?C.accent:C.textSec, borderBottom:`3px solid ${on?C.accent:"transparent"}`,
+                style={{ flex:1, padding:"10px 6px", border:"none", cursor:"pointer", background:on?C.surface:"transparent",
+                  color:on?C.text:C.textMuted, borderBottom:`3px solid ${on?C.accent:"transparent"}`,
                   fontSize:11, fontWeight:800, letterSpacing:1.5, fontFamily:FONT_DISPLAY }}>
                 {tb.label}
               </button>
@@ -74,7 +75,7 @@ export const TargetGoalModal = ({ onClose, onSave, idea, moves=[], prefill }) =>
         </div>
       )}
 
-      <div style={{ flex:1, overflow:"auto", padding:16 }}>
+      <div style={{ flex:1, overflow:"auto", padding:"16px 20px" }}>
 
         {/* ── JOURNAL TAB ── */}
         {activeTab==="journal"&&(
@@ -101,45 +102,28 @@ export const TargetGoalModal = ({ onClose, onSave, idea, moves=[], prefill }) =>
         {/* ── TARGET TAB ── */}
         {activeTab==="target"&&(
           <div>
-            {!isEdit&&(
-              <div style={{
-                fontSize: 11, color: C.textMuted, fontFamily: FONT_BODY,
-                lineHeight: 1.5, marginBottom: 14, fontStyle: "italic",
-              }}>
-                {t("targetDesc")}
-              </div>
-            )}
-            {!isEdit&&(
-              <div style={{ display:"flex", alignItems:"flex-start", gap:8, padding:"10px 12px", background:`${C.accent}12`,
-                border:`1px solid ${C.accent}30`, borderRadius:8, marginBottom:18 }}>
-                <span style={{ flexShrink:0 }}><Ic n="book" s={16} c={C.textMuted}/></span>
-                <span style={{ fontSize:13, color:C.textSec, lineHeight:1.6 }}>
-                  {t("targetJournalDesc").split(t("trainingJournal")).map((part,i,arr)=>i<arr.length-1?<React.Fragment key={i}>{part}<strong style={{color:C.text}}>{t("trainingJournal")}</strong></React.Fragment>:part)}
-                </span>
-              </div>
-            )}
             <div style={{ marginBottom:14 }}>
-              <label style={lbl()}>{t("title")} *</label>
-              <input value={title} onChange={e=>setTitle(e.target.value)} placeholder="e.g. Learn 20 new moves…"
+              <label style={lbl()}>{t("targetTitleLabel")}</label>
+              <input value={title} onChange={e=>setTitle(e.target.value)} placeholder={t("targetTitlePlaceholder")}
                 style={{ ...inputStyle, fontSize:14, fontWeight:700, border:`1.5px solid ${C.accent}`, fontFamily:FONT_DISPLAY }}/>
             </div>
             <div style={{ display:"flex", gap:10, marginBottom:14 }}>
               <div style={{ flex:1 }}>
-                <label style={lbl()}>{t("targetNumberLabel")} *</label>
+                <label style={lbl()}>{t("targetTargetLabel")}</label>
                 <input type="number" min="0" value={targetRaw}
                   onChange={e=>{ setTargetRaw(e.target.value); const n=parseInt(e.target.value); if(!isNaN(n)&&n>=0) setTarget(n); }}
                   onBlur={()=>{ const n=parseInt(targetRaw); const v=isNaN(n)||n<0?0:n; setTarget(v); setTargetRaw(String(v)); }}
                   style={{ ...inputStyle, fontWeight:800, fontSize:18, fontFamily:FONT_DISPLAY, textAlign:"center" }}/>
               </div>
               <div style={{ flex:2 }}>
-                <label style={lbl()}>{t("unitLabel")}</label>
+                <label style={lbl()}>{t("targetUnitLabel")}</label>
                 <input value={unit} onChange={e=>setUnit(e.target.value)} placeholder={t("unitPlaceholder")}
                   style={inputStyle}/>
               </div>
             </div>
             {!(autoLink && autoLinkEnabled) && (
               <div style={{ marginBottom:14 }}>
-                <label style={lbl()}>{t("currentProgress")}</label>
+                <label style={lbl()}>{t("targetCurrentProgressLabel")}</label>
                 <div style={{ display:"flex", alignItems:"center", gap:8 }}>
                   <button onClick={()=>setCurrent(Math.max(0,current-1))}
                     style={{ width:36, height:36, borderRadius:8, border:`1px solid ${C.border}`, background:C.surface,
@@ -168,18 +152,25 @@ export const TargetGoalModal = ({ onClose, onSave, idea, moves=[], prefill }) =>
               </div>
             )}
             <div style={{ marginBottom:14 }}>
-              <label style={lbl()}>{t("deadlineOptional")}</label>
+              <label style={lbl()}>{t("targetDeadlineLabel")}</label>
               <input type="date" value={byWhen} onChange={e=>setByWhen(e.target.value)}
-                style={{ ...inputStyle, colorScheme: C.bg==="#121212"?"dark":"light" }}/>
+                style={{ ...inputStyle, colorScheme: C.bg==="#0A0A0A"?"dark":"light" }}/>
             </div>
-            <div style={{ marginBottom:14 }}>
-              <label style={lbl()}>{t("videoRefOptional")}</label>
+            <div>
+              <label style={lbl()}>{t("targetVideoRefLabel")}</label>
               <input value={link} onChange={e=>setLink(e.target.value)}
                 placeholder="https://youtube.com/…"
                 style={inputStyle}/>
             </div>
           </div>
         )}
+      </div>
+
+      {/* Footer — Save/Cancel always visible */}
+      <div style={{ display:"flex", gap:8, justifyContent:"flex-end", padding:"16px 20px",
+        borderTop:`1px solid ${C.borderLight}`, flexShrink:0 }}>
+        <Btn variant="ghost" onClick={onClose}>{t("cancel")}</Btn>
+        <Btn onClick={handleSave} disabled={!title.trim()}>{t("save")}</Btn>
       </div>
     </div>
   );
