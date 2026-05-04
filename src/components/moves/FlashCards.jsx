@@ -80,6 +80,8 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
         title: "Flash Cards",
         type: "flashcards",
         score: { percentage, total, correct },
+        setId: deck[0].id,
+        setIds: deck.map(s => s.id),
       });
 
       setScreen("summary");
