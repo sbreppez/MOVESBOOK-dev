@@ -4,13 +4,7 @@
  * No React dependencies.
  */
 
-import { todayLocal, toLocalYMD } from './dateUtils';
-
-const toYMD = (d) => {
-  if (!d) return null;
-  if (typeof d === "string" && /^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
-  try { return toLocalYMD(d); } catch { return null; }
-};
+import { todayLocal, toLocalYMD, toYMD } from './dateUtils';
 
 const getMonday = (dateStr) => {
   const d = new Date(dateStr + "T00:00:00");

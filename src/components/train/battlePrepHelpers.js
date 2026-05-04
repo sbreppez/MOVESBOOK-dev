@@ -1,5 +1,7 @@
 // Battle Prep Helpers — Phase distribution, task generation, date math
 
+import { toYMD } from '../../utils/dateUtils';
+
 // ── Preset configurations ──────────────────────────────────────────────────
 export const PRESET_CONFIGS = {
   smoke: {
@@ -83,20 +85,7 @@ export function getPreparationStats(plan, dayMap, battleDate) {
 }
 
 // ── Date utilities ─────────────────────────────────────────────────────────
-// CRITICAL: Use local time, NOT toISOString() which converts to UTC and
-// shifts dates in positive-offset timezones (e.g. AEST = UTC+10).
-function localYMD(date) {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-}
-
-export const toYMD = (d) => {
-  if (!d) return null;
-  if (typeof d === "string" && /^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
-  try { return localYMD(new Date(d)); } catch { return null; }
-};
+// toYMD is imported from utils/dateUtils — use that canonical export.
 
 export const addDays = (dateStr, n) => {
   const d = new Date(dateStr + "T00:00:00");

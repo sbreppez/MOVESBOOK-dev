@@ -11,13 +11,8 @@ import { Modal } from '../shared/Modal';
 import { BottomSheet } from '../shared/BottomSheet';
 import { IdeaForm } from '../home/IdeaForm';
 import { BattleResultDetail } from '../reflect/BattleResultDetail';
-import { todayLocal, toLocalYMD } from '../../utils/dateUtils';
-
-const toYMD = (d) => {
-  if (!d) return null;
-  if (typeof d === "string" && /^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
-  try { return toLocalYMD(d); } catch { return null; }
-};
+import { todayLocal, toYMD } from '../../utils/dateUtils';
+import { useDayData } from '../../hooks/useDayData';
 
 const MONTH_KEYS = ["january","february","march","april","may","june","july","august","september","october","november","december"];
 const DAY_KEYS = ["sunS","monS","tueS","wedS","thuS","friS","satS"];
@@ -104,19 +99,7 @@ export const CalendarOverlay = ({
   }, [moves, reps, sparring, habits, ideas, calendar, allDayMaps]);
 
   // Day detail data
-  const dayData = useMemo(() => {
-    if (!selectedDay) return null;
-    const d = selectedDay;
-    return {
-      movesTrained: (moves || []).filter(m => toYMD(m.date) === d),
-      repSessions: (reps || []).filter(r => toYMD(r.date) === d),
-      sparringSessions: (sparring?.sessions || []).filter(s => toYMD(s.date) === d),
-      musicflowSessions: (musicflow?.sessions || []).filter(s => toYMD(s.date) === d),
-      habitsCompleted: (habits || []).filter(h => (h.checkIns || []).includes(d)),
-      notesOnDay: (ideas || []).filter(i => (i.journal || []).some(j => toYMD(j.date) === d)),
-      calendarEvents: (calendar?.events || []).filter(e => e.date === d),
-    };
-  }, [selectedDay, moves, reps, sparring, musicflow, habits, ideas, calendar]);
+  const dayData = useDayData(selectedDay, { moves, reps, sparring, musicflow, habits, ideas, calendar });
 
   const handleSaveEvent = useCallback((eventObj) => {
     setCalendar(prev => {
@@ -580,7 +563,8 @@ export const CalendarOverlay = ({
 
             {/* No activity */}
             {dayData.movesTrained.length === 0 && dayData.repSessions.length === 0 &&
-             dayData.sparringSessions.length === 0 && dayData.musicflowSessions.length === 0 &&
+             dayData.sparringSessions.length === 0 && dayData.sparringSessions1v1.length === 0 &&
+             dayData.musicflowSessions.length === 0 &&
              dayData.habitsCompleted.length === 0 &&
              dayData.notesOnDay.length === 0 && dayData.calendarEvents.length === 0 &&
              !(activityMap[selectedDay]?.battlePrepPhases?.length) && (
@@ -628,6 +612,11 @@ export const CalendarOverlay = ({
                         </div>
                       )}
                       {e.notes && <div style={{ fontSize: 11, color: C.textSec, marginTop: 3 }}>{e.notes}</div>}
+                      {e.noteForNextTraining && (
+                        <div style={{ fontSize: 11, color: C.textSec, marginTop: 3, fontStyle: "italic" }}>
+                          → {t("nextTimeLabel")}: {e.noteForNextTraining}
+                        </div>
+                      )}
                       {e.eventLink && (
                         <a href={e.eventLink} target="_blank" rel="noopener noreferrer"
                           style={{ fontSize: 11, color: C.blue, marginTop: 3, display: "flex", alignItems: "center", gap: 4, textDecoration: "none" }}>
@@ -741,15 +730,21 @@ export const CalendarOverlay = ({
               </div>
             )}
 
-            {/* Sparring Sessions */}
-            {dayData.sparringSessions.length > 0 && (
+            {/* Sparring Sessions (Solo + 1v1) */}
+            {(dayData.sparringSessions.length > 0 || dayData.sparringSessions1v1.length > 0) && (
               <div>
                 <div style={sectionLabel}>{t("sparringSession")}</div>
-                {dayData.sparringSessions.map(s => (
-                  <div key={s.id} style={{ fontSize: 11, color: C.textSec, padding: "3px 0" }}>
+                {[
+                  ...dayData.sparringSessions.map(s => ({ ...s, _kind: "solo" })),
+                  ...dayData.sparringSessions1v1.map(s => ({ ...s, _kind: "1v1" })),
+                ].map(s => (
+                  <div key={`${s._kind}-${s.id}`} style={{ fontSize: 11, color: C.textSec, padding: "3px 0" }}>
                     <span style={{ color: C.text, fontWeight: 600 }}>
                       {s.roundLog?.length || 0} rounds
                     </span>
+                    {s._kind === "1v1" && s.opponent && (
+                      <span style={{ marginLeft: 8, color: C.textMuted }}>vs {s.opponent}</span>
+                    )}
                     {s.notes && <span style={{ marginLeft: 8, fontStyle: "italic" }}>{s.notes}</span>}
                     {s.reflection && (
                       <div style={{ fontSize: 11, color: C.textMuted, fontStyle: "italic", marginTop: 2 }}>
