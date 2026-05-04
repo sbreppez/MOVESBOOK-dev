@@ -82,6 +82,7 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
         score: { percentage, total, correct },
         setId: deck[0].id,
         setIds: deck.map(s => s.id),
+        moveIds: [...new Set(deck.flatMap(s => s.moveIds || []))],
       });
 
       setScreen("summary");
