@@ -13,7 +13,8 @@ function fmtDuration(totalSec) {
 const tileStyle = {
   background: C.surface,
   borderRadius: 8,
-  padding: "14px 16px",
+  padding: "14px 40px 14px 16px",
+  position: "relative",
 };
 
 const titleStyle = {
@@ -47,6 +48,27 @@ const expansionItemStyle = {
 const expansionContainerStyle = {
   marginTop: 8,
 };
+
+function TileXButton({ onClick }) {
+  return (
+    <button
+      onClick={(e) => { e.stopPropagation(); onClick(); }}
+      aria-label="Remove from log"
+      style={{
+        position: "absolute",
+        top: 8,
+        right: 8,
+        background: "none",
+        border: "none",
+        cursor: "pointer",
+        padding: 6,
+        lineHeight: 0,
+      }}
+    >
+      <Ic n="x" s={12} c={C.textMuted} />
+    </button>
+  );
+}
 
 function ChevronToggle({ expanded, onToggle }) {
   return (
@@ -105,13 +127,16 @@ function Section({ title, rows, isFirst, children }) {
   );
 }
 
-function DrillTile({ session, moves }) {
+function DrillTile({ session, moves, pending, xButton }) {
   const name = session.moveName
     || moves?.find(m => m.id === session.moveId)?.name
     || "Move";
   return (
-    <div style={tileStyle}>
-      <span style={titleStyle}>DRILL — {name}</span>
+    <div style={{ ...tileStyle, opacity: pending ? 0.4 : 1 }}>
+      {xButton}
+      <span style={{ ...titleStyle, textDecoration: pending ? "line-through" : "none" }}>
+        DRILL — {name}
+      </span>
       <span style={subtitleStyle}>
         {session.reps} reps · {fmtDuration(session.duration)}
       </span>
@@ -119,14 +144,17 @@ function DrillTile({ session, moves }) {
   );
 }
 
-function SparSoloTile({ session, moves }) {
+function SparSoloTile({ session, moves, pending, xButton }) {
   const [expanded, setExpanded] = useState(false);
   const tagged = session.movesTrained || [];
   const hasExpansion = tagged.length > 0;
   const totalSec = (session.totalDuration || 0) / 1000;
   return (
-    <div style={tileStyle}>
-      <span style={titleStyle}>SOLO SPAR</span>
+    <div style={{ ...tileStyle, opacity: pending ? 0.4 : 1 }}>
+      {xButton}
+      <span style={{ ...titleStyle, textDecoration: pending ? "line-through" : "none" }}>
+        SOLO SPAR
+      </span>
       <span style={subtitleStyle}>
         {session.rounds} rounds · {fmtDuration(totalSec)}
       </span>
@@ -145,15 +173,18 @@ function SparSoloTile({ session, moves }) {
   );
 }
 
-function Spar1v1Tile({ session }) {
+function Spar1v1Tile({ session, pending, xButton }) {
   const [expanded, setExpanded] = useState(false);
   const log = session.roundLog || [];
   const hasExpansion = log.length > 0;
   const opponent = session.opponent || "?";
   const loc = session.location ? ` · ${session.location}` : "";
   return (
-    <div style={tileStyle}>
-      <span style={titleStyle}>1V1 SPAR — {opponent}</span>
+    <div style={{ ...tileStyle, opacity: pending ? 0.4 : 1 }}>
+      {xButton}
+      <span style={{ ...titleStyle, textDecoration: pending ? "line-through" : "none" }}>
+        1V1 SPAR — {opponent}
+      </span>
       <span style={subtitleStyle}>
         {session.userRounds || 0}–{session.opponentRounds || 0}{loc}
       </span>
@@ -176,7 +207,7 @@ function Spar1v1Tile({ session }) {
   );
 }
 
-function SetsPracticedTile({ event, sets, moves }) {
+function SetsPracticedTile({ event, sets, moves, pending, xButton }) {
   const [expanded, setExpanded] = useState(false);
   const set = event.setId ? sets?.find(s => s.id === event.setId) : null;
   const setName = set?.name || "SET UNKNOWN";
@@ -184,8 +215,11 @@ function SetsPracticedTile({ event, sets, moves }) {
   const hasExpansion = !!set && setMoveIds.length > 0;
   const score = event.score || {};
   return (
-    <div style={tileStyle}>
-      <span style={titleStyle}>{setName}</span>
+    <div style={{ ...tileStyle, opacity: pending ? 0.4 : 1 }}>
+      {xButton}
+      <span style={{ ...titleStyle, textDecoration: pending ? "line-through" : "none" }}>
+        {setName}
+      </span>
       <span style={subtitleStyle}>
         {score.correct ?? 0}/{score.total ?? 0} correct ({score.percentage ?? 0}%)
       </span>
@@ -204,13 +238,16 @@ function SetsPracticedTile({ event, sets, moves }) {
   );
 }
 
-function SavedCombosTile({ event, moves }) {
+function SavedCombosTile({ event, moves, pending, xButton }) {
   const [expanded, setExpanded] = useState(false);
   const moveIds = event.moveIds || [];
   const hasExpansion = moveIds.length > 0;
   return (
-    <div style={tileStyle}>
-      <span style={titleStyle}>{event.title}</span>
+    <div style={{ ...tileStyle, opacity: pending ? 0.4 : 1 }}>
+      {xButton}
+      <span style={{ ...titleStyle, textDecoration: pending ? "line-through" : "none" }}>
+        {event.title}
+      </span>
       {event.notes && (
         <span style={{ ...subtitleStyle, whiteSpace: "normal" }}>{event.notes}</span>
       )}
@@ -229,13 +266,16 @@ function SavedCombosTile({ event, moves }) {
   );
 }
 
-function FlowTile({ session }) {
+function FlowTile({ session, pending, xButton }) {
   const [expanded, setExpanded] = useState(false);
   const reflection = typeof session.reflection === "string" ? session.reflection.trim() : "";
   const hasExpansion = reflection.length > 0;
   return (
-    <div style={tileStyle}>
-      <span style={titleStyle}>FLOW</span>
+    <div style={{ ...tileStyle, opacity: pending ? 0.4 : 1 }}>
+      {xButton}
+      <span style={{ ...titleStyle, textDecoration: pending ? "line-through" : "none" }}>
+        FLOW
+      </span>
       <span style={subtitleStyle}>
         {fmtDuration(session.duration)} · Stage {session.stageReached ?? "—"} · {session.promptCount ?? 0} prompts
       </span>
@@ -253,22 +293,28 @@ function FlowTile({ session }) {
   );
 }
 
-function MovesTrainedTile({ move }) {
+function MovesTrainedTile({ move, pending, xButton }) {
   return (
-    <div style={tileStyle}>
-      <span style={titleStyle}>{move.name}</span>
+    <div style={{ ...tileStyle, opacity: pending ? 0.4 : 1 }}>
+      {xButton}
+      <span style={{ ...titleStyle, textDecoration: pending ? "line-through" : "none" }}>
+        {move.name}
+      </span>
       <span style={subtitleStyle}>{move.category}</span>
     </div>
   );
 }
 
-function ManualSessionTile({ event }) {
+function ManualSessionTile({ event, pending, xButton }) {
   const [expanded, setExpanded] = useState(false);
   const notes = typeof event.notes === "string" ? event.notes.trim() : "";
   const hasExpansion = notes.length > 0;
   return (
-    <div style={tileStyle}>
-      <span style={titleStyle}>{event.title}</span>
+    <div style={{ ...tileStyle, opacity: pending ? 0.4 : 1 }}>
+      {xButton}
+      <span style={{ ...titleStyle, textDecoration: pending ? "line-through" : "none" }}>
+        {event.title}
+      </span>
       {event.duration ? (
         <span style={subtitleStyle}>{event.duration} min</span>
       ) : null}
@@ -286,18 +332,109 @@ function ManualSessionTile({ event }) {
   );
 }
 
-export function LogTodayTraining({ buckets, moves, sets }) {
+export function LogTodayTraining({ buckets, moves, sets, isPending, onToggleExclusion }) {
   if (!buckets) return null;
 
+  const checkPending = isPending || (() => false);
+  const makeXButton = (source, sourceId) =>
+    onToggleExclusion
+      ? <TileXButton onClick={() => onToggleExclusion(source, sourceId)} />
+      : null;
+
   const sections = [
-    { title: "DRILL",           rows: buckets.drillSessions,        render: (s) => <DrillTile session={s} moves={moves} /> },
-    { title: "SOLO SPAR",       rows: buckets.sparSoloSessions,     render: (s) => <SparSoloTile session={s} moves={moves} /> },
-    { title: "1V1 SPAR",        rows: buckets.sparOneVoneSessions,  render: (s) => <Spar1v1Tile session={s} /> },
-    { title: "SETS PRACTICED",  rows: buckets.setsPracticed,        render: (e) => <SetsPracticedTile event={e} sets={sets} moves={moves} /> },
-    { title: "SAVED COMBOS",    rows: buckets.savedCombos,          render: (e) => <SavedCombosTile event={e} moves={moves} /> },
-    { title: "FLOW",            rows: buckets.flowSessions,         render: (s) => <FlowTile session={s} /> },
-    { title: "MOVES TRAINED",   rows: buckets.movesTrained,         render: (m) => <MovesTrainedTile move={m} /> },
-    { title: "MANUAL SESSIONS", rows: buckets.manualSessions,       render: (e) => <ManualSessionTile event={e} /> },
+    {
+      title: "DRILL",
+      rows: buckets.drillSessions,
+      render: (s) => (
+        <DrillTile
+          session={s}
+          moves={moves}
+          pending={checkPending("rep_counter", s.id)}
+          xButton={makeXButton("rep_counter", s.id)}
+        />
+      ),
+    },
+    {
+      title: "SOLO SPAR",
+      rows: buckets.sparSoloSessions,
+      render: (s) => (
+        <SparSoloTile
+          session={s}
+          moves={moves}
+          pending={checkPending("sparring", s.id)}
+          xButton={makeXButton("sparring", s.id)}
+        />
+      ),
+    },
+    {
+      title: "1V1 SPAR",
+      rows: buckets.sparOneVoneSessions,
+      render: (s) => (
+        <Spar1v1Tile
+          session={s}
+          pending={checkPending("spar-1v1", s.id)}
+          xButton={makeXButton("spar-1v1", s.id)}
+        />
+      ),
+    },
+    {
+      title: "SETS PRACTICED",
+      rows: buckets.setsPracticed,
+      render: (e) => (
+        <SetsPracticedTile
+          event={e}
+          sets={sets}
+          moves={moves}
+          pending={checkPending("flashcards", e.id)}
+          xButton={makeXButton("flashcards", e.id)}
+        />
+      ),
+    },
+    {
+      title: "SAVED COMBOS",
+      rows: buckets.savedCombos,
+      render: (e) => (
+        <SavedCombosTile
+          event={e}
+          moves={moves}
+          pending={checkPending("combo_machine", e.id)}
+          xButton={makeXButton("combo_machine", e.id)}
+        />
+      ),
+    },
+    {
+      title: "FLOW",
+      rows: buckets.flowSessions,
+      render: (s) => (
+        <FlowTile
+          session={s}
+          pending={checkPending("musicflow", s.id)}
+          xButton={makeXButton("musicflow", s.id)}
+        />
+      ),
+    },
+    {
+      title: "MOVES TRAINED",
+      rows: buckets.movesTrained,
+      render: (m) => (
+        <MovesTrainedTile
+          move={m}
+          pending={checkPending("movesTrained", m.id)}
+          xButton={makeXButton("movesTrained", m.id)}
+        />
+      ),
+    },
+    {
+      title: "MANUAL SESSIONS",
+      rows: buckets.manualSessions,
+      render: (e) => (
+        <ManualSessionTile
+          event={e}
+          pending={checkPending("manual", e.id)}
+          xButton={makeXButton("manual", e.id)}
+        />
+      ),
+    },
   ];
 
   let firstNonEmpty = true;

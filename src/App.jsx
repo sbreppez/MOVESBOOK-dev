@@ -155,6 +155,9 @@ export default function App() {
   const [calendar, setCalendar] = useState(() => {
     try { const s=localStorage.getItem("mb_calendar"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { events:[] };
   });
+  const [log_exclusions, setLogExclusions] = useState(() => {
+    try { const s=localStorage.getItem("mb_log_exclusions"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return {};
+  });
   const [stance, setStance] = useState(() => {
     try { const s=localStorage.getItem("mb_stance"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { assessments:[] };
   });
@@ -253,6 +256,7 @@ export default function App() {
   useEffect(()=>{ saveLocal("mb_flashcards", flashcards); },[flashcards]);
   useEffect(()=>{ saveLocal("mb_reminders", reminders); },[reminders]);
   useEffect(()=>{ saveLocal("mb_calendar", calendar); },[calendar]);
+  useEffect(()=>{ saveLocal("mb_log_exclusions", log_exclusions); },[log_exclusions]);
   useEffect(()=>{ saveLocal("mb_stance", stance); },[stance]);
   useEffect(()=>{ saveLocal("mb_musicflow", musicflow); },[musicflow]);
   useEffect(()=>{ saveLocal("mb_freestyle", freestyle); },[freestyle]);
@@ -309,6 +313,7 @@ export default function App() {
       flashcards:  save("flashcards"),
       reminders:   save("reminders"),
       calendar:    save("calendar"),
+      log_exclusions: save("log_exclusions"),
       stance:      save("stance"),
       musicflow:   save("musicflow"),
       freestyle:   save("freestyle"),
@@ -343,6 +348,7 @@ export default function App() {
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.flashcards?.(fbUser.uid, flashcards); },[flashcards, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.reminders?.(fbUser.uid, reminders); },[reminders, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.calendar?.(fbUser.uid, calendar); },[calendar, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.log_exclusions?.(fbUser.uid, log_exclusions); },[log_exclusions, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.stance?.(fbUser.uid, stance); },[stance, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.musicflow?.(fbUser.uid, musicflow); },[musicflow, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.freestyle?.(fbUser.uid, freestyle); },[freestyle, fbUser]);
@@ -409,6 +415,8 @@ export default function App() {
           if (rm) { try { const p=JSON.parse(rm); if(p&&typeof p==="object") setReminders(p); } catch {} }
           const cal = localStorage.getItem("mb_calendar");
           if (cal) { try { const p=JSON.parse(cal); if(p&&typeof p==="object") setCalendar(p); } catch {} }
+          const lex = localStorage.getItem("mb_log_exclusions");
+          if (lex) { try { const p=JSON.parse(lex); if(p&&typeof p==="object") setLogExclusions(p); } catch {} }
           const stn = localStorage.getItem("mb_stance");
           if (stn) { try { const p=JSON.parse(stn); if(p&&typeof p==="object") setStance(p); } catch {} }
           const mf = localStorage.getItem("mb_musicflow");
@@ -490,6 +498,7 @@ export default function App() {
         setRRR({ lastUsed:{ mode:null, moveId:null, moveName:null, date:null } });
         setReminders({ items:[] });
         setCalendar({ events:[] });
+        setLogExclusions({});
         setStance({ assessments:[] });
         setMusicflow({ sessions:[] });
         setReflections({ lastCategory:-1, lastDate:null });
