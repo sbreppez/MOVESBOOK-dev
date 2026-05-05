@@ -106,7 +106,7 @@ export const MusicFlow = ({ musicflow: _musicflow, onMusicflowChange, onUpdateSe
     }));
 
     addCalendarEvent(
-      { date: today, type: "training", title: "Music Flow", duration, source: "musicflow" },
+      { date: today, type: "training", title: `Music Flow · ${fmtTime(duration * 1000)}`, duration, source: "musicflow" },
       { silent: true }
     );
 
