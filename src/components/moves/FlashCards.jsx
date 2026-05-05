@@ -77,7 +77,7 @@ export const FlashCards = ({ sets, moves, flashcards, onFlashcardsChange, addCal
       addCalendarEvent({
         source: "flashcards",
         date: todayLocal(),
-        title: "Flash Cards",
+        title: `Flash Cards · ${correct}/${total}`,
         type: "flashcards",
         score: { percentage, total, correct },
         setId: deck[0].id,
