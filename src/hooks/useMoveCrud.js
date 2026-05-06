@@ -15,7 +15,7 @@ export const useMoveCrud = ({ moves, setMoves, addToast, t, st }) => {
     }
   };
 
-  const handleToggleTrainedToday = (id) => {
+  const handleToggleTrainedToday = (id, { silent = false } = {}) => {
     const today = todayLocal();
     const move = moves.find(m => m.id === id);
     if (!move) return;
@@ -26,10 +26,12 @@ export const useMoveCrud = ({ moves, setMoves, addToast, t, st }) => {
         ? { ...m, date: m.prevDate || null, prevDate: null }
         : { ...m, prevDate: m.date, date: today };
     }));
-    addToast({
-      icon: isToday ? "refresh" : "check",
-      title: t(isToday ? "unmarkedToday" : "markedTrainedToday"),
-    });
+    if (!silent) {
+      addToast({
+        icon: isToday ? "refresh" : "check",
+        title: t(isToday ? "unmarkedToday" : "markedTrainedToday"),
+      });
+    }
   };
 
   const bulkImport = (newMoves) => {

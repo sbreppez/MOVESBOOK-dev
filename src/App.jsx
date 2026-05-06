@@ -640,16 +640,46 @@ export default function App() {
   // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally narrow deps: uses `.length` values as proxies for list-growth triggers to avoid running on every unrelated state change. Full-object deps would re-fire on any move/sparring/calendar mutation (perf) and risk a loop with milestonesShown being updated inside. Known limitation: milestones that depend on non-count data (e.g. mastery thresholds) may not trigger on the exact update — audit detectMilestones for non-count milestone types if this matters (tracked separately from #41).
   }, [moves.length, sparring?.sessions?.length, battleprep?.history?.length, reps.length, musicflow?.sessions?.length, fbUser]);
 
-  const addCalendarEvent = useCallback((eventData, { silent = false } = {}) => {
+  /**
+   * Append a calendar event.
+   *
+   * @param {object} eventData - the event record (id auto-assigned if absent)
+   * @param {object} [opts]
+   * @param {boolean} [opts.silent=false] - suppress the success toast
+   * @param {boolean} [opts.skipDedup=false] - bypass the (source, date, title)
+   *   duplicate check. Intended for user-authored events where multi-per-day
+   *   is legitimate (LogToday, future SessionJournal-equivalents). Auto-capture
+   *   sources should never pass this.
+   */
+  const addCalendarEvent = useCallback((eventData, { silent = false, skipDedup = false } = {}) => {
     setCalendar(prev => {
-      const isDup = (prev.events || []).some(e =>
-        e.source === eventData.source && e.date === eventData.date && e.title === eventData.title
-      );
-      if (isDup) return prev;
+      if (!skipDedup) {
+        const isDup = (prev.events || []).some(e =>
+          e.source === eventData.source && e.date === eventData.date && e.title === eventData.title
+        );
+        if (isDup) return prev;
+      }
       return { ...prev, events: [...(prev.events || []), { id: Date.now(), ...eventData }] };
     });
     if (!silent) addToast({ icon: "check", title: tr("sessionLogged") });
   }, [setCalendar, addToast, tr]);
+
+  const updateCalendarEvent = useCallback((eventData) => {
+    if (!eventData?.id) return;
+    setCalendar(prev => ({
+      ...prev,
+      events: (prev.events || []).map(e => e.id === eventData.id ? { ...e, ...eventData } : e),
+    }));
+  }, [setCalendar]);
+
+  const markMoveTrainedToday = useCallback((id) => {
+    const today = todayLocal();
+    setMoves(prev => prev.map(m => {
+      if (m.id !== id) return m;
+      if (m.date === today) return m;
+      return { ...m, prevDate: m.date, date: today };
+    }));
+  }, []);
 
   const removeCalendarEvent = useCallback((eventId) => {
     setCalendar(prev => ({ ...prev, events: (prev.events || []).filter(e => e.id !== eventId) }));
