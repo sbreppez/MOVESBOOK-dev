@@ -35,8 +35,7 @@ export function LogTodayMovePicker({
   cats,
   catColors,
   buckets,
-  selectedMoveIds,
-  onToggleSelection,
+  onToggleTrainedToday,
   addToast,
   onClose,
 }) {
@@ -62,7 +61,7 @@ export function LogTodayMovePicker({
       });
       return;
     }
-    onToggleSelection(move.id);
+    onToggleTrainedToday(move.id);
   };
 
   // ── Container ──────────────────────────────────────────────────────────────
@@ -117,18 +116,12 @@ export function LogTodayMovePicker({
     border: `2px solid ${C.border}`, background: "transparent",
   };
 
-  const checkboxSelected = {
-    width: 18, height: 18, borderRadius: 4, flexShrink: 0,
-    border: `2px solid ${C.accent}`, background: C.accent,
-    display: "flex", alignItems: "center", justifyContent: "center",
-  };
-
   // ── Empty state: no moves in library ──────────────────────────────────────
   if (moves.length === 0) {
     return (
       <div style={overlay}>
         <div style={header}>
-          <span style={headerTitle}>ADD MOVES</span>
+          <span style={headerTitle}>ADD A MOVE</span>
           <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
             <Ic n="x" s={18} c={C.textMuted} />
           </button>
@@ -163,7 +156,7 @@ export function LogTodayMovePicker({
     <div style={overlay}>
       {/* Header */}
       <div style={header}>
-        <span style={headerTitle}>ADD MOVES</span>
+        <span style={headerTitle}>ADD A MOVE</span>
         <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
           <Ic n="x" s={18} c={C.textMuted} />
         </button>
@@ -197,7 +190,6 @@ export function LogTodayMovePicker({
               {group.moves.map(move => {
                 const sourceName = sourceMap.get(move.id);
                 const locked = sourceName !== undefined;
-                const isSelected = !locked && selectedMoveIds.includes(move.id);
                 return (
                   <div
                     key={move.id}
@@ -206,10 +198,6 @@ export function LogTodayMovePicker({
                   >
                     {locked ? (
                       <Ic n="lock" s={18} c={C.textMuted} />
-                    ) : isSelected ? (
-                      <div style={checkboxSelected}>
-                        <Ic n="check" s={12} c="#fff" />
-                      </div>
                     ) : (
                       <div style={checkbox} />
                     )}
