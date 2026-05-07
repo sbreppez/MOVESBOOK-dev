@@ -631,12 +631,14 @@ export default function App() {
   // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally narrow deps: uses `.length` values as proxies for list-growth triggers to avoid running on every unrelated state change. Full-object deps would re-fire on any move/sparring/calendar mutation (perf) and risk a loop with milestonesShown being updated inside. Known limitation: milestones that depend on non-count data (e.g. mastery thresholds) may not trigger on the exact update — audit detectMilestones for non-count milestone types if this matters (tracked separately from #41).
   }, [moves.length, sparring?.sessions?.length, battleprep?.history?.length, reps.length, musicflow?.sessions?.length, fbUser]);
 
-  const addCalendarEvent = useCallback((eventData, { silent = false } = {}) => {
+  const addCalendarEvent = useCallback((eventData, { silent = false, skipDedup = false } = {}) => {
     setCalendar(prev => {
-      const isDup = (prev.events || []).some(e =>
-        e.source === eventData.source && e.date === eventData.date && e.title === eventData.title
-      );
-      if (isDup) return prev;
+      if (!skipDedup) {
+        const isDup = (prev.events || []).some(e =>
+          e.source === eventData.source && e.date === eventData.date && e.title === eventData.title
+        );
+        if (isDup) return prev;
+      }
       return { ...prev, events: [...(prev.events || []), { id: Date.now(), ...eventData }] };
     });
     if (!silent) addToast({ icon: "check", title: tr("sessionLogged") });
@@ -645,6 +647,10 @@ export default function App() {
   const removeCalendarEvent = useCallback((eventId) => {
     setCalendar(prev => ({ ...prev, events: (prev.events || []).filter(e => e.id !== eventId) }));
   }, [setCalendar]);
+
+  const markMoveTrainedToday = useCallback((id) => {
+    setMoves(prev => prev.map(m => m.id === id ? { ...m, date: todayLocal() } : m));
+  }, []);
 
   const onUpdateRepSession = useCallback((sessionId, updates) => {
     setReps(prev => prev.map(s => s.id === sessionId ? {...s, ...updates} : s));
@@ -742,7 +748,7 @@ export default function App() {
             </div>
           )}
           <TrainModalCtx.Provider value={{ openModal:(type,idea,onSave)=>{ setTrainModal({type,idea,onSave}); } }}>
-            {tab==="home" && !showCreate && <HomePage habits={habits} setHabits={setHabits} injuries={injuries} setInjuries={setInjuries} presession={presession} setPresession={setPresession} ideas={ideas} setIdeas={setIdeas} settings={appSettings} onSettingsChange={setAppSettings} homeStack={homeStack} setHomeStack={setHomeStack} homeChecks={homeChecks} setHomeChecks={setHomeChecks} onAddTrigger={addTick} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} calendar={calendar} moves={moves} setMoves={setMovesGrad} cats={cats} catColors={catColors} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} isPremium={isPremium} addToast={addToast}/>}
+            {tab==="home" && !showCreate && <HomePage habits={habits} setHabits={setHabits} injuries={injuries} setInjuries={setInjuries} presession={presession} setPresession={setPresession} ideas={ideas} setIdeas={setIdeas} settings={appSettings} onSettingsChange={setAppSettings} homeStack={homeStack} setHomeStack={setHomeStack} homeChecks={homeChecks} setHomeChecks={setHomeChecks} onAddTrigger={addTick} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} calendar={calendar} moves={moves} setMoves={setMovesGrad} cats={cats} catColors={catColors} sets={sets} markMoveTrainedToday={markMoveTrainedToday} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} isPremium={isPremium} addToast={addToast}/>}
             {tab==="moves" && !showCreate && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} catDomains={catDomains} setCatDomains={setCatDomains} sets={sets} setSets={setSets} addToast={addToast} settings={appSettings} onSettingsChange={setAppSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} reminders={reminders} onRemindersChange={setReminders} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}} onOpenManageReminders={()=>setShowManageReminders(true)} isPremium={isPremium} staleCount={staleCount} onOpenExplore={()=>{if(!isPremium){setGatedFeature("explore");return;}setShowLab(true);}} onOpenRRR={()=>{if(!isPremium){setGatedFeature("rrr");return;}setShowRRR(true);}} onOpenCombine={()=>{if(!isPremium){setGatedFeature("combine");return;}setShowComboMachine(true);}} onOpenMap={()=>{if(!isPremium){setGatedFeature("map");return;}setShowFlowMap(true);}} onOpenFlashCards={()=>{if(!isPremium){setGatedFeature("flashCards");return;}setShowFlashCards(true);}} onOpenTools={()=>setShowCreate(true)} onOpenFlow={()=>{if(!isPremium){setGatedFeature("flow");return;}setShowMusicFlow(true);}} onBulkTrigger={bulkTrigger}/>}
             {tab==="battle" && !showCreate && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} addToast={addToast} freestyle={freestyle} onFreestyleChange={setFreestyle} rivals={rivals} onRivalsChange={setRivals} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} isPremium={isPremium} onSimulate={()=>{if(!isPremium){setGatedFeature("compSim");return;}setShowCompSim(true);}} onOpenSparring={()=>setShowSparring(true)} battleprep={battleprep} setBattleprep={setBattleprep} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={()=>setBattlePrepSeed(null)} onOpenSharedCalendar={(im)=>{setCalendarInitialMonth(im||null); setTab("reflect"); setSubTab("calendar");}}/>}
             {tab==="reflect" && !showCreate && <ReflectPage isPremium={isPremium} ideas={ideas} setIdeas={setIdeas} moves={moves} setMoves={setMovesGrad} reps={reps} sparring={sparring} musicflow={musicflow} habits={habits} setHabits={setHabits} homeStack={homeStack} setHomeStack={setHomeStack} calendar={calendar} setCalendar={setCalendar} cats={cats} catColors={catColors} settings={appSettings} onSettingsChange={setAppSettings} addToast={addToast} stance={stance} battleprep={battleprep} onToggleBattlePrepTask={(planId,dateStr,taskIdx)=>{setBattleprep(prev=>{const plans=(prev.plans||[]).map(p=>{if(p.id!==planId) return p;const key=dateStr+"-"+taskIdx;return {...p, completedTasks:{...(p.completedTasks||{}), [key]:!(p.completedTasks||{})[key]}};});return {...prev, plans};});}} onOpenStanceAssessment={()=>setShowStanceAssessment(true)} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onSubTabChange={setSubTab} onGoToPrep={(seed)=>{setBattlePrepSeed(seed);setTab("battle");}} initialMonth={calendarInitialMonth} sets={sets} onAddTrigger={addTick} parentSubTab={subTab} reports={reports} injuries={injuries}/>}

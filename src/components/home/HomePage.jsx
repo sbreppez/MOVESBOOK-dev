@@ -11,6 +11,7 @@ import { TypeChooserSheet } from '../train/TypeChooserSheet';
 import { HabitModal } from '../train/HabitModal';
 import { MoveModal } from '../moves/MoveModal';
 import { BottomSheet } from '../shared/BottomSheet';
+import { LogTodayModal } from '../logToday/LogTodayModal';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { useSettings } from '../../hooks/useSettings';
 import { useT } from '../../hooks/useTranslation';
@@ -79,7 +80,8 @@ export const HomePage = ({
   ideas, setIdeas, settings, onSettingsChange: _onSettingsChange,
   homeStack, setHomeStack, homeChecks, setHomeChecks,
   onAddTrigger, addCalendarEvent, removeCalendarEvent, calendar,
-  moves, setMoves, cats, catColors, customAttrs, setCustomAttrs, isPremium,
+  moves, setMoves, cats, catColors, sets, markMoveTrainedToday,
+  customAttrs, setCustomAttrs, isPremium,
   addToast,
 }) => {
   const { C } = useSettings();
@@ -87,6 +89,7 @@ export const HomePage = ({
   const todayStr = todayLocal();
   const [selectedDate, setSelectedDate] = useState(todayStr);
   const [showAddPicker, setShowAddPicker] = useState(false);
+  const [showLogToday, setShowLogToday] = useState(false);
   const [addFormType, setAddFormType] = useState(null);
   const [homeTypeChooser, setHomeTypeChooser] = useState(false);
   const [showMoveUpdatePicker, setShowMoveUpdatePicker] = useState(false);
@@ -707,6 +710,26 @@ export const HomePage = ({
 
       {/* Scrollable content */}
       <div style={{ flex: 1, overflow: "auto", paddingBottom: 76 }}>
+        {/* Log Today entry */}
+        <div style={{ padding: "8px 16px 0" }}>
+          <button onClick={() => setShowLogToday(true)} style={{
+            width: "100%",
+            background: "transparent",
+            border: `1px solid ${C.accent}`,
+            color: C.accent,
+            borderRadius: 8,
+            padding: "10px 16px",
+            fontFamily: FONT_DISPLAY,
+            fontWeight: 800,
+            fontSize: 13,
+            letterSpacing: 1.5,
+            textTransform: "uppercase",
+            cursor: "pointer",
+          }}>
+            {t("logToday")}
+          </button>
+        </div>
+
         {/* Pre-session intelligence */}
         {isBreakingDay && presession && (
           <PreSessionIntel presession={presession} setPresession={setPresession}/>
@@ -1253,6 +1276,20 @@ export const HomePage = ({
             idea={journalGoalTile.goal}
           />
         </div>
+      )}
+
+      {showLogToday && (
+        <LogTodayModal
+          date={todayLocal()}
+          moves={moves}
+          sets={sets}
+          cats={cats}
+          catColors={catColors}
+          addCalendarEvent={addCalendarEvent}
+          markMoveTrainedToday={markMoveTrainedToday}
+          addToast={addToast}
+          onClose={() => setShowLogToday(false)}
+        />
       )}
     </div>
   );
