@@ -10,31 +10,35 @@ export const LogTodayTraining = forwardRef(function LogTodayTraining({
   date,
   moves,
   sets,
+  catColors,
   pendingMoveIds = [],
   pendingSetIds = [],
+  onTogglePendingMove,
+  onTogglePendingSet,
   onOpenMovePicker,
   onOpenSetPicker,
   addCalendarEvent,
+  updateCalendarEvent,
   markMoveTrainedToday,
   addToast,
-  event,
+  existingEvent,
   onClose,
 }, ref) {
   const t = useT();
 
-  const [title, setTitle] = useState(event?.title || "");
-  const [workDescription, setWorkDescription] = useState(event?.workDescription || "");
-  const [howItFelt, setHowItFelt] = useState(event?.howItFelt || "");
+  const [title, setTitle] = useState(existingEvent?.title || "");
+  const [workDescription, setWorkDescription] = useState(existingEvent?.workDescription || "");
+  const [howItFelt, setHowItFelt] = useState(existingEvent?.howItFelt || "");
   const [durationH, setDurationH] = useState(
-    event?.duration ? String(Math.floor(event.duration / 60)) : ""
+    existingEvent?.duration ? String(Math.floor(existingEvent.duration / 60)) : ""
   );
   const [durationM, setDurationM] = useState(
-    event?.duration ? String(event.duration % 60) : ""
+    existingEvent?.duration ? String(existingEvent.duration % 60) : ""
   );
-  const [location, setLocation] = useState(event?.location || "");
-  const [videoLink, setVideoLink] = useState(event?.videoLink || "");
-  const [videoLinkOpen, setVideoLinkOpen] = useState(!!event?.videoLink);
-  const [notes, setNotes] = useState(event?.notes || "");
+  const [location, setLocation] = useState(existingEvent?.location || "");
+  const [videoLink, setVideoLink] = useState(existingEvent?.videoLink || "");
+  const [videoLinkOpen, setVideoLinkOpen] = useState(!!existingEvent?.videoLink);
+  const [notes, setNotes] = useState(existingEvent?.notes || "");
   const [chooserOpen, setChooserOpen] = useState(false);
 
   const formSectionHeader = (isFirst) => ({
@@ -64,20 +68,6 @@ export const LogTodayTraining = forwardRef(function LogTodayTraining({
     cursor: "pointer", textAlign: "left",
   };
 
-  // Summary line — visible feedback for what was selected
-  const moveSummaryNames = pendingMoveIds
-    .map(id => moves?.find(m => m.id === id)?.name)
-    .filter(Boolean);
-  const setSummaryNames = pendingSetIds
-    .map(id => sets?.find(s => s.id === id)?.name)
-    .filter(Boolean);
-  const summaryParts = [];
-  if (moveSummaryNames.length > 0) summaryParts.push(`${t("moves")}: ${moveSummaryNames.join(", ")}.`);
-  if (setSummaryNames.length > 0) summaryParts.push(`${t("sets")}: ${setSummaryNames.join(", ")}.`);
-  const summaryLine = summaryParts.length > 0
-    ? `${t("trainedToday")}: ${summaryParts.join(" ")}`
-    : null;
-
   const handleSave = () => {
     const h = parseInt(durationH, 10) || 0;
     const m = parseInt(durationM, 10) || 0;
@@ -89,9 +79,11 @@ export const LogTodayTraining = forwardRef(function LogTodayTraining({
     });
     const allMoveIdsToMark = [...new Set([...pendingMoveIds, ...movesFromSets])];
 
+    const isUpdate = !!existingEvent?.id;
+
     const record = {
-      ...(event || {}),
-      id: event?.id ?? Date.now(),
+      ...(existingEvent || {}),
+      id: existingEvent?.id ?? Date.now(),
       date,
       type: "training",
       source: "log_today",
@@ -106,13 +98,20 @@ export const LogTodayTraining = forwardRef(function LogTodayTraining({
       notes: notes.trim(),
     };
 
-    addCalendarEvent?.(record, { silent: true, skipDedup: true });
+    if (isUpdate) {
+      updateCalendarEvent?.(record);
+    } else {
+      addCalendarEvent?.(record, { silent: true });
+    }
 
     if (markMoveTrainedToday) {
       allMoveIdsToMark.forEach(id => markMoveTrainedToday(id));
     }
 
-    addToast?.({ icon: "check", title: t("sessionLogged") });
+    addToast?.({
+      icon: "check",
+      title: isUpdate ? t("sessionUpdated") : t("sessionLogged"),
+    });
 
     onClose?.();
   };
@@ -149,14 +148,78 @@ export const LogTodayTraining = forwardRef(function LogTodayTraining({
           <Ic n="plus" s={14} c={C.accent} />
         </button>
       </div>
-      {summaryLine && (
-        <div style={{
-          fontSize: 13, fontFamily: FONT_BODY, color: C.textSec,
-          lineHeight: 1.5, marginBottom: 13,
-        }}>
-          {summaryLine}
+
+      {/* Picked moves rows */}
+      {pendingMoveIds.length > 0 && (
+        <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 8 }}>
+          {pendingMoveIds.map(moveId => {
+            const move = moves?.find(m => m.id === moveId);
+            if (!move) return null;
+            return (
+              <div key={moveId} style={{
+                background: C.surface, borderRadius: 8, padding: "10px 12px",
+                borderLeft: `4px solid ${catColors?.[move.category] || C.accent}`,
+                display: "flex", alignItems: "center", gap: 8,
+              }}>
+                <span style={{
+                  flex: 1, fontFamily: FONT_DISPLAY, fontSize: 14, fontWeight: 800,
+                  letterSpacing: 1.2, textTransform: "uppercase", color: C.text,
+                  overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                }}>
+                  {move.name}
+                </span>
+                <button
+                  onClick={() => onTogglePendingMove?.(moveId)}
+                  aria-label={t("remove")}
+                  style={{ background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex" }}
+                >
+                  <Ic n="x" s={14} c={C.textMuted} />
+                </button>
+              </div>
+            );
+          })}
         </div>
       )}
+
+      {/* Picked sets rows */}
+      {pendingSetIds.length > 0 && (
+        <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 8 }}>
+          {pendingSetIds.map(setId => {
+            const set = sets?.find(s => s.id === setId);
+            if (!set) return null;
+            const moveCount = (set.moveIds || []).length;
+            return (
+              <div key={setId} style={{
+                background: C.surface, borderRadius: 8, padding: "10px 12px",
+                display: "flex", alignItems: "center", gap: 8,
+              }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{
+                    fontFamily: FONT_DISPLAY, fontSize: 14, fontWeight: 800,
+                    letterSpacing: 1.2, textTransform: "uppercase", color: C.text,
+                    overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                  }}>
+                    {set.name}
+                  </div>
+                  <div style={{
+                    fontFamily: FONT_BODY, fontSize: 11, color: C.textMuted, marginTop: 2,
+                  }}>
+                    {moveCount} {(moveCount === 1 ? t("move") : t("moves")).toLowerCase()}
+                  </div>
+                </div>
+                <button
+                  onClick={() => onTogglePendingSet?.(setId)}
+                  aria-label={t("remove")}
+                  style={{ background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex" }}
+                >
+                  <Ic n="x" s={14} c={C.textMuted} />
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
       <Txtarea
         value={workDescription}
         onChange={setWorkDescription}

@@ -11,11 +11,13 @@ import { ComingSoonState } from './ComingSoonState';
 
 export function LogTodayModal({
   date,
+  existingEvent,
   moves,
   sets,
   cats,
   catColors,
   addCalendarEvent,
+  updateCalendarEvent,
   markMoveTrainedToday,
   addToast,
   onClose,
@@ -25,8 +27,8 @@ export function LogTodayModal({
   const effectiveDate = date || todayLocal();
 
   const [activeTab, setActiveTab] = useState("training");
-  const [pendingMoveIds, setPendingMoveIds] = useState([]);
-  const [pendingSetIds, setPendingSetIds] = useState([]);
+  const [pendingMoveIds, setPendingMoveIds] = useState(existingEvent?.moveIds || []);
+  const [pendingSetIds, setPendingSetIds] = useState(existingEvent?.setIds || []);
   const [movePickerOpen, setMovePickerOpen] = useState(false);
   const [setPickerOpen, setSetPickerOpen] = useState(false);
 
@@ -147,6 +149,7 @@ export function LogTodayModal({
           <LogTodayTraining
             ref={formRef}
             date={effectiveDate}
+            existingEvent={existingEvent}
             moves={moves}
             sets={sets}
             cats={cats}
@@ -158,6 +161,7 @@ export function LogTodayModal({
             onOpenMovePicker={() => setMovePickerOpen(true)}
             onOpenSetPicker={() => setSetPickerOpen(true)}
             addCalendarEvent={addCalendarEvent}
+            updateCalendarEvent={updateCalendarEvent}
             markMoveTrainedToday={markMoveTrainedToday}
             addToast={addToast}
             onClose={onClose}

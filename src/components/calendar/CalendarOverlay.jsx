@@ -6,6 +6,7 @@ import { useT } from '../../hooks/useTranslation';
 import { Ic } from '../shared/Ic';
 import { EXERTION_OPTIONS, BODY_PARTS, BODY_STATES } from '../shared/BodyCheckIn';
 import { SessionJournal } from './SessionJournal';
+import { LogTodayModal } from '../logToday/LogTodayModal';
 import { computeAllDayMaps, computeDayMap, getTasksForDay, getPrevDayTasks } from '../train/battlePrepHelpers';
 import { Modal } from '../shared/Modal';
 import { BottomSheet } from '../shared/BottomSheet';
@@ -23,6 +24,7 @@ export const CalendarOverlay = ({
   calendar, setCalendar,
   cats, catColors, settings, onSettingsChange,
   addToast,
+  addCalendarEvent, updateCalendarEvent, markMoveTrainedToday,
   onClose, onGoToPrep,
   battleprep, onToggleBattlePrepTask, initialMonth,
   inline, onAddTrigger, reports: _reports, isPremium,
@@ -43,6 +45,7 @@ export const CalendarOverlay = ({
   const [confirmDeleteNote, setConfirmDeleteNote] = useState(null);
   const [editHomeNote, setEditHomeNote] = useState(null);
   const [detailBattle, setDetailBattle] = useState(null); // { battle, plan } | null
+  const [selectedLogTodayEvent, setSelectedLogTodayEvent] = useState(null);
   const prevAddTrigger = useRef(onAddTrigger);
 
   useEffect(() => {
@@ -584,9 +587,13 @@ export const CalendarOverlay = ({
                       onDelete={(evt) => setConfirmDeleteNote(evt)}
                     />;
                   }
+                  const isLogToday = e.source === "log_today";
                   return (
-                  <div key={e.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between",
-                    padding: "8px 10px", background: C.surfaceAlt, borderRadius: 8, marginBottom: 4 }}>
+                  <div key={e.id}
+                    onClick={isLogToday ? () => setSelectedLogTodayEvent(e) : undefined}
+                    style={{ display: "flex", alignItems: "center", justifyContent: "space-between",
+                    padding: "8px 10px", background: C.surfaceAlt, borderRadius: 8, marginBottom: 4,
+                    cursor: isLogToday ? "pointer" : "default" }}>
                     <div style={{ flex: 1 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                         <Ic n={e.type==="training"?"target":e.type==="battle"?"swords":e.type==="rest"?"pause":"mapPin"} s={14}/>
@@ -619,6 +626,7 @@ export const CalendarOverlay = ({
                       )}
                       {e.eventLink && (
                         <a href={e.eventLink} target="_blank" rel="noopener noreferrer"
+                          onClick={(ev) => ev.stopPropagation()}
                           style={{ fontSize: 11, color: C.blue, marginTop: 3, display: "flex", alignItems: "center", gap: 4, textDecoration: "none" }}>
                           <Ic n="link" s={11} c={C.blue} />
                           {e.eventLink.length > 40 ? e.eventLink.slice(0, 40) + "…" : e.eventLink}
@@ -669,12 +677,21 @@ export const CalendarOverlay = ({
                           <Ic n="eye" s={14} c={C.textMuted} />
                         </button>
                       ) : (
-                        <button onClick={() => { setEditEvent(e); setShowJournal(true); }}
+                        <button
+                          onClick={(ev) => {
+                            ev.stopPropagation();
+                            if (isLogToday) {
+                              setSelectedLogTodayEvent(e);
+                            } else {
+                              setEditEvent(e);
+                              setShowJournal(true);
+                            }
+                          }}
                           style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
                           <Ic n="edit" s={14} c={C.textMuted} />
                         </button>
                       )}
-                      <button onClick={() => handleDeleteEvent(e.id)}
+                      <button onClick={(ev) => { ev.stopPropagation(); handleDeleteEvent(e.id); }}
                         style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
                         <Ic n="trash" s={14} c={C.textMuted} />
                       </button>
@@ -926,6 +943,21 @@ export const CalendarOverlay = ({
         onAddToHome={onAddToHome}
         t={t}
       />
+      {selectedLogTodayEvent && (
+        <LogTodayModal
+          date={selectedLogTodayEvent.date}
+          existingEvent={selectedLogTodayEvent}
+          moves={moves}
+          sets={sets}
+          cats={cats}
+          catColors={catColors}
+          addCalendarEvent={addCalendarEvent}
+          updateCalendarEvent={updateCalendarEvent}
+          markMoveTrainedToday={markMoveTrainedToday}
+          addToast={addToast}
+          onClose={() => setSelectedLogTodayEvent(null)}
+        />
+      )}
     </div>
   );
 };

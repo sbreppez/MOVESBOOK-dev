@@ -79,7 +79,7 @@ export const HomePage = ({
   injuries: _injuries, setInjuries: _setInjuries, presession, setPresession,
   ideas, setIdeas, settings, onSettingsChange: _onSettingsChange,
   homeStack, setHomeStack, homeChecks, setHomeChecks,
-  onAddTrigger, addCalendarEvent, removeCalendarEvent, calendar,
+  onAddTrigger, addCalendarEvent, removeCalendarEvent, updateCalendarEvent, calendar,
   moves, setMoves, cats, catColors, sets, markMoveTrainedToday,
   customAttrs, setCustomAttrs, isPremium,
   addToast,
@@ -1278,19 +1278,27 @@ export const HomePage = ({
         </div>
       )}
 
-      {showLogToday && (
-        <LogTodayModal
-          date={todayLocal()}
-          moves={moves}
-          sets={sets}
-          cats={cats}
-          catColors={catColors}
-          addCalendarEvent={addCalendarEvent}
-          markMoveTrainedToday={markMoveTrainedToday}
-          addToast={addToast}
-          onClose={() => setShowLogToday(false)}
-        />
-      )}
+      {showLogToday && (() => {
+        const logTodayDate = todayLocal();
+        const existingLogTodayEvent = (calendar?.events || []).find(
+          e => e.source === "log_today" && e.date === logTodayDate
+        ) || null;
+        return (
+          <LogTodayModal
+            date={logTodayDate}
+            existingEvent={existingLogTodayEvent}
+            moves={moves}
+            sets={sets}
+            cats={cats}
+            catColors={catColors}
+            addCalendarEvent={addCalendarEvent}
+            updateCalendarEvent={updateCalendarEvent}
+            markMoveTrainedToday={markMoveTrainedToday}
+            addToast={addToast}
+            onClose={() => setShowLogToday(false)}
+          />
+        );
+      })()}
     </div>
   );
 };
