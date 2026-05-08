@@ -614,6 +614,8 @@ export const TRANSLATIONS = {
     difficulty_intermediate:"Intermediate",
     difficulty_advanced:"Advanced",
     difficultyBrief:"Easy moves stay sharper longer. Advanced moves decay faster between sessions.",
+    difficultyExplainerP1:"Difficulty affects how fast a move's Execution Level decays between sessions.",
+    difficultyExplainerP2:"Easy moves hold their level for weeks. Intermediate moves decay at a moderate pace. Advanced moves can drop a level within days if you're not actively working them.",
     // Calendar
     calendar:"CALENDAR", noActivity:"No activity", movesTrained:"MOVES TRAINED",
     sparringSession:"SPARRING", repSession:"REP COUNTER", habitCompleted:"HABITS",
@@ -1828,6 +1830,8 @@ export const TRANSLATIONS = {
     difficulty_intermediate:"Intermedio",
     difficulty_advanced:"Avanzato",
     difficultyBrief:"Easy moves stay sharper longer. Advanced moves decay faster between sessions.", // TODO: verify
+    difficultyExplainerP1:"Difficulty affects how fast a move's Execution Level decays between sessions.", // TODO: verify
+    difficultyExplainerP2:"Easy moves hold their level for weeks. Intermediate moves decay at a moderate pace. Advanced moves can drop a level within days if you're not actively working them.", // TODO: verify
     calendar:"CALENDARIO", noActivity:"Nessuna attività", movesTrained:"MOSSE ALLENATE",
     sparringSession:"SPARRING", repSession:"RIPETIZIONI", habitCompleted:"ABITUDINI",
     noteCreated:"NOTE", addEvent:"Aggiungi evento", training:"Allenamento", battleEvent:"Battle",
@@ -3023,6 +3027,8 @@ export const TRANSLATIONS = {
     difficulty_intermediate:"Intermedio",
     difficulty_advanced:"Avanzado",
     difficultyBrief:"Easy moves stay sharper longer. Advanced moves decay faster between sessions.", // TODO: verify
+    difficultyExplainerP1:"Difficulty affects how fast a move's Execution Level decays between sessions.", // TODO: verify
+    difficultyExplainerP2:"Easy moves hold their level for weeks. Intermediate moves decay at a moderate pace. Advanced moves can drop a level within days if you're not actively working them.", // TODO: verify
     calendar:"CALENDARIO", noActivity:"Sin actividad", movesTrained:"MOVIMIENTOS ENTRENADOS",
     sparringSession:"SPARRING", repSession:"REPETICIONES", habitCompleted:"HÁBITOS",
     noteCreated:"NOTAS", addEvent:"Agregar evento", training:"Entrenamiento", battleEvent:"Battle",
@@ -4218,6 +4224,8 @@ export const TRANSLATIONS = {
     difficulty_intermediate:"Intermédiaire",
     difficulty_advanced:"Avancé",
     difficultyBrief:"Easy moves stay sharper longer. Advanced moves decay faster between sessions.", // TODO: verify
+    difficultyExplainerP1:"Difficulty affects how fast a move's Execution Level decays between sessions.", // TODO: verify
+    difficultyExplainerP2:"Easy moves hold their level for weeks. Intermediate moves decay at a moderate pace. Advanced moves can drop a level within days if you're not actively working them.", // TODO: verify
     calendar:"CALENDRIER", noActivity:"Aucune activité", movesTrained:"MOUVEMENTS ENTRAÎNÉS",
     sparringSession:"SPARRING", repSession:"RÉPÉTITIONS", habitCompleted:"HABITUDES",
     noteCreated:"NOTES", addEvent:"Ajouter un événement", training:"Entraînement", battleEvent:"Battle",
@@ -5413,6 +5421,8 @@ export const TRANSLATIONS = {
     difficulty_intermediate:"Intermediário",
     difficulty_advanced:"Avançado",
     difficultyBrief:"Easy moves stay sharper longer. Advanced moves decay faster between sessions.", // TODO: verify
+    difficultyExplainerP1:"Difficulty affects how fast a move's Execution Level decays between sessions.", // TODO: verify
+    difficultyExplainerP2:"Easy moves hold their level for weeks. Intermediate moves decay at a moderate pace. Advanced moves can drop a level within days if you're not actively working them.", // TODO: verify
     calendar:"CALENDÁRIO", noActivity:"Sem atividade", movesTrained:"MOVIMENTOS TREINADOS",
     sparringSession:"SPARRING", repSession:"REPETIÇÕES", habitCompleted:"HÁBITOS",
     noteCreated:"NOTAS", addEvent:"Adicionar evento", training:"Treino", battleEvent:"Battle",
@@ -6608,6 +6618,8 @@ export const TRANSLATIONS = {
     difficulty_intermediate:"Mittel",
     difficulty_advanced:"Fortgeschritten",
     difficultyBrief:"Easy moves stay sharper longer. Advanced moves decay faster between sessions.", // TODO: verify
+    difficultyExplainerP1:"Difficulty affects how fast a move's Execution Level decays between sessions.", // TODO: verify
+    difficultyExplainerP2:"Easy moves hold their level for weeks. Intermediate moves decay at a moderate pace. Advanced moves can drop a level within days if you're not actively working them.", // TODO: verify
     calendar:"KALENDER", noActivity:"Keine Aktivität", movesTrained:"TRAINIERTE MOVES",
     sparringSession:"SPARRING", repSession:"WIEDERHOLUNGEN", habitCompleted:"GEWOHNHEITEN",
     noteCreated:"NOTIZEN", addEvent:"Ereignis hinzufügen", training:"Training", battleEvent:"Battle",
@@ -7804,6 +7816,8 @@ export const TRANSLATIONS = {
     difficulty_intermediate:"中級",
     difficulty_advanced:"上級",
     difficultyBrief:"Easy moves stay sharper longer. Advanced moves decay faster between sessions.", // TODO: verify
+    difficultyExplainerP1:"Difficulty affects how fast a move's Execution Level decays between sessions.", // TODO: verify
+    difficultyExplainerP2:"Easy moves hold their level for weeks. Intermediate moves decay at a moderate pace. Advanced moves can drop a level within days if you're not actively working them.", // TODO: verify
     calendar:"カレンダー", noActivity:"活動なし", movesTrained:"トレーニングしたムーブ",
     sparringSession:"スパーリング", repSession:"レップカウンター", habitCompleted:"習慣",
     noteCreated:"ノート", addEvent:"イベント追加", training:"トレーニング", battleEvent:"バトル",
@@ -8998,6 +9012,8 @@ export const TRANSLATIONS = {
     difficulty_intermediate:"中等",
     difficulty_advanced:"高级",
     difficultyBrief:"Easy moves stay sharper longer. Advanced moves decay faster between sessions.", // TODO: verify
+    difficultyExplainerP1:"Difficulty affects how fast a move's Execution Level decays between sessions.", // TODO: verify
+    difficultyExplainerP2:"Easy moves hold their level for weeks. Intermediate moves decay at a moderate pace. Advanced moves can drop a level within days if you're not actively working them.", // TODO: verify
     calendar:"日历", noActivity:"无活动", movesTrained:"已训练动作",
     sparringSession:"对练", repSession:"重复计数", habitCompleted:"习惯",
     noteCreated:"笔记", addEvent:"添加事件", training:"训练", battleEvent:"比赛",
@@ -10192,6 +10208,8 @@ export const TRANSLATIONS = {
     difficulty_intermediate:"Средне",
     difficulty_advanced:"Сложно",
     difficultyBrief:"Easy moves stay sharper longer. Advanced moves decay faster between sessions.", // TODO: verify
+    difficultyExplainerP1:"Difficulty affects how fast a move's Execution Level decays between sessions.", // TODO: verify
+    difficultyExplainerP2:"Easy moves hold their level for weeks. Intermediate moves decay at a moderate pace. Advanced moves can drop a level within days if you're not actively working them.", // TODO: verify
     calendar:"КАЛЕНДАРЬ", noActivity:"Нет активности", movesTrained:"ТРЕНИРОВАННЫЕ ДВИЖЕНИЯ",
     sparringSession:"СПАРРИНГ", repSession:"ПОВТОРЕНИЯ", habitCompleted:"ПРИВЫЧКИ",
     noteCreated:"ЗАМЕТКИ", addEvent:"Добавить событие", training:"Тренировка", battleEvent:"Батл",
@@ -11422,6 +11440,8 @@ export const TRANSLATIONS = {
     difficulty_intermediate:"중급",
     difficulty_advanced:"고급",
     difficultyBrief:"Easy moves stay sharper longer. Advanced moves decay faster between sessions.", // TODO: verify
+    difficultyExplainerP1:"Difficulty affects how fast a move's Execution Level decays between sessions.", // TODO: verify
+    difficultyExplainerP2:"Easy moves hold their level for weeks. Intermediate moves decay at a moderate pace. Advanced moves can drop a level within days if you're not actively working them.", // TODO: verify
     calendar:"캘린더", noActivity:"활동 없음", movesTrained:"훈련한 무브",
     sparringSession:"스파링", repSession:"횟수 카운터", habitCompleted:"습관",
     noteCreated:"노트", addEvent:"이벤트 추가", training:"트레이닝", battleEvent:"배틀",
@@ -13272,6 +13292,8 @@ export const TRANSLATIONS = {
     difficulty_intermediate:"ปานกลาง",
     difficulty_advanced:"ขั้นสูง",
     difficultyBrief:"Easy moves stay sharper longer. Advanced moves decay faster between sessions.", // TODO: verify
+    difficultyExplainerP1:"Difficulty affects how fast a move's Execution Level decays between sessions.", // TODO: verify
+    difficultyExplainerP2:"Easy moves hold their level for weeks. Intermediate moves decay at a moderate pace. Advanced moves can drop a level within days if you're not actively working them.", // TODO: verify
     // Section briefs
     showSectionDescriptions:"แสดงคำอธิบายส่วน", showSectionDescriptionsSub:"คำอธิบายสั้นๆ ด้านบนของแต่ละส่วน", libraryBrief:"ท่าทั้งหมดของคุณรวมอยู่ในที่เดียว จัดระเบียบและพร้อมเติบโต", setsBrief:"จัดกลุ่มท่าเป็นเซ็ตตามธีมสำหรับการฝึกเฉพาะและแฟลชการ์ด", gapBrief:"ท่าที่ต้องการความสนใจ — เสื่อมลง ความชำนาญต่ำ หรือขาดไปจากการฝึก", exploreBrief:"ข้อจำกัดสร้างสิ่งประดิษฐ์ — คอมโบยิ่งแปลก ผลลัพธ์ยิ่งสร้างสรรค์", exploreBriefStat:"4 โหมดสร้างสรรค์เพื่อจุดประกายไอเดียการเคลื่อนไหวใหม่", rrrBrief:"สามวิธีพัฒนาคำศัพท์ของคุณ เลือกท่าและเลือกเส้นทาง", rrrBriefStat:"เลือกท่าเพื่อเริ่มต้น", combineBrief:"สุ่มคอมโบสุ่มจากไลบรารีของคุณ ยิ่งแปลกยิ่งเรียนรู้มาก", mapBrief:"แผนที่การเชื่อมต่อท่าของคุณ คู่ที่สำรวจแต่ละคู่เผยคำศัพท์การเคลื่อนไหวส่วนตัว", battlePlanBrief:"สร้างกลยุทธ์แบทเทิลทีละราวด์ จัดระเบียบและจำลองแรงกดดันการแข่งขัน", battlePrepBrief:"ติดตามแบทเทิลที่จะมาถึง เตรียมแผนและทบทวนผลงานที่ผ่านมา", freestyleBrief:"สร้างรายการฟรีสไตล์จากคำศัพท์ท่าของคุณ", rivalsBrief:"ติดตามคู่แข่ง คู่ซ้อม และครู", calendarBrief:"ประวัติการฝึกของคุณในสายตา แตะวันใดเพื่อดูว่าคุณฝึกอะไร", stanceBrief:"ตัวตนการเต้นของคุณใน 6 โดเมน", goalsBrief:"เป้าหมายระยะยาวและเป้าหมายที่วัดได้", notesBrief:"ความคิด การทบทวน และบันทึกเซสชัน", homeBrief:"เพิ่มกิจวัตรประจำวัน บันทึก และงานของวันนี้",
     // HOME blackboard sections (L2)
@@ -13893,6 +13915,8 @@ export const TRANSLATIONS = {
     difficulty_intermediate:"Trung bình",
     difficulty_advanced:"Nâng cao",
     difficultyBrief:"Easy moves stay sharper longer. Advanced moves decay faster between sessions.", // TODO: verify
+    difficultyExplainerP1:"Difficulty affects how fast a move's Execution Level decays between sessions.", // TODO: verify
+    difficultyExplainerP2:"Easy moves hold their level for weeks. Intermediate moves decay at a moderate pace. Advanced moves can drop a level within days if you're not actively working them.", // TODO: verify
     calendar:"LỊCH", noActivity:"Không có hoạt động", movesTrained:"ĐỘNG TÁC ĐÃ TẬP",
     sparringSession:"ĐỐI KHÁNG", repSession:"ĐẾM LẶP", habitCompleted:"THÓI QUEN",
     noteCreated:"GHI CHÚ", addEvent:"Thêm sự kiện", training:"Tập luyện", battleEvent:"Battle",

@@ -73,6 +73,7 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
 
   const [showTensionExplainer, setShowTensionExplainer] = useState(false);
   const [showAttributesExplainer, setShowAttributesExplainer] = useState(false);
+  const [showDifficultyExplainer, setShowDifficultyExplainer] = useState(false);
 
   const [manualDelta, setManualDelta] = useState(0);
   const [showRepsBreakdown, setShowRepsBreakdown] = useState(false);
@@ -241,7 +242,48 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
 
       {/* ── Difficulty ── */}
       <div style={{ marginTop:8, marginBottom:4 }}>
-        <div style={sectionLabel}>{t("difficulty")}</div>
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom: 4 }}>
+          <div style={sectionLabel}>{t("difficulty")}</div>
+          <button
+            onClick={() => setShowDifficultyExplainer(p => !p)}
+            aria-label="Difficulty info"
+            style={{
+              background:'none', border:'none', cursor:'pointer',
+              padding: 4, display:'flex', alignItems:'center', justifyContent:'center',
+            }}
+          >
+            <Ic n="info" s={14} c={showDifficultyExplainer ? C.accent : C.textMuted} />
+          </button>
+        </div>
+        {showDifficultyExplainer && (
+          <div style={{
+            background: C.surfaceAlt, borderRadius: 8,
+            padding: 12, marginBottom: 8, position: 'relative',
+          }}>
+            <button
+              onClick={() => setShowDifficultyExplainer(false)}
+              aria-label="Close explainer"
+              style={{
+                position: 'absolute', top: 8, right: 8,
+                background:'none', border:'none', cursor:'pointer', padding: 4,
+              }}
+            >
+              <Ic n="x" s={12} c={C.textMuted} />
+            </button>
+            <div style={{
+              fontSize: 12, color: C.text, fontFamily: FONT_BODY,
+              lineHeight: 1.5, paddingRight: 24,
+            }}>
+              {t("difficultyExplainerP1")}
+            </div>
+            <div style={{
+              fontSize: 12, color: C.text, fontFamily: FONT_BODY,
+              lineHeight: 1.5, paddingRight: 24, marginTop: 8,
+            }}>
+              {t("difficultyExplainerP2")}
+            </div>
+          </div>
+        )}
         <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
           {["easy","intermediate","advanced"].map(d => {
             const active = f.difficulty === d;
@@ -252,12 +294,6 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
               </button>
             );
           })}
-        </div>
-        <div style={{
-          fontSize: 11, color: C.textMuted, fontStyle: 'italic',
-          marginTop: 6,
-        }}>
-          {t("difficultyBrief")}
         </div>
       </div>
 
