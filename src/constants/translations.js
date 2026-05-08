@@ -1,7 +1,7 @@
 export const TRANSLATIONS = {
   en: {
     // Move journal
-    updates:"Updates", journalEntryPlaceholder:"What's changed? What did you notice?", updatePlaceholder:"What do you want to change about this move?", noJournalEntries:"No entries yet — start tracking your progress",
+    updates:"Updates", moveJournal:"Journal", journalEntryPlaceholder:"What's changed? What did you notice?", updatePlaceholder:"What do you want to change about this move?", noJournalEntries:"No entries yet — start tracking your progress",
     // Nav tabs
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE", home:"HOME", reflect:"REFLECT",
     // Sub-tabs
@@ -810,6 +810,9 @@ export const TRANSLATIONS = {
     tensionLow:"Low", tensionMid:"Mid", tensionHigh:"High", tensionPeak:"Peak",
     arcBuild:"Your round builds to a clear peak.", arcFlat:"Every entry is the same level — no dynamics.", arcNoDynamics:"Every entry is the same level — no dynamics.", arcStrongCloser:"Ends on a high. Strong closer.", arcBackToBack:"Two peaks back to back — no breathing room between them.",
     tensionRole:"TENSION ROLE", whatRoleDoesThisMove:"What role does this move usually play in your rounds?",
+    tensionRoleNudge:"Setting this powers your Set arcs and Battle Plan",
+    tensionExplainerP1:"A round without shape is just moves stacked in time. Tagging each move's role — Flow, Build, Hit, Peak — lets you see the energy curve of your round and shape it deliberately.",
+    tensionExplainerP2:"The curve generates live as you build a Set, then carries through to Battle Plan when you drop that Set into an entry.",
     tensionRole_flow:"Flow", tensionRole_build:"Build", tensionRole_hit:"Hit", tensionRole_peak:"Peak",
     depthSection:"Depth", lineage:"Lineage",
     tensionFlow:"Flow", tensionBuild:"Build", tensionHit:"Hit", tensionPeak:"Peak",
@@ -1251,7 +1254,7 @@ export const TRANSLATIONS = {
   },
 
   it: {
-    updates:"Aggiornamenti", journalEntryPlaceholder:"Cosa è cambiato? Cosa hai notato?", updatePlaceholder:"Cosa vuoi cambiare di questo movimento?", noJournalEntries:"Nessuna voce — inizia a monitorare i progressi",
+    updates:"Aggiornamenti", moveJournal:"Journal", /* TODO: verify */ journalEntryPlaceholder:"Cosa è cambiato? Cosa hai notato?", updatePlaceholder:"Cosa vuoi cambiare di questo movimento?", noJournalEntries:"Nessuna voce — inizia a monitorare i progressi",
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE", home:"HOME", reflect:"RIFLETTI",
     plan:"PIANO", freestyle:"FREESTYLE", library:"LIBRERIA", stance:"POSTURA", prep:"PREP", goals:"OBIETTIVI", habits:"ABITUDINI", notes:"NOTE", calendar:"CALENDARIO",
     save:"Salva", cancel:"Annulla", delete:"Elimina", deleted:"Eliminato", done:"FATTO", confirm:"Conferma", exit:"Esci",
@@ -2017,6 +2020,9 @@ export const TRANSLATIONS = {
     tensionLow:"Basso", tensionMid:"Medio", tensionHigh:"Alto", tensionPeak:"Picco",
     arcBuild:"Il tuo round cresce verso un picco chiaro.", arcFlat:"Ogni entry è allo stesso livello — nessuna dinamica.", arcNoDynamics:"Ogni entry è allo stesso livello — nessuna dinamica.", arcStrongCloser:"Finisce in alto. Gran chiusura.", arcBackToBack:"Due picchi di fila — nessun respiro tra loro.",
     tensionRole:"RUOLO TENSIONE", whatRoleDoesThisMove:"Che ruolo ha di solito questo move nei tuoi round?",
+    tensionRoleNudge:"Setting this powers your Set arcs and Battle Plan", // TODO: verify
+    tensionExplainerP1:"A round without shape is just moves stacked in time. Tagging each move's role — Flow, Build, Hit, Peak — lets you see the energy curve of your round and shape it deliberately.", // TODO: verify
+    tensionExplainerP2:"The curve generates live as you build a Set, then carries through to Battle Plan when you drop that Set into an entry.", // TODO: verify
     tensionRole_flow:"Flow", tensionRole_build:"Build", tensionRole_hit:"Hit", tensionRole_peak:"Peak",
     depthSection:"Depth", lineage:"Lineage", // TODO: verify
     tensionFlow:"Flow", tensionBuild:"Build", tensionHit:"Hit", tensionPeak:"Peak",
@@ -2451,7 +2457,7 @@ export const TRANSLATIONS = {
   },
 
   es: {
-    updates:"Actualizaciones", journalEntryPlaceholder:"¿Qué cambió? ¿Qué notaste?", updatePlaceholder:"¿Qué quieres cambiar de este movimiento?", noJournalEntries:"Sin entradas — empieza a seguir tu progreso",
+    updates:"Actualizaciones", moveJournal:"Journal", /* TODO: verify */ journalEntryPlaceholder:"¿Qué cambió? ¿Qué notaste?", updatePlaceholder:"¿Qué quieres cambiar de este movimiento?", noJournalEntries:"Sin entradas — empieza a seguir tu progreso",
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE", home:"INICIO", reflect:"REFLEXIÓN",
     plan:"PLAN", freestyle:"FREESTYLE", library:"BIBLIOTECA", stance:"POSTURA", prep:"PREP", goals:"METAS", habits:"HÁBITOS", notes:"NOTAS", calendar:"CALENDARIO",
     save:"Guardar", cancel:"Cancelar", delete:"Eliminar", deleted:"Eliminado", done:"LISTO", confirm:"Confirmar", exit:"Salir",
@@ -3206,6 +3212,9 @@ export const TRANSLATIONS = {
     tensionLow:"Bajo", tensionMid:"Medio", tensionHigh:"Alto", tensionPeak:"Pico",
     arcBuild:"Tu round crece hacia un pico claro.", arcFlat:"Todas las entries están al mismo nivel — sin dinámica.", arcNoDynamics:"Todas las entries están al mismo nivel — sin dinámica.", arcStrongCloser:"Termina arriba. Buen cierre.", arcBackToBack:"Dos picos seguidos — sin respiro entre ellos.",
     tensionRole:"ROL DE TENSIÓN", whatRoleDoesThisMove:"¿Qué rol suele tener este move en tus rounds?",
+    tensionRoleNudge:"Setting this powers your Set arcs and Battle Plan", // TODO: verify
+    tensionExplainerP1:"A round without shape is just moves stacked in time. Tagging each move's role — Flow, Build, Hit, Peak — lets you see the energy curve of your round and shape it deliberately.", // TODO: verify
+    tensionExplainerP2:"The curve generates live as you build a Set, then carries through to Battle Plan when you drop that Set into an entry.", // TODO: verify
     tensionRole_flow:"Flow", tensionRole_build:"Build", tensionRole_hit:"Hit", tensionRole_peak:"Peak",
     depthSection:"Depth", lineage:"Lineage", // TODO: verify
     tensionFlow:"Flow", tensionBuild:"Build", tensionHit:"Hit", tensionPeak:"Peak",
@@ -3640,7 +3649,7 @@ export const TRANSLATIONS = {
   },
 
   fr: {
-    updates:"Mises à jour", journalEntryPlaceholder:"Qu'est-ce qui a changé ? Qu'as-tu remarqué ?", updatePlaceholder:"Que veux-tu changer dans ce mouvement ?", noJournalEntries:"Aucune entrée — commence à suivre tes progrès",
+    updates:"Mises à jour", moveJournal:"Journal", /* TODO: verify */ journalEntryPlaceholder:"Qu'est-ce qui a changé ? Qu'as-tu remarqué ?", updatePlaceholder:"Que veux-tu changer dans ce mouvement ?", noJournalEntries:"Aucune entrée — commence à suivre tes progrès",
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE", home:"ACCUEIL", reflect:"BILAN",
     plan:"PLAN", freestyle:"FREESTYLE", library:"BIBLIOTHÈQUE", stance:"POSTURE", prep:"PRÉP", goals:"OBJECTIFS", habits:"HABITUDES", notes:"NOTES", calendar:"CALENDRIER",
     save:"Enregistrer", cancel:"Annuler", delete:"Supprimer", deleted:"Supprimé", done:"OK", confirm:"Confirmer", exit:"Quitter",
@@ -4395,6 +4404,9 @@ export const TRANSLATIONS = {
     tensionLow:"Bas", tensionMid:"Moyen", tensionHigh:"Haut", tensionPeak:"Pic",
     arcBuild:"Ton round monte vers un pic clair.", arcFlat:"Chaque entry est au même niveau — aucune dynamique.", arcNoDynamics:"Chaque entry est au même niveau — aucune dynamique.", arcStrongCloser:"Finit en haut. Belle fermeture.", arcBackToBack:"Deux pics à la suite — pas de respiration entre eux.",
     tensionRole:"RÔLE DE TENSION", whatRoleDoesThisMove:"Quel rôle joue habituellement ce move dans tes rounds ?",
+    tensionRoleNudge:"Setting this powers your Set arcs and Battle Plan", // TODO: verify
+    tensionExplainerP1:"A round without shape is just moves stacked in time. Tagging each move's role — Flow, Build, Hit, Peak — lets you see the energy curve of your round and shape it deliberately.", // TODO: verify
+    tensionExplainerP2:"The curve generates live as you build a Set, then carries through to Battle Plan when you drop that Set into an entry.", // TODO: verify
     tensionRole_flow:"Flow", tensionRole_build:"Build", tensionRole_hit:"Hit", tensionRole_peak:"Peak",
     depthSection:"Depth", lineage:"Lineage", // TODO: verify
     tensionFlow:"Flow", tensionBuild:"Build", tensionHit:"Hit", tensionPeak:"Peak",
@@ -4829,7 +4841,7 @@ export const TRANSLATIONS = {
   },
 
   pt: {
-    updates:"Atualizações", journalEntryPlaceholder:"O que mudou? O que você notou?", updatePlaceholder:"O que você quer mudar neste movimento?", noJournalEntries:"Sem entradas — comece a acompanhar seu progresso",
+    updates:"Atualizações", moveJournal:"Journal", /* TODO: verify */ journalEntryPlaceholder:"O que mudou? O que você notou?", updatePlaceholder:"O que você quer mudar neste movimento?", noJournalEntries:"Sem entradas — comece a acompanhar seu progresso",
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE", home:"INÍCIO", reflect:"REFLEXÃO",
     plan:"PLANO", freestyle:"FREESTYLE", library:"BIBLIOTECA", stance:"POSTURA", prep:"PREP", goals:"METAS", habits:"HÁBITOS", notes:"NOTAS", calendar:"CALENDÁRIO",
     save:"Salvar", cancel:"Cancelar", delete:"Excluir", deleted:"Excluído", done:"PRONTO", confirm:"Confirmar", exit:"Sair",
@@ -5584,6 +5596,9 @@ export const TRANSLATIONS = {
     tensionLow:"Baixo", tensionMid:"Médio", tensionHigh:"Alto", tensionPeak:"Pico",
     arcBuild:"Seu round cresce até um pico claro.", arcFlat:"Todas as entries estão no mesmo nível — sem dinâmica.", arcNoDynamics:"Todas as entries estão no mesmo nível — sem dinâmica.", arcStrongCloser:"Termina em alta. Bom fechamento.", arcBackToBack:"Dois picos seguidos — sem respiro entre eles.",
     tensionRole:"PAPEL DE TENSÃO", whatRoleDoesThisMove:"Qual papel esse move costuma ter nos seus rounds?",
+    tensionRoleNudge:"Setting this powers your Set arcs and Battle Plan", // TODO: verify
+    tensionExplainerP1:"A round without shape is just moves stacked in time. Tagging each move's role — Flow, Build, Hit, Peak — lets you see the energy curve of your round and shape it deliberately.", // TODO: verify
+    tensionExplainerP2:"The curve generates live as you build a Set, then carries through to Battle Plan when you drop that Set into an entry.", // TODO: verify
     tensionRole_flow:"Flow", tensionRole_build:"Build", tensionRole_hit:"Hit", tensionRole_peak:"Peak",
     depthSection:"Depth", lineage:"Lineage", // TODO: verify
     tensionFlow:"Flow", tensionBuild:"Build", tensionHit:"Hit", tensionPeak:"Peak",
@@ -6018,7 +6033,7 @@ export const TRANSLATIONS = {
   },
 
   de: {
-    updates:"Aktualisierungen", journalEntryPlaceholder:"Was hat sich geändert? Was ist dir aufgefallen?", updatePlaceholder:"Was möchtest du an dieser Bewegung ändern?", noJournalEntries:"Noch keine Einträge — verfolge deinen Fortschritt",
+    updates:"Aktualisierungen", moveJournal:"Journal", /* TODO: verify */ journalEntryPlaceholder:"Was hat sich geändert? Was ist dir aufgefallen?", updatePlaceholder:"Was möchtest du an dieser Bewegung ändern?", noJournalEntries:"Noch keine Einträge — verfolge deinen Fortschritt",
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE", home:"START", reflect:"RÜCKBLICK",
     plan:"PLAN", freestyle:"FREESTYLE", library:"BIBLIOTHEK", stance:"HALTUNG", prep:"VORB.", goals:"ZIELE", habits:"GEWOHNHEITEN", notes:"NOTIZEN", calendar:"KALENDER",
     save:"Speichern", cancel:"Abbrechen", delete:"Löschen", deleted:"Gelöscht", done:"FERTIG", confirm:"Bestätigen", exit:"Beenden",
@@ -6773,6 +6788,9 @@ export const TRANSLATIONS = {
     tensionLow:"Niedrig", tensionMid:"Mittel", tensionHigh:"Hoch", tensionPeak:"Höhepunkt",
     arcBuild:"Dein Round steigt zu einem klaren Höhepunkt.", arcFlat:"Jeder Entry ist auf dem gleichen Level — keine Dynamik.", arcNoDynamics:"Jeder Entry ist auf dem gleichen Level — keine Dynamik.", arcStrongCloser:"Endet hoch. Starker Abschluss.", arcBackToBack:"Zwei Höhepunkte direkt nacheinander — kein Durchatmen dazwischen.",
     tensionRole:"SPANNUNGSROLLE", whatRoleDoesThisMove:"Welche Rolle spielt dieser Move normalerweise in deinen Rounds?",
+    tensionRoleNudge:"Setting this powers your Set arcs and Battle Plan", // TODO: verify
+    tensionExplainerP1:"A round without shape is just moves stacked in time. Tagging each move's role — Flow, Build, Hit, Peak — lets you see the energy curve of your round and shape it deliberately.", // TODO: verify
+    tensionExplainerP2:"The curve generates live as you build a Set, then carries through to Battle Plan when you drop that Set into an entry.", // TODO: verify
     tensionRole_flow:"Flow", tensionRole_build:"Build", tensionRole_hit:"Hit", tensionRole_peak:"Peak",
     depthSection:"Depth", lineage:"Lineage", // TODO: verify
     tensionFlow:"Flow", tensionBuild:"Build", tensionHit:"Hit", tensionPeak:"Peak",
@@ -7207,7 +7225,7 @@ export const TRANSLATIONS = {
   },
 
   ja: {
-    updates:"アップデート", journalEntryPlaceholder:"何が変わった？何に気づいた？", updatePlaceholder:"このムーブの何を変えたい？", noJournalEntries:"まだエントリーなし — 進捗を記録しよう",
+    updates:"アップデート", moveJournal:"Journal", /* TODO: verify */ journalEntryPlaceholder:"何が変わった？何に気づいた？", updatePlaceholder:"このムーブの何を変えたい？", noJournalEntries:"まだエントリーなし — 進捗を記録しよう",
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE", home:"ホーム", reflect:"ふりかえり",
     plan:"プラン", freestyle:"フリースタイル", library:"ライブラリ", stance:"スタンス", prep:"準備", goals:"目標", habits:"習慣", notes:"ノート", calendar:"カレンダー",
     save:"保存", cancel:"キャンセル", delete:"削除", deleted:"削除済み", done:"完了", confirm:"確認", exit:"終了",
@@ -7963,6 +7981,9 @@ export const TRANSLATIONS = {
     tensionLow:"低", tensionMid:"中", tensionHigh:"高", tensionPeak:"ピーク",
     arcBuild:"ラウンドが明確なピークに向かって盛り上がる。", arcFlat:"すべてのエントリーが同じレベル — 緩急がない。", arcNoDynamics:"すべてのエントリーが同じレベル — 緩急がない。", arcStrongCloser:"高い位置で終了。強いクローザー。", arcBackToBack:"ピークが連続 — 間に余裕がない。",
     tensionRole:"テンションロール", whatRoleDoesThisMove:"このムーブはラウンドでどんな役割を果たす？",
+    tensionRoleNudge:"Setting this powers your Set arcs and Battle Plan", // TODO: verify
+    tensionExplainerP1:"A round without shape is just moves stacked in time. Tagging each move's role — Flow, Build, Hit, Peak — lets you see the energy curve of your round and shape it deliberately.", // TODO: verify
+    tensionExplainerP2:"The curve generates live as you build a Set, then carries through to Battle Plan when you drop that Set into an entry.", // TODO: verify
     tensionRole_flow:"フロー", tensionRole_build:"ビルド", tensionRole_hit:"ヒット", tensionRole_peak:"ピーク",
     depthSection:"Depth", lineage:"Lineage", // TODO: verify
     tensionFlow:"Flow", tensionBuild:"Build", tensionHit:"Hit", tensionPeak:"Peak",
@@ -8397,7 +8418,7 @@ export const TRANSLATIONS = {
   },
 
   zh: {
-    updates:"更新", journalEntryPlaceholder:"有什么变化？你注意到了什么？", updatePlaceholder:"你想改变这个动作的什么？", noJournalEntries:"暂无记录 — 开始追踪你的进步",
+    updates:"更新", moveJournal:"Journal", /* TODO: verify */ journalEntryPlaceholder:"有什么变化？你注意到了什么？", updatePlaceholder:"你想改变这个动作的什么？", noJournalEntries:"暂无记录 — 开始追踪你的进步",
     train:"训练", vocab:"动作", battle:"对战", home:"首页", reflect:"回顾",
     plan:"计划", freestyle:"FREESTYLE", library:"库", stance:"姿态", prep:"备战", goals:"目标", habits:"习惯", notes:"笔记", calendar:"日历",
     save:"保存", cancel:"取消", delete:"删除", deleted:"已删除", done:"完成", confirm:"确认", exit:"退出",
@@ -9151,6 +9172,9 @@ export const TRANSLATIONS = {
     tensionLow:"低", tensionMid:"中", tensionHigh:"高", tensionPeak:"顶峰",
     arcBuild:"你的回合逐步攀升到明确的高潮。", arcFlat:"每个段落都在同一水平 — 没有起伏。", arcNoDynamics:"每个段落都在同一水平 — 没有起伏。", arcStrongCloser:"高潮收尾。强力结束。", arcBackToBack:"两个高潮紧连 — 中间没有喘息。",
     tensionRole:"张力角色", whatRoleDoesThisMove:"这个动作在你的回合中通常扮演什么角色？",
+    tensionRoleNudge:"Setting this powers your Set arcs and Battle Plan", // TODO: verify
+    tensionExplainerP1:"A round without shape is just moves stacked in time. Tagging each move's role — Flow, Build, Hit, Peak — lets you see the energy curve of your round and shape it deliberately.", // TODO: verify
+    tensionExplainerP2:"The curve generates live as you build a Set, then carries through to Battle Plan when you drop that Set into an entry.", // TODO: verify
     tensionRole_flow:"流动", tensionRole_build:"构建", tensionRole_hit:"打击", tensionRole_peak:"高潮",
     depthSection:"Depth", lineage:"Lineage", // TODO: verify
     tensionFlow:"Flow", tensionBuild:"Build", tensionHit:"Hit", tensionPeak:"Peak",
@@ -9585,7 +9609,7 @@ export const TRANSLATIONS = {
   },
 
   ru: {
-    updates:"Обновления", journalEntryPlaceholder:"Что изменилось? Что ты заметил?", updatePlaceholder:"Что ты хочешь изменить в этом движении?", noJournalEntries:"Пока нет записей — начни отслеживать прогресс",
+    updates:"Обновления", moveJournal:"Journal", /* TODO: verify */ journalEntryPlaceholder:"Что изменилось? Что ты заметил?", updatePlaceholder:"Что ты хочешь изменить в этом движении?", noJournalEntries:"Пока нет записей — начни отслеживать прогресс",
     train:"ТРЕН", vocab:"МУВЫ", battle:"БАТТЛ", home:"ГЛАВНАЯ", reflect:"ОБЗОР",
     plan:"ПЛАН", freestyle:"ФРИСТАЙЛ", library:"БИБЛИОТЕКА", stance:"СТОЙКА", prep:"ПОДГ.", goals:"ЦЕЛИ", habits:"ПРИВЫЧКИ", notes:"ЗАМЕТКИ", calendar:"КАЛЕНДАРЬ",
     save:"Сохранить", cancel:"Отмена", delete:"Удалить", deleted:"Удалено", done:"ГОТОВО", confirm:"Подтвердить", exit:"Выйти",
@@ -10339,6 +10363,9 @@ export const TRANSLATIONS = {
     tensionLow:"Низкий", tensionMid:"Средний", tensionHigh:"Высокий", tensionPeak:"Пик",
     arcBuild:"Твой раунд нарастает к чёткому пику.", arcFlat:"Каждый выход на одном уровне — нет динамики.", arcNoDynamics:"Каждый выход на одном уровне — нет динамики.", arcStrongCloser:"Заканчивается на высоте. Сильная концовка.", arcBackToBack:"Два пика подряд — нет передышки между ними.",
     tensionRole:"РОЛЬ НАПРЯЖЕНИЯ", whatRoleDoesThisMove:"Какую роль этот мув обычно играет в твоих раундах?",
+    tensionRoleNudge:"Setting this powers your Set arcs and Battle Plan", // TODO: verify
+    tensionExplainerP1:"A round without shape is just moves stacked in time. Tagging each move's role — Flow, Build, Hit, Peak — lets you see the energy curve of your round and shape it deliberately.", // TODO: verify
+    tensionExplainerP2:"The curve generates live as you build a Set, then carries through to Battle Plan when you drop that Set into an entry.", // TODO: verify
     tensionRole_flow:"Флоу", tensionRole_build:"Билд", tensionRole_hit:"Хит", tensionRole_peak:"Пик",
     depthSection:"Depth", lineage:"Lineage", // TODO: verify
     tensionFlow:"Flow", tensionBuild:"Build", tensionHit:"Hit", tensionPeak:"Peak",
@@ -10774,7 +10801,7 @@ export const TRANSLATIONS = {
 
   ko: {
     // Move journal
-    updates:"업데이트", journalEntryPlaceholder:"무엇이 바뀌었나? 무엇을 알아챘나?", updatePlaceholder:"이 무브에서 무엇을 바꾸고 싶나요?", noJournalEntries:"아직 항목 없음 — 진행 상황을 추적해 보세요",
+    updates:"업데이트", moveJournal:"Journal", /* TODO: verify */ journalEntryPlaceholder:"무엇이 바뀌었나? 무엇을 알아챘나?", updatePlaceholder:"이 무브에서 무엇을 바꾸고 싶나요?", noJournalEntries:"아직 항목 없음 — 진행 상황을 추적해 보세요",
     // Nav tabs
     train:"훈련", vocab:"무브", battle:"배틀", home:"홈", reflect:"돌아보기",
     // Sub-tabs
@@ -11563,6 +11590,9 @@ export const TRANSLATIONS = {
     tensionLow:"낮음", tensionMid:"중간", tensionHigh:"높음", tensionPeak:"절정",
     arcBuild:"라운드가 확실한 절정을 향해 올라간다.", arcFlat:"모든 엔트리가 같은 레벨 — 강약이 없다.", arcNoDynamics:"모든 엔트리가 같은 레벨 — 강약이 없다.", arcStrongCloser:"높게 마무리. 강한 클로저.", arcBackToBack:"절정이 연속 — 사이에 여유가 없다.",
     tensionRole:"텐션 역할", whatRoleDoesThisMove:"이 무브는 라운드에서 보통 어떤 역할을 하나요?",
+    tensionRoleNudge:"Setting this powers your Set arcs and Battle Plan", // TODO: verify
+    tensionExplainerP1:"A round without shape is just moves stacked in time. Tagging each move's role — Flow, Build, Hit, Peak — lets you see the energy curve of your round and shape it deliberately.", // TODO: verify
+    tensionExplainerP2:"The curve generates live as you build a Set, then carries through to Battle Plan when you drop that Set into an entry.", // TODO: verify
     tensionRole_flow:"플로우", tensionRole_build:"빌드", tensionRole_hit:"히트", tensionRole_peak:"피크",
     depthSection:"Depth", lineage:"Lineage", // TODO: verify
     tensionFlow:"Flow", tensionBuild:"Build", tensionHit:"Hit", tensionPeak:"Peak",
@@ -11998,7 +12028,7 @@ export const TRANSLATIONS = {
 
   th: {
     // Move journal
-    updates:"อัปเดต", journalEntryPlaceholder:"อะไรเปลี่ยนไป? สังเกตเห็นอะไร?", updatePlaceholder:"คุณอยากเปลี่ยนอะไรเกี่ยวกับท่านี้?", noJournalEntries:"ยังไม่มีบันทึก — เริ่มติดตามความคืบหน้า",
+    updates:"อัปเดต", moveJournal:"Journal", /* TODO: verify */ journalEntryPlaceholder:"อะไรเปลี่ยนไป? สังเกตเห็นอะไร?", updatePlaceholder:"คุณอยากเปลี่ยนอะไรเกี่ยวกับท่านี้?", noJournalEntries:"ยังไม่มีบันทึก — เริ่มติดตามความคืบหน้า",
     // Nav tabs
     train:"ฝึกซ้อม", vocab:"ท่า", battle:"แบทเทิล", home:"หน้าหลัก", reflect:"ทบทวน",
     // Sub-tabs
@@ -12768,6 +12798,9 @@ export const TRANSLATIONS = {
     tensionLow:"ต่ำ", tensionMid:"กลาง", tensionHigh:"สูง", tensionPeak:"จุดสูงสุด",
     arcBuild:"ราวด์ของคุณไต่ขึ้นสู่จุดสูงสุดอย่างชัดเจน", arcFlat:"ทุกเอนทรีอยู่ระดับเดียวกัน — ไม่มีไดนามิก", arcNoDynamics:"ทุกเอนทรีอยู่ระดับเดียวกัน — ไม่มีไดนามิก", arcStrongCloser:"จบที่จุดสูง ปิดได้แข็งแกร่ง", arcBackToBack:"สองจุดพีคติดกัน — ไม่มีจังหวะพัก",
     tensionRole:"บทบาทความตึงเครียด", whatRoleDoesThisMove:"มูฟนี้มักมีบทบาทอะไรในราวด์ของคุณ?",
+    tensionRoleNudge:"Setting this powers your Set arcs and Battle Plan", // TODO: verify
+    tensionExplainerP1:"A round without shape is just moves stacked in time. Tagging each move's role — Flow, Build, Hit, Peak — lets you see the energy curve of your round and shape it deliberately.", // TODO: verify
+    tensionExplainerP2:"The curve generates live as you build a Set, then carries through to Battle Plan when you drop that Set into an entry.", // TODO: verify
     tensionRole_flow:"Flow", tensionRole_build:"Build", tensionRole_hit:"Hit", tensionRole_peak:"Peak",
     depthSection:"Depth", lineage:"Lineage", // TODO: verify
     tensionFlow:"Flow", tensionBuild:"Build", tensionHit:"Hit", tensionPeak:"Peak",
@@ -13217,7 +13250,7 @@ export const TRANSLATIONS = {
 
   vi: {
     // Move journal
-    updates:"Cập Nhật", journalEntryPlaceholder:"Có gì thay đổi? Bạn nhận thấy gì?", updatePlaceholder:"Bạn muốn thay đổi gì ở chiêu thức này?", noJournalEntries:"Chưa có mục nào — bắt đầu theo dõi tiến trình",
+    updates:"Cập Nhật", moveJournal:"Journal", /* TODO: verify */ journalEntryPlaceholder:"Có gì thay đổi? Bạn nhận thấy gì?", updatePlaceholder:"Bạn muốn thay đổi gì ở chiêu thức này?", noJournalEntries:"Chưa có mục nào — bắt đầu theo dõi tiến trình",
     // Nav tabs
     train:"LUYỆN TẬP", vocab:"ĐỘNG TÁC", battle:"BATTLE", home:"TRANG CHỦ", reflect:"NHÌN LẠI",
     // Sub-tabs
@@ -14022,6 +14055,9 @@ export const TRANSLATIONS = {
     tensionLow:"Thấp", tensionMid:"Trung bình", tensionHigh:"Cao", tensionPeak:"Đỉnh",
     arcBuild:"Round của bạn tăng dần đến đỉnh rõ ràng.", arcFlat:"Mọi entry đều cùng mức — không có biến động.", arcNoDynamics:"Mọi entry đều cùng mức — không có biến động.", arcStrongCloser:"Kết thúc ở mức cao. Đóng mạnh.", arcBackToBack:"Hai đỉnh liên tiếp — không có khoảng nghỉ.",
     tensionRole:"VAI TRÒ CĂNG THẲNG", whatRoleDoesThisMove:"Động tác này thường đóng vai trò gì trong round của bạn?",
+    tensionRoleNudge:"Setting this powers your Set arcs and Battle Plan", // TODO: verify
+    tensionExplainerP1:"A round without shape is just moves stacked in time. Tagging each move's role — Flow, Build, Hit, Peak — lets you see the energy curve of your round and shape it deliberately.", // TODO: verify
+    tensionExplainerP2:"The curve generates live as you build a Set, then carries through to Battle Plan when you drop that Set into an entry.", // TODO: verify
     tensionRole_flow:"Flow", tensionRole_build:"Build", tensionRole_hit:"Hit", tensionRole_peak:"Peak",
     depthSection:"Depth", lineage:"Lineage", // TODO: verify
     tensionFlow:"Flow", tensionBuild:"Build", tensionHit:"Hit", tensionPeak:"Peak",

@@ -21,10 +21,10 @@ const ORIGIN_HINTS = { learned:"foundationalHint", version:"myVersionHint", crea
 const ORIGIN_LABELS = { learned:"foundational", version:"myVersion", creation:"myCreation" };
 
 const TENSION_ROLE_OPTS = [
-  { key:"flow",  emoji:"\ud83c\udf0a", label:"tensionFlow", hint:"flowHint" },
-  { key:"build", emoji:"\ud83d\udcc8", label:"tensionBuild", hint:"buildHint" },
-  { key:"hit",   emoji:"\ud83d\udca5", label:"tensionHit", hint:"hitHint" },
-  { key:"peak",  emoji:"\ud83d\udd25", label:"tensionPeak", hint:"peakHint" },
+  { key:"flow",  icon:"waves",      label:"tensionFlow", hint:"flowHint" },
+  { key:"build", icon:"trendingUp", label:"tensionBuild", hint:"buildHint" },
+  { key:"hit",   icon:"zap",        label:"tensionHit", hint:"hitHint" },
+  { key:"peak",  icon:"flame",      label:"tensionPeak", hint:"peakHint" },
 ];
 
 const chipStyle = (active) => ({
@@ -43,7 +43,13 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
   const set = k => v => setF(p=>({...p,[k]:v}));
   const [journalEntries, setJournalEntries] = useState(move?.journal || []);
   const [newJournalText, setNewJournalText] = useState("");
-  const [showJournal, setShowJournal] = useState((move?.journal || []).length > 0);
+  const [showJournal, setShowJournal] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem('mb_editmove_journal') === 'true';
+  });
+  useEffect(() => {
+    localStorage.setItem('mb_editmove_journal', String(showJournal));
+  }, [showJournal]);
   const handleSave = () => {
     if (!f.name) return;
     const newRepsHistory = manualDelta > 0
@@ -64,6 +70,8 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
   useEffect(() => {
     localStorage.setItem('mb_editmove_depth', String(showDepth));
   }, [showDepth]);
+
+  const [showTensionExplainer, setShowTensionExplainer] = useState(false);
 
   const [manualDelta, setManualDelta] = useState(0);
   const [showRepsBreakdown, setShowRepsBreakdown] = useState(false);
@@ -258,15 +266,67 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
         <div>
           {/* ── Tension Role ── */}
           <div style={{ marginTop:8, marginBottom:4 }}>
-            <div style={sectionLabel}>{t("tensionRole")}</div>
-            <div style={{ fontSize:11, color:C.textMuted, fontStyle:"italic", marginBottom:6 }}>{t("whatRoleDoesThisMove")}</div>
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom: 4 }}>
+              <div style={sectionLabel}>{t("tensionRole")}</div>
+              <button
+                onClick={() => setShowTensionExplainer(p => !p)}
+                aria-label="Tension Role info"
+                style={{
+                  background:'none', border:'none', cursor:'pointer',
+                  padding: 4, display:'flex', alignItems:'center', justifyContent:'center',
+                }}
+              >
+                <Ic n="info" s={14} c={showTensionExplainer ? C.accent : C.textMuted} />
+              </button>
+            </div>
+            {!f.tensionRole && !showTensionExplainer && (
+              <div style={{ fontSize:11, color:C.textMuted, fontStyle:"italic", marginBottom:6 }}>
+                ↳ {t("tensionRoleNudge")}
+              </div>
+            )}
+            {showTensionExplainer && (
+              <div style={{
+                background: C.surfaceAlt, borderRadius: 8,
+                padding: 12, marginBottom: 8, position: 'relative',
+              }}>
+                <button
+                  onClick={() => setShowTensionExplainer(false)}
+                  aria-label="Close explainer"
+                  style={{
+                    position: 'absolute', top: 8, right: 8,
+                    background:'none', border:'none', cursor:'pointer', padding: 4,
+                  }}
+                >
+                  <Ic n="x" s={12} c={C.textMuted} />
+                </button>
+                <div style={{
+                  fontSize: 12, color: C.text, fontFamily: FONT_BODY,
+                  lineHeight: 1.5, paddingRight: 24,
+                }}>
+                  {t("tensionExplainerP1")}
+                </div>
+                <div style={{
+                  fontSize: 12, color: C.text, fontFamily: FONT_BODY,
+                  lineHeight: 1.5, paddingRight: 24, marginTop: 8,
+                }}>
+                  {t("tensionExplainerP2")}
+                </div>
+              </div>
+            )}
             <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
               {TENSION_ROLE_OPTS.map(r => {
                 const active = f.tensionRole === r.key;
                 return (
-                  <button key={r.key} onClick={() => setF(p => ({...p, tensionRole: active ? null : r.key}))}
-                    style={chipStyle(active)}>
-                    {r.emoji} {t(r.label)}
+                  <button
+                    key={r.key}
+                    onClick={() => setF(p => ({...p, tensionRole: active ? null : r.key}))}
+                    style={{
+                      ...chipStyle(active),
+                      display:'inline-flex', alignItems:'center', gap:6,
+                    }}
+                  >
+                    <Ic n={r.icon} s={14} c={active ? C.bg : C.textSec} />
+                    <span>{t(r.label)}</span>
                   </button>
                 );
               })}
@@ -424,15 +484,12 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
 
       {/* ── Move Journal ── */}
       {move && (
-        <div style={{ marginTop: 12 }}>
-          <button onClick={() => setShowJournal(p => !p)}
-            style={{ display: "flex", alignItems: "center", gap: 6, width: "100%",
-              background: "none", border: "none", cursor: "pointer", padding: "6px 0" }}>
-            <Ic n={showJournal ? "chevD" : "chevR"} s={12} c={C.textMuted} />
-            <span style={{ ...sectionLabel, margin: 0 }}>
-              {t("updates")} ({journalEntries.length})
-            </span>
-          </button>
+        <>
+          <SectionHeader
+            label={`${t("moveJournal")} (${journalEntries.length})`}
+            expanded={showJournal}
+            onToggle={() => setShowJournal(p => !p)}
+          />
 
           {showJournal && (
             <div style={{ marginTop: 6 }}>
@@ -494,7 +551,7 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
               )}
             </div>
           )}
-        </div>
+        </>
       )}
 
       {showAttrModal && (
