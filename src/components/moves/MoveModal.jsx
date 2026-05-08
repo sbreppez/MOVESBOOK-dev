@@ -39,12 +39,19 @@ const sectionLabel = { fontSize:10, fontWeight:800, letterSpacing:1, color:C.tex
 
 export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initialDesc="", cats=CATS, customAttrs=[], onAddAttr, allMoves=[], catColors=CAT_COLORS, isPremium }) => {
   const t = useT();
-  const [f,setF] = useState({ name:"", category:initialCat, description:initialDesc||"", link:"", mastery:10, date:todayLocal(), rotation:"", travelling:"", custom:"", attrs:{}, origin:"learned", musicEnergy:null, tensionRole:null, parentId:null, ...move });
+  const [f,setF] = useState({ name:"", category:initialCat, description:initialDesc||"", link:"", mastery:10, date:todayLocal(), rotation:"", travelling:"", custom:"", attrs:{}, origin:"learned", musicEnergy:null, tensionRole:null, parentId:null, repsHistory:[], ...move });
   const set = k => v => setF(p=>({...p,[k]:v}));
   const [journalEntries, setJournalEntries] = useState(move?.journal || []);
   const [newJournalText, setNewJournalText] = useState("");
   const [showJournal, setShowJournal] = useState((move?.journal || []).length > 0);
-  const handleSave = () => { if (f.name) { onSave({ ...f, journal: journalEntries }); onClose(); } };
+  const handleSave = () => {
+    if (!f.name) return;
+    const newRepsHistory = manualDelta > 0
+      ? [...(f.repsHistory || []), { date: todayLocal(), count: manualDelta, source: 'manual' }]
+      : (f.repsHistory || []);
+    onSave({ ...f, journal: journalEntries, repsHistory: newRepsHistory });
+    onClose();
+  };
   const [showAttrModal, setShowAttrModal] = useState(false);
   const [showBasedOn, setShowBasedOn] = useState(!!f.parentId);
   const [basedOnFilter, setBasedOnFilter] = useState(f.category || "");
@@ -57,6 +64,20 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
   useEffect(() => {
     localStorage.setItem('mb_editmove_depth', String(showDepth));
   }, [showDepth]);
+
+  const [manualDelta, setManualDelta] = useState(0);
+  const [showRepsBreakdown, setShowRepsBreakdown] = useState(false);
+  const repsBySource = useMemo(() => {
+    const sums = { manual: 0, drill: 0, sparring: 0, flashcards: 0 };
+    for (const entry of (f.repsHistory || [])) {
+      if (sums[entry.source] !== undefined) {
+        sums[entry.source] += entry.count;
+      }
+    }
+    return sums;
+  }, [f.repsHistory]);
+  const totalReps =
+    repsBySource.manual + repsBySource.drill + repsBySource.sparring + repsBySource.flashcards + manualDelta;
 
   const setAttr = (attrId, val) => {
     setF(p => ({ ...p, attrs: { ...(p.attrs || {}), [attrId]: val } }));
@@ -132,6 +153,82 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
 
       {/* ── STATE ── */}
       <ExecutionLevelBattery value={f.mastery} onChange={set("mastery")}/>
+
+      {/* ── Total Reps ── */}
+      <div style={{ marginBottom: 16 }}>
+        <label style={lbl()}>{t('totalReps')}</label>
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 12,
+          marginTop: 6,
+        }}>
+          {/* Total + chevron (left) */}
+          <button
+            onClick={() => setShowRepsBreakdown(p => !p)}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 6,
+              background: 'none', border: 'none', cursor: 'pointer',
+              padding: 0,
+            }}
+          >
+            <span style={{
+              fontSize: 28, fontWeight: 800, color: C.text,
+              fontFamily: FONT_DISPLAY, lineHeight: 1,
+            }}>
+              {totalReps}
+            </span>
+            <Ic n={showRepsBreakdown ? 'chevD' : 'chevR'} s={12} c={C.textMuted}/>
+          </button>
+          {/* +/- buttons (right) */}
+          <div style={{ marginLeft: 'auto', display: 'flex', gap: 6 }}>
+            <button
+              onClick={() => setManualDelta(d => Math.max(0, d - 1))}
+              disabled={manualDelta === 0}
+              style={{
+                width: 32, height: 32, borderRadius: 4,
+                background: C.surfaceAlt, border: 'none',
+                cursor: manualDelta === 0 ? 'default' : 'pointer',
+                opacity: manualDelta === 0 ? 0.4 : 1,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}
+            >
+              <Ic n="minus" s={16} c={C.text}/>
+            </button>
+            <button
+              onClick={() => setManualDelta(d => d + 1)}
+              style={{
+                width: 32, height: 32, borderRadius: 4,
+                background: C.surfaceAlt, border: 'none',
+                cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}
+            >
+              <Ic n="plus" s={16} c={C.text}/>
+            </button>
+          </div>
+        </div>
+        {/* Breakdown */}
+        {showRepsBreakdown && (
+          <div style={{
+            marginTop: 10, padding: 10,
+            background: C.surfaceAlt, borderRadius: 8,
+          }}>
+            {[
+              { label: t('repSourceManual'), count: repsBySource.manual + manualDelta },
+              { label: t('repSourceDrill'), count: repsBySource.drill },
+              { label: t('repSourceSparring'), count: repsBySource.sparring },
+              { label: t('repSourceSets'), count: repsBySource.flashcards },
+            ].map(row => (
+              <div key={row.label} style={{
+                display: 'flex', justifyContent: 'space-between',
+                padding: '4px 0', fontSize: 12, fontFamily: FONT_BODY,
+              }}>
+                <span style={{ color: C.textSec }}>{row.label}</span>
+                <span style={{ color: C.text, fontWeight: 700 }}>{row.count}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* ── Difficulty ── */}
       <div style={{ marginTop:8, marginBottom:4 }}>
