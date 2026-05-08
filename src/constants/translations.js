@@ -16,6 +16,11 @@ export const TRANSLATIONS = {
     notes:"NOTES", name:"NAME", title:"TITLE", description:"DESCRIPTION",
     status:"STATUS", colour:"COLOUR", color:"COLOR", date:"DATE CREATED",
     mastery:"MASTERY LEVEL", set:"SET",
+    executionLevel:"Execution Level", execLevel_1:"Trying it", execLevel_2:"Getting closer", execLevel_3:"Hit it once", execLevel_4:"Catching it", execLevel_5:"Hit it twice",
+    execLevel_6:"Stringing it", execLevel_7:"Consistent", execLevel_8:"Solid", execLevel_9:"Locked", execLevel_10:"Owned",
+    execSub_1:"First attempts. Body's still figuring it out.", execSub_2:"Pieces are landing, full move isn't.", execSub_3:"One clean rep on a good day.",
+    execSub_4:"Lands more than it falls. Not reliable yet.", execSub_5:"Can repeat under no pressure.", execSub_6:"A few in a row when warm.",
+    execSub_7:"Lands when you call it.", execSub_8:"Hits cold, hits tired, hits in cypher.", execSub_9:"Can hit at will. Style coming through.", execSub_10:"It's yours. Variations on demand.",
     // Buttons / labels
     addMove:"ADD A MOVE", addCategory:"ADD CATEGORY", addEntry:"ADD ENTRY",
     addRound:"ADD ROUND", addSet:"NEW SET", newRound:"NEW ROUND",
@@ -1256,6 +1261,11 @@ export const TRANSLATIONS = {
     notes:"NOTE", name:"NOME", title:"TITOLO", description:"DESCRIZIONE",
     status:"STATO", colour:"COLORE", color:"COLORE", date:"DATA CREAZIONE",
     mastery:"LIVELLO PADRONANZA", set:"SET",
+    executionLevel:"Execution Level", execLevel_1:"Trying it", execLevel_2:"Getting closer", execLevel_3:"Hit it once", execLevel_4:"Catching it", execLevel_5:"Hit it twice", // TODO: verify
+    execLevel_6:"Stringing it", execLevel_7:"Consistent", execLevel_8:"Solid", execLevel_9:"Locked", execLevel_10:"Owned", // TODO: verify
+    execSub_1:"First attempts. Body's still figuring it out.", execSub_2:"Pieces are landing, full move isn't.", execSub_3:"One clean rep on a good day.", // TODO: verify
+    execSub_4:"Lands more than it falls. Not reliable yet.", execSub_5:"Can repeat under no pressure.", execSub_6:"A few in a row when warm.", // TODO: verify
+    execSub_7:"Lands when you call it.", execSub_8:"Hits cold, hits tired, hits in cypher.", execSub_9:"Can hit at will. Style coming through.", execSub_10:"It's yours. Variations on demand.", // TODO: verify
     addMove:"AGGIUNGI MOSSA", addCategory:"AGGIUNGI CATEGORIA", addEntry:"AGGIUNGI VOCE",
     addRound:"AGGIUNGI ROUND", addSet:"NUOVO SET", newRound:"NUOVO ROUND",
     newNote:"NUOVA NOTA", newGoal:"NUOVO OBIETTIVO",
@@ -2450,6 +2460,11 @@ export const TRANSLATIONS = {
     notes:"NOTAS", name:"NOMBRE", title:"TÍTULO", description:"DESCRIPCIÓN",
     status:"ESTADO", colour:"COLOR", color:"COLOR", date:"FECHA CREACIÓN",
     mastery:"NIVEL DE DOMINIO", set:"SET",
+    executionLevel:"Execution Level", execLevel_1:"Trying it", execLevel_2:"Getting closer", execLevel_3:"Hit it once", execLevel_4:"Catching it", execLevel_5:"Hit it twice", // TODO: verify
+    execLevel_6:"Stringing it", execLevel_7:"Consistent", execLevel_8:"Solid", execLevel_9:"Locked", execLevel_10:"Owned", // TODO: verify
+    execSub_1:"First attempts. Body's still figuring it out.", execSub_2:"Pieces are landing, full move isn't.", execSub_3:"One clean rep on a good day.", // TODO: verify
+    execSub_4:"Lands more than it falls. Not reliable yet.", execSub_5:"Can repeat under no pressure.", execSub_6:"A few in a row when warm.", // TODO: verify
+    execSub_7:"Lands when you call it.", execSub_8:"Hits cold, hits tired, hits in cypher.", execSub_9:"Can hit at will. Style coming through.", execSub_10:"It's yours. Variations on demand.", // TODO: verify
     addMove:"AGREGAR MOVIMIENTO", addCategory:"AGREGAR CATEGORÍA", addEntry:"AGREGAR ENTRADA",
     addRound:"AGREGAR RONDA", addSet:"NUEVO SET", newRound:"NUEVA RONDA",
     newNote:"NUEVA NOTA", newGoal:"NUEVO OBJETIVO",
@@ -3633,6 +3648,11 @@ export const TRANSLATIONS = {
     notes:"NOTES", name:"NOM", title:"TITRE", description:"DESCRIPTION",
     status:"STATUT", colour:"COULEUR", color:"COULEUR", date:"DATE DE CRÉATION",
     mastery:"NIVEAU DE MAÎTRISE", set:"SET",
+    executionLevel:"Execution Level", execLevel_1:"Trying it", execLevel_2:"Getting closer", execLevel_3:"Hit it once", execLevel_4:"Catching it", execLevel_5:"Hit it twice", // TODO: verify
+    execLevel_6:"Stringing it", execLevel_7:"Consistent", execLevel_8:"Solid", execLevel_9:"Locked", execLevel_10:"Owned", // TODO: verify
+    execSub_1:"First attempts. Body's still figuring it out.", execSub_2:"Pieces are landing, full move isn't.", execSub_3:"One clean rep on a good day.", // TODO: verify
+    execSub_4:"Lands more than it falls. Not reliable yet.", execSub_5:"Can repeat under no pressure.", execSub_6:"A few in a row when warm.", // TODO: verify
+    execSub_7:"Lands when you call it.", execSub_8:"Hits cold, hits tired, hits in cypher.", execSub_9:"Can hit at will. Style coming through.", execSub_10:"It's yours. Variations on demand.", // TODO: verify
     addMove:"AJOUTER UN MOVE", addCategory:"AJOUTER CATÉGORIE", addEntry:"AJOUTER ENTRÉE",
     addRound:"AJOUTER ROUND", addSet:"NOUVEAU SET", newRound:"NOUVEAU ROUND",
     newNote:"NOUVELLE NOTE", newGoal:"NOUVEL OBJECTIF",
@@ -4816,6 +4836,11 @@ export const TRANSLATIONS = {
     notes:"NOTAS", name:"NOME", title:"TÍTULO", description:"DESCRIÇÃO",
     status:"STATUS", colour:"COR", color:"COR", date:"DATA DE CRIAÇÃO",
     mastery:"NÍVEL DE DOMÍNIO", set:"SET",
+    executionLevel:"Execution Level", execLevel_1:"Trying it", execLevel_2:"Getting closer", execLevel_3:"Hit it once", execLevel_4:"Catching it", execLevel_5:"Hit it twice", // TODO: verify
+    execLevel_6:"Stringing it", execLevel_7:"Consistent", execLevel_8:"Solid", execLevel_9:"Locked", execLevel_10:"Owned", // TODO: verify
+    execSub_1:"First attempts. Body's still figuring it out.", execSub_2:"Pieces are landing, full move isn't.", execSub_3:"One clean rep on a good day.", // TODO: verify
+    execSub_4:"Lands more than it falls. Not reliable yet.", execSub_5:"Can repeat under no pressure.", execSub_6:"A few in a row when warm.", // TODO: verify
+    execSub_7:"Lands when you call it.", execSub_8:"Hits cold, hits tired, hits in cypher.", execSub_9:"Can hit at will. Style coming through.", execSub_10:"It's yours. Variations on demand.", // TODO: verify
     addMove:"ADICIONAR MOVE", addCategory:"ADICIONAR CATEGORIA", addEntry:"ADICIONAR ENTRADA",
     addRound:"ADICIONAR ROUND", addSet:"NOVO SET", newRound:"NOVO ROUND",
     newNote:"NOVA NOTA", newGoal:"NOVO OBJETIVO",
@@ -5999,6 +6024,11 @@ export const TRANSLATIONS = {
     notes:"NOTIZEN", name:"NAME", title:"TITEL", description:"BESCHREIBUNG",
     status:"STATUS", colour:"FARBE", color:"FARBE", date:"ERSTELLUNGSDATUM",
     mastery:"BEHERRSCHUNGSGRAD", set:"SET",
+    executionLevel:"Execution Level", execLevel_1:"Trying it", execLevel_2:"Getting closer", execLevel_3:"Hit it once", execLevel_4:"Catching it", execLevel_5:"Hit it twice", // TODO: verify
+    execLevel_6:"Stringing it", execLevel_7:"Consistent", execLevel_8:"Solid", execLevel_9:"Locked", execLevel_10:"Owned", // TODO: verify
+    execSub_1:"First attempts. Body's still figuring it out.", execSub_2:"Pieces are landing, full move isn't.", execSub_3:"One clean rep on a good day.", // TODO: verify
+    execSub_4:"Lands more than it falls. Not reliable yet.", execSub_5:"Can repeat under no pressure.", execSub_6:"A few in a row when warm.", // TODO: verify
+    execSub_7:"Lands when you call it.", execSub_8:"Hits cold, hits tired, hits in cypher.", execSub_9:"Can hit at will. Style coming through.", execSub_10:"It's yours. Variations on demand.", // TODO: verify
     addMove:"MOVE HINZUFÜGEN", addCategory:"KATEGORIE HINZUFÜGEN", addEntry:"EINTRAG HINZUFÜGEN",
     addRound:"RUNDE HINZUFÜGEN", addSet:"NEUES SET", newRound:"NEUE RUNDE",
     newNote:"NEUE NOTIZ", newGoal:"NEUES ZIEL",
@@ -7182,6 +7212,11 @@ export const TRANSLATIONS = {
     notes:"ノート", name:"名前", title:"タイトル", description:"説明",
     status:"ステータス", colour:"カラー", color:"カラー", date:"作成日",
     mastery:"習熟度", set:"セット",
+    executionLevel:"Execution Level", execLevel_1:"Trying it", execLevel_2:"Getting closer", execLevel_3:"Hit it once", execLevel_4:"Catching it", execLevel_5:"Hit it twice", // TODO: verify
+    execLevel_6:"Stringing it", execLevel_7:"Consistent", execLevel_8:"Solid", execLevel_9:"Locked", execLevel_10:"Owned", // TODO: verify
+    execSub_1:"First attempts. Body's still figuring it out.", execSub_2:"Pieces are landing, full move isn't.", execSub_3:"One clean rep on a good day.", // TODO: verify
+    execSub_4:"Lands more than it falls. Not reliable yet.", execSub_5:"Can repeat under no pressure.", execSub_6:"A few in a row when warm.", // TODO: verify
+    execSub_7:"Lands when you call it.", execSub_8:"Hits cold, hits tired, hits in cypher.", execSub_9:"Can hit at will. Style coming through.", execSub_10:"It's yours. Variations on demand.", // TODO: verify
     addMove:"ムーブ追加", addCategory:"カテゴリ追加", addEntry:"エントリ追加",
     addRound:"ラウンド追加", addSet:"新しいセット", newRound:"新しいラウンド",
     newNote:"新しいノート", newGoal:"新しい目標",
@@ -8366,6 +8401,11 @@ export const TRANSLATIONS = {
     notes:"笔记", name:"名称", title:"标题", description:"描述",
     status:"状态", colour:"颜色", color:"颜色", date:"创建日期",
     mastery:"熟练度", set:"组合",
+    executionLevel:"Execution Level", execLevel_1:"Trying it", execLevel_2:"Getting closer", execLevel_3:"Hit it once", execLevel_4:"Catching it", execLevel_5:"Hit it twice", // TODO: verify
+    execLevel_6:"Stringing it", execLevel_7:"Consistent", execLevel_8:"Solid", execLevel_9:"Locked", execLevel_10:"Owned", // TODO: verify
+    execSub_1:"First attempts. Body's still figuring it out.", execSub_2:"Pieces are landing, full move isn't.", execSub_3:"One clean rep on a good day.", // TODO: verify
+    execSub_4:"Lands more than it falls. Not reliable yet.", execSub_5:"Can repeat under no pressure.", execSub_6:"A few in a row when warm.", // TODO: verify
+    execSub_7:"Lands when you call it.", execSub_8:"Hits cold, hits tired, hits in cypher.", execSub_9:"Can hit at will. Style coming through.", execSub_10:"It's yours. Variations on demand.", // TODO: verify
     addMove:"添加动作", addCategory:"添加分类", addEntry:"添加条目",
     addRound:"添加回合", addSet:"新组合", newRound:"新回合",
     newNote:"新笔记", newGoal:"新目标",
@@ -9548,6 +9588,11 @@ export const TRANSLATIONS = {
     notes:"ЗАМЕТКИ", name:"НАЗВАНИЕ", title:"ЗАГОЛОВОК", description:"ОПИСАНИЕ",
     status:"СТАТУС", colour:"ЦВЕТ", color:"ЦВЕТ", date:"ДАТА СОЗДАНИЯ",
     mastery:"УРОВЕНЬ МАСТЕРСТВА", set:"СЕТ",
+    executionLevel:"Execution Level", execLevel_1:"Trying it", execLevel_2:"Getting closer", execLevel_3:"Hit it once", execLevel_4:"Catching it", execLevel_5:"Hit it twice", // TODO: verify
+    execLevel_6:"Stringing it", execLevel_7:"Consistent", execLevel_8:"Solid", execLevel_9:"Locked", execLevel_10:"Owned", // TODO: verify
+    execSub_1:"First attempts. Body's still figuring it out.", execSub_2:"Pieces are landing, full move isn't.", execSub_3:"One clean rep on a good day.", // TODO: verify
+    execSub_4:"Lands more than it falls. Not reliable yet.", execSub_5:"Can repeat under no pressure.", execSub_6:"A few in a row when warm.", // TODO: verify
+    execSub_7:"Lands when you call it.", execSub_8:"Hits cold, hits tired, hits in cypher.", execSub_9:"Can hit at will. Style coming through.", execSub_10:"It's yours. Variations on demand.", // TODO: verify
     addMove:"ДОБАВИТЬ ДВИЖЕНИЕ", addCategory:"ДОБАВИТЬ КАТЕГОРИЮ", addEntry:"ДОБАВИТЬ ЗАПИСЬ",
     addRound:"ДОБАВИТЬ РАУНД", addSet:"НОВЫЙ СЕТ", newRound:"НОВЫЙ РАУНД",
     newNote:"НОВАЯ ЗАМЕТКА", newGoal:"НОВАЯ ЦЕЛЬ",
@@ -10735,6 +10780,11 @@ export const TRANSLATIONS = {
     notes:"노트", name:"이름", title:"제목", description:"설명",
     status:"상태", colour:"색상", color:"색상", date:"생성일",
     mastery:"숙련도", set:"세트",
+    executionLevel:"Execution Level", execLevel_1:"Trying it", execLevel_2:"Getting closer", execLevel_3:"Hit it once", execLevel_4:"Catching it", execLevel_5:"Hit it twice", // TODO: verify
+    execLevel_6:"Stringing it", execLevel_7:"Consistent", execLevel_8:"Solid", execLevel_9:"Locked", execLevel_10:"Owned", // TODO: verify
+    execSub_1:"First attempts. Body's still figuring it out.", execSub_2:"Pieces are landing, full move isn't.", execSub_3:"One clean rep on a good day.", // TODO: verify
+    execSub_4:"Lands more than it falls. Not reliable yet.", execSub_5:"Can repeat under no pressure.", execSub_6:"A few in a row when warm.", // TODO: verify
+    execSub_7:"Lands when you call it.", execSub_8:"Hits cold, hits tired, hits in cypher.", execSub_9:"Can hit at will. Style coming through.", execSub_10:"It's yours. Variations on demand.", // TODO: verify
     // Buttons / labels
     addMove:"무브 추가", addCategory:"카테고리 추가", addEntry:"항목 추가",
     addRound:"라운드 추가", addSet:"새 세트", newRound:"새 라운드",
@@ -11953,6 +12003,11 @@ export const TRANSLATIONS = {
     notes:"บันทึก", name:"ชื่อ", title:"หัวข้อ", description:"คำอธิบาย",
     status:"สถานะ", colour:"สี", color:"สี", date:"วันที่สร้าง",
     mastery:"ระดับความชำนาญ", set:"เซ็ต",
+    executionLevel:"Execution Level", execLevel_1:"Trying it", execLevel_2:"Getting closer", execLevel_3:"Hit it once", execLevel_4:"Catching it", execLevel_5:"Hit it twice", // TODO: verify
+    execLevel_6:"Stringing it", execLevel_7:"Consistent", execLevel_8:"Solid", execLevel_9:"Locked", execLevel_10:"Owned", // TODO: verify
+    execSub_1:"First attempts. Body's still figuring it out.", execSub_2:"Pieces are landing, full move isn't.", execSub_3:"One clean rep on a good day.", // TODO: verify
+    execSub_4:"Lands more than it falls. Not reliable yet.", execSub_5:"Can repeat under no pressure.", execSub_6:"A few in a row when warm.", // TODO: verify
+    execSub_7:"Lands when you call it.", execSub_8:"Hits cold, hits tired, hits in cypher.", execSub_9:"Can hit at will. Style coming through.", execSub_10:"It's yours. Variations on demand.", // TODO: verify
     // Buttons / labels
     addMove:"เพิ่มท่า", addCategory:"เพิ่มหมวดหมู่", addEntry:"เพิ่มรายการ",
     addRound:"เพิ่มราวด์", addSet:"เซ็ตใหม่", newRound:"ราวด์ใหม่",
@@ -13166,6 +13221,11 @@ export const TRANSLATIONS = {
     notes:"GHI CHÚ", name:"TÊN", title:"TIÊU ĐỀ", description:"MÔ TẢ",
     status:"TRẠNG THÁI", colour:"MÀU", color:"MÀU", date:"NGÀY TẠO",
     mastery:"MỨC ĐỘ THÀNH THẠO", set:"SET",
+    executionLevel:"Execution Level", execLevel_1:"Trying it", execLevel_2:"Getting closer", execLevel_3:"Hit it once", execLevel_4:"Catching it", execLevel_5:"Hit it twice", // TODO: verify
+    execLevel_6:"Stringing it", execLevel_7:"Consistent", execLevel_8:"Solid", execLevel_9:"Locked", execLevel_10:"Owned", // TODO: verify
+    execSub_1:"First attempts. Body's still figuring it out.", execSub_2:"Pieces are landing, full move isn't.", execSub_3:"One clean rep on a good day.", // TODO: verify
+    execSub_4:"Lands more than it falls. Not reliable yet.", execSub_5:"Can repeat under no pressure.", execSub_6:"A few in a row when warm.", // TODO: verify
+    execSub_7:"Lands when you call it.", execSub_8:"Hits cold, hits tired, hits in cypher.", execSub_9:"Can hit at will. Style coming through.", execSub_10:"It's yours. Variations on demand.", // TODO: verify
     // Buttons / labels
     addMove:"THÊM ĐỘNG TÁC", addCategory:"THÊM DANH MỤC", addEntry:"THÊM MỤC",
     addRound:"THÊM ROUND", addSet:"SET MỚI", newRound:"ROUND MỚI",
