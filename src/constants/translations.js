@@ -300,6 +300,8 @@ export const TRANSLATIONS = {
     moveNamePlaceholder:"Move name…", openLink:"Open link",
     hideDetails:"Hide details", moreDetails:"More details",
     attributes:"ATTRIBUTES", attributesHint:"Custom attributes — add or edit options in Settings",
+    attributesExplainerP1:"Custom attributes track per-move details specific to your practice. Examples: Spin (clockwise / counter-clockwise), Direction (forward / backward / side), Tags (smooth, powerful, clean).",
+    attributesExplainerP2:"Single-select attributes capture one value (a move spins one direction). Multi-select attributes capture several (a move can be tagged smooth AND powerful).",
     clockwise:"Clockwise", counterclockwise:"Counterclockwise",
     forward:"Forward", backwards:"Backwards", sideways:"Sideways", goingAround:"Going Around",
     detailsLabel:"DETAILS", movesInThisSet:"MOVES IN THIS SET",
@@ -611,6 +613,7 @@ export const TRANSLATIONS = {
     difficulty_easy:"Easy",
     difficulty_intermediate:"Intermediate",
     difficulty_advanced:"Advanced",
+    difficultyBrief:"Easy moves stay sharper longer. Advanced moves decay faster between sessions.",
     // Calendar
     calendar:"CALENDAR", noActivity:"No activity", movesTrained:"MOVES TRAINED",
     sparringSession:"SPARRING", repSession:"REP COUNTER", habitCompleted:"HABITS",
@@ -1519,6 +1522,8 @@ export const TRANSLATIONS = {
     moveNamePlaceholder:"Nome mossa…", openLink:"Apri link",
     hideDetails:"Nascondi dettagli", moreDetails:"Più dettagli",
     attributes:"ATTRIBUTI", attributesHint:"Attributi personalizzati — aggiungi o modifica le opzioni in Impostazioni",
+    attributesExplainerP1:"Custom attributes track per-move details specific to your practice. Examples: Spin (clockwise / counter-clockwise), Direction (forward / backward / side), Tags (smooth, powerful, clean).", // TODO: verify
+    attributesExplainerP2:"Single-select attributes capture one value (a move spins one direction). Multi-select attributes capture several (a move can be tagged smooth AND powerful).", // TODO: verify
     clockwise:"Senso orario", counterclockwise:"Senso antiorario",
     forward:"Avanti", backwards:"Indietro", sideways:"Laterale", goingAround:"In cerchio",
     detailsLabel:"DETTAGLI", movesInThisSet:"MOSSE IN QUESTO SET",
@@ -1822,6 +1827,7 @@ export const TRANSLATIONS = {
     difficulty_easy:"Facile",
     difficulty_intermediate:"Intermedio",
     difficulty_advanced:"Avanzato",
+    difficultyBrief:"Easy moves stay sharper longer. Advanced moves decay faster between sessions.", // TODO: verify
     calendar:"CALENDARIO", noActivity:"Nessuna attività", movesTrained:"MOSSE ALLENATE",
     sparringSession:"SPARRING", repSession:"RIPETIZIONI", habitCompleted:"ABITUDINI",
     noteCreated:"NOTE", addEvent:"Aggiungi evento", training:"Allenamento", battleEvent:"Battle",
@@ -2714,6 +2720,8 @@ export const TRANSLATIONS = {
     moveNamePlaceholder:"Nombre del movimiento…", openLink:"Abrir enlace",
     hideDetails:"Ocultar detalles", moreDetails:"Más detalles",
     attributes:"ATRIBUTOS", attributesHint:"Atributos personalizados — añade o edita opciones en Ajustes",
+    attributesExplainerP1:"Custom attributes track per-move details specific to your practice. Examples: Spin (clockwise / counter-clockwise), Direction (forward / backward / side), Tags (smooth, powerful, clean).", // TODO: verify
+    attributesExplainerP2:"Single-select attributes capture one value (a move spins one direction). Multi-select attributes capture several (a move can be tagged smooth AND powerful).", // TODO: verify
     clockwise:"Sentido horario", counterclockwise:"Sentido antihorario",
     forward:"Adelante", backwards:"Atrás", sideways:"Lateral", goingAround:"En círculo",
     detailsLabel:"DETALLES", movesInThisSet:"MOVIMIENTOS EN ESTE SET",
@@ -3014,6 +3022,7 @@ export const TRANSLATIONS = {
     difficulty_easy:"Fácil",
     difficulty_intermediate:"Intermedio",
     difficulty_advanced:"Avanzado",
+    difficultyBrief:"Easy moves stay sharper longer. Advanced moves decay faster between sessions.", // TODO: verify
     calendar:"CALENDARIO", noActivity:"Sin actividad", movesTrained:"MOVIMIENTOS ENTRENADOS",
     sparringSession:"SPARRING", repSession:"REPETICIONES", habitCompleted:"HÁBITOS",
     noteCreated:"NOTAS", addEvent:"Agregar evento", training:"Entrenamiento", battleEvent:"Battle",
@@ -3906,6 +3915,8 @@ export const TRANSLATIONS = {
     moveNamePlaceholder:"Nom du mouvement…", openLink:"Ouvrir le lien",
     hideDetails:"Masquer les détails", moreDetails:"Plus de détails",
     attributes:"ATTRIBUTS", attributesHint:"Attributs personnalisés — ajoute ou modifie les options dans les Paramètres",
+    attributesExplainerP1:"Custom attributes track per-move details specific to your practice. Examples: Spin (clockwise / counter-clockwise), Direction (forward / backward / side), Tags (smooth, powerful, clean).", // TODO: verify
+    attributesExplainerP2:"Single-select attributes capture one value (a move spins one direction). Multi-select attributes capture several (a move can be tagged smooth AND powerful).", // TODO: verify
     clockwise:"Sens horaire", counterclockwise:"Sens antihoraire",
     forward:"Avant", backwards:"Arrière", sideways:"Latéral", goingAround:"En cercle",
     detailsLabel:"DÉTAILS", movesInThisSet:"MOUVEMENTS DANS CE SET",
@@ -4206,6 +4217,7 @@ export const TRANSLATIONS = {
     difficulty_easy:"Facile",
     difficulty_intermediate:"Intermédiaire",
     difficulty_advanced:"Avancé",
+    difficultyBrief:"Easy moves stay sharper longer. Advanced moves decay faster between sessions.", // TODO: verify
     calendar:"CALENDRIER", noActivity:"Aucune activité", movesTrained:"MOUVEMENTS ENTRAÎNÉS",
     sparringSession:"SPARRING", repSession:"RÉPÉTITIONS", habitCompleted:"HABITUDES",
     noteCreated:"NOTES", addEvent:"Ajouter un événement", training:"Entraînement", battleEvent:"Battle",
@@ -5098,6 +5110,8 @@ export const TRANSLATIONS = {
     moveNamePlaceholder:"Nome do movimento…", openLink:"Abrir link",
     hideDetails:"Ocultar detalhes", moreDetails:"Mais detalhes",
     attributes:"ATRIBUTOS", attributesHint:"Atributos personalizados — adicione ou edite opções em Configurações",
+    attributesExplainerP1:"Custom attributes track per-move details specific to your practice. Examples: Spin (clockwise / counter-clockwise), Direction (forward / backward / side), Tags (smooth, powerful, clean).", // TODO: verify
+    attributesExplainerP2:"Single-select attributes capture one value (a move spins one direction). Multi-select attributes capture several (a move can be tagged smooth AND powerful).", // TODO: verify
     clockwise:"Sentido horário", counterclockwise:"Sentido anti-horário",
     forward:"Para frente", backwards:"Para trás", sideways:"Lateral", goingAround:"Em círculo",
     detailsLabel:"DETALHES", movesInThisSet:"MOVIMENTOS NESTE SET",
@@ -5398,6 +5412,7 @@ export const TRANSLATIONS = {
     difficulty_easy:"Fácil",
     difficulty_intermediate:"Intermediário",
     difficulty_advanced:"Avançado",
+    difficultyBrief:"Easy moves stay sharper longer. Advanced moves decay faster between sessions.", // TODO: verify
     calendar:"CALENDÁRIO", noActivity:"Sem atividade", movesTrained:"MOVIMENTOS TREINADOS",
     sparringSession:"SPARRING", repSession:"REPETIÇÕES", habitCompleted:"HÁBITOS",
     noteCreated:"NOTAS", addEvent:"Adicionar evento", training:"Treino", battleEvent:"Battle",
@@ -6290,6 +6305,8 @@ export const TRANSLATIONS = {
     moveNamePlaceholder:"Move-Name…", openLink:"Link öffnen",
     hideDetails:"Details verbergen", moreDetails:"Mehr Details",
     attributes:"ATTRIBUTE", attributesHint:"Eigene Attribute — Optionen in den Einstellungen hinzufügen oder bearbeiten",
+    attributesExplainerP1:"Custom attributes track per-move details specific to your practice. Examples: Spin (clockwise / counter-clockwise), Direction (forward / backward / side), Tags (smooth, powerful, clean).", // TODO: verify
+    attributesExplainerP2:"Single-select attributes capture one value (a move spins one direction). Multi-select attributes capture several (a move can be tagged smooth AND powerful).", // TODO: verify
     clockwise:"Im Uhrzeigersinn", counterclockwise:"Gegen den Uhrzeigersinn",
     forward:"Vorwärts", backwards:"Rückwärts", sideways:"Seitwärts", goingAround:"Im Kreis",
     detailsLabel:"DETAILS", movesInThisSet:"MOVES IN DIESEM SET",
@@ -6590,6 +6607,7 @@ export const TRANSLATIONS = {
     difficulty_easy:"Einfach",
     difficulty_intermediate:"Mittel",
     difficulty_advanced:"Fortgeschritten",
+    difficultyBrief:"Easy moves stay sharper longer. Advanced moves decay faster between sessions.", // TODO: verify
     calendar:"KALENDER", noActivity:"Keine Aktivität", movesTrained:"TRAINIERTE MOVES",
     sparringSession:"SPARRING", repSession:"WIEDERHOLUNGEN", habitCompleted:"GEWOHNHEITEN",
     noteCreated:"NOTIZEN", addEvent:"Ereignis hinzufügen", training:"Training", battleEvent:"Battle",
@@ -7483,6 +7501,8 @@ export const TRANSLATIONS = {
     moveNamePlaceholder:"ムーブ名…", openLink:"リンクを開く",
     hideDetails:"詳細を隠す", moreDetails:"詳細を表示",
     attributes:"属性", attributesHint:"カスタム属性 — 設定でオプションを追加・編集",
+    attributesExplainerP1:"Custom attributes track per-move details specific to your practice. Examples: Spin (clockwise / counter-clockwise), Direction (forward / backward / side), Tags (smooth, powerful, clean).", // TODO: verify
+    attributesExplainerP2:"Single-select attributes capture one value (a move spins one direction). Multi-select attributes capture several (a move can be tagged smooth AND powerful).", // TODO: verify
     clockwise:"時計回り", counterclockwise:"反時計回り",
     forward:"前方", backwards:"後方", sideways:"横方向", goingAround:"回転",
     detailsLabel:"詳細", movesInThisSet:"このセットのムーブ",
@@ -7783,6 +7803,7 @@ export const TRANSLATIONS = {
     difficulty_easy:"簡単",
     difficulty_intermediate:"中級",
     difficulty_advanced:"上級",
+    difficultyBrief:"Easy moves stay sharper longer. Advanced moves decay faster between sessions.", // TODO: verify
     calendar:"カレンダー", noActivity:"活動なし", movesTrained:"トレーニングしたムーブ",
     sparringSession:"スパーリング", repSession:"レップカウンター", habitCompleted:"習慣",
     noteCreated:"ノート", addEvent:"イベント追加", training:"トレーニング", battleEvent:"バトル",
@@ -8674,6 +8695,8 @@ export const TRANSLATIONS = {
     moveNamePlaceholder:"动作名称…", openLink:"打开链接",
     hideDetails:"隐藏详情", moreDetails:"更多详情",
     attributes:"属性", attributesHint:"自定义属性 — 在设置中添加或编辑选项",
+    attributesExplainerP1:"Custom attributes track per-move details specific to your practice. Examples: Spin (clockwise / counter-clockwise), Direction (forward / backward / side), Tags (smooth, powerful, clean).", // TODO: verify
+    attributesExplainerP2:"Single-select attributes capture one value (a move spins one direction). Multi-select attributes capture several (a move can be tagged smooth AND powerful).", // TODO: verify
     clockwise:"顺时针", counterclockwise:"逆时针",
     forward:"向前", backwards:"向后", sideways:"横向", goingAround:"旋转",
     detailsLabel:"详情", movesInThisSet:"此组合中的动作",
@@ -8974,6 +8997,7 @@ export const TRANSLATIONS = {
     difficulty_easy:"简单",
     difficulty_intermediate:"中等",
     difficulty_advanced:"高级",
+    difficultyBrief:"Easy moves stay sharper longer. Advanced moves decay faster between sessions.", // TODO: verify
     calendar:"日历", noActivity:"无活动", movesTrained:"已训练动作",
     sparringSession:"对练", repSession:"重复计数", habitCompleted:"习惯",
     noteCreated:"笔记", addEvent:"添加事件", training:"训练", battleEvent:"比赛",
@@ -9865,6 +9889,8 @@ export const TRANSLATIONS = {
     moveNamePlaceholder:"Название движения…", openLink:"Открыть ссылку",
     hideDetails:"Скрыть детали", moreDetails:"Подробнее",
     attributes:"АТРИБУТЫ", attributesHint:"Пользовательские атрибуты — добавьте или измените опции в Настройках",
+    attributesExplainerP1:"Custom attributes track per-move details specific to your practice. Examples: Spin (clockwise / counter-clockwise), Direction (forward / backward / side), Tags (smooth, powerful, clean).", // TODO: verify
+    attributesExplainerP2:"Single-select attributes capture one value (a move spins one direction). Multi-select attributes capture several (a move can be tagged smooth AND powerful).", // TODO: verify
     clockwise:"По часовой", counterclockwise:"Против часовой",
     forward:"Вперёд", backwards:"Назад", sideways:"Вбок", goingAround:"По кругу",
     detailsLabel:"ДЕТАЛИ", movesInThisSet:"ДВИЖЕНИЯ В ЭТОМ СЕТЕ",
@@ -10165,6 +10191,7 @@ export const TRANSLATIONS = {
     difficulty_easy:"Легко",
     difficulty_intermediate:"Средне",
     difficulty_advanced:"Сложно",
+    difficultyBrief:"Easy moves stay sharper longer. Advanced moves decay faster between sessions.", // TODO: verify
     calendar:"КАЛЕНДАРЬ", noActivity:"Нет активности", movesTrained:"ТРЕНИРОВАННЫЕ ДВИЖЕНИЯ",
     sparringSession:"СПАРРИНГ", repSession:"ПОВТОРЕНИЯ", habitCompleted:"ПРИВЫЧКИ",
     noteCreated:"ЗАМЕТКИ", addEvent:"Добавить событие", training:"Тренировка", battleEvent:"Батл",
@@ -11092,6 +11119,8 @@ export const TRANSLATIONS = {
     moveNamePlaceholder:"무브 이름…", openLink:"링크 열기",
     hideDetails:"상세 숨기기", moreDetails:"상세 보기",
     attributes:"속성", attributesHint:"맞춤 속성 — 설정에서 옵션 추가 또는 편집",
+    attributesExplainerP1:"Custom attributes track per-move details specific to your practice. Examples: Spin (clockwise / counter-clockwise), Direction (forward / backward / side), Tags (smooth, powerful, clean).", // TODO: verify
+    attributesExplainerP2:"Single-select attributes capture one value (a move spins one direction). Multi-select attributes capture several (a move can be tagged smooth AND powerful).", // TODO: verify
     clockwise:"시계 방향", counterclockwise:"반시계 방향",
     forward:"앞으로", backwards:"뒤로", sideways:"옆으로", goingAround:"회전",
     detailsLabel:"상세", movesInThisSet:"이 세트의 무브",
@@ -11392,6 +11421,7 @@ export const TRANSLATIONS = {
     difficulty_easy:"쉬움",
     difficulty_intermediate:"중급",
     difficulty_advanced:"고급",
+    difficultyBrief:"Easy moves stay sharper longer. Advanced moves decay faster between sessions.", // TODO: verify
     calendar:"캘린더", noActivity:"활동 없음", movesTrained:"훈련한 무브",
     sparringSession:"스파링", repSession:"횟수 카운터", habitCompleted:"습관",
     noteCreated:"노트", addEvent:"이벤트 추가", training:"트레이닝", battleEvent:"배틀",
@@ -12327,6 +12357,8 @@ export const TRANSLATIONS = {
     moveNamePlaceholder:"ชื่อท่า…", openLink:"เปิดลิงก์",
     hideDetails:"ซ่อนรายละเอียด", moreDetails:"รายละเอียดเพิ่มเติม",
     attributes:"คุณสมบัติ", attributesHint:"คุณสมบัติที่กำหนดเอง — เพิ่มหรือแก้ไขตัวเลือกในการตั้งค่า",
+    attributesExplainerP1:"Custom attributes track per-move details specific to your practice. Examples: Spin (clockwise / counter-clockwise), Direction (forward / backward / side), Tags (smooth, powerful, clean).", // TODO: verify
+    attributesExplainerP2:"Single-select attributes capture one value (a move spins one direction). Multi-select attributes capture several (a move can be tagged smooth AND powerful).", // TODO: verify
     clockwise:"ตามเข็มนาฬิกา", counterclockwise:"ทวนเข็มนาฬิกา",
     forward:"ไปข้างหน้า", backwards:"ถอยหลัง", sideways:"ด้านข้าง", goingAround:"หมุนรอบ",
     detailsLabel:"รายละเอียด", movesInThisSet:"ท่าในเซ็ตนี้",
@@ -13239,6 +13271,7 @@ export const TRANSLATIONS = {
     difficulty_easy:"ง่าย",
     difficulty_intermediate:"ปานกลาง",
     difficulty_advanced:"ขั้นสูง",
+    difficultyBrief:"Easy moves stay sharper longer. Advanced moves decay faster between sessions.", // TODO: verify
     // Section briefs
     showSectionDescriptions:"แสดงคำอธิบายส่วน", showSectionDescriptionsSub:"คำอธิบายสั้นๆ ด้านบนของแต่ละส่วน", libraryBrief:"ท่าทั้งหมดของคุณรวมอยู่ในที่เดียว จัดระเบียบและพร้อมเติบโต", setsBrief:"จัดกลุ่มท่าเป็นเซ็ตตามธีมสำหรับการฝึกเฉพาะและแฟลชการ์ด", gapBrief:"ท่าที่ต้องการความสนใจ — เสื่อมลง ความชำนาญต่ำ หรือขาดไปจากการฝึก", exploreBrief:"ข้อจำกัดสร้างสิ่งประดิษฐ์ — คอมโบยิ่งแปลก ผลลัพธ์ยิ่งสร้างสรรค์", exploreBriefStat:"4 โหมดสร้างสรรค์เพื่อจุดประกายไอเดียการเคลื่อนไหวใหม่", rrrBrief:"สามวิธีพัฒนาคำศัพท์ของคุณ เลือกท่าและเลือกเส้นทาง", rrrBriefStat:"เลือกท่าเพื่อเริ่มต้น", combineBrief:"สุ่มคอมโบสุ่มจากไลบรารีของคุณ ยิ่งแปลกยิ่งเรียนรู้มาก", mapBrief:"แผนที่การเชื่อมต่อท่าของคุณ คู่ที่สำรวจแต่ละคู่เผยคำศัพท์การเคลื่อนไหวส่วนตัว", battlePlanBrief:"สร้างกลยุทธ์แบทเทิลทีละราวด์ จัดระเบียบและจำลองแรงกดดันการแข่งขัน", battlePrepBrief:"ติดตามแบทเทิลที่จะมาถึง เตรียมแผนและทบทวนผลงานที่ผ่านมา", freestyleBrief:"สร้างรายการฟรีสไตล์จากคำศัพท์ท่าของคุณ", rivalsBrief:"ติดตามคู่แข่ง คู่ซ้อม และครู", calendarBrief:"ประวัติการฝึกของคุณในสายตา แตะวันใดเพื่อดูว่าคุณฝึกอะไร", stanceBrief:"ตัวตนการเต้นของคุณใน 6 โดเมน", goalsBrief:"เป้าหมายระยะยาวและเป้าหมายที่วัดได้", notesBrief:"ความคิด การทบทวน และบันทึกเซสชัน", homeBrief:"เพิ่มกิจวัตรประจำวัน บันทึก และงานของวันนี้",
     // HOME blackboard sections (L2)
@@ -13549,6 +13582,8 @@ export const TRANSLATIONS = {
     moveNamePlaceholder:"Tên động tác…", openLink:"Mở link",
     hideDetails:"Ẩn chi tiết", moreDetails:"Xem chi tiết",
     attributes:"THUỘC TÍNH", attributesHint:"Thuộc tính tùy chỉnh — thêm hoặc chỉnh sửa tùy chọn trong Cài đặt",
+    attributesExplainerP1:"Custom attributes track per-move details specific to your practice. Examples: Spin (clockwise / counter-clockwise), Direction (forward / backward / side), Tags (smooth, powerful, clean).", // TODO: verify
+    attributesExplainerP2:"Single-select attributes capture one value (a move spins one direction). Multi-select attributes capture several (a move can be tagged smooth AND powerful).", // TODO: verify
     clockwise:"Thuận chiều kim đồng hồ", counterclockwise:"Ngược chiều kim đồng hồ",
     forward:"Tiến", backwards:"Lùi", sideways:"Ngang", goingAround:"Xoay vòng",
     detailsLabel:"CHI TIẾT", movesInThisSet:"ĐỘNG TÁC TRONG SET NÀY",
@@ -13857,6 +13892,7 @@ export const TRANSLATIONS = {
     difficulty_easy:"Dễ",
     difficulty_intermediate:"Trung bình",
     difficulty_advanced:"Nâng cao",
+    difficultyBrief:"Easy moves stay sharper longer. Advanced moves decay faster between sessions.", // TODO: verify
     calendar:"LỊCH", noActivity:"Không có hoạt động", movesTrained:"ĐỘNG TÁC ĐÃ TẬP",
     sparringSession:"ĐỐI KHÁNG", repSession:"ĐẾM LẶP", habitCompleted:"THÓI QUEN",
     noteCreated:"GHI CHÚ", addEvent:"Thêm sự kiện", training:"Tập luyện", battleEvent:"Battle",

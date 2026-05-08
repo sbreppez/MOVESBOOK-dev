@@ -4,9 +4,16 @@ import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { lbl } from '../../constants/styles';
 import { useT } from '../../hooks/useTranslation';
 
+const levelColor = (lvl) => {
+  if (lvl <= 3) return C.red;
+  if (lvl <= 6) return C.yellow;
+  return C.green;
+};
+
 export const ExecutionLevelBattery = ({ value, onChange }) => {
   const t = useT();
   const level = Math.max(1, Math.min(10, Math.ceil((value || 0) / 10)));
+  const fillColor = levelColor(level);
 
   return (
     <div style={{ marginBottom: 16 }}>
@@ -33,7 +40,7 @@ export const ExecutionLevelBattery = ({ value, onChange }) => {
               aria-label={`${t('executionLevel')} ${segLevel}`}
               style={{
                 flex: 1, height: 28, borderRadius: 4,
-                background: filled ? C.accent : 'transparent',
+                background: filled ? fillColor : 'transparent',
                 border: filled ? 'none' : `1px solid ${C.border}`,
                 cursor: 'pointer', padding: 0,
                 transition: 'all 0.15s',

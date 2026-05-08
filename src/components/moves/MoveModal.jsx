@@ -72,6 +72,7 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
   }, [showDepth]);
 
   const [showTensionExplainer, setShowTensionExplainer] = useState(false);
+  const [showAttributesExplainer, setShowAttributesExplainer] = useState(false);
 
   const [manualDelta, setManualDelta] = useState(0);
   const [showRepsBreakdown, setShowRepsBreakdown] = useState(false);
@@ -252,6 +253,12 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
             );
           })}
         </div>
+        <div style={{
+          fontSize: 11, color: C.textMuted, fontStyle: 'italic',
+          marginTop: 6,
+        }}>
+          {t("difficultyBrief")}
+        </div>
       </div>
 
       {/* ── DEPTH (collapsible) ── */}
@@ -383,9 +390,20 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
                     </button>
                   </div>
                 ) : (
-                  <div style={{ background:C.surfaceAlt, borderRadius:10, padding:10, border:`1px solid ${C.borderLight}` }}>
+                  <div style={{ background:C.surfaceAlt, borderRadius:10, padding:10, border:`1px solid ${C.borderLight}`, position:"relative" }}>
+                    <button
+                      onClick={() => { setShowBasedOn(false); setBasedOnFilter(""); setBasedOnSearch(""); }}
+                      aria-label="Close picker"
+                      style={{
+                        position:"absolute", top:6, right:6,
+                        background:"none", border:"none", cursor:"pointer", padding:4,
+                        display:"flex", alignItems:"center", justifyContent:"center",
+                      }}
+                    >
+                      <Ic n="x" s={12} c={C.textMuted}/>
+                    </button>
                     {/* Category filter chips */}
-                    <div style={{ display:"flex", gap:4, flexWrap:"wrap", marginBottom:8 }}>
+                    <div style={{ display:"flex", gap:4, flexWrap:"wrap", marginBottom:8, paddingRight:24 }}>
                       <button onClick={() => setBasedOnFilter("")}
                         style={chipStyle(!basedOnFilter)}>
                         {t("all") || "All"}
@@ -449,8 +467,49 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
 
           {/* ── Custom Attributes ── */}
           <div style={{ marginTop:8, marginBottom:4 }}>
-            <div style={sectionLabel}>{t("attributes")}</div>
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom: 4 }}>
+              <div style={sectionLabel}>{t("attributes")}</div>
+              <button
+                onClick={() => setShowAttributesExplainer(p => !p)}
+                aria-label="Custom Attributes info"
+                style={{
+                  background:'none', border:'none', cursor:'pointer',
+                  padding: 4, display:'flex', alignItems:'center', justifyContent:'center',
+                }}
+              >
+                <Ic n="info" s={14} c={showAttributesExplainer ? C.accent : C.textMuted} />
+              </button>
+            </div>
             <div style={{ fontSize:11, color:C.textMuted, fontStyle:"italic", marginBottom:6 }}>{t("attributesHint")}</div>
+            {showAttributesExplainer && (
+              <div style={{
+                background: C.surfaceAlt, borderRadius: 8,
+                padding: 12, marginBottom: 8, position: 'relative',
+              }}>
+                <button
+                  onClick={() => setShowAttributesExplainer(false)}
+                  aria-label="Close explainer"
+                  style={{
+                    position: 'absolute', top: 8, right: 8,
+                    background:'none', border:'none', cursor:'pointer', padding: 4,
+                  }}
+                >
+                  <Ic n="x" s={12} c={C.textMuted} />
+                </button>
+                <div style={{
+                  fontSize: 12, color: C.text, fontFamily: FONT_BODY,
+                  lineHeight: 1.5, paddingRight: 24,
+                }}>
+                  {t("attributesExplainerP1")}
+                </div>
+                <div style={{
+                  fontSize: 12, color: C.text, fontFamily: FONT_BODY,
+                  lineHeight: 1.5, paddingRight: 24, marginTop: 8,
+                }}>
+                  {t("attributesExplainerP2")}
+                </div>
+              </div>
+            )}
             <div style={{ background:C.surfaceAlt, borderRadius:10, padding:12, marginBottom:12,
               border:`1px solid ${C.borderLight}` }}>
               {sortedAttrs.length > 0 ? (
