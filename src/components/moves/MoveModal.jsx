@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Modal } from '../shared/Modal';
@@ -50,6 +50,14 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
   const [basedOnFilter, setBasedOnFilter] = useState(f.category || "");
   const [basedOnSearch, setBasedOnSearch] = useState("");
 
+  const [showDepth, setShowDepth] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem('mb_editmove_depth') === 'true';
+  });
+  useEffect(() => {
+    localStorage.setItem('mb_editmove_depth', String(showDepth));
+  }, [showDepth]);
+
   const setAttr = (attrId, val) => {
     setF(p => ({ ...p, attrs: { ...(p.attrs || {}), [attrId]: val } }));
   };
@@ -68,6 +76,33 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
   }, [allMoves, move, f.id, basedOnFilter, basedOnSearch]);
 
   const parentMove = f.parentId ? allMoves.find(m => m.id === f.parentId) : null;
+
+  const SectionHeader = ({ label, expanded, onToggle, showDot = false }) => (
+    <button
+      onClick={onToggle}
+      style={{
+        display:'flex', alignItems:'center', gap:6, width:'100%',
+        background:'none', border:'none', cursor:'pointer',
+        padding:'12px 0 8px', borderTop:`1px solid ${C.borderLight}`,
+        marginTop:12,
+      }}
+    >
+      <Ic n={expanded ? 'chevD' : 'chevR'} s={12} c={C.textMuted}/>
+      <span style={{
+        fontSize:11, fontWeight:800, letterSpacing:1.5,
+        color:C.text, fontFamily:FONT_DISPLAY,
+        textTransform:'uppercase',
+      }}>
+        {label}
+      </span>
+      {showDot && (
+        <span style={{
+          width:6, height:6, borderRadius:'50%',
+          background:C.accent, marginLeft:4,
+        }}/>
+      )}
+    </button>
+  );
 
   return (
     <Modal title={move?t("editMove"):t("addMove")} onClose={onClose}
@@ -95,67 +130,7 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
         </div>
       </div>
 
-      {/* ── Based On (parent move) — premium ── */}
-      {isPremium && <div style={{ marginBottom:8 }}>
-        <label style={lbl()}>{t("basedOn")}</label>
-        <div style={{ fontSize:11, color:C.textMuted, fontStyle:"italic", marginTop:-2, marginBottom:5 }}>{t("basedOnHint")}</div>
-        {!showBasedOn && !f.parentId ? (
-          <button onClick={() => setShowBasedOn(true)}
-            style={{ background:"none", border:"none", cursor:"pointer", padding:0,
-              fontSize:11, color:C.textMuted, fontStyle:"italic" }}>
-            + {t("linkToParent")}
-          </button>
-        ) : parentMove ? (
-          <div style={{ display:"inline-flex", alignItems:"center", gap:6, background:C.surfaceAlt, borderRadius:20, padding:"4px 10px 4px 12px", border:`1px solid ${C.border}` }}>
-            <span style={{ fontSize:11, fontWeight:700, color:C.text, fontFamily:FONT_DISPLAY }}>{parentMove.name}</span>
-            <button onClick={() => setF(p=>({...p, parentId:null}))}
-              style={{ background:"none", border:"none", cursor:"pointer", padding:2, display:"flex" }}>
-              <Ic n="x" s={12} c={C.textMuted}/>
-            </button>
-          </div>
-        ) : (
-          <div style={{ background:C.surfaceAlt, borderRadius:10, padding:10, border:`1px solid ${C.borderLight}` }}>
-            {/* Category filter chips */}
-            <div style={{ display:"flex", gap:4, flexWrap:"wrap", marginBottom:8 }}>
-              <button onClick={() => setBasedOnFilter("")}
-                style={chipStyle(!basedOnFilter)}>
-                {t("all") || "All"}
-              </button>
-              {cats.map(c => (
-                <button key={c} onClick={() => setBasedOnFilter(basedOnFilter === c ? "" : c)}
-                  style={chipStyle(basedOnFilter === c)}>
-                  {c}
-                </button>
-              ))}
-            </div>
-            {/* Search */}
-            <div style={{ display:"flex", alignItems:"center", background:C.bg, borderRadius:7, padding:"5px 10px", gap:6, border:`1px solid ${C.border}`, marginBottom:8 }}>
-              <Ic n="search" s={13} c={C.textMuted}/>
-              <input value={basedOnSearch} onChange={e=>setBasedOnSearch(e.target.value)} placeholder={t("searchMoves")}
-                style={{ flex:1, background:"none", border:"none", outline:"none", color:C.text, fontSize:13, fontFamily:FONT_BODY }}/>
-              {basedOnSearch&&<button onClick={()=>setBasedOnSearch("")} style={{ background:"none", border:"none", cursor:"pointer", color:C.textMuted, padding:0, display:"flex" }}><Ic n="x" s={13}/></button>}
-            </div>
-            {/* Move list */}
-            <div style={{ maxHeight:180, overflowY:"auto" }}>
-              {basedOnMoves.length === 0 ? (
-                <div style={{ fontSize:11, color:C.textMuted, textAlign:"center", padding:12 }}>No moves found</div>
-              ) : basedOnMoves.map(m => {
-                const col = masteryColor(m.mastery || 0);
-                const catCol = catColors[m.category] || C.accent;
-                return (
-                  <button key={m.id} onClick={() => setF(p=>({...p, parentId: m.id}))}
-                    style={{ display:"flex", alignItems:"center", gap:8, width:"100%", padding:"7px 8px", background:"none", border:"none", borderBottom:`1px solid ${C.borderLight}`, cursor:"pointer", textAlign:"left" }}>
-                    <div style={{ width:6, height:6, borderRadius:"50%", background:catCol, flexShrink:0 }}/>
-                    <span style={{ flex:1, fontSize:13, color:C.text, fontFamily:FONT_BODY, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{m.name}</span>
-                    <span style={{ fontSize:11, color:col, fontWeight:700, flexShrink:0 }}>{m.mastery||0}%</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
-      </div>}
-
+      {/* ── STATE ── */}
       <MasterySlider value={f.mastery} onChange={set("mastery")} moveDate={f.date} moveDifficulty={f.difficulty}/>
 
       {/* ── Difficulty ── */}
@@ -174,99 +149,181 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
         </div>
       </div>
 
-      {/* ── Origin — premium ── */}
-      {isPremium && <div style={{ marginTop:8, marginBottom:4 }}>
-        <div style={sectionLabel}>{t("origin")}</div>
-        <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
-          {ORIGIN_KEYS.map(o => {
-            const active = f.origin === o;
-            return (
-              <button key={o} onClick={() => setF(p => ({...p, origin: o}))}
-                style={chipStyle(active)}>
-                {t(ORIGIN_LABELS[o])}
-              </button>
-            );
-          })}
-        </div>
-        <div style={{ fontSize:11, color:C.textMuted, fontStyle:"italic", marginTop:5 }}>
-          {t(ORIGIN_HINTS[f.origin || "learned"])}
-        </div>
-      </div>}
+      {/* ── DEPTH (collapsible) ── */}
+      <SectionHeader
+        label={t("depthSection")}
+        expanded={showDepth}
+        onToggle={() => setShowDepth(p => !p)}
+        showDot={!showDepth && !f.tensionRole}
+      />
 
-      {/* ── Tension Role ── */}
-      <div style={{ marginTop:8, marginBottom:4 }}>
-        <div style={sectionLabel}>{t("tensionRole")}</div>
-        <div style={{ fontSize:11, color:C.textMuted, fontStyle:"italic", marginBottom:6 }}>{t("whatRoleDoesThisMove")}</div>
-        <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
-          {TENSION_ROLE_OPTS.map(r => {
-            const active = f.tensionRole === r.key;
-            return (
-              <button key={r.key} onClick={() => setF(p => ({...p, tensionRole: active ? null : r.key}))}
-                style={chipStyle(active)}>
-                {r.emoji} {t(r.label)}
-              </button>
-            );
-          })}
-        </div>
-        {f.tensionRole && (
-          <div style={{ fontSize:11, color:C.textMuted, fontStyle:"italic", marginTop:5 }}>
-            {t(TENSION_ROLE_OPTS.find(r => r.key === f.tensionRole)?.hint || "")}
-          </div>
-        )}
-      </div>
-
-      {/* ── Domains (multi-select) ── */}
-      <div style={{ marginTop:8, marginBottom:4 }}>
-        <div style={sectionLabel}>{t("domains")}</div>
-        <div style={{ fontSize:11, color:C.textMuted, marginBottom:6 }}>{t("whatDoesThisMoveDevelop")}</div>
-        <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
-          {DOMAIN_OPTS.map(d => {
-            const domains = Array.isArray(f.domains) ? f.domains : [];
-            const active = domains.includes(d);
-            return (
-              <button key={d} onClick={() => setF(p => {
-                const prev = Array.isArray(p.domains) ? p.domains : [];
-                return {...p, domains: active ? prev.filter(x => x !== d) : [...prev, d]};
-              })} style={chipStyle(active)}>
-                {d.charAt(0).toUpperCase() + d.slice(1)}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* ── Attributes (always visible) ── */}
-      <div style={{ marginTop:8, marginBottom:4 }}>
-        <div style={sectionLabel}>{t("attributes")}</div>
-        <div style={{ fontSize:11, color:C.textMuted, fontStyle:"italic", marginBottom:6 }}>{t("attributesHint")}</div>
-        <div style={{ background:C.surfaceAlt, borderRadius:10, padding:12, marginBottom:12,
-          border:`1px solid ${C.borderLight}` }}>
-          {sortedAttrs.length > 0 ? (
-            sortedAttrs.map(attr => (
-              <div key={attr.id} style={{ marginBottom:10 }}>
-                <div style={{ fontSize:10, fontWeight:800, letterSpacing:1, color:C.textMuted,
-                  fontFamily:FONT_DISPLAY, marginBottom:4 }}>
-                  {attr.name}{attr.multi ? " (multi)" : ""}
-                </div>
-                <AttributeChips
-                  attr={attr}
-                  selected={f.attrs?.[attr.id] || (attr.multi ? [] : "")}
-                  onChange={val => setAttr(attr.id, val)}
-                />
+      {showDepth && (
+        <div>
+          {/* ── Tension Role ── */}
+          <div style={{ marginTop:8, marginBottom:4 }}>
+            <div style={sectionLabel}>{t("tensionRole")}</div>
+            <div style={{ fontSize:11, color:C.textMuted, fontStyle:"italic", marginBottom:6 }}>{t("whatRoleDoesThisMove")}</div>
+            <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
+              {TENSION_ROLE_OPTS.map(r => {
+                const active = f.tensionRole === r.key;
+                return (
+                  <button key={r.key} onClick={() => setF(p => ({...p, tensionRole: active ? null : r.key}))}
+                    style={chipStyle(active)}>
+                    {r.emoji} {t(r.label)}
+                  </button>
+                );
+              })}
+            </div>
+            {f.tensionRole && (
+              <div style={{ fontSize:11, color:C.textMuted, fontStyle:"italic", marginTop:5 }}>
+                {t(TENSION_ROLE_OPTS.find(r => r.key === f.tensionRole)?.hint || "")}
               </div>
-            ))
-          ) : (
-            <div style={{ fontSize:11, color:C.textMuted, fontStyle:"italic", marginBottom:6 }}>
-              {t("noAttributesDefined")}
+            )}
+          </div>
+
+          {/* ── Lineage subgroup (premium) ── */}
+          {isPremium && (
+            <div style={{ marginTop:16, marginBottom:8 }}>
+              <div style={{ fontSize:10, fontWeight:800, letterSpacing:1.2, color:C.textMuted, fontFamily:FONT_DISPLAY, textTransform:"uppercase", marginBottom:8 }}>
+                {t("lineage")}
+              </div>
+
+              {/* ── Origin ── */}
+              <div style={{ marginTop:8, marginBottom:4 }}>
+                <div style={sectionLabel}>{t("origin")}</div>
+                <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
+                  {ORIGIN_KEYS.map(o => {
+                    const active = f.origin === o;
+                    return (
+                      <button key={o} onClick={() => setF(p => ({...p, origin: o}))}
+                        style={chipStyle(active)}>
+                        {t(ORIGIN_LABELS[o])}
+                      </button>
+                    );
+                  })}
+                </div>
+                <div style={{ fontSize:11, color:C.textMuted, fontStyle:"italic", marginTop:5 }}>
+                  {t(ORIGIN_HINTS[f.origin || "learned"])}
+                </div>
+              </div>
+
+              {/* ── Based On (parent move) ── */}
+              <div style={{ marginTop:12, marginBottom:8 }}>
+                <label style={lbl()}>{t("basedOn")}</label>
+                <div style={{ fontSize:11, color:C.textMuted, fontStyle:"italic", marginTop:-2, marginBottom:5 }}>{t("basedOnHint")}</div>
+                {!showBasedOn && !f.parentId ? (
+                  <button onClick={() => setShowBasedOn(true)}
+                    style={{ background:"none", border:"none", cursor:"pointer", padding:0,
+                      fontSize:11, color:C.textMuted, fontStyle:"italic" }}>
+                    + {t("linkToParent")}
+                  </button>
+                ) : parentMove ? (
+                  <div style={{ display:"inline-flex", alignItems:"center", gap:6, background:C.surfaceAlt, borderRadius:20, padding:"4px 10px 4px 12px", border:`1px solid ${C.border}` }}>
+                    <span style={{ fontSize:11, fontWeight:700, color:C.text, fontFamily:FONT_DISPLAY }}>{parentMove.name}</span>
+                    <button onClick={() => setF(p=>({...p, parentId:null}))}
+                      style={{ background:"none", border:"none", cursor:"pointer", padding:2, display:"flex" }}>
+                      <Ic n="x" s={12} c={C.textMuted}/>
+                    </button>
+                  </div>
+                ) : (
+                  <div style={{ background:C.surfaceAlt, borderRadius:10, padding:10, border:`1px solid ${C.borderLight}` }}>
+                    {/* Category filter chips */}
+                    <div style={{ display:"flex", gap:4, flexWrap:"wrap", marginBottom:8 }}>
+                      <button onClick={() => setBasedOnFilter("")}
+                        style={chipStyle(!basedOnFilter)}>
+                        {t("all") || "All"}
+                      </button>
+                      {cats.map(c => (
+                        <button key={c} onClick={() => setBasedOnFilter(basedOnFilter === c ? "" : c)}
+                          style={chipStyle(basedOnFilter === c)}>
+                          {c}
+                        </button>
+                      ))}
+                    </div>
+                    {/* Search */}
+                    <div style={{ display:"flex", alignItems:"center", background:C.bg, borderRadius:7, padding:"5px 10px", gap:6, border:`1px solid ${C.border}`, marginBottom:8 }}>
+                      <Ic n="search" s={13} c={C.textMuted}/>
+                      <input value={basedOnSearch} onChange={e=>setBasedOnSearch(e.target.value)} placeholder={t("searchMoves")}
+                        style={{ flex:1, background:"none", border:"none", outline:"none", color:C.text, fontSize:13, fontFamily:FONT_BODY }}/>
+                      {basedOnSearch&&<button onClick={()=>setBasedOnSearch("")} style={{ background:"none", border:"none", cursor:"pointer", color:C.textMuted, padding:0, display:"flex" }}><Ic n="x" s={13}/></button>}
+                    </div>
+                    {/* Move list */}
+                    <div style={{ maxHeight:180, overflowY:"auto" }}>
+                      {basedOnMoves.length === 0 ? (
+                        <div style={{ fontSize:11, color:C.textMuted, textAlign:"center", padding:12 }}>No moves found</div>
+                      ) : basedOnMoves.map(m => {
+                        const col = masteryColor(m.mastery || 0);
+                        const catCol = catColors[m.category] || C.accent;
+                        return (
+                          <button key={m.id} onClick={() => setF(p=>({...p, parentId: m.id}))}
+                            style={{ display:"flex", alignItems:"center", gap:8, width:"100%", padding:"7px 8px", background:"none", border:"none", borderBottom:`1px solid ${C.borderLight}`, cursor:"pointer", textAlign:"left" }}>
+                            <div style={{ width:6, height:6, borderRadius:"50%", background:catCol, flexShrink:0 }}/>
+                            <span style={{ flex:1, fontSize:13, color:C.text, fontFamily:FONT_BODY, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{m.name}</span>
+                            <span style={{ fontSize:11, color:col, fontWeight:700, flexShrink:0 }}>{m.mastery||0}%</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           )}
-          <button onClick={() => setShowAttrModal(true)}
-            style={{ background:"none", border:"none", cursor:"pointer", fontSize:11,
-              color:C.accent, fontWeight:700, fontFamily:FONT_DISPLAY, padding:"4px 0" }}>
-            + {t("addNewAttribute")}
-          </button>
+
+          {/* ── Domains (multi-select) ── */}
+          <div style={{ marginTop:8, marginBottom:4 }}>
+            <div style={sectionLabel}>{t("domains")}</div>
+            <div style={{ fontSize:11, color:C.textMuted, marginBottom:6 }}>{t("whatDoesThisMoveDevelop")}</div>
+            <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
+              {DOMAIN_OPTS.map(d => {
+                const domains = Array.isArray(f.domains) ? f.domains : [];
+                const active = domains.includes(d);
+                return (
+                  <button key={d} onClick={() => setF(p => {
+                    const prev = Array.isArray(p.domains) ? p.domains : [];
+                    return {...p, domains: active ? prev.filter(x => x !== d) : [...prev, d]};
+                  })} style={chipStyle(active)}>
+                    {d.charAt(0).toUpperCase() + d.slice(1)}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* ── Custom Attributes ── */}
+          <div style={{ marginTop:8, marginBottom:4 }}>
+            <div style={sectionLabel}>{t("attributes")}</div>
+            <div style={{ fontSize:11, color:C.textMuted, fontStyle:"italic", marginBottom:6 }}>{t("attributesHint")}</div>
+            <div style={{ background:C.surfaceAlt, borderRadius:10, padding:12, marginBottom:12,
+              border:`1px solid ${C.borderLight}` }}>
+              {sortedAttrs.length > 0 ? (
+                sortedAttrs.map(attr => (
+                  <div key={attr.id} style={{ marginBottom:10 }}>
+                    <div style={{ fontSize:10, fontWeight:800, letterSpacing:1, color:C.textMuted,
+                      fontFamily:FONT_DISPLAY, marginBottom:4 }}>
+                      {attr.name}{attr.multi ? " (multi)" : ""}
+                    </div>
+                    <AttributeChips
+                      attr={attr}
+                      selected={f.attrs?.[attr.id] || (attr.multi ? [] : "")}
+                      onChange={val => setAttr(attr.id, val)}
+                    />
+                  </div>
+                ))
+              ) : (
+                <div style={{ fontSize:11, color:C.textMuted, fontStyle:"italic", marginBottom:6 }}>
+                  {t("noAttributesDefined")}
+                </div>
+              )}
+              <button onClick={() => setShowAttrModal(true)}
+                style={{ background:"none", border:"none", cursor:"pointer", fontSize:11,
+                  color:C.accent, fontWeight:700, fontFamily:FONT_DISPLAY, padding:"4px 0" }}>
+                + {t("addNewAttribute")}
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* ── Move Journal ── */}
       {move && (
