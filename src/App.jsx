@@ -5,7 +5,7 @@ import { DEFAULT_CATS, CAT_COLORS, buildInitRounds } from './constants/categorie
 import { SettingsCtx } from './hooks/useSettings';
 import { TrainModalCtx } from './hooks/useTrainContext';
 import { TRANSLATIONS } from './constants/translations';
-import { SCHEMA_VERSION, migrateMove, loadLocal, saveLocal, debounce, unwrapPhoto } from './utils/storage';
+import { SCHEMA_VERSION, migrateMove, migrateIdea, loadLocal, saveLocal, debounce, unwrapPhoto } from './utils/storage';
 import { todayLocal } from './utils/dateUtils';
 import { migrateOldAttributes } from './utils/attributeHelpers';
 import { Ic } from './components/shared/Ic';
@@ -121,7 +121,7 @@ export default function App() {
   const [ideas, setIdeas] = useState(() => {
     try {
       const s = localStorage.getItem("mb_ideas");
-      if (s) { const p = JSON.parse(s); if (Array.isArray(p) && p.length > 0) return p; }
+      if (s) { const p = JSON.parse(s); if (Array.isArray(p) && p.length > 0) return p.map(migrateIdea); }
     } catch {}
     return [];
   });
@@ -390,7 +390,7 @@ export default function App() {
           if (s) { try { const p=JSON.parse(s); if(Array.isArray(p)&&p.length>0) setSets(p); } catch {} }
           if (r) { try { const p=JSON.parse(r); if(Array.isArray(p)&&p.length>0) setRounds(p); } catch {} }
           const id = localStorage.getItem("mb_ideas");
-          if (id) { try { const p=JSON.parse(id); if(Array.isArray(p)&&p.length>0) setIdeas(p); } catch {} }
+          if (id) { try { const p=JSON.parse(id); if(Array.isArray(p)&&p.length>0) setIdeas(p.map(migrateIdea)); } catch {} }
           const hb = localStorage.getItem("mb_habits");
           if (hb) { try { const p=JSON.parse(hb); if(Array.isArray(p)&&p.length>0) setHabits(p); } catch {} }
           const ca = localStorage.getItem("mb_custom_attrs");

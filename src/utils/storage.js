@@ -23,6 +23,21 @@ export function migrateMove(m) {
   };
 }
 
+export function migrateIdea(i) {
+  if (!i) return i;
+  const journal = Array.isArray(i.journal) ? i.journal.map(entry => {
+    if (!entry || typeof entry.date !== 'string') return entry;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(entry.date)) return entry;
+    const parsed = new Date(entry.date);
+    if (Number.isNaN(parsed.getTime())) return entry;
+    const yyyy = parsed.getFullYear();
+    const mm = String(parsed.getMonth() + 1).padStart(2, '0');
+    const dd = String(parsed.getDate()).padStart(2, '0');
+    return { ...entry, date: `${yyyy}-${mm}-${dd}` };
+  }) : i.journal;
+  return { ...i, journal };
+}
+
 export function loadLocal(key, fallback) {
   try {
     const v = localStorage.getItem("mb_data_version");

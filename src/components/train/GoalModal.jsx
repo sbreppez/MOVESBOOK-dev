@@ -99,7 +99,7 @@ export const GoalModal = ({ onClose, onSave, idea, prefill }) => {
         {activeTab === "journal" && (
           <div>
             <JournalEntryInput
-              onAdd={({text,link}) => { const entry = {id:Date.now(), date:new Date().toLocaleDateString("en-AU",{day:"2-digit",month:"short",year:"numeric"}), text, link}; setJournal(j => [entry, ...j]); }}
+              onAdd={({text,link}) => { const entry = {id:Date.now(), date:todayLocal(), text, link}; setJournal(j => [entry, ...j]); }}
             />
             {journal.length === 0 ? (
               <div style={{ textAlign:"center", padding:"40px 20px", color:C.textMuted }}>

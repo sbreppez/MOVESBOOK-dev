@@ -81,7 +81,7 @@ export const TargetGoalModal = ({ onClose, onSave, idea, moves=[], prefill }) =>
         {activeTab==="journal"&&(
           <div>
             <JournalEntryInput
-              onAdd={({text,link})=>{ const entry={id:Date.now(),date:new Date().toLocaleDateString("en-AU",{day:"2-digit",month:"short",year:"numeric"}),text,link}; setJournal(j=>[entry,...j]); }}
+              onAdd={({text,link})=>{ const entry={id:Date.now(),date:todayLocal(),text,link}; setJournal(j=>[entry,...j]); }}
               placeholder={t("targetJournalPlaceholder")}
             />
             {journal.length===0 ? (
