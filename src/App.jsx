@@ -40,6 +40,7 @@ import { PremiumGate } from './components/shared/PremiumGate';
 import { detectMilestones } from './utils/reportEngine';
 import { runHomeMigration } from './utils/homeMigration';
 import { backfillTextStream } from './utils/textStream';
+import { emitProfileChanges, emitReminderChanges, emitPresessionChanges } from './utils/textStreamWraps';
 
 // ── Firebase stubs for preview ──
 if (typeof window !== "undefined") {
@@ -112,7 +113,7 @@ export default function App() {
     } catch {}
     return [];
   });
-  const [profile, setProfile] = useState(() => {
+  const [profile, setProfileState] = useState(() => {
     try {
       const s = localStorage.getItem("mb_profile");
       if (s) { const p = JSON.parse(s); if (p && Object.values(p).some(v=>v)) return p; }
@@ -150,7 +151,7 @@ export default function App() {
   const [profilePhoto, setProfilePhoto] = useState(() => {
     try { return unwrapPhoto(localStorage.getItem("mb_profile_photo")); } catch{} return null;
   });
-  const [reminders, setReminders] = useState(() => {
+  const [reminders, setRemindersState] = useState(() => {
     try { const s=localStorage.getItem("mb_reminders"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { items:[] };
   });
   const [calendar, setCalendar] = useState(() => {
@@ -209,7 +210,7 @@ export default function App() {
     try { const s=localStorage.getItem("mb_milestones_shown"); if(s){const p=JSON.parse(s); if(Array.isArray(p)) return p;} } catch{} return [];
   });
   const milestonesInitRef = useRef(false);
-  const [presession, setPresession] = useState(() => {
+  const [presession, setPresessionState] = useState(() => {
     try { const s=localStorage.getItem("mb_presession"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{}
     return { fromLastSession:null, fromFootage:null, wantToTry:[] };
   });
@@ -287,6 +288,47 @@ export default function App() {
   const { isPremium } = usePremium(fbUser);
   const [gatedFeature, setGatedFeature] = useState(null);
   const dbSave = useRef({});
+
+  // ── TextStream user-driven setters (Batch A wraps) ────────────────────────
+  // These wrap setProfileState / setRemindersState / setPresessionState so
+  // that user-driven text changes emit to TextStream automatically. System
+  // paths inside App.jsx (rehydrate, sign-out reset) call the *State setters
+  // directly to avoid spurious emits. See docs/CORE_PRINCIPLES.md.
+  const setProfile = useCallback((updater) => {
+    setProfileState(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      if (fbUser?.uid) {
+        emitProfileChanges(prev, next, fbUser.uid).catch(err => {
+          console.error('[textStream] profile emit failed:', err);
+        });
+      }
+      return next;
+    });
+  }, [fbUser?.uid]);
+
+  const setReminders = useCallback((updater) => {
+    setRemindersState(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      if (fbUser?.uid) {
+        emitReminderChanges(prev, next, fbUser.uid).catch(err => {
+          console.error('[textStream] reminders emit failed:', err);
+        });
+      }
+      return next;
+    });
+  }, [fbUser?.uid]);
+
+  const setPresession = useCallback((updater) => {
+    setPresessionState(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      if (fbUser?.uid) {
+        emitPresessionChanges(prev, next, fbUser.uid).catch(err => {
+          console.error('[textStream] presession emit failed:', err);
+        });
+      }
+      return next;
+    });
+  }, [fbUser?.uid]);
 
   useEffect(() => {
     const save = (key, ms=1500) => debounce(
@@ -408,7 +450,7 @@ export default function App() {
           const rr = localStorage.getItem("mb_rrr");
           if (rr) { try { const p=JSON.parse(rr); if(p&&typeof p==="object") setRRR(p); } catch {} }
           const rm = localStorage.getItem("mb_reminders");
-          if (rm) { try { const p=JSON.parse(rm); if(p&&typeof p==="object") setReminders(p); } catch {} }
+          if (rm) { try { const p=JSON.parse(rm); if(p&&typeof p==="object") setRemindersState(p); } catch {} }
           const cal = localStorage.getItem("mb_calendar");
           if (cal) { try { const p=JSON.parse(cal); if(p&&typeof p==="object") setCalendar(p); } catch {} }
           const stn = localStorage.getItem("mb_stance");
@@ -442,7 +484,7 @@ export default function App() {
             runHomeMigration(migBlocks, migHabits, migIdeas, migHS, setHomeStack);
           }
           const prs = localStorage.getItem("mb_presession");
-          if (prs) { try { const p=JSON.parse(prs); if(p&&typeof p==="object") setPresession(p); } catch {} }
+          if (prs) { try { const p=JSON.parse(prs); if(p&&typeof p==="object") setPresessionState(p); } catch {} }
           const inj = localStorage.getItem("mb_injuries");
           if (inj) { try { const p=JSON.parse(inj); if(Array.isArray(p)) setInjuries(p); } catch {} }
           const hs = localStorage.getItem("mb_home_stack");
@@ -451,7 +493,7 @@ export default function App() {
           if (hc) { try { const p=JSON.parse(hc); if(p&&typeof p==="object") setHomeChecks(p); } catch {} }
           const ppho = unwrapPhoto(localStorage.getItem("mb_profile_photo"));
           if (ppho) setProfilePhoto(ppho);
-          if (p) { try { const pp=JSON.parse(p); if(pp&&Object.values(pp).some(v=>v)) setProfile(pp); } catch{} }
+          if (p) { try { const pp=JSON.parse(p); if(pp&&Object.values(pp).some(v=>v)) setProfileState(pp); } catch{} }
           const st = localStorage.getItem("mb_settings");
           if (st) {
             const parsed = JSON.parse(st);
@@ -487,7 +529,7 @@ export default function App() {
         setRounds(buildInitRounds());
         setIdeas([]);
         setHabits([]);
-        setProfile({ nickname:"", age:"", gender:"", goals:"", years:"",
+        setProfileState({ nickname:"", age:"", gender:"", goals:"", years:"",
           startYear:"", startMonth:"", startDay:"", why:"" });
         setCustomAttrs([]);
         setReps([]);
@@ -495,7 +537,7 @@ export default function App() {
         setCombos({ transitions:[...DEFAULT_TRANSITIONS], selectedMoveIds:null });
         setLab({ customChips:{ technical:{}, conceptual:{} } });
         setRRR({ lastUsed:{ mode:null, moveId:null, moveName:null, date:null } });
-        setReminders({ items:[] });
+        setRemindersState({ items:[] });
         setCalendar({ events:[] });
         setStance({ assessments:[] });
         setMusicflow({ sessions:[] });

@@ -176,6 +176,37 @@ export async function emitToTextStream(
   return newDocRef.id;
 }
 
+// ─── Lookup helper ──────────────────────────────────────────────────────────
+/**
+ * Find the current un-superseded TextStream entry for a (source_type, source_id).
+ *
+ * Used by the wrap layer to look up the prior entry to supersede on edits.
+ * Returns null if no current entry exists (first emit case).
+ *
+ * Note: requires a Firestore composite index on
+ * (source_type, source_id, superseded_at). On first run, Firestore will
+ * surface a console error with a one-click index-creation link.
+ *
+ * @param {string} uid
+ * @param {string} source_type
+ * @param {string} source_id
+ * @returns {Promise<{id: string, [k: string]: any} | null>}
+ */
+export async function findCurrentEntry(uid, source_type, source_id) {
+  if (!uid || !source_type || !source_id) return null;
+  const snap = await firebase.firestore()
+    .collection('users').doc(uid)
+    .collection('textstream')
+    .where('source_type', '==', source_type)
+    .where('source_id', '==', source_id)
+    .where('superseded_at', '==', null)
+    .limit(1)
+    .get();
+  if (snap.empty) return null;
+  const doc = snap.docs[0];
+  return { id: doc.id, ...doc.data() };
+}
+
 // ─── Backfill ────────────────────────────────────────────────────────────────
 //
 // Calendar event source values that are auto-capture (canonical content lives

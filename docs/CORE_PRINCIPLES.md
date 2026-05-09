@@ -90,6 +90,28 @@ When adding or modifying a text-bearing field:
    has its own `created_at`.
 5. For pure appends (journal entries), omit `supersedes`.
 
+### Wrap pattern (Batches A–H)
+
+Surface migrations follow a setter-wrap pattern, not direct emits at modal Save handlers:
+
+- App.jsx's `useState` setter is renamed with a `*State` suffix (e.g. `setProfileState`).
+- The un-suffixed name (e.g. `setProfile`) is reassigned to a wrapper that diffs `prev` vs `next` and calls the appropriate `emit*Changes` function from `src/utils/textStreamWraps.js`.
+- Children consume the un-suffixed name unchanged.
+- System paths inside App.jsx (rehydrate, Firestore sync, sign-out reset) call the raw `*State` setter — they must NOT trigger emits.
+
+This keeps emit logic centralized, rather than scattered across modal Save handlers.
+
+### System vs user setters
+
+| Path | Setter to use | Emits TextStream? |
+|---|---|---|
+| Modal Save handler (user action) | `setProfile` (wrapped) | Yes |
+| localStorage rehydrate on app boot | `setProfileState` (raw) | No |
+| Firestore subscribe handler (cross-device sync) | `setProfileState` (raw) | No |
+| Sign-out reset | `setProfileState` (raw) | No |
+
+Adding a new text-bearing field to a wrapped store requires updating the corresponding `*_TEXT_FIELDS` list in `src/utils/textStreamWraps.js`. The dev-mode assertion catches missing entries with `console.error` if a field changes but no emit fires.
+
 Excluded fields — URLs, label data (Custom Attributes, Lab chips,
 Categories), drafts, and auto-capture calendar derivatives — are
 listed in inventory Section 5.2. Don't migrate excluded fields
