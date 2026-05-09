@@ -39,6 +39,7 @@ import { usePremium } from './hooks/usePremium';
 import { PremiumGate } from './components/shared/PremiumGate';
 import { detectMilestones } from './utils/reportEngine';
 import { runHomeMigration } from './utils/homeMigration';
+import { backfillTextStream } from './utils/textStream';
 
 // ── Firebase stubs for preview ──
 if (typeof window !== "undefined") {
@@ -282,6 +283,7 @@ export default function App() {
 
   // ── Firestore sync ─────────────────────────────────────────────────────────
   const [fbUser, setFbUser] = useState(null);
+  const [storesReady, setStoresReady] = useState(false);
   const { isPremium } = usePremium(fbUser);
   const [gatedFeature, setGatedFeature] = useState(null);
   const dbSave = useRef({});
@@ -470,7 +472,12 @@ export default function App() {
             localStorage.setItem("mb_rivals_photo_migrated","1");
           }
         } catch {}
+        // Stores have been rehydrated from localStorage. The TextStream backfill
+        // useEffect below depends on this flag — flip last so the effect sees
+        // populated state on the post-render commit.
+        setStoresReady(true);
       } else {
+        setStoresReady(false);
         setFbUser(null);
         setMoves([]);
         setCats([...DEFAULT_CATS]);
@@ -507,6 +514,24 @@ export default function App() {
     if (window.__MB_USER__) handleAuthResolved();
     return () => window.removeEventListener("mb-auth-resolved", handleAuthResolved);
   },[]);
+
+  // ── TextStream backfill (one-time, idempotent) ────────────────────────────
+  // Runs after stores rehydrate. backfillTextStream dedupes via Firestore read
+  // so re-runs are no-ops. Effect intentionally does NOT depend on the 14
+  // canonical stores — re-firing on every keystroke would be wasteful even
+  // though dedup makes it safe. Gating on uid (not the auth object) avoids
+  // re-running on auth-state object identity changes.
+  useEffect(() => {
+    if (!storesReady || !fbUser?.uid) return;
+    backfillTextStream(fbUser.uid, {
+      moves, ideas, habits, homeStack, calendar, reps,
+      sparring, musicflow, sets, rivals, battleprep,
+      profile, reminders, presession,
+    }).catch(err => {
+      console.error('[textStream] backfill failed:', err);
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally narrow deps; reads canonical stores via closure once after rehydrate. Dedup inside backfillTextStream makes re-runs no-ops.
+  }, [storesReady, fbUser?.uid]);
 
   // ── Migrate HOME tiles for non-auth users (one-time) ──
   const homeMigRef = useRef(false);

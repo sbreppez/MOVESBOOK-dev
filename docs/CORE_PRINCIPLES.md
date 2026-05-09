@@ -67,6 +67,34 @@ docs, they're drift.
   presence. Never eyeball.
 - **Flag Capacitor risks before coding.** Not after.
 
+## TextStream invariant
+
+Every user-authored text field that ships in a canonical store must
+also emit to `users/{uid}/textstream`. TextStream is the cross-cutting
+source for look-back, search, Reports, and Dev Story.
+
+- Schema and source-type catalog: `src/constants/textStream.js`
+- Inventory of every text-bearing field: `docs/research/UserText_Storage_Inventory.md`
+- Helpers: `emitToTextStream`, `resolveSourceLabel`, `backfillTextStream`
+  in `src/utils/textStream.js`
+
+When adding or modifying a text-bearing field:
+1. Update the inventory dossier (Section 1).
+2. Add the new `source_type` to `src/constants/textStream.js` and a
+   case to `resolveSourceLabel`.
+3. Wire the canonical write to call `emitToTextStream` with
+   `source_type`, `source_id`, `source_label`, `text`.
+4. For in-place edits (single-string fields like `profile.why`,
+   `habit.notes`), pass the prior entry's id as `supersedes` so the
+   prior gets `superseded_at` and `superseded_by` set. The new entry
+   has its own `created_at`.
+5. For pure appends (journal entries), omit `supersedes`.
+
+Excluded fields — URLs, label data (Custom Attributes, Lab chips,
+Categories), drafts, and auto-capture calendar derivatives — are
+listed in inventory Section 5.2. Don't migrate excluded fields
+without first updating the dossier.
+
 ## When this doc is wrong
 
 This doc drifts too. If you find the code disagrees with anything here,
