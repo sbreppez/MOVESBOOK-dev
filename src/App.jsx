@@ -40,7 +40,7 @@ import { PremiumGate } from './components/shared/PremiumGate';
 import { detectMilestones } from './utils/reportEngine';
 import { runHomeMigration } from './utils/homeMigration';
 import { backfillTextStream } from './utils/textStream';
-import { emitProfileChanges, emitReminderChanges, emitPresessionChanges } from './utils/textStreamWraps';
+import { emitProfileChanges, emitReminderChanges, emitPresessionChanges, emitHabitsChanges, emitRoutinesChanges } from './utils/textStreamWraps';
 
 // ── Firebase stubs for preview ──
 if (typeof window !== "undefined") {
@@ -106,7 +106,7 @@ export default function App() {
     } catch {}
     return buildInitRounds();
   });
-  const [habits, setHabits] = useState(() => {
+  const [habits, setHabitsState] = useState(() => {
     try {
       const s = localStorage.getItem("mb_habits");
       if (s) { const p = JSON.parse(s); if (Array.isArray(p) && p.length > 0) return p; }
@@ -218,7 +218,7 @@ export default function App() {
     try { const s=localStorage.getItem("mb_injuries"); if(s){const p=JSON.parse(s); if(Array.isArray(p)) return p;} } catch{}
     return [];
   });
-  const [homeStack, setHomeStack] = useState(() => {
+  const [homeStack, setHomeStackState] = useState(() => {
     try { const s=localStorage.getItem("mb_home_stack"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{}
     return { defaultStack:[], overrides:{} };
   });
@@ -324,6 +324,30 @@ export default function App() {
       if (fbUser?.uid) {
         emitPresessionChanges(prev, next, fbUser.uid).catch(err => {
           console.error('[textStream] presession emit failed:', err);
+        });
+      }
+      return next;
+    });
+  }, [fbUser?.uid]);
+
+  const setHabits = useCallback((updater) => {
+    setHabitsState(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      if (fbUser?.uid) {
+        emitHabitsChanges(prev, next, fbUser.uid).catch(err => {
+          console.error('[textStream] habits emit failed:', err);
+        });
+      }
+      return next;
+    });
+  }, [fbUser?.uid]);
+
+  const setHomeStack = useCallback((updater) => {
+    setHomeStackState(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      if (fbUser?.uid) {
+        emitRoutinesChanges(prev, next, fbUser.uid).catch(err => {
+          console.error('[textStream] routines emit failed:', err);
         });
       }
       return next;
@@ -436,7 +460,7 @@ export default function App() {
           const id = localStorage.getItem("mb_ideas");
           if (id) { try { const p=JSON.parse(id); if(Array.isArray(p)&&p.length>0) setIdeas(p.map(migrateIdea)); } catch {} }
           const hb = localStorage.getItem("mb_habits");
-          if (hb) { try { const p=JSON.parse(hb); if(Array.isArray(p)&&p.length>0) setHabits(p); } catch {} }
+          if (hb) { try { const p=JSON.parse(hb); if(Array.isArray(p)&&p.length>0) setHabitsState(p); } catch {} }
           const ca = localStorage.getItem("mb_custom_attrs");
           if (ca) { try { const p=JSON.parse(ca); if(Array.isArray(p)) setCustomAttrs(p); } catch {} }
           const rp = localStorage.getItem("mb_reps");
@@ -481,14 +505,14 @@ export default function App() {
             try { const raw = localStorage.getItem("mb_ideas"); if (raw) { const p = JSON.parse(raw); if (Array.isArray(p)) migIdeas = p; } } catch {}
             let migHS = { defaultStack: [], overrides: {} };
             try { const raw = localStorage.getItem("mb_home_stack"); if (raw) { const p = JSON.parse(raw); if (p && typeof p === "object") migHS = p; } } catch {}
-            runHomeMigration(migBlocks, migHabits, migIdeas, migHS, setHomeStack);
+            runHomeMigration(migBlocks, migHabits, migIdeas, migHS, setHomeStackState);
           }
           const prs = localStorage.getItem("mb_presession");
           if (prs) { try { const p=JSON.parse(prs); if(p&&typeof p==="object") setPresessionState(p); } catch {} }
           const inj = localStorage.getItem("mb_injuries");
           if (inj) { try { const p=JSON.parse(inj); if(Array.isArray(p)) setInjuries(p); } catch {} }
           const hs = localStorage.getItem("mb_home_stack");
-          if (hs) { try { const p=JSON.parse(hs); if(p&&typeof p==="object") setHomeStack(p); } catch {} }
+          if (hs) { try { const p=JSON.parse(hs); if(p&&typeof p==="object") setHomeStackState(p); } catch {} }
           const hc = localStorage.getItem("mb_home_checks");
           if (hc) { try { const p=JSON.parse(hc); if(p&&typeof p==="object") setHomeChecks(p); } catch {} }
           const ppho = unwrapPhoto(localStorage.getItem("mb_profile_photo"));
@@ -528,7 +552,7 @@ export default function App() {
         setSets([]);
         setRounds(buildInitRounds());
         setIdeas([]);
-        setHabits([]);
+        setHabitsState([]);
         setProfileState({ nickname:"", age:"", gender:"", goals:"", years:"",
           startYear:"", startMonth:"", startDay:"", why:"" });
         setCustomAttrs([]);
@@ -548,7 +572,7 @@ export default function App() {
         setReports({ milestones:[], weeklyDismissed:null });
         setMilestonesShown([]);
         milestonesInitRef.current = false;
-        setHomeStack({ defaultStack:[], overrides:{} });
+        setHomeStackState({ defaultStack:[], overrides:{} });
         setHomeChecks({});
       }
     }
@@ -583,7 +607,7 @@ export default function App() {
     // Read blocks from localStorage (state no longer exists)
     let migBlocks = [];
     try { const raw = localStorage.getItem("mb_blocks"); if (raw) { const p = JSON.parse(raw); if (Array.isArray(p)) migBlocks = p; } } catch {}
-    runHomeMigration(migBlocks, habits, ideas, homeStack, setHomeStack);
+    runHomeMigration(migBlocks, habits, ideas, homeStack, setHomeStackState);
   // eslint-disable-next-line react-hooks/exhaustive-deps -- one-shot mount migration; homeMigRef.current guard enforces idempotence; habits/ideas/homeStack are read as the mount-time snapshot, not reactive triggers
   }, []);
 
