@@ -292,6 +292,141 @@ export async function emitRoutinesChanges(prev, next, uid) {
   // Removed routines: no action (orphan handling).
 }
 
+// ─── Ideas (array of {id, type, ...}) ───────────────────────────────────────
+//
+// Three flavors with different text-bearing shapes:
+//   type 'note'   → single text field (NOTE_TEXT, source_id = idea.id)
+//   type 'goal'   → description (GOAL_DESCRIPTION, source_id = idea.id)
+//                 + journal[].text (GOAL_JOURNAL, composite source_id)
+//   type 'target' → journal[].text (TARGET_JOURNAL, composite source_id)
+//
+// Journal entries (goal, target) are editable in place via
+// JournalEntryCard.save — stable composite source_id ${idea.id}:${entry.id}
+// allows supersede across edits. This contrasts with move.journal which is
+// delete-only (pure-append, no supersede).
+//
+// Type-change handling: if prev/next differ on .type, the per-branch guard
+// (prevIdea?.type === 'note' ? prevIdea.text : '') treats old-type fields as
+// empty, so the new emit has no prior — old type's entries naturally become
+// orphans. No special branch needed.
+//
+// Excluded: idea.title (label, not narrative; consistent with habit.name /
+// routine.name exclusion), idea.link (URL), target.unit (single-token), and
+// legacy goal.why/steps[]/obstacles (collapsed into description on first
+// save by GoalModal — that save emits GOAL_DESCRIPTION once).
+export async function emitIdeasChanges(prev, next, uid) {
+  if (!uid) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('[textStream] emitIdeasChanges called without uid; skipping');
+    }
+    return;
+  }
+
+  const prevList = prev || [];
+  const nextList = next || [];
+  const prevById = new Map(prevList.map(i => [i.id, i]));
+
+  for (const nextIdea of nextList) {
+    const prevIdea = prevById.get(nextIdea.id);
+
+    if (nextIdea.type === 'note') {
+      const prevText = (prevIdea?.type === 'note' ? prevIdea.text ?? '' : '').toString();
+      const nextText = (nextIdea.text ?? '').toString();
+      if (prevText === nextText) continue;
+      if (!nextText.trim()) continue;
+
+      try {
+        const prior = prevIdea?.type === 'note'
+          ? await findCurrentEntry(uid, SOURCE_TYPES.NOTE_TEXT, nextIdea.id)
+          : null;
+        await emitToTextStream(uid, {
+          source_type: SOURCE_TYPES.NOTE_TEXT,
+          source_id: nextIdea.id,
+          source_label: resolveSourceLabel(SOURCE_TYPES.NOTE_TEXT, nextIdea),
+          text: nextText,
+          supersedes: prior?.id || null,
+        });
+      } catch (err) {
+        console.error(`[textStream] idea ${nextIdea.id} note emit failed:`, err);
+      }
+    } else if (nextIdea.type === 'goal') {
+      // description
+      const prevDesc = (prevIdea?.type === 'goal' ? prevIdea.description ?? '' : '').toString();
+      const nextDesc = (nextIdea.description ?? '').toString();
+      if (prevDesc !== nextDesc && nextDesc.trim()) {
+        try {
+          const prior = prevIdea?.type === 'goal'
+            ? await findCurrentEntry(uid, SOURCE_TYPES.GOAL_DESCRIPTION, nextIdea.id)
+            : null;
+          await emitToTextStream(uid, {
+            source_type: SOURCE_TYPES.GOAL_DESCRIPTION,
+            source_id: nextIdea.id,
+            source_label: resolveSourceLabel(SOURCE_TYPES.GOAL_DESCRIPTION, nextIdea),
+            text: nextDesc,
+            supersedes: prior?.id || null,
+          });
+        } catch (err) {
+          console.error(`[textStream] idea ${nextIdea.id} goal description emit failed:`, err);
+        }
+      }
+
+      // journal[]
+      const prevJournal = prevIdea?.type === 'goal' ? (prevIdea.journal || []) : [];
+      const prevJournalById = new Map(prevJournal.map(j => [j.id, j]));
+      for (const entry of (nextIdea.journal || [])) {
+        const prevEntry = prevJournalById.get(entry.id);
+        const prevEntryText = (prevEntry?.text ?? '').toString();
+        const nextEntryText = (entry?.text ?? '').toString();
+        if (prevEntryText === nextEntryText) continue;
+        if (!nextEntryText.trim()) continue;
+
+        const sourceId = `${nextIdea.id}:${entry.id}`;
+        try {
+          const prior = prevEntry
+            ? await findCurrentEntry(uid, SOURCE_TYPES.GOAL_JOURNAL, sourceId)
+            : null;
+          await emitToTextStream(uid, {
+            source_type: SOURCE_TYPES.GOAL_JOURNAL,
+            source_id: sourceId,
+            source_label: resolveSourceLabel(SOURCE_TYPES.GOAL_JOURNAL, nextIdea),
+            text: nextEntryText,
+            supersedes: prior?.id || null,
+          });
+        } catch (err) {
+          console.error(`[textStream] idea ${sourceId} goal journal emit failed:`, err);
+        }
+      }
+    } else if (nextIdea.type === 'target') {
+      const prevJournal = prevIdea?.type === 'target' ? (prevIdea.journal || []) : [];
+      const prevJournalById = new Map(prevJournal.map(j => [j.id, j]));
+      for (const entry of (nextIdea.journal || [])) {
+        const prevEntry = prevJournalById.get(entry.id);
+        const prevEntryText = (prevEntry?.text ?? '').toString();
+        const nextEntryText = (entry?.text ?? '').toString();
+        if (prevEntryText === nextEntryText) continue;
+        if (!nextEntryText.trim()) continue;
+
+        const sourceId = `${nextIdea.id}:${entry.id}`;
+        try {
+          const prior = prevEntry
+            ? await findCurrentEntry(uid, SOURCE_TYPES.TARGET_JOURNAL, sourceId)
+            : null;
+          await emitToTextStream(uid, {
+            source_type: SOURCE_TYPES.TARGET_JOURNAL,
+            source_id: sourceId,
+            source_label: resolveSourceLabel(SOURCE_TYPES.TARGET_JOURNAL, nextIdea),
+            text: nextEntryText,
+            supersedes: prior?.id || null,
+          });
+        } catch (err) {
+          console.error(`[textStream] idea ${sourceId} target journal emit failed:`, err);
+        }
+      }
+    }
+    // Unknown type: no-op. Removed ideas: no action (orphan handling).
+  }
+}
+
 // ─── Dev-mode assertion ──────────────────────────────────────────────────────
 // Catches the case where a developer adds a new text field to the canonical
 // schema but forgets to add it to the wrap's *_TEXT_FIELDS list.

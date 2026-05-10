@@ -40,7 +40,7 @@ import { PremiumGate } from './components/shared/PremiumGate';
 import { detectMilestones } from './utils/reportEngine';
 import { runHomeMigration } from './utils/homeMigration';
 import { backfillTextStream } from './utils/textStream';
-import { emitProfileChanges, emitReminderChanges, emitPresessionChanges, emitHabitsChanges, emitRoutinesChanges } from './utils/textStreamWraps';
+import { emitProfileChanges, emitReminderChanges, emitPresessionChanges, emitHabitsChanges, emitRoutinesChanges, emitIdeasChanges } from './utils/textStreamWraps';
 
 // ── Firebase stubs for preview ──
 if (typeof window !== "undefined") {
@@ -120,7 +120,7 @@ export default function App() {
     } catch {}
     return { nickname:"", age:"", gender:"", goals:"", years:"", startYear:"", startMonth:"", startDay:"", why:"" };
   });
-  const [ideas, setIdeas] = useState(() => {
+  const [ideas, setIdeasState] = useState(() => {
     try {
       const s = localStorage.getItem("mb_ideas");
       if (s) { const p = JSON.parse(s); if (Array.isArray(p) && p.length > 0) return p.map(migrateIdea); }
@@ -354,6 +354,18 @@ export default function App() {
     });
   }, [fbUser?.uid]);
 
+  const setIdeas = useCallback((updater) => {
+    setIdeasState(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      if (fbUser?.uid) {
+        emitIdeasChanges(prev, next, fbUser.uid).catch(err => {
+          console.error('[textStream] ideas emit failed:', err);
+        });
+      }
+      return next;
+    });
+  }, [fbUser?.uid]);
+
   useEffect(() => {
     const save = (key, ms=1500) => debounce(
       (uid, val) => window.__MB_DB__?.save(uid, key, val), ms
@@ -458,7 +470,7 @@ export default function App() {
           if (s) { try { const p=JSON.parse(s); if(Array.isArray(p)&&p.length>0) setSets(p); } catch {} }
           if (r) { try { const p=JSON.parse(r); if(Array.isArray(p)&&p.length>0) setRounds(p); } catch {} }
           const id = localStorage.getItem("mb_ideas");
-          if (id) { try { const p=JSON.parse(id); if(Array.isArray(p)&&p.length>0) setIdeas(p.map(migrateIdea)); } catch {} }
+          if (id) { try { const p=JSON.parse(id); if(Array.isArray(p)&&p.length>0) setIdeasState(p.map(migrateIdea)); } catch {} }
           const hb = localStorage.getItem("mb_habits");
           if (hb) { try { const p=JSON.parse(hb); if(Array.isArray(p)&&p.length>0) setHabitsState(p); } catch {} }
           const ca = localStorage.getItem("mb_custom_attrs");
@@ -551,7 +563,7 @@ export default function App() {
         setCatDomains({});
         setSets([]);
         setRounds(buildInitRounds());
-        setIdeas([]);
+        setIdeasState([]);
         setHabitsState([]);
         setProfileState({ nickname:"", age:"", gender:"", goals:"", years:"",
           startYear:"", startMonth:"", startDay:"", why:"" });
@@ -615,7 +627,7 @@ export default function App() {
   useEffect(() => {
     try {
       if (localStorage.getItem("mb_pinned_notes_migrated") === "1") return;
-      setIdeas(prev => prev.map(i =>
+      setIdeasState(prev => prev.map(i =>
         i.pinnedNotes !== undefined
           ? { ...i, pinnedHome: i.pinnedHome || i.pinnedNotes, pinnedNotes: undefined }
           : i

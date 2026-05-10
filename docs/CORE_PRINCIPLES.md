@@ -88,7 +88,13 @@ When adding or modifying a text-bearing field:
    `habit.notes`), pass the prior entry's id as `supersedes` so the
    prior gets `superseded_at` and `superseded_by` set. The new entry
    has its own `created_at`.
-5. For pure appends (journal entries), omit `supersedes`.
+5. For journals that allow in-place text edits (goal, target),
+   supersede on edit using the composite `source_id`
+   `${parentId}:${entryId}` — the composite key stays stable per
+   `(parent, entry)` so the supersede chain resolves correctly across
+   edits. For delete-only journals (move), entries are pure-append —
+   omit `supersedes`. Per-source lifecycle is documented in the
+   inventory dossier.
 
 ### Wrap pattern (Batches A–H)
 
