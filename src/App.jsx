@@ -242,8 +242,6 @@ export default function App() {
   useEffect(()=>{ saveLocal("mb_rounds",  rounds);  },[rounds]);
   useEffect(()=>{
     try { localStorage.setItem("mb_habits", JSON.stringify(habits)); } catch {}
-    const timer = setTimeout(()=>{ if(window.__MB_USER__?.uid && window.__MB_DB__) window.__MB_DB__.save(window.__MB_USER__.uid,"habits",habits); }, 1500);
-    return ()=>clearTimeout(timer);
   },[habits]);
   useEffect(()=>{ if(Object.values(profile).some(v=>v)) saveLocal("mb_profile", profile); },[profile]);
   useEffect(()=>{ saveLocal("mb_custom_attrs", customAttrs); },[customAttrs]);
@@ -273,14 +271,7 @@ export default function App() {
   useEffect(()=>{ saveLocal("mb_injuries", injuries); },[injuries]);
   useEffect(()=>{ saveLocal("mb_home_stack", homeStack); },[homeStack]);
   useEffect(()=>{ saveLocal("mb_home_checks", homeChecks); },[homeChecks]);
-  useEffect(()=>{ saveLocal("mb_ideas",   ideas);
-    const timer = setTimeout(() => {
-      if (window.__MB_USER__?.uid && window.__MB_DB__) {
-        window.__MB_DB__.save(window.__MB_USER__.uid, 'ideas', ideas);
-      }
-    }, 1500);
-    return () => clearTimeout(timer);
-  },[ideas]);
+  useEffect(()=>{ saveLocal("mb_ideas", ideas); },[ideas]);
 
   // ── Firestore sync ─────────────────────────────────────────────────────────
   const [fbUser, setFbUser] = useState(null);
@@ -376,6 +367,7 @@ export default function App() {
       rounds:    save("rounds"),
       profile:   save("profile"),
       ideas:     save("ideas"),
+      habits:    save("habits"),
       settings:  save("settings"),
       cats:      save("cats"),
       catColors: save("catColors"),
@@ -408,6 +400,7 @@ export default function App() {
 
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.moves?.(fbUser.uid,   moves);   },[moves,   fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.ideas?.(fbUser.uid,   ideas);   },[ideas,   fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.habits?.(fbUser.uid,  habits);  },[habits,  fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.sets?.(fbUser.uid,    sets);    },[sets,    fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.rounds?.(fbUser.uid,  rounds);  },[rounds,  fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.profile?.(fbUser.uid, profile); },[profile, fbUser]);
