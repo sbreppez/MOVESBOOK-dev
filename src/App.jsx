@@ -648,6 +648,26 @@ export default function App() {
     return () => window.removeEventListener("mb-auth-resolved", handleAuthResolved);
   },[]);
 
+  // ── Dev-only auto-signin for Claude-driven QA. Reads test creds from
+  // VITE_MB_TEST_EMAIL/VITE_MB_TEST_PASSWORD in .env.local (gitignored).
+  // The DEV gate means production builds dead-code-eliminate this block.
+  // The 500ms delay lets index.html's onAuthStateChanged resolve first —
+  // a real user already signed in takes precedence over auto-signin.
+  useEffect(() => {
+    if (!import.meta.env.DEV) return;
+    const email = import.meta.env.VITE_MB_TEST_EMAIL;
+    const password = import.meta.env.VITE_MB_TEST_PASSWORD;
+    if (!email || !password) return;
+    const t = setTimeout(() => {
+      if (window.__MB_USER__) return;
+      if (typeof firebase === 'undefined' || !firebase.auth) return;
+      firebase.auth().signInWithEmailAndPassword(email, password)
+        .then(() => console.log('[mb-test] auto-signed-in as', email))
+        .catch(err => console.warn('[mb-test] auto-signin failed:', err.code));
+    }, 500);
+    return () => clearTimeout(t);
+  }, []);
+
   // ── TextStream backfill (one-time, idempotent) ────────────────────────────
   // Runs after stores rehydrate. backfillTextStream dedupes via Firestore read
   // so re-runs are no-ops. Effect intentionally does NOT depend on the 14
