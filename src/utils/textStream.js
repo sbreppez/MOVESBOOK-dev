@@ -218,7 +218,7 @@ export async function findCurrentEntry(uid, source_type, source_id) {
 //   Manual:  log_today, plus SessionJournal events which omit `source` entirely
 //
 // home-idea events excluded: note→calendar mirror — emit once from idea.
-const AUTO_SOURCES = new Set([
+export const AUTO_SOURCES = new Set([
   'rep_counter',
   'sparring',
   'spar-1v1',

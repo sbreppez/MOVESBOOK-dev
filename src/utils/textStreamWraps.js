@@ -9,7 +9,7 @@
 // invariant section).
 
 import { SOURCE_TYPES } from '../constants/textStream';
-import { emitToTextStream, findCurrentEntry, resolveSourceLabel } from './textStream';
+import { emitToTextStream, findCurrentEntry, resolveSourceLabel, AUTO_SOURCES } from './textStream';
 
 // ─── Profile (singleton, keyed by uid) ───────────────────────────────────────
 //
@@ -505,6 +505,74 @@ export async function emitMovesChanges(prev, next, uid) {
     // Removed entries: no action (orphan handling).
   }
   // Removed moves: no action.
+}
+
+// ─── Calendar events (array of {id, source?, title, notes, ...}) ────────────
+//
+// Four text fields per event. Auto-capture events (source values in
+// AUTO_SOURCES) are filtered at the wrap layer — their parent stores own
+// their canonical text. The same filter runs in backfillTextStream's
+// calendar branch — single source of truth via the shared AUTO_SOURCES Set.
+//
+// Pass-through: events with no source key (SessionJournal manual events,
+// source === undefined) clear the falsy short-circuit and emit. Events
+// with source: "log_today" (LogTodayTraining) also pass — "log_today" is
+// not in AUTO_SOURCES.
+//
+// Excluded fields per dossier §1.7 / §5.2:
+//   event.title    — template-fallback semantics, not narrative
+//   event.text     — home-idea mirror only; auto-source filtered anyway
+//   event.videoLink / event.eventLink — URLs
+//
+// All four source_types share bare event.id as source_id; discriminator
+// is source_type. source_label resolves via resolveSourceLabel →
+// event.title || event.date || '(event)'.
+const CALENDAR_TEXT_FIELDS = [
+  { path: 'notes',           source_type: SOURCE_TYPES.CALENDAR_NOTES },
+  { path: 'workDescription', source_type: SOURCE_TYPES.CALENDAR_WORK_DESCRIPTION },
+  { path: 'howItFelt',       source_type: SOURCE_TYPES.CALENDAR_HOW_IT_FELT },
+  { path: 'location',        source_type: SOURCE_TYPES.CALENDAR_LOCATION },
+];
+
+export async function emitCalendarChanges(prev, next, uid) {
+  if (!uid) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('[textStream] emitCalendarChanges called without uid; skipping');
+    }
+    return;
+  }
+
+  const prevEvents = prev?.events || [];
+  const nextEvents = next?.events || [];
+  const prevById = new Map(prevEvents.map(e => [e.id, e]));
+
+  for (const nextEvent of nextEvents) {
+    if (nextEvent.source && AUTO_SOURCES.has(nextEvent.source)) continue;
+
+    const prevEvent = prevById.get(nextEvent.id);
+    for (const { path, source_type } of CALENDAR_TEXT_FIELDS) {
+      const prevVal = (prevEvent?.[path] ?? '').toString();
+      const nextVal = (nextEvent?.[path] ?? '').toString();
+      if (prevVal === nextVal) continue;
+      if (!nextVal.trim()) continue;
+
+      try {
+        const prior = prevEvent
+          ? await findCurrentEntry(uid, source_type, nextEvent.id)
+          : null;
+        await emitToTextStream(uid, {
+          source_type,
+          source_id: nextEvent.id,
+          source_label: resolveSourceLabel(source_type, nextEvent),
+          text: nextVal,
+          supersedes: prior?.id || null,
+        });
+      } catch (err) {
+        console.error(`[textStream] calendar event ${nextEvent.id}.${path} emit failed:`, err);
+      }
+    }
+  }
+  // Removed events: no action (orphan handling).
 }
 
 // ─── Dev-mode assertion ──────────────────────────────────────────────────────

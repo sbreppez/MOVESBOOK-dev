@@ -40,7 +40,7 @@ import { PremiumGate } from './components/shared/PremiumGate';
 import { detectMilestones } from './utils/reportEngine';
 import { runHomeMigration } from './utils/homeMigration';
 import { backfillTextStream } from './utils/textStream';
-import { emitProfileChanges, emitReminderChanges, emitPresessionChanges, emitHabitsChanges, emitRoutinesChanges, emitIdeasChanges, emitMovesChanges } from './utils/textStreamWraps';
+import { emitProfileChanges, emitReminderChanges, emitPresessionChanges, emitHabitsChanges, emitRoutinesChanges, emitIdeasChanges, emitMovesChanges, emitCalendarChanges } from './utils/textStreamWraps';
 
 // ── Firebase stubs for preview ──
 if (typeof window !== "undefined") {
@@ -154,7 +154,7 @@ export default function App() {
   const [reminders, setRemindersState] = useState(() => {
     try { const s=localStorage.getItem("mb_reminders"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { items:[] };
   });
-  const [calendar, setCalendar] = useState(() => {
+  const [calendar, setCalendarState] = useState(() => {
     try { const s=localStorage.getItem("mb_calendar"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { events:[] };
   });
   const [stance, setStance] = useState(() => {
@@ -369,6 +369,18 @@ export default function App() {
     });
   }, [fbUser?.uid]);
 
+  const setCalendar = useCallback((updater) => {
+    setCalendarState(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      if (fbUser?.uid) {
+        emitCalendarChanges(prev, next, fbUser.uid).catch(err => {
+          console.error('[textStream] calendar emit failed:', err);
+        });
+      }
+      return next;
+    });
+  }, [fbUser?.uid]);
+
   useEffect(() => {
     const save = (key, ms=1500) => debounce(
       (uid, val) => window.__MB_DB__?.save(uid, key, val), ms
@@ -495,7 +507,7 @@ export default function App() {
           const rm = localStorage.getItem("mb_reminders");
           if (rm) { try { const p=JSON.parse(rm); if(p&&typeof p==="object") setRemindersState(p); } catch {} }
           const cal = localStorage.getItem("mb_calendar");
-          if (cal) { try { const p=JSON.parse(cal); if(p&&typeof p==="object") setCalendar(p); } catch {} }
+          if (cal) { try { const p=JSON.parse(cal); if(p&&typeof p==="object") setCalendarState(p); } catch {} }
           const stn = localStorage.getItem("mb_stance");
           if (stn) { try { const p=JSON.parse(stn); if(p&&typeof p==="object") setStance(p); } catch {} }
           const mf = localStorage.getItem("mb_musicflow");
@@ -581,7 +593,7 @@ export default function App() {
         setLab({ customChips:{ technical:{}, conceptual:{} } });
         setRRR({ lastUsed:{ mode:null, moveId:null, moveName:null, date:null } });
         setRemindersState({ items:[] });
-        setCalendar({ events:[] });
+        setCalendarState({ events:[] });
         setStance({ assessments:[] });
         setMusicflow({ sessions:[] });
         setReflections({ lastCategory:-1, lastDate:null });
