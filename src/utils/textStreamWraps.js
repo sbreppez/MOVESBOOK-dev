@@ -575,6 +575,195 @@ export async function emitCalendarChanges(prev, next, uid) {
   // Removed events: no action (orphan handling).
 }
 
+// ─── Reps (array of session records; mb_reps is the array itself) ───────────
+//
+// Single text field per session: reflection. Two-stage lifecycle — session is
+// created without reflection (RepCounter builds the session at handleDone
+// without a text field); reflection is added later via a debounced post-save
+// update callback. The diff handles both stages: creation is a no-op
+// (prev/next reflection both empty), and subsequent updates emit with
+// supersede semantics via findCurrentEntry.
+//
+// source_id = session.id (bare). source_label resolves via resolveSourceLabel →
+// session.moveName fallback (session carries moveName at construction).
+//
+// Excluded structural fields: moveId, moveCategory, reps, duration, date.
+export async function emitRepsChanges(prev, next, uid) {
+  if (!uid) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('[textStream] emitRepsChanges called without uid; skipping');
+    }
+    return;
+  }
+
+  const prevList = prev || [];
+  const nextList = next || [];
+  const prevById = new Map(prevList.map(s => [s.id, s]));
+
+  for (const nextSession of nextList) {
+    const prevSession = prevById.get(nextSession.id);
+    const prevText = (prevSession?.reflection ?? '').toString();
+    const nextText = (nextSession?.reflection ?? '').toString();
+    if (prevText === nextText) continue;
+    if (!nextText.trim()) continue;
+
+    try {
+      const prior = prevSession
+        ? await findCurrentEntry(uid, SOURCE_TYPES.REPS_REFLECTION, nextSession.id)
+        : null;
+      await emitToTextStream(uid, {
+        source_type: SOURCE_TYPES.REPS_REFLECTION,
+        source_id: nextSession.id,
+        source_label: resolveSourceLabel(SOURCE_TYPES.REPS_REFLECTION, nextSession),
+        text: nextText,
+        supersedes: prior?.id || null,
+      });
+    } catch (err) {
+      console.error(`[textStream] reps session ${nextSession.id} reflection emit failed:`, err);
+    }
+  }
+  // Removed sessions: no action (orphan handling).
+}
+
+// ─── Sparring (parent object with sessions[] + sessions1v1[]) ───────────────
+//
+// One store covering two session flavors:
+//   sessions[]    — Spar Solo + Competition (same shape: notes + reflection).
+//                   CompetitionSimulator writes here with isCompetition:true
+//                   and the same text fields; the per-field loop handles both.
+//   sessions1v1[] — Spar 1v1, single text field: journal (single string, not
+//                   an array — naming collision with move.journal[] /
+//                   idea.journal[] per dossier §1.10).
+//
+// All three emits use bare session.id as source_id; source_type discriminates.
+// source_label is entity-self-sufficient: SPARRING_* resolve via
+// `Spar — ${session.date}`; SPAR1V1_JOURNAL resolves via session.opponent.
+//
+// Excluded fields per dossier §1.10:
+//   sessions1v1.opponent  — no source_type (label-only)
+//   sessions1v1.location  — no source_type (label-only)
+//   records / records1v1  — numeric PR counters
+//   All structural fields (roundLog, durations, side, etc.)
+const SPARRING_SOLO_TEXT_FIELDS = [
+  { path: 'notes',      source_type: SOURCE_TYPES.SPARRING_NOTES },
+  { path: 'reflection', source_type: SOURCE_TYPES.SPARRING_REFLECTION },
+];
+
+export async function emitSparringChanges(prev, next, uid) {
+  if (!uid) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('[textStream] emitSparringChanges called without uid; skipping');
+    }
+    return;
+  }
+
+  // Solo + Competition (sessions[])
+  const prevSolo = prev?.sessions || [];
+  const nextSolo = next?.sessions || [];
+  const prevSoloById = new Map(prevSolo.map(s => [s.id, s]));
+
+  for (const nextSession of nextSolo) {
+    const prevSession = prevSoloById.get(nextSession.id);
+    for (const { path, source_type } of SPARRING_SOLO_TEXT_FIELDS) {
+      const prevVal = (prevSession?.[path] ?? '').toString();
+      const nextVal = (nextSession?.[path] ?? '').toString();
+      if (prevVal === nextVal) continue;
+      if (!nextVal.trim()) continue;
+
+      try {
+        const prior = prevSession
+          ? await findCurrentEntry(uid, source_type, nextSession.id)
+          : null;
+        await emitToTextStream(uid, {
+          source_type,
+          source_id: nextSession.id,
+          source_label: resolveSourceLabel(source_type, nextSession),
+          text: nextVal,
+          supersedes: prior?.id || null,
+        });
+      } catch (err) {
+        console.error(`[textStream] sparring session ${nextSession.id}.${path} emit failed:`, err);
+      }
+    }
+  }
+
+  // Spar 1v1 (sessions1v1[])
+  const prev1v1 = prev?.sessions1v1 || [];
+  const next1v1 = next?.sessions1v1 || [];
+  const prev1v1ById = new Map(prev1v1.map(s => [s.id, s]));
+
+  for (const nextSession of next1v1) {
+    const prevSession = prev1v1ById.get(nextSession.id);
+    const prevText = (prevSession?.journal ?? '').toString();
+    const nextText = (nextSession?.journal ?? '').toString();
+    if (prevText === nextText) continue;
+    if (!nextText.trim()) continue;
+
+    try {
+      const prior = prevSession
+        ? await findCurrentEntry(uid, SOURCE_TYPES.SPAR1V1_JOURNAL, nextSession.id)
+        : null;
+      await emitToTextStream(uid, {
+        source_type: SOURCE_TYPES.SPAR1V1_JOURNAL,
+        source_id: nextSession.id,
+        source_label: resolveSourceLabel(SOURCE_TYPES.SPAR1V1_JOURNAL, nextSession),
+        text: nextText,
+        supersedes: prior?.id || null,
+      });
+    } catch (err) {
+      console.error(`[textStream] sparring 1v1 session ${nextSession.id} journal emit failed:`, err);
+    }
+  }
+  // Removed sessions: no action (orphan handling).
+}
+
+// ─── Music Flow (parent object with sessions[]) ─────────────────────────────
+//
+// Single text field per session: reflection. Same two-stage lifecycle as reps
+// — session created without reflection, text added via debounced post-save
+// callback. The diff handles both stages naturally.
+//
+// source_id = session.id (bare). source_label resolves via resolveSourceLabel →
+// `Flow — ${session.date}`.
+//
+// Excluded structural fields: duration, promptCount, stageReached, date.
+export async function emitMusicflowChanges(prev, next, uid) {
+  if (!uid) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('[textStream] emitMusicflowChanges called without uid; skipping');
+    }
+    return;
+  }
+
+  const prevSessions = prev?.sessions || [];
+  const nextSessions = next?.sessions || [];
+  const prevById = new Map(prevSessions.map(s => [s.id, s]));
+
+  for (const nextSession of nextSessions) {
+    const prevSession = prevById.get(nextSession.id);
+    const prevText = (prevSession?.reflection ?? '').toString();
+    const nextText = (nextSession?.reflection ?? '').toString();
+    if (prevText === nextText) continue;
+    if (!nextText.trim()) continue;
+
+    try {
+      const prior = prevSession
+        ? await findCurrentEntry(uid, SOURCE_TYPES.MUSICFLOW_REFLECTION, nextSession.id)
+        : null;
+      await emitToTextStream(uid, {
+        source_type: SOURCE_TYPES.MUSICFLOW_REFLECTION,
+        source_id: nextSession.id,
+        source_label: resolveSourceLabel(SOURCE_TYPES.MUSICFLOW_REFLECTION, nextSession),
+        text: nextText,
+        supersedes: prior?.id || null,
+      });
+    } catch (err) {
+      console.error(`[textStream] musicflow session ${nextSession.id} reflection emit failed:`, err);
+    }
+  }
+  // Removed sessions: no action (orphan handling).
+}
+
 // ─── Dev-mode assertion ──────────────────────────────────────────────────────
 // Catches the case where a developer adds a new text field to the canonical
 // schema but forgets to add it to the wrap's *_TEXT_FIELDS list.

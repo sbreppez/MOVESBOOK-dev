@@ -40,7 +40,7 @@ import { PremiumGate } from './components/shared/PremiumGate';
 import { detectMilestones } from './utils/reportEngine';
 import { runHomeMigration } from './utils/homeMigration';
 import { backfillTextStream } from './utils/textStream';
-import { emitProfileChanges, emitReminderChanges, emitPresessionChanges, emitHabitsChanges, emitRoutinesChanges, emitIdeasChanges, emitMovesChanges, emitCalendarChanges } from './utils/textStreamWraps';
+import { emitProfileChanges, emitReminderChanges, emitPresessionChanges, emitHabitsChanges, emitRoutinesChanges, emitIdeasChanges, emitMovesChanges, emitCalendarChanges, emitRepsChanges, emitSparringChanges, emitMusicflowChanges } from './utils/textStreamWraps';
 
 // ── Firebase stubs for preview ──
 if (typeof window !== "undefined") {
@@ -130,10 +130,10 @@ export default function App() {
   const [customAttrs, setCustomAttrs] = useState(() => {
     try { const s=localStorage.getItem("mb_custom_attrs"); if(s){const p=JSON.parse(s); if(Array.isArray(p)) return p;} } catch{} return [];
   });
-  const [reps, setReps] = useState(() => {
+  const [reps, setRepsState] = useState(() => {
     try { const s=localStorage.getItem("mb_reps"); if(s){const p=JSON.parse(s); if(Array.isArray(p)) return p;} } catch{} return [];
   });
-  const [sparring, setSparring] = useState(() => {
+  const [sparring, setSparringState] = useState(() => {
     try { const s=localStorage.getItem("mb_sparring"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { sessions:[], records:{} };
   });
   const [combos, setCombos] = useState(() => {
@@ -160,7 +160,7 @@ export default function App() {
   const [stance, setStance] = useState(() => {
     try { const s=localStorage.getItem("mb_stance"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { assessments:[] };
   });
-  const [musicflow, setMusicflow] = useState(() => {
+  const [musicflow, setMusicflowState] = useState(() => {
     try { const s=localStorage.getItem("mb_musicflow"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { sessions:[] };
   });
   const [freestyle, setFreestyle] = useState(() => {
@@ -381,6 +381,42 @@ export default function App() {
     });
   }, [fbUser?.uid]);
 
+  const setReps = useCallback((updater) => {
+    setRepsState(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      if (fbUser?.uid) {
+        emitRepsChanges(prev, next, fbUser.uid).catch(err => {
+          console.error('[textStream] reps emit failed:', err);
+        });
+      }
+      return next;
+    });
+  }, [fbUser?.uid]);
+
+  const setSparring = useCallback((updater) => {
+    setSparringState(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      if (fbUser?.uid) {
+        emitSparringChanges(prev, next, fbUser.uid).catch(err => {
+          console.error('[textStream] sparring emit failed:', err);
+        });
+      }
+      return next;
+    });
+  }, [fbUser?.uid]);
+
+  const setMusicflow = useCallback((updater) => {
+    setMusicflowState(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      if (fbUser?.uid) {
+        emitMusicflowChanges(prev, next, fbUser.uid).catch(err => {
+          console.error('[textStream] musicflow emit failed:', err);
+        });
+      }
+      return next;
+    });
+  }, [fbUser?.uid]);
+
   useEffect(() => {
     const save = (key, ms=1500) => debounce(
       (uid, val) => window.__MB_DB__?.save(uid, key, val), ms
@@ -493,9 +529,9 @@ export default function App() {
           const ca = localStorage.getItem("mb_custom_attrs");
           if (ca) { try { const p=JSON.parse(ca); if(Array.isArray(p)) setCustomAttrs(p); } catch {} }
           const rp = localStorage.getItem("mb_reps");
-          if (rp) { try { const p=JSON.parse(rp); if(Array.isArray(p)) setReps(p); } catch {} }
+          if (rp) { try { const p=JSON.parse(rp); if(Array.isArray(p)) setRepsState(p); } catch {} }
           const sp = localStorage.getItem("mb_sparring");
-          if (sp) { try { const p=JSON.parse(sp); if(p&&typeof p==="object") setSparring(p); } catch {} }
+          if (sp) { try { const p=JSON.parse(sp); if(p&&typeof p==="object") setSparringState(p); } catch {} }
           const cb = localStorage.getItem("mb_combos");
           if (cb) { try { const p=JSON.parse(cb); if(p&&typeof p==="object") setCombos(p); } catch {} }
           const lb = localStorage.getItem("mb_lab");
@@ -511,7 +547,7 @@ export default function App() {
           const stn = localStorage.getItem("mb_stance");
           if (stn) { try { const p=JSON.parse(stn); if(p&&typeof p==="object") setStance(p); } catch {} }
           const mf = localStorage.getItem("mb_musicflow");
-          if (mf) { try { const p=JSON.parse(mf); if(p&&typeof p==="object") setMusicflow(p); } catch {} }
+          if (mf) { try { const p=JSON.parse(mf); if(p&&typeof p==="object") setMusicflowState(p); } catch {} }
           const fsl = localStorage.getItem("mb_freestyle");
           if (fsl) { try { const p=JSON.parse(fsl); if(p&&typeof p==="object") setFreestyle(p); } catch {} }
           const ref = localStorage.getItem("mb_reflections");
@@ -587,15 +623,15 @@ export default function App() {
         setProfileState({ nickname:"", age:"", gender:"", goals:"", years:"",
           startYear:"", startMonth:"", startDay:"", why:"" });
         setCustomAttrs([]);
-        setReps([]);
-        setSparring({ sessions:[], records:{} });
+        setRepsState([]);
+        setSparringState({ sessions:[], records:{} });
         setCombos({ transitions:[...DEFAULT_TRANSITIONS], selectedMoveIds:null });
         setLab({ customChips:{ technical:{}, conceptual:{} } });
         setRRR({ lastUsed:{ mode:null, moveId:null, moveName:null, date:null } });
         setRemindersState({ items:[] });
         setCalendarState({ events:[] });
         setStance({ assessments:[] });
-        setMusicflow({ sessions:[] });
+        setMusicflowState({ sessions:[] });
         setReflections({ lastCategory:-1, lastDate:null });
         setRivals([]);
         setProfilePhoto(null);
