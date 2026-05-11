@@ -478,6 +478,8 @@ export default function App() {
           if (lb) { try { const p=JSON.parse(lb); if(p&&typeof p==="object") setLab(p); } catch {} }
           const rr = localStorage.getItem("mb_rrr");
           if (rr) { try { const p=JSON.parse(rr); if(p&&typeof p==="object") setRRR(p); } catch {} }
+          const fc = localStorage.getItem("mb_flashcards");
+          if (fc) { try { const p=JSON.parse(fc); if(p&&typeof p==="object") setFlashcards(p); } catch {} }
           const rm = localStorage.getItem("mb_reminders");
           if (rm) { try { const p=JSON.parse(rm); if(p&&typeof p==="object") setRemindersState(p); } catch {} }
           const cal = localStorage.getItem("mb_calendar");

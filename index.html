@@ -249,6 +249,9 @@ firebase.initializeApp({
             if (data.milestonesShown) { try { const p=JSON.parse(data.milestonesShown); if(Array.isArray(p)) localStorage.setItem('mb_milestones_shown', data.milestonesShown); } catch(e){ console.warn('[MB] sync load parse fail:', 'milestonesShown', e); } }
             if (data.presession)  { try { const p=JSON.parse(data.presession);  if(p&&typeof p==="object") localStorage.setItem('mb_presession',  data.presession);  } catch(e){ console.warn('[MB] sync load parse fail:', 'presession', e); } }
             if (data.injuries)    { try { const p=JSON.parse(data.injuries);    if(Array.isArray(p))            localStorage.setItem('mb_injuries',    data.injuries);    } catch(e){ console.warn('[MB] sync load parse fail:', 'injuries', e); } }
+            if (data.homeStack)   { try { const p=JSON.parse(data.homeStack);   if(p&&typeof p==="object") localStorage.setItem('mb_home_stack',   data.homeStack);   } catch(e){ console.warn('[MB] sync load parse fail:', 'homeStack',  e); } }
+            if (data.homeChecks)  { try { const p=JSON.parse(data.homeChecks);  if(p&&typeof p==="object") localStorage.setItem('mb_home_checks',  data.homeChecks);  } catch(e){ console.warn('[MB] sync load parse fail:', 'homeChecks', e); } }
+            if (data.flashcards)  { try { const p=JSON.parse(data.flashcards);  if(p&&typeof p==="object") localStorage.setItem('mb_flashcards',   data.flashcards);  } catch(e){ console.warn('[MB] sync load parse fail:', 'flashcards', e); } }
             if (data.profilePhoto) { var _pp = data.profilePhoto; if (_pp && _pp !== 'null' && _pp !== '"null"') { try { _pp = JSON.parse(_pp); } catch(e){ console.warn('[MB] sync load parse fail:', 'profilePhoto', e); } while(typeof _pp==='string'&&_pp.charAt(0)==='"'&&_pp.charAt(_pp.length-1)==='"'){try{var _pp2=JSON.parse(_pp);if(_pp2===_pp)break;_pp=_pp2;}catch(e){break;}} if(typeof _pp==='string'&&_pp.indexOf('data:')===0) localStorage.setItem('mb_profile_photo',_pp); else localStorage.removeItem('mb_profile_photo'); } }
           }
           if (loginDiv) { loginDiv.style.opacity='0'; setTimeout(function(){ loginDiv.style.display='none'; },300); }
@@ -293,6 +296,9 @@ firebase.initializeApp({
             if (d.milestonesShown) localStorage.setItem('mb_milestones_shown', d.milestonesShown);
             if (d.presession)  localStorage.setItem('mb_presession',  d.presession);
             if (d.injuries)    localStorage.setItem('mb_injuries',    d.injuries);
+            if (d.homeStack)   localStorage.setItem('mb_home_stack',  d.homeStack);
+            if (d.homeChecks)  localStorage.setItem('mb_home_checks', d.homeChecks);
+            if (d.flashcards)  localStorage.setItem('mb_flashcards',  d.flashcards);
             if (d.profilePhoto) { var _sp=d.profilePhoto; if(_sp&&_sp!=='null'&&_sp!=='"null"'){try{_sp=JSON.parse(_sp);}catch(e){console.warn('[MB] sync subscribe parse fail:', 'profilePhoto', e);}while(typeof _sp==='string'&&_sp.charAt(0)==='"'&&_sp.charAt(_sp.length-1)==='"'){try{var _sp2=JSON.parse(_sp);if(_sp2===_sp)break;_sp=_sp2;}catch(e){break;}}if(typeof _sp==='string'&&_sp.indexOf('data:')===0)localStorage.setItem('mb_profile_photo',_sp);else localStorage.removeItem('mb_profile_photo');} }
           } catch(e){ console.warn('[MB] sync subscribe handler crashed:', e); }
         });
@@ -303,7 +309,8 @@ firebase.initializeApp({
          'mb_rivals','mb_reps','mb_sparring','mb_combos','mb_lab','mb_rrr','mb_reminders',
          'mb_calendar','mb_stance','mb_musicflow','mb_freestyle','mb_reflections',
          'mb_battleprep','mb_flowmap','mb_cat_domains','mb_reports','mb_milestones_shown',
-         'mb_presession','mb_injuries','mb_profile_photo'].forEach(function(k){ localStorage.removeItem(k); });
+         'mb_presession','mb_injuries','mb_profile_photo',
+         'mb_home_stack','mb_home_checks','mb_flashcards'].forEach(function(k){ localStorage.removeItem(k); });
         if (loginDiv) { loginDiv.style.display='flex'; loginDiv.style.opacity='1'; }
         if (_unsubSnap) { _unsubSnap(); _unsubSnap=null; }
         window.dispatchEvent(new Event('mb-auth-resolved'));
