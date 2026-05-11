@@ -40,7 +40,7 @@ import { PremiumGate } from './components/shared/PremiumGate';
 import { detectMilestones } from './utils/reportEngine';
 import { runHomeMigration } from './utils/homeMigration';
 import { backfillTextStream } from './utils/textStream';
-import { emitProfileChanges, emitReminderChanges, emitPresessionChanges, emitHabitsChanges, emitRoutinesChanges, emitIdeasChanges } from './utils/textStreamWraps';
+import { emitProfileChanges, emitReminderChanges, emitPresessionChanges, emitHabitsChanges, emitRoutinesChanges, emitIdeasChanges, emitMovesChanges } from './utils/textStreamWraps';
 
 // ── Firebase stubs for preview ──
 if (typeof window !== "undefined") {
@@ -61,7 +61,7 @@ export default function App() {
   const [tab,setTab]=useState(()=>{ try { const st=localStorage.getItem("mb_settings"); if(st){ const p=JSON.parse(st); if(p.defaultTab){ const m={"wip":"moves","ideas":"home","ready":"battle","train":"home","vocab":"moves"}; const mapped=m[p.defaultTab]||p.defaultTab; const valid=["home","moves","battle","reflect"]; return valid.includes(mapped)?mapped:"home"; } } } catch {} return "home"; });
 
   // ── Data state ─────────────────────────────────────────────────────────────
-  const [moves,  setMoves]  = useState(() => {
+  const [moves,  setMovesState]  = useState(() => {
     try {
       const s = localStorage.getItem("mb_moves");
       if (s) { const p = JSON.parse(s); if (Array.isArray(p) && p.length > 0) return p.map(migrateMove); }
@@ -357,6 +357,18 @@ export default function App() {
     });
   }, [fbUser?.uid]);
 
+  const setMoves = useCallback((updater) => {
+    setMovesState(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      if (fbUser?.uid) {
+        emitMovesChanges(prev, next, fbUser.uid).catch(err => {
+          console.error('[textStream] moves emit failed:', err);
+        });
+      }
+      return next;
+    });
+  }, [fbUser?.uid]);
+
   useEffect(() => {
     const save = (key, ms=1500) => debounce(
       (uid, val) => window.__MB_DB__?.save(uid, key, val), ms
@@ -456,7 +468,7 @@ export default function App() {
           const s = localStorage.getItem("mb_sets");
           const r = localStorage.getItem("mb_rounds");
           const p = localStorage.getItem("mb_profile");
-          if (m) { try { const p=JSON.parse(m); if(Array.isArray(p)&&p.length>0) setMoves(p.map(migrateMove)); } catch {} }
+          if (m) { try { const p=JSON.parse(m); if(Array.isArray(p)&&p.length>0) setMovesState(p.map(migrateMove)); } catch {} }
           const ct = localStorage.getItem("mb_cats"); if (ct) { try { const p=JSON.parse(ct); if(Array.isArray(p)&&p.length>0) setCats(p); } catch {} }
           const cc = localStorage.getItem("mb_cat_colors"); if (cc) { try { setCatColors(JSON.parse(cc)); } catch {} }
           const cd = localStorage.getItem("mb_cat_domains"); if (cd) { try { setCatDomains(JSON.parse(cd)); } catch {} }
@@ -552,7 +564,7 @@ export default function App() {
       } else {
         setStoresReady(false);
         setFbUser(null);
-        setMoves([]);
+        setMovesState([]);
         setCats([...DEFAULT_CATS]);
         setCatColors({...CAT_COLORS});
         setCatDomains({});
@@ -638,7 +650,7 @@ export default function App() {
   useEffect(()=>{
     if(customAttrs.length===0 && moves.some(m=>m.rotation===true||m.travelling===true)){
       const result = migrateOldAttributes(moves, customAttrs);
-      if(result.customAttrs.length>0){ setCustomAttrs(result.customAttrs); setMoves(result.moves); }
+      if(result.customAttrs.length>0){ setCustomAttrs(result.customAttrs); setMovesState(result.moves); }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps -- one-shot mount migration; condition (`customAttrs.length===0 && moves.some(...)`) self-guards from re-triggering after migration; intentionally reads mount-time snapshot
   },[]);
@@ -754,7 +766,7 @@ export default function App() {
   }, [setCalendar]);
 
   const markMoveTrainedToday = useCallback((id) => {
-    setMoves(prev => prev.map(m => m.id === id ? { ...m, date: todayLocal() } : m));
+    setMovesState(prev => prev.map(m => m.id === id ? { ...m, date: todayLocal() } : m));
   }, []);
 
   const onUpdateRepSession = useCallback((sessionId, updates) => {
@@ -862,7 +874,7 @@ export default function App() {
             preselectedMove={repCounterPreselect}
             onSaveSession={(session)=>{
               setReps(prev=>[session,...prev]);
-              setMoves(prev=>prev.map(m=>m.id===session.moveId?{...m,date:todayLocal()}:m));
+              setMovesState(prev=>prev.map(m=>m.id===session.moveId?{...m,date:todayLocal()}:m));
               lastSessionSaved.current=true;
             }}
             onUpdateSession={onUpdateRepSession}
@@ -873,7 +885,7 @@ export default function App() {
             onSaveSession={(session, updatedSparring)=>{
               setSparring(updatedSparring);
               if(session.movesTrained?.length){
-                setMoves(prev=>prev.map(m=>session.movesTrained.includes(m.id)?{...m,date:todayLocal()}:m));
+                setMovesState(prev=>prev.map(m=>session.movesTrained.includes(m.id)?{...m,date:todayLocal()}:m));
               }
               lastSessionSaved.current=true;
             }}

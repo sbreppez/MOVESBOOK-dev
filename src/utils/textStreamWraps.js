@@ -427,6 +427,86 @@ export async function emitIdeasChanges(prev, next, uid) {
   }
 }
 
+// ─── Moves (array of {id, description, journal[], ...}) ─────────────────────
+//
+// Two text fields per move:
+//   description    → singleton, supersede on edit (MOVE_DESCRIPTION)
+//   journal[].text → pure-append, NO supersede (MOVE_JOURNAL)
+//
+// Pure-append is the contract: MoveModal offers append (MoveModal.jsx:603)
+// and delete (MoveModal.jsx:635) only — no in-place edit handler, unlike
+// goal/target journals which use JournalEntryCard.save. The wrap reflects
+// this by emitting MOVE_JOURNAL with supersedes: null and skipping the
+// findCurrentEntry lookup for journal entries (no prior to supersede).
+//
+// Detection of new journal entries via Set-of-prev-ids, not text diff: the
+// lifecycle is append-prepend (entries prepended at index 0 per dossier
+// 1.1), so positional diff would falsely flag every append as a "change to
+// entry 0." Stable entry.id (Date.now() per MoveModal:606) makes Set the
+// natural primitive.
+//
+// Excluded fields: move.name (label), move.link (URL), move.notes
+// (deprecated — no UI write site per dossier 1.1 line 84), move.attrs /
+// move.parentId (non-text references), customAttributes (separate store).
+export async function emitMovesChanges(prev, next, uid) {
+  if (!uid) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('[textStream] emitMovesChanges called without uid; skipping');
+    }
+    return;
+  }
+
+  const prevList = prev || [];
+  const nextList = next || [];
+  const prevById = new Map(prevList.map(m => [m.id, m]));
+
+  for (const nextMove of nextList) {
+    const prevMove = prevById.get(nextMove.id);
+
+    // description (singleton, supersede semantics)
+    const prevDesc = (prevMove?.description ?? '').toString();
+    const nextDesc = (nextMove?.description ?? '').toString();
+    if (prevDesc !== nextDesc && nextDesc.trim()) {
+      try {
+        const prior = prevMove
+          ? await findCurrentEntry(uid, SOURCE_TYPES.MOVE_DESCRIPTION, nextMove.id)
+          : null;
+        await emitToTextStream(uid, {
+          source_type: SOURCE_TYPES.MOVE_DESCRIPTION,
+          source_id: nextMove.id,
+          source_label: resolveSourceLabel(SOURCE_TYPES.MOVE_DESCRIPTION, nextMove),
+          text: nextDesc,
+          supersedes: prior?.id || null,
+        });
+      } catch (err) {
+        console.error(`[textStream] move ${nextMove.id} description emit failed:`, err);
+      }
+    }
+
+    // journal[] (pure-append — no supersede, no findCurrentEntry)
+    const prevJournalIds = new Set((prevMove?.journal || []).map(j => j.id));
+    for (const entry of (nextMove.journal || [])) {
+      if (prevJournalIds.has(entry.id)) continue;
+      const text = (entry?.text ?? '').toString();
+      if (!text.trim()) continue;
+
+      try {
+        await emitToTextStream(uid, {
+          source_type: SOURCE_TYPES.MOVE_JOURNAL,
+          source_id: `${nextMove.id}:${entry.id}`,
+          source_label: resolveSourceLabel(SOURCE_TYPES.MOVE_JOURNAL, nextMove),
+          text,
+          supersedes: null,
+        });
+      } catch (err) {
+        console.error(`[textStream] move ${nextMove.id} journal ${entry.id} emit failed:`, err);
+      }
+    }
+    // Removed entries: no action (orphan handling).
+  }
+  // Removed moves: no action.
+}
+
 // ─── Dev-mode assertion ──────────────────────────────────────────────────────
 // Catches the case where a developer adds a new text field to the canonical
 // schema but forgets to add it to the wrap's *_TEXT_FIELDS list.
