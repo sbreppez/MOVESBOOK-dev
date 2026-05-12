@@ -68,6 +68,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
   const [peopleTab, setPeopleTab] = useState("rivals");
   const [showModal, setShowModal] = useState(false);
   const [editingRival, setEditingRival] = useState(null);
+  const [battleScrollId, setBattleScrollId] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [showConfPrompt, setShowConfPrompt] = useState(false);
   const [pendingConf, setPendingConf] = useState(null);
@@ -101,6 +102,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
       setPeopleTab(t === "sparringMate" ? "sparringMate" : t === "crew" ? "crew" : "rivals");
       setEditingRival(normalizeRival(rival));
       setShowModal(true);
+      setBattleScrollId(rivalsSeed.battleId || null);
     }
     if (onRivalsSeedUsed) onRivalsSeedUsed();
   // eslint-disable-next-line react-hooks/exhaustive-deps -- seed-only by intent
@@ -232,7 +234,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
   };
 
   // ── Rival Modal ──
-  const RivalModal = ({ rival, onClose, onSave }) => {
+  const RivalModal = ({ rival, onClose, onSave, battleScrollId, onBattleScrollUsed }) => {
     const isEdit = !!rival?.id;
     const [f, setF] = useState({
       name: rival?.name ?? "",
@@ -260,6 +262,19 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
     // Battle/spar history expand state
     const [expandedBattle, setExpandedBattle] = useState(null);
     const [expandedSpar, setExpandedSpar] = useState(null);
+
+    // TEXTSTREAM-SEARCH-2B — battle scroll. When a search result points to a
+    // specific battle, auto-expand it and scroll into view after mount.
+    useEffect(() => {
+      if (!battleScrollId) return;
+      setExpandedBattle(battleScrollId);
+      const timer = setTimeout(() => {
+        const el = document.getElementById(`battle-${battleScrollId}`);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (onBattleScrollUsed) onBattleScrollUsed();
+      }, 100);
+      return () => clearTimeout(timer);
+    }, [battleScrollId, onBattleScrollUsed]);
 
     const toggleDomain = (d) => {
       setF(prev => ({
@@ -621,7 +636,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
               const isExpanded = expandedBattle === b.id;
               const hasDetail = b.howDidItGo || b.whatSurprised || b.trainingNext;
               return (
-                <div key={b.id} onClick={() => hasDetail && setExpandedBattle(isExpanded ? null : b.id)}
+                <div key={b.id} id={`battle-${b.id}`} onClick={() => hasDetail && setExpandedBattle(isExpanded ? null : b.id)}
                   style={{ background:C.surfaceAlt, borderRadius:8, padding:"10px 12px", marginBottom:6,
                     cursor: hasDetail ? "pointer" : "default" }}>
                   <div style={{ display:"flex", alignItems:"center", gap:8 }}>
@@ -850,12 +865,15 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
       {showModal && (
         <RivalModal
           rival={editingRival}
-          onClose={() => { setShowModal(false); setEditingRival(null); }}
+          battleScrollId={battleScrollId}
+          onBattleScrollUsed={() => setBattleScrollId(null)}
+          onClose={() => { setShowModal(false); setEditingRival(null); setBattleScrollId(null); }}
           onSave={(data) => {
             if (editingRival?.id) updateRival(editingRival.id, data);
             else addRival(data);
             setShowModal(false);
             setEditingRival(null);
+            setBattleScrollId(null);
             // Switch to the tab matching the saved type
             if (data.type && data.type !== peopleTab) setPeopleTab(data.type === "rival" ? "rivals" : data.type);
           }}/>

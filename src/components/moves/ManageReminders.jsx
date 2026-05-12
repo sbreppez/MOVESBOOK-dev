@@ -1,13 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
 import { todayLocal } from '../../utils/dateUtils';
 
-export const ManageReminders = ({ reminders, onRemindersChange, addToast, settings, onClose }) => {
+export const ManageReminders = ({ reminders, onRemindersChange, addToast, settings, onClose, remindersSeed, onRemindersSeedUsed }) => {
   const t = useT();
   const items = reminders?.items || [];
+
+  // TEXTSTREAM-SEARCH-2B — reminder scroll. Defer until the list renders.
+  useEffect(() => {
+    if (!remindersSeed?.reminderId) return;
+    const timer = setTimeout(() => {
+      const el = document.getElementById(`reminder-${remindersSeed.reminderId}`);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (onRemindersSeedUsed) onRemindersSeedUsed();
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [remindersSeed, onRemindersSeedUsed]);
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState("");
   const [deletingId, setDeletingId] = useState(null);
@@ -96,7 +107,7 @@ export const ManageReminders = ({ reminders, onRemindersChange, addToast, settin
         ) : (
           <>
             {items.map(item => (
-              <div key={item.id} style={{ background: C.surface, borderRadius: 8,
+              <div key={item.id} id={`reminder-${item.id}`} style={{ background: C.surface, borderRadius: 8,
                 padding: 12, margin: "0 12px 8px" }}>
 
                 {deletingId === item.id ? (

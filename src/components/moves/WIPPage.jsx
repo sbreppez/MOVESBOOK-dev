@@ -47,6 +47,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
   const [showAdd,setShowAdd]=useState(false); const [bulk,setBulk]=useState(false);
   const [showLibraryMenu,setShowLibraryMenu]=useState(false);
   const [editMove,setEditMove]=useState(null);
+  const [editMoveFocus,setEditMoveFocus]=useState(undefined);
   // cats/catColors are now lifted to App — received as props
   const [showAddCat,setShowAddCat]=useState(false);
   const [ideaDesc,setIdeaDesc]=useState(null);
@@ -75,7 +76,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
     setVocabTab("moves");
     setOpenCat(null);
     const move = moves?.find(m => String(m.id) === String(movesSeed.moveId));
-    if (move) setEditMove(move);
+    if (move) { setEditMove(move); setEditMoveFocus(movesSeed.focus); }
     if (onMovesSeedUsed) onMovesSeedUsed();
   // eslint-disable-next-line react-hooks/exhaustive-deps -- seed-only by intent
   }, [movesSeed]);
@@ -396,7 +397,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
       {/* MoveModal at root level — for "Add to Move" arriving from Ideas tab */}
       {showAdd&&<MoveModal initialCat={cats[0]||""} cats={cats} initialDesc={ideaDesc} onClose={()=>{setShowAdd(false);setIdeaDesc(null);}} onSave={f=>saveMove(f)} customAttrs={customAttrs} onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])} allMoves={moves} catColors={catColors} isPremium={isPremium}/>}
       {/* EditMove at root level — for tree/search views where openCat is null */}
-      {!openCat&&editMove&&<MoveModal move={editMove} cats={cats} onClose={()=>setEditMove(null)} onSave={f=>{saveMove(f,editMove.id);setEditMove(null);}} customAttrs={customAttrs} onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])} allMoves={moves} catColors={catColors} isPremium={isPremium}/>}
+      {!openCat&&editMove&&<MoveModal move={editMove} cats={cats} onClose={()=>{setEditMove(null);setEditMoveFocus(undefined);}} onSave={f=>{saveMove(f,editMove.id);setEditMove(null);setEditMoveFocus(undefined);}} customAttrs={customAttrs} onAddAttr={def=>setCustomAttrs&&setCustomAttrs(p=>[...p,def])} allMoves={moves} catColors={catColors} isPremium={isPremium} focus={editMoveFocus}/>}
       {/* Version move modal — triggered by version tracking prompt */}
       {versionMove && (
         <MoveModal

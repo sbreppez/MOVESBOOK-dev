@@ -53,6 +53,28 @@ export const CalendarOverlay = ({
     setViewDate(new Date(d.getFullYear(), d.getMonth(), 1));
     setSelectedDay(initialFocus.day);
   }, [initialFocus]);
+
+  // TEXTSTREAM-SEARCH-2B — within-day scroll. After selectedDay updates trigger
+  // the day-detail render, defer one tick so getElementById can find the tile.
+  useEffect(() => {
+    if (!initialFocus) return;
+    const { eventId, sessionId, sessionKind } = initialFocus;
+    if (!eventId && !sessionId) return;
+    const timer = setTimeout(() => {
+      let targetId = null;
+      if (eventId) targetId = `event-${eventId}`;
+      else if (sessionId) {
+        if (sessionKind === 'drill') targetId = `session-drill-${sessionId}`;
+        else if (sessionKind === 'sparSolo') targetId = `session-spar-solo-${sessionId}`;
+        else if (sessionKind === 'spar1v1') targetId = `session-spar-1v1-${sessionId}`;
+        else if (sessionKind === 'musicflow') targetId = `session-musicflow-${sessionId}`;
+      }
+      if (!targetId) return;
+      const el = document.getElementById(targetId);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [initialFocus]);
   const [showJournal, setShowJournal] = useState(false);
   const [editEvent, setEditEvent] = useState(null);
   const [showTypePicker, setShowTypePicker] = useState(false);
@@ -230,7 +252,7 @@ export const CalendarOverlay = ({
     }, [menu]);
 
     return (
-      <div style={{ background: C.surfaceAlt, borderRadius: 8, marginBottom: 4, overflow: "visible" }}>
+      <div id={`event-${event.id}`} style={{ background: C.surfaceAlt, borderRadius: 8, marginBottom: 4, overflow: "visible" }}>
         <div style={{ display: "flex", alignItems: "center", padding: "10px 12px", gap: 8 }}>
           <Ic n="fileText" s={14} c={C.textSec}/>
           <span style={{ flex: 1, fontFamily: FONT_DISPLAY, fontWeight: 800, fontSize: 13, color: C.text,
@@ -604,7 +626,7 @@ export const CalendarOverlay = ({
                   }
                   const isLogToday = e.source === "log_today";
                   return (
-                  <div key={e.id}
+                  <div key={e.id} id={`event-${e.id}`}
                     onClick={isLogToday ? () => setSelectedLogTodayEvent(e) : undefined}
                     style={{ display: "flex", alignItems: "center", justifyContent: "space-between",
                     padding: "8px 10px", background: C.surfaceAlt, borderRadius: 8, marginBottom: 4,
@@ -746,7 +768,7 @@ export const CalendarOverlay = ({
               <div>
                 <div style={sectionLabel}>{t("repSession")}</div>
                 {dayData.repSessions.map(r => (
-                  <div key={r.id} style={{ fontSize: 11, color: C.textSec, padding: "3px 0" }}>
+                  <div key={r.id} id={`session-drill-${r.id}`} style={{ fontSize: 11, color: C.textSec, padding: "3px 0" }}>
                     <div style={{ display: "flex", gap: 8 }}>
                       <span style={{ color: C.text, fontWeight: 600 }}>{r.moveName}</span>
                       <span>{r.reps} reps</span>
@@ -770,7 +792,7 @@ export const CalendarOverlay = ({
                   ...dayData.sparringSessions.map(s => ({ ...s, _kind: "solo" })),
                   ...dayData.sparringSessions1v1.map(s => ({ ...s, _kind: "1v1" })),
                 ].map(s => (
-                  <div key={`${s._kind}-${s.id}`} style={{ fontSize: 11, color: C.textSec, padding: "3px 0" }}>
+                  <div key={`${s._kind}-${s.id}`} id={`session-spar-${s._kind === '1v1' ? '1v1' : 'solo'}-${s.id}`} style={{ fontSize: 11, color: C.textSec, padding: "3px 0" }}>
                     <span style={{ color: C.text, fontWeight: 600 }}>
                       {s.roundLog?.length || 0} rounds
                     </span>
@@ -793,7 +815,7 @@ export const CalendarOverlay = ({
               <div>
                 <div style={sectionLabel}>{t("musicFlow")}</div>
                 {dayData.musicflowSessions.map(s => (
-                  <div key={s.id} style={{ fontSize: 11, color: C.textSec, padding: "3px 0" }}>
+                  <div key={s.id} id={`session-musicflow-${s.id}`} style={{ fontSize: 11, color: C.textSec, padding: "3px 0" }}>
                     <span style={{ color: C.text, fontWeight: 600 }}>
                       {Math.floor(s.duration / 60)}:{String(s.duration % 60).padStart(2, "0")}
                     </span>

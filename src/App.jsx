@@ -794,11 +794,12 @@ export default function App() {
   const [calendarInitialMonth, setCalendarInitialMonth] = useState(null); // { year, month } for shared calendar
   // Jump-to-source seeds (TEXTSTREAM-SEARCH-2A). Single-use payloads handed
   // to child pages; cleared by the consumer via on*SeedUsed.
-  const [movesSeed, setMovesSeed] = useState(null);     // { moveId }
-  const [homeSeed, setHomeSeed] = useState(null);       // { kind, ...payload }
+  const [movesSeed, setMovesSeed] = useState(null);     // { moveId, focus? }
+  const [homeSeed, setHomeSeed] = useState(null);       // { kind, focus?, ...payload }
   const [setsSeed, setSetsSeed] = useState(null);       // { setId }
   const [rivalsSeed, setRivalsSeed] = useState(null);   // { rivalId, battleId }
-  const [calendarInitialFocus, setCalendarInitialFocus] = useState(null); // { day: 'YYYY-MM-DD' }
+  const [calendarInitialFocus, setCalendarInitialFocus] = useState(null); // { day, eventId?, sessionId?, sessionKind? }
+  const [remindersSeed, setRemindersSeed] = useState(null); // { reminderId }
   const [trainModal,  setTrainModal]  = useState({});
   const [showManual,   setShowManual]   =useState(false);
   const [showSettings, setShowSettings] =useState(false);
@@ -969,14 +970,21 @@ export default function App() {
     };
 
     switch (category) {
-      case 'moves':
+      case 'moves': {
+        const focus = sourceType === SOURCE_TYPES.MOVE_JOURNAL ? 'journal' : undefined;
         setTab('moves'); setSubTab('moves');
-        setMovesSeed({ moveId: primaryId });
+        setMovesSeed({ moveId: primaryId, focus });
         break;
-      case 'ideas':
+      }
+      case 'ideas': {
+        const focus =
+          sourceType === SOURCE_TYPES.GOAL_DESCRIPTION ? 'edit' :
+          (sourceType === SOURCE_TYPES.GOAL_JOURNAL || sourceType === SOURCE_TYPES.TARGET_JOURNAL) ? 'journal' :
+          undefined;
         setTab('home');
-        setHomeSeed({ kind: 'idea', ideaId: primaryId });
+        setHomeSeed({ kind: 'idea', ideaId: primaryId, focus });
         break;
+      }
       case 'habits':
         setTab('home');
         setHomeSeed({ kind: 'habit', habitId: primaryId });
@@ -993,7 +1001,7 @@ export default function App() {
         const event = (calendar?.events || []).find(e => String(e.id) === String(primaryId));
         const day = toYMD(event?.date);
         if (day) {
-          setCalendarInitialFocus({ day });
+          setCalendarInitialFocus({ day, eventId: primaryId });
           setTab('reflect'); setSubTab('calendar');
         }
         break;
@@ -1003,7 +1011,13 @@ export default function App() {
         // or a bare YMD; toYMD normalizes both into "YYYY-MM-DD".
         const day = toYMD(findSessionDate(sourceType, primaryId));
         if (day) {
-          setCalendarInitialFocus({ day });
+          const sessionKind =
+            sourceType === SOURCE_TYPES.REPS_REFLECTION ? 'drill' :
+            (sourceType === SOURCE_TYPES.SPARRING_NOTES || sourceType === SOURCE_TYPES.SPARRING_REFLECTION) ? 'sparSolo' :
+            sourceType === SOURCE_TYPES.SPAR1V1_JOURNAL ? 'spar1v1' :
+            sourceType === SOURCE_TYPES.MUSICFLOW_REFLECTION ? 'musicflow' :
+            undefined;
+          setCalendarInitialFocus({ day, sessionId: primaryId, sessionKind });
           setTab('reflect'); setSubTab('calendar');
         }
         break;
@@ -1035,6 +1049,7 @@ export default function App() {
         break;
       case 'reminders':
         setShowManageReminders(true);
+        setRemindersSeed({ reminderId: primaryId });
         break;
       case 'presession': {
         const fieldMap = {
@@ -1158,6 +1173,7 @@ export default function App() {
           {showManageReminders&&<ManageReminders
             reminders={reminders} onRemindersChange={setReminders}
             addToast={addToast} settings={appSettings}
+            remindersSeed={remindersSeed} onRemindersSeedUsed={()=>setRemindersSeed(null)}
             onClose={()=>setShowManageReminders(false)}/>}
           {showLab&&<Lab moves={moves} cats={cats} catColors={catColors} lab={lab}
             onLabChange={setLab}

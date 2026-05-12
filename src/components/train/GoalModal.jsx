@@ -23,14 +23,18 @@ const buildLegacyDump = (idea, t) => {
   return sections.join("\n\n");
 };
 
-export const GoalModal = ({ onClose, onSave, idea, prefill }) => {
+export const GoalModal = ({ onClose, onSave, idea, prefill, focus }) => {
   const t = useT();
   const isEdit = !!idea;
   const isLegacy = isEdit && !idea.legacyMigrated && !idea.description &&
     (idea.why?.trim() || idea.steps?.some(s => s && s.trim()) || idea.obstacles?.trim());
   const initialDescription = idea?.description ?? (isLegacy ? buildLegacyDump(idea, t) : "");
 
-  const [activeTab,    setActiveTab]    = useState(isEdit ? "journal" : "goal");
+  const [activeTab,    setActiveTab]    = useState(
+    focus === 'edit' ? 'goal' :
+    focus === 'journal' ? 'journal' :
+    (isEdit ? "journal" : "goal")
+  );
   const [title,        setTitle]        = useState(idea?.title || prefill?.title || "");
   const [description,  setDescription]  = useState(initialDescription);
   const [byWhen,       setByWhen]       = useState(idea?.byWhen || "");

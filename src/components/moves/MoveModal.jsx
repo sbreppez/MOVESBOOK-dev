@@ -37,13 +37,14 @@ const chipStyle = (active) => ({
 
 const sectionLabel = { fontSize:10, fontWeight:800, letterSpacing:1, color:C.textMuted, fontFamily:FONT_DISPLAY, marginBottom:6 };
 
-export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initialDesc="", cats=CATS, customAttrs=[], onAddAttr, allMoves=[], catColors=CAT_COLORS, isPremium }) => {
+export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initialDesc="", cats=CATS, customAttrs=[], onAddAttr, allMoves=[], catColors=CAT_COLORS, isPremium, focus }) => {
   const t = useT();
   const [f,setF] = useState({ name:"", category:initialCat, description:initialDesc||"", link:"", mastery:10, date:todayLocal(), rotation:"", travelling:"", custom:"", attrs:{}, origin:"learned", musicEnergy:null, tensionRole:null, parentId:null, repsHistory:[], ...move });
   const set = k => v => setF(p=>({...p,[k]:v}));
   const [journalEntries, setJournalEntries] = useState(move?.journal || []);
   const [newJournalText, setNewJournalText] = useState("");
   const [showJournal, setShowJournal] = useState(() => {
+    if (focus === 'journal') return true;
     if (typeof window === 'undefined') return false;
     return localStorage.getItem('mb_editmove_journal') === 'true';
   });

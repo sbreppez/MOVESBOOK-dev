@@ -118,6 +118,7 @@ export const HomePage = ({
         } else {
           // goal or target — opens via goalhabit branch which checks ideas for goal/target
           setEditTile({ id: 'gh_' + idea.id, type: 'goalhabit', refId: idea.id });
+          setEditTileFocus(homeSeed.focus);
         }
       }
     } else if (homeSeed.kind === 'habit') {
@@ -143,6 +144,7 @@ export const HomePage = ({
   }, [homeSeed]);
   const [showGearMenu, setShowGearMenu] = useState(false);
   const [editTile, setEditTile] = useState(null);
+  const [editTileFocus, setEditTileFocus] = useState(undefined);
   const [confirmRemove, setConfirmRemove] = useState(null);
   const [journalGoalTile, setJournalGoalTile] = useState(null);
   const [editMoveFromHome, setEditMoveFromHome] = useState(null);
@@ -1161,14 +1163,16 @@ export const HomePage = ({
           return (
             <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.6)", zIndex:10000, display:"flex", alignItems:"center", justifyContent:"center", padding:10 }}>
               <GoalModal
-                onClose={() => setEditTile(null)}
+                onClose={() => { setEditTile(null); setEditTileFocus(undefined); }}
                 onSave={(fields) => {
                   setIdeas(prev => prev.map(i =>
                     String(i.id) === String(editTile.refId) ? { ...i, ...fields } : i
                   ));
                   setEditTile(null);
+                  setEditTileFocus(undefined);
                 }}
                 idea={goal}
+                focus={editTileFocus}
               />
             </div>
           );

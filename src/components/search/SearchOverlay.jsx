@@ -10,7 +10,16 @@ function ResultTile({ entry, categoryLabel, C, onClick }) {
   const [hovered, setHovered] = useState(false);
   return (
     <div
+      role="button"
+      tabIndex={0}
+      aria-label={`${entry.source_label} — ${categoryLabel}`}
       onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          if (onClick) onClick();
+        }
+      }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
