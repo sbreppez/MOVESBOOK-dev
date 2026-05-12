@@ -51,9 +51,20 @@ if (typeof window !== "undefined") {
 
 function migrateBattlePrep(bp) {
   if (!bp || typeof bp !== "object") return { plans: [], history: [] };
-  if (Array.isArray(bp.plans)) return bp;
-  if (bp.activePlan) return { plans: [bp.activePlan], history: bp.history || [] };
-  return { plans: [], history: bp.history || [] };
+  if (!Array.isArray(bp.plans)) {
+    bp = bp.activePlan
+      ? { plans: [bp.activePlan], history: bp.history || [] }
+      : { plans: [], history: bp.history || [] };
+  }
+  // Inject ids on legacy customItems (TEXTSTREAM-CUSTOMITEM-FIX).
+  // Once injected, the customItems wrap uses Set-of-prev-ids and
+  // supersede chains stop forming.
+  bp.plans.forEach(plan => {
+    plan?.battleDay?.customItems?.forEach((ci, idx) => {
+      if (!ci.id) ci.id = Date.now() + idx;
+    });
+  });
+  return bp;
 }
 
 const DEFAULT_TRANSITIONS = ["Thread","Jump","Counter Spin","Slide","Sweep","Touch Foot","Kick","Hop","Roll","Twist","Drop","Spin Through"];

@@ -888,21 +888,13 @@ export async function emitRivalsChanges(prev, next, uid) {
 //     eventName, planName, location — written together in BattlePrepSetup
 //     buildPlanObject. source_id = plan.id (bare).
 //
-//   battleDay.customItems[] (1 field, Set-of-prev-texts + forced supersede):
-//     customItem.text only. Pre-existing foundation bug: items are written
-//     {text, done} without an id field (BattleDayView:117), so the backfill
-//     and this wrap both key by `${plan.id}:${ci.id}` which evaluates to
-//     `${plan.id}:undefined` for every item. All customItems in a plan
-//     collide on the same source_id. Wrap mirrors backfill exactly:
-//       - Detection uses Set-of-prev-texts (Set-of-prev-ids would collapse
-//         to {undefined}, matching everything; index match breaks on
-//         reordering or deletion).
-//       - findCurrentEntry is mandatory (not optional) — every new emit
-//         MUST supersede the prior to keep "one current entry per source_id"
-//         intact, because the source_id is constant within a plan.
-//     Net effect: each plan's customItems collapse into a supersede chain
-//     where only the most-recently-added item is "current." This matches
-//     backfill's broken behavior. Fix filed as separate ticket; do not
+//   battleDay.customItems[] (1 field, pure-append per MOVE_JOURNAL pattern):
+//     customItem.text only. Detection via Set-of-prev-ids; source_id =
+//     `${plan.id}:${ci.id}` is stable per item. No supersede — customItems
+//     are append/remove only (no in-place text edit), mirroring move
+//     journal. ids are guaranteed by BattleDayView write-site
+//     (BattleDayView:117) and migrateBattlePrep injection (App.jsx) for
+//     legacy/cross-device data — see TEXTSTREAM-CUSTOMITEM-FIX. Do not
 //     remediate here.
 //
 //   battles[].reflection (4 fields, standard supersede):
@@ -972,24 +964,19 @@ export async function emitBattleprepChanges(prev, next, uid) {
       }
     }
 
-    // ── battleDay.customItems (Set-of-prev-texts + forced supersede) ──────
-    // See top-of-block comment: source_id collides at `${plan.id}:undefined`
-    // because ci.id doesn't exist. Mirroring backfill exactly.
-    const prevTexts = new Set(
-      (prevPlan?.battleDay?.customItems || []).map(ci => ci.text)
+    // ── battleDay.customItems (pure-append per MOVE_JOURNAL pattern) ──────
+    // ids are stable post-fix (TEXTSTREAM-CUSTOMITEM-FIX); source_ids no
+    // longer collide.
+    const prevCustomIds = new Set(
+      (prevPlan?.battleDay?.customItems || []).map(ci => ci.id)
     );
     for (const ci of (nextPlan?.battleDay?.customItems || [])) {
-      if (prevTexts.has(ci.text)) continue;
+      if (prevCustomIds.has(ci.id)) continue;
       const text = (ci?.text ?? '').toString();
       if (!text.trim()) continue;
 
       const sourceId = `${nextPlan.id}:${ci.id}`;
       try {
-        const prior = await findCurrentEntry(
-          uid,
-          SOURCE_TYPES.BATTLEPREP_BATTLEDAY_CUSTOM_ITEM,
-          sourceId
-        );
         await emitToTextStream(uid, {
           source_type: SOURCE_TYPES.BATTLEPREP_BATTLEDAY_CUSTOM_ITEM,
           source_id: sourceId,
@@ -998,7 +985,7 @@ export async function emitBattleprepChanges(prev, next, uid) {
             nextPlan
           ),
           text,
-          supersedes: prior?.id || null,
+          supersedes: null,
         });
       } catch (err) {
         console.error(`[textStream] battleprep customItem ${sourceId} emit failed:`, err);

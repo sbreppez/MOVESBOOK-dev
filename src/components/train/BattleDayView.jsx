@@ -114,7 +114,7 @@ const PreBattleSection = ({ plan, battle: _battle, dayMap: _dayMap, moves, sets:
   const addCustomItem = () => {
     const text = newRitual.trim();
     if (!text) return;
-    const next = [...customItems, { text, done: false }];
+    const next = [...customItems, { id: Date.now(), text, done: false }];
     setCustomItems(next);
     setNewRitual("");
     persistChecklist(checklist, next);
