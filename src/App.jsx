@@ -40,7 +40,7 @@ import { PremiumGate } from './components/shared/PremiumGate';
 import { detectMilestones } from './utils/reportEngine';
 import { runHomeMigration } from './utils/homeMigration';
 import { backfillTextStream } from './utils/textStream';
-import { emitProfileChanges, emitReminderChanges, emitPresessionChanges, emitHabitsChanges, emitRoutinesChanges, emitIdeasChanges, emitMovesChanges, emitCalendarChanges, emitRepsChanges, emitSparringChanges, emitMusicflowChanges } from './utils/textStreamWraps';
+import { emitProfileChanges, emitReminderChanges, emitPresessionChanges, emitHabitsChanges, emitRoutinesChanges, emitIdeasChanges, emitMovesChanges, emitCalendarChanges, emitRepsChanges, emitSparringChanges, emitMusicflowChanges, emitRivalsChanges } from './utils/textStreamWraps';
 
 // ── Firebase stubs for preview ──
 if (typeof window !== "undefined") {
@@ -169,7 +169,7 @@ export default function App() {
   const [reflections, setReflections] = useState(() => {
     try { const s=localStorage.getItem("mb_reflections"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{} return { lastCategory:-1, lastDate:null };
   });
-  const [rivals, setRivals] = useState(() => {
+  const [rivals, setRivalsState] = useState(() => {
     try { const s=localStorage.getItem("mb_rivals"); if(s){const p=JSON.parse(s); if(Array.isArray(p)) return p;} } catch{} return [];
   });
   const [battleprep, setBattleprep] = useState(() => {
@@ -417,6 +417,18 @@ export default function App() {
     });
   }, [fbUser?.uid]);
 
+  const setRivals = useCallback((updater) => {
+    setRivalsState(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      if (fbUser?.uid) {
+        emitRivalsChanges(prev, next, fbUser.uid).catch(err => {
+          console.error('[textStream] rivals emit failed:', err);
+        });
+      }
+      return next;
+    });
+  }, [fbUser?.uid]);
+
   useEffect(() => {
     const save = (key, ms=1500) => debounce(
       (uid, val) => window.__MB_DB__?.save(uid, key, val), ms
@@ -553,7 +565,7 @@ export default function App() {
           const ref = localStorage.getItem("mb_reflections");
           if (ref) { try { const p=JSON.parse(ref); if(p&&typeof p==="object") setReflections(p); } catch {} }
           const rv = localStorage.getItem("mb_rivals");
-          if (rv) { try { const p=JSON.parse(rv); if(Array.isArray(p)) setRivals(p); } catch {} }
+          if (rv) { try { const p=JSON.parse(rv); if(Array.isArray(p)) setRivalsState(p); } catch {} }
           const bpp = localStorage.getItem("mb_battleprep");
           if (bpp) { try { const p=JSON.parse(bpp); if(p&&typeof p==="object") setBattleprep(migrateBattlePrep(p)); } catch {} }
           const fm = localStorage.getItem("mb_flowmap");
@@ -633,7 +645,7 @@ export default function App() {
         setStance({ assessments:[] });
         setMusicflowState({ sessions:[] });
         setReflections({ lastCategory:-1, lastDate:null });
-        setRivals([]);
+        setRivalsState([]);
         setProfilePhoto(null);
         setBattleprep({ plans:[], history:[] });
         setReports({ milestones:[], weeklyDismissed:null });

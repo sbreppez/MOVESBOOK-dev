@@ -764,6 +764,119 @@ export async function emitMusicflowChanges(prev, next, uid) {
   // Removed sessions: no action (orphan handling).
 }
 
+// ─── Rivals (array of {id, type, battles[], ...}) ───────────────────────────
+//
+// Single store mb_rivals[] with type discriminator ('rival' | 'sparringMate' |
+// 'crew'). All three types share the same text fields — the discriminator
+// affects only UI sub-tab routing, not emit semantics. The wrap treats all
+// three uniformly.
+//
+// Two diff styles inside one function:
+//
+//   Rival-level (7 fields, standard supersede via findCurrentEntry):
+//     crew, city, signatureMoves, gamePlan, sparringJournal, targetWhen,
+//     targetWhere — edited in place via RivalModal.handleSave.
+//     source_id = rival.id (bare).
+//
+//   Battle-level (4 fields, pure-append via Set-of-prev-ids):
+//     battle.event, howDidItGo, whatSurprised, trainingNext.
+//     Mirrors MOVE_JOURNAL (Batch D) — dossier §1.16 declares battles
+//     append-only (handleSaveBattle appends; no UI edit path), so wrap
+//     enforces the same contract via Set primitive and supersedes: null.
+//     source_id = `${rival.id}:${battle.id}` (composite).
+//     resolveSourceLabel needs ctx.{battle} for battle-level cases.
+//
+// Excluded per dossier §1.16 / §5.2:
+//   rival.name        - label (used as source_label)
+//   rival.instagram   - handle
+//   rival.videoRefs   - URL + label
+//   rival.sparHistory - auto-populated from sparring (Batch F canonical)
+//   battle.result     - enum
+//   battle.date       - date
+//
+// Cross-store side effect: saving a battle also writes a calendar event with
+// source: 'rivals'. AUTO_SOURCES (Batch E shared filter) suppresses double-
+// emit — no coordination needed here.
+const RIVAL_TEXT_FIELDS = [
+  { path: 'crew',            source_type: SOURCE_TYPES.RIVAL_CREW },
+  { path: 'city',            source_type: SOURCE_TYPES.RIVAL_CITY },
+  { path: 'signatureMoves',  source_type: SOURCE_TYPES.RIVAL_SIGNATURE_MOVES },
+  { path: 'gamePlan',        source_type: SOURCE_TYPES.RIVAL_GAME_PLAN },
+  { path: 'sparringJournal', source_type: SOURCE_TYPES.RIVAL_SPARRING_JOURNAL },
+  { path: 'targetWhen',      source_type: SOURCE_TYPES.RIVAL_TARGET_WHEN },
+  { path: 'targetWhere',     source_type: SOURCE_TYPES.RIVAL_TARGET_WHERE },
+];
+const RIVAL_BATTLE_TEXT_FIELDS = [
+  { path: 'event',         source_type: SOURCE_TYPES.RIVAL_BATTLE_EVENT },
+  { path: 'howDidItGo',    source_type: SOURCE_TYPES.RIVAL_BATTLE_HOW_DID_IT_GO },
+  { path: 'whatSurprised', source_type: SOURCE_TYPES.RIVAL_BATTLE_WHAT_SURPRISED },
+  { path: 'trainingNext',  source_type: SOURCE_TYPES.RIVAL_BATTLE_TRAINING_NEXT },
+];
+
+export async function emitRivalsChanges(prev, next, uid) {
+  if (!uid) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('[textStream] emitRivalsChanges called without uid; skipping');
+    }
+    return;
+  }
+
+  const prevList = prev || [];
+  const nextList = next || [];
+  const prevById = new Map(prevList.map(r => [r.id, r]));
+
+  for (const nextRival of nextList) {
+    const prevRival = prevById.get(nextRival.id);
+
+    // Rival-level fields (standard supersede via findCurrentEntry)
+    for (const { path, source_type } of RIVAL_TEXT_FIELDS) {
+      const prevVal = (prevRival?.[path] ?? '').toString();
+      const nextVal = (nextRival?.[path] ?? '').toString();
+      if (prevVal === nextVal) continue;
+      if (!nextVal.trim()) continue;
+
+      try {
+        const prior = prevRival
+          ? await findCurrentEntry(uid, source_type, nextRival.id)
+          : null;
+        await emitToTextStream(uid, {
+          source_type,
+          source_id: nextRival.id,
+          source_label: resolveSourceLabel(source_type, nextRival),
+          text: nextVal,
+          supersedes: prior?.id || null,
+        });
+      } catch (err) {
+        console.error(`[textStream] rival ${nextRival.id}.${path} emit failed:`, err);
+      }
+    }
+
+    // Battle-level fields (pure-append via Set-of-prev-ids; supersedes: null)
+    const prevBattleIds = new Set((prevRival?.battles || []).map(b => b.id));
+    for (const battle of (nextRival.battles || [])) {
+      if (prevBattleIds.has(battle.id)) continue;
+      for (const { path, source_type } of RIVAL_BATTLE_TEXT_FIELDS) {
+        const text = (battle?.[path] ?? '').toString();
+        if (!text.trim()) continue;
+
+        try {
+          await emitToTextStream(uid, {
+            source_type,
+            source_id: `${nextRival.id}:${battle.id}`,
+            source_label: resolveSourceLabel(source_type, nextRival, { battle }),
+            text,
+            supersedes: null,
+          });
+        } catch (err) {
+          console.error(`[textStream] rival ${nextRival.id} battle ${battle.id}.${path} emit failed:`, err);
+        }
+      }
+    }
+    // Removed battles: no action (orphan handling).
+  }
+  // Removed rivals: no action (orphan handling).
+}
+
 // ─── Dev-mode assertion ──────────────────────────────────────────────────────
 // Catches the case where a developer adds a new text field to the canonical
 // schema but forgets to add it to the wrap's *_TEXT_FIELDS list.
