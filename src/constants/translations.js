@@ -1256,6 +1256,9 @@ export const TRANSLATIONS = {
     // AddToHome (Reflect → Home)
     addToHome:"Add to Home", addNoteToHome:"Add a Note to Home", resolvedInjuryContext:"Resolved injury",
     reports:"REPORTS", history:"HISTORY", reportsBrief:"Your training data over time, in patterns you can read.", historyBrief:"Resolved injuries and archived items live here.", noHistoryYet:"Nothing in your history yet.", archive:"Archive", archived:"Archived", archivedFromHome:"Moved to History", archivedItemsCount:"Archived {n} items", archivedSomeOfSelected:"Archived {n} of {total}", archivedGoalContext:"Archived goal", archivedNoteContext:"Archived note", battleResultContext:"Battle", weeklyReportContext:"Week of", monthlyReportContext:"Month of", yearlyReportContext:"Year",
+    // Search (TextStream)
+    searchTitle:"Search", searchPlaceholder:"Search your notes, journals, plans...", searchLoading:"Loading...", searchEmptyAll:"No entries yet. Start using MovesBook to fill your textstream.",
+    searchCategoryMoves:"Moves", searchCategoryIdeas:"Ideas", searchCategoryHabits:"Habits", searchCategoryRoutines:"Routines", searchCategoryCalendar:"Calendar", searchCategorySessions:"Sessions", searchCategorySets:"Sets", searchCategoryRivals:"Rivals", searchCategoryBattles:"Battles", searchCategoryBattlePrep:"Battle Prep", searchCategoryProfile:"Profile", searchCategoryReminders:"Reminders", searchCategoryPresession:"Pre-session",
   },
 
   it: {
@@ -2464,6 +2467,9 @@ export const TRANSLATIONS = {
     // AddToHome (Rifletti → Home)
     addToHome:"Aggiungi a Home", addNoteToHome:"Aggiungi una nota a Home", resolvedInjuryContext:"Infortunio risolto",
     reports:"REPORT", history:"STORICO", reportsBrief:"I tuoi dati di allenamento nel tempo, in schemi leggibili.", historyBrief:"Infortuni risolti e elementi archiviati vivono qui.", noHistoryYet:"Niente ancora nel tuo storico.", archive:"Archivia", archived:"Archiviato", archivedFromHome:"Spostato nello Storico", archivedItemsCount:"Archiviati {n} elementi", archivedSomeOfSelected:"Archiviati {n} di {total}", archivedGoalContext:"Obiettivo archiviato", archivedNoteContext:"Nota archiviata", battleResultContext:"Battaglia", weeklyReportContext:"Settimana del", monthlyReportContext:"Mese di", yearlyReportContext:"Anno",
+    // Search (TextStream)
+    searchTitle:"Cerca", searchPlaceholder:"Cerca nelle tue note, journal, piani...", searchLoading:"Caricamento...", searchEmptyAll:"Nessuna voce ancora. Inizia a usare MovesBook per riempire il tuo textstream.",
+    searchCategoryMoves:"Mosse", searchCategoryIdeas:"Idee", searchCategoryHabits:"Abitudini", searchCategoryRoutines:"Routine", searchCategoryCalendar:"Calendario", searchCategorySessions:"Sessioni", searchCategorySets:"Set", searchCategoryRivals:"Rivali", searchCategoryBattles:"Battaglie", searchCategoryBattlePrep:"Preparazione", searchCategoryProfile:"Profilo", searchCategoryReminders:"Promemoria", searchCategoryPresession:"Pre-sessione",
   },
 
   es: {
@@ -3661,6 +3667,9 @@ export const TRANSLATIONS = {
     // AddToHome (Reflexión → Inicio)
     addToHome:"Agregar a Inicio", addNoteToHome:"Añadir una nota a Home", resolvedInjuryContext:"Lesión resuelta",
     reports:"INFORMES", history:"HISTORIAL", reportsBrief:"Tus datos de entrenamiento a lo largo del tiempo, en patrones legibles.", historyBrief:"Las lesiones resueltas y los elementos archivados viven aquí.", noHistoryYet:"Aún nada en tu historial.", archive:"Archivar", archived:"Archivado", archivedFromHome:"Movido al Historial", archivedItemsCount:"Archivados {n} elementos", archivedSomeOfSelected:"Archivados {n} de {total}", archivedGoalContext:"Meta archivada", archivedNoteContext:"Nota archivada", battleResultContext:"Batalla", weeklyReportContext:"Semana del", monthlyReportContext:"Mes de", yearlyReportContext:"Año",
+    // Search (TextStream)
+    searchTitle:"Buscar", searchPlaceholder:"Busca en tus notas, journals, planes...", searchLoading:"Cargando...", searchEmptyAll:"Aún no hay entradas. Empieza a usar MovesBook para llenar tu textstream.",
+    searchCategoryMoves:"Movimientos", searchCategoryIdeas:"Ideas", searchCategoryHabits:"Hábitos", searchCategoryRoutines:"Rutinas", searchCategoryCalendar:"Calendario", searchCategorySessions:"Sesiones", searchCategorySets:"Sets", searchCategoryRivals:"Rivales", searchCategoryBattles:"Batallas", searchCategoryBattlePrep:"Preparación", searchCategoryProfile:"Perfil", searchCategoryReminders:"Recordatorios", searchCategoryPresession:"Pre-sesión",
   },
 
   fr: {
@@ -4858,6 +4867,9 @@ export const TRANSLATIONS = {
     // AddToHome (Réflexion → Accueil)
     addToHome:"Ajouter à l'accueil", addNoteToHome:"Ajouter une note à Home", resolvedInjuryContext:"Blessure guérie",
     reports:"RAPPORTS", history:"HISTORIQUE", reportsBrief:"Tes données d'entraînement dans le temps, en motifs lisibles.", historyBrief:"Les blessures guéries et les éléments archivés vivent ici.", noHistoryYet:"Rien encore dans ton historique.", archive:"Archiver", archived:"Archivé", archivedFromHome:"Déplacé vers l'Historique", archivedItemsCount:"Archivés {n} éléments", archivedSomeOfSelected:"Archivés {n} sur {total}", archivedGoalContext:"Objectif archivé", archivedNoteContext:"Note archivée", battleResultContext:"Battle", weeklyReportContext:"Semaine du", monthlyReportContext:"Mois de", yearlyReportContext:"Année",
+    // Search (TextStream)
+    searchTitle:"Recherche", searchPlaceholder:"Cherche dans tes notes, journals, plans...", searchLoading:"Chargement...", searchEmptyAll:"Aucune entrée pour l'instant. Commence à utiliser MovesBook pour remplir ton textstream.",
+    searchCategoryMoves:"Moves", searchCategoryIdeas:"Idées", searchCategoryHabits:"Habitudes", searchCategoryRoutines:"Routines", searchCategoryCalendar:"Calendrier", searchCategorySessions:"Sessions", searchCategorySets:"Sets", searchCategoryRivals:"Rivaux", searchCategoryBattles:"Battles", searchCategoryBattlePrep:"Préparation", searchCategoryProfile:"Profil", searchCategoryReminders:"Rappels", searchCategoryPresession:"Pré-session",
   },
 
   pt: {
@@ -6055,6 +6067,9 @@ export const TRANSLATIONS = {
     // AddToHome (Reflexão → Início)
     addToHome:"Adicionar ao Início", addNoteToHome:"Adicionar uma nota ao Home", resolvedInjuryContext:"Lesão resolvida",
     reports:"RELATÓRIOS", history:"HISTÓRICO", reportsBrief:"Seus dados de treino ao longo do tempo, em padrões legíveis.", historyBrief:"Lesões resolvidas e itens arquivados vivem aqui.", noHistoryYet:"Nada ainda no seu histórico.", archive:"Arquivar", archived:"Arquivado", archivedFromHome:"Movido para o Histórico", archivedItemsCount:"Arquivados {n} itens", archivedSomeOfSelected:"Arquivados {n} de {total}", archivedGoalContext:"Meta arquivada", archivedNoteContext:"Nota arquivada", battleResultContext:"Batalha", weeklyReportContext:"Semana de", monthlyReportContext:"Mês de", yearlyReportContext:"Ano",
+    // Search (TextStream)
+    searchTitle:"Buscar", searchPlaceholder:"Busque em suas notas, journals, planos...", searchLoading:"Carregando...", searchEmptyAll:"Ainda não há entradas. Comece a usar o MovesBook para preencher seu textstream.",
+    searchCategoryMoves:"Movimentos", searchCategoryIdeas:"Ideias", searchCategoryHabits:"Hábitos", searchCategoryRoutines:"Rotinas", searchCategoryCalendar:"Calendário", searchCategorySessions:"Sessões", searchCategorySets:"Sets", searchCategoryRivals:"Rivais", searchCategoryBattles:"Batalhas", searchCategoryBattlePrep:"Preparação", searchCategoryProfile:"Perfil", searchCategoryReminders:"Lembretes", searchCategoryPresession:"Pré-sessão",
   },
 
   de: {
@@ -7252,6 +7267,9 @@ export const TRANSLATIONS = {
     // AddToHome (Reflexion → Home)
     addToHome:"Zu Home hinzufügen", addNoteToHome:"Notiz zu Home hinzufügen", resolvedInjuryContext:"Verletzung verheilt",
     reports:"BERICHTE", history:"VERLAUF", reportsBrief:"Deine Trainingsdaten über die Zeit, in lesbaren Mustern.", historyBrief:"Verheilte Verletzungen und archivierte Einträge leben hier.", noHistoryYet:"Noch nichts in deinem Verlauf.", archive:"Archivieren", archived:"Archiviert", archivedFromHome:"In den Verlauf verschoben", archivedItemsCount:"{n} Einträge archiviert", archivedSomeOfSelected:"{n} von {total} archiviert", archivedGoalContext:"Archiviertes Ziel", archivedNoteContext:"Archivierte Notiz", battleResultContext:"Battle", weeklyReportContext:"Woche vom", monthlyReportContext:"Monat", yearlyReportContext:"Jahr",
+    // Search (TextStream)
+    searchTitle:"Suche", searchPlaceholder:"Suche in deinen Notizen, Journals, Plänen...", searchLoading:"Lädt...", searchEmptyAll:"Noch keine Einträge. Beginne MovesBook zu nutzen, um deinen Textstream zu füllen.",
+    searchCategoryMoves:"Moves", searchCategoryIdeas:"Ideen", searchCategoryHabits:"Gewohnheiten", searchCategoryRoutines:"Routinen", searchCategoryCalendar:"Kalender", searchCategorySessions:"Sessions", searchCategorySets:"Sets", searchCategoryRivals:"Rivalen", searchCategoryBattles:"Battles", searchCategoryBattlePrep:"Battle-Prep", searchCategoryProfile:"Profil", searchCategoryReminders:"Erinnerungen", searchCategoryPresession:"Vor-Session",
   },
 
   ja: {
@@ -8450,6 +8468,9 @@ export const TRANSLATIONS = {
     // AddToHome (Reflect → Home)
     addToHome:"ホームに追加", addNoteToHome:"Homeにメモを追加", resolvedInjuryContext:"治癒した怪我",
     reports:"レポート", history:"履歴", reportsBrief:"時間をかけたトレーニングデータを、読みやすいパターンで。", historyBrief:"治癒した怪我とアーカイブされたアイテムはここに表示されます。", noHistoryYet:"履歴はまだありません。", archive:"アーカイブ", archived:"アーカイブ済み", archivedFromHome:"履歴に移動しました", archivedItemsCount:"{n}件をアーカイブしました", archivedSomeOfSelected:"{total}件中{n}件をアーカイブしました", archivedGoalContext:"アーカイブされた目標", archivedNoteContext:"アーカイブされたメモ", battleResultContext:"バトル", weeklyReportContext:"週", monthlyReportContext:"月", yearlyReportContext:"年",
+    // Search (TextStream)
+    searchTitle:"検索", searchPlaceholder:"メモ、ジャーナル、プランを検索...", searchLoading:"読み込み中...", searchEmptyAll:"まだエントリーがありません。MovesBookを使い始めてテキストストリームを満たしましょう。",
+    searchCategoryMoves:"ムーブ", searchCategoryIdeas:"アイデア", searchCategoryHabits:"習慣", searchCategoryRoutines:"ルーティン", searchCategoryCalendar:"カレンダー", searchCategorySessions:"セッション", searchCategorySets:"セット", searchCategoryRivals:"ライバル", searchCategoryBattles:"バトル", searchCategoryBattlePrep:"バトル準備", searchCategoryProfile:"プロフィール", searchCategoryReminders:"リマインダー", searchCategoryPresession:"プレセッション",
   },
 
   zh: {
@@ -9646,6 +9667,9 @@ export const TRANSLATIONS = {
     // AddToHome (Reflect → Home)
     addToHome:"添加到首页", addNoteToHome:"添加笔记到Home", resolvedInjuryContext:"已恢复的伤病",
     reports:"报告", history:"历史", reportsBrief:"你的训练数据随时间的变化，以可读的模式呈现。", historyBrief:"已恢复的伤病和归档项目存放在这里。", noHistoryYet:"历史中还没有内容。", archive:"归档", archived:"已归档", archivedFromHome:"已移至历史", archivedItemsCount:"已归档{n}项", archivedSomeOfSelected:"已归档{n}/{total}项", archivedGoalContext:"已归档目标", archivedNoteContext:"已归档笔记", battleResultContext:"对战", weeklyReportContext:"周", monthlyReportContext:"月", yearlyReportContext:"年",
+    // Search (TextStream)
+    searchTitle:"搜索", searchPlaceholder:"搜索你的笔记、日记、计划...", searchLoading:"加载中...", searchEmptyAll:"暂无记录。开始使用 MovesBook 来填充你的 textstream。",
+    searchCategoryMoves:"动作", searchCategoryIdeas:"想法", searchCategoryHabits:"习惯", searchCategoryRoutines:"日常", searchCategoryCalendar:"日历", searchCategorySessions:"训练", searchCategorySets:"Set", searchCategoryRivals:"对手", searchCategoryBattles:"对战", searchCategoryBattlePrep:"对战准备", searchCategoryProfile:"个人资料", searchCategoryReminders:"提醒", searchCategoryPresession:"训练前",
   },
 
   ru: {
@@ -10842,6 +10866,9 @@ export const TRANSLATIONS = {
     // AddToHome (Рефлексия → Главная)
     addToHome:"Добавить на главную", addNoteToHome:"Добавить заметку в Home", resolvedInjuryContext:"Заживлённая травма",
     reports:"ОТЧЁТЫ", history:"ИСТОРИЯ", reportsBrief:"Твои данные тренировок во времени, в читаемых паттернах.", historyBrief:"Заживлённые травмы и архивные элементы живут здесь.", noHistoryYet:"В истории пока ничего нет.", archive:"Архивировать", archived:"Архивировано", archivedFromHome:"Перемещено в Историю", archivedItemsCount:"Архивировано {n}", archivedSomeOfSelected:"Архивировано {n} из {total}", archivedGoalContext:"Архивная цель", archivedNoteContext:"Архивная заметка", battleResultContext:"Battle", weeklyReportContext:"Неделя с", monthlyReportContext:"Месяц", yearlyReportContext:"Год",
+    // Search (TextStream)
+    searchTitle:"Поиск", searchPlaceholder:"Поиск по заметкам, журналам, планам...", searchLoading:"Загрузка...", searchEmptyAll:"Пока нет записей. Начни использовать MovesBook, чтобы наполнить свой textstream.",
+    searchCategoryMoves:"Мувы", searchCategoryIdeas:"Идеи", searchCategoryHabits:"Привычки", searchCategoryRoutines:"Рутины", searchCategoryCalendar:"Календарь", searchCategorySessions:"Сессии", searchCategorySets:"Сеты", searchCategoryRivals:"Ривалы", searchCategoryBattles:"Баттлы", searchCategoryBattlePrep:"Подготовка", searchCategoryProfile:"Профиль", searchCategoryReminders:"Напоминания", searchCategoryPresession:"Пре-сессия",
   },
 
   ko: {
@@ -12074,6 +12101,9 @@ export const TRANSLATIONS = {
     // AddToHome (Reflect → Home)
     addToHome:"홈에 추가", addNoteToHome:"Home에 메모 추가", resolvedInjuryContext:"회복된 부상",
     reports:"리포트", history:"기록", reportsBrief:"시간에 따른 훈련 데이터를 읽기 쉬운 패턴으로.", historyBrief:"회복된 부상과 보관된 항목이 여기에 있습니다.", noHistoryYet:"아직 기록이 없습니다.", archive:"보관", archived:"보관됨", archivedFromHome:"기록으로 이동됨", archivedItemsCount:"{n}개 항목 보관됨", archivedSomeOfSelected:"{total}개 중 {n}개 보관됨", archivedGoalContext:"보관된 목표", archivedNoteContext:"보관된 메모", battleResultContext:"배틀", weeklyReportContext:"주차", monthlyReportContext:"월", yearlyReportContext:"연도",
+    // Search (TextStream)
+    searchTitle:"검색", searchPlaceholder:"메모, 저널, 계획에서 검색...", searchLoading:"로딩 중...", searchEmptyAll:"아직 기록이 없습니다. MovesBook을 사용하여 텍스트스트림을 채워보세요.",
+    searchCategoryMoves:"무브", searchCategoryIdeas:"아이디어", searchCategoryHabits:"습관", searchCategoryRoutines:"루틴", searchCategoryCalendar:"캘린더", searchCategorySessions:"세션", searchCategorySets:"세트", searchCategoryRivals:"라이벌", searchCategoryBattles:"배틀", searchCategoryBattlePrep:"배틀 준비", searchCategoryProfile:"프로필", searchCategoryReminders:"알림", searchCategoryPresession:"프리세션",
   },
 
   th: {
@@ -13301,6 +13331,9 @@ export const TRANSLATIONS = {
     // AddToHome (Reflect → Home)
     addToHome:"เพิ่มไปยังหน้าหลัก", addNoteToHome:"เพิ่มโน้ตไปที่ Home", resolvedInjuryContext:"การบาดเจ็บที่หายแล้ว",
     reports:"รายงาน", history:"ประวัติ", reportsBrief:"ข้อมูลการฝึกของคุณตลอดเวลา ในรูปแบบที่อ่านได้", historyBrief:"การบาดเจ็บที่หายแล้วและรายการที่เก็บถาวรอยู่ที่นี่", noHistoryYet:"ยังไม่มีอะไรในประวัติ", archive:"เก็บถาวร", archived:"เก็บถาวรแล้ว", archivedFromHome:"ย้ายไปยังประวัติ", archivedItemsCount:"เก็บถาวร {n} รายการ", archivedSomeOfSelected:"เก็บถาวร {n} จาก {total}", archivedGoalContext:"เป้าหมายที่เก็บถาวร", archivedNoteContext:"บันทึกที่เก็บถาวร", battleResultContext:"การต่อสู้", weeklyReportContext:"สัปดาห์ที่", monthlyReportContext:"เดือน", yearlyReportContext:"ปี",
+    // Search (TextStream)
+    searchTitle:"ค้นหา", searchPlaceholder:"ค้นหาในบันทึก ไดอารี่ แผนของคุณ...", searchLoading:"กำลังโหลด...", searchEmptyAll:"ยังไม่มีรายการ เริ่มใช้ MovesBook เพื่อเติม textstream ของคุณ",
+    searchCategoryMoves:"ท่า", searchCategoryIdeas:"ไอเดีย", searchCategoryHabits:"นิสัย", searchCategoryRoutines:"กิจวัตร", searchCategoryCalendar:"ปฏิทิน", searchCategorySessions:"เซสชัน", searchCategorySets:"เซ็ต", searchCategoryRivals:"คู่แข่ง", searchCategoryBattles:"การต่อสู้", searchCategoryBattlePrep:"เตรียมต่อสู้", searchCategoryProfile:"โปรไฟล์", searchCategoryReminders:"การเตือน", searchCategoryPresession:"ก่อนเซสชัน",
   },
 
   vi: {
@@ -14549,5 +14582,8 @@ export const TRANSLATIONS = {
     // AddToHome (Reflect → Home)
     addToHome:"Thêm vào Trang chủ", addNoteToHome:"Thêm ghi chú vào Home", resolvedInjuryContext:"Chấn thương đã hồi phục",
     reports:"BÁO CÁO", history:"LỊCH SỬ", reportsBrief:"Dữ liệu tập luyện của bạn theo thời gian, theo các mẫu dễ đọc.", historyBrief:"Các chấn thương đã hồi phục và mục đã lưu trữ ở đây.", noHistoryYet:"Chưa có gì trong lịch sử của bạn.", archive:"Lưu trữ", archived:"Đã lưu trữ", archivedFromHome:"Đã chuyển vào Lịch sử", archivedItemsCount:"Đã lưu trữ {n} mục", archivedSomeOfSelected:"Đã lưu trữ {n} trong {total}", archivedGoalContext:"Mục tiêu đã lưu trữ", archivedNoteContext:"Ghi chú đã lưu trữ", battleResultContext:"Battle", weeklyReportContext:"Tuần", monthlyReportContext:"Tháng", yearlyReportContext:"Năm",
+    // Search (TextStream)
+    searchTitle:"Tìm kiếm", searchPlaceholder:"Tìm trong ghi chú, journal, kế hoạch...", searchLoading:"Đang tải...", searchEmptyAll:"Chưa có mục nào. Bắt đầu sử dụng MovesBook để lấp đầy textstream của bạn.",
+    searchCategoryMoves:"Move", searchCategoryIdeas:"Ý tưởng", searchCategoryHabits:"Thói quen", searchCategoryRoutines:"Bài tập", searchCategoryCalendar:"Lịch", searchCategorySessions:"Buổi tập", searchCategorySets:"Set", searchCategoryRivals:"Đối thủ", searchCategoryBattles:"Battle", searchCategoryBattlePrep:"Chuẩn bị battle", searchCategoryProfile:"Hồ sơ", searchCategoryReminders:"Nhắc nhở", searchCategoryPresession:"Trước buổi tập",
   },
 };

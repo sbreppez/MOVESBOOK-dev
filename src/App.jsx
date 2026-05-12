@@ -35,6 +35,7 @@ import { CompetitionSimulator } from './components/battle/CompetitionSimulator';
 import { FlowMap } from './components/battle/FlowMap';
 import { PostSessionPrompt } from './components/home/PostSessionPrompt';
 import { CreateOverlay } from './components/moves/CreateOverlay';
+import { SearchOverlay } from './components/search/SearchOverlay';
 import { usePremium } from './hooks/usePremium';
 import { PremiumGate } from './components/shared/PremiumGate';
 import { detectMilestones } from './utils/reportEngine';
@@ -230,6 +231,7 @@ export default function App() {
   const [showPostSessionPrompt, setShowPostSessionPrompt] = useState(false);
   // showPlusSheet removed — each page handles + via onAddTrigger
   const [showCreate, setShowCreate] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
   const [bulkTrigger] = useState(0);
   const lastSessionSaved = useRef(false);
 
@@ -648,6 +650,7 @@ export default function App() {
       } else {
         setStoresReady(false);
         setFbUser(null);
+        setShowSearch(false);
         setMovesState([]);
         setCats([...DEFAULT_CATS]);
         setCatColors({...CAT_COLORS});
@@ -937,6 +940,11 @@ export default function App() {
             )}
           </div>
           <div style={{ display:"flex", gap:6, alignItems:"center" }}>
+            <button onClick={()=>setShowSearch(true)}
+              style={{ background:"none", border:"none", cursor:"pointer", padding:5 }}
+              title="Search">
+              <Ic n="search" s={18} c={C.brownLight}/>
+            </button>
             <ProfileAvatar profilePhoto={profilePhoto} fbUser={fbUser} nickname={profile.nickname}
               size={26} C={C} onClick={()=>setShowProfile(true)} id="tour-profile" />
             <button onClick={()=>setShowSettings(true)}
@@ -1068,6 +1076,7 @@ export default function App() {
             onOpenFlow={()=>{setShowCreate(false);if(!isPremium){setGatedFeature("flow");return;}setShowMusicFlow(true);}}
             onClose={()=>setShowCreate(false)}
           />}
+          {showSearch&&<SearchOverlay uid={fbUser?.uid} onClose={()=>setShowSearch(false)}/>}
         </div>
 
         {gatedFeature&&<div onClick={()=>setGatedFeature(null)} style={{position:"fixed",inset:0,zIndex:9000,background:"rgba(0,0,0,0.5)",display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
@@ -1080,7 +1089,7 @@ export default function App() {
 
         {/* ── Bottom Bar — 4 tabs + centre Add ── */}
         {!showTour&&(()=>{
-          const anyOverlay = showRepCounter||showSparring||showComboMachine||showManageReminders||showRRR||showFlashCards||showLab||showProfile||showManual||showSettings||showStanceAssessment||showMusicFlow||showCompSim||showPostSessionPrompt||showCreate;
+          const anyOverlay = showRepCounter||showSparring||showComboMachine||showManageReminders||showRRR||showFlashCards||showLab||showProfile||showManual||showSettings||showStanceAssessment||showMusicFlow||showCompSim||showPostSessionPrompt||showCreate||showSearch;
           const tabs = [{id:"home",icon:"home",label:tr("home")},{id:"moves",icon:"book",label:tr("vocab")},null,{id:"battle",icon:"sword",label:tr("battle")},{id:"reflect",icon:"barChart",label:tr("reflect")}];
           const handleTabChange = (t) => { setTab(t); setAddTick(0); setAddTick2(0); setSubTab(t==="moves"?"moves":t==="battle"?"plan":t==="reflect"?"calendar":""); };
           return (
