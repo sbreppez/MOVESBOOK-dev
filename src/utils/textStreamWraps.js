@@ -877,6 +877,223 @@ export async function emitRivalsChanges(prev, next, uid) {
   // Removed rivals: no action (orphan handling).
 }
 
+// ─── Battle Prep (mb_battleprep.plans[] — three diff levels) ────────────────
+//
+// One store, one wrap, three distinct diff mechanics — the structurally
+// densest wrap in the system. Mirrors the rivals wrap's plan-level + battle-
+// level split but adds a third level (battleDay.customItems) with a primitive
+// not used elsewhere.
+//
+//   Plan-level (3 fields, standard supersede):
+//     eventName, planName, location — written together in BattlePrepSetup
+//     buildPlanObject. source_id = plan.id (bare).
+//
+//   battleDay.customItems[] (1 field, Set-of-prev-texts + forced supersede):
+//     customItem.text only. Pre-existing foundation bug: items are written
+//     {text, done} without an id field (BattleDayView:117), so the backfill
+//     and this wrap both key by `${plan.id}:${ci.id}` which evaluates to
+//     `${plan.id}:undefined` for every item. All customItems in a plan
+//     collide on the same source_id. Wrap mirrors backfill exactly:
+//       - Detection uses Set-of-prev-texts (Set-of-prev-ids would collapse
+//         to {undefined}, matching everything; index match breaks on
+//         reordering or deletion).
+//       - findCurrentEntry is mandatory (not optional) — every new emit
+//         MUST supersede the prior to keep "one current entry per source_id"
+//         intact, because the source_id is constant within a plan.
+//     Net effect: each plan's customItems collapse into a supersede chain
+//     where only the most-recently-added item is "current." This matches
+//     backfill's broken behavior. Fix filed as separate ticket; do not
+//     remediate here.
+//
+//   battles[].reflection (4 fields, standard supersede):
+//     takeaway, whatWorked, needsWork, changeTraining. Dossier §1.17 treats
+//     reflection as one-shot, but BattleDayView:289–297 allows overwrite on
+//     re-save. Wrap uses standard supersede defensively. One Firestore read
+//     per emit; in the one-shot common case findCurrentEntry returns null
+//     and supersedes is null.
+//     source_id = `${plan.id}:${battle.id}` (composite). resolveSourceLabel
+//     requires { battle } in ctx for the `${planLabel} — ${battleDate}`
+//     suffix per textStream.js:89–93.
+//
+// Excluded fields per dossier §1.17 / §5.2:
+//   plan.eventUrl           - URL
+//   plan.customPhases[].name - label data
+//   battles[].eventName     - no source type in constants; mirror backfill
+//   battles[].mood/result/date - enum/date
+//   plan.arsenal / completedTasks / customDayOverrides / createdDate
+//   /status / preset / trainingDays — metadata
+const BATTLEPREP_PLAN_TEXT_FIELDS = [
+  { path: 'eventName', source_type: SOURCE_TYPES.BATTLEPREP_EVENT_NAME },
+  { path: 'planName',  source_type: SOURCE_TYPES.BATTLEPREP_PLAN_NAME },
+  { path: 'location',  source_type: SOURCE_TYPES.BATTLEPREP_LOCATION },
+];
+const BATTLEPREP_REFLECTION_FIELDS = [
+  { path: 'takeaway',       source_type: SOURCE_TYPES.BATTLEPREP_REFLECTION_TAKEAWAY },
+  { path: 'whatWorked',     source_type: SOURCE_TYPES.BATTLEPREP_REFLECTION_WHAT_WORKED },
+  { path: 'needsWork',      source_type: SOURCE_TYPES.BATTLEPREP_REFLECTION_NEEDS_WORK },
+  { path: 'changeTraining', source_type: SOURCE_TYPES.BATTLEPREP_REFLECTION_CHANGE_TRAINING },
+];
+
+export async function emitBattleprepChanges(prev, next, uid) {
+  if (!uid) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('[textStream] emitBattleprepChanges called without uid; skipping');
+    }
+    return;
+  }
+
+  const prevPlans = prev?.plans || [];
+  const nextPlans = next?.plans || [];
+  const prevPlansById = new Map(prevPlans.map(p => [p.id, p]));
+
+  for (const nextPlan of nextPlans) {
+    const prevPlan = prevPlansById.get(nextPlan.id);
+
+    // ── Plan-level fields (standard supersede) ────────────────────────────
+    for (const { path, source_type } of BATTLEPREP_PLAN_TEXT_FIELDS) {
+      const prevVal = (prevPlan?.[path] ?? '').toString();
+      const nextVal = (nextPlan?.[path] ?? '').toString();
+      if (prevVal === nextVal) continue;
+      if (!nextVal.trim()) continue;
+
+      try {
+        const prior = prevPlan
+          ? await findCurrentEntry(uid, source_type, nextPlan.id)
+          : null;
+        await emitToTextStream(uid, {
+          source_type,
+          source_id: nextPlan.id,
+          source_label: resolveSourceLabel(source_type, nextPlan),
+          text: nextVal,
+          supersedes: prior?.id || null,
+        });
+      } catch (err) {
+        console.error(`[textStream] battleprep plan ${nextPlan.id}.${path} emit failed:`, err);
+      }
+    }
+
+    // ── battleDay.customItems (Set-of-prev-texts + forced supersede) ──────
+    // See top-of-block comment: source_id collides at `${plan.id}:undefined`
+    // because ci.id doesn't exist. Mirroring backfill exactly.
+    const prevTexts = new Set(
+      (prevPlan?.battleDay?.customItems || []).map(ci => ci.text)
+    );
+    for (const ci of (nextPlan?.battleDay?.customItems || [])) {
+      if (prevTexts.has(ci.text)) continue;
+      const text = (ci?.text ?? '').toString();
+      if (!text.trim()) continue;
+
+      const sourceId = `${nextPlan.id}:${ci.id}`;
+      try {
+        const prior = await findCurrentEntry(
+          uid,
+          SOURCE_TYPES.BATTLEPREP_BATTLEDAY_CUSTOM_ITEM,
+          sourceId
+        );
+        await emitToTextStream(uid, {
+          source_type: SOURCE_TYPES.BATTLEPREP_BATTLEDAY_CUSTOM_ITEM,
+          source_id: sourceId,
+          source_label: resolveSourceLabel(
+            SOURCE_TYPES.BATTLEPREP_BATTLEDAY_CUSTOM_ITEM,
+            nextPlan
+          ),
+          text,
+          supersedes: prior?.id || null,
+        });
+      } catch (err) {
+        console.error(`[textStream] battleprep customItem ${sourceId} emit failed:`, err);
+      }
+    }
+
+    // ── battles[].reflection (standard supersede, composite source_id) ────
+    const prevBattlesById = new Map(
+      (prevPlan?.battles || []).map(b => [b.id, b])
+    );
+    for (const battle of (nextPlan?.battles || [])) {
+      const prevBattle = prevBattlesById.get(battle.id);
+      for (const { path, source_type } of BATTLEPREP_REFLECTION_FIELDS) {
+        const prevVal = (prevBattle?.reflection?.[path] ?? '').toString();
+        const nextVal = (battle?.reflection?.[path] ?? '').toString();
+        if (prevVal === nextVal) continue;
+        if (!nextVal.trim()) continue;
+
+        const sourceId = `${nextPlan.id}:${battle.id}`;
+        try {
+          const prior = prevBattle
+            ? await findCurrentEntry(uid, source_type, sourceId)
+            : null;
+          await emitToTextStream(uid, {
+            source_type,
+            source_id: sourceId,
+            source_label: resolveSourceLabel(source_type, nextPlan, { battle }),
+            text: nextVal,
+            supersedes: prior?.id || null,
+          });
+        } catch (err) {
+          console.error(`[textStream] battleprep battle ${sourceId}.${path} emit failed:`, err);
+        }
+      }
+    }
+    // Removed battles / customItems: no action (orphan handling).
+  }
+  // Removed plans: no action (orphan handling).
+}
+
+// ─── Sets (mb_sets[] — single text field per item) ──────────────────────────
+//
+// Top-level array (mb_sets is the array itself, not wrapped). Single emit-
+// eligible field per dossier §1.13:
+//   set.details → SET_DETAILS, source_id = set.id (bare).
+//
+// Excluded fields:
+//   set.name      - label (used as source_label via resolveSourceLabel)
+//   set.notes     - DEPRECATED. Only ComboMachine writes user-influenced
+//                   content here, and even that is auto-generated arrow-
+//                   joined combo text (ComboMachine.jsx:167), not free-form.
+//                   SetDetailModal freezes the field: `const [notes] =
+//                   useState(item.notes || "")` at SetDetailModal.jsx:32
+//                   — destructured without a setter, so the edit-modal
+//                   pass-through preserves any existing value but cannot
+//                   change it. No source_type in constants; do not emit.
+//   set.link, color, mastery, date - URL / label / metadata
+//   set.moveIds[]                  - non-text references
+export async function emitSetsChanges(prev, next, uid) {
+  if (!uid) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('[textStream] emitSetsChanges called without uid; skipping');
+    }
+    return;
+  }
+
+  const prevList = prev || [];
+  const nextList = next || [];
+  const prevById = new Map(prevList.map(s => [s.id, s]));
+
+  for (const nextSet of nextList) {
+    const prevSet = prevById.get(nextSet.id);
+    const prevVal = (prevSet?.details ?? '').toString();
+    const nextVal = (nextSet?.details ?? '').toString();
+    if (prevVal === nextVal) continue;
+    if (!nextVal.trim()) continue;
+
+    try {
+      const prior = prevSet
+        ? await findCurrentEntry(uid, SOURCE_TYPES.SET_DETAILS, nextSet.id)
+        : null;
+      await emitToTextStream(uid, {
+        source_type: SOURCE_TYPES.SET_DETAILS,
+        source_id: nextSet.id,
+        source_label: resolveSourceLabel(SOURCE_TYPES.SET_DETAILS, nextSet),
+        text: nextVal,
+        supersedes: prior?.id || null,
+      });
+    } catch (err) {
+      console.error(`[textStream] set ${nextSet.id} details emit failed:`, err);
+    }
+  }
+  // Removed sets: no action (orphan handling).
+}
+
 // ─── Dev-mode assertion ──────────────────────────────────────────────────────
 // Catches the case where a developer adds a new text field to the canonical
 // schema but forgets to add it to the wrap's *_TEXT_FIELDS list.

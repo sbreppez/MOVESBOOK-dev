@@ -40,7 +40,7 @@ import { PremiumGate } from './components/shared/PremiumGate';
 import { detectMilestones } from './utils/reportEngine';
 import { runHomeMigration } from './utils/homeMigration';
 import { backfillTextStream } from './utils/textStream';
-import { emitProfileChanges, emitReminderChanges, emitPresessionChanges, emitHabitsChanges, emitRoutinesChanges, emitIdeasChanges, emitMovesChanges, emitCalendarChanges, emitRepsChanges, emitSparringChanges, emitMusicflowChanges, emitRivalsChanges } from './utils/textStreamWraps';
+import { emitProfileChanges, emitReminderChanges, emitPresessionChanges, emitHabitsChanges, emitRoutinesChanges, emitIdeasChanges, emitMovesChanges, emitCalendarChanges, emitRepsChanges, emitSparringChanges, emitMusicflowChanges, emitRivalsChanges, emitBattleprepChanges, emitSetsChanges } from './utils/textStreamWraps';
 
 // ── Firebase stubs for preview ──
 if (typeof window !== "undefined") {
@@ -89,7 +89,7 @@ export default function App() {
     } catch {}
     return {};
   });
-  const [sets, setSets] = useState(() => {
+  const [sets, setSetsState] = useState(() => {
     try {
       const s = localStorage.getItem("mb_sets");
       if (s) { const p = JSON.parse(s); if (Array.isArray(p) && p.length > 0) return p; }
@@ -172,7 +172,7 @@ export default function App() {
   const [rivals, setRivalsState] = useState(() => {
     try { const s=localStorage.getItem("mb_rivals"); if(s){const p=JSON.parse(s); if(Array.isArray(p)) return p;} } catch{} return [];
   });
-  const [battleprep, setBattleprep] = useState(() => {
+  const [battleprep, setBattleprepState] = useState(() => {
     try { const s=localStorage.getItem("mb_battleprep"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return migrateBattlePrep(p);} } catch{} return { plans:[], history:[] };
   });
   const [flowmap, setFlowmap] = useState(() => {
@@ -429,6 +429,30 @@ export default function App() {
     });
   }, [fbUser?.uid]);
 
+  const setSets = useCallback((updater) => {
+    setSetsState(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      if (fbUser?.uid) {
+        emitSetsChanges(prev, next, fbUser.uid).catch(err => {
+          console.error('[textStream] sets emit failed:', err);
+        });
+      }
+      return next;
+    });
+  }, [fbUser?.uid]);
+
+  const setBattleprep = useCallback((updater) => {
+    setBattleprepState(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      if (fbUser?.uid) {
+        emitBattleprepChanges(prev, next, fbUser.uid).catch(err => {
+          console.error('[textStream] battleprep emit failed:', err);
+        });
+      }
+      return next;
+    });
+  }, [fbUser?.uid]);
+
   useEffect(() => {
     const save = (key, ms=1500) => debounce(
       (uid, val) => window.__MB_DB__?.save(uid, key, val), ms
@@ -532,7 +556,7 @@ export default function App() {
           const ct = localStorage.getItem("mb_cats"); if (ct) { try { const p=JSON.parse(ct); if(Array.isArray(p)&&p.length>0) setCats(p); } catch {} }
           const cc = localStorage.getItem("mb_cat_colors"); if (cc) { try { setCatColors(JSON.parse(cc)); } catch {} }
           const cd = localStorage.getItem("mb_cat_domains"); if (cd) { try { setCatDomains(JSON.parse(cd)); } catch {} }
-          if (s) { try { const p=JSON.parse(s); if(Array.isArray(p)&&p.length>0) setSets(p); } catch {} }
+          if (s) { try { const p=JSON.parse(s); if(Array.isArray(p)&&p.length>0) setSetsState(p); } catch {} }
           if (r) { try { const p=JSON.parse(r); if(Array.isArray(p)&&p.length>0) setRounds(p); } catch {} }
           const id = localStorage.getItem("mb_ideas");
           if (id) { try { const p=JSON.parse(id); if(Array.isArray(p)&&p.length>0) setIdeasState(p.map(migrateIdea)); } catch {} }
@@ -567,7 +591,7 @@ export default function App() {
           const rv = localStorage.getItem("mb_rivals");
           if (rv) { try { const p=JSON.parse(rv); if(Array.isArray(p)) setRivalsState(p); } catch {} }
           const bpp = localStorage.getItem("mb_battleprep");
-          if (bpp) { try { const p=JSON.parse(bpp); if(p&&typeof p==="object") setBattleprep(migrateBattlePrep(p)); } catch {} }
+          if (bpp) { try { const p=JSON.parse(bpp); if(p&&typeof p==="object") setBattleprepState(migrateBattlePrep(p)); } catch {} }
           const fm = localStorage.getItem("mb_flowmap");
           if (fm) { try { const p=JSON.parse(fm); if(p&&typeof p==="object") setFlowmap(p); } catch {} }
           const rpt = localStorage.getItem("mb_reports");
@@ -628,7 +652,7 @@ export default function App() {
         setCats([...DEFAULT_CATS]);
         setCatColors({...CAT_COLORS});
         setCatDomains({});
-        setSets([]);
+        setSetsState([]);
         setRounds(buildInitRounds());
         setIdeasState([]);
         setHabitsState([]);
@@ -647,7 +671,7 @@ export default function App() {
         setReflections({ lastCategory:-1, lastDate:null });
         setRivalsState([]);
         setProfilePhoto(null);
-        setBattleprep({ plans:[], history:[] });
+        setBattleprepState({ plans:[], history:[] });
         setReports({ milestones:[], weeklyDismissed:null });
         setMilestonesShown([]);
         milestonesInitRef.current = false;
