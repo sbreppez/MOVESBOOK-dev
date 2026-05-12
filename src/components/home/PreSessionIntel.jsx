@@ -52,7 +52,7 @@ export const PreSessionIntel = ({ presession, setPresession }) => {
   const noteStyle = { fontSize:13, color:C.text, fontFamily:FONT_BODY, lineHeight:1.5 };
 
   const NoteSection = ({ field, label, value }) => (
-    <div style={sectionStyle}>
+    <div id={`presession-${field}`} style={sectionStyle}>
       <div style={labelStyle}>
         {label}
         <button onClick={() => startEdit(field)} style={{ background:"none", border:"none", cursor:"pointer", padding:2 }}>
@@ -101,7 +101,7 @@ export const PreSessionIntel = ({ presession, setPresession }) => {
       {fromFootage && <NoteSection field="fromFootage" label={t("fromFootageReview")} value={fromFootage}/>}
 
       {wantToTry.length > 0 && (
-        <div style={sectionStyle}>
+        <div id="presession-wantToTry" style={sectionStyle}>
           <div style={labelStyle}>{t("wantToTry")}</div>
           {wantToTry.map(item => (
             <div key={item.id} style={{

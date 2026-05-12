@@ -62,7 +62,7 @@ const normalizeRival = (r) => r ? ({
   battles:[], videoRefs:[], strongDomains:[], ...r,
 }) : null;
 
-export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, addCalendarEvent, onOpenSparring }) => {
+export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, addCalendarEvent, onOpenSparring, rivalsSeed, onRivalsSeedUsed }) => {
   const t = useT();
   const { C } = useSettings();
   const [peopleTab, setPeopleTab] = useState("rivals");
@@ -88,6 +88,23 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
     if (!onAddTrigger) return;
     setShowAddMenu(true);
   }, [onAddTrigger]);
+
+  // TEXTSTREAM-SEARCH-2A — jump-to-source: open the rival modal for the
+  // seeded rival. The rival's `type` (rival / sparringMate / crew) determines
+  // which people sub-tab to switch to so the user sees the modal in context.
+  // battleId is forwarded to the modal but no scroll happens in Cap 2a.
+  useEffect(() => {
+    if (!rivalsSeed?.rivalId) return;
+    const rival = rivals?.find(r => String(r.id) === String(rivalsSeed.rivalId));
+    if (rival) {
+      const t = rival.type || "rival";
+      setPeopleTab(t === "sparringMate" ? "sparringMate" : t === "crew" ? "crew" : "rivals");
+      setEditingRival(normalizeRival(rival));
+      setShowModal(true);
+    }
+    if (onRivalsSeedUsed) onRivalsSeedUsed();
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- seed-only by intent
+  }, [rivalsSeed]);
 
   const addRival = (data) => {
     const now = new Date().toISOString();

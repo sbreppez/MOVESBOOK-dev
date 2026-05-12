@@ -101,6 +101,21 @@ export function getSourceCategory(sourceType) {
   return SOURCE_TO_CATEGORY[sourceType] || 'other';
 }
 
+// Bare vs composite source_id split. Composites are joined with ':' by
+// the emit pipeline (move_journal, goal_journal, target_journal,
+// routine_step, rival_battle_*, battleprep_battleDay_customItem,
+// battleprep_reflection_*). The dispatcher uses primaryId to navigate
+// to the parent entity; secondaryId is reserved for Cap 2b's within-tab
+// scroll targets.
+export function parseSourceId(sourceType, sourceId) {
+  if (typeof sourceId !== 'string') return { primaryId: sourceId };
+  if (sourceId.includes(':')) {
+    const [primary, secondary] = sourceId.split(':');
+    return { primaryId: primary, secondaryId: secondary };
+  }
+  return { primaryId: sourceId };
+}
+
 if (process.env.NODE_ENV !== 'production') {
   Object.values(SOURCE_TYPES).forEach(t => {
     if (!SOURCE_TO_CATEGORY[t]) {

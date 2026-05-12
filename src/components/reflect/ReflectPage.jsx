@@ -28,7 +28,7 @@ export const ReflectPage = ({
   addToast, stance, battleprep, onToggleBattlePrepTask,
   onOpenStanceAssessment, addCalendarEvent, removeCalendarEvent: _removeCalendarEvent,
   updateCalendarEvent, markMoveTrainedToday,
-  onSubTabChange, onGoToPrep, initialMonth, sets, onAddTrigger, parentSubTab, reports, injuries,
+  onSubTabChange, onGoToPrep, initialMonth, initialFocus, sets, onAddTrigger, parentSubTab, reports, injuries,
   isPremium
 }) => {
   const t = useT();
@@ -211,7 +211,7 @@ export const ReflectPage = ({
           updateCalendarEvent={updateCalendarEvent}
           markMoveTrainedToday={markMoveTrainedToday}
           onGoToPrep={onGoToPrep}
-          battleprep={battleprep} initialMonth={initialMonth}
+          battleprep={battleprep} initialMonth={initialMonth} initialFocus={initialFocus}
           onToggleBattlePrepTask={onToggleBattlePrepTask}
           onAddTrigger={calendarAddTick} reports={reports} isPremium={isPremium}
           onAddToHome={(ctx) => setAddToHomeContext(ctx)} />

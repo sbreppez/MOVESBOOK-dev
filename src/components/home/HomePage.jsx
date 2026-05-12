@@ -83,6 +83,7 @@ export const HomePage = ({
   moves, setMoves, cats, catColors, sets, markMoveTrainedToday,
   customAttrs, setCustomAttrs, isPremium,
   addToast,
+  homeSeed, onHomeSeedUsed,
 }) => {
   const { C } = useSettings();
   const t = useT();
@@ -103,6 +104,43 @@ export const HomePage = ({
     if (!onAddTrigger) return;
     setShowAddPicker(true);
   }, [onAddTrigger]);
+
+  // TEXTSTREAM-SEARCH-2A — jump-to-source: open the right modal/scroll target
+  // for the seeded source. The seed is single-use and synthesizes the editTile
+  // shape that HomePage's render path expects.
+  useEffect(() => {
+    if (!homeSeed) return;
+    if (homeSeed.kind === 'idea') {
+      const idea = ideas?.find(i => String(i.id) === String(homeSeed.ideaId));
+      if (idea) {
+        if (idea.type === 'note') {
+          setEditTile({ id: idea.id, type: 'note' });
+        } else {
+          // goal or target — opens via goalhabit branch which checks ideas for goal/target
+          setEditTile({ id: 'gh_' + idea.id, type: 'goalhabit', refId: idea.id });
+        }
+      }
+    } else if (homeSeed.kind === 'habit') {
+      const habit = habits?.find(h => String(h.id) === String(homeSeed.habitId));
+      if (habit) {
+        setEditTile({ id: 'gh_' + habit.id, type: 'goalhabit', refId: habit.id });
+      }
+    } else if (homeSeed.kind === 'routine') {
+      const routine = (homeStack?.defaultStack || []).find(
+        t => String(t.id) === String(homeSeed.routineId) && t.type === 'routine'
+      );
+      if (routine) setEditTile(routine);
+    } else if (homeSeed.kind === 'presession' && homeSeed.field) {
+      // Defer scroll until PreSessionIntel has rendered (it only mounts on
+      // breaking days when presession has content — if neither, this no-ops).
+      setTimeout(() => {
+        const el = document.getElementById('presession-' + homeSeed.field);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
+    }
+    if (onHomeSeedUsed) onHomeSeedUsed();
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- seed-only by intent
+  }, [homeSeed]);
   const [showGearMenu, setShowGearMenu] = useState(false);
   const [editTile, setEditTile] = useState(null);
   const [confirmRemove, setConfirmRemove] = useState(null);

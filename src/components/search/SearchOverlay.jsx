@@ -6,11 +6,18 @@ import { useTextStream } from '../../hooks/useTextStream';
 import { Ic } from '../shared/Ic';
 import { CATEGORIES, getSourceCategory } from '../../constants/textStreamCategories';
 
-function ResultTile({ entry, categoryLabel, C }) {
+function ResultTile({ entry, categoryLabel, C, onClick }) {
+  const [hovered, setHovered] = useState(false);
   return (
-    <div style={{
-      background: C.surface, borderRadius: 8, padding: '14px 16px',
-    }}>
+    <div
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        background: hovered ? C.surfaceAlt : C.surface,
+        borderRadius: 8, padding: '14px 16px',
+        cursor: 'pointer', transition: 'background 0.15s',
+      }}>
       <div style={{
         display: 'flex', alignItems: 'baseline', justifyContent: 'space-between',
         gap: 8, marginBottom: 6,
@@ -42,7 +49,7 @@ function ResultTile({ entry, categoryLabel, C }) {
   );
 }
 
-export const SearchOverlay = ({ uid, onClose }) => {
+export const SearchOverlay = ({ uid, onClose, onJumpToSource }) => {
   const t = useT();
   const { resultCountStr } = usePlural();
   const { C } = useSettings();
@@ -198,7 +205,8 @@ export const SearchOverlay = ({ uid, onClose }) => {
               <ResultTile key={entry.id}
                 entry={entry}
                 categoryLabel={categoryLabelByKey[getSourceCategory(entry.source_type)] || ''}
-                C={C}/>
+                C={C}
+                onClick={() => onJumpToSource && onJumpToSource(entry.source_type, entry.source_id)}/>
             ))}
           </div>
         )}

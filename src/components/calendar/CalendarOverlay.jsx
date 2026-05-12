@@ -26,7 +26,7 @@ export const CalendarOverlay = ({
   addToast,
   addCalendarEvent, updateCalendarEvent, markMoveTrainedToday,
   onClose, onGoToPrep,
-  battleprep, onToggleBattlePrepTask, initialMonth,
+  battleprep, onToggleBattlePrepTask, initialMonth, initialFocus,
   inline, onAddTrigger, reports: _reports, isPremium,
   onAddToHome,
 }) => {
@@ -34,10 +34,25 @@ export const CalendarOverlay = ({
   const today = todayLocal();
 
   const [viewDate, setViewDate] = useState(() => {
+    if (initialFocus?.day) {
+      const d = new Date(initialFocus.day + 'T12:00:00');
+      return new Date(d.getFullYear(), d.getMonth(), 1);
+    }
     if (initialMonth) return new Date(initialMonth.year, initialMonth.month, 1);
     return new Date();
   });
-  const [selectedDay, setSelectedDay] = useState(today);
+  const [selectedDay, setSelectedDay] = useState(() => initialFocus?.day || today);
+
+  // TEXTSTREAM-SEARCH-2A — jump-to-source: when a focus arrives on an already-
+  // mounted CalendarOverlay (REFLECT > CALENDAR is the current sub-tab), the
+  // useState initializer above has already run with the prior value. Sync
+  // viewDate and selectedDay to the new focus on every identity change.
+  useEffect(() => {
+    if (!initialFocus?.day) return;
+    const d = new Date(initialFocus.day + 'T12:00:00');
+    setViewDate(new Date(d.getFullYear(), d.getMonth(), 1));
+    setSelectedDay(initialFocus.day);
+  }, [initialFocus]);
   const [showJournal, setShowJournal] = useState(false);
   const [editEvent, setEditEvent] = useState(null);
   const [showTypePicker, setShowTypePicker] = useState(false);

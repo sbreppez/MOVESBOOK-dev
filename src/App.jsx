@@ -6,7 +6,7 @@ import { SettingsCtx } from './hooks/useSettings';
 import { TrainModalCtx } from './hooks/useTrainContext';
 import { TRANSLATIONS } from './constants/translations';
 import { SCHEMA_VERSION, migrateMove, migrateIdea, loadLocal, saveLocal, debounce, unwrapPhoto } from './utils/storage';
-import { todayLocal } from './utils/dateUtils';
+import { todayLocal, toYMD } from './utils/dateUtils';
 import { migrateOldAttributes } from './utils/attributeHelpers';
 import { Ic } from './components/shared/Ic';
 import { ProfileAvatar } from './components/shared/ProfileAvatar';
@@ -36,6 +36,8 @@ import { FlowMap } from './components/battle/FlowMap';
 import { PostSessionPrompt } from './components/home/PostSessionPrompt';
 import { CreateOverlay } from './components/moves/CreateOverlay';
 import { SearchOverlay } from './components/search/SearchOverlay';
+import { getSourceCategory, parseSourceId } from './constants/textStreamCategories';
+import { SOURCE_TYPES } from './constants/textStream';
 import { usePremium } from './hooks/usePremium';
 import { PremiumGate } from './components/shared/PremiumGate';
 import { detectMilestones } from './utils/reportEngine';
@@ -691,6 +693,13 @@ export default function App() {
         milestonesInitRef.current = false;
         setHomeStackState({ defaultStack:[], overrides:{} });
         setHomeChecks({});
+        // Jump-to-source seeds (TEXTSTREAM-SEARCH-2A) — clear stale seeds
+        // so the next sign-in doesn't dispatch a navigation from prior state.
+        setMovesSeed(null);
+        setHomeSeed(null);
+        setSetsSeed(null);
+        setRivalsSeed(null);
+        setCalendarInitialFocus(null);
       }
     }
     window.addEventListener("mb-auth-resolved", handleAuthResolved);
@@ -783,6 +792,13 @@ export default function App() {
   // Polymorphic: { date, eventName } opens setup modal | { focus: "plan", planId, date } expands existing plan
   const [battlePrepSeed, setBattlePrepSeed] = useState(null);
   const [calendarInitialMonth, setCalendarInitialMonth] = useState(null); // { year, month } for shared calendar
+  // Jump-to-source seeds (TEXTSTREAM-SEARCH-2A). Single-use payloads handed
+  // to child pages; cleared by the consumer via on*SeedUsed.
+  const [movesSeed, setMovesSeed] = useState(null);     // { moveId }
+  const [homeSeed, setHomeSeed] = useState(null);       // { kind, ...payload }
+  const [setsSeed, setSetsSeed] = useState(null);       // { setId }
+  const [rivalsSeed, setRivalsSeed] = useState(null);   // { rivalId, battleId }
+  const [calendarInitialFocus, setCalendarInitialFocus] = useState(null); // { day: 'YYYY-MM-DD' }
   const [trainModal,  setTrainModal]  = useState({});
   const [showManual,   setShowManual]   =useState(false);
   const [showSettings, setShowSettings] =useState(false);
@@ -927,6 +943,116 @@ export default function App() {
   const effectiveZoom = fontScale * zoom;
   const rootHeight = effectiveZoom < 1 ? `${(100 / effectiveZoom).toFixed(2)}vh` : "100vh";
 
+  // ── Jump-to-source dispatcher (TEXTSTREAM-SEARCH-2A) ──────────────────────
+  // Routes a search result tile click to the source entity's native UI by
+  // switching tabs and setting seed state on the appropriate child page.
+  const dispatchJumpToSource = useCallback((sourceType, sourceId) => {
+    setShowSearch(false);
+    const category = getSourceCategory(sourceType);
+    const { primaryId, secondaryId } = parseSourceId(sourceType, sourceId);
+
+    const findSessionDate = (st, sid) => {
+      const idStr = String(sid);
+      if (st === SOURCE_TYPES.REPS_REFLECTION) {
+        return reps?.find(s => String(s.id) === idStr)?.date || null;
+      }
+      if (st === SOURCE_TYPES.SPARRING_NOTES || st === SOURCE_TYPES.SPARRING_REFLECTION) {
+        return sparring?.sessions?.find(s => String(s.id) === idStr)?.date || null;
+      }
+      if (st === SOURCE_TYPES.SPAR1V1_JOURNAL) {
+        return sparring?.sessions1v1?.find(s => String(s.id) === idStr)?.date || null;
+      }
+      if (st === SOURCE_TYPES.MUSICFLOW_REFLECTION) {
+        return musicflow?.sessions?.find(s => String(s.id) === idStr)?.date || null;
+      }
+      return null;
+    };
+
+    switch (category) {
+      case 'moves':
+        setTab('moves'); setSubTab('moves');
+        setMovesSeed({ moveId: primaryId });
+        break;
+      case 'ideas':
+        setTab('home');
+        setHomeSeed({ kind: 'idea', ideaId: primaryId });
+        break;
+      case 'habits':
+        setTab('home');
+        setHomeSeed({ kind: 'habit', habitId: primaryId });
+        break;
+      case 'routines':
+        setTab('home');
+        setHomeSeed({ kind: 'routine', routineId: primaryId });
+        break;
+      case 'sets':
+        setTab('moves'); setSubTab('sets');
+        setSetsSeed({ setId: primaryId });
+        break;
+      case 'calendar': {
+        const event = (calendar?.events || []).find(e => String(e.id) === String(primaryId));
+        const day = toYMD(event?.date);
+        if (day) {
+          setCalendarInitialFocus({ day });
+          setTab('reflect'); setSubTab('calendar');
+        }
+        break;
+      }
+      case 'sessions': {
+        // session.date may be an ISO timestamp ("2026-05-11T20:51:31.412Z")
+        // or a bare YMD; toYMD normalizes both into "YYYY-MM-DD".
+        const day = toYMD(findSessionDate(sourceType, primaryId));
+        if (day) {
+          setCalendarInitialFocus({ day });
+          setTab('reflect'); setSubTab('calendar');
+        }
+        break;
+      }
+      case 'rivals':
+      case 'battles':
+        setTab('battle');
+        setRivalsSeed({ rivalId: primaryId, battleId: secondaryId || null });
+        break;
+      case 'battleprep': {
+        setTab('battle');
+        let date = null;
+        const reflectionTypes = [
+          SOURCE_TYPES.BATTLEPREP_REFLECTION_TAKEAWAY,
+          SOURCE_TYPES.BATTLEPREP_REFLECTION_WHAT_WORKED,
+          SOURCE_TYPES.BATTLEPREP_REFLECTION_NEEDS_WORK,
+          SOURCE_TYPES.BATTLEPREP_REFLECTION_CHANGE_TRAINING,
+        ];
+        if (reflectionTypes.includes(sourceType)) {
+          const plan = (battleprep?.plans || []).find(p => String(p.id) === String(primaryId));
+          const battle = plan?.battles?.find(b => String(b.id) === String(secondaryId));
+          date = battle?.date || null;
+        }
+        setBattlePrepSeed({ focus: 'plan', planId: primaryId, date });
+        break;
+      }
+      case 'profile':
+        setShowProfile(true);
+        break;
+      case 'reminders':
+        setShowManageReminders(true);
+        break;
+      case 'presession': {
+        const fieldMap = {
+          [SOURCE_TYPES.PRESESSION_FROM_LAST_SESSION]: 'fromLastSession',
+          [SOURCE_TYPES.PRESESSION_FROM_FOOTAGE]:      'fromFootage',
+          [SOURCE_TYPES.PRESESSION_WANT_TO_TRY]:       'wantToTry',
+        };
+        setTab('home');
+        setHomeSeed({ kind: 'presession', field: fieldMap[sourceType] });
+        break;
+      }
+      default:
+        if (process.env.NODE_ENV !== 'production') {
+          console.warn('[jumpToSource] Unknown category:', category, sourceType);
+        }
+    }
+  }, [calendar, battleprep, reps, sparring, musicflow]);
+
   return (
     <SettingsCtx.Provider value={{ settings:appSettings, C, cardPad, cardFontSize }}>
       <style>{`
@@ -988,10 +1114,10 @@ export default function App() {
             </div>
           )}
           <TrainModalCtx.Provider value={{ openModal:(type,idea,onSave)=>{ setTrainModal({type,idea,onSave}); } }}>
-            {tab==="home" && !showCreate && <HomePage habits={habits} setHabits={setHabits} injuries={injuries} setInjuries={setInjuries} presession={presession} setPresession={setPresession} ideas={ideas} setIdeas={setIdeas} settings={appSettings} onSettingsChange={setAppSettings} homeStack={homeStack} setHomeStack={setHomeStack} homeChecks={homeChecks} setHomeChecks={setHomeChecks} onAddTrigger={addTick} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} calendar={calendar} moves={moves} setMoves={setMovesGrad} cats={cats} catColors={catColors} sets={sets} markMoveTrainedToday={markMoveTrainedToday} updateCalendarEvent={updateCalendarEvent} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} isPremium={isPremium} addToast={addToast}/>}
-            {tab==="moves" && !showCreate && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} catDomains={catDomains} setCatDomains={setCatDomains} sets={sets} setSets={setSets} addToast={addToast} settings={appSettings} onSettingsChange={setAppSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} reminders={reminders} onRemindersChange={setReminders} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}} onOpenManageReminders={()=>setShowManageReminders(true)} isPremium={isPremium} staleCount={staleCount} onOpenExplore={()=>{if(!isPremium){setGatedFeature("explore");return;}setShowLab(true);}} onOpenRRR={()=>{if(!isPremium){setGatedFeature("rrr");return;}setShowRRR(true);}} onOpenCombine={()=>{if(!isPremium){setGatedFeature("combine");return;}setShowComboMachine(true);}} onOpenMap={()=>{if(!isPremium){setGatedFeature("map");return;}setShowFlowMap(true);}} onOpenFlashCards={()=>{if(!isPremium){setGatedFeature("flashCards");return;}setShowFlashCards(true);}} onOpenTools={()=>setShowCreate(true)} onOpenFlow={()=>{if(!isPremium){setGatedFeature("flow");return;}setShowMusicFlow(true);}} onBulkTrigger={bulkTrigger}/>}
-            {tab==="battle" && !showCreate && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} addToast={addToast} freestyle={freestyle} onFreestyleChange={setFreestyle} rivals={rivals} onRivalsChange={setRivals} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} isPremium={isPremium} onSimulate={()=>{if(!isPremium){setGatedFeature("compSim");return;}setShowCompSim(true);}} onOpenSparring={()=>setShowSparring(true)} battleprep={battleprep} setBattleprep={setBattleprep} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={()=>setBattlePrepSeed(null)} onOpenSharedCalendar={(im)=>{setCalendarInitialMonth(im||null); setTab("reflect"); setSubTab("calendar");}}/>}
-            {tab==="reflect" && !showCreate && <ReflectPage isPremium={isPremium} ideas={ideas} setIdeas={setIdeas} moves={moves} setMoves={setMovesGrad} reps={reps} sparring={sparring} musicflow={musicflow} habits={habits} setHabits={setHabits} homeStack={homeStack} setHomeStack={setHomeStack} calendar={calendar} setCalendar={setCalendar} cats={cats} catColors={catColors} settings={appSettings} onSettingsChange={setAppSettings} addToast={addToast} stance={stance} battleprep={battleprep} onToggleBattlePrepTask={(planId,dateStr,taskIdx)=>{setBattleprep(prev=>{const plans=(prev.plans||[]).map(p=>{if(p.id!==planId) return p;const key=dateStr+"-"+taskIdx;return {...p, completedTasks:{...(p.completedTasks||{}), [key]:!(p.completedTasks||{})[key]}};});return {...prev, plans};});}} onOpenStanceAssessment={()=>setShowStanceAssessment(true)} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onSubTabChange={setSubTab} onGoToPrep={(seed)=>{setBattlePrepSeed(seed);setTab("battle");}} initialMonth={calendarInitialMonth} sets={sets} onAddTrigger={addTick} parentSubTab={subTab} reports={reports} injuries={injuries} markMoveTrainedToday={markMoveTrainedToday} updateCalendarEvent={updateCalendarEvent}/>}
+            {tab==="home" && !showCreate && <HomePage habits={habits} setHabits={setHabits} injuries={injuries} setInjuries={setInjuries} presession={presession} setPresession={setPresession} ideas={ideas} setIdeas={setIdeas} settings={appSettings} onSettingsChange={setAppSettings} homeStack={homeStack} setHomeStack={setHomeStack} homeChecks={homeChecks} setHomeChecks={setHomeChecks} onAddTrigger={addTick} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} calendar={calendar} moves={moves} setMoves={setMovesGrad} cats={cats} catColors={catColors} sets={sets} markMoveTrainedToday={markMoveTrainedToday} updateCalendarEvent={updateCalendarEvent} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} isPremium={isPremium} addToast={addToast} homeSeed={homeSeed} onHomeSeedUsed={()=>setHomeSeed(null)}/>}
+            {tab==="moves" && !showCreate && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} catDomains={catDomains} setCatDomains={setCatDomains} sets={sets} setSets={setSets} addToast={addToast} settings={appSettings} onSettingsChange={setAppSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} reminders={reminders} onRemindersChange={setReminders} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}} onOpenManageReminders={()=>setShowManageReminders(true)} isPremium={isPremium} staleCount={staleCount} onOpenExplore={()=>{if(!isPremium){setGatedFeature("explore");return;}setShowLab(true);}} onOpenRRR={()=>{if(!isPremium){setGatedFeature("rrr");return;}setShowRRR(true);}} onOpenCombine={()=>{if(!isPremium){setGatedFeature("combine");return;}setShowComboMachine(true);}} onOpenMap={()=>{if(!isPremium){setGatedFeature("map");return;}setShowFlowMap(true);}} onOpenFlashCards={()=>{if(!isPremium){setGatedFeature("flashCards");return;}setShowFlashCards(true);}} onOpenTools={()=>setShowCreate(true)} onOpenFlow={()=>{if(!isPremium){setGatedFeature("flow");return;}setShowMusicFlow(true);}} onBulkTrigger={bulkTrigger} movesSeed={movesSeed} onMovesSeedUsed={()=>setMovesSeed(null)} setsSeed={setsSeed} onSetsSeedUsed={()=>setSetsSeed(null)}/>}
+            {tab==="battle" && !showCreate && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} addToast={addToast} freestyle={freestyle} onFreestyleChange={setFreestyle} rivals={rivals} onRivalsChange={setRivals} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} isPremium={isPremium} onSimulate={()=>{if(!isPremium){setGatedFeature("compSim");return;}setShowCompSim(true);}} onOpenSparring={()=>setShowSparring(true)} battleprep={battleprep} setBattleprep={setBattleprep} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={()=>setBattlePrepSeed(null)} rivalsSeed={rivalsSeed} onRivalsSeedUsed={()=>setRivalsSeed(null)} onOpenSharedCalendar={(im)=>{setCalendarInitialMonth(im||null); setTab("reflect"); setSubTab("calendar");}}/>}
+            {tab==="reflect" && !showCreate && <ReflectPage isPremium={isPremium} ideas={ideas} setIdeas={setIdeas} moves={moves} setMoves={setMovesGrad} reps={reps} sparring={sparring} musicflow={musicflow} habits={habits} setHabits={setHabits} homeStack={homeStack} setHomeStack={setHomeStack} calendar={calendar} setCalendar={setCalendar} cats={cats} catColors={catColors} settings={appSettings} onSettingsChange={setAppSettings} addToast={addToast} stance={stance} battleprep={battleprep} onToggleBattlePrepTask={(planId,dateStr,taskIdx)=>{setBattleprep(prev=>{const plans=(prev.plans||[]).map(p=>{if(p.id!==planId) return p;const key=dateStr+"-"+taskIdx;return {...p, completedTasks:{...(p.completedTasks||{}), [key]:!(p.completedTasks||{})[key]}};});return {...prev, plans};});}} onOpenStanceAssessment={()=>setShowStanceAssessment(true)} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onSubTabChange={setSubTab} onGoToPrep={(seed)=>{setBattlePrepSeed(seed);setTab("battle");}} initialMonth={calendarInitialMonth} initialFocus={calendarInitialFocus} sets={sets} onAddTrigger={addTick} parentSubTab={subTab} reports={reports} injuries={injuries} markMoveTrainedToday={markMoveTrainedToday} updateCalendarEvent={updateCalendarEvent}/>}
           </TrainModalCtx.Provider>
           {showRepCounter&&<RepCounter moves={moves} catColors={catColors} reps={reps}
             preselectedMove={repCounterPreselect}
@@ -1087,7 +1213,7 @@ export default function App() {
             onOpenFlow={()=>{setShowCreate(false);if(!isPremium){setGatedFeature("flow");return;}setShowMusicFlow(true);}}
             onClose={()=>setShowCreate(false)}
           />}
-          {showSearch&&<SearchOverlay uid={fbUser?.uid} onClose={()=>setShowSearch(false)}/>}
+          {showSearch&&<SearchOverlay uid={fbUser?.uid} onClose={()=>setShowSearch(false)} onJumpToSource={dispatchJumpToSource}/>}
         </div>
 
         {gatedFeature&&<div onClick={()=>setGatedFeature(null)} style={{position:"fixed",inset:0,zIndex:9000,background:"rgba(0,0,0,0.5)",display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>

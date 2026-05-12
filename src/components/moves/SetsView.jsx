@@ -22,6 +22,8 @@ export const SetsView = ({
   showSectionDescriptions,
   defaultView,
   onOpenFlashCards,
+  setsSeed,
+  onSetsSeedUsed,
 }) => {
   const { C } = useSettings();
   const t = useT();
@@ -33,6 +35,15 @@ export const SetsView = ({
   const [expSets, setExpSets] = useState({});
   const [editSetModal, setEditSetModal] = useState(null);
   const [confirmDeleteSet, setConfirmDeleteSet] = useState(null);
+
+  // TEXTSTREAM-SEARCH-2A — jump-to-source: open SetDetailModal for the seeded set.
+  useEffect(() => {
+    if (!setsSeed?.setId) return;
+    const set = sets?.find(s => String(s.id) === String(setsSeed.setId));
+    if (set) setEditSetModal(set);
+    if (onSetsSeedUsed) onSetsSeedUsed();
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- seed-only by intent
+  }, [setsSeed]);
 
   const moveSetUp = (idx) => {
     if (idx === 0) return;

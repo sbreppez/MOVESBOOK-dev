@@ -30,7 +30,7 @@ import { SetsView } from './SetsView';
 import { WipHeaderActions } from './WipHeaderActions';
 import { CategoryDetailView } from './CategoryDetailView';
 
-export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains: _catDomains={}, setCatDomains: _setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore: _onOpenExplore, onOpenRRR: _onOpenRRR, onOpenCombine: _onOpenCombine, onOpenMap: _onOpenMap, onOpenFlashCards, onOpenTools, isPremium, staleCount=0, onBulkTrigger }) => {
+export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains: _catDomains={}, setCatDomains: _setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore: _onOpenExplore, onOpenRRR: _onOpenRRR, onOpenCombine: _onOpenCombine, onOpenMap: _onOpenMap, onOpenFlashCards, onOpenTools, isPremium, staleCount=0, onBulkTrigger, movesSeed, onMovesSeedUsed, setsSeed, onSetsSeedUsed }) => {
   const t = useT();
   const { moveCountStr } = usePlural();
   const { C, settings:ctxSettings } = useSettings();
@@ -66,6 +66,28 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
     if(pendingDesc){ setIdeaDesc(pendingDesc); setShowAdd(true); clearPendingDesc(); }
   // eslint-disable-next-line react-hooks/exhaustive-deps -- pendingDesc-only by intent; clearPendingDesc called inside is stable
   },[pendingDesc]);
+
+  // TEXTSTREAM-SEARCH-2A — jump-to-source: open MoveModal for the seeded move.
+  // The seed is single-use; cleared via onMovesSeedUsed regardless of whether
+  // the move still exists (defends against deletion between subscribe + click).
+  useEffect(() => {
+    if (!movesSeed?.moveId) return;
+    setVocabTab("moves");
+    setOpenCat(null);
+    const move = moves?.find(m => String(m.id) === String(movesSeed.moveId));
+    if (move) setEditMove(move);
+    if (onMovesSeedUsed) onMovesSeedUsed();
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- seed-only by intent
+  }, [movesSeed]);
+
+  // TEXTSTREAM-SEARCH-2A — switch to SETS sub-tab on seed arrival. The seed
+  // itself is consumed by SetsView; here we only ensure SetsView is mounted.
+  useEffect(() => {
+    if (!setsSeed?.setId) return;
+    setVocabTab("sets");
+    setOpenCat(null);
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- seed-only by intent
+  }, [setsSeed]);
 
   const wipMoves=moves; // show all moves regardless of status
   const sortFn = st.sortMoves==="name" ? (a,b)=>a.name.localeCompare(b.name)
@@ -328,6 +350,8 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
             showSectionDescriptions={st.showSectionDescriptions}
             defaultView={st.defaultView}
             onOpenFlashCards={onOpenFlashCards}
+            setsSeed={setsSeed}
+            onSetsSeedUsed={onSetsSeedUsed}
           />
         ) : searchResults ? (
           <SearchResultsView
