@@ -26,7 +26,7 @@ export const CalendarOverlay = ({
   addToast,
   addCalendarEvent, updateCalendarEvent, markMoveTrainedToday,
   onClose, onGoToPrep,
-  battleprep, onToggleBattlePrepTask, initialMonth, initialFocus,
+  battleprep, onToggleBattlePrepTask, initialMonth, initialFocus, onInitialFocusUsed,
   inline, onAddTrigger, reports: _reports, isPremium,
   onAddToHome,
 }) => {
@@ -43,23 +43,22 @@ export const CalendarOverlay = ({
   });
   const [selectedDay, setSelectedDay] = useState(() => initialFocus?.day || today);
 
-  // TEXTSTREAM-SEARCH-2A — jump-to-source: when a focus arrives on an already-
-  // mounted CalendarOverlay (REFLECT > CALENDAR is the current sub-tab), the
-  // useState initializer above has already run with the prior value. Sync
-  // viewDate and selectedDay to the new focus on every identity change.
+  // TEXTSTREAM-SEARCH-2A/2B — jump-to-source. Sync viewDate/selectedDay to the
+  // arriving focus and, if it carries an event/session id, scroll the day-
+  // detail tile into view after the render commit. Merged into one effect so
+  // the post-consumption clear (onInitialFocusUsed) runs once at the end —
+  // splitting them would let one effect's cleanup cancel the other's pending
+  // scroll timer when the prop drops to null.
   useEffect(() => {
     if (!initialFocus?.day) return;
     const d = new Date(initialFocus.day + 'T12:00:00');
     setViewDate(new Date(d.getFullYear(), d.getMonth(), 1));
     setSelectedDay(initialFocus.day);
-  }, [initialFocus]);
-
-  // TEXTSTREAM-SEARCH-2B — within-day scroll. After selectedDay updates trigger
-  // the day-detail render, defer one tick so getElementById can find the tile.
-  useEffect(() => {
-    if (!initialFocus) return;
     const { eventId, sessionId, sessionKind } = initialFocus;
-    if (!eventId && !sessionId) return;
+    if (!eventId && !sessionId) {
+      onInitialFocusUsed?.();
+      return;
+    }
     const timer = setTimeout(() => {
       let targetId = null;
       if (eventId) targetId = `event-${eventId}`;
@@ -69,9 +68,11 @@ export const CalendarOverlay = ({
         else if (sessionKind === 'spar1v1') targetId = `session-spar-1v1-${sessionId}`;
         else if (sessionKind === 'musicflow') targetId = `session-musicflow-${sessionId}`;
       }
-      if (!targetId) return;
-      const el = document.getElementById(targetId);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (targetId) {
+        const el = document.getElementById(targetId);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      onInitialFocusUsed?.();
     }, 100);
     return () => clearTimeout(timer);
   }, [initialFocus]);
