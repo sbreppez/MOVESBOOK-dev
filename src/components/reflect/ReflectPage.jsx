@@ -12,14 +12,7 @@ import { DevelopmentStory } from '../stance/DevelopmentStory';
 import { PremiumGate } from '../shared/PremiumGate';
 import { SectionBrief } from '../shared/SectionBrief';
 import { NoteModal } from '../train/NoteModal';
-import { InjuryModal } from '../modals/InjuryModal';
 import { getNextTrainingDay } from '../../utils/nextTrainingDay';
-
-const todayYMD = () => {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-};
-const partLabelKey = (p) => p ? "bodyPart" + p.charAt(0).toUpperCase() + p.slice(1) : "";
 
 const SUB_TABS = ["calendar", "stance", "reports", "history"];
 
@@ -35,7 +28,7 @@ export const ReflectPage = ({
   addToast, stance, battleprep, onToggleBattlePrepTask,
   onOpenStanceAssessment, addCalendarEvent, removeCalendarEvent: _removeCalendarEvent,
   updateCalendarEvent, markMoveTrainedToday,
-  onSubTabChange, onGoToPrep, initialMonth, initialFocus, onInitialFocusUsed, sets, onAddTrigger, parentSubTab, reports, injuries, setInjuries,
+  onSubTabChange, onGoToPrep, initialMonth, initialFocus, onInitialFocusUsed, sets, onAddTrigger, parentSubTab, reports, injuries,
   isPremium
 }) => {
   const t = useT();
@@ -44,10 +37,6 @@ export const ReflectPage = ({
   const [showStanceConfirm, setShowStanceConfirm] = useState(false);
   const [calendarAddTick, setCalendarAddTick] = useState(0);
   const [addToHomeContext, setAddToHomeContext] = useState(null);
-  const [injuryModalOpen, setInjuryModalOpen] = useState(false);
-  const [editingInjury, setEditingInjury] = useState(null);
-  const [resolveConfirm, setResolveConfirm] = useState(null);
-  const [resolvedExpanded, setResolvedExpanded] = useState(false);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps -- reflectTab-only by intent
   useEffect(() => { if (onSubTabChange) onSubTabChange(reflectTab); }, [reflectTab]);
@@ -81,21 +70,15 @@ export const ReflectPage = ({
   const sevColors = { 1: C.green, 2: C.yellow, 3: C.accent };
   const sevLabels = { 1: "severityMild", 2: "severityModerate", 3: "severitySevere" };
 
-  // ── Injuries: active and resolved ──────────────────────────────────────────
-  const activeInjuriesList = useMemo(() =>
-    (injuries || []).filter(i => !i.resolved)
-      .sort((a, b) => (b.date || b.startDate || "").localeCompare(a.date || a.startDate || "")),
-    [injuries]
-  );
-  const resolvedInjuriesList = useMemo(() =>
-    (injuries || []).filter(i => i.resolved)
-      .sort((a, b) => (b.resolvedDate || "").localeCompare(a.resolvedDate || "")),
-    [injuries]
-  );
-
-  // ── Archived ideas/goals (kept under their own section) ────────────────────
-  const ideaHistoryEntries = useMemo(() => {
+  // ── Build combined HISTORY entries ─────────────────────────────────────────
+  const historyEntries = useMemo(() => {
     const entries = [];
+
+    (injuries || []).filter(i => i.resolved).forEach(inj => {
+      const date = inj.resolvedDate || inj.date || inj.startDate || "";
+      entries.push({ id: `injury_${inj.id}`, kind: "injury", date, data: inj });
+    });
+
     (ideas || []).filter(i => i.archived === true).forEach(idea => {
       entries.push({
         id: `idea_${idea.id}`,
@@ -104,8 +87,9 @@ export const ReflectPage = ({
         data: idea,
       });
     });
+
     return entries.sort((a, b) => (b.date || "").localeCompare(a.date || ""));
-  }, [ideas]);
+  }, [injuries, ideas]);
 
   const ghostBtn = {
     background: "transparent", border: `1px solid ${C.accent}`,
@@ -115,68 +99,40 @@ export const ReflectPage = ({
     display: "flex", alignItems: "center", gap: 6, cursor: "pointer",
   };
 
-  const sectionHeader = {
-    fontSize: 10, fontWeight: 800, fontFamily: FONT_DISPLAY,
-    letterSpacing: 1.5, color: C.textMuted, textTransform: "uppercase",
-    marginBottom: 8,
-  };
-
-  const emptyMini = {
-    fontSize: 12, color: C.textMuted, fontFamily: FONT_BODY,
-    padding: "12px 4px", fontStyle: "italic",
-  };
-
-  const renderInjuryCard = (inj, isResolved) => {
-    const stripeColor = inj.severity ? sevColors[inj.severity] : C.border;
-    const partLabel = inj.bodyPart ? t(partLabelKey(inj.bodyPart)) : "";
-    const sideLabel = inj.side ? t(inj.side === "left" ? "leftSide" : "rightSide") : "";
-    const fullLabel = sideLabel ? `${sideLabel} ${partLabel}` : partLabel;
-    const dateStart = inj.date || inj.startDate || "";
-    const dur = isResolved ? daysBetween(dateStart, inj.resolvedDate) : null;
-
-    return (
-      <div key={inj.id}
-        onClick={() => { setEditingInjury(inj); setInjuryModalOpen(true); }}
-        style={{
-          background: C.surface, borderRadius: 8,
-          borderLeft: `4px solid ${stripeColor}`,
-          padding: "12px 14px", marginBottom: 6,
-          cursor: "pointer",
-        }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-          <span style={{ fontSize: 14, fontWeight: 800, color: C.text, fontFamily: FONT_DISPLAY }}>
-            {fullLabel}
-          </span>
-          {inj.severity && (
-            <span style={{ fontSize: 10, fontWeight: 700, color: stripeColor, fontFamily: FONT_DISPLAY, textTransform: "uppercase", letterSpacing: 0.5 }}>
-              {t(sevLabels[inj.severity])}
+  const renderHistoryEntry = (entry) => {
+    if (entry.kind === "injury") {
+      const inj = entry.data;
+      const dateStart = inj.date || inj.startDate;
+      const dur = daysBetween(dateStart, inj.resolvedDate);
+      const sideTxt = inj.side ? `${t(inj.side === "left" ? "leftSide" : "rightSide")} ` : "";
+      return (
+        <div key={entry.id} style={{ background: C.surface, borderRadius: 8, padding: "12px 14px", marginBottom: 6 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+            {inj.severity && <div style={{ width: 8, height: 8, borderRadius: 4, background: sevColors[inj.severity], flexShrink: 0 }}/>}
+            <span style={{ fontSize: 13, fontWeight: 800, color: C.text, fontFamily: FONT_DISPLAY }}>
+              {sideTxt}{inj.bodyPart}
             </span>
-          )}
-        </div>
-        <div style={{ fontSize: 11, color: C.textMuted, fontFamily: FONT_BODY, marginBottom: 4 }}>
-          {dateStart}
-          {isResolved && inj.resolvedDate ? ` → ${inj.resolvedDate}` : ""}
-          {dur ? ` (${dur} ${t("daysInjured")})` : ""}
-        </div>
-        {inj.description && (
-          <div style={{ fontSize: 12, color: C.textSec, fontFamily: FONT_BODY, lineHeight: 1.4, marginBottom: 6 }}>
-            {inj.description}
+            {inj.severity && <span style={{ fontSize: 10, fontWeight: 700, color: sevColors[inj.severity], fontFamily: FONT_DISPLAY }}>{t(sevLabels[inj.severity])}</span>}
           </div>
-        )}
-        {!isResolved && (
+          <div style={{ fontSize: 11, color: C.textMuted, fontFamily: FONT_BODY, marginBottom: 4 }}>
+            {dateStart}{inj.resolvedDate ? ` → ${inj.resolvedDate}` : ""}{dur ? ` (${dur} ${t("daysInjured")})` : ""}
+          </div>
+          {inj.description && <div style={{ fontSize: 11, color: C.textSec, fontFamily: FONT_BODY, lineHeight: 1.4, marginBottom: 4 }}>{inj.description}</div>}
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
             <button
-              onClick={(e) => { e.stopPropagation(); setResolveConfirm(inj); }}
+              onClick={() => {
+                const ctx = `${t("resolvedInjuryContext")}: ${sideTxt}${inj.bodyPart}${dur ? `, ${dur} ${t("daysInjured")}` : ""}`;
+                setAddToHomeContext(ctx);
+              }}
               style={ghostBtn}>
-              <Ic n="check" s={12} c={C.accent}/>{t("markResolved")}
+              <Ic n="plus" s={12} c={C.accent}/>{t("addToHome")}
             </button>
           </div>
-        )}
-      </div>
-    );
-  };
+        </div>
+      );
+    }
 
-  const renderHistoryEntry = (entry) => {
+    // goal or note
     const idea = entry.data;
     const kindIcon = entry.kind === "goal" ? "trophy" : "fileText";
     const ctxKey = entry.kind === "goal" ? "archivedGoalContext" : "archivedNoteContext";
@@ -296,56 +252,13 @@ export const ReflectPage = ({
         <>
           <SectionBrief desc={t("historyBrief")} settings={settings}/>
           <div style={{ flex: 1, overflow: "auto", padding: "8px 16px 76px" }}>
-            {/* + Log injury */}
-            <button onClick={() => { setEditingInjury(null); setInjuryModalOpen(true); }}
-              style={{
-                width: "100%", padding: "10px 16px", marginBottom: 14,
-                background: "transparent", border: `1.5px dashed ${C.border}`,
-                borderRadius: 8, color: C.accent, cursor: "pointer",
-                fontSize: 13, fontWeight: 800, fontFamily: FONT_DISPLAY,
-                letterSpacing: 1, textTransform: "uppercase",
-                display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-              }}>
-              <Ic n="plus" s={14} c={C.accent}/>{t("addInjury")}
-            </button>
-
-            {/* Active injuries */}
-            <div style={{ marginBottom: 21 }}>
-              <div style={sectionHeader}>{t("activeInjuries")}</div>
-              {activeInjuriesList.length === 0
-                ? <div style={emptyMini}>{t("noActiveInjuries")}</div>
-                : activeInjuriesList.map(inj => renderInjuryCard(inj, false))}
-            </div>
-
-            {/* Resolved injuries (collapsible) */}
-            <div style={{ marginBottom: 21 }}>
-              <button onClick={() => setResolvedExpanded(x => !x)}
-                style={{ background: "none", border: "none", padding: 0, cursor: "pointer",
-                  display: "flex", alignItems: "center", gap: 6, marginBottom: 8, width: "100%" }}>
-                <Ic n={resolvedExpanded ? "chevD" : "chevR"} s={13} c={C.textMuted}/>
-                <span style={{ ...sectionHeader, marginBottom: 0 }}>{t("injuryHistory")}</span>
-              </button>
-              {resolvedExpanded && (
-                resolvedInjuriesList.length === 0
-                  ? <div style={emptyMini}>{t("noInjuryHistory")}</div>
-                  : resolvedInjuriesList.map(inj => renderInjuryCard(inj, true))
-              )}
-            </div>
-
-            {/* Archived ideas/goals */}
-            {ideaHistoryEntries.length > 0 && (
-              <div>
-                <div style={sectionHeader}>{t("archived")}</div>
-                {ideaHistoryEntries.map(renderHistoryEntry)}
-              </div>
-            )}
-
-            {/* Truly empty state */}
-            {activeInjuriesList.length === 0 && resolvedInjuriesList.length === 0 && ideaHistoryEntries.length === 0 && (
+            {historyEntries.length === 0 ? (
               <div style={{ textAlign: "center", padding: 40, color: C.textMuted }}>
                 <div style={{ marginBottom: 8 }}><Ic n="archive" s={28} c={C.textMuted}/></div>
                 <p style={{ fontSize: 13 }}>{t("noHistoryYet")}</p>
               </div>
+            ) : (
+              historyEntries.map(renderHistoryEntry)
             )}
           </div>
         </>
@@ -379,40 +292,6 @@ export const ReflectPage = ({
             <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
               <Btn variant="secondary" onClick={() => setShowStanceConfirm(false)}>{t("cancel")}</Btn>
               <Btn style={{ background: C.accent, color: "#fff" }} onClick={() => { setShowStanceConfirm(false); if (onOpenStanceAssessment) onOpenStanceAssessment(); }}>{t("confirm")}</Btn>
-            </div>
-          </div>
-        </Modal>
-      )}
-
-      {/* Injury modal (create + edit) */}
-      {injuryModalOpen && (
-        <InjuryModal
-          injury={editingInjury}
-          onClose={() => { setInjuryModalOpen(false); setEditingInjury(null); }}
-          onSave={(payload) => {
-            if (editingInjury) {
-              setInjuries(prev => prev.map(i => i.id === payload.id ? payload : i));
-            } else {
-              setInjuries(prev => [...(prev || []), payload]);
-            }
-          }}
-          onDelete={(id) => setInjuries(prev => (prev || []).filter(i => i.id !== id))}
-        />
-      )}
-
-      {/* Mark resolved confirmation */}
-      {resolveConfirm && (
-        <Modal title={t("markResolved")} onClose={() => setResolveConfirm(null)}>
-          <div style={{ textAlign: "center", padding: "10px 0" }}>
-            <div style={{ fontSize: 13, color: C.textSec, marginBottom: 18, lineHeight: 1.5 }}>{t("markResolvedConfirm")}</div>
-            <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
-              <Btn variant="secondary" onClick={() => setResolveConfirm(null)}>{t("cancel")}</Btn>
-              <Btn style={{ background: C.accent, color: "#fff" }} onClick={() => {
-                const id = resolveConfirm.id;
-                const day = todayYMD();
-                setInjuries(prev => (prev || []).map(i => i.id === id ? { ...i, resolved: true, resolvedDate: day } : i));
-                setResolveConfirm(null);
-              }}>{t("confirm")}</Btn>
             </div>
           </div>
         </Modal>
