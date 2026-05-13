@@ -1,5 +1,6 @@
 /* global firebase */
 import { SOURCE_TYPES } from '../constants/textStream';
+import { toLocalYMD } from './dateUtils';
 
 // ─── Source-label resolver ──────────────────────────────────────────────────
 // Per inventory Section 2/Concern 8.
@@ -46,11 +47,11 @@ export function resolveSourceLabel(sourceType, entity, ctx = {}) {
       return ctx.moveName || entity.moveName || 'Drill';
     case SOURCE_TYPES.SPARRING_NOTES:
     case SOURCE_TYPES.SPARRING_REFLECTION:
-      return `Spar — ${(entity.date || '').slice(0, 10)}`;
+      return `Spar — ${toLocalYMD(entity.date) || ''}`;
     case SOURCE_TYPES.SPAR1V1_JOURNAL:
       return entity.opponent || '1v1 Spar';
     case SOURCE_TYPES.MUSICFLOW_REFLECTION:
-      return `Flow — ${(entity.date || '').slice(0, 10)}`;
+      return `Flow — ${toLocalYMD(entity.date) || ''}`;
 
     // Set
     case SOURCE_TYPES.SET_DETAILS:
