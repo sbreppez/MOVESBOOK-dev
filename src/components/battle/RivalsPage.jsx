@@ -108,6 +108,21 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
   // eslint-disable-next-line react-hooks/exhaustive-deps -- seed-only by intent
   }, [rivalsSeed]);
 
+  // TEXTSTREAM-SEARCH-2B — battle scroll. Lives in parent scope (not inside
+  // the inline RivalModal) because the inline-component definition is
+  // recreated on every render of RivalsPage, causing the modal to unmount/
+  // remount and any timer inside its useEffect to be cleared before firing.
+  // 250ms is conservative — waits for modal mount + battle history render.
+  useEffect(() => {
+    if (!battleScrollId) return;
+    const id = battleScrollId;
+    const timer = setTimeout(() => {
+      const el = document.getElementById(`battle-${id}`);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [battleScrollId]);
+
   const addRival = (data) => {
     const now = new Date().toISOString();
     onRivalsChange(prev => [...prev, { ...data, id: Date.now(), battles:[], sparHistory:[], createdDate: now, updatedDate: now }]);
@@ -234,7 +249,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
   };
 
   // ── Rival Modal ──
-  const RivalModal = ({ rival, onClose, onSave, battleScrollId, onBattleScrollUsed }) => {
+  const RivalModal = ({ rival, onClose, onSave, battleScrollId }) => {
     const isEdit = !!rival?.id;
     const [f, setF] = useState({
       name: rival?.name ?? "",
@@ -259,22 +274,12 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
     const [showBattleLog, setShowBattleLog] = useState(false);
     const [battleForm, setBattleForm] = useState({ date: today(), result: null, event: rival?.targetWhere ?? "", howDidItGo:"", whatSurprised:"", trainingNext:"" });
 
-    // Battle/spar history expand state
-    const [expandedBattle, setExpandedBattle] = useState(null);
+    // Battle/spar history expand state. expandedBattle initializes from
+    // battleScrollId so a seed-driven mount/remount preserves the auto-
+    // expansion of the target battle. The scroll itself is handled in the
+    // parent RivalsPage scope to survive inline-component remounts.
+    const [expandedBattle, setExpandedBattle] = useState(battleScrollId || null);
     const [expandedSpar, setExpandedSpar] = useState(null);
-
-    // TEXTSTREAM-SEARCH-2B — battle scroll. When a search result points to a
-    // specific battle, auto-expand it and scroll into view after mount.
-    useEffect(() => {
-      if (!battleScrollId) return;
-      setExpandedBattle(battleScrollId);
-      const timer = setTimeout(() => {
-        const el = document.getElementById(`battle-${battleScrollId}`);
-        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        if (onBattleScrollUsed) onBattleScrollUsed();
-      }, 100);
-      return () => clearTimeout(timer);
-    }, [battleScrollId, onBattleScrollUsed]);
 
     const toggleDomain = (d) => {
       setF(prev => ({
@@ -866,7 +871,6 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
         <RivalModal
           rival={editingRival}
           battleScrollId={battleScrollId}
-          onBattleScrollUsed={() => setBattleScrollId(null)}
           onClose={() => { setShowModal(false); setEditingRival(null); setBattleScrollId(null); }}
           onSave={(data) => {
             if (editingRival?.id) updateRival(editingRival.id, data);
