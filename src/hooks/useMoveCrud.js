@@ -49,7 +49,7 @@ export const useMoveCrud = ({ moves, setMoves, addToast, t, st }) => {
 
   const dupMove = (m) => setMoves(prev => [
     ...prev,
-    { ...m, id: Date.now(), name: m.name + " (copy)" },
+    { ...m, id: Date.now(), name: m.name + " (copy)", createdAt: todayLocal(), trainingLog: [] },
   ]);
 
   const moveToCat = (id, cat) => setMoves(prev =>

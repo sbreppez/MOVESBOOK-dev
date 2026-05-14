@@ -274,6 +274,7 @@ export const Lab = ({ moves, cats, catColors, lab, onLabChange, onSaveMove, addT
       description: preview,
       mastery: 0,
       date: todayLocal(),
+      createdAt: todayLocal(),
       status: "wip",
       attrs: {},
       origin: "creation",

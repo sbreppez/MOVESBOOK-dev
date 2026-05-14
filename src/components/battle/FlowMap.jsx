@@ -642,6 +642,7 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
       arcTension: impact ? IMPACT_TENSION[impact] : null,
       parentId: a.id,
       date: today,
+      createdAt: today,
     };
     onSaveMove(moveData);
     // Also save the connection with library reference

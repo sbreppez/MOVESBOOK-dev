@@ -39,7 +39,7 @@ const sectionLabel = { fontSize:10, fontWeight:800, letterSpacing:1, color:C.tex
 
 export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initialDesc="", cats=CATS, customAttrs=[], onAddAttr, allMoves=[], catColors=CAT_COLORS, isPremium, focus }) => {
   const t = useT();
-  const [f,setF] = useState({ name:"", category:initialCat, description:initialDesc||"", link:"", mastery:10, date:todayLocal(), rotation:"", travelling:"", custom:"", attrs:{}, origin:"learned", musicEnergy:null, tensionRole:null, parentId:null, repsHistory:[], ...move });
+  const [f,setF] = useState({ name:"", category:initialCat, description:initialDesc||"", link:"", mastery:10, date:todayLocal(), createdAt:todayLocal(), rotation:"", travelling:"", custom:"", attrs:{}, origin:"learned", musicEnergy:null, tensionRole:null, parentId:null, trainingLog:[], ...move });
   const set = k => v => setF(p=>({...p,[k]:v}));
   const [journalEntries, setJournalEntries] = useState(move?.journal || []);
   const [newJournalText, setNewJournalText] = useState("");
@@ -53,10 +53,10 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
   }, [showJournal]);
   const handleSave = () => {
     if (!f.name) return;
-    const newRepsHistory = manualDelta > 0
-      ? [...(f.repsHistory || []), { date: todayLocal(), count: manualDelta, source: 'manual' }]
-      : (f.repsHistory || []);
-    onSave({ ...f, journal: journalEntries, repsHistory: newRepsHistory });
+    const newTrainingLog = manualDelta > 0
+      ? [...(f.trainingLog || []), { date: todayLocal(), count: manualDelta, source: 'manual' }]
+      : (f.trainingLog || []);
+    onSave({ ...f, journal: journalEntries, trainingLog: newTrainingLog });
     onClose();
   };
   const [showAttrModal, setShowAttrModal] = useState(false);
@@ -80,13 +80,13 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
   const [showRepsBreakdown, setShowRepsBreakdown] = useState(false);
   const repsBySource = useMemo(() => {
     const sums = { manual: 0, drill: 0, sparring: 0, flashcards: 0 };
-    for (const entry of (f.repsHistory || [])) {
+    for (const entry of (f.trainingLog || [])) {
       if (sums[entry.source] !== undefined) {
         sums[entry.source] += entry.count;
       }
     }
     return sums;
-  }, [f.repsHistory]);
+  }, [f.trainingLog]);
   const totalReps =
     repsBySource.manual + repsBySource.drill + repsBySource.sparring + repsBySource.flashcards + manualDelta;
 
