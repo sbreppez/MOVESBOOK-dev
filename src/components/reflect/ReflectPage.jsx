@@ -29,6 +29,7 @@ export const ReflectPage = ({
   onOpenStanceAssessment, addCalendarEvent, removeCalendarEvent: _removeCalendarEvent,
   updateCalendarEvent, markMoveTrainedToday,
   onSubTabChange, onGoToPrep, initialMonth, initialFocus, onInitialFocusUsed, sets, onAddTrigger, parentSubTab, reports, injuries,
+  setInjuries, restLog, setRestLog, restTypes, setRestTypes,
   isPremium
 }) => {
   const t = useT();
@@ -210,6 +211,9 @@ export const ReflectPage = ({
           addCalendarEvent={addCalendarEvent}
           updateCalendarEvent={updateCalendarEvent}
           markMoveTrainedToday={markMoveTrainedToday}
+          injuries={injuries} setInjuries={setInjuries}
+          restLog={restLog} setRestLog={setRestLog}
+          restTypes={restTypes} setRestTypes={setRestTypes}
           onGoToPrep={onGoToPrep}
           battleprep={battleprep} initialMonth={initialMonth} initialFocus={initialFocus} onInitialFocusUsed={onInitialFocusUsed}
           onToggleBattlePrepTask={onToggleBattlePrepTask}

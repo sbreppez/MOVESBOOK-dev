@@ -25,6 +25,7 @@ export const CalendarOverlay = ({
   cats, catColors, settings, onSettingsChange,
   addToast,
   addCalendarEvent, updateCalendarEvent, markMoveTrainedToday,
+  injuries, setInjuries, restLog, setRestLog, restTypes, setRestTypes,
   onClose, onGoToPrep,
   battleprep, onToggleBattlePrepTask, initialMonth, initialFocus, onInitialFocusUsed,
   inline, onAddTrigger, reports: _reports, isPremium,
@@ -993,6 +994,12 @@ export const CalendarOverlay = ({
           updateCalendarEvent={updateCalendarEvent}
           markMoveTrainedToday={markMoveTrainedToday}
           addToast={addToast}
+          restLog={restLog}
+          setRestLog={setRestLog}
+          restTypes={restTypes}
+          setRestTypes={setRestTypes}
+          injuries={injuries}
+          setInjuries={setInjuries}
           onClose={() => setSelectedLogTodayEvent(null)}
         />
       )}
