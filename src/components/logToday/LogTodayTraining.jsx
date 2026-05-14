@@ -128,7 +128,7 @@ export const LogTodayTraining = forwardRef(function LogTodayTraining({
         value={title}
         onChange={e => setTitle(e.target.value)}
         placeholder={t("sessionTitleOptional")}
-        style={{ ...formInputStyle, fontWeight: 700, fontSize: 16, marginBottom: 8 }}
+        style={{ ...formInputStyle, fontSize: 16, marginBottom: 8 }}
       />
 
       {/* WHAT I WORKED ON */}
