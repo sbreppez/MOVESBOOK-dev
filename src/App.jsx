@@ -922,11 +922,23 @@ export default function App() {
 
   const addCalendarEvent = useCallback((eventData, { silent = false } = {}) => {
     setCalendar(prev => {
+      const now = Date.now();
+      const DEDUP_WINDOW_MS = 1500;
+      // Only treat as a dup if an identical event was written in the last
+      // 1.5s — catches accidental React re-fires without dropping legitimate
+      // user repeats. Events stored before createdAt existed never collide.
       const isDup = (prev.events || []).some(e =>
-        e.source === eventData.source && e.date === eventData.date && e.title === eventData.title
+        e.source === eventData.source &&
+        e.date === eventData.date &&
+        e.title === eventData.title &&
+        e.createdAt &&
+        (now - e.createdAt) < DEDUP_WINDOW_MS
       );
       if (isDup) return prev;
-      return { ...prev, events: [...(prev.events || []), { id: Date.now(), ...eventData }] };
+      return {
+        ...prev,
+        events: [...(prev.events || []), { id: now, createdAt: now, ...eventData }],
+      };
     });
     if (!silent) addToast({ icon: "check", title: tr("sessionLogged") });
   }, [setCalendar, addToast, tr]);
