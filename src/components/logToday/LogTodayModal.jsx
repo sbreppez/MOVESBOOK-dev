@@ -5,6 +5,7 @@ import { useT } from '../../hooks/useTranslation';
 import { Ic } from '../shared/Ic';
 import { todayLocal } from '../../utils/dateUtils';
 import { LogTodayTraining } from './LogTodayTraining';
+import { LogTodayRest } from './LogTodayRest';
 import { LogTodayMovePicker } from './LogTodayMovePicker';
 import { LogTodaySetPicker } from './LogTodaySetPicker';
 import { ComingSoonState } from './ComingSoonState';
@@ -20,10 +21,17 @@ export function LogTodayModal({
   updateCalendarEvent,
   markMoveTrainedToday,
   addToast,
+  restLog,
+  setRestLog,
+  restTypes,
+  setRestTypes,
+  injuries,
+  setInjuries,
   onClose,
 }) {
   const t = useT();
   const formRef = useRef(null);
+  const restRef = useRef(null);
   const effectiveDate = date || todayLocal();
 
   const [activeTab, setActiveTab] = useState("training");
@@ -63,6 +71,7 @@ export function LogTodayModal({
   ];
 
   const isTraining = activeTab === "training";
+  const isRest = activeTab === "rest";
 
   return (
     <div style={{
@@ -166,6 +175,19 @@ export function LogTodayModal({
             addToast={addToast}
             onClose={onClose}
           />
+        ) : isRest ? (
+          <LogTodayRest
+            ref={restRef}
+            date={effectiveDate}
+            restLog={restLog}
+            setRestLog={setRestLog}
+            restTypes={restTypes}
+            setRestTypes={setRestTypes}
+            injuries={injuries}
+            setInjuries={setInjuries}
+            addToast={addToast}
+            onClose={onClose}
+          />
         ) : (
           <ComingSoonState />
         )}
@@ -192,17 +214,17 @@ export function LogTodayModal({
         </button>
         <button
           onClick={() => {
-            if (!isTraining) return;
-            formRef.current?.save();
+            if (isTraining) formRef.current?.save();
+            else if (isRest) restRef.current?.save();
           }}
-          disabled={!isTraining}
+          disabled={!isTraining && !isRest}
           style={{
             flex: 1, background: C.accent, color: "#fff", border: "none",
             borderRadius: 8, padding: "12px 16px",
             fontFamily: FONT_DISPLAY, fontWeight: 800, fontSize: 12,
             letterSpacing: 1.5, textTransform: "uppercase",
-            cursor: isTraining ? "pointer" : "not-allowed",
-            opacity: isTraining ? 1 : 0.4,
+            cursor: (isTraining || isRest) ? "pointer" : "not-allowed",
+            opacity: (isTraining || isRest) ? 1 : 0.4,
           }}
         >
           {t("save")}

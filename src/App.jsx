@@ -71,6 +71,8 @@ function migrateBattlePrep(bp) {
 
 const DEFAULT_TRANSITIONS = ["Thread","Jump","Counter Spin","Slide","Sweep","Touch Foot","Kick","Hop","Roll","Twist","Drop","Spin Through"];
 
+const REST_TYPE_DEFAULTS = ["rest","activeRecovery","injuryOrSick","other"];
+
 export default function App() {
   const [tab,setTab]=useState(()=>{ try { const st=localStorage.getItem("mb_settings"); if(st){ const p=JSON.parse(st); if(p.defaultTab){ const m={"wip":"moves","ideas":"home","ready":"battle","train":"home","vocab":"moves"}; const mapped=m[p.defaultTab]||p.defaultTab; const valid=["home","moves","battle","reflect"]; return valid.includes(mapped)?mapped:"home"; } } } catch {} return "home"; });
 
@@ -232,6 +234,14 @@ export default function App() {
     try { const s=localStorage.getItem("mb_injuries"); if(s){const p=JSON.parse(s); if(Array.isArray(p)) return p;} } catch{}
     return [];
   });
+  const [restLog, setRestLog] = useState(() => {
+    try { const s=localStorage.getItem("mb_rest_log"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object"&&!Array.isArray(p)) return p;} } catch{}
+    return {};
+  });
+  const [restTypes, setRestTypes] = useState(() => {
+    try { const s=localStorage.getItem("mb_rest_types"); if(s){const p=JSON.parse(s); if(Array.isArray(p)&&p.length) return p;} } catch{}
+    return REST_TYPE_DEFAULTS;
+  });
   const [homeStack, setHomeStackState] = useState(() => {
     try { const s=localStorage.getItem("mb_home_stack"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{}
     return { defaultStack:[], overrides:{} };
@@ -284,6 +294,8 @@ export default function App() {
   useEffect(()=>{ saveLocal("mb_milestones_shown", milestonesShown); },[milestonesShown]);
   useEffect(()=>{ saveLocal("mb_presession", presession); },[presession]);
   useEffect(()=>{ saveLocal("mb_injuries", injuries); },[injuries]);
+  useEffect(()=>{ saveLocal("mb_rest_log", restLog); },[restLog]);
+  useEffect(()=>{ saveLocal("mb_rest_types", restTypes); },[restTypes]);
   useEffect(()=>{ saveLocal("mb_home_stack", homeStack); },[homeStack]);
   useEffect(()=>{ saveLocal("mb_home_checks", homeChecks); },[homeChecks]);
   useEffect(()=>{ saveLocal("mb_ideas", ideas); },[ideas]);
@@ -503,6 +515,8 @@ export default function App() {
       milestonesShown: save("milestonesShown"),
       presession:  save("presession"),
       injuries:    save("injuries"),
+      restLog:     save("restLog"),
+      restTypes:   save("restTypes"),
       homeStack:   save("homeStack"),
       homeChecks:  save("homeChecks"),
       profilePhoto: save("profilePhoto"),
@@ -538,6 +552,8 @@ export default function App() {
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.milestonesShown?.(fbUser.uid, milestonesShown); },[milestonesShown, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.presession?.(fbUser.uid, presession); },[presession, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.injuries?.(fbUser.uid, injuries); },[injuries, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.restLog?.(fbUser.uid, restLog); },[restLog, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.restTypes?.(fbUser.uid, restTypes); },[restTypes, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.homeStack?.(fbUser.uid, homeStack); },[homeStack, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.homeChecks?.(fbUser.uid, homeChecks); },[homeChecks, fbUser]);
   useEffect(()=>{ if(fbUser?.uid && profilePhoto && profilePhoto.startsWith('data:')) dbSave.current.profilePhoto?.(fbUser.uid, profilePhoto); },[profilePhoto, fbUser]);
@@ -629,6 +645,10 @@ export default function App() {
           if (prs) { try { const p=JSON.parse(prs); if(p&&typeof p==="object") setPresessionState(p); } catch {} }
           const inj = localStorage.getItem("mb_injuries");
           if (inj) { try { const p=JSON.parse(inj); if(Array.isArray(p)) setInjuries(p); } catch {} }
+          const rl = localStorage.getItem("mb_rest_log");
+          if (rl) { try { const p=JSON.parse(rl); if(p&&typeof p==="object"&&!Array.isArray(p)) setRestLog(p); } catch {} }
+          const rt = localStorage.getItem("mb_rest_types");
+          if (rt) { try { const p=JSON.parse(rt); if(Array.isArray(p)&&p.length) setRestTypes(p); } catch {} }
           const hs = localStorage.getItem("mb_home_stack");
           if (hs) { try { const p=JSON.parse(hs); if(p&&typeof p==="object") setHomeStackState(p); } catch {} }
           const hc = localStorage.getItem("mb_home_checks");
@@ -1129,7 +1149,7 @@ export default function App() {
             </div>
           )}
           <TrainModalCtx.Provider value={{ openModal:(type,idea,onSave)=>{ setTrainModal({type,idea,onSave}); } }}>
-            {tab==="home" && !showCreate && <HomePage habits={habits} setHabits={setHabits} injuries={injuries} setInjuries={setInjuries} presession={presession} setPresession={setPresession} ideas={ideas} setIdeas={setIdeas} settings={appSettings} onSettingsChange={setAppSettings} homeStack={homeStack} setHomeStack={setHomeStack} homeChecks={homeChecks} setHomeChecks={setHomeChecks} onAddTrigger={addTick} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} calendar={calendar} moves={moves} setMoves={setMovesGrad} cats={cats} catColors={catColors} sets={sets} markMoveTrainedToday={markMoveTrainedToday} updateCalendarEvent={updateCalendarEvent} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} isPremium={isPremium} addToast={addToast} homeSeed={homeSeed} onHomeSeedUsed={()=>setHomeSeed(null)}/>}
+            {tab==="home" && !showCreate && <HomePage habits={habits} setHabits={setHabits} injuries={injuries} setInjuries={setInjuries} restLog={restLog} setRestLog={setRestLog} restTypes={restTypes} setRestTypes={setRestTypes} presession={presession} setPresession={setPresession} ideas={ideas} setIdeas={setIdeas} settings={appSettings} onSettingsChange={setAppSettings} homeStack={homeStack} setHomeStack={setHomeStack} homeChecks={homeChecks} setHomeChecks={setHomeChecks} onAddTrigger={addTick} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} calendar={calendar} moves={moves} setMoves={setMovesGrad} cats={cats} catColors={catColors} sets={sets} markMoveTrainedToday={markMoveTrainedToday} updateCalendarEvent={updateCalendarEvent} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} isPremium={isPremium} addToast={addToast} homeSeed={homeSeed} onHomeSeedUsed={()=>setHomeSeed(null)}/>}
             {tab==="moves" && !showCreate && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} catDomains={catDomains} setCatDomains={setCatDomains} sets={sets} setSets={setSets} addToast={addToast} settings={appSettings} onSettingsChange={setAppSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} reminders={reminders} onRemindersChange={setReminders} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}} onOpenManageReminders={()=>setShowManageReminders(true)} isPremium={isPremium} staleCount={staleCount} onOpenExplore={()=>{if(!isPremium){setGatedFeature("explore");return;}setShowLab(true);}} onOpenRRR={()=>{if(!isPremium){setGatedFeature("rrr");return;}setShowRRR(true);}} onOpenCombine={()=>{if(!isPremium){setGatedFeature("combine");return;}setShowComboMachine(true);}} onOpenMap={()=>{if(!isPremium){setGatedFeature("map");return;}setShowFlowMap(true);}} onOpenFlashCards={()=>{if(!isPremium){setGatedFeature("flashCards");return;}setShowFlashCards(true);}} onOpenTools={()=>setShowCreate(true)} onOpenFlow={()=>{if(!isPremium){setGatedFeature("flow");return;}setShowMusicFlow(true);}} onBulkTrigger={bulkTrigger} movesSeed={movesSeed} onMovesSeedUsed={()=>setMovesSeed(null)} setsSeed={setsSeed} onSetsSeedUsed={()=>setSetsSeed(null)}/>}
             {tab==="battle" && !showCreate && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} addToast={addToast} freestyle={freestyle} onFreestyleChange={setFreestyle} rivals={rivals} onRivalsChange={setRivals} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} isPremium={isPremium} onSimulate={()=>{if(!isPremium){setGatedFeature("compSim");return;}setShowCompSim(true);}} onOpenSparring={()=>setShowSparring(true)} battleprep={battleprep} setBattleprep={setBattleprep} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={()=>setBattlePrepSeed(null)} rivalsSeed={rivalsSeed} onRivalsSeedUsed={()=>setRivalsSeed(null)} onOpenSharedCalendar={(im)=>{setCalendarInitialMonth(im||null); setTab("reflect"); setSubTab("calendar");}}/>}
             {tab==="reflect" && !showCreate && <ReflectPage isPremium={isPremium} ideas={ideas} setIdeas={setIdeas} moves={moves} setMoves={setMovesGrad} reps={reps} sparring={sparring} musicflow={musicflow} habits={habits} setHabits={setHabits} homeStack={homeStack} setHomeStack={setHomeStack} calendar={calendar} setCalendar={setCalendar} cats={cats} catColors={catColors} settings={appSettings} onSettingsChange={setAppSettings} addToast={addToast} stance={stance} battleprep={battleprep} onToggleBattlePrepTask={(planId,dateStr,taskIdx)=>{setBattleprep(prev=>{const plans=(prev.plans||[]).map(p=>{if(p.id!==planId) return p;const key=dateStr+"-"+taskIdx;return {...p, completedTasks:{...(p.completedTasks||{}), [key]:!(p.completedTasks||{})[key]}};});return {...prev, plans};});}} onOpenStanceAssessment={()=>setShowStanceAssessment(true)} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onSubTabChange={setSubTab} onGoToPrep={(seed)=>{setBattlePrepSeed(seed);setTab("battle");}} initialMonth={calendarInitialMonth} initialFocus={calendarInitialFocus} onInitialFocusUsed={()=>setCalendarInitialFocus(null)} sets={sets} onAddTrigger={addTick} parentSubTab={subTab} reports={reports} injuries={injuries} markMoveTrainedToday={markMoveTrainedToday} updateCalendarEvent={updateCalendarEvent}/>}

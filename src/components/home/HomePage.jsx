@@ -76,7 +76,9 @@ function resolveTileName(tile, habits, ideas, moves) {
 
 export const HomePage = ({
   habits, setHabits,
-  injuries: _injuries, setInjuries: _setInjuries, presession, setPresession,
+  injuries, setInjuries,
+  restLog, setRestLog, restTypes, setRestTypes,
+  presession, setPresession,
   ideas, setIdeas, settings, onSettingsChange: _onSettingsChange,
   homeStack, setHomeStack, homeChecks, setHomeChecks,
   onAddTrigger, addCalendarEvent, removeCalendarEvent, updateCalendarEvent, calendar,
@@ -1337,6 +1339,12 @@ export const HomePage = ({
             updateCalendarEvent={updateCalendarEvent}
             markMoveTrainedToday={markMoveTrainedToday}
             addToast={addToast}
+            restLog={restLog}
+            setRestLog={setRestLog}
+            restTypes={restTypes}
+            setRestTypes={setRestTypes}
+            injuries={injuries}
+            setInjuries={setInjuries}
             onClose={() => setShowLogToday(false)}
           />
         );
