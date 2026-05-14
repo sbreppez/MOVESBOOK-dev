@@ -514,6 +514,27 @@ export const SessionJournal = ({
               />
             </>
           )}
+
+          {/* ── FALLBACK ── any type not handled above (e.g. flashcards, routine) */}
+          {!["training", "battle", "rest", "journal", "custom"].includes(type) && (
+            <>
+              <input
+                value={title}
+                onChange={e => setTitle(e.target.value)}
+                placeholder={t("journalEvent")}
+                style={{ width: "100%", background: C.surfaceAlt, border: `1px solid ${C.border}`,
+                  borderRadius: 8, padding: "8px 10px", color: C.text, fontSize: 13,
+                  fontFamily: FONT_BODY, fontWeight: 600, outline: "none", marginBottom: 8 }}
+              />
+              <Txtarea
+                value={notes}
+                onChange={setNotes}
+                placeholder={t("notesPlaceholder")}
+                rows={3}
+                autoExpand
+              />
+            </>
+          )}
         </div>
 
         {/* Save button */}
