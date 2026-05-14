@@ -109,6 +109,27 @@ export function resolveSourceLabel(sourceType, entity, ctx = {}) {
     case SOURCE_TYPES.PRESESSION_WANT_TO_TRY:
       return 'Before You Train';
 
+    // Injury — entity is the injury record; label is body-part-derived.
+    // Resolution prefix distinguishes the resolutionNote case from the
+    // initial description in textstream lookups.
+    case SOURCE_TYPES.INJURY_DESCRIPTION:
+    case SOURCE_TYPES.INJURY_RESOLUTION_NOTE: {
+      const part = entity.bodyPart
+        ? (ctx.bodyPartLabel || entity.bodyPart)
+        : '';
+      const side = entity.side
+        ? (ctx.sideLabel || entity.side)
+        : '';
+      const where = side ? `${side} ${part}` : (part || '(injury)');
+      return sourceType === SOURCE_TYPES.INJURY_RESOLUTION_NOTE
+        ? `Resolved — ${where}`
+        : where;
+    }
+
+    // Rest log — entity is the per-date entry; label is the date itself.
+    case SOURCE_TYPES.REST_TODAY_NOTE:
+      return ctx.date || '(rest day)';
+
     default:
       console.warn(`[textStream] No label resolver for source_type: ${sourceType}`);
       return '(unknown)';
@@ -442,6 +463,19 @@ export async function backfillTextStream(uid, stores) {
     for (const w of (stores.presession.wantToTry || [])) {
       await tryEmit(SOURCE_TYPES.PRESESSION_WANT_TO_TRY, w.id, 'Before You Train', w.text);
     }
+  }
+
+  // 1.25 Injuries
+  for (const inj of (stores.injuries || [])) {
+    const label = resolveSourceLabel(SOURCE_TYPES.INJURY_DESCRIPTION, inj);
+    await tryEmit(SOURCE_TYPES.INJURY_DESCRIPTION,     inj.id, label, inj.description);
+    const resolvedLabel = resolveSourceLabel(SOURCE_TYPES.INJURY_RESOLUTION_NOTE, inj);
+    await tryEmit(SOURCE_TYPES.INJURY_RESOLUTION_NOTE, inj.id, resolvedLabel, inj.resolutionNote);
+  }
+
+  // 1.26 Rest log — keyed by YYYY-MM-DD; source_id is the bare date
+  for (const [date, entry] of Object.entries(stores.restLog || {})) {
+    await tryEmit(SOURCE_TYPES.REST_TODAY_NOTE, date, date, entry?.todayNote);
   }
 
   if (process.env.NODE_ENV !== 'production') {

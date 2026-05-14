@@ -43,7 +43,7 @@ import { PremiumGate } from './components/shared/PremiumGate';
 import { detectMilestones } from './utils/reportEngine';
 import { runHomeMigration } from './utils/homeMigration';
 import { backfillTextStream } from './utils/textStream';
-import { emitProfileChanges, emitReminderChanges, emitPresessionChanges, emitHabitsChanges, emitRoutinesChanges, emitIdeasChanges, emitMovesChanges, emitCalendarChanges, emitRepsChanges, emitSparringChanges, emitMusicflowChanges, emitRivalsChanges, emitBattleprepChanges, emitSetsChanges } from './utils/textStreamWraps';
+import { emitProfileChanges, emitReminderChanges, emitPresessionChanges, emitHabitsChanges, emitRoutinesChanges, emitIdeasChanges, emitMovesChanges, emitCalendarChanges, emitRepsChanges, emitSparringChanges, emitMusicflowChanges, emitRivalsChanges, emitBattleprepChanges, emitSetsChanges, emitInjuriesChanges, emitRestLogChanges } from './utils/textStreamWraps';
 
 // ── Firebase stubs for preview ──
 if (typeof window !== "undefined") {
@@ -230,11 +230,11 @@ export default function App() {
     try { const s=localStorage.getItem("mb_presession"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{}
     return { fromLastSession:null, fromFootage:null, wantToTry:[] };
   });
-  const [injuries, setInjuries] = useState(() => {
+  const [injuries, setInjuriesState] = useState(() => {
     try { const s=localStorage.getItem("mb_injuries"); if(s){const p=JSON.parse(s); if(Array.isArray(p)) return p;} } catch{}
     return [];
   });
-  const [restLog, setRestLog] = useState(() => {
+  const [restLog, setRestLogState] = useState(() => {
     try { const s=localStorage.getItem("mb_rest_log"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object"&&!Array.isArray(p)) return p;} } catch{}
     return {};
   });
@@ -354,6 +354,30 @@ export default function App() {
       if (fbUser?.uid) {
         emitHabitsChanges(prev, next, fbUser.uid).catch(err => {
           console.error('[textStream] habits emit failed:', err);
+        });
+      }
+      return next;
+    });
+  }, [fbUser?.uid]);
+
+  const setInjuries = useCallback((updater) => {
+    setInjuriesState(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      if (fbUser?.uid) {
+        emitInjuriesChanges(prev, next, fbUser.uid).catch(err => {
+          console.error('[textStream] injuries emit failed:', err);
+        });
+      }
+      return next;
+    });
+  }, [fbUser?.uid]);
+
+  const setRestLog = useCallback((updater) => {
+    setRestLogState(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      if (fbUser?.uid) {
+        emitRestLogChanges(prev, next, fbUser.uid).catch(err => {
+          console.error('[textStream] restLog emit failed:', err);
         });
       }
       return next;
@@ -644,9 +668,9 @@ export default function App() {
           const prs = localStorage.getItem("mb_presession");
           if (prs) { try { const p=JSON.parse(prs); if(p&&typeof p==="object") setPresessionState(p); } catch {} }
           const inj = localStorage.getItem("mb_injuries");
-          if (inj) { try { const p=JSON.parse(inj); if(Array.isArray(p)) setInjuries(p); } catch {} }
+          if (inj) { try { const p=JSON.parse(inj); if(Array.isArray(p)) setInjuriesState(p); } catch {} }
           const rl = localStorage.getItem("mb_rest_log");
-          if (rl) { try { const p=JSON.parse(rl); if(p&&typeof p==="object"&&!Array.isArray(p)) setRestLog(p); } catch {} }
+          if (rl) { try { const p=JSON.parse(rl); if(p&&typeof p==="object"&&!Array.isArray(p)) setRestLogState(p); } catch {} }
           const rt = localStorage.getItem("mb_rest_types");
           if (rt) { try { const p=JSON.parse(rt); if(Array.isArray(p)&&p.length) setRestTypes(p); } catch {} }
           const hs = localStorage.getItem("mb_home_stack");
@@ -758,7 +782,7 @@ export default function App() {
     backfillTextStream(fbUser.uid, {
       moves, ideas, habits, homeStack, calendar, reps,
       sparring, musicflow, sets, rivals, battleprep,
-      profile, reminders, presession,
+      profile, reminders, presession, injuries, restLog,
     }).catch(err => {
       console.error('[textStream] backfill failed:', err);
     });

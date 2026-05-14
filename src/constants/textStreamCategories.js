@@ -22,6 +22,7 @@ export const CATEGORIES = [
   { key: 'profile',    labelKey: 'searchCategoryProfile' },
   { key: 'reminders',  labelKey: 'searchCategoryReminders' },
   { key: 'presession', labelKey: 'searchCategoryPresession' },
+  { key: 'rest',       labelKey: 'searchCategoryRest' },
 ];
 
 const SOURCE_TO_CATEGORY = {
@@ -95,6 +96,11 @@ const SOURCE_TO_CATEGORY = {
   [SOURCE_TYPES.PRESESSION_FROM_LAST_SESSION]: 'presession',
   [SOURCE_TYPES.PRESESSION_FROM_FOOTAGE]:      'presession',
   [SOURCE_TYPES.PRESESSION_WANT_TO_TRY]:       'presession',
+
+  // Rest (injuries + per-day rest log — both live under the LogToday Rest sub-tab)
+  [SOURCE_TYPES.INJURY_DESCRIPTION]:     'rest',
+  [SOURCE_TYPES.INJURY_RESOLUTION_NOTE]: 'rest',
+  [SOURCE_TYPES.REST_TODAY_NOTE]:        'rest',
 };
 
 export function getSourceCategory(sourceType) {

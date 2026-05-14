@@ -1081,6 +1081,118 @@ export async function emitSetsChanges(prev, next, uid) {
   // Removed sets: no action (orphan handling).
 }
 
+// ─── Injuries (mb_injuries[] — array of {id, description, resolutionNote, ...}) ─
+//
+// Two text fields per injury:
+//   description    → singleton, supersede on edit (INJURY_DESCRIPTION)
+//   resolutionNote → singleton, supersede on edit (INJURY_RESOLUTION_NOTE)
+//
+// Both use the habit pattern: skip emit when the new value is empty/whitespace,
+// supersede prior entry via findCurrentEntry. Resolved-then-reopened lifecycle
+// leaves the prior resolutionNote un-superseded as an orphan (matches removed-
+// habits behavior); the next resolve supersedes it cleanly.
+//
+// source_id = injury.id (bare). source_label is body-part-derived and resolves
+// inside resolveSourceLabel — no ctx needed because injury carries bodyPart/side
+// on the entity itself.
+//
+// Excluded fields per dossier §1.21:
+//   bodyPart / side / severity / startDate / resolvedDate / resolved — structural
+//     (enums, dates, booleans). bodyPart/side feed the source_label.
+const INJURY_TEXT_FIELDS = [
+  { path: 'description',    source_type: SOURCE_TYPES.INJURY_DESCRIPTION },
+  { path: 'resolutionNote', source_type: SOURCE_TYPES.INJURY_RESOLUTION_NOTE },
+];
+
+export async function emitInjuriesChanges(prev, next, uid) {
+  if (!uid) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('[textStream] emitInjuriesChanges called without uid; skipping');
+    }
+    return;
+  }
+
+  const prevList = prev || [];
+  const nextList = next || [];
+  const prevById = new Map(prevList.map(i => [i.id, i]));
+
+  for (const nextInj of nextList) {
+    const prevInj = prevById.get(nextInj.id);
+    for (const { path, source_type } of INJURY_TEXT_FIELDS) {
+      const prevVal = (prevInj?.[path] ?? '').toString();
+      const nextVal = (nextInj?.[path] ?? '').toString();
+      if (prevVal === nextVal) continue;
+      if (!nextVal.trim()) continue;
+
+      try {
+        const prior = prevInj
+          ? await findCurrentEntry(uid, source_type, nextInj.id)
+          : null;
+        await emitToTextStream(uid, {
+          source_type,
+          source_id: nextInj.id,
+          source_label: resolveSourceLabel(source_type, nextInj),
+          text: nextVal,
+          supersedes: prior?.id || null,
+        });
+      } catch (err) {
+        console.error(`[textStream] injury ${nextInj.id}.${path} emit failed:`, err);
+      }
+    }
+  }
+  // Removed injuries: no action (orphan handling).
+}
+
+// ─── Rest Log (mb_rest_log — object keyed by YYYY-MM-DD) ────────────────────
+//
+// Single text field per date entry: todayNote. Storage shape differs from every
+// other wrap (object keyed by date, not array of records) — iterate via
+// Object.entries instead of array map. source_id is the bare date string.
+//
+// LogTodayRest.save() deletes the date key entirely when the entry becomes
+// empty (no restType, no note, no sleep, no soreness). The diff treats the
+// missing key as prevVal '' → no emit. The prior textstream entry for that
+// date stays un-superseded (orphan) per the standard removed-record contract.
+//
+// Excluded fields per dossier §1.22:
+//   restType / sleep.hours / sleep.quality / soreness[] — enums, numerics,
+//     structural arrays. Not narrative.
+export async function emitRestLogChanges(prev, next, uid) {
+  if (!uid) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('[textStream] emitRestLogChanges called without uid; skipping');
+    }
+    return;
+  }
+
+  const prevMap = prev || {};
+  const nextMap = next || {};
+
+  for (const [date, nextEntry] of Object.entries(nextMap)) {
+    const prevEntry = prevMap[date];
+    const prevVal = (prevEntry?.todayNote ?? '').toString();
+    const nextVal = (nextEntry?.todayNote ?? '').toString();
+    if (prevVal === nextVal) continue;
+    if (!nextVal.trim()) continue;
+
+    try {
+      const prior = prevEntry
+        ? await findCurrentEntry(uid, SOURCE_TYPES.REST_TODAY_NOTE, date)
+        : null;
+      await emitToTextStream(uid, {
+        source_type: SOURCE_TYPES.REST_TODAY_NOTE,
+        source_id: date,
+        source_label: resolveSourceLabel(SOURCE_TYPES.REST_TODAY_NOTE, nextEntry, { date }),
+        text: nextVal,
+        supersedes: prior?.id || null,
+      });
+    } catch (err) {
+      console.error(`[textStream] restLog ${date}.todayNote emit failed:`, err);
+    }
+  }
+  // Removed dates: no action (orphan handling).
+}
+
 // ─── Dev-mode assertion ──────────────────────────────────────────────────────
 // Catches the case where a developer adds a new text field to the canonical
 // schema but forgets to add it to the wrap's *_TEXT_FIELDS list.

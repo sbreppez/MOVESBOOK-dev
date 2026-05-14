@@ -75,4 +75,11 @@ export const SOURCE_TYPES = Object.freeze({
   PRESESSION_FROM_LAST_SESSION:     'presession_fromLastSession',
   PRESESSION_FROM_FOOTAGE:          'presession_fromFootage',
   PRESESSION_WANT_TO_TRY:           'presession_wantToTry',
+
+  // Section 1.25 — Injury (mb_injuries[])
+  INJURY_DESCRIPTION:               'injury_description',
+  INJURY_RESOLUTION_NOTE:           'injury_resolutionNote',
+
+  // Section 1.26 — Rest Log (mb_rest_log, keyed by YYYY-MM-DD)
+  REST_TODAY_NOTE:                  'rest_todayNote',
 });

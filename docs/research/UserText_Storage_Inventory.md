@@ -720,6 +720,60 @@ These do not migrate.
 
 ---
 
+### 1.25 — Injury (`mb_injuries[]`)
+
+Added 2026-05-13 (Sessions A–D2 — REST sub-tab + InjuryModal). Numbered after the original inventory sequence; placement reflects creation order, not exclusion. Two narrative text fields per injury record. Storage: `localStorage["mb_injuries"]` → array; Firestore `users/{uid}/injuries` (registered at [App.jsx:517](src/App.jsx:517), synced at [App.jsx:554](src/App.jsx:554)).
+
+#### `injury.description`
+
+| Aspect | Value |
+|---|---|
+| Schema shape | `string` (multiline; auto-expanding textarea) |
+| Storage location | `mb_injuries[]` array entry |
+| Existing edit-history | None — overwrite via InjuryModal handleSave |
+| Write sites | [src/components/modals/InjuryModal.jsx:39](src/components/modals/InjuryModal.jsx:39) (handleSave) — value from Txtarea at [InjuryModal.jsx:103](src/components/modals/InjuryModal.jsx:103). Mounted from [LogTodayRest.jsx:230](src/components/logToday/LogTodayRest.jsx:230) (REST sub-tab) and [HomeActiveInjuryBanner.jsx:93](src/components/home/HomeActiveInjuryBanner.jsx:93) (HOME banner) |
+| Read sites | InjuryModal re-display on edit; HomeActiveInjuryBanner / LogTodayRest derive labels from `bodyPart`/`side`, not description |
+| Translation keys | `injuryDescription`, `injuryDescPlaceholder` |
+| Notes | Optional — `canSave` at [InjuryModal.jsx:29](src/components/modals/InjuryModal.jsx:29) requires only `bodyPart && severity > 0 && startDate`. Trimmed on save. |
+
+#### `injury.resolutionNote`
+
+| Aspect | Value |
+|---|---|
+| Schema shape | `string` (multiline) — `null` when injury is unresolved |
+| Storage location | Same record |
+| Existing edit-history | None — overwrite. Reopen-then-resolve cycle replaces the prior note. |
+| Write sites | [src/components/modals/InjuryModal.jsx:44](src/components/modals/InjuryModal.jsx:44) (handleSave) — Txtarea at [InjuryModal.jsx:122](src/components/modals/InjuryModal.jsx:122), only when `resolved === true` |
+| Read sites | InjuryModal resolved-section re-display |
+| Translation keys | `injuryResolutionPrompt`, `markAsResolved`, `resolvedOn`, `reopen` |
+| Notes | Set to `null` when `resolved === false` ([InjuryModal.jsx:44](src/components/modals/InjuryModal.jsx:44) ternary). Reopen leaves the prior textstream entry orphan-style un-superseded; next resolve supersedes it. |
+
+**Injury-level structural fields (excluded from TextStream — not narrative):** `id`, `bodyPart`, `side`, `severity`, `startDate`, `resolved`, `resolvedDate`. `bodyPart`/`side` feed the source_label.
+
+---
+
+### 1.26 — Rest Log (`mb_rest_log`)
+
+Added 2026-05-13 (Session D1). **Storage shape differs from every other store: object keyed by YYYY-MM-DD date string, not array of records.** One entry per date. Storage: `localStorage["mb_rest_log"]` → object; Firestore `users/{uid}/restLog` (registered at [App.jsx:518](src/App.jsx:518), synced at [App.jsx:555](src/App.jsx:555)).
+
+#### `restLog[date].todayNote`
+
+| Aspect | Value |
+|---|---|
+| Schema shape | `string` (multiline; auto-expanding textarea) |
+| Storage location | `mb_rest_log[YYYY-MM-DD].todayNote` |
+| Existing edit-history | None — overwrite by date. LogTodayRest.save() replaces the entire date entry. |
+| Write sites | [src/components/logToday/LogTodayRest.jsx:48](src/components/logToday/LogTodayRest.jsx:48) (save imperative handle) — value from Txtarea at [LogTodayRest.jsx:219](src/components/logToday/LogTodayRest.jsx:219) |
+| Read sites | [LogTodayRest.jsx:34](src/components/logToday/LogTodayRest.jsx:34) (re-displayed on re-open of same date) |
+| Translation keys | `todayNote` (label only) |
+| Notes | When the entry becomes empty (no restType, no note, no sleep, no soreness), [LogTodayRest.jsx:62](src/components/logToday/LogTodayRest.jsx:62) `delete next[date]` removes the date key entirely. Trimmed on save. |
+
+**Date-entry structural fields (excluded from TextStream — not narrative):** `restType` (enum), `sleep.hours` (number), `sleep.quality` (enum), `soreness[]` (structural array of `{bodyPart, side, severity}`).
+
+**Custom rest types (`mb_rest_types`):** Sibling store, also added in D1, but `setRestTypes` is unused in D1 ([LogTodayRest.jsx:23](src/components/logToday/LogTodayRest.jsx:23) "custom rest type CRUD deferred"). No UI write site for user-typed type labels exists yet — when CRUD lands, revisit and add `REST_TYPE_LABEL` per the borderline label-data convention (see 5.2).
+
+---
+
 ## Section 2 — Cross-cutting concerns
 
 ### Concern 1 — Timestamp format inconsistencies on text records
