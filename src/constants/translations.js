@@ -1208,6 +1208,7 @@ export const TRANSLATIONS = {
     activeInjuries:"ACTIVE INJURIES",addInjury:"ADD INJURY",editInjury:"EDIT INJURY",newInjury:"NEW INJURY",bodyPart:"BODY PART",side:"SIDE",leftSide:"Left",rightSide:"Right",markResolved:"RESOLVE",startDate:"START DATE",injuryDescPlaceholder:"What happened? (optional)",bodyPartHead:"Head",bodyPartNeck:"Neck",bodyPartShoulder:"Shoulder",bodyPartElbow:"Elbow",bodyPartWrist:"Wrist",bodyPartUpperBack:"Upper back",bodyPartLowerBack:"Lower back",bodyPartHip:"Hip",bodyPartKnee:"Knee",bodyPartAnkle:"Ankle",
     injuryResolutionPrompt:"Anything to remember to prevent this?",markAsResolved:"Mark as resolved",reopen:"Reopen",resolvedOn:"Resolved on",
     restActiveInjuries:"Active injuries",restLogNewInjury:"+ Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
+    injuryDayCounter:"Day {n}",injuryNMoreActive:"+ {n} more",
     battlePrepCard:"BATTLE PREP",daysLeft:"days left",todaysTasks:"tasks today",
     sparringGap:"SPARRING GAP",daysSinceLastSpar:"days since last spar",timeToSpar:"Time to spar!",
     injuryDescription:"DESCRIPTION",severity:"SEVERITY",severityMild:"Mild",severityModerate:"Moderate",severitySevere:"Severe",cause:"CAUSE",treatment:"TREATMENT",resolveInjury:"RESOLVE INJURY",preventionNote:"PREVENTION NOTE",preventionNotePrompt:"Anything to remember to prevent this in the future?",resolvedDate:"RESOLVED DATE",injuryHistory:"INJURY HISTORY",whatCausedIt:"WHAT CAUSED IT",treatmentPlan:"TREATMENT PLAN",daysInjured:"days",noInjuryHistory:"No injury history yet",
@@ -2426,6 +2427,8 @@ export const TRANSLATIONS = {
     injuryResolutionPrompt:"Anything to remember to prevent this?",markAsResolved:"Mark as resolved",reopen:"Reopen",resolvedOn:"Resolved on",
     // rest sub-tab — TODO: verify translations
     restActiveInjuries:"Active injuries",restLogNewInjury:"+ Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
+    // HOME injury banner — TODO: verify translations
+    injuryDayCounter:"Day {n}",injuryNMoreActive:"+ {n} more",
     battlePrepCard:"PREP BATTLE",daysLeft:"giorni rimasti",todaysTasks:"compiti oggi",
     sparringGap:"GAP SPARRING",daysSinceLastSpar:"giorni dall'ultimo spar",timeToSpar:"È ora di sparrare!",
     injuryDescription:"DESCRIZIONE",severity:"GRAVITÀ",severityMild:"Lieve",severityModerate:"Moderata",severitySevere:"Grave",cause:"CAUSA",treatment:"TRATTAMENTO",resolveInjury:"RISOLVI INFORTUNIO",preventionNote:"NOTA DI PREVENZIONE",preventionNotePrompt:"Qualcosa da ricordare per prevenire questo in futuro?",resolvedDate:"DATA RISOLUZIONE",injuryHistory:"STORICO INFORTUNI",whatCausedIt:"CAUSA",treatmentPlan:"PIANO DI TRATTAMENTO",daysInjured:"giorni",noInjuryHistory:"Nessuno storico infortuni",
@@ -3630,6 +3633,8 @@ export const TRANSLATIONS = {
     injuryResolutionPrompt:"Anything to remember to prevent this?",markAsResolved:"Mark as resolved",reopen:"Reopen",resolvedOn:"Resolved on",
     // rest sub-tab — TODO: verify translations
     restActiveInjuries:"Active injuries",restLogNewInjury:"+ Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
+    // HOME injury banner — TODO: verify translations
+    injuryDayCounter:"Day {n}",injuryNMoreActive:"+ {n} more",
     battlePrepCard:"PREP BATALLA",daysLeft:"días restantes",todaysTasks:"tareas hoy",
     sparringGap:"GAP SPARRING",daysSinceLastSpar:"días desde último spar",timeToSpar:"¡Hora de sparrear!",
     injuryDescription:"DESCRIPCIÓN",severity:"GRAVEDAD",severityMild:"Leve",severityModerate:"Moderada",severitySevere:"Grave",cause:"CAUSA",treatment:"TRATAMIENTO",resolveInjury:"RESOLVER LESIÓN",preventionNote:"NOTA DE PREVENCIÓN",preventionNotePrompt:"¿Algo que recordar para prevenir esto en el futuro?",resolvedDate:"FECHA DE RESOLUCIÓN",injuryHistory:"HISTORIAL DE LESIONES",whatCausedIt:"QUÉ LO CAUSÓ",treatmentPlan:"PLAN DE TRATAMIENTO",daysInjured:"días",noInjuryHistory:"Sin historial de lesiones",
@@ -4834,6 +4839,8 @@ export const TRANSLATIONS = {
     injuryResolutionPrompt:"Anything to remember to prevent this?",markAsResolved:"Mark as resolved",reopen:"Reopen",resolvedOn:"Resolved on",
     // rest sub-tab — TODO: verify translations
     restActiveInjuries:"Active injuries",restLogNewInjury:"+ Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
+    // HOME injury banner — TODO: verify translations
+    injuryDayCounter:"Day {n}",injuryNMoreActive:"+ {n} more",
     battlePrepCard:"PRÉP BATTLE",daysLeft:"jours restants",todaysTasks:"tâches aujourd'hui",
     sparringGap:"GAP SPARRING",daysSinceLastSpar:"jours depuis dernier spar",timeToSpar:"C'est l'heure du spar !",
     injuryDescription:"DESCRIPTION",severity:"GRAVITÉ",severityMild:"Légère",severityModerate:"Modérée",severitySevere:"Grave",cause:"CAUSE",treatment:"TRAITEMENT",resolveInjury:"RÉSOUDRE BLESSURE",preventionNote:"NOTE DE PRÉVENTION",preventionNotePrompt:"Quelque chose à retenir pour prévenir cela à l'avenir ?",resolvedDate:"DATE DE RÉSOLUTION",injuryHistory:"HISTORIQUE DES BLESSURES",whatCausedIt:"CAUSE",treatmentPlan:"PLAN DE TRAITEMENT",daysInjured:"jours",noInjuryHistory:"Aucun historique de blessures",
@@ -6038,6 +6045,8 @@ export const TRANSLATIONS = {
     injuryResolutionPrompt:"Anything to remember to prevent this?",markAsResolved:"Mark as resolved",reopen:"Reopen",resolvedOn:"Resolved on",
     // rest sub-tab — TODO: verify translations
     restActiveInjuries:"Active injuries",restLogNewInjury:"+ Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
+    // HOME injury banner — TODO: verify translations
+    injuryDayCounter:"Day {n}",injuryNMoreActive:"+ {n} more",
     battlePrepCard:"PREP BATALHA",daysLeft:"dias restantes",todaysTasks:"tarefas hoje",
     sparringGap:"GAP SPARRING",daysSinceLastSpar:"dias desde último spar",timeToSpar:"Hora de sparrar!",
     injuryDescription:"DESCRIÇÃO",severity:"GRAVIDADE",severityMild:"Leve",severityModerate:"Moderada",severitySevere:"Grave",cause:"CAUSA",treatment:"TRATAMENTO",resolveInjury:"RESOLVER LESÃO",preventionNote:"NOTA DE PREVENÇÃO",preventionNotePrompt:"Algo a lembrar para prevenir isto no futuro?",resolvedDate:"DATA DE RESOLUÇÃO",injuryHistory:"HISTÓRICO DE LESÕES",whatCausedIt:"O QUE CAUSOU",treatmentPlan:"PLANO DE TRATAMENTO",daysInjured:"dias",noInjuryHistory:"Sem histórico de lesões",
@@ -7242,6 +7251,8 @@ export const TRANSLATIONS = {
     injuryResolutionPrompt:"Anything to remember to prevent this?",markAsResolved:"Mark as resolved",reopen:"Reopen",resolvedOn:"Resolved on",
     // rest sub-tab — TODO: verify translations
     restActiveInjuries:"Active injuries",restLogNewInjury:"+ Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
+    // HOME injury banner — TODO: verify translations
+    injuryDayCounter:"Day {n}",injuryNMoreActive:"+ {n} more",
     battlePrepCard:"BATTLE-VORBEREITUNG",daysLeft:"Tage übrig",todaysTasks:"Aufgaben heute",
     sparringGap:"SPARRING-GAP",daysSinceLastSpar:"Tage seit letztem Spar",timeToSpar:"Zeit zum Sparren!",
     injuryDescription:"BESCHREIBUNG",severity:"SCHWEREGRAD",severityMild:"Leicht",severityModerate:"Mittel",severitySevere:"Schwer",cause:"URSACHE",treatment:"BEHANDLUNG",resolveInjury:"VERLETZUNG LÖSEN",preventionNote:"PRÄVENTIONSNOTIZ",preventionNotePrompt:"Etwas zu merken um das in Zukunft zu vermeiden?",resolvedDate:"GELÖST AM",injuryHistory:"VERLETZUNGSHISTORIE",whatCausedIt:"URSACHE",treatmentPlan:"BEHANDLUNGSPLAN",daysInjured:"Tage",noInjuryHistory:"Keine Verletzungshistorie",
@@ -8447,6 +8458,8 @@ export const TRANSLATIONS = {
     injuryResolutionPrompt:"Anything to remember to prevent this?",markAsResolved:"Mark as resolved",reopen:"Reopen",resolvedOn:"Resolved on",
     // rest sub-tab — TODO: verify translations
     restActiveInjuries:"Active injuries",restLogNewInjury:"+ Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
+    // HOME injury banner — TODO: verify translations
+    injuryDayCounter:"Day {n}",injuryNMoreActive:"+ {n} more",
     battlePrepCard:"バトル準備",daysLeft:"日残り",todaysTasks:"今日のタスク",
     sparringGap:"���パーリングGAP",daysSinceLastSpar:"前回のスパーから",timeToSpar:"スパーの時間だ！",
     injuryDescription:"説明",severity:"重症度",severityMild:"軽度",severityModerate:"中度",severitySevere:"重度",cause:"原因",treatment:"治療",resolveInjury:"怪我を解決",preventionNote:"予防メモ",preventionNotePrompt:"今後これを防ぐために覚えておくことは？",resolvedDate:"解決日",injuryHistory:"怪我の履歴",whatCausedIt:"原因",treatmentPlan:"治療計画",daysInjured:"日",noInjuryHistory:"怪我の履歴なし",
@@ -9650,6 +9663,8 @@ export const TRANSLATIONS = {
     injuryResolutionPrompt:"Anything to remember to prevent this?",markAsResolved:"Mark as resolved",reopen:"Reopen",resolvedOn:"Resolved on",
     // rest sub-tab — TODO: verify translations
     restActiveInjuries:"Active injuries",restLogNewInjury:"+ Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
+    // HOME injury banner — TODO: verify translations
+    injuryDayCounter:"Day {n}",injuryNMoreActive:"+ {n} more",
     battlePrepCard:"备战准备",daysLeft:"天剩余",todaysTasks:"今日任务",
     sparringGap:"对练间隔",daysSinceLastSpar:"距上次对练",timeToSpar:"该对练了！",
     injuryDescription:"描述",severity:"严重程度",severityMild:"轻微",severityModerate:"中等",severitySevere:"严重",cause:"原因",treatment:"治疗",resolveInjury:"解决伤病",preventionNote:"预防备注",preventionNotePrompt:"有什么需要记住以防止将来再次发生的吗？",resolvedDate:"解决日期",injuryHistory:"伤病历史",whatCausedIt:"造成原因",treatmentPlan:"治疗方案",daysInjured:"天",noInjuryHistory:"暂无伤病历史",
@@ -10853,6 +10868,8 @@ export const TRANSLATIONS = {
     injuryResolutionPrompt:"Anything to remember to prevent this?",markAsResolved:"Mark as resolved",reopen:"Reopen",resolvedOn:"Resolved on",
     // rest sub-tab — TODO: verify translations
     restActiveInjuries:"Active injuries",restLogNewInjury:"+ Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
+    // HOME injury banner — TODO: verify translations
+    injuryDayCounter:"Day {n}",injuryNMoreActive:"+ {n} more",
     battlePrepCard:"ПОДГОТОВКА К БАТТЛУ",daysLeft:"дней осталось",todaysTasks:"задач сегодня",
     sparringGap:"ПЕРЕРЫВ В СПАРРИНГЕ",daysSinceLastSpar:"дней с последнего спарринга",timeToSpar:"Пора спарринговать!",
     injuryDescription:"ОПИСАНИЕ",severity:"ТЯЖЕСТЬ",severityMild:"Лёгкая",severityModerate:"Средняя",severitySevere:"Тяжёлая",cause:"ПРИЧИНА",treatment:"ЛЕЧЕНИЕ",resolveInjury:"РЕШИТЬ ТРАВМУ",preventionNote:"ЗАМЕТКА О ПРОФИЛАКТИКЕ",preventionNotePrompt:"Что запомнить чтобы предотвратить это в будущем?",resolvedDate:"ДАТА РЕШЕНИЯ",injuryHistory:"ИСТОРИЯ ТРАВМ",whatCausedIt:"ЧТО ВЫЗВАЛО",treatmentPlan:"ПЛАН ЛЕЧЕНИЯ",daysInjured:"дней",noInjuryHistory:"Нет истории травм",
@@ -12092,6 +12109,8 @@ export const TRANSLATIONS = {
     injuryResolutionPrompt:"Anything to remember to prevent this?",markAsResolved:"Mark as resolved",reopen:"Reopen",resolvedOn:"Resolved on",
     // rest sub-tab — TODO: verify translations
     restActiveInjuries:"Active injuries",restLogNewInjury:"+ Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
+    // HOME injury banner — TODO: verify translations
+    injuryDayCounter:"Day {n}",injuryNMoreActive:"+ {n} more",
     battlePrepCard:"배틀 준비",daysLeft:"일 남음",todaysTasks:"오늘 과제",
     sparringGap:"스파링 간격",daysSinceLastSpar:"마지막 스파링 이후",timeToSpar:"스파링 할 시간!",
     injuryDescription:"설명",severity:"심각도",severityMild:"경미",severityModerate:"보통",severitySevere:"심각",cause:"원인",treatment:"치료",resolveInjury:"부상 해결",preventionNote:"예방 메모",preventionNotePrompt:"앞으로 이것을 방지하기 위해 기억할 것이 있나요?",resolvedDate:"해결 날짜",injuryHistory:"부상 이력",whatCausedIt:"원인",treatmentPlan:"치료 계획",daysInjured:"일",noInjuryHistory:"부상 이력 없음",
@@ -13309,6 +13328,8 @@ export const TRANSLATIONS = {
     injuryResolutionPrompt:"Anything to remember to prevent this?",markAsResolved:"Mark as resolved",reopen:"Reopen",resolvedOn:"Resolved on",
     // rest sub-tab — TODO: verify translations
     restActiveInjuries:"Active injuries",restLogNewInjury:"+ Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
+    // HOME injury banner — TODO: verify translations
+    injuryDayCounter:"Day {n}",injuryNMoreActive:"+ {n} more",
     battlePrepCard:"เตรียมแบทเทิล",daysLeft:"วันที่เหลือ",todaysTasks:"งานวันนี้",
     eventLink:"ลิงก์อีเวนต์", addEventLinkHint:"วางลิงก์อีเวนต์ ลงทะเบียน หรือโซเชียล…", openInMaps:"เปิดในแผนที่", battleLocationPlaceholder:"เช่น ศูนย์ประชุม, กรุงเทพ",
     noteForNextTraining:"โน้ตสำหรับเทรนนิ่งครั้งหน้า", noteForNextTrainingPlaceholder:"สิ่งที่จะโฟกัสในเซสชันหน้า — ดริล พลัง มายด์เซ็ต...", nextTimeLabel:"ครั้งหน้า",
@@ -14581,6 +14602,8 @@ export const TRANSLATIONS = {
     injuryResolutionPrompt:"Anything to remember to prevent this?",markAsResolved:"Mark as resolved",reopen:"Reopen",resolvedOn:"Resolved on",
     // rest sub-tab — TODO: verify translations
     restActiveInjuries:"Active injuries",restLogNewInjury:"+ Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
+    // HOME injury banner — TODO: verify translations
+    injuryDayCounter:"Day {n}",injuryNMoreActive:"+ {n} more",
     battlePrepCard:"CHUẨN BỊ BATTLE",daysLeft:"ngày còn lại",todaysTasks:"nhiệm vụ hôm nay",
     sparringGap:"KHOẢNG CÁCH SPARRING",daysSinceLastSpar:"ngày kể từ lần spar cuối",timeToSpar:"Đến lúc spar rồi!",
     injuryDescription:"MÔ TẢ",severity:"MỨC ĐỘ",severityMild:"Nhẹ",severityModerate:"Trung bình",severitySevere:"Nặng",cause:"NGUYÊN NHÂN",treatment:"ĐIỀU TRỊ",resolveInjury:"GIẢI QUYẾT CHẤN THƯƠNG",preventionNote:"GHI CHÚ PHÒNG NGỪA",preventionNotePrompt:"Có gì cần nhớ để phòng ngừa điều này trong tương lai không?",resolvedDate:"NGÀY GIẢI QUYẾT",injuryHistory:"LỊCH SỬ CHẤN THƯƠNG",whatCausedIt:"NGUYÊN NHÂN",treatmentPlan:"KẾ HOẠCH ĐIỀU TRỊ",daysInjured:"ngày",noInjuryHistory:"Chưa có lịch sử chấn thương",

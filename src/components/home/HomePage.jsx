@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { WeekStrip } from './WeekStrip';
+import { HomeActiveInjuryBanner } from './HomeActiveInjuryBanner';
 import { HomeTile } from './HomeTile';
 import { HomeAddPicker } from './HomeAddPicker';
 import { PreSessionIntel } from './PreSessionIntel';
@@ -660,6 +661,9 @@ export const HomePage = ({
           <Ic n="moreH" s={16} c={C.textMuted}/>
         </button>
       </div>
+
+      {/* Active injury banner (hidden when no active injuries) */}
+      <HomeActiveInjuryBanner injuries={injuries} setInjuries={setInjuries}/>
 
       {/* Week strip */}
       <WeekStrip selectedDate={selectedDate} onSelectDate={setSelectedDate}/>
