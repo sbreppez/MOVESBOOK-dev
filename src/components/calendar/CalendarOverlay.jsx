@@ -13,6 +13,7 @@ import { BottomSheet } from '../shared/BottomSheet';
 import { IdeaForm } from '../home/IdeaForm';
 import { BattleResultDetail } from '../reflect/BattleResultDetail';
 import { todayLocal, toYMD } from '../../utils/dateUtils';
+import { setEventTraining, removeEventTraining } from '../../utils/trainingLog';
 import { useDayData } from '../../hooks/useDayData';
 
 const MONTH_KEYS = ["january","february","march","april","may","june","july","august","september","october","november","december"];
@@ -151,11 +152,21 @@ export const CalendarOverlay = ({
       }
       return { ...prev, events: [...prev.events, eventObj] };
     });
-    // Update move dates for tagged moves
-    if (eventObj.type === "training" && eventObj.moveIds?.length) {
-      setMoves(prev => prev.map(m =>
-        eventObj.moveIds.includes(m.id) ? { ...m, date: eventObj.date } : m
-      ));
+    // Phase 2 dual-write: stamp move.date AND upsert the per-move trainingLog
+    // keyed by this event id (handles edit + un-tag in one pass).
+    if (eventObj.type === "training") {
+      setMoves(prev => {
+        const withDate = eventObj.moveIds?.length
+          ? prev.map(m => eventObj.moveIds.includes(m.id) ? { ...m, date: eventObj.date } : m)
+          : prev;
+        return setEventTraining(withDate, {
+          eventId: eventObj.id,
+          moveIds: eventObj.moveIds || [],
+          date: eventObj.date,
+          source: 'session_journal',
+          count: 0,
+        });
+      });
     }
     setShowJournal(false);
     setEditEvent(null);
@@ -171,7 +182,8 @@ export const CalendarOverlay = ({
       ...prev,
       events: prev.events.filter(e => e.id !== id),
     }));
-  }, [setCalendar]);
+    setMoves(prev => removeEventTraining(prev, id));
+  }, [setCalendar, setMoves]);
 
   const openNewEvent = (type) => {
     setEditEvent({ type, date: selectedDay });

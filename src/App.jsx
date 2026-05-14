@@ -41,6 +41,7 @@ import { SOURCE_TYPES } from './constants/textStream';
 import { usePremium } from './hooks/usePremium';
 import { PremiumGate } from './components/shared/PremiumGate';
 import { detectMilestones } from './utils/reportEngine';
+import { setEventTraining, appendTrainingEntry } from './utils/trainingLog';
 import { runHomeMigration } from './utils/homeMigration';
 import { backfillTextStream } from './utils/textStream';
 import { emitProfileChanges, emitReminderChanges, emitPresessionChanges, emitHabitsChanges, emitRoutinesChanges, emitIdeasChanges, emitMovesChanges, emitCalendarChanges, emitRepsChanges, emitSparringChanges, emitMusicflowChanges, emitRivalsChanges, emitBattleprepChanges, emitSetsChanges, emitInjuriesChanges, emitRestLogChanges } from './utils/textStreamWraps';
@@ -956,8 +957,13 @@ export default function App() {
     }));
   }, [setCalendar]);
 
-  const markMoveTrainedToday = useCallback((id) => {
-    setMovesState(prev => prev.map(m => m.id === id ? { ...m, date: todayLocal() } : m));
+  // Phase 2 dual-write: stamps move.date (removed in phase 4) AND upserts the
+  // per-move trainingLog keyed by the Log Today event id.
+  const markMoveTrainedToday = useCallback((eventId, moveIds, date) => {
+    setMovesState(prev => {
+      const withDate = prev.map(m => moveIds.includes(m.id) ? { ...m, date } : m);
+      return setEventTraining(withDate, { eventId, moveIds, date, source: 'log_today', count: 0 });
+    });
   }, []);
 
   const onUpdateRepSession = useCallback((sessionId, updates) => {
@@ -1194,7 +1200,10 @@ export default function App() {
             preselectedMove={repCounterPreselect}
             onSaveSession={(session)=>{
               setReps(prev=>[session,...prev]);
-              setMovesState(prev=>prev.map(m=>m.id===session.moveId?{...m,date:todayLocal()}:m));
+              setMovesState(prev=>{
+                const withDate=prev.map(m=>m.id===session.moveId?{...m,date:todayLocal()}:m);
+                return appendTrainingEntry(withDate, session.moveId, { date: toYMD(session.date), count: session.reps, source: 'drill' });
+              });
               lastSessionSaved.current=true;
             }}
             onUpdateSession={onUpdateRepSession}
@@ -1205,7 +1214,11 @@ export default function App() {
             onSaveSession={(session, updatedSparring)=>{
               setSparring(updatedSparring);
               if(session.movesTrained?.length){
-                setMovesState(prev=>prev.map(m=>session.movesTrained.includes(m.id)?{...m,date:todayLocal()}:m));
+                setMovesState(prev=>{
+                  const withDate=prev.map(m=>session.movesTrained.includes(m.id)?{...m,date:todayLocal()}:m);
+                  const d=toYMD(session.date);
+                  return session.movesTrained.reduce((acc,id)=>appendTrainingEntry(acc,id,{ date:d, count:0, source:'sparring' }),withDate);
+                });
               }
               lastSessionSaved.current=true;
             }}

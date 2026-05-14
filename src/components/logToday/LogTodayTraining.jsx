@@ -105,7 +105,7 @@ export const LogTodayTraining = forwardRef(function LogTodayTraining({
     }
 
     if (markMoveTrainedToday) {
-      allMoveIdsToMark.forEach(id => markMoveTrainedToday(id));
+      markMoveTrainedToday(record.id, allMoveIdsToMark, record.date);
     }
 
     addToast?.({
