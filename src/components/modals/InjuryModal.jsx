@@ -4,34 +4,14 @@ import { lbl } from '../../constants/styles';
 import { Modal } from '../shared/Modal';
 import { Btn } from '../shared/Btn';
 import { Txtarea } from '../shared/Txtarea';
+import { BodyPartChipGrid } from '../shared/BodyPartChipGrid';
 import { useT } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
-
-const CHIP_ORDER = [
-  { part: "head",       side: null    },
-  { part: "neck",       side: null    },
-  { part: "shoulder",   side: "left"  },
-  { part: "shoulder",   side: "right" },
-  { part: "elbow",      side: "left"  },
-  { part: "elbow",      side: "right" },
-  { part: "wrist",      side: "left"  },
-  { part: "wrist",      side: "right" },
-  { part: "upperBack",  side: null    },
-  { part: "lowerBack",  side: null    },
-  { part: "hip",        side: "left"  },
-  { part: "hip",        side: "right" },
-  { part: "knee",       side: "left"  },
-  { part: "knee",       side: "right" },
-  { part: "ankle",      side: "left"  },
-  { part: "ankle",      side: "right" },
-];
 
 const todayYMD = () => {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 };
-
-const partLabelKey = (p) => p ? "bodyPart" + p.charAt(0).toUpperCase() + p.slice(1) : "";
 
 export const InjuryModal = ({ injury, onClose, onSave, onDelete }) => {
   const { C } = useSettings();
@@ -47,30 +27,6 @@ export const InjuryModal = ({ injury, onClose, onSave, onDelete }) => {
 
   const sevColors = { 1: C.green, 2: C.yellow, 3: C.accent };
   const canSave = bodyPart && severity > 0 && startDate;
-
-  const chipStyle = (active) => ({
-    borderRadius: 20, padding: "5px 13px",
-    border: `1.5px solid ${active ? C.accent : C.border}`,
-    background: active ? C.accent + "18" : "transparent",
-    color: active ? C.accent : C.text,
-    fontSize: 11, fontWeight: 700, fontFamily: FONT_DISPLAY,
-    letterSpacing: 0.5, textTransform: "uppercase",
-    cursor: "pointer", transition: "all 0.15s",
-    width: "100%",
-  });
-
-  const chipLabel = (chip) => {
-    const part = t(partLabelKey(chip.part));
-    if (!chip.side) return part;
-    return `${t(chip.side === "left" ? "leftSide" : "rightSide")} ${part}`;
-  };
-
-  const isChipActive = (chip) => bodyPart === chip.part && (side || null) === (chip.side || null);
-
-  const handleChipClick = (chip) => {
-    setBodyPart(chip.part);
-    setSide(chip.side);
-  };
 
   const handleSave = () => {
     if (!canSave) return;
@@ -100,13 +56,13 @@ export const InjuryModal = ({ injury, onClose, onSave, onDelete }) => {
       {/* Body part chip grid */}
       <div style={{ marginBottom: 14 }}>
         <label style={lbl()}>{t("bodyPart")} *</label>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, marginTop: 6 }}>
-          {CHIP_ORDER.map((chip, i) => (
-            <button key={i} onClick={() => handleChipClick(chip)} style={chipStyle(isChipActive(chip))}>
-              {chipLabel(chip)}
-            </button>
-          ))}
-        </div>
+        <BodyPartChipGrid
+          selected={bodyPart ? [{ bodyPart, side: side || null }] : []}
+          onToggle={(chip) => {
+            setBodyPart(chip.bodyPart);
+            setSide(chip.side);
+          }}
+        />
       </div>
 
       {/* Severity */}
