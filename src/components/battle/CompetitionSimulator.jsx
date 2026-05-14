@@ -471,6 +471,7 @@ export const CompetitionSimulator = ({
     };
 
     const updatedSparring = {
+      ...sparring,
       sessions: [session, ...(sparring.sessions || [])],
       records: sparring.records || {},
     };

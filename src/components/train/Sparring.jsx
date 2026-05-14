@@ -361,6 +361,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
     session.prBroken = prs[0] || null;
 
     const updatedSparring = {
+      ...sparring,
       sessions: [session, ...(sparring.sessions || [])],
       records,
     };
