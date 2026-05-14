@@ -61,7 +61,7 @@ export const SorenessSheet = ({ value = [], onChange }) => {
                     letterSpacing: 0.5, textTransform: "uppercase",
                     border: `1.5px solid ${active ? color : C.border}`,
                     background: active ? color : C.surface,
-                    color: active ? "#fff" : C.textMuted,
+                    color: active ? C.onAccent : C.textMuted,
                     transition: "all 0.15s",
                   }}>
                   {t(s === 1 ? "severityMild" : s === 2 ? "severityModerate" : "severitySevere")}
