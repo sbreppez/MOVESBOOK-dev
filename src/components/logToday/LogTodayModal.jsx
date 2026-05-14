@@ -19,7 +19,7 @@ export function LogTodayModal({
   catColors,
   addCalendarEvent,
   updateCalendarEvent,
-  markMoveTrainedToday,
+  recordEventTraining,
   addToast,
   restLog,
   setRestLog,
@@ -171,7 +171,7 @@ export function LogTodayModal({
             onOpenSetPicker={() => setSetPickerOpen(true)}
             addCalendarEvent={addCalendarEvent}
             updateCalendarEvent={updateCalendarEvent}
-            markMoveTrainedToday={markMoveTrainedToday}
+            recordEventTraining={recordEventTraining}
             addToast={addToast}
             onClose={onClose}
           />

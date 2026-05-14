@@ -641,7 +641,6 @@ const DetailModal = ({ pair, pairings, transitions, catColors, cats, onSave, onS
       flowmapPairing: { moveA: a.name, moveB: b.name },
       arcTension: impact ? IMPACT_TENSION[impact] : null,
       parentId: a.id,
-      date: today,
       createdAt: today,
     };
     onSaveMove(moveData);

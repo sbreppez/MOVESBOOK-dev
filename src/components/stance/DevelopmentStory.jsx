@@ -14,7 +14,7 @@ export const DevelopmentStory = ({ moves, sparring: _sparring, calendar: _calend
 
   let earliest = Infinity;
   moves.forEach(m => {
-    const d = m.createdAt || m.date;
+    const d = m.createdAt;
     if (d) {
       const ts = new Date(d).getTime();
       if (ts < earliest) earliest = ts;

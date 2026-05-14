@@ -25,7 +25,7 @@ export const CalendarOverlay = ({
   calendar, setCalendar,
   cats, catColors, settings, onSettingsChange,
   addToast,
-  addCalendarEvent, updateCalendarEvent, markMoveTrainedToday,
+  addCalendarEvent, updateCalendarEvent, recordEventTraining,
   injuries, setInjuries, restLog, setRestLog, restTypes, setRestTypes,
   onClose, onGoToPrep,
   battleprep, onToggleBattlePrepTask, initialMonth, initialFocus, onInitialFocusUsed,
@@ -152,21 +152,16 @@ export const CalendarOverlay = ({
       }
       return { ...prev, events: [...prev.events, eventObj] };
     });
-    // Phase 2 dual-write: stamp move.date AND upsert the per-move trainingLog
-    // keyed by this event id (handles edit + un-tag in one pass).
+    // Upsert the per-move trainingLog keyed by this event id
+    // (handles edit + un-tag in one pass).
     if (eventObj.type === "training") {
-      setMoves(prev => {
-        const withDate = eventObj.moveIds?.length
-          ? prev.map(m => eventObj.moveIds.includes(m.id) ? { ...m, date: eventObj.date } : m)
-          : prev;
-        return setEventTraining(withDate, {
-          eventId: eventObj.id,
-          moveIds: eventObj.moveIds || [],
-          date: eventObj.date,
-          source: 'session_journal',
-          count: 0,
-        });
-      });
+      setMoves(prev => setEventTraining(prev, {
+        eventId: eventObj.id,
+        moveIds: eventObj.moveIds || [],
+        date: eventObj.date,
+        source: 'session_journal',
+        count: 0,
+      }));
     }
     setShowJournal(false);
     setEditEvent(null);
@@ -1004,7 +999,7 @@ export const CalendarOverlay = ({
           catColors={catColors}
           addCalendarEvent={addCalendarEvent}
           updateCalendarEvent={updateCalendarEvent}
-          markMoveTrainedToday={markMoveTrainedToday}
+          recordEventTraining={recordEventTraining}
           addToast={addToast}
           restLog={restLog}
           setRestLog={setRestLog}

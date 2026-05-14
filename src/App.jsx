@@ -957,13 +957,10 @@ export default function App() {
     }));
   }, [setCalendar]);
 
-  // Phase 2 dual-write: stamps move.date (removed in phase 4) AND upserts the
-  // per-move trainingLog keyed by the Log Today event id.
-  const markMoveTrainedToday = useCallback((eventId, moveIds, date) => {
-    setMovesState(prev => {
-      const withDate = prev.map(m => moveIds.includes(m.id) ? { ...m, date } : m);
-      return setEventTraining(withDate, { eventId, moveIds, date, source: 'log_today', count: 0 });
-    });
+  // Records a Log Today event's training into each tagged move's trainingLog
+  // (upsert keyed by the event id — handles save, edit, and un-tag).
+  const recordEventTraining = useCallback((eventId, moveIds, date) => {
+    setMovesState(prev => setEventTraining(prev, { eventId, moveIds, date, source: 'log_today', count: 0 }));
   }, []);
 
   const onUpdateRepSession = useCallback((sessionId, updates) => {
@@ -1192,19 +1189,16 @@ export default function App() {
             </div>
           )}
           <TrainModalCtx.Provider value={{ openModal:(type,idea,onSave)=>{ setTrainModal({type,idea,onSave}); } }}>
-            {tab==="home" && !showCreate && <HomePage habits={habits} setHabits={setHabits} injuries={injuries} setInjuries={setInjuries} restLog={restLog} setRestLog={setRestLog} restTypes={restTypes} setRestTypes={setRestTypes} presession={presession} setPresession={setPresession} ideas={ideas} setIdeas={setIdeas} settings={appSettings} onSettingsChange={setAppSettings} homeStack={homeStack} setHomeStack={setHomeStack} homeChecks={homeChecks} setHomeChecks={setHomeChecks} onAddTrigger={addTick} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} calendar={calendar} moves={moves} setMoves={setMovesGrad} cats={cats} catColors={catColors} sets={sets} markMoveTrainedToday={markMoveTrainedToday} updateCalendarEvent={updateCalendarEvent} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} isPremium={isPremium} addToast={addToast} homeSeed={homeSeed} onHomeSeedUsed={()=>setHomeSeed(null)}/>}
+            {tab==="home" && !showCreate && <HomePage habits={habits} setHabits={setHabits} injuries={injuries} setInjuries={setInjuries} restLog={restLog} setRestLog={setRestLog} restTypes={restTypes} setRestTypes={setRestTypes} presession={presession} setPresession={setPresession} ideas={ideas} setIdeas={setIdeas} settings={appSettings} onSettingsChange={setAppSettings} homeStack={homeStack} setHomeStack={setHomeStack} homeChecks={homeChecks} setHomeChecks={setHomeChecks} onAddTrigger={addTick} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} calendar={calendar} moves={moves} setMoves={setMovesGrad} cats={cats} catColors={catColors} sets={sets} recordEventTraining={recordEventTraining} updateCalendarEvent={updateCalendarEvent} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} isPremium={isPremium} addToast={addToast} homeSeed={homeSeed} onHomeSeedUsed={()=>setHomeSeed(null)}/>}
             {tab==="moves" && !showCreate && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} catDomains={catDomains} setCatDomains={setCatDomains} sets={sets} setSets={setSets} addToast={addToast} settings={appSettings} onSettingsChange={setAppSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} reminders={reminders} onRemindersChange={setReminders} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}} onOpenManageReminders={()=>setShowManageReminders(true)} isPremium={isPremium} staleCount={staleCount} onOpenExplore={()=>{if(!isPremium){setGatedFeature("explore");return;}setShowLab(true);}} onOpenRRR={()=>{if(!isPremium){setGatedFeature("rrr");return;}setShowRRR(true);}} onOpenCombine={()=>{if(!isPremium){setGatedFeature("combine");return;}setShowComboMachine(true);}} onOpenMap={()=>{if(!isPremium){setGatedFeature("map");return;}setShowFlowMap(true);}} onOpenFlashCards={()=>{if(!isPremium){setGatedFeature("flashCards");return;}setShowFlashCards(true);}} onOpenTools={()=>setShowCreate(true)} onOpenFlow={()=>{if(!isPremium){setGatedFeature("flow");return;}setShowMusicFlow(true);}} onBulkTrigger={bulkTrigger} movesSeed={movesSeed} onMovesSeedUsed={()=>setMovesSeed(null)} setsSeed={setsSeed} onSetsSeedUsed={()=>setSetsSeed(null)}/>}
             {tab==="battle" && !showCreate && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} addToast={addToast} freestyle={freestyle} onFreestyleChange={setFreestyle} rivals={rivals} onRivalsChange={setRivals} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} isPremium={isPremium} onSimulate={()=>{if(!isPremium){setGatedFeature("compSim");return;}setShowCompSim(true);}} onOpenSparring={()=>setShowSparring(true)} battleprep={battleprep} setBattleprep={setBattleprep} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={()=>setBattlePrepSeed(null)} rivalsSeed={rivalsSeed} onRivalsSeedUsed={()=>setRivalsSeed(null)} onOpenSharedCalendar={(im)=>{setCalendarInitialMonth(im||null); setTab("reflect"); setSubTab("calendar");}}/>}
-            {tab==="reflect" && !showCreate && <ReflectPage isPremium={isPremium} ideas={ideas} setIdeas={setIdeas} moves={moves} setMoves={setMovesGrad} reps={reps} sparring={sparring} musicflow={musicflow} habits={habits} setHabits={setHabits} homeStack={homeStack} setHomeStack={setHomeStack} calendar={calendar} setCalendar={setCalendar} cats={cats} catColors={catColors} settings={appSettings} onSettingsChange={setAppSettings} addToast={addToast} stance={stance} battleprep={battleprep} onToggleBattlePrepTask={(planId,dateStr,taskIdx)=>{setBattleprep(prev=>{const plans=(prev.plans||[]).map(p=>{if(p.id!==planId) return p;const key=dateStr+"-"+taskIdx;return {...p, completedTasks:{...(p.completedTasks||{}), [key]:!(p.completedTasks||{})[key]}};});return {...prev, plans};});}} onOpenStanceAssessment={()=>setShowStanceAssessment(true)} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onSubTabChange={setSubTab} onGoToPrep={(seed)=>{setBattlePrepSeed(seed);setTab("battle");}} initialMonth={calendarInitialMonth} initialFocus={calendarInitialFocus} onInitialFocusUsed={()=>setCalendarInitialFocus(null)} sets={sets} onAddTrigger={addTick} parentSubTab={subTab} reports={reports} injuries={injuries} setInjuries={setInjuries} restLog={restLog} setRestLog={setRestLog} restTypes={restTypes} setRestTypes={setRestTypes} markMoveTrainedToday={markMoveTrainedToday} updateCalendarEvent={updateCalendarEvent}/>}
+            {tab==="reflect" && !showCreate && <ReflectPage isPremium={isPremium} ideas={ideas} setIdeas={setIdeas} moves={moves} setMoves={setMovesGrad} reps={reps} sparring={sparring} musicflow={musicflow} habits={habits} setHabits={setHabits} homeStack={homeStack} setHomeStack={setHomeStack} calendar={calendar} setCalendar={setCalendar} cats={cats} catColors={catColors} settings={appSettings} onSettingsChange={setAppSettings} addToast={addToast} stance={stance} battleprep={battleprep} onToggleBattlePrepTask={(planId,dateStr,taskIdx)=>{setBattleprep(prev=>{const plans=(prev.plans||[]).map(p=>{if(p.id!==planId) return p;const key=dateStr+"-"+taskIdx;return {...p, completedTasks:{...(p.completedTasks||{}), [key]:!(p.completedTasks||{})[key]}};});return {...prev, plans};});}} onOpenStanceAssessment={()=>setShowStanceAssessment(true)} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onSubTabChange={setSubTab} onGoToPrep={(seed)=>{setBattlePrepSeed(seed);setTab("battle");}} initialMonth={calendarInitialMonth} initialFocus={calendarInitialFocus} onInitialFocusUsed={()=>setCalendarInitialFocus(null)} sets={sets} onAddTrigger={addTick} parentSubTab={subTab} reports={reports} injuries={injuries} setInjuries={setInjuries} restLog={restLog} setRestLog={setRestLog} restTypes={restTypes} setRestTypes={setRestTypes} recordEventTraining={recordEventTraining} updateCalendarEvent={updateCalendarEvent}/>}
           </TrainModalCtx.Provider>
           {showRepCounter&&<RepCounter moves={moves} catColors={catColors} reps={reps}
             preselectedMove={repCounterPreselect}
             onSaveSession={(session)=>{
               setReps(prev=>[session,...prev]);
-              setMovesState(prev=>{
-                const withDate=prev.map(m=>m.id===session.moveId?{...m,date:todayLocal()}:m);
-                return appendTrainingEntry(withDate, session.moveId, { date: toYMD(session.date), count: session.reps, source: 'drill' });
-              });
+              setMovesState(prev=>appendTrainingEntry(prev, session.moveId, { date: toYMD(session.date), count: session.reps, source: 'drill' }));
               lastSessionSaved.current=true;
             }}
             onUpdateSession={onUpdateRepSession}
@@ -1216,9 +1210,8 @@ export default function App() {
               setSparring(updatedSparring);
               if(session.movesTrained?.length){
                 setMovesState(prev=>{
-                  const withDate=prev.map(m=>session.movesTrained.includes(m.id)?{...m,date:todayLocal()}:m);
                   const d=toYMD(session.date);
-                  return session.movesTrained.reduce((acc,id)=>appendTrainingEntry(acc,id,{ date:d, count:0, source:'sparring' }),withDate);
+                  return session.movesTrained.reduce((acc,id)=>appendTrainingEntry(acc,id,{ date:d, count:0, source:'sparring' }),prev);
                 });
               }
               lastSessionSaved.current=true;

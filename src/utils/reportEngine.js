@@ -28,7 +28,7 @@ const MONTH_NAMES = ["January","February","March","April","May","June","July","A
 export const computeDailyEntry = (date, { moves, reps, sparring, musicflow, calendar }) => {
   const d = date;
   const movesAdded = (moves || []).filter(m => {
-    const md = toYMD(m.createdAt || m.date);
+    const md = toYMD(m.createdAt);
     return md === d;
   }).length;
 
@@ -82,7 +82,7 @@ export const computeWeeklyReport = (weekStart, data) => {
       if (cat) catCounts[cat] = (catCounts[cat] || 0) + 1;
     });
     // Count from moves added that week
-    (moves || []).filter(m => toYMD(m.createdAt || m.date) === d).forEach(m => {
+    (moves || []).filter(m => toYMD(m.createdAt) === d).forEach(m => {
       const cat = m.category || "";
       if (cat) catCounts[cat] = (catCounts[cat] || 0) + 1;
     });
@@ -119,7 +119,7 @@ export const computeMonthlyReport = (year, month, data) => {
       const cat = r.category || r.moveCat || "";
       if (cat) catCounts[cat] = (catCounts[cat] || 0) + 1;
     });
-    (moves || []).filter(m => toYMD(m.createdAt || m.date) === dateStr).forEach(m => {
+    (moves || []).filter(m => toYMD(m.createdAt) === dateStr).forEach(m => {
       const cat = m.category || "";
       if (cat) catCounts[cat] = (catCounts[cat] || 0) + 1;
     });

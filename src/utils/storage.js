@@ -10,16 +10,15 @@ export function migrateMove(m) {
     description: m.description || "",
     notes:       m.notes       || "",
     link:        m.link        || "",
-    date:        m.date        || Date.now(),
     attrs:       m.attrs       || {},
     difficulty:  m.difficulty  || null,
     origin:      m.origin      || "learned",
     musicEnergy: m.musicEnergy || null,
     tensionRole: m.tensionRole || null,
     domains:     Array.isArray(m.domains) ? m.domains : [],
-    prevDate:    m.prevDate    || null,
     parentId:    m.parentId    || null,
     journal:     Array.isArray(m.journal) ? m.journal : [],
+    trainingLog: Array.isArray(m.trainingLog) ? m.trainingLog : [],
   };
 }
 

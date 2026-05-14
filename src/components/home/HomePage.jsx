@@ -83,7 +83,7 @@ export const HomePage = ({
   ideas, setIdeas, settings, onSettingsChange: _onSettingsChange,
   homeStack, setHomeStack, homeChecks, setHomeChecks,
   onAddTrigger, addCalendarEvent, removeCalendarEvent, updateCalendarEvent, calendar,
-  moves, setMoves, cats, catColors, sets, markMoveTrainedToday,
+  moves, setMoves, cats, catColors, sets, recordEventTraining,
   customAttrs, setCustomAttrs, isPremium,
   addToast,
   homeSeed, onHomeSeedUsed,
@@ -1341,7 +1341,7 @@ export const HomePage = ({
             catColors={catColors}
             addCalendarEvent={addCalendarEvent}
             updateCalendarEvent={updateCalendarEvent}
-            markMoveTrainedToday={markMoveTrainedToday}
+            recordEventTraining={recordEventTraining}
             addToast={addToast}
             restLog={restLog}
             setRestLog={setRestLog}

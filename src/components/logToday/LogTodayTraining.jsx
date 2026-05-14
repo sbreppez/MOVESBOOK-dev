@@ -19,7 +19,7 @@ export const LogTodayTraining = forwardRef(function LogTodayTraining({
   onOpenSetPicker,
   addCalendarEvent,
   updateCalendarEvent,
-  markMoveTrainedToday,
+  recordEventTraining,
   addToast,
   existingEvent,
   onClose,
@@ -104,8 +104,8 @@ export const LogTodayTraining = forwardRef(function LogTodayTraining({
       addCalendarEvent?.(record, { silent: true });
     }
 
-    if (markMoveTrainedToday) {
-      markMoveTrainedToday(record.id, allMoveIdsToMark, record.date);
+    if (recordEventTraining) {
+      recordEventTraining(record.id, allMoveIdsToMark, record.date);
     }
 
     addToast?.({
