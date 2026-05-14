@@ -1207,7 +1207,7 @@ export const TRANSLATIONS = {
     // HOME cards
     activeInjuries:"ACTIVE INJURIES",addInjury:"ADD INJURY",editInjury:"EDIT INJURY",newInjury:"NEW INJURY",bodyPart:"BODY PART",side:"SIDE",leftSide:"Left",rightSide:"Right",markResolved:"RESOLVE",startDate:"START DATE",injuryDescPlaceholder:"What happened? (optional)",bodyPartHead:"Head",bodyPartNeck:"Neck",bodyPartShoulder:"Shoulder",bodyPartElbow:"Elbow",bodyPartWrist:"Wrist",bodyPartUpperBack:"Upper back",bodyPartLowerBack:"Lower back",bodyPartHip:"Hip",bodyPartKnee:"Knee",bodyPartAnkle:"Ankle",
     injuryResolutionPrompt:"Anything to remember to prevent this?",markAsResolved:"Mark as resolved",reopen:"Reopen",resolvedOn:"Resolved on",
-    restActiveInjuries:"Active injuries",restLogNewInjury:"+ Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
+    restActiveInjuries:"Active injuries",restLogNewInjury:"Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
     injuryDayCounter:"Day {n}",injuryNMoreActive:"+ {n} more",
     battlePrepCard:"BATTLE PREP",daysLeft:"days left",todaysTasks:"tasks today",
     sparringGap:"SPARRING GAP",daysSinceLastSpar:"days since last spar",timeToSpar:"Time to spar!",
@@ -2426,7 +2426,7 @@ export const TRANSLATIONS = {
     // injury resolve UI — TODO: verify translations
     injuryResolutionPrompt:"Anything to remember to prevent this?",markAsResolved:"Mark as resolved",reopen:"Reopen",resolvedOn:"Resolved on",
     // rest sub-tab — TODO: verify translations
-    restActiveInjuries:"Active injuries",restLogNewInjury:"+ Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
+    restActiveInjuries:"Active injuries",restLogNewInjury:"Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
     // HOME injury banner — TODO: verify translations
     injuryDayCounter:"Day {n}",injuryNMoreActive:"+ {n} more",
     battlePrepCard:"PREP BATTLE",daysLeft:"giorni rimasti",todaysTasks:"compiti oggi",
@@ -3632,7 +3632,7 @@ export const TRANSLATIONS = {
     // injury resolve UI — TODO: verify translations
     injuryResolutionPrompt:"Anything to remember to prevent this?",markAsResolved:"Mark as resolved",reopen:"Reopen",resolvedOn:"Resolved on",
     // rest sub-tab — TODO: verify translations
-    restActiveInjuries:"Active injuries",restLogNewInjury:"+ Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
+    restActiveInjuries:"Active injuries",restLogNewInjury:"Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
     // HOME injury banner — TODO: verify translations
     injuryDayCounter:"Day {n}",injuryNMoreActive:"+ {n} more",
     battlePrepCard:"PREP BATALLA",daysLeft:"días restantes",todaysTasks:"tareas hoy",
@@ -4838,7 +4838,7 @@ export const TRANSLATIONS = {
     // injury resolve UI — TODO: verify translations
     injuryResolutionPrompt:"Anything to remember to prevent this?",markAsResolved:"Mark as resolved",reopen:"Reopen",resolvedOn:"Resolved on",
     // rest sub-tab — TODO: verify translations
-    restActiveInjuries:"Active injuries",restLogNewInjury:"+ Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
+    restActiveInjuries:"Active injuries",restLogNewInjury:"Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
     // HOME injury banner — TODO: verify translations
     injuryDayCounter:"Day {n}",injuryNMoreActive:"+ {n} more",
     battlePrepCard:"PRÉP BATTLE",daysLeft:"jours restants",todaysTasks:"tâches aujourd'hui",
@@ -6044,7 +6044,7 @@ export const TRANSLATIONS = {
     // injury resolve UI — TODO: verify translations
     injuryResolutionPrompt:"Anything to remember to prevent this?",markAsResolved:"Mark as resolved",reopen:"Reopen",resolvedOn:"Resolved on",
     // rest sub-tab — TODO: verify translations
-    restActiveInjuries:"Active injuries",restLogNewInjury:"+ Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
+    restActiveInjuries:"Active injuries",restLogNewInjury:"Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
     // HOME injury banner — TODO: verify translations
     injuryDayCounter:"Day {n}",injuryNMoreActive:"+ {n} more",
     battlePrepCard:"PREP BATALHA",daysLeft:"dias restantes",todaysTasks:"tarefas hoje",
@@ -7250,7 +7250,7 @@ export const TRANSLATIONS = {
     // injury resolve UI — TODO: verify translations
     injuryResolutionPrompt:"Anything to remember to prevent this?",markAsResolved:"Mark as resolved",reopen:"Reopen",resolvedOn:"Resolved on",
     // rest sub-tab — TODO: verify translations
-    restActiveInjuries:"Active injuries",restLogNewInjury:"+ Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
+    restActiveInjuries:"Active injuries",restLogNewInjury:"Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
     // HOME injury banner — TODO: verify translations
     injuryDayCounter:"Day {n}",injuryNMoreActive:"+ {n} more",
     battlePrepCard:"BATTLE-VORBEREITUNG",daysLeft:"Tage übrig",todaysTasks:"Aufgaben heute",
@@ -8457,7 +8457,7 @@ export const TRANSLATIONS = {
     // injury resolve UI — TODO: verify translations
     injuryResolutionPrompt:"Anything to remember to prevent this?",markAsResolved:"Mark as resolved",reopen:"Reopen",resolvedOn:"Resolved on",
     // rest sub-tab — TODO: verify translations
-    restActiveInjuries:"Active injuries",restLogNewInjury:"+ Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
+    restActiveInjuries:"Active injuries",restLogNewInjury:"Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
     // HOME injury banner — TODO: verify translations
     injuryDayCounter:"Day {n}",injuryNMoreActive:"+ {n} more",
     battlePrepCard:"バトル準備",daysLeft:"日残り",todaysTasks:"今日のタスク",
@@ -9662,7 +9662,7 @@ export const TRANSLATIONS = {
     // injury resolve UI — TODO: verify translations
     injuryResolutionPrompt:"Anything to remember to prevent this?",markAsResolved:"Mark as resolved",reopen:"Reopen",resolvedOn:"Resolved on",
     // rest sub-tab — TODO: verify translations
-    restActiveInjuries:"Active injuries",restLogNewInjury:"+ Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
+    restActiveInjuries:"Active injuries",restLogNewInjury:"Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
     // HOME injury banner — TODO: verify translations
     injuryDayCounter:"Day {n}",injuryNMoreActive:"+ {n} more",
     battlePrepCard:"备战准备",daysLeft:"天剩余",todaysTasks:"今日任务",
@@ -10867,7 +10867,7 @@ export const TRANSLATIONS = {
     // injury resolve UI — TODO: verify translations
     injuryResolutionPrompt:"Anything to remember to prevent this?",markAsResolved:"Mark as resolved",reopen:"Reopen",resolvedOn:"Resolved on",
     // rest sub-tab — TODO: verify translations
-    restActiveInjuries:"Active injuries",restLogNewInjury:"+ Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
+    restActiveInjuries:"Active injuries",restLogNewInjury:"Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
     // HOME injury banner — TODO: verify translations
     injuryDayCounter:"Day {n}",injuryNMoreActive:"+ {n} more",
     battlePrepCard:"ПОДГОТОВКА К БАТТЛУ",daysLeft:"дней осталось",todaysTasks:"задач сегодня",
@@ -12108,7 +12108,7 @@ export const TRANSLATIONS = {
     // injury resolve UI — TODO: verify translations
     injuryResolutionPrompt:"Anything to remember to prevent this?",markAsResolved:"Mark as resolved",reopen:"Reopen",resolvedOn:"Resolved on",
     // rest sub-tab — TODO: verify translations
-    restActiveInjuries:"Active injuries",restLogNewInjury:"+ Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
+    restActiveInjuries:"Active injuries",restLogNewInjury:"Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
     // HOME injury banner — TODO: verify translations
     injuryDayCounter:"Day {n}",injuryNMoreActive:"+ {n} more",
     battlePrepCard:"배틀 준비",daysLeft:"일 남음",todaysTasks:"오늘 과제",
@@ -13327,7 +13327,7 @@ export const TRANSLATIONS = {
     // injury resolve UI — TODO: verify translations
     injuryResolutionPrompt:"Anything to remember to prevent this?",markAsResolved:"Mark as resolved",reopen:"Reopen",resolvedOn:"Resolved on",
     // rest sub-tab — TODO: verify translations
-    restActiveInjuries:"Active injuries",restLogNewInjury:"+ Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
+    restActiveInjuries:"Active injuries",restLogNewInjury:"Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
     // HOME injury banner — TODO: verify translations
     injuryDayCounter:"Day {n}",injuryNMoreActive:"+ {n} more",
     battlePrepCard:"เตรียมแบทเทิล",daysLeft:"วันที่เหลือ",todaysTasks:"งานวันนี้",
@@ -14601,7 +14601,7 @@ export const TRANSLATIONS = {
     // injury resolve UI — TODO: verify translations
     injuryResolutionPrompt:"Anything to remember to prevent this?",markAsResolved:"Mark as resolved",reopen:"Reopen",resolvedOn:"Resolved on",
     // rest sub-tab — TODO: verify translations
-    restActiveInjuries:"Active injuries",restLogNewInjury:"+ Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
+    restActiveInjuries:"Active injuries",restLogNewInjury:"Log new injury",restType:"Rest type",restTypeRest:"Rest",restTypeActiveRecovery:"Active recovery",restTypeInjuryOrSick:"Injury or sick",restTypeOther:"Other",restSleep:"Sleep",restSleepHours:"Hours",restSleepQuality:"Quality",restSleepPoor:"Poor",restSleepOk:"OK",restSleepGreat:"Great",restSoreness:"What's sore today",todayNote:"Today's note",
     // HOME injury banner — TODO: verify translations
     injuryDayCounter:"Day {n}",injuryNMoreActive:"+ {n} more",
     battlePrepCard:"CHUẨN BỊ BATTLE",daysLeft:"ngày còn lại",todaysTasks:"nhiệm vụ hôm nay",
