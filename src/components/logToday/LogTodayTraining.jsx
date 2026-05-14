@@ -88,7 +88,7 @@ export const LogTodayTraining = forwardRef(function LogTodayTraining({
       type: "training",
       source: "log_today",
       title: title.trim() || t("trainingSession"),
-      moveIds: allMoveIdsToMark,
+      moveIds: pendingMoveIds,
       setIds: pendingSetIds,
       workDescription: workDescription.trim(),
       howItFelt: howItFelt.trim(),
