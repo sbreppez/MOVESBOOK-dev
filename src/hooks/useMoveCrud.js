@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { todayLocal } from '../utils/dateUtils';
-import { appendTrainingEntry, removeTrainingEntries } from '../utils/trainingLog';
 
 export const useMoveCrud = ({ moves, setMoves, addToast, t, st }) => {
   const [confirmDeleteMove, setConfirmDeleteMove] = useState(null);
@@ -14,31 +13,6 @@ export const useMoveCrud = ({ moves, setMoves, addToast, t, st }) => {
     } else {
       setMoves(prev => [...prev, { ...form, id: Date.now() }]);
     }
-  };
-
-  const handleToggleTrainedToday = (id) => {
-    const today = todayLocal();
-    const move = moves.find(m => m.id === id);
-    if (!move) return;
-    const isToday = move.date === today;
-    setMoves(prev => {
-      // Phase 2 dual-write: toggle move.date (+ prevDate) AND the trainingLog's
-      // gap-quick-mark entry for today. Unmark only strips the gap layer —
-      // entries from Log Today / Rep Counter / etc. are left untouched.
-      const withDate = prev.map(m => {
-        if (m.id !== id) return m;
-        return isToday
-          ? { ...m, date: m.prevDate || null, prevDate: null }
-          : { ...m, prevDate: m.date, date: today };
-      });
-      return isToday
-        ? removeTrainingEntries(withDate, id, { date: today, source: 'gap' })
-        : appendTrainingEntry(withDate, id, { date: today, count: 0, source: 'gap' });
-    });
-    addToast({
-      icon: isToday ? "refresh" : "check",
-      title: t(isToday ? "unmarkedToday" : "markedTrainedToday"),
-    });
   };
 
   const bulkImport = (newMoves) => {
@@ -96,7 +70,6 @@ export const useMoveCrud = ({ moves, setMoves, addToast, t, st }) => {
     setSelectedMoveIds,
     setConfirmBulkDeleteMoves,
     saveMove,
-    handleToggleTrainedToday,
     bulkImport,
     delMove,
     tryDelMove,

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { lastActivityDate } from '../utils/trainingLog';
 
 export const VERSION_CHIPS = [
   { key: "entry",  label: "changeEntry" },
@@ -17,8 +18,9 @@ export const useVersionPrompt = ({ moves, vocabTab, versionPromptsShown, onSetti
   const versionEligible = vocabTab === "moves" ? moves.find(m => {
     if ((m.mastery || 0) < 75) return false;
     if (versionShown.includes(m.id)) return false;
-    if (!m.date) return false;
-    const d = new Date(m.date);
+    const last = lastActivityDate(m);
+    if (!last) return false;
+    const d = new Date(last);
     return (today - d) / (1000 * 60 * 60 * 24) >= 30;
   }) : null;
 

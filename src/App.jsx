@@ -41,7 +41,7 @@ import { SOURCE_TYPES } from './constants/textStream';
 import { usePremium } from './hooks/usePremium';
 import { PremiumGate } from './components/shared/PremiumGate';
 import { detectMilestones } from './utils/reportEngine';
-import { setEventTraining, appendTrainingEntry } from './utils/trainingLog';
+import { setEventTraining, appendTrainingEntry, lastActivityDate } from './utils/trainingLog';
 import { runHomeMigration } from './utils/homeMigration';
 import { backfillTextStream } from './utils/textStream';
 import { emitProfileChanges, emitReminderChanges, emitPresessionChanges, emitHabitsChanges, emitRoutinesChanges, emitIdeasChanges, emitMovesChanges, emitCalendarChanges, emitRepsChanges, emitSparringChanges, emitMusicflowChanges, emitRivalsChanges, emitBattleprepChanges, emitSetsChanges, emitInjuriesChanges, emitRestLogChanges } from './utils/textStreamWraps';
@@ -996,7 +996,8 @@ export default function App() {
   const staleCount = useMemo(() => {
     const todayMs = new Date(todayLocal()).getTime();
     return moves.filter(m => {
-      const lastMs = m.date ? new Date(m.date).getTime() : 0;
+      const last = lastActivityDate(m);
+      const lastMs = last ? new Date(last).getTime() : 0;
       const days = Math.floor((todayMs - lastMs) / 86400000);
       const mult = m.difficulty === "easy" ? 0.7 : m.difficulty === "advanced" ? 1.5 : 1;
       return days >= Math.round(14 * mult);

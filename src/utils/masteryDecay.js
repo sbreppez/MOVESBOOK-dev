@@ -2,9 +2,11 @@
  * Mastery Decay — computed display mastery (non-destructive)
  *
  * The stored mastery value is never mutated.  These pure functions
- * derive display mastery from move.mastery, move.date, move.difficulty,
- * and the user's decaySensitivity setting.
+ * derive display mastery from move.mastery, the move's last activity
+ * date, move.difficulty, and the user's decaySensitivity setting.
  */
+
+import { lastActivityDate } from './trainingLog';
 
 const RATES = { off: 0, gentle: 0.5, normal: 1, aggressive: 1.5 };
 const GRACE_DAYS = 30;
@@ -12,19 +14,20 @@ const DIFF_MULT = { easy: 0.7, advanced: 1.5 };   // mirrors GAPTab pattern
 const ARROW_THRESHOLD = 15;                         // show ▼ after 15%+ cumulative
 
 /**
- * @param {{ mastery:number, date:string|null, difficulty:string|null }} move
+ * @param {{ mastery:number, trainingLog?:Array, createdAt?:string, difficulty:string|null }} move
  * @param {string} decaySetting  "off"|"gentle"|"normal"|"aggressive"
  * @returns {{ displayMastery:number, decayAmount:number }}
  */
 export function computeDecay(move, decaySetting = "normal") {
   const base = typeof move.mastery === "number" ? move.mastery : 0;
   const rate = RATES[decaySetting] ?? 0;
+  const last = lastActivityDate(move);
 
-  if (rate === 0 || base === 0 || !move.date) {
+  if (rate === 0 || base === 0 || !last) {
     return { displayMastery: base, decayAmount: 0 };
   }
 
-  const lastMs = new Date(move.date).getTime();
+  const lastMs = new Date(last).getTime();
   if (isNaN(lastMs)) return { displayMastery: base, decayAmount: 0 };
 
   const daysSince = Math.floor((Date.now() - lastMs) / 86400000);

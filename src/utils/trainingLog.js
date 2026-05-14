@@ -24,6 +24,15 @@ export function lastTrainedDate(move) {
 }
 
 /**
+ * Returns the move's most recent activity date — last trained, or if the
+ * move has never been trained, when it was created. Null if neither exists.
+ * Used by staleness / decay / recency readers.
+ */
+export function lastActivityDate(move) {
+  return lastTrainedDate(move) || move?.createdAt || null;
+}
+
+/**
  * Returns true if a move's trainingLog contains an entry for the given
  * date (YYYY-MM-DD).
  */
@@ -81,15 +90,3 @@ export function removeEventTraining(moves, eventId) {
   });
 }
 
-/**
- * Removes a move's training entries matching the given date + source.
- * Returns a new moves array. Used to reverse a GAP quick-mark.
- */
-export function removeTrainingEntries(moves, moveId, { date, source }) {
-  return moves.map(m => {
-    if (m.id !== moveId) return m;
-    const log = m.trainingLog || [];
-    const filtered = log.filter(e => !(e.date === date && e.source === source));
-    return filtered.length === log.length ? m : { ...m, trainingLog: filtered };
-  });
-}

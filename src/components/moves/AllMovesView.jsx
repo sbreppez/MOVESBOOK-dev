@@ -19,7 +19,6 @@ export const AllMovesView = ({
   onDeleteMove,
   onDuplicateMove,
   onMoveToCat,
-  onToggleTrainedToday,
 }) => {
   const { C } = useSettings();
   const t = useT();
@@ -85,7 +84,6 @@ export const AllMovesView = ({
               onMove={cat => onMoveToCat(m.id, cat)}
               allCats={cats}
               catColors={catColors}
-              onToggleTrainedToday={onToggleTrainedToday}
               selectMode={selectMode}
               isSelected={selectedMoveIds.has(m.id)}
             />

@@ -24,7 +24,7 @@ export const CategoryDetailView = ({
   selectedMoveIds,
   setConfirmDeleteMove: _setConfirmDeleteMove, setConfirmBulkDeleteMoves,
   saveMove, tryDelMove, dupMove, moveToCat,
-  handleToggleTrainedToday, toggleMoveSelect,
+  toggleMoveSelect,
   exitMoveSelectMode,
 }) => {
   const { C } = useSettings();
@@ -149,13 +149,13 @@ export const CategoryDetailView = ({
                       cursor:idx===allCatMoves.length-1?"default":"pointer", color:idx===allCatMoves.length-1?C.border:C.accent,
                       fontSize:14, fontWeight:700, display:"flex", alignItems:"center", justifyContent:"center" }}>▼</button>
                 </div>
-                <MoveListRow move={m} catColor={catColor} onEdit={()=>setEditMove(m)} onDelete={()=>tryDelMove(m)} onMove={c=>moveToCat(m.id,c)} allCats={cats} catColors={catColors} onToggleTrainedToday={handleToggleTrainedToday}/>
+                <MoveListRow move={m} catColor={catColor} onEdit={()=>setEditMove(m)} onDelete={()=>tryDelMove(m)} onMove={c=>moveToCat(m.id,c)} allCats={cats} catColors={catColors}/>
               </div>
             ))}
           </div>
         ) : (
           <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
-            {catMoves.map(m=><MoveListRow key={m.id} move={m} searchQuery={search} catColor={catColor} onEdit={()=>selectMode?toggleMoveSelect(m.id):setEditMove(m)} onDelete={()=>tryDelMove(m)} onMove={c=>moveToCat(m.id,c)} allCats={cats} catColors={catColors} onToggleTrainedToday={handleToggleTrainedToday} selectMode={selectMode} isSelected={selectedMoveIds.has(m.id)}/>)}
+            {catMoves.map(m=><MoveListRow key={m.id} move={m} searchQuery={search} catColor={catColor} onEdit={()=>selectMode?toggleMoveSelect(m.id):setEditMove(m)} onDelete={()=>tryDelMove(m)} onMove={c=>moveToCat(m.id,c)} allCats={cats} catColors={catColors} selectMode={selectMode} isSelected={selectedMoveIds.has(m.id)}/>)}
           </div>
         )}
       </div>

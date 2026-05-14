@@ -6,10 +6,11 @@ import { useT } from '../../hooks/useTranslation';
 import { CAT_COLORS } from '../../constants/categories';
 import { computeDecay, showDecayArrow } from '../../utils/masteryDecay';
 import { todayLocal } from '../../utils/dateUtils';
+import { lastActivityDate } from '../../utils/trainingLog';
 
 const PRESETS = [7, 14, 30];
 
-export const GAPTab = ({ moves, catColors=CAT_COLORS, setMoves, onDrill, settings={}, onTrainToday }) => {
+export const GAPTab = ({ moves, catColors=CAT_COLORS, onDrill, settings={} }) => {
   const t = useT();
   const [threshold, setThreshold] = useState(14);
   const [customDays, setCustomDays] = useState("");
@@ -20,7 +21,8 @@ export const GAPTab = ({ moves, catColors=CAT_COLORS, setMoves, onDrill, setting
 
   const { staleMoves, freshCount } = useMemo(() => {
     const all = moves.map(m => {
-      const lastMs = m.date ? new Date(m.date).getTime() : 0;
+      const last = lastActivityDate(m);
+      const lastMs = last ? new Date(last).getTime() : 0;
       const daysSince = lastMs ? Math.floor((todayMs - lastMs) / 86400000) : 9999;
       const mult = m.difficulty === "easy" ? 0.7
                  : m.difficulty === "advanced" ? 1.5 : 1;
@@ -36,11 +38,6 @@ export const GAPTab = ({ moves, catColors=CAT_COLORS, setMoves, onDrill, setting
   const staleCount = staleMoves.length;
   const totalCount = moves.length;
   const freshPct = totalCount ? freshCount / totalCount : 1;
-
-  const handleTrainToday = (id) => {
-    if (onTrainToday) { onTrainToday(id); }
-    else { setMoves(prev => prev.map(m => m.id === id ? { ...m, date: today } : m)); }
-  };
 
   // Progress ring SVG
   const ringSize = 28, ringStroke = 3;
@@ -112,12 +109,11 @@ export const GAPTab = ({ moves, catColors=CAT_COLORS, setMoves, onDrill, setting
         <div style={{ display:"flex", flexDirection:"column", gap:6, padding:"10px 16px" }}>
           {staleMoves.map(m => {
             const catCol = catColors[m.category] || C.accent;
-            const isTrained = m.date === today;
             const { displayMastery } = computeDecay(m, settings.decaySensitivity);
             return (
               <div key={m.id} style={{ background:C.surface, border:"none", borderRadius:8,
                 borderLeft:`4px solid ${catCol}`, padding:"14px 16px 13px 16px" }}>
-                {/* Top row: name + trained dot + drill */}
+                {/* Top row: name + drill */}
                 <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:4 }}>
                   <div style={{ flex:1, minWidth:0 }}>
                     <div style={{ fontWeight:700, fontSize:16, color:C.text, fontFamily:FONT_DISPLAY,
@@ -126,14 +122,6 @@ export const GAPTab = ({ moves, catColors=CAT_COLORS, setMoves, onDrill, setting
                       {m.category}
                     </div>
                   </div>
-                  {/* Trained-today dot */}
-                  <button onClick={() => handleTrainToday(m.id)}
-                    style={{ width:16, height:16, borderRadius:"50%", flexShrink:0, padding:0,
-                      border: isTrained ? "none" : `1.5px solid ${C.border}`,
-                      background: isTrained ? C.green : "transparent",
-                      display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer" }}>
-                    {isTrained && <Ic n="check" s={10} c="#fff"/>}
-                  </button>
                   {/* Video icon */}
                   {m.link && (
                     <a href={m.link.startsWith("http") ? m.link : "https://"+m.link} target="_blank" rel="noopener noreferrer"

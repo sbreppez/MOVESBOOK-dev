@@ -122,7 +122,6 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
     setSelectMode,
     setConfirmBulkDeleteMoves,
     saveMove,
-    handleToggleTrainedToday,
     bulkImport,
     delMove,
     tryDelMove,
@@ -250,7 +249,6 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
           tryDelMove={tryDelMove}
           dupMove={dupMove}
           moveToCat={moveToCat}
-          handleToggleTrainedToday={handleToggleTrainedToday}
           toggleMoveSelect={toggleMoveSelect}
           exitMoveSelectMode={exitMoveSelectMode}
         />
@@ -334,10 +332,9 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
             onDeleteMove={tryDelMove}
             onDuplicateMove={dupMove}
             onMoveToCat={moveToCat}
-            onToggleTrainedToday={handleToggleTrainedToday}
           />
         ) : vocabTab==="gap" ? (
-          isPremium ? <><SectionBrief desc={t("gapBrief")} settings={st}/><GAPTab moves={moves} catColors={catColors} setMoves={setMoves} onDrill={onDrill} settings={st} onTrainToday={handleToggleTrainedToday}/></> : <div style={{padding:20}}><PremiumGate feature="gap" addToast={addToast}/></div>
+          isPremium ? <><SectionBrief desc={t("gapBrief")} settings={st}/><GAPTab moves={moves} catColors={catColors} onDrill={onDrill} settings={st}/></> : <div style={{padding:20}}><PremiumGate feature="gap" addToast={addToast}/></div>
         ) : vocabTab==="sets" ? (
           <SetsView
             sets={sets}

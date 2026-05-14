@@ -119,7 +119,7 @@ export const CalendarOverlay = ({
       if (!map[k]) map[k] = {};
       map[k][type] = true;
     };
-    (moves || []).forEach(m => mark(m.date, "moves"));
+    (moves || []).forEach(m => (m.trainingLog || []).forEach(e => mark(e.date, "moves")));
     (reps || []).forEach(r => mark(r.date, "moves"));
     (sparring?.sessions || []).forEach(s => mark(s.date, "sparring"));
     (sparring?.sessions1v1 || []).forEach(s => mark(s.date, "sparring"));

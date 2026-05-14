@@ -5,6 +5,7 @@
  */
 
 import { todayLocal, toLocalYMD, toYMD } from './dateUtils';
+import { lastActivityDate } from './trainingLog';
 
 const getMonday = (dateStr) => {
   const d = new Date(dateStr + "T00:00:00");
@@ -128,7 +129,7 @@ export const computeMonthlyReport = (year, month, data) => {
   const monthEnd = `${monthStr}-${String(daysInMonth).padStart(2, "0")}`;
   const staleThreshold = addDays(monthEnd, -30);
   const staleCount = (moves || []).filter(m => {
-    const md = toYMD(m.date);
+    const md = lastActivityDate(m);
     return md && md < staleThreshold;
   }).length;
 
@@ -242,7 +243,7 @@ export const detectMilestones = ({ moves, sparring, battleprep, reps, musicflow,
     const catMoves = (moves || []).filter(m => m.category === cat);
     if (catMoves.length === 0) return false;
     const thirtyAgo = addDays(today, -30);
-    const fresh = catMoves.filter(m => { const d = toYMD(m.date); return d && d >= thirtyAgo; }).length;
+    const fresh = catMoves.filter(m => { const d = lastActivityDate(m); return d && d >= thirtyAgo; }).length;
     return (fresh / catMoves.length) >= 0.3;
   });
 

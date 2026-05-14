@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { toYMD } from '../utils/dateUtils';
+import { wasTrainedOn } from '../utils/trainingLog';
 
 /**
  * Returns memoized day-keyed data slices for a given date.
@@ -19,7 +20,7 @@ export function useDayData(date, { moves, reps, sparring, musicflow, habits, ide
     if (!date) return null;
     const d = date;
     return {
-      movesTrained: (moves || []).filter(m => toYMD(m.date) === d),
+      movesTrained: (moves || []).filter(m => wasTrainedOn(m, d)),
       repSessions: (reps || []).filter(r => toYMD(r.date) === d),
       sparringSessions: (sparring?.sessions || []).filter(s => toYMD(s.date) === d),
       sparringSessions1v1: (sparring?.sessions1v1 || []).filter(s => toYMD(s.date) === d),

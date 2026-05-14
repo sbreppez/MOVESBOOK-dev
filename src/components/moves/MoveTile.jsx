@@ -7,10 +7,9 @@ import { masteryColor } from '../../constants/styles';
 import { useSettings } from '../../hooks/useSettings';
 import { useT } from '../../hooks/useTranslation';
 import { computeDecay } from '../../utils/masteryDecay';
-import { todayLocal } from '../../utils/dateUtils';
 import { CATS, CAT_COLORS } from '../../constants/categories';
 
-export const MoveTile = ({ move, onClick, onEdit: _onEdit, onDelete: _onDelete, onDuplicate: _onDuplicate, onMove: _onMove, allCats: _allCats=CATS, catColors=CAT_COLORS, searchQuery="", onToggleTrainedToday, selectMode, isSelected }) => {
+export const MoveTile = ({ move, onClick, onEdit: _onEdit, onDelete: _onDelete, onDuplicate: _onDuplicate, onMove: _onMove, allCats: _allCats=CATS, catColors=CAT_COLORS, searchQuery="", selectMode, isSelected }) => {
   const { settings } = useSettings();
   const t = useT();
   const [expanded, setExpanded] = useState(false);
@@ -73,17 +72,6 @@ export const MoveTile = ({ move, onClick, onEdit: _onEdit, onDelete: _onDelete, 
               </a>
             )}
 
-            {/* Trained today circle */}
-            {!selectMode && onToggleTrainedToday && (() => {
-              const isTrained = move.date === todayLocal();
-              return <button onClick={e => { e.stopPropagation(); onToggleTrainedToday(move.id); }}
-                style={{ width:16, height:16, borderRadius:"50%", flexShrink:0, padding:0,
-                  border: isTrained ? "none" : `1.5px solid ${C.border}`,
-                  background: isTrained ? C.green : "transparent",
-                  display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer" }}>
-                {isTrained && <Ic n="check" s={10} c="#fff"/>}
-              </button>;
-            })()}
           </div>
 
           {/* Mastery bar — no percentage number */}
