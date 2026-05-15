@@ -140,7 +140,7 @@ export const LogTodayRest = forwardRef(function LogTodayRest({
       </button>
 
       {/* Rest type chips */}
-      <div style={sectionHeader(C, activeInjuries.length === 0)}>{t("restType")}</div>
+      <div style={sectionHeader(C)}>{t("restType")}</div>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
         {(restTypes || []).map(typeKey => {
           const active = restType === typeKey;
@@ -153,6 +153,16 @@ export const LogTodayRest = forwardRef(function LogTodayRest({
           );
         })}
       </div>
+
+      {/* Today's Note */}
+      <div style={sectionHeader(C)}>{t("todaysNote")}</div>
+      <Txtarea
+        value={todayNote}
+        onChange={setTodayNote}
+        rows={3}
+        autoExpand
+        minHeight={80}
+      />
 
       {/* Sleep */}
       <div style={sectionHeader(C)}>{t("restSleep")}</div>
@@ -213,17 +223,6 @@ export const LogTodayRest = forwardRef(function LogTodayRest({
       {sorenessExpanded && (
         <SorenessSheet value={soreness} onChange={setSoreness} />
       )}
-
-      {/* Today's Note */}
-      <div style={{ marginTop: 21 }}>
-        <Txtarea
-          label={t("todayNote")}
-          value={todayNote}
-          onChange={setTodayNote}
-          rows={3}
-          autoExpand
-        />
-      </div>
 
       {/* InjuryModal mount */}
       {editingInjury && (
