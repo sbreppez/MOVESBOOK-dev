@@ -120,6 +120,7 @@ export const CalendarOverlay = ({
       map[k][type] = true;
     };
     (moves || []).forEach(m => (m.trainingLog || []).forEach(e => mark(e.date, "moves")));
+    (moves || []).forEach(m => mark(m.createdAt, "created"));
     (reps || []).forEach(r => mark(r.date, "moves"));
     (sparring?.sessions || []).forEach(s => mark(s.date, "sparring"));
     (sparring?.sessions1v1 || []).forEach(s => mark(s.date, "sparring"));
@@ -415,6 +416,7 @@ export const CalendarOverlay = ({
             if (activity?.sparring) dots.push(C.red);
             if (activity?.habits) dots.push(C.blue);
             if (activity?.notes) dots.push(C.yellow);
+            if (activity?.created) dots.push(C.textMuted);
 
             // Battle prep phase dots (unique colors, max 3)
             const bpPhases = activity?.battlePrepPhases || [];
@@ -448,7 +450,7 @@ export const CalendarOverlay = ({
                 {isBattleDay && <span style={{ fontSize: 8, fontFamily: FONT_DISPLAY, fontWeight: 700, color: C.text, lineHeight: 1 }}>{dayNum}</span>}
                 {dots.length > 0 && (
                   <div style={{ display: "flex", gap: 3, marginTop: 3 }}>
-                    {dots.slice(0, 4).map((color, di) => (
+                    {dots.slice(0, 5).map((color, di) => (
                       <div key={di} style={{ width: 5, height: 5, borderRadius: "50%", background: color }} />
                     ))}
                   </div>
