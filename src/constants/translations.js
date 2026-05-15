@@ -17,7 +17,7 @@ export const TRANSLATIONS = {
     status:"STATUS", colour:"COLOUR", color:"COLOR", date:"DATE CREATED",
     mastery:"MASTERY LEVEL", set:"SET",
     executionLevel:"Execution Level", execLevel_1:"Trying it", execLevel_2:"Getting closer", execLevel_3:"Hit it once", execLevel_4:"Catching it", execLevel_5:"Hit it twice",
-    totalReps:"Total Reps", repSourceManual:"Manual", repSourceDrill:"Drill", repSourceSparring:"Sparring", repSourceSets:"Sets",
+    totalReps:"Total Reps", repSourceManual:"Manual", repSourceDrill:"Drill", repSourceSparring:"Sparring",
     execLevel_6:"Stringing it", execLevel_7:"Consistent", execLevel_8:"Solid", execLevel_9:"Locked", execLevel_10:"Owned",
     execSub_1:"First attempts. Body's still figuring it out.", execSub_2:"Pieces are landing, full move isn't.", execSub_3:"One clean rep on a good day.",
     execSub_4:"Lands more than it falls. Not reliable yet.", execSub_5:"Can repeat under no pressure.", execSub_6:"A few in a row when warm.",
@@ -1277,7 +1277,7 @@ export const TRANSLATIONS = {
     status:"STATO", colour:"COLORE", color:"COLORE", date:"DATA CREAZIONE",
     mastery:"LIVELLO PADRONANZA", set:"SET",
     executionLevel:"Execution Level", execLevel_1:"Trying it", execLevel_2:"Getting closer", execLevel_3:"Hit it once", execLevel_4:"Catching it", execLevel_5:"Hit it twice", // TODO: verify
-    totalReps:"Total Reps", repSourceManual:"Manual", repSourceDrill:"Drill", repSourceSparring:"Sparring", repSourceSets:"Sets", // TODO: verify
+    totalReps:"Total Reps", repSourceManual:"Manual", repSourceDrill:"Drill", repSourceSparring:"Sparring", // TODO: verify
     execLevel_6:"Stringing it", execLevel_7:"Consistent", execLevel_8:"Solid", execLevel_9:"Locked", execLevel_10:"Owned", // TODO: verify
     execSub_1:"First attempts. Body's still figuring it out.", execSub_2:"Pieces are landing, full move isn't.", execSub_3:"One clean rep on a good day.", // TODO: verify
     execSub_4:"Lands more than it falls. Not reliable yet.", execSub_5:"Can repeat under no pressure.", execSub_6:"A few in a row when warm.", // TODO: verify
@@ -2494,7 +2494,7 @@ export const TRANSLATIONS = {
     status:"ESTADO", colour:"COLOR", color:"COLOR", date:"FECHA CREACIÓN",
     mastery:"NIVEL DE DOMINIO", set:"SET",
     executionLevel:"Execution Level", execLevel_1:"Trying it", execLevel_2:"Getting closer", execLevel_3:"Hit it once", execLevel_4:"Catching it", execLevel_5:"Hit it twice", // TODO: verify
-    totalReps:"Total Reps", repSourceManual:"Manual", repSourceDrill:"Drill", repSourceSparring:"Sparring", repSourceSets:"Sets", // TODO: verify
+    totalReps:"Total Reps", repSourceManual:"Manual", repSourceDrill:"Drill", repSourceSparring:"Sparring", // TODO: verify
     execLevel_6:"Stringing it", execLevel_7:"Consistent", execLevel_8:"Solid", execLevel_9:"Locked", execLevel_10:"Owned", // TODO: verify
     execSub_1:"First attempts. Body's still figuring it out.", execSub_2:"Pieces are landing, full move isn't.", execSub_3:"One clean rep on a good day.", // TODO: verify
     execSub_4:"Lands more than it falls. Not reliable yet.", execSub_5:"Can repeat under no pressure.", execSub_6:"A few in a row when warm.", // TODO: verify
@@ -3700,7 +3700,7 @@ export const TRANSLATIONS = {
     status:"STATUT", colour:"COULEUR", color:"COULEUR", date:"DATE DE CRÉATION",
     mastery:"NIVEAU DE MAÎTRISE", set:"SET",
     executionLevel:"Execution Level", execLevel_1:"Trying it", execLevel_2:"Getting closer", execLevel_3:"Hit it once", execLevel_4:"Catching it", execLevel_5:"Hit it twice", // TODO: verify
-    totalReps:"Total Reps", repSourceManual:"Manual", repSourceDrill:"Drill", repSourceSparring:"Sparring", repSourceSets:"Sets", // TODO: verify
+    totalReps:"Total Reps", repSourceManual:"Manual", repSourceDrill:"Drill", repSourceSparring:"Sparring", // TODO: verify
     execLevel_6:"Stringing it", execLevel_7:"Consistent", execLevel_8:"Solid", execLevel_9:"Locked", execLevel_10:"Owned", // TODO: verify
     execSub_1:"First attempts. Body's still figuring it out.", execSub_2:"Pieces are landing, full move isn't.", execSub_3:"One clean rep on a good day.", // TODO: verify
     execSub_4:"Lands more than it falls. Not reliable yet.", execSub_5:"Can repeat under no pressure.", execSub_6:"A few in a row when warm.", // TODO: verify
@@ -4906,7 +4906,7 @@ export const TRANSLATIONS = {
     status:"STATUS", colour:"COR", color:"COR", date:"DATA DE CRIAÇÃO",
     mastery:"NÍVEL DE DOMÍNIO", set:"SET",
     executionLevel:"Execution Level", execLevel_1:"Trying it", execLevel_2:"Getting closer", execLevel_3:"Hit it once", execLevel_4:"Catching it", execLevel_5:"Hit it twice", // TODO: verify
-    totalReps:"Total Reps", repSourceManual:"Manual", repSourceDrill:"Drill", repSourceSparring:"Sparring", repSourceSets:"Sets", // TODO: verify
+    totalReps:"Total Reps", repSourceManual:"Manual", repSourceDrill:"Drill", repSourceSparring:"Sparring", // TODO: verify
     execLevel_6:"Stringing it", execLevel_7:"Consistent", execLevel_8:"Solid", execLevel_9:"Locked", execLevel_10:"Owned", // TODO: verify
     execSub_1:"First attempts. Body's still figuring it out.", execSub_2:"Pieces are landing, full move isn't.", execSub_3:"One clean rep on a good day.", // TODO: verify
     execSub_4:"Lands more than it falls. Not reliable yet.", execSub_5:"Can repeat under no pressure.", execSub_6:"A few in a row when warm.", // TODO: verify
@@ -6112,7 +6112,7 @@ export const TRANSLATIONS = {
     status:"STATUS", colour:"FARBE", color:"FARBE", date:"ERSTELLUNGSDATUM",
     mastery:"BEHERRSCHUNGSGRAD", set:"SET",
     executionLevel:"Execution Level", execLevel_1:"Trying it", execLevel_2:"Getting closer", execLevel_3:"Hit it once", execLevel_4:"Catching it", execLevel_5:"Hit it twice", // TODO: verify
-    totalReps:"Total Reps", repSourceManual:"Manual", repSourceDrill:"Drill", repSourceSparring:"Sparring", repSourceSets:"Sets", // TODO: verify
+    totalReps:"Total Reps", repSourceManual:"Manual", repSourceDrill:"Drill", repSourceSparring:"Sparring", // TODO: verify
     execLevel_6:"Stringing it", execLevel_7:"Consistent", execLevel_8:"Solid", execLevel_9:"Locked", execLevel_10:"Owned", // TODO: verify
     execSub_1:"First attempts. Body's still figuring it out.", execSub_2:"Pieces are landing, full move isn't.", execSub_3:"One clean rep on a good day.", // TODO: verify
     execSub_4:"Lands more than it falls. Not reliable yet.", execSub_5:"Can repeat under no pressure.", execSub_6:"A few in a row when warm.", // TODO: verify
@@ -7318,7 +7318,7 @@ export const TRANSLATIONS = {
     status:"ステータス", colour:"カラー", color:"カラー", date:"作成日",
     mastery:"習熟度", set:"セット",
     executionLevel:"Execution Level", execLevel_1:"Trying it", execLevel_2:"Getting closer", execLevel_3:"Hit it once", execLevel_4:"Catching it", execLevel_5:"Hit it twice", // TODO: verify
-    totalReps:"Total Reps", repSourceManual:"Manual", repSourceDrill:"Drill", repSourceSparring:"Sparring", repSourceSets:"Sets", // TODO: verify
+    totalReps:"Total Reps", repSourceManual:"Manual", repSourceDrill:"Drill", repSourceSparring:"Sparring", // TODO: verify
     execLevel_6:"Stringing it", execLevel_7:"Consistent", execLevel_8:"Solid", execLevel_9:"Locked", execLevel_10:"Owned", // TODO: verify
     execSub_1:"First attempts. Body's still figuring it out.", execSub_2:"Pieces are landing, full move isn't.", execSub_3:"One clean rep on a good day.", // TODO: verify
     execSub_4:"Lands more than it falls. Not reliable yet.", execSub_5:"Can repeat under no pressure.", execSub_6:"A few in a row when warm.", // TODO: verify
@@ -8525,7 +8525,7 @@ export const TRANSLATIONS = {
     status:"状态", colour:"颜色", color:"颜色", date:"创建日期",
     mastery:"熟练度", set:"组合",
     executionLevel:"Execution Level", execLevel_1:"Trying it", execLevel_2:"Getting closer", execLevel_3:"Hit it once", execLevel_4:"Catching it", execLevel_5:"Hit it twice", // TODO: verify
-    totalReps:"Total Reps", repSourceManual:"Manual", repSourceDrill:"Drill", repSourceSparring:"Sparring", repSourceSets:"Sets", // TODO: verify
+    totalReps:"Total Reps", repSourceManual:"Manual", repSourceDrill:"Drill", repSourceSparring:"Sparring", // TODO: verify
     execLevel_6:"Stringing it", execLevel_7:"Consistent", execLevel_8:"Solid", execLevel_9:"Locked", execLevel_10:"Owned", // TODO: verify
     execSub_1:"First attempts. Body's still figuring it out.", execSub_2:"Pieces are landing, full move isn't.", execSub_3:"One clean rep on a good day.", // TODO: verify
     execSub_4:"Lands more than it falls. Not reliable yet.", execSub_5:"Can repeat under no pressure.", execSub_6:"A few in a row when warm.", // TODO: verify
@@ -9730,7 +9730,7 @@ export const TRANSLATIONS = {
     status:"СТАТУС", colour:"ЦВЕТ", color:"ЦВЕТ", date:"ДАТА СОЗДАНИЯ",
     mastery:"УРОВЕНЬ МАСТЕРСТВА", set:"СЕТ",
     executionLevel:"Execution Level", execLevel_1:"Trying it", execLevel_2:"Getting closer", execLevel_3:"Hit it once", execLevel_4:"Catching it", execLevel_5:"Hit it twice", // TODO: verify
-    totalReps:"Total Reps", repSourceManual:"Manual", repSourceDrill:"Drill", repSourceSparring:"Sparring", repSourceSets:"Sets", // TODO: verify
+    totalReps:"Total Reps", repSourceManual:"Manual", repSourceDrill:"Drill", repSourceSparring:"Sparring", // TODO: verify
     execLevel_6:"Stringing it", execLevel_7:"Consistent", execLevel_8:"Solid", execLevel_9:"Locked", execLevel_10:"Owned", // TODO: verify
     execSub_1:"First attempts. Body's still figuring it out.", execSub_2:"Pieces are landing, full move isn't.", execSub_3:"One clean rep on a good day.", // TODO: verify
     execSub_4:"Lands more than it falls. Not reliable yet.", execSub_5:"Can repeat under no pressure.", execSub_6:"A few in a row when warm.", // TODO: verify
@@ -10940,7 +10940,7 @@ export const TRANSLATIONS = {
     status:"상태", colour:"색상", color:"색상", date:"생성일",
     mastery:"숙련도", set:"세트",
     executionLevel:"Execution Level", execLevel_1:"Trying it", execLevel_2:"Getting closer", execLevel_3:"Hit it once", execLevel_4:"Catching it", execLevel_5:"Hit it twice", // TODO: verify
-    totalReps:"Total Reps", repSourceManual:"Manual", repSourceDrill:"Drill", repSourceSparring:"Sparring", repSourceSets:"Sets", // TODO: verify
+    totalReps:"Total Reps", repSourceManual:"Manual", repSourceDrill:"Drill", repSourceSparring:"Sparring", // TODO: verify
     execLevel_6:"Stringing it", execLevel_7:"Consistent", execLevel_8:"Solid", execLevel_9:"Locked", execLevel_10:"Owned", // TODO: verify
     execSub_1:"First attempts. Body's still figuring it out.", execSub_2:"Pieces are landing, full move isn't.", execSub_3:"One clean rep on a good day.", // TODO: verify
     execSub_4:"Lands more than it falls. Not reliable yet.", execSub_5:"Can repeat under no pressure.", execSub_6:"A few in a row when warm.", // TODO: verify
@@ -12181,7 +12181,7 @@ export const TRANSLATIONS = {
     status:"สถานะ", colour:"สี", color:"สี", date:"วันที่สร้าง",
     mastery:"ระดับความชำนาญ", set:"เซ็ต",
     executionLevel:"Execution Level", execLevel_1:"Trying it", execLevel_2:"Getting closer", execLevel_3:"Hit it once", execLevel_4:"Catching it", execLevel_5:"Hit it twice", // TODO: verify
-    totalReps:"Total Reps", repSourceManual:"Manual", repSourceDrill:"Drill", repSourceSparring:"Sparring", repSourceSets:"Sets", // TODO: verify
+    totalReps:"Total Reps", repSourceManual:"Manual", repSourceDrill:"Drill", repSourceSparring:"Sparring", // TODO: verify
     execLevel_6:"Stringing it", execLevel_7:"Consistent", execLevel_8:"Solid", execLevel_9:"Locked", execLevel_10:"Owned", // TODO: verify
     execSub_1:"First attempts. Body's still figuring it out.", execSub_2:"Pieces are landing, full move isn't.", execSub_3:"One clean rep on a good day.", // TODO: verify
     execSub_4:"Lands more than it falls. Not reliable yet.", execSub_5:"Can repeat under no pressure.", execSub_6:"A few in a row when warm.", // TODO: verify
@@ -13417,7 +13417,7 @@ export const TRANSLATIONS = {
     status:"TRẠNG THÁI", colour:"MÀU", color:"MÀU", date:"NGÀY TẠO",
     mastery:"MỨC ĐỘ THÀNH THẠO", set:"SET",
     executionLevel:"Execution Level", execLevel_1:"Trying it", execLevel_2:"Getting closer", execLevel_3:"Hit it once", execLevel_4:"Catching it", execLevel_5:"Hit it twice", // TODO: verify
-    totalReps:"Total Reps", repSourceManual:"Manual", repSourceDrill:"Drill", repSourceSparring:"Sparring", repSourceSets:"Sets", // TODO: verify
+    totalReps:"Total Reps", repSourceManual:"Manual", repSourceDrill:"Drill", repSourceSparring:"Sparring", // TODO: verify
     execLevel_6:"Stringing it", execLevel_7:"Consistent", execLevel_8:"Solid", execLevel_9:"Locked", execLevel_10:"Owned", // TODO: verify
     execSub_1:"First attempts. Body's still figuring it out.", execSub_2:"Pieces are landing, full move isn't.", execSub_3:"One clean rep on a good day.", // TODO: verify
     execSub_4:"Lands more than it falls. Not reliable yet.", execSub_5:"Can repeat under no pressure.", execSub_6:"A few in a row when warm.", // TODO: verify

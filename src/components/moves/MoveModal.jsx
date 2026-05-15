@@ -79,7 +79,7 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
   const [manualDelta, setManualDelta] = useState(0);
   const [showRepsBreakdown, setShowRepsBreakdown] = useState(false);
   const repsBySource = useMemo(() => {
-    const sums = { manual: 0, drill: 0, sparring: 0, flashcards: 0 };
+    const sums = { manual: 0, drill: 0, sparring: 0 };
     for (const entry of (f.trainingLog || [])) {
       if (sums[entry.source] !== undefined) {
         sums[entry.source] += entry.count;
@@ -88,7 +88,7 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
     return sums;
   }, [f.trainingLog]);
   const totalReps =
-    repsBySource.manual + repsBySource.drill + repsBySource.sparring + repsBySource.flashcards + manualDelta;
+    repsBySource.manual + repsBySource.drill + repsBySource.sparring + manualDelta;
 
   const setAttr = (attrId, val) => {
     setF(p => ({ ...p, attrs: { ...(p.attrs || {}), [attrId]: val } }));
@@ -227,7 +227,6 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
               { label: t('repSourceManual'), count: repsBySource.manual + manualDelta },
               { label: t('repSourceDrill'), count: repsBySource.drill },
               { label: t('repSourceSparring'), count: repsBySource.sparring },
-              { label: t('repSourceSets'), count: repsBySource.flashcards },
             ].map(row => (
               <div key={row.label} style={{
                 display: 'flex', justifyContent: 'space-between',
