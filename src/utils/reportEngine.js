@@ -42,12 +42,13 @@ export const computeDailyEntry = (date, { moves, reps, sparring, musicflow, cale
   // musicflow) are excluded to avoid double-counting; everything else (Log Today,
   // SessionJournal, Lab, Combo, RRR) is a session in its own right.
   const sparCount = (sparring?.sessions || []).filter(s => toYMD(s.date) === d).length;
+  const spar1v1Count = (sparring?.sessions1v1 || []).filter(s => toYMD(s.date) === d).length;
   const flowCount = (musicflow?.sessions || []).filter(s => toYMD(s.date) === d).length;
   const calTrainingSessions = (calendar?.events || []).filter(e =>
     e.date === d && e.type === "training" &&
     !['rep_counter','sparring','spar-1v1','musicflow'].includes(e.source)
   ).length;
-  const sessionsLogged = repCount + sparCount + flowCount + calTrainingSessions;
+  const sessionsLogged = repCount + sparCount + spar1v1Count + flowCount + calTrainingSessions;
 
   // Routine completions
   const routineEvents = (calendar?.events || []).filter(e => e.date === d && e.type === "routine");
@@ -238,6 +239,7 @@ export const detectMilestones = ({ moves, sparring, battleprep, reps, musicflow,
   let sessionsThisMonth = 0;
   sessionsThisMonth += (reps || []).filter(r => { const d = toYMD(r.date); return d && d >= monthStart; }).length;
   sessionsThisMonth += (sparring?.sessions || []).filter(s => { const d = toYMD(s.date); return d && d >= monthStart; }).length;
+  sessionsThisMonth += (sparring?.sessions1v1 || []).filter(s => { const d = toYMD(s.date); return d && d >= monthStart; }).length;
   sessionsThisMonth += (musicflow?.sessions || []).filter(s => { const d = toYMD(s.date); return d && d >= monthStart; }).length;
   sessionsThisMonth += (calendar?.events || []).filter(e => {
     const d = toYMD(e.date);
