@@ -148,13 +148,15 @@ export function LogTodayModal({
         })}
       </div>
 
-      {/* Scrollable body */}
+      {/* Scrollable body — Training and Rest forms stay mounted (toggled via
+          display:none) so their local state persists across sub-tab switches.
+          ComingSoon has no form state, stays conditional. */}
       <div style={{
         flex: 1, minHeight: 0,
         overflowY: "auto", WebkitOverflowScrolling: "touch",
         paddingBottom: 16,
       }}>
-        {isTraining ? (
+        <div style={{ display: isTraining ? "block" : "none" }}>
           <LogTodayTraining
             ref={formRef}
             date={effectiveDate}
@@ -175,7 +177,8 @@ export function LogTodayModal({
             addToast={addToast}
             onClose={onClose}
           />
-        ) : isRest ? (
+        </div>
+        <div style={{ display: isRest ? "block" : "none" }}>
           <LogTodayRest
             ref={restRef}
             date={effectiveDate}
@@ -188,9 +191,8 @@ export function LogTodayModal({
             addToast={addToast}
             onClose={onClose}
           />
-        ) : (
-          <ComingSoonState />
-        )}
+        </div>
+        {!isTraining && !isRest && <ComingSoonState />}
       </div>
 
       {/* Sticky footer */}
