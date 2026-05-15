@@ -626,16 +626,16 @@ export const CalendarOverlay = ({
             {dayData.calendarEvents.length > 0 && (
               <div>
                 <div style={sectionLabel}>{t("calendarEvents")}</div>
-                {dayData.calendarEvents.map(e => {
+                {dayData.calendarEvents.map((e, i) => {
                   if (e.source === "home-idea") {
-                    return <HomeIdeaNote key={e.id} event={e}
+                    return <HomeIdeaNote key={`${e.id}-${i}`} event={e}
                       onEdit={(evt) => setEditHomeNote(evt)}
                       onDelete={(evt) => setConfirmDeleteNote(evt)}
                     />;
                   }
                   const isLogToday = e.source === "log_today";
                   return (
-                  <div key={e.id} id={`event-${e.id}`}
+                  <div key={`${e.id}-${i}`} id={`event-${e.id}`}
                     onClick={isLogToday ? () => setSelectedLogTodayEvent(e) : undefined}
                     style={{ display: "flex", alignItems: "center", justifyContent: "space-between",
                     padding: "8px 10px", background: C.surfaceAlt, borderRadius: 8, marginBottom: 4,
@@ -753,11 +753,11 @@ export const CalendarOverlay = ({
               <div>
                 <div style={sectionLabel}>{t("movesTrained")}</div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
-                  {dayData.movesTrained.map(m => {
+                  {dayData.movesTrained.map((m, i) => {
                     const domainKey = CATEGORY_DOMAIN_MAP[m.category]?.primary;
                     const domainColor = domainKey ? DOMAIN_COLORS[domainKey] : null;
                     return (
-                      <span key={m.id} style={{ display: "inline-flex", alignItems: "center", gap: 4,
+                      <span key={`${m.id}-${i}`} style={{ display: "inline-flex", alignItems: "center", gap: 4,
                         fontSize: 11, fontFamily: FONT_BODY, color: C.text,
                         background: C.surfaceAlt, borderRadius: 8, padding: "3px 8px" }}>
                         <span style={{ width: 6, height: 6, borderRadius: "50%",
@@ -776,8 +776,8 @@ export const CalendarOverlay = ({
             {dayData.repSessions.length > 0 && (
               <div>
                 <div style={sectionLabel}>{t("repSession")}</div>
-                {dayData.repSessions.map(r => (
-                  <div key={r.id} id={`session-drill-${r.id}`} style={{ fontSize: 11, color: C.textSec, padding: "3px 0" }}>
+                {dayData.repSessions.map((r, i) => (
+                  <div key={`${r.id}-${i}`} id={`session-drill-${r.id}`} style={{ fontSize: 11, color: C.textSec, padding: "3px 0" }}>
                     <div style={{ display: "flex", gap: 8 }}>
                       <span style={{ color: C.text, fontWeight: 600 }}>{r.moveName}</span>
                       <span>{r.reps} reps</span>
@@ -800,8 +800,8 @@ export const CalendarOverlay = ({
                 {[
                   ...dayData.sparringSessions.map(s => ({ ...s, _kind: "solo" })),
                   ...dayData.sparringSessions1v1.map(s => ({ ...s, _kind: "1v1" })),
-                ].map(s => (
-                  <div key={`${s._kind}-${s.id}`} id={`session-spar-${s._kind === '1v1' ? '1v1' : 'solo'}-${s.id}`} style={{ fontSize: 11, color: C.textSec, padding: "3px 0" }}>
+                ].map((s, i) => (
+                  <div key={`${s._kind}-${s.id}-${i}`} id={`session-spar-${s._kind === '1v1' ? '1v1' : 'solo'}-${s.id}`} style={{ fontSize: 11, color: C.textSec, padding: "3px 0" }}>
                     <span style={{ color: C.text, fontWeight: 600 }}>
                       {s.roundLog?.length || 0} rounds
                     </span>
@@ -823,8 +823,8 @@ export const CalendarOverlay = ({
             {dayData.musicflowSessions.length > 0 && (
               <div>
                 <div style={sectionLabel}>{t("musicFlow")}</div>
-                {dayData.musicflowSessions.map(s => (
-                  <div key={s.id} id={`session-musicflow-${s.id}`} style={{ fontSize: 11, color: C.textSec, padding: "3px 0" }}>
+                {dayData.musicflowSessions.map((s, i) => (
+                  <div key={`${s.id}-${i}`} id={`session-musicflow-${s.id}`} style={{ fontSize: 11, color: C.textSec, padding: "3px 0" }}>
                     <span style={{ color: C.text, fontWeight: 600 }}>
                       {Math.floor(s.duration / 60)}:{String(s.duration % 60).padStart(2, "0")}
                     </span>
@@ -844,8 +844,8 @@ export const CalendarOverlay = ({
               <div>
                 <div style={sectionLabel}>{t("habitCompleted")}</div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
-                  {dayData.habitsCompleted.map(h => (
-                    <span key={h.id} style={{ fontSize: 11, color: C.blue, background: C.blue + "14",
+                  {dayData.habitsCompleted.map((h, i) => (
+                    <span key={`${h.id}-${i}`} style={{ fontSize: 11, color: C.blue, background: C.blue + "14",
                       borderRadius: 8, padding: "3px 8px", fontWeight: 600 }}>
                       {h.name || h.text || "Habit"}
                     </span>
@@ -858,8 +858,8 @@ export const CalendarOverlay = ({
             {dayData.notesOnDay.length > 0 && (
               <div>
                 <div style={sectionLabel}>{t("noteCreated")}</div>
-                {dayData.notesOnDay.map(n => (
-                  <div key={n.id} style={{ fontSize: 11, color: C.textSec, padding: "3px 0" }}>
+                {dayData.notesOnDay.map((n, i) => (
+                  <div key={`${n.id}-${i}`} style={{ fontSize: 11, color: C.textSec, padding: "3px 0" }}>
                     <span style={{ color: C.text, fontWeight: 600 }}>{n.text || n.title || "Note"}</span>
                   </div>
                 ))}
