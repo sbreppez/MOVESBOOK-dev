@@ -6,10 +6,10 @@ import { Ic } from '../shared/Ic';
 import { todayLocal } from '../../utils/dateUtils';
 import { LogTodayTraining } from './LogTodayTraining';
 import { LogTodayRest } from './LogTodayRest';
+import { LogTodayBattle } from './LogTodayBattle';
 import { LogTodayMovePicker } from './LogTodayMovePicker';
 import { LogTodaySetPicker } from './LogTodaySetPicker';
 import { ComingSoonState } from './ComingSoonState';
-import { BattleFormModal } from '../battle/BattleFormModal';
 
 export function LogTodayModal({
   date,
@@ -36,6 +36,7 @@ export function LogTodayModal({
   const t = useT();
   const formRef = useRef(null);
   const restRef = useRef(null);
+  const battleRef = useRef(null);
   const effectiveDate = date || todayLocal();
 
   const [activeTab, setActiveTab] = useState("training");
@@ -43,37 +44,6 @@ export function LogTodayModal({
   const [pendingSetIds, setPendingSetIds] = useState(existingEvent?.setIds || []);
   const [movePickerOpen, setMovePickerOpen] = useState(false);
   const [setPickerOpen, setSetPickerOpen] = useState(false);
-  const [battleFormOpen, setBattleFormOpen] = useState(false);
-
-  // Full empty-battle shape mirrors BattleFormModal.emptyBattle(); partials
-  // would replace the entire state and break canSave on eventName.trim().
-  // Memoized so a re-render while the form is open doesn't reset its state.
-  const battleInitialValue = useMemo(() => ({
-    id: (typeof crypto !== "undefined" && crypto.randomUUID)
-      ? crypto.randomUUID()
-      : String(Date.now() + Math.random()),
-    date: effectiveDate,
-    eventName: "",
-    format: null,
-    battleNotes: "",
-    judges: null,
-    rounds: [],
-  }), [effectiveDate, battleFormOpen]);
-
-  const handleSaveBattle = (battle) => {
-    if (setBattles) setBattles(prev => [...prev, battle]);
-    if (addCalendarEvent) {
-      addCalendarEvent({
-        date: battle.date,
-        type: "battle",
-        title: t("battleEvent"),
-        notes: battle.eventName ? battle.eventName : "",
-        source: "logToday",
-      }, { silent: true });
-    }
-    if (addToast) addToast({ icon: "swords", title: t("battleLogged") });
-    setBattleFormOpen(false);
-  };
 
   const togglePendingMove = (moveId) => {
     setPendingMoveIds(prev =>
@@ -228,26 +198,19 @@ export function LogTodayModal({
             onClose={onClose}
           />
         </div>
-        {isBattle && (
-          <div style={{ padding: "40px 20px", display: "flex", justifyContent: "center" }}>
-            <button
-              onClick={() => setBattleFormOpen(true)}
-              style={{
-                width: "100%", maxWidth: 320,
-                background: "transparent",
-                border: `1.5px dashed ${C.border}`,
-                borderRadius: 8,
-                padding: "14px 16px",
-                color: C.accent,
-                fontFamily: FONT_DISPLAY, fontWeight: 800, fontSize: 13,
-                letterSpacing: 1, textTransform: "uppercase",
-                cursor: "pointer",
-              }}
-            >
-              {t("logABattle")}
-            </button>
-          </div>
-        )}
+        <div style={{ display: isBattle ? "block" : "none" }}>
+          <LogTodayBattle
+            ref={battleRef}
+            date={effectiveDate}
+            moves={moves}
+            battleFormats={battleFormats}
+            setBattleFormats={setBattleFormats}
+            setBattles={setBattles}
+            addCalendarEvent={addCalendarEvent}
+            addToast={addToast}
+            onClose={onClose}
+          />
+        </div>
         {!isTraining && !isRest && !isBattle && <ComingSoonState />}
       </div>
 
@@ -274,15 +237,16 @@ export function LogTodayModal({
           onClick={() => {
             if (isTraining) formRef.current?.save();
             else if (isRest) restRef.current?.save();
+            else if (isBattle) battleRef.current?.save();
           }}
-          disabled={!isTraining && !isRest}
+          disabled={!isTraining && !isRest && !isBattle}
           style={{
             flex: 1, background: C.accent, color: "#fff", border: "none",
             borderRadius: 8, padding: "12px 16px",
             fontFamily: FONT_DISPLAY, fontWeight: 800, fontSize: 12,
             letterSpacing: 1.5, textTransform: "uppercase",
-            cursor: (isTraining || isRest) ? "pointer" : "not-allowed",
-            opacity: (isTraining || isRest) ? 1 : 0.4,
+            cursor: (isTraining || isRest || isBattle) ? "pointer" : "not-allowed",
+            opacity: (isTraining || isRest || isBattle) ? 1 : 0.4,
           }}
         >
           {t("save")}
@@ -308,15 +272,6 @@ export function LogTodayModal({
           onClose={() => setSetPickerOpen(false)}
         />
       )}
-      <BattleFormModal
-        open={battleFormOpen}
-        onClose={() => setBattleFormOpen(false)}
-        onSave={handleSaveBattle}
-        initialValue={battleInitialValue}
-        moves={moves}
-        battleFormats={battleFormats}
-        setBattleFormats={setBattleFormats}
-      />
     </div>
   );
 }
