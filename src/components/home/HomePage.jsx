@@ -87,6 +87,7 @@ export const HomePage = ({
   customAttrs, setCustomAttrs, isPremium,
   addToast,
   homeSeed, onHomeSeedUsed,
+  setBattles, battleFormats, setBattleFormats,
 }) => {
   const { C } = useSettings();
   const t = useT();
@@ -1349,6 +1350,9 @@ export const HomePage = ({
             setRestTypes={setRestTypes}
             injuries={injuries}
             setInjuries={setInjuries}
+            setBattles={setBattles}
+            battleFormats={battleFormats}
+            setBattleFormats={setBattleFormats}
             onClose={() => setShowLogToday(false)}
           />
         );

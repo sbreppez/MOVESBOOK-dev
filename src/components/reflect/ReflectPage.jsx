@@ -30,7 +30,8 @@ export const ReflectPage = ({
   updateCalendarEvent, recordEventTraining,
   onSubTabChange, onGoToPrep, initialMonth, initialFocus, onInitialFocusUsed, sets, onAddTrigger, parentSubTab, reports, injuries,
   setInjuries, restLog, setRestLog, restTypes, setRestTypes,
-  isPremium
+  isPremium,
+  setBattles, battleFormats, setBattleFormats,
 }) => {
   const t = useT();
   const { C } = useSettings();
@@ -218,6 +219,7 @@ export const ReflectPage = ({
           battleprep={battleprep} initialMonth={initialMonth} initialFocus={initialFocus} onInitialFocusUsed={onInitialFocusUsed}
           onToggleBattlePrepTask={onToggleBattlePrepTask}
           onAddTrigger={calendarAddTick} reports={reports} isPremium={isPremium}
+          setBattles={setBattles} battleFormats={battleFormats} setBattleFormats={setBattleFormats}
           onAddToHome={(ctx) => setAddToHomeContext(ctx)} />
         </>
       )}

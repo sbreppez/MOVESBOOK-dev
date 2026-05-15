@@ -31,6 +31,7 @@ export const CalendarOverlay = ({
   battleprep, onToggleBattlePrepTask, initialMonth, initialFocus, onInitialFocusUsed,
   inline, onAddTrigger, reports: _reports, isPremium,
   onAddToHome,
+  setBattles, battleFormats, setBattleFormats,
 }) => {
   const t = useT();
   const today = todayLocal();
@@ -1009,6 +1010,9 @@ export const CalendarOverlay = ({
           setRestTypes={setRestTypes}
           injuries={injuries}
           setInjuries={setInjuries}
+          setBattles={setBattles}
+          battleFormats={battleFormats}
+          setBattleFormats={setBattleFormats}
           onClose={() => setSelectedLogTodayEvent(null)}
         />
       )}
