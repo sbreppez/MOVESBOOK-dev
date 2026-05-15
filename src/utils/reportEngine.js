@@ -37,10 +37,17 @@ export const computeDailyEntry = (date, { moves, reps, sparring, musicflow, cale
   const calTraining = (calendar?.events || []).filter(e => e.date === d && e.type === "training").length;
   const movesTrained = repCount + calTraining;
 
-  // Sessions: reps + sparring + musicflow
+  // Sessions: reps + sparring + musicflow + non-mirror training calendar events.
+  // Calendar training events with a primary store (rep_counter/sparring/spar-1v1/
+  // musicflow) are excluded to avoid double-counting; everything else (Log Today,
+  // SessionJournal, Lab, Combo, RRR) is a session in its own right.
   const sparCount = (sparring?.sessions || []).filter(s => toYMD(s.date) === d).length;
   const flowCount = (musicflow?.sessions || []).filter(s => toYMD(s.date) === d).length;
-  const sessionsLogged = repCount + sparCount + flowCount;
+  const calTrainingSessions = (calendar?.events || []).filter(e =>
+    e.date === d && e.type === "training" &&
+    !['rep_counter','sparring','spar-1v1','musicflow'].includes(e.source)
+  ).length;
+  const sessionsLogged = repCount + sparCount + flowCount + calTrainingSessions;
 
   // Routine completions
   const routineEvents = (calendar?.events || []).filter(e => e.date === d && e.type === "routine");
@@ -215,7 +222,7 @@ const MILESTONE_DEFS = [
   { id: "foundation-30",   check: s => s.foundationAbove30, label: "foundationStrong" },
 ];
 
-export const detectMilestones = ({ moves, sparring, battleprep, reps, musicflow, cats, calendar: _calendar }, existingMilestones) => {
+export const detectMilestones = ({ moves, sparring, battleprep, reps, musicflow, cats, calendar }, existingMilestones) => {
   const existingIds = new Set((existingMilestones || []).map(m => m.id));
   const today = todayLocal();
   const monthStr = today.slice(0, 7);
@@ -232,6 +239,11 @@ export const detectMilestones = ({ moves, sparring, battleprep, reps, musicflow,
   sessionsThisMonth += (reps || []).filter(r => { const d = toYMD(r.date); return d && d >= monthStart; }).length;
   sessionsThisMonth += (sparring?.sessions || []).filter(s => { const d = toYMD(s.date); return d && d >= monthStart; }).length;
   sessionsThisMonth += (musicflow?.sessions || []).filter(s => { const d = toYMD(s.date); return d && d >= monthStart; }).length;
+  sessionsThisMonth += (calendar?.events || []).filter(e => {
+    const d = toYMD(e.date);
+    return d && d >= monthStart && e.type === "training"
+      && !['rep_counter','sparring','spar-1v1','musicflow'].includes(e.source);
+  }).length;
 
   // All categories have a move
   const usedCats = new Set((moves || []).map(m => m.category).filter(Boolean));
