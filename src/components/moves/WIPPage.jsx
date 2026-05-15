@@ -125,7 +125,6 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
     bulkImport,
     delMove,
     tryDelMove,
-    dupMove,
     moveToCat,
     toggleMoveSelect,
     exitMoveSelectMode,
@@ -247,7 +246,6 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
           setConfirmBulkDeleteMoves={setConfirmBulkDeleteMoves}
           saveMove={saveMove}
           tryDelMove={tryDelMove}
-          dupMove={dupMove}
           moveToCat={moveToCat}
           toggleMoveSelect={toggleMoveSelect}
           exitMoveSelectMode={exitMoveSelectMode}
@@ -330,7 +328,6 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
             onToggleSelect={toggleMoveSelect}
             onEditMove={setEditMove}
             onDeleteMove={tryDelMove}
-            onDuplicateMove={dupMove}
             onMoveToCat={moveToCat}
           />
         ) : vocabTab==="gap" ? (

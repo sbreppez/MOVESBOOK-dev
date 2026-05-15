@@ -23,7 +23,7 @@ export const CategoryDetailView = ({
   selectMode, setSelectMode,
   selectedMoveIds,
   setConfirmDeleteMove: _setConfirmDeleteMove, setConfirmBulkDeleteMoves,
-  saveMove, tryDelMove, dupMove, moveToCat,
+  saveMove, tryDelMove, moveToCat,
   toggleMoveSelect,
   exitMoveSelectMode,
 }) => {

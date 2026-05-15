@@ -17,7 +17,6 @@ export const AllMovesView = ({
   onToggleSelect,
   onEditMove,
   onDeleteMove,
-  onDuplicateMove,
   onMoveToCat,
 }) => {
   const { C } = useSettings();
@@ -80,7 +79,6 @@ export const AllMovesView = ({
               onClick={() => selectMode ? onToggleSelect(m.id) : onEditMove(m)}
               onEdit={() => onEditMove(m)}
               onDelete={() => onDeleteMove(m)}
-              onDuplicate={() => onDuplicateMove(m)}
               onMove={cat => onMoveToCat(m.id, cat)}
               allCats={cats}
               catColors={catColors}

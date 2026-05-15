@@ -30,11 +30,6 @@ export const useMoveCrud = ({ moves, setMoves, addToast, t, st }) => {
     else delMove(m.id);
   };
 
-  const dupMove = (m) => setMoves(prev => [
-    ...prev,
-    { ...m, id: Date.now(), name: m.name + " (copy)", createdAt: todayLocal(), trainingLog: [] },
-  ]);
-
   const moveToCat = (id, cat) => setMoves(prev =>
     prev.map(m => m.id === id ? { ...m, category: cat } : m)
   );
@@ -73,7 +68,6 @@ export const useMoveCrud = ({ moves, setMoves, addToast, t, st }) => {
     bulkImport,
     delMove,
     tryDelMove,
-    dupMove,
     moveToCat,
     toggleMoveSelect,
     exitMoveSelectMode,
