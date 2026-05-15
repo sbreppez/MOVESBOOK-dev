@@ -41,6 +41,22 @@ export const LogTodayTraining = forwardRef(function LogTodayTraining({
   const [notes, setNotes] = useState(existingEvent?.notes || "");
   const [chooserOpen, setChooserOpen] = useState(false);
 
+  // Per-move rep counts. Restored on edit from each move's trainingLog entry
+  // matching this event's id, so re-saving doesn't zero out previously entered reps.
+  const [pendingMoveReps, setPendingMoveReps] = useState(() => {
+    if (!existingEvent?.id) return {};
+    const out = {};
+    for (const moveId of (existingEvent.moveIds || [])) {
+      const move = moves?.find(m => m.id === moveId);
+      if (!move) continue;
+      const entry = (move.trainingLog || []).find(e => e.sourceId === existingEvent.id);
+      if (entry && typeof entry.count === 'number' && entry.count > 0) out[moveId] = entry.count;
+    }
+    return out;
+  });
+  const incReps = (moveId) => setPendingMoveReps(p => ({ ...p, [moveId]: (p[moveId] || 0) + 1 }));
+  const decReps = (moveId) => setPendingMoveReps(p => ({ ...p, [moveId]: Math.max(0, (p[moveId] || 0) - 1) }));
+
   const formSectionHeader = (isFirst) => ({
     fontSize: 10, fontFamily: FONT_DISPLAY, fontWeight: 800,
     color: C.textMuted, textTransform: "uppercase", letterSpacing: 1.5,
@@ -105,7 +121,7 @@ export const LogTodayTraining = forwardRef(function LogTodayTraining({
     }
 
     if (recordEventTraining) {
-      recordEventTraining(record.id, allMoveIdsToMark, record.date);
+      recordEventTraining(record.id, allMoveIdsToMark, record.date, pendingMoveReps);
     }
 
     addToast?.({
@@ -168,6 +184,41 @@ export const LogTodayTraining = forwardRef(function LogTodayTraining({
                 }}>
                   {move.name}
                 </span>
+                {/* Reps stepper — mirrors the MoveModal +/- pattern, sized down for the row */}
+                {(() => {
+                  const reps = pendingMoveReps[moveId] || 0;
+                  return (
+                    <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                      <button
+                        onClick={() => decReps(moveId)}
+                        disabled={reps === 0}
+                        aria-label={t("remove")}
+                        style={{
+                          width: 22, height: 22, borderRadius: 4,
+                          background: C.surfaceAlt, border: "none", padding: 0,
+                          cursor: reps === 0 ? "default" : "pointer",
+                          opacity: reps === 0 ? 0.4 : 1,
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                        }}>
+                        <Ic n="minus" s={12} c={C.text}/>
+                      </button>
+                      <span style={{
+                        minWidth: 24, textAlign: "center",
+                        fontSize: 14, fontWeight: 800, color: C.text, fontFamily: FONT_DISPLAY,
+                      }}>{reps}</span>
+                      <button
+                        onClick={() => incReps(moveId)}
+                        style={{
+                          width: 22, height: 22, borderRadius: 4,
+                          background: C.surfaceAlt, border: "none", padding: 0,
+                          cursor: "pointer",
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                        }}>
+                        <Ic n="plus" s={12} c={C.text}/>
+                      </button>
+                    </div>
+                  );
+                })()}
                 <button
                   onClick={() => onTogglePendingMove?.(moveId)}
                   aria-label={t("remove")}

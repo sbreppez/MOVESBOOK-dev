@@ -69,10 +69,11 @@ export function setEventTraining(moves, { eventId, moveIds, date, source, count 
     const isTagged = tagged.has(m.id);
     if (!hadEntry && !isTagged) return m;
     const rest = log.filter(e => e.sourceId !== eventId);
+    const c = typeof count === 'function' ? count(m.id) : count;
     return {
       ...m,
       trainingLog: isTagged
-        ? [...rest, { sourceId: eventId, date, source, count }]
+        ? [...rest, { sourceId: eventId, date, source, count: c }]
         : rest,
     };
   });

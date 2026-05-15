@@ -958,9 +958,15 @@ export default function App() {
   }, [setCalendar]);
 
   // Records a Log Today event's training into each tagged move's trainingLog
-  // (upsert keyed by the event id — handles save, edit, and un-tag).
-  const recordEventTraining = useCallback((eventId, moveIds, date) => {
-    setMovesState(prev => setEventTraining(prev, { eventId, moveIds, date, source: 'log_today', count: 0 }));
+  // (upsert keyed by the event id — handles save, edit, and un-tag). Optional
+  // `counts` map { [moveId]: number } supplies per-move rep counts; moves
+  // without a count (e.g. set-derived) default to 0.
+  const recordEventTraining = useCallback((eventId, moveIds, date, counts) => {
+    setMovesState(prev => setEventTraining(prev, {
+      eventId, moveIds, date,
+      source: 'log_today',
+      count: counts ? (id => counts[id] || 0) : 0,
+    }));
   }, []);
 
   const onUpdateRepSession = useCallback((sessionId, updates) => {
