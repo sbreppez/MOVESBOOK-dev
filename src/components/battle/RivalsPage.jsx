@@ -183,7 +183,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, battles=[], setBattles, 
       addCalendarEvent({
         date: battle.date,
         type: "battle",
-        title: `Battle vs ${rival.name}`,
+        title: t("battleVs").replace("{name}", rival.name),
         notes: battle.eventName ? battle.eventName : "",
         source: "rivals",
         rivalId: rival.id,

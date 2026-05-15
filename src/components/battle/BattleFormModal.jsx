@@ -3,11 +3,17 @@ import { C } from "../../constants/colors";
 import { FONT_DISPLAY, FONT_BODY } from "../../constants/fonts";
 import { inp } from "../../constants/styles";
 import { todayLocal } from "../../utils/dateUtils";
+import { useT } from "../../hooks/useTranslation";
 import { Ic } from "../shared/Ic";
 import { Modal } from "../shared/Modal";
 import { RoundCard } from "./RoundCard";
 
-const FORMAT_PRESETS = ["1v1", "2v2", "Crew", "Cypher"];
+const FORMAT_PRESETS = [
+  { value: "1v1", labelKey: "format1v1" },
+  { value: "2v2", labelKey: "format2v2" },
+  { value: "Crew", labelKey: "crew" },
+  { value: "Cypher", labelKey: "cypher" },
+];
 
 const newId = () => (typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()));
 
@@ -108,6 +114,7 @@ const AccordionSection = ({ label, open, onToggle, children }) => (
 );
 
 const FormatRow = ({ value, onChange, customs, onAddCustom }) => {
+  const t = useT();
   const [adding, setAdding] = useState(false);
   const [draft, setDraft] = useState("");
   const inputRef = useRef(null);
@@ -127,14 +134,14 @@ const FormatRow = ({ value, onChange, customs, onAddCustom }) => {
 
   return (
     <div>
-      <FormLabel>Format</FormLabel>
+      <FormLabel>{t("format")}</FormLabel>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center" }}>
         {FORMAT_PRESETS.map((f) => (
           <Chip
-            key={f}
-            label={f}
-            active={value === f}
-            onClick={() => onChange(value === f ? null : f)}
+            key={f.value}
+            label={t(f.labelKey)}
+            active={value === f.value}
+            onClick={() => onChange(value === f.value ? null : f.value)}
           />
         ))}
         {customs.map((label) => {
@@ -162,7 +169,7 @@ const FormatRow = ({ value, onChange, customs, onAddCustom }) => {
           }}
         >
           <Ic n="plus" s={12} c={C.accent}/>
-          Add
+          {t("add")}
         </button>
       </div>
       {adding && (
@@ -176,7 +183,7 @@ const FormatRow = ({ value, onChange, customs, onAddCustom }) => {
             if (e.key === "Enter") { e.preventDefault(); commit(); }
             else if (e.key === "Escape") { e.preventDefault(); cancel(); }
           }}
-          placeholder="New format..."
+          placeholder={t("newFormatPlaceholder")}
           style={{ ...inp(), marginTop: 6 }}
         />
       )}
@@ -185,6 +192,7 @@ const FormatRow = ({ value, onChange, customs, onAddCustom }) => {
 };
 
 const JudgesSection = ({ judges, onChange }) => {
+  const t = useT();
   const count = judges?.count ?? 3;
   const names = judges?.names ?? Array.from({ length: count }, () => "");
 
@@ -200,7 +208,7 @@ const JudgesSection = ({ judges, onChange }) => {
   return (
     <>
       <div>
-        <FormLabel>Judge count</FormLabel>
+        <FormLabel>{t("judgeCount")}</FormLabel>
         <input
           type="number"
           min={1}
@@ -211,7 +219,7 @@ const JudgesSection = ({ judges, onChange }) => {
         />
       </div>
       <div>
-        <FormLabel>Judge names (optional)</FormLabel>
+        <FormLabel>{t("judgeNamesOptional")}</FormLabel>
         <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
           {names.map((nm, i) => (
             <div key={i}>
@@ -219,7 +227,7 @@ const JudgesSection = ({ judges, onChange }) => {
                 fontFamily: FONT_DISPLAY, fontSize: 10, fontWeight: 700, letterSpacing: 1.2,
                 color: C.textMuted, textTransform: "uppercase", marginBottom: 4,
               }}>
-                Judge {i + 1}
+                {t("judgeN").replace("{n}", i + 1)}
               </div>
               <input
                 type="text"
@@ -236,6 +244,7 @@ const JudgesSection = ({ judges, onChange }) => {
 };
 
 export const BattleFormModal = ({ open, onClose, onSave, initialValue, moves = [], battleFormats = [], setBattleFormats }) => {
+  const t = useT();
   const [battle, setBattle] = useState(() => initialValue || emptyBattle());
   const [judgesOpen, setJudgesOpen] = useState(() => !!initialValue?.judges);
   const [roundsOpen, setRoundsOpen] = useState(() => (initialValue?.rounds?.length ?? 0) > 0);
@@ -292,7 +301,7 @@ export const BattleFormModal = ({ open, onClose, onSave, initialValue, moves = [
           cursor: canSave ? "pointer" : "not-allowed",
         }}
       >
-        Save
+        {t("save")}
       </button>
       <button
         type="button"
@@ -303,22 +312,22 @@ export const BattleFormModal = ({ open, onClose, onSave, initialValue, moves = [
           cursor: "pointer", padding: "8px 16px", width: "100%",
         }}
       >
-        Cancel
+        {t("cancel")}
       </button>
     </div>
   );
 
   return (
-    <Modal title="BATTLE" onClose={onClose} footer={footer}>
+    <Modal title={t("battle")} onClose={onClose} footer={footer}>
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         {/* Event name */}
         <div>
-          <FormLabel>Event name</FormLabel>
+          <FormLabel>{t("eventName")}</FormLabel>
           <input
             type="text"
             value={battle.eventName}
             onChange={(e) => update({ eventName: e.target.value })}
-            placeholder="Event name"
+            placeholder={t("eventPlaceholder")}
             style={inp()}
             autoFocus
           />
@@ -326,7 +335,7 @@ export const BattleFormModal = ({ open, onClose, onSave, initialValue, moves = [
 
         {/* Date */}
         <div>
-          <FormLabel>Date</FormLabel>
+          <FormLabel>{t("battleDate")}</FormLabel>
           <input
             type="date"
             value={battle.date}
@@ -345,7 +354,7 @@ export const BattleFormModal = ({ open, onClose, onSave, initialValue, moves = [
 
         {/* Judges accordion */}
         <AccordionSection
-          label="Judges"
+          label={t("judges")}
           open={judgesOpen}
           onToggle={() => {
             setJudgesOpen((v) => !v);
@@ -359,7 +368,7 @@ export const BattleFormModal = ({ open, onClose, onSave, initialValue, moves = [
 
         {/* Rounds accordion */}
         <AccordionSection
-          label="Rounds"
+          label={t("rounds")}
           open={roundsOpen}
           onToggle={() => setRoundsOpen((v) => !v)}
         >
@@ -376,17 +385,17 @@ export const BattleFormModal = ({ open, onClose, onSave, initialValue, moves = [
           ))}
           <DashedButton onClick={handleAddRound}>
             <Ic n="plus" s={14} c={C.accent}/>
-            <span>Add round</span>
+            <span>{t("addRound")}</span>
           </DashedButton>
         </AccordionSection>
 
         {/* Battle thoughts */}
         <div>
-          <FormLabel>Battle thoughts</FormLabel>
+          <FormLabel>{t("battleThoughts")}</FormLabel>
           <textarea
             value={battle.battleNotes}
             onChange={(e) => update({ battleNotes: e.target.value })}
-            placeholder="Free thoughts on the battle as a whole..."
+            placeholder={t("battleThoughtsPlaceholder")}
             rows={3}
             style={{ ...inp(), resize: "vertical" }}
           />

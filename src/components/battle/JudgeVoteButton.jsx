@@ -1,19 +1,21 @@
 import React from "react";
 import { C } from "../../constants/colors";
 import { FONT_DISPLAY } from "../../constants/fonts";
+import { useT } from "../../hooks/useTranslation";
 import { Ic } from "../shared/Ic";
 
 const NEXT = { null: "up", up: "down", down: "tie", tie: null };
 
 export const JudgeVoteButton = ({ name, vote, onChange }) => {
+  const t = useT();
   const active = vote != null;
   const cycle = () => onChange(NEXT[vote == null ? "null" : vote]);
 
   let iconNode = null;
-  let label = "Tap to vote";
-  if (vote === "up")   { iconNode = <Ic n="thumbsUp"   s={16} c={C.accent}/>; label = "Up"; }
-  if (vote === "down") { iconNode = <Ic n="thumbsDown" s={16} c={C.accent}/>; label = "Down"; }
-  if (vote === "tie")  { iconNode = <Ic n="x"          s={16} c={C.accent}/>; label = "Tie"; }
+  let label = t("tapToVote");
+  if (vote === "up")   { iconNode = <Ic n="thumbsUp"   s={16} c={C.accent}/>; label = t("won"); }
+  if (vote === "down") { iconNode = <Ic n="thumbsDown" s={16} c={C.accent}/>; label = t("lost"); }
+  if (vote === "tie")  { iconNode = <Ic n="x"          s={16} c={C.accent}/>; label = t("judgeVoteTie"); }
 
   return (
     <button

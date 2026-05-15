@@ -3,11 +3,23 @@ import { C } from "../../constants/colors";
 import { CAT_COLORS } from "../../constants/categories";
 import { FONT_DISPLAY, FONT_BODY } from "../../constants/fonts";
 import { inp } from "../../constants/styles";
+import { useT } from "../../hooks/useTranslation";
 import { Ic } from "../shared/Ic";
 import { JudgeVoteButton } from "./JudgeVoteButton";
 
 const STRIPE_CYCLE = ["Toprocks","Godowns","Footworks","Power Moves","Freezes","Transitions","Burns","Blowups"];
-const ROUND_NAME_PRESETS = ["Prelims","Top 32","Top 16","Top 8","Quarter-Finals","Semi-Finals","Finals","Round 1","Round 2","Round 3"];
+const ROUND_NAME_PRESETS = [
+  { value: "Prelims",        labelKey: "roundNamePrelims" },
+  { value: "Top 32",         labelKey: "roundNameTop32" },
+  { value: "Top 16",         labelKey: "roundNameTop16" },
+  { value: "Top 8",          labelKey: "roundNameTop8" },
+  { value: "Quarter-Finals", labelKey: "roundNameQF" },
+  { value: "Semi-Finals",    labelKey: "roundNameSF" },
+  { value: "Finals",         labelKey: "roundNameFinals" },
+  { value: "Round 1",        labelKey: "roundName1" },
+  { value: "Round 2",        labelKey: "roundName2" },
+  { value: "Round 3",        labelKey: "roundName3" },
+];
 
 const FormLabel = ({ children }) => (
   <div style={{
@@ -60,8 +72,9 @@ const DashedButton = ({ children, onClick }) => (
 const newId = () => (typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()));
 
 export const RoundCard = ({ round, index, battleJudges, onChange, moves = [] }) => {
+  const t = useT();
   const stripeColor = CAT_COLORS[STRIPE_CYCLE[(index - 1) % STRIPE_CYCLE.length]];
-  const isCustomRoundName = round.roundName && !ROUND_NAME_PRESETS.includes(round.roundName);
+  const isCustomRoundName = round.roundName && !ROUND_NAME_PRESETS.some(p => p.value === round.roundName);
   const [customMode, setCustomMode] = useState(isCustomRoundName);
 
   const update = (patch) => onChange({ ...round, ...patch });
@@ -108,31 +121,31 @@ export const RoundCard = ({ round, index, battleJudges, onChange, moves = [] }) 
           fontFamily: FONT_DISPLAY, fontSize: 14, fontWeight: 800, letterSpacing: 1.2,
           color: C.text, textTransform: "uppercase",
         }}>
-          Round {index}
+          {`${t("roundN")} ${index}`}
         </span>
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: 13 }}>
         {/* Round name */}
         <div>
-          <FormLabel>Round name</FormLabel>
+          <FormLabel>{t("roundName")}</FormLabel>
           <select
             value={dropdownValue}
             onChange={(e) => handleRoundNameSelect(e.target.value)}
             style={inp()}
           >
-            <option value="" disabled>Pick a round name</option>
-            {ROUND_NAME_PRESETS.map((name) => (
-              <option key={name} value={name}>{name}</option>
+            <option value="" disabled>{t("pickRoundName")}</option>
+            {ROUND_NAME_PRESETS.map((p) => (
+              <option key={p.value} value={p.value}>{t(p.labelKey)}</option>
             ))}
-            <option value="__custom__">Custom...</option>
+            <option value="__custom__">{t("customOption")}</option>
           </select>
           {customMode && (
             <input
               type="text"
               value={round.roundName}
               onChange={(e) => update({ roundName: e.target.value })}
-              placeholder="Custom round name"
+              placeholder={t("customRoundNamePlaceholder")}
               style={{ ...inp(), marginTop: 6 }}
             />
           )}
@@ -140,20 +153,20 @@ export const RoundCard = ({ round, index, battleJudges, onChange, moves = [] }) 
 
         {/* Outcome */}
         <div>
-          <FormLabel>Outcome</FormLabel>
+          <FormLabel>{t("outcome")}</FormLabel>
           <div style={{ display: "flex", gap: 6 }}>
-            <Chip label="Won"  active={round.outcome === "won"}  onClick={() => toggleOutcome("won")} />
-            <Chip label="Lost" active={round.outcome === "lost"} onClick={() => toggleOutcome("lost")} />
+            <Chip label={t("won")}  active={round.outcome === "won"}  onClick={() => toggleOutcome("won")} />
+            <Chip label={t("lost")} active={round.outcome === "lost"} onClick={() => toggleOutcome("lost")} />
           </div>
         </div>
 
         {/* Notes */}
         <div>
-          <FormLabel>Notes</FormLabel>
+          <FormLabel>{t("notes")}</FormLabel>
           <textarea
             value={round.notes}
             onChange={(e) => update({ notes: e.target.value })}
-            placeholder="What happened this round..."
+            placeholder={t("notesRound")}
             rows={2}
             style={{ ...inp(), resize: "vertical" }}
           />
@@ -161,7 +174,7 @@ export const RoundCard = ({ round, index, battleJudges, onChange, moves = [] }) 
 
         {/* Videos */}
         <div>
-          <FormLabel>Videos</FormLabel>
+          <FormLabel>{t("videos")}</FormLabel>
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             {round.videos.map((url, i) => (
               <input
@@ -169,20 +182,20 @@ export const RoundCard = ({ round, index, battleJudges, onChange, moves = [] }) 
                 type="text"
                 value={url}
                 onChange={(e) => setVideo(i, e.target.value)}
-                placeholder="Video URL"
+                placeholder={t("videoUrl")}
                 style={inp()}
               />
             ))}
             <DashedButton onClick={addVideo}>
               <Ic n="plus" s={14} c={C.accent}/>
-              <span>Video</span>
+              <span>{t("video")}</span>
             </DashedButton>
           </div>
         </div>
 
         {/* Opponent */}
         <div>
-          <FormLabel>Opponent</FormLabel>
+          <FormLabel>{t("opponent")}</FormLabel>
           {round.opponent && round.opponent.rivalId && (
             <div style={{ marginBottom: 6 }}>
               <span style={{
@@ -199,7 +212,7 @@ export const RoundCard = ({ round, index, battleJudges, onChange, moves = [] }) 
                   type="button"
                   onClick={clearRival}
                   style={{ background: "none", border: "none", padding: 0, display: "inline-flex", cursor: "pointer" }}
-                  aria-label="Remove linked rival"
+                  aria-label={t("removeLinkedRival")}
                 >
                   <Ic n="x" s={13} c={C.textMuted}/>
                 </button>
@@ -212,13 +225,13 @@ export const RoundCard = ({ round, index, battleJudges, onChange, moves = [] }) 
                 type="text"
                 value={round.opponent?.name || ""}
                 onChange={(e) => setOpponentName(e.target.value)}
-                placeholder="Type a name (crew, unknown)..."
+                placeholder={t("opponentNamePlaceholder")}
                 style={inp()}
               />
             </div>
             <button
               type="button"
-              title="Pick from rivals"
+              title={t("pickFromRivals")}
               onClick={() => alert("TODO: rivals picker")}
               style={{
                 background: C.surface,
@@ -236,7 +249,7 @@ export const RoundCard = ({ round, index, battleJudges, onChange, moves = [] }) 
 
         {/* Entries */}
         <div>
-          <FormLabel>Entries</FormLabel>
+          <FormLabel>{t("entries")}</FormLabel>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {round.entries.map((e, i) => (
               <div key={e.id}>
@@ -244,27 +257,27 @@ export const RoundCard = ({ round, index, battleJudges, onChange, moves = [] }) 
                   fontFamily: FONT_DISPLAY, fontSize: 10, fontWeight: 700, letterSpacing: 1.2,
                   color: C.textMuted, textTransform: "uppercase", marginBottom: 4,
                 }}>
-                  Entry {i + 1}
+                  {t("entryN").replace("{n}", i + 1)}
                 </div>
                 <input
                   type="text"
                   value={e.text}
                   onChange={(ev) => setEntryText(i, ev.target.value)}
-                  placeholder={`What you did in entry ${i + 1}...`}
+                  placeholder={t("entryNPlaceholder").replace("{n}", i + 1)}
                   style={inp()}
                 />
               </div>
             ))}
             <DashedButton onClick={addEntry}>
               <Ic n="plus" s={14} c={C.accent}/>
-              <span>Entry</span>
+              <span>{t("entry")}</span>
             </DashedButton>
           </div>
         </div>
 
         {/* Moves used */}
         <div>
-          <FormLabel>Moves used</FormLabel>
+          <FormLabel>{t("movesUsed")}</FormLabel>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 5, alignItems: "center" }}>
             {round.moves.map((moveId) => {
               const move = moves.find(m => m.id === moveId);
@@ -299,7 +312,7 @@ export const RoundCard = ({ round, index, battleJudges, onChange, moves = [] }) 
               }}
             >
               <Ic n="plus" s={12} c={C.accent}/>
-              Add
+              {t("add")}
             </button>
           </div>
         </div>
@@ -307,10 +320,10 @@ export const RoundCard = ({ round, index, battleJudges, onChange, moves = [] }) 
         {/* Judge votes — only when battle judges are set */}
         {battleJudges != null && (
           <div>
-            <FormLabel>Judge votes</FormLabel>
+            <FormLabel>{t("judgeVotes")}</FormLabel>
             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
               {Array.from({ length: battleJudges.count }).map((_, i) => {
-                const name = (battleJudges.names && battleJudges.names[i]) || `Judge ${i + 1}`;
+                const name = (battleJudges.names && battleJudges.names[i]) || t("judgeN").replace("{n}", i + 1);
                 const vote = (round.judgeVotes && round.judgeVotes[i]) || null;
                 return (
                   <JudgeVoteButton
