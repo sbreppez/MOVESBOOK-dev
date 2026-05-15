@@ -8,7 +8,6 @@ import { Modal } from "../shared/Modal";
 import { RoundCard } from "./RoundCard";
 
 const FORMAT_PRESETS = ["1v1", "2v2", "Crew", "Cypher"];
-const LS_FORMATS_KEY = "mb_battle_formats";
 
 const newId = () => (typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()));
 
@@ -33,21 +32,6 @@ const emptyBattle = () => ({
   judges: null,
   rounds: [],
 });
-
-const readCustomFormats = () => {
-  try {
-    const s = localStorage.getItem(LS_FORMATS_KEY);
-    if (!s) return [];
-    const p = JSON.parse(s);
-    return Array.isArray(p) ? p.filter((v) => typeof v === "string" && v.trim()) : [];
-  } catch {
-    return [];
-  }
-};
-
-const writeCustomFormats = (arr) => {
-  try { localStorage.setItem(LS_FORMATS_KEY, JSON.stringify(arr)); } catch {}
-};
 
 const FormLabel = ({ children }) => (
   <div style={{
@@ -251,9 +235,8 @@ const JudgesSection = ({ judges, onChange }) => {
   );
 };
 
-export const BattleFormModal = ({ open, onClose, onSave, initialValue }) => {
+export const BattleFormModal = ({ open, onClose, onSave, initialValue, moves = [], battleFormats = [], setBattleFormats }) => {
   const [battle, setBattle] = useState(() => initialValue || emptyBattle());
-  const [customFormats, setCustomFormats] = useState(() => readCustomFormats());
   const [judgesOpen, setJudgesOpen] = useState(() => !!initialValue?.judges);
   const [roundsOpen, setRoundsOpen] = useState(() => (initialValue?.rounds?.length ?? 0) > 0);
 
@@ -263,7 +246,6 @@ export const BattleFormModal = ({ open, onClose, onSave, initialValue }) => {
     setBattle(initialValue || emptyBattle());
     setJudgesOpen(!!initialValue?.judges);
     setRoundsOpen((initialValue?.rounds?.length ?? 0) > 0);
-    setCustomFormats(readCustomFormats());
   }, [open, initialValue]);
 
   if (!open) return null;
@@ -273,9 +255,9 @@ export const BattleFormModal = ({ open, onClose, onSave, initialValue }) => {
   const update = (patch) => setBattle((prev) => ({ ...prev, ...patch }));
 
   const handleAddCustomFormat = (label) => {
-    const next = [...customFormats, label];
-    setCustomFormats(next);
-    writeCustomFormats(next);
+    if (setBattleFormats) {
+      setBattleFormats(prev => (prev || []).includes(label) ? prev : [...(prev || []), label]);
+    }
   };
 
   const handleSetJudges = (judges) => update({ judges });
@@ -357,7 +339,7 @@ export const BattleFormModal = ({ open, onClose, onSave, initialValue }) => {
         <FormatRow
           value={battle.format}
           onChange={(v) => update({ format: v })}
-          customs={customFormats}
+          customs={battleFormats}
           onAddCustom={handleAddCustomFormat}
         />
 
@@ -387,6 +369,7 @@ export const BattleFormModal = ({ open, onClose, onSave, initialValue }) => {
               round={round}
               index={i + 1}
               battleJudges={battle.judges}
+              moves={moves}
               onChange={(next) => handleRoundChange(i, next)}
               onRemove={() => update({ rounds: battle.rounds.filter((_, k) => k !== i) })}
             />

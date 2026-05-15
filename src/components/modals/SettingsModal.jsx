@@ -5,44 +5,6 @@ import { Ic } from "../shared/Ic";
 import { useT } from "../../hooks/useTranslation";
 import { downloadBackup, restoreBackup } from "./BackupModal";
 import { AttributeModal } from "./AttributeModal";
-import { BattleFormModal } from "../battle/BattleFormModal";
-import { todayLocal } from "../../utils/dateUtils";
-
-const buildMockBattle = () => ({
-  id: "mock-battle-1",
-  date: todayLocal(),
-  eventName: "Outbreak Sydney 2026",
-  format: "1v1",
-  battleNotes: "First round was shaky — I was holding back. Music switched at the top 8 and the room shifted with it.",
-  judges: { count: 3, names: ["Masami", "El Niño", "Benny"] },
-  rounds: [
-    {
-      id: "mock-round-1",
-      roundName: "Prelims",
-      opponent: null,
-      outcome: "won",
-      entries: [{ id: "mock-entry-1", text: "" }],
-      moves: [],
-      videos: [],
-      judgeVotes: null,
-      notes: "Solid opener. Stayed in my pocket.",
-    },
-    {
-      id: "mock-round-2",
-      roundName: "Semi-Finals",
-      opponent: { name: "Mando", rivalId: "mock-rival-1" },
-      outcome: "won",
-      entries: [
-        { id: "mock-entry-2", text: "Toprock → 6-step → flare exit" },
-        { id: "mock-entry-3", text: "Backspin → freeze hold" },
-      ],
-      moves: ["6-Step", "Flare", "Air Chair"],
-      videos: ["https://youtube.com/watch?v=outbreak26-semi"],
-      judgeVotes: { 0: "up", 1: "down", 2: "tie" },
-      notes: "Better music, better flow.",
-    },
-  ],
-});
 
 export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onRestoreRounds, onRestartTour, zoom=1, onZoomChange, customAttrs=[], setCustomAttrs, inline, onOpenManual }) => {
   const t = useT();
@@ -62,8 +24,6 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
   const [showAddAttr, setShowAddAttr] = useState(false);
   const [confirmDeleteAttr, setConfirmDeleteAttr] = useState(null);
   const restoreFileRef=useRef(null);
-  const [showBattleForm,setShowBattleForm]=useState(false);
-  const [mockBattle,setMockBattle]=useState(null);
   const set=k=>v=>{
     setS(p=>{
       const next={...p,[k]:v};
@@ -449,13 +409,6 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
             color:C.textMuted, fontSize:11, cursor:"pointer", fontFamily:FONT_DISPLAY, letterSpacing:1, width:"100%" }}>
           {"↺ "+t("restartWalkthrough")}
         </button>
-        {import.meta.env.DEV && (
-          <button onClick={()=>{ setMockBattle(buildMockBattle()); setShowBattleForm(true); }}
-            style={{ background:"none", border:`1px dashed ${C.border}`, borderRadius:8, padding:"9px 14px",
-              color:C.accent, fontSize:11, cursor:"pointer", fontFamily:FONT_DISPLAY, letterSpacing:1, width:"100%" }}>
-            Open Battle Form (test)
-          </button>
-        )}
       </div>
 
         </div>
@@ -502,14 +455,6 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
             </div>
           </div>
         </div>
-      )}
-      {import.meta.env.DEV && (
-        <BattleFormModal
-          open={showBattleForm}
-          onClose={()=>setShowBattleForm(false)}
-          onSave={(b)=>{ console.log("[BattleFormModal] onSave", b); }}
-          initialValue={mockBattle}
-        />
       )}
       {confirmRestore&&(
         <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", zIndex:1200, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>

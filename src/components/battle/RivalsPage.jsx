@@ -8,8 +8,22 @@ import { Txtarea } from '../shared/Txtarea';
 import { BottomSheet } from '../shared/BottomSheet';
 import { useT } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
-import { todayLocal } from '../../utils/dateUtils';
 import { compressImage } from '../../utils/imageUtils';
+import { todayLocal } from '../../utils/dateUtils';
+import { BattleFormModal } from './BattleFormModal';
+
+const newId = () => (typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()));
+
+// Derive a single won/lost/draw label from per-round outcomes. Used in the
+// battle-history row to keep the visual close to the old single-result render.
+const deriveBattleResult = (rounds = []) => {
+  const wins = rounds.filter(r => r.outcome === "won").length;
+  const losses = rounds.filter(r => r.outcome === "lost").length;
+  if (wins === 0 && losses === 0) return null;
+  if (losses === 0) return "won";
+  if (wins === 0) return "lost";
+  return "draw";
+};
 
 const DOMAINS = ["Musicality","Performance","Technique","Variety","Creativity","Personality"];
 const DOMAIN_KEYS = { Musicality:"musicality", Performance:"performance", Technique:"technique", Variety:"variety", Creativity:"creativity", Personality:"personality" };
@@ -44,8 +58,6 @@ const STANCE_OPTIONS = [
   { val:"unknown", key:"stanceUnknown" },
 ];
 
-const today = () => todayLocal();
-
 const cleanIG = (val) => {
   let h = (val || "").trim();
   h = h.replace(/^https?:\/\/(www\.)?instagram\.com\//, "");
@@ -59,10 +71,10 @@ const normalizeRival = (r) => r ? ({
   type:"rival", crew:"", city:"", instagram:"", stance:"unknown",
   sparHistory:[], sparringJournal:"",
   signatureMoves:"", gamePlan:"", targetWhen:"", targetWhere:"",
-  battles:[], videoRefs:[], strongDomains:[], ...r,
+  videoRefs:[], strongDomains:[], ...r,
 }) : null;
 
-export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, addCalendarEvent, onOpenSparring, rivalsSeed, onRivalsSeedUsed }) => {
+export const RivalsPage = ({ rivals=[], onRivalsChange, battles=[], setBattles, battleFormats=[], setBattleFormats, moves=[], addToast, onAddTrigger, addCalendarEvent, onOpenSparring, rivalsSeed, onRivalsSeedUsed }) => {
   const t = useT();
   const { C } = useSettings();
   const [peopleTab, setPeopleTab] = useState("rivals");
@@ -77,6 +89,10 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
   const [showImportPicker, setShowImportPicker] = useState(false);
   const [importTarget, setImportTarget] = useState(null);
   const importRef = useRef(null);
+  // Hoisted to RivalsPage scope so the inline RivalModal's remount-per-render
+  // doesn't lose this state (same reason the battle-scroll effect lives here).
+  const [battleFormRival, setBattleFormRival] = useState(null);
+  const [battleFormInitial, setBattleFormInitial] = useState(null);
 
   // Normalize all rivals
   const allPeople = rivals.map(normalizeRival);
@@ -125,7 +141,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
 
   const addRival = (data) => {
     const now = new Date().toISOString();
-    onRivalsChange(prev => [...prev, { ...data, id: Date.now(), battles:[], sparHistory:[], createdDate: now, updatedDate: now }]);
+    onRivalsChange(prev => [...prev, { ...data, id: Date.now(), sparHistory:[], createdDate: now, updatedDate: now }]);
   };
   const updateRival = (id, data) => {
     onRivalsChange(prev => prev.map(r => r.id === id ? { ...r, ...data, updatedDate: new Date().toISOString() } : r));
@@ -134,6 +150,48 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
     onRivalsChange(prev => prev.filter(r => r.id !== id));
     setConfirmDelete(null);
     if (addToast) addToast({ icon:"trash", title: t("deleteRival") });
+  };
+
+  const openBattleForm = (rival) => {
+    setBattleFormRival(rival);
+    setBattleFormInitial({
+      id: newId(),
+      date: todayLocal(),
+      eventName: "",
+      format: null,
+      battleNotes: "",
+      judges: null,
+      rounds: [{
+        id: newId(),
+        roundName: "",
+        opponent: { name: rival.name, rivalId: rival.id },
+        outcome: null,
+        entries: [{ id: newId(), text: "" }],
+        moves: [],
+        videos: [],
+        judgeVotes: null,
+        notes: "",
+      }],
+    });
+  };
+
+  const handleSaveBattle = (battle) => {
+    const rival = battleFormRival;
+    if (!rival) return;
+    if (setBattles) setBattles(prev => [...prev, battle]);
+    if (addCalendarEvent) {
+      addCalendarEvent({
+        date: battle.date,
+        type: "battle",
+        title: `Battle vs ${rival.name}`,
+        notes: battle.eventName ? battle.eventName : "",
+        source: "rivals",
+        rivalId: rival.id,
+      }, { silent: true });
+    }
+    if (addToast) addToast({ icon: "swords", title: t("battleLogged") });
+    setPendingConf(rival.confidence || null);
+    setShowConfPrompt(true);
   };
 
   // Import spar session
@@ -179,8 +237,12 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
   const RivalCard = ({ rival }) => {
     const initials = rival.name.split(" ").map(w => w[0]).join("").slice(0,2).toUpperCase();
     const conf = CONF_OPTIONS.find(c => c.val === rival.confidence);
-    const lastBattle = (rival.battles||[]).length > 0 ? [...rival.battles].sort((a,b) => b.date.localeCompare(a.date))[0] : null;
-    const lastResult = lastBattle ? RESULT_OPTIONS.find(r => r.val === lastBattle.result) : null;
+    const rivalBattlesForCard = (battles || []).filter(b => (b.rounds || []).some(r => r.opponent?.rivalId === rival.id));
+    const lastBattle = rivalBattlesForCard.length > 0
+      ? [...rivalBattlesForCard].sort((a,b) => (b.date || "").localeCompare(a.date || ""))[0]
+      : null;
+    const lastResultKey = lastBattle ? deriveBattleResult(lastBattle.rounds) : null;
+    const lastResult = lastResultKey ? RESULT_OPTIONS.find(r => r.val === lastResultKey) : null;
     const stanceBadge = rival.stance === "left" ? "(L)" : rival.stance === "right" ? "(R)" : null;
     const metaParts = [
       rival.targetWhen ? `\ud83d\udcc5 ${rival.targetWhen}` : null,
@@ -270,10 +332,6 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
     });
     const photoRef = useRef(null);
 
-    // Battle log state
-    const [showBattleLog, setShowBattleLog] = useState(false);
-    const [battleForm, setBattleForm] = useState({ date: today(), result: null, event: rival?.targetWhere ?? "", howDidItGo:"", whatSurprised:"", trainingNext:"" });
-
     // Battle/spar history expand state. expandedBattle initializes from
     // battleScrollId so a seed-driven mount/remount preserves the auto-
     // expansion of the target battle. The scroll itself is handled in the
@@ -322,113 +380,10 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
       onSave(clean);
     };
 
-    // Battle log save
-    const handleSaveBattle = () => {
-      if (!battleForm.result) return;
-      const entry = {
-        id: String(Date.now()),
-        date: battleForm.date,
-        result: battleForm.result,
-        event: battleForm.event.trim() || null,
-        howDidItGo: battleForm.howDidItGo.trim() || null,
-        whatSurprised: battleForm.whatSurprised.trim() || null,
-        trainingNext: battleForm.trainingNext.trim() || null,
-      };
-      const updatedBattles = [...(rival.battles||[]), entry];
-      updateRival(rival.id, { battles: updatedBattles });
-      if (rival) rival.battles = updatedBattles;
-
-      const resultLabel = RESULT_OPTIONS.find(r => r.val === entry.result);
-      if (addCalendarEvent) {
-        addCalendarEvent({
-          date: entry.date,
-          type: "battle",
-          title: `Battle vs ${rival.name}`,
-          notes: `Result: ${resultLabel ? resultLabel.val.charAt(0).toUpperCase()+resultLabel.val.slice(1) : entry.result}${entry.event ? ` \u2014 ${entry.event}` : ""}`,
-          source: "rivals",
-          rivalId: rival.id,
-        }, { silent: true });
-      }
-      if (addToast) addToast({ icon:"swords", title: t("battleLogged") });
-
-      setShowBattleLog(false);
-      setPendingConf(rival.confidence || null);
-      setShowConfPrompt(true);
-    };
-
-    const battles = [...(rival?.battles||[])].sort((a,b) => b.date.localeCompare(a.date));
+    const rivalBattles = (battles || [])
+      .filter(b => (b.rounds || []).some(r => r.opponent?.rivalId === rival?.id))
+      .sort((a,b) => (b.date || "").localeCompare(a.date || ""));
     const sparSessions = [...(rival?.sparHistory||[])].sort((a,b) => (b.date||"").localeCompare(a.date||""));
-
-    // ── Battle Log form screen ──
-    if (showBattleLog) {
-      return (
-        <Modal title={t("battleLog")} onClose={() => setShowBattleLog(false)}>
-          <div style={{ marginBottom:14 }}>
-            <label style={lbl()}>DATE</label>
-            <input type="date" value={battleForm.date} onChange={e => setBattleForm(p => ({...p, date: e.target.value}))} style={inp()}/>
-          </div>
-          <div style={{ marginBottom:14 }}>
-            <label style={lbl()}>{t("resultLabel")}</label>
-            <div style={{ display:"flex", gap:6 }}>
-              {RESULT_OPTIONS.map(opt => {
-                const active = battleForm.result === opt.val;
-                return (
-                  <button key={opt.val} onClick={() => setBattleForm(p => ({...p, result: active ? null : opt.val}))}
-                    style={{ flex:1, borderRadius:8, padding:"10px 4px", fontSize:11, fontWeight:700, fontFamily:FONT_DISPLAY,
-                      letterSpacing:0.3, cursor:"pointer", transition:"all 0.15s", textAlign:"center",
-                      background: active ? `${C.accent}18` : C.surface,
-                      color: active ? C.accent : C.textSec,
-                      border: `1.5px solid ${active ? C.accent : C.border}` }}>
-                    {t(opt.key)}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-          <div style={{ marginBottom:14 }}>
-            <label style={lbl()}>{t("eventName")}</label>
-            <input value={battleForm.event} onChange={e => setBattleForm(p => ({...p, event: e.target.value}))} placeholder={t("eventPlaceholder")} style={inp()}/>
-          </div>
-          <Txtarea
-            label={t("howDidItGo")}
-            value={battleForm.howDidItGo}
-            onChange={v => setBattleForm(p => ({...p, howDidItGo: v}))}
-            placeholder={t("howDidItGoPlaceholder")}
-            rows={3}
-            autoExpand
-          />
-          <Txtarea
-            label={t("whatSurprised")}
-            value={battleForm.whatSurprised}
-            onChange={v => setBattleForm(p => ({...p, whatSurprised: v}))}
-            placeholder={t("whatSurprisedPlaceholder")}
-            rows={2}
-            autoExpand
-          />
-          <Txtarea
-            label={t("trainingNext")}
-            value={battleForm.trainingNext}
-            onChange={v => setBattleForm(p => ({...p, trainingNext: v}))}
-            placeholder={t("trainingNextPlaceholder")}
-            rows={2}
-            autoExpand
-          />
-          <button onClick={handleSaveBattle} disabled={!battleForm.result}
-            style={{ width:"100%", padding:"12px 0", borderRadius:8, border:"none",
-              background: battleForm.result ? C.accent : C.surfaceAlt,
-              color: battleForm.result ? C.bg : C.textMuted,
-              fontSize:14, fontWeight:900, fontFamily:FONT_DISPLAY, letterSpacing:1, cursor: battleForm.result ? "pointer" : "not-allowed",
-              opacity: battleForm.result ? 1 : 0.5, marginBottom:8 }}>
-            {t("saveBattleLog")}
-          </button>
-          <button onClick={() => setShowBattleLog(false)}
-            style={{ width:"100%", padding:"8px 0", background:"none", border:"none", color:C.textSec, fontSize:11,
-              fontWeight:700, fontFamily:FONT_DISPLAY, cursor:"pointer", letterSpacing:0.5 }}>
-            {t("cancel")}
-          </button>
-        </Modal>
-      );
-    }
 
     // ── Main rival edit/add modal ──
     return (
@@ -632,14 +587,15 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
           </button>
         </div>
 
-        {/* Battle History */}
-        {isEdit && battles.length > 0 && (
+        {/* Battle History \u2014 sourced from mb_battles, filtered by rivalId */}
+        {isEdit && rivalBattles.length > 0 && (
           <div style={{ marginBottom:14 }}>
             <div style={{ fontSize:10, fontWeight:700, letterSpacing:1.5, color:C.textMuted, fontFamily:FONT_DISPLAY, marginBottom:8 }}>{t("battleHistory")}</div>
-            {battles.map(b => {
-              const res = RESULT_OPTIONS.find(r => r.val === b.result);
+            {rivalBattles.map(b => {
+              const resultKey = deriveBattleResult(b.rounds);
+              const res = resultKey ? RESULT_OPTIONS.find(r => r.val === resultKey) : null;
               const isExpanded = expandedBattle === b.id;
-              const hasDetail = b.howDidItGo || b.whatSurprised || b.trainingNext;
+              const hasDetail = !!(b.battleNotes && b.battleNotes.trim());
               return (
                 <div key={b.id} id={`battle-${b.id}`} onClick={() => hasDetail && setExpandedBattle(isExpanded ? null : b.id)}
                   style={{ background:C.surfaceAlt, borderRadius:8, padding:"10px 12px", marginBottom:6,
@@ -647,14 +603,12 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
                   <div style={{ display:"flex", alignItems:"center", gap:8 }}>
                     <span style={{ fontSize:11, fontWeight:700, color:C.text, fontFamily:FONT_DISPLAY }}>{b.date}</span>
                     {res && <span style={{ fontSize:11 }}>{t(res.key)}</span>}
-                    {b.event && <span style={{ fontSize:11, color:C.textMuted, fontFamily:FONT_BODY }}>\u2014 {b.event}</span>}
+                    {b.eventName && <span style={{ fontSize:11, color:C.textMuted, fontFamily:FONT_BODY }}>\u2014 {b.eventName}</span>}
                     {hasDetail && <span style={{ marginLeft:"auto", fontSize:10, color:C.textMuted }}>{isExpanded ? "\u25b2" : "\u25bc"}</span>}
                   </div>
-                  {isExpanded && (
+                  {isExpanded && hasDetail && (
                     <div style={{ marginTop:8, paddingTop:8, borderTop:`1px solid ${C.border}` }}>
-                      {b.howDidItGo && <div style={{ marginBottom:6 }}><div style={{ fontSize:10, fontWeight:700, color:C.textMuted, fontFamily:FONT_DISPLAY, letterSpacing:0.8, marginBottom:2 }}>{t("howDidItGo")}</div><div style={{ fontSize:13, color:C.textSec, lineHeight:1.5, fontFamily:FONT_BODY }}>{b.howDidItGo}</div></div>}
-                      {b.whatSurprised && <div style={{ marginBottom:6 }}><div style={{ fontSize:10, fontWeight:700, color:C.textMuted, fontFamily:FONT_DISPLAY, letterSpacing:0.8, marginBottom:2 }}>{t("whatSurprised")}</div><div style={{ fontSize:13, color:C.textSec, lineHeight:1.5, fontFamily:FONT_BODY }}>{b.whatSurprised}</div></div>}
-                      {b.trainingNext && <div><div style={{ fontSize:10, fontWeight:700, color:C.textMuted, fontFamily:FONT_DISPLAY, letterSpacing:0.8, marginBottom:2 }}>{t("trainingNext")}</div><div style={{ fontSize:13, color:C.textSec, lineHeight:1.5, fontFamily:FONT_BODY }}>{b.trainingNext}</div></div>}
+                      <div style={{ fontSize:13, color:C.textSec, lineHeight:1.5, fontFamily:FONT_BODY }}>{b.battleNotes}</div>
                     </div>
                   )}
                 </div>
@@ -706,7 +660,7 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
 
         {/* Log a Battle button */}
         {isEdit && (
-          <button onClick={() => { setBattleForm({ date: today(), result: null, event: rival?.targetWhere ?? "", howDidItGo:"", whatSurprised:"", trainingNext:"" }); setShowBattleLog(true); }}
+          <button onClick={() => openBattleForm(rival)}
             style={{ width:"100%", padding:"12px 0", borderRadius:8, border:"none",
               background:C.accent, color:C.bg,
               fontSize:14, fontWeight:900, fontFamily:FONT_DISPLAY, letterSpacing:1, cursor:"pointer", marginBottom:14 }}>
@@ -882,6 +836,17 @@ export const RivalsPage = ({ rivals=[], onRivalsChange, addToast, onAddTrigger, 
             if (data.type && data.type !== peopleTab) setPeopleTab(data.type === "rival" ? "rivals" : data.type);
           }}/>
       )}
+
+      {/* Battle form modal */}
+      <BattleFormModal
+        open={!!battleFormRival}
+        onClose={() => { setBattleFormRival(null); setBattleFormInitial(null); }}
+        onSave={handleSaveBattle}
+        initialValue={battleFormInitial}
+        moves={moves}
+        battleFormats={battleFormats}
+        setBattleFormats={setBattleFormats}
+      />
 
       {/* Delete confirmation */}
       {confirmDelete && (

@@ -20,7 +20,7 @@ import { SectionBrief } from '../shared/SectionBrief';
 import { computeDecay } from '../../utils/masteryDecay';
 import { LEVEL_TO_ROLE, getTensionColors, getItemTension, getMoveTension, ArcChart, getArcFeedback, ArcLegend } from '../shared/ArcVis';
 
-export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, addToast, freestyle, onFreestyleChange, rivals, onRivalsChange, addCalendarEvent, removeCalendarEvent, onSimulate, onOpenSparring, battleprep, setBattleprep, calendar, battlePrepSeed, onBattlePrepSeedUsed, rivalsSeed, onRivalsSeedUsed, onOpenSharedCalendar, isPremium }) => {
+export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, addToast, freestyle, onFreestyleChange, rivals, onRivalsChange, battles, setBattles, battleFormats, setBattleFormats, addCalendarEvent, removeCalendarEvent, onSimulate, onOpenSparring, battleprep, setBattleprep, calendar, battlePrepSeed, onBattlePrepSeedUsed, rivalsSeed, onRivalsSeedUsed, onOpenSharedCalendar, isPremium }) => {
   const t = useT();
   const { roundCountStr, entryCountStr } = usePlural();
   const { C } = useSettings();
@@ -699,7 +699,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
       {battleTab==="freestyle"&&<FreestylePage moves={moves} sets={sets} settings={settings} onAddTrigger={freestyleAddTick} addToast={addToast} freestyle={freestyle} onFreestyleChange={onFreestyleChange}/>}
 
       {/* RIVALS tab */}
-      {battleTab==="rivals"&&(isPremium?<><SectionBrief desc={t("rivalsBrief")} settings={settings}/><RivalsPage rivals={rivals||[]} onRivalsChange={onRivalsChange} addToast={addToast} onAddTrigger={rivalsAddTick} addCalendarEvent={addCalendarEvent} onOpenSparring={onOpenSparring} rivalsSeed={rivalsSeed} onRivalsSeedUsed={onRivalsSeedUsed}/></>:<div style={{padding:20}}><PremiumGate feature="rivals" addToast={addToast}/></div>)}
+      {battleTab==="rivals"&&(isPremium?<><SectionBrief desc={t("rivalsBrief")} settings={settings}/><RivalsPage rivals={rivals||[]} onRivalsChange={onRivalsChange} battles={battles||[]} setBattles={setBattles} battleFormats={battleFormats||[]} setBattleFormats={setBattleFormats} moves={moves||[]} addToast={addToast} onAddTrigger={rivalsAddTick} addCalendarEvent={addCalendarEvent} onOpenSparring={onOpenSparring} rivalsSeed={rivalsSeed} onRivalsSeedUsed={onRivalsSeedUsed}/></>:<div style={{padding:20}}><PremiumGate feature="rivals" addToast={addToast}/></div>)}
 
       {/* Modals */}
       {addingRound&&<NewRoundModal onClose={()=>setAddingRound(false)}

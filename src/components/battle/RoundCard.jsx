@@ -59,7 +59,7 @@ const DashedButton = ({ children, onClick }) => (
 
 const newId = () => (typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()));
 
-export const RoundCard = ({ round, index, battleJudges, onChange }) => {
+export const RoundCard = ({ round, index, battleJudges, onChange, moves = [] }) => {
   const stripeColor = CAT_COLORS[STRIPE_CYCLE[(index - 1) % STRIPE_CYCLE.length]];
   const isCustomRoundName = round.roundName && !ROUND_NAME_PRESETS.includes(round.roundName);
   const [customMode, setCustomMode] = useState(isCustomRoundName);
@@ -266,20 +266,25 @@ export const RoundCard = ({ round, index, battleJudges, onChange }) => {
         <div>
           <FormLabel>Moves used</FormLabel>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 5, alignItems: "center" }}>
-            {round.moves.map((moveId) => (
-              <span
-                key={moveId}
-                style={{
-                  background: C.accent + "18",
-                  border: `1.5px solid ${C.accent}`,
-                  borderRadius: 20, padding: "5px 11px",
-                  fontSize: 11, fontWeight: 700, fontFamily: FONT_DISPLAY, letterSpacing: 0.5,
-                  color: C.accent, textTransform: "uppercase",
-                }}
-              >
-                {moveId}
-              </span>
-            ))}
+            {round.moves.map((moveId) => {
+              const move = moves.find(m => m.id === moveId);
+              const catCol = move?.category ? CAT_COLORS[move.category] : null;
+              const chipCol = catCol || C.accent;
+              return (
+                <span
+                  key={moveId}
+                  style={{
+                    background: chipCol + "18",
+                    border: `1.5px solid ${chipCol}`,
+                    borderRadius: 20, padding: "5px 11px",
+                    fontSize: 11, fontWeight: 700, fontFamily: FONT_DISPLAY, letterSpacing: 0.5,
+                    color: chipCol, textTransform: "uppercase",
+                  }}
+                >
+                  {moveId}
+                </span>
+              );
+            })}
             <button
               type="button"
               onClick={() => alert("TODO: moves picker")}

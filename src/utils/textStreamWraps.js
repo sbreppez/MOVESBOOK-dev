@@ -877,6 +877,150 @@ export async function emitRivalsChanges(prev, next, uid) {
   // Removed rivals: no action (orphan handling).
 }
 
+// ─── Battles (mb_battles[] — array of {id, eventName, rounds[], ...}) ──────
+//
+// Top-level array. Three text-bearing surfaces:
+//
+//   Battle-level (1 field, standard supersede):
+//     eventName → BATTLE_EVENT_NAME, source_id = battle.id (bare).
+//
+//   Round-level (2 fields, standard supersede, composite source_id):
+//     round.notes        → BATTLE_ROUND_NOTES
+//     round.opponent.name → BATTLE_OPPONENT_NAME
+//     source_id = `${battle.id}:${round.id}`. resolveSourceLabel reads ctx.round
+//     for the `${event} — ${roundName}` suffix.
+//
+// Excluded fields:
+//   battle.date / format / judges       — structural / enum / object
+//   battle.battleNotes                  — no source_type (drop-only; could add
+//                                         later if needed)
+//   round.outcome / entries / moves /
+//   videos / judgeVotes / roundName     — enums / structured arrays / labels
+//   opponent.rivalId                    — non-text reference
+const BATTLE_TEXT_FIELDS = [
+  { path: 'eventName', source_type: SOURCE_TYPES.BATTLE_EVENT_NAME },
+];
+const BATTLE_ROUND_TEXT_FIELDS = [
+  { path: 'notes',           source_type: SOURCE_TYPES.BATTLE_ROUND_NOTES },
+  { path: 'opponent.name',   source_type: SOURCE_TYPES.BATTLE_OPPONENT_NAME },
+];
+
+function readPath(obj, path) {
+  const parts = path.split('.');
+  let cur = obj;
+  for (const k of parts) {
+    if (cur == null) return undefined;
+    cur = cur[k];
+  }
+  return cur;
+}
+
+export async function emitBattlesChanges(prev, next, uid) {
+  if (!uid) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('[textStream] emitBattlesChanges called without uid; skipping');
+    }
+    return;
+  }
+
+  const prevList = prev || [];
+  const nextList = next || [];
+  const prevById = new Map(prevList.map(b => [b.id, b]));
+
+  for (const nextBattle of nextList) {
+    const prevBattle = prevById.get(nextBattle.id);
+
+    // Battle-level fields (standard supersede)
+    for (const { path, source_type } of BATTLE_TEXT_FIELDS) {
+      const prevVal = (prevBattle?.[path] ?? '').toString();
+      const nextVal = (nextBattle?.[path] ?? '').toString();
+      if (prevVal === nextVal) continue;
+      if (!nextVal.trim()) continue;
+
+      try {
+        const prior = prevBattle
+          ? await findCurrentEntry(uid, source_type, nextBattle.id)
+          : null;
+        await emitToTextStream(uid, {
+          source_type,
+          source_id: nextBattle.id,
+          source_label: resolveSourceLabel(source_type, nextBattle),
+          text: nextVal,
+          supersedes: prior?.id || null,
+        });
+      } catch (err) {
+        console.error(`[textStream] battle ${nextBattle.id}.${path} emit failed:`, err);
+      }
+    }
+
+    // Round-level fields (standard supersede, composite source_id)
+    const prevRoundsById = new Map(
+      (prevBattle?.rounds || []).map(r => [r.id, r])
+    );
+    (nextBattle.rounds || []).forEach((round, idx) => {
+      const prevRound = prevRoundsById.get(round.id);
+      for (const { path, source_type } of BATTLE_ROUND_TEXT_FIELDS) {
+        const prevVal = (readPath(prevRound, path) ?? '').toString();
+        const nextVal = (readPath(round, path) ?? '').toString();
+        if (prevVal === nextVal) continue;
+        if (!nextVal.trim()) continue;
+
+        const sourceId = `${nextBattle.id}:${round.id}`;
+        (async () => {
+          try {
+            const prior = prevRound
+              ? await findCurrentEntry(uid, source_type, sourceId)
+              : null;
+            await emitToTextStream(uid, {
+              source_type,
+              source_id: sourceId,
+              source_label: resolveSourceLabel(source_type, nextBattle, { round: { ...round, index: idx + 1 } }),
+              text: nextVal,
+              supersedes: prior?.id || null,
+            });
+          } catch (err) {
+            console.error(`[textStream] battle ${sourceId}.${path} emit failed:`, err);
+          }
+        })();
+      }
+    });
+  }
+  // Removed battles / rounds: no action (orphan handling).
+}
+
+// ─── Battle custom formats (mb_battle_formats — array of strings) ──────────
+//
+// Append-only string array. Each new entry emits once with source_id = the
+// string itself; no supersede semantics (formats are append/remove only).
+export async function emitBattleFormatsChanges(prev, next, uid) {
+  if (!uid) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('[textStream] emitBattleFormatsChanges called without uid; skipping');
+    }
+    return;
+  }
+
+  const prevSet = new Set((prev || []).filter(v => typeof v === 'string'));
+  for (const label of (next || [])) {
+    if (typeof label !== 'string') continue;
+    const text = label.trim();
+    if (!text) continue;
+    if (prevSet.has(label)) continue;
+
+    try {
+      await emitToTextStream(uid, {
+        source_type: SOURCE_TYPES.BATTLE_CUSTOM_FORMAT,
+        source_id: text,
+        source_label: resolveSourceLabel(SOURCE_TYPES.BATTLE_CUSTOM_FORMAT, null),
+        text,
+        supersedes: null,
+      });
+    } catch (err) {
+      console.error(`[textStream] battle format "${text}" emit failed:`, err);
+    }
+  }
+}
+
 // ─── Battle Prep (mb_battleprep.plans[] — three diff levels) ────────────────
 //
 // One store, one wrap, three distinct diff mechanics — the structurally

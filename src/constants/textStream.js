@@ -53,6 +53,12 @@ export const SOURCE_TYPES = Object.freeze({
   RIVAL_BATTLE_WHAT_SURPRISED:      'rival_battle_whatSurprised',
   RIVAL_BATTLE_TRAINING_NEXT:       'rival_battle_trainingNext',
 
+  // Section 1.16b — Battle (mb_battles[])
+  BATTLE_EVENT_NAME:                'battle_eventName',
+  BATTLE_ROUND_NOTES:               'battle_round_notes',
+  BATTLE_OPPONENT_NAME:             'battle_round_opponentName',
+  BATTLE_CUSTOM_FORMAT:             'battle_customFormat',
+
   // Section 1.17 — Battle Prep
   BATTLEPREP_EVENT_NAME:            'battleprep_eventName',
   BATTLEPREP_PLAN_NAME:             'battleprep_planName',

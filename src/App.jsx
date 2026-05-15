@@ -44,7 +44,7 @@ import { detectMilestones } from './utils/reportEngine';
 import { setEventTraining, appendTrainingEntry, lastActivityDate } from './utils/trainingLog';
 import { runHomeMigration } from './utils/homeMigration';
 import { backfillTextStream } from './utils/textStream';
-import { emitProfileChanges, emitReminderChanges, emitPresessionChanges, emitHabitsChanges, emitRoutinesChanges, emitIdeasChanges, emitMovesChanges, emitCalendarChanges, emitRepsChanges, emitSparringChanges, emitMusicflowChanges, emitRivalsChanges, emitBattleprepChanges, emitSetsChanges, emitInjuriesChanges, emitRestLogChanges } from './utils/textStreamWraps';
+import { emitProfileChanges, emitReminderChanges, emitPresessionChanges, emitHabitsChanges, emitRoutinesChanges, emitIdeasChanges, emitMovesChanges, emitCalendarChanges, emitRepsChanges, emitSparringChanges, emitMusicflowChanges, emitRivalsChanges, emitBattleprepChanges, emitSetsChanges, emitInjuriesChanges, emitRestLogChanges, emitBattlesChanges, emitBattleFormatsChanges } from './utils/textStreamWraps';
 
 // ── Firebase stubs for preview ──
 if (typeof window !== "undefined") {
@@ -189,6 +189,12 @@ export default function App() {
   const [rivals, setRivalsState] = useState(() => {
     try { const s=localStorage.getItem("mb_rivals"); if(s){const p=JSON.parse(s); if(Array.isArray(p)) return p;} } catch{} return [];
   });
+  const [battles, setBattlesState] = useState(() => {
+    try { const s=localStorage.getItem("mb_battles"); if(s){const p=JSON.parse(s); if(Array.isArray(p)) return p;} } catch{} return [];
+  });
+  const [battleFormats, setBattleFormatsState] = useState(() => {
+    try { const s=localStorage.getItem("mb_battle_formats"); if(s){const p=JSON.parse(s); if(Array.isArray(p)) return p.filter(v => typeof v === "string" && v.trim());} } catch{} return [];
+  });
   const [battleprep, setBattleprepState] = useState(() => {
     try { const s=localStorage.getItem("mb_battleprep"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return migrateBattlePrep(p);} } catch{} return { plans:[], history:[] };
   });
@@ -284,6 +290,8 @@ export default function App() {
   useEffect(()=>{ saveLocal("mb_freestyle", freestyle); },[freestyle]);
   useEffect(()=>{ saveLocal("mb_reflections", reflections); },[reflections]);
   useEffect(()=>{ saveLocal("mb_rivals", rivals); },[rivals]);
+  useEffect(()=>{ saveLocal("mb_battles", battles); },[battles]);
+  useEffect(()=>{ saveLocal("mb_battle_formats", battleFormats); },[battleFormats]);
   useEffect(()=>{
     if(profilePhoto && typeof profilePhoto === 'string' && profilePhoto.startsWith('data:')) {
       try { localStorage.setItem("mb_profile_photo", profilePhoto); } catch{}
@@ -481,6 +489,30 @@ export default function App() {
     });
   }, [fbUser?.uid]);
 
+  const setBattles = useCallback((updater) => {
+    setBattlesState(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      if (fbUser?.uid) {
+        emitBattlesChanges(prev, next, fbUser.uid).catch(err => {
+          console.error('[textStream] battles emit failed:', err);
+        });
+      }
+      return next;
+    });
+  }, [fbUser?.uid]);
+
+  const setBattleFormats = useCallback((updater) => {
+    setBattleFormatsState(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      if (fbUser?.uid) {
+        emitBattleFormatsChanges(prev, next, fbUser.uid).catch(err => {
+          console.error('[textStream] battleFormats emit failed:', err);
+        });
+      }
+      return next;
+    });
+  }, [fbUser?.uid]);
+
   const setSets = useCallback((updater) => {
     setSetsState(prev => {
       const next = typeof updater === 'function' ? updater(prev) : updater;
@@ -534,6 +566,8 @@ export default function App() {
       freestyle:   save("freestyle"),
       reflections: save("reflections"),
       rivals:      save("rivals"),
+      battles:     save("battles"),
+      battleFormats: save("battleFormats"),
       battleprep:  save("battleprep"),
       flowmap:     save("flowmap"),
       reports:     save("reports"),
@@ -571,6 +605,8 @@ export default function App() {
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.freestyle?.(fbUser.uid, freestyle); },[freestyle, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.reflections?.(fbUser.uid, reflections); },[reflections, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.rivals?.(fbUser.uid, rivals); },[rivals, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.battles?.(fbUser.uid, battles); },[battles, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.battleFormats?.(fbUser.uid, battleFormats); },[battleFormats, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.battleprep?.(fbUser.uid, battleprep); },[battleprep, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.flowmap?.(fbUser.uid, flowmap); },[flowmap, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.reports?.(fbUser.uid, reports); },[reports, fbUser]);
@@ -646,6 +682,10 @@ export default function App() {
           if (ref) { try { const p=JSON.parse(ref); if(p&&typeof p==="object") setReflections(p); } catch {} }
           const rv = localStorage.getItem("mb_rivals");
           if (rv) { try { const p=JSON.parse(rv); if(Array.isArray(p)) setRivalsState(p); } catch {} }
+          const btl = localStorage.getItem("mb_battles");
+          if (btl) { try { const p=JSON.parse(btl); if(Array.isArray(p)) setBattlesState(p); } catch {} }
+          const bfm = localStorage.getItem("mb_battle_formats");
+          if (bfm) { try { const p=JSON.parse(bfm); if(Array.isArray(p)) setBattleFormatsState(p.filter(v => typeof v === "string" && v.trim())); } catch {} }
           const bpp = localStorage.getItem("mb_battleprep");
           if (bpp) { try { const p=JSON.parse(bpp); if(p&&typeof p==="object") setBattleprepState(migrateBattlePrep(p)); } catch {} }
           const fm = localStorage.getItem("mb_flowmap");
@@ -731,6 +771,8 @@ export default function App() {
         setMusicflowState({ sessions:[] });
         setReflections({ lastCategory:-1, lastDate:null });
         setRivalsState([]);
+        setBattlesState([]);
+        setBattleFormatsState([]);
         setProfilePhoto(null);
         setBattleprepState({ plans:[], history:[] });
         setReports({ milestones:[], weeklyDismissed:null });
@@ -788,6 +830,38 @@ export default function App() {
       console.error('[textStream] backfill failed:', err);
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally narrow deps; reads canonical stores via closure once after rehydrate. Dedup inside backfillTextStream makes re-runs no-ops.
+  }, [storesReady, fbUser?.uid]);
+
+  // ── One-time Battle v2 wipe (Issue #183) ──────────────────────────────────
+  // mb_battles is the new canonical store for logged battles. The legacy
+  // rival.battles[] + mb_battleprep.plans[].battles[].reflection +
+  // calendar `type:"battle"` pins are wiped once so the new store doesn't
+  // overlap with stale data. Gated on storesReady so the wipe runs against
+  // the Firestore-hydrated state (index.html writes Firestore data into
+  // localStorage before dispatching mb-auth-resolved); a mount-time wipe
+  // would race the rehydrate and miss real data. Raw setters keep the wipe
+  // off the textstream emit path.
+  const battlesV2WipedRef = useRef(false);
+  useEffect(() => {
+    if (battlesV2WipedRef.current) return;
+    if (!storesReady || !fbUser?.uid) return;
+    if (localStorage.getItem("mb_battles_v2_initialized") === "true") return;
+    battlesV2WipedRef.current = true;
+
+    setRivalsState(prev => prev.map(r => ({ ...r, battles: [] })));
+    setBattleprepState(prev => ({
+      ...prev,
+      plans: (prev.plans || []).map(p => ({
+        ...p,
+        battles: (p.battles || []).map(b => ({ ...b, reflection: null, reflectionLogged: false })),
+      })),
+    }));
+    setCalendarState(prev => ({
+      ...prev,
+      events: (prev.events || []).filter(e => e.type !== "battle"),
+    }));
+
+    try { localStorage.setItem("mb_battles_v2_initialized", "true"); } catch {}
   }, [storesReady, fbUser?.uid]);
 
   // ── Migrate HOME tiles for non-auth users (one-time) ──
@@ -1197,7 +1271,7 @@ export default function App() {
           <TrainModalCtx.Provider value={{ openModal:(type,idea,onSave)=>{ setTrainModal({type,idea,onSave}); } }}>
             {tab==="home" && !showCreate && <HomePage habits={habits} setHabits={setHabits} injuries={injuries} setInjuries={setInjuries} restLog={restLog} setRestLog={setRestLog} restTypes={restTypes} setRestTypes={setRestTypes} presession={presession} setPresession={setPresession} ideas={ideas} setIdeas={setIdeas} settings={appSettings} onSettingsChange={setAppSettings} homeStack={homeStack} setHomeStack={setHomeStack} homeChecks={homeChecks} setHomeChecks={setHomeChecks} onAddTrigger={addTick} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} calendar={calendar} moves={moves} setMoves={setMovesGrad} cats={cats} catColors={catColors} sets={sets} recordEventTraining={recordEventTraining} updateCalendarEvent={updateCalendarEvent} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} isPremium={isPremium} addToast={addToast} homeSeed={homeSeed} onHomeSeedUsed={()=>setHomeSeed(null)}/>}
             {tab==="moves" && !showCreate && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} catDomains={catDomains} setCatDomains={setCatDomains} sets={sets} setSets={setSets} addToast={addToast} settings={appSettings} onSettingsChange={setAppSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} reminders={reminders} onRemindersChange={setReminders} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}} onOpenManageReminders={()=>setShowManageReminders(true)} isPremium={isPremium} staleCount={staleCount} onOpenExplore={()=>{if(!isPremium){setGatedFeature("explore");return;}setShowLab(true);}} onOpenRRR={()=>{if(!isPremium){setGatedFeature("rrr");return;}setShowRRR(true);}} onOpenCombine={()=>{if(!isPremium){setGatedFeature("combine");return;}setShowComboMachine(true);}} onOpenMap={()=>{if(!isPremium){setGatedFeature("map");return;}setShowFlowMap(true);}} onOpenFlashCards={()=>{if(!isPremium){setGatedFeature("flashCards");return;}setShowFlashCards(true);}} onOpenTools={()=>setShowCreate(true)} onOpenFlow={()=>{if(!isPremium){setGatedFeature("flow");return;}setShowMusicFlow(true);}} onBulkTrigger={bulkTrigger} movesSeed={movesSeed} onMovesSeedUsed={()=>setMovesSeed(null)} setsSeed={setsSeed} onSetsSeedUsed={()=>setSetsSeed(null)}/>}
-            {tab==="battle" && !showCreate && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} addToast={addToast} freestyle={freestyle} onFreestyleChange={setFreestyle} rivals={rivals} onRivalsChange={setRivals} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} isPremium={isPremium} onSimulate={()=>{if(!isPremium){setGatedFeature("compSim");return;}setShowCompSim(true);}} onOpenSparring={()=>setShowSparring(true)} battleprep={battleprep} setBattleprep={setBattleprep} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={()=>setBattlePrepSeed(null)} rivalsSeed={rivalsSeed} onRivalsSeedUsed={()=>setRivalsSeed(null)} onOpenSharedCalendar={(im)=>{setCalendarInitialMonth(im||null); setTab("reflect"); setSubTab("calendar");}}/>}
+            {tab==="battle" && !showCreate && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} addToast={addToast} freestyle={freestyle} onFreestyleChange={setFreestyle} rivals={rivals} onRivalsChange={setRivals} battles={battles} setBattles={setBattles} battleFormats={battleFormats} setBattleFormats={setBattleFormats} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} isPremium={isPremium} onSimulate={()=>{if(!isPremium){setGatedFeature("compSim");return;}setShowCompSim(true);}} onOpenSparring={()=>setShowSparring(true)} battleprep={battleprep} setBattleprep={setBattleprep} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={()=>setBattlePrepSeed(null)} rivalsSeed={rivalsSeed} onRivalsSeedUsed={()=>setRivalsSeed(null)} onOpenSharedCalendar={(im)=>{setCalendarInitialMonth(im||null); setTab("reflect"); setSubTab("calendar");}}/>}
             {tab==="reflect" && !showCreate && <ReflectPage isPremium={isPremium} ideas={ideas} setIdeas={setIdeas} moves={moves} setMoves={setMovesGrad} reps={reps} sparring={sparring} musicflow={musicflow} habits={habits} setHabits={setHabits} homeStack={homeStack} setHomeStack={setHomeStack} calendar={calendar} setCalendar={setCalendar} cats={cats} catColors={catColors} settings={appSettings} onSettingsChange={setAppSettings} addToast={addToast} stance={stance} battleprep={battleprep} onToggleBattlePrepTask={(planId,dateStr,taskIdx)=>{setBattleprep(prev=>{const plans=(prev.plans||[]).map(p=>{if(p.id!==planId) return p;const key=dateStr+"-"+taskIdx;return {...p, completedTasks:{...(p.completedTasks||{}), [key]:!(p.completedTasks||{})[key]}};});return {...prev, plans};});}} onOpenStanceAssessment={()=>setShowStanceAssessment(true)} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onSubTabChange={setSubTab} onGoToPrep={(seed)=>{setBattlePrepSeed(seed);setTab("battle");}} initialMonth={calendarInitialMonth} initialFocus={calendarInitialFocus} onInitialFocusUsed={()=>setCalendarInitialFocus(null)} sets={sets} onAddTrigger={addTick} parentSubTab={subTab} reports={reports} injuries={injuries} setInjuries={setInjuries} restLog={restLog} setRestLog={setRestLog} restTypes={restTypes} setRestTypes={setRestTypes} recordEventTraining={recordEventTraining} updateCalendarEvent={updateCalendarEvent}/>}
           </TrainModalCtx.Provider>
           {showRepCounter&&<RepCounter moves={moves} catColors={catColors} reps={reps}

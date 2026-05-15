@@ -77,6 +77,18 @@ export function resolveSourceLabel(sourceType, entity, ctx = {}) {
       return `${rivalName} — ${battleLabel}`;
     }
 
+    // Battle (mb_battles) — entity is the battle, ctx.round optional for round-level
+    case SOURCE_TYPES.BATTLE_EVENT_NAME:
+      return entity.eventName || entity.date || '(battle)';
+    case SOURCE_TYPES.BATTLE_ROUND_NOTES:
+    case SOURCE_TYPES.BATTLE_OPPONENT_NAME: {
+      const battleLabel = entity.eventName || entity.date || '(battle)';
+      const roundLabel = ctx.round?.roundName || (ctx.round ? `Round ${ctx.round.index}` : '');
+      return roundLabel ? `${battleLabel} — ${roundLabel}` : battleLabel;
+    }
+    case SOURCE_TYPES.BATTLE_CUSTOM_FORMAT:
+      return 'Battle formats';
+
     // Battle Prep — entity is the plan
     case SOURCE_TYPES.BATTLEPREP_EVENT_NAME:
     case SOURCE_TYPES.BATTLEPREP_PLAN_NAME:
