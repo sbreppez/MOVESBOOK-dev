@@ -31,6 +31,7 @@ export const emptyBattle = (date) => ({
   id: newId(),
   date: date || new Date().toISOString().slice(0, 10),
   eventName: "",
+  location: "",
   format: null,
   battleNotes: "",
   judges: null,
@@ -292,6 +293,18 @@ export const BattleFormBody = ({
           type="date"
           value={battle.date}
           onChange={(e) => update({ date: e.target.value })}
+          style={inp()}
+        />
+      </div>
+
+      {/* Location */}
+      <div>
+        <FormLabel>{t("location")}</FormLabel>
+        <input
+          type="text"
+          value={battle.location || ""}
+          onChange={(e) => update({ location: e.target.value })}
+          placeholder={t("battleLocationPlaceholder")}
           style={inp()}
         />
       </div>
