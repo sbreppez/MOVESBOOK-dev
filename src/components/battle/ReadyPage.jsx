@@ -20,7 +20,7 @@ import { SectionBrief } from '../shared/SectionBrief';
 import { computeDecay } from '../../utils/masteryDecay';
 import { LEVEL_TO_ROLE, getTensionColors, getItemTension, getMoveTension, ArcChart, getArcFeedback, ArcLegend } from '../shared/ArcVis';
 
-export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, addToast, freestyle, onFreestyleChange, rivals, onRivalsChange, battles, setBattles, battleFormats, setBattleFormats, addCalendarEvent, removeCalendarEvent, onSimulate, onOpenSparring, battleprep, setBattleprep, calendar, battlePrepSeed, onBattlePrepSeedUsed, rivalsSeed, onRivalsSeedUsed, onOpenDay, isPremium }) => {
+export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}, onAddTrigger, onAddTrigger2=0, onSubTabChange, addToast, freestyle, onFreestyleChange, rivals, onRivalsChange, battles, setBattles, battleFormats, setBattleFormats, addCalendarEvent, removeCalendarEvent, onSimulate, onOpenSparring, battleprep, setBattleprep, calendar, battlePrepSeed, onBattlePrepSeedUsed, rivalsSeed, onRivalsSeedUsed, onOpenDay, onOpenCalendar, isPremium }) => {
   const t = useT();
   const { roundCountStr, entryCountStr } = usePlural();
   const { C } = useSettings();
@@ -693,7 +693,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
       )}
 
       {/* PREP tab */}
-      {battleTab==="prep"&&(isPremium?<><SectionBrief desc={t("battlePrepBrief")} settings={settings}/><BattlePrepPage battleprep={battleprep} setBattleprep={setBattleprep} moves={moves} sets={sets} addToast={addToast} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={onBattlePrepSeedUsed} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onAddTrigger={prepAddTick} onOpenDay={onOpenDay}/></>:<div style={{padding:20}}><PremiumGate feature="battlePrep" addToast={addToast}/></div>)}
+      {battleTab==="prep"&&(isPremium?<><SectionBrief desc={t("battlePrepBrief")} settings={settings}/><BattlePrepPage battleprep={battleprep} setBattleprep={setBattleprep} moves={moves} sets={sets} addToast={addToast} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={onBattlePrepSeedUsed} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onAddTrigger={prepAddTick} onOpenDay={onOpenDay} onOpenCalendar={onOpenCalendar}/></>:<div style={{padding:20}}><PremiumGate feature="battlePrep" addToast={addToast}/></div>)}
 
       {/* FREESTYLE tab */}
       {battleTab==="freestyle"&&<FreestylePage moves={moves} sets={sets} settings={settings} onAddTrigger={freestyleAddTick} addToast={addToast} freestyle={freestyle} onFreestyleChange={onFreestyleChange}/>}

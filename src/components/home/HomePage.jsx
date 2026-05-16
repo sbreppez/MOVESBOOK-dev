@@ -151,6 +151,9 @@ export const HomePage = ({
       // External surfaces (Reports row, BattlePrep "open day", TextStream
       // jump-to-source for calendar/session records) land here.
       setSelectedDate(homeSeed.day);
+    } else if (homeSeed.kind === 'calendar') {
+      setSelectedDate(homeSeed.day || todayLocal());
+      setShowMonthSheet(true);
     }
     if (onHomeSeedUsed) onHomeSeedUsed();
   // eslint-disable-next-line react-hooks/exhaustive-deps -- seed-only by intent
