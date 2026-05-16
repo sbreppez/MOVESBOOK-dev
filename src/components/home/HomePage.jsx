@@ -93,11 +93,11 @@ export const HomePage = ({
   addToast,
   homeSeed, onHomeSeedUsed,
   setBattles, battleFormats, setBattleFormats,
+  selectedDate, setSelectedDate,
 }) => {
   const { C } = useSettings();
   const t = useT();
   const todayStr = todayLocal();
-  const [selectedDate, setSelectedDate] = useState(todayStr);
   const [showAddPicker, setShowAddPicker] = useState(false);
   const [showLogToday, setShowLogToday] = useState(false);
   const [addFormType, setAddFormType] = useState(null);
