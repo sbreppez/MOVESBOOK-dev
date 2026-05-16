@@ -26,7 +26,6 @@ export const LogTodayTraining = forwardRef(function LogTodayTraining({
 }, ref) {
   const t = useT();
 
-  const [title, setTitle] = useState(existingEvent?.title || "");
   const [workDescription, setWorkDescription] = useState(existingEvent?.workDescription || "");
   const [howItFelt, setHowItFelt] = useState(existingEvent?.howItFelt || "");
   const [durationH, setDurationH] = useState(
@@ -98,12 +97,13 @@ export const LogTodayTraining = forwardRef(function LogTodayTraining({
     const isUpdate = !!existingEvent?.id;
 
     const record = {
-      ...(existingEvent || {}),
-      id: existingEvent?.id ?? Date.now(),
+      ...(isUpdate
+        ? { id: existingEvent.id, createdAt: existingEvent.createdAt }
+        : {}),
       date,
       type: "training",
       source: "log_today",
-      title: title.trim() || t("trainingSession"),
+      title: existingEvent?.title?.trim() || t("trainingSession"),
       moveIds: pendingMoveIds,
       setIds: pendingSetIds,
       workDescription: workDescription.trim(),
@@ -138,15 +138,6 @@ export const LogTodayTraining = forwardRef(function LogTodayTraining({
 
   return (
     <div style={{ padding: "16px 16px 24px" }}>
-      {/* Title */}
-      <input
-        type="text"
-        value={title}
-        onChange={e => setTitle(e.target.value)}
-        placeholder={t("sessionTitleOptional")}
-        style={{ ...formInputStyle, fontSize: 16, marginBottom: 8 }}
-      />
-
       {/* WHAT I WORKED ON */}
       <div style={{
         ...formSectionHeader(true),

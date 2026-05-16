@@ -7,6 +7,7 @@ import { todayLocal } from '../../utils/dateUtils';
 import { LogTodayTraining } from './LogTodayTraining';
 import { LogTodayRest } from './LogTodayRest';
 import { LogTodayBattle } from './LogTodayBattle';
+import { LogTodayConditioning } from './LogTodayConditioning';
 import { LogTodayMovePicker } from './LogTodayMovePicker';
 import { LogTodaySetPicker } from './LogTodaySetPicker';
 import { ComingSoonState } from './ComingSoonState';
@@ -37,9 +38,14 @@ export function LogTodayModal({
   const formRef = useRef(null);
   const restRef = useRef(null);
   const battleRef = useRef(null);
+  const conditioningRef = useRef(null);
   const effectiveDate = date || todayLocal();
 
-  const [activeTab, setActiveTab] = useState("training");
+  const [activeTab, setActiveTab] = useState(() => {
+    const tabId = existingEvent?.type;
+    if (tabId === "training" || tabId === "battle" || tabId === "conditioning" || tabId === "rest") return tabId;
+    return "training";
+  });
   const [pendingMoveIds, setPendingMoveIds] = useState(existingEvent?.moveIds || []);
   const [pendingSetIds, setPendingSetIds] = useState(existingEvent?.setIds || []);
   const [movePickerOpen, setMovePickerOpen] = useState(false);
@@ -78,6 +84,7 @@ export function LogTodayModal({
   const isTraining = activeTab === "training";
   const isRest = activeTab === "rest";
   const isBattle = activeTab === "battle";
+  const isConditioning = activeTab === "conditioning";
 
   return (
     <div style={{
@@ -202,16 +209,29 @@ export function LogTodayModal({
           <LogTodayBattle
             ref={battleRef}
             date={effectiveDate}
+            existingEvent={existingEvent}
             moves={moves}
             battleFormats={battleFormats}
             setBattleFormats={setBattleFormats}
             setBattles={setBattles}
             addCalendarEvent={addCalendarEvent}
+            updateCalendarEvent={updateCalendarEvent}
             addToast={addToast}
             onClose={onClose}
           />
         </div>
-        {!isTraining && !isRest && !isBattle && <ComingSoonState />}
+        <div style={{ display: isConditioning ? "block" : "none" }}>
+          <LogTodayConditioning
+            ref={conditioningRef}
+            date={effectiveDate}
+            existingEvent={existingEvent}
+            addCalendarEvent={addCalendarEvent}
+            updateCalendarEvent={updateCalendarEvent}
+            addToast={addToast}
+            onClose={onClose}
+          />
+        </div>
+        {!isTraining && !isRest && !isBattle && !isConditioning && <ComingSoonState />}
       </div>
 
       {/* Sticky footer */}
@@ -238,15 +258,16 @@ export function LogTodayModal({
             if (isTraining) formRef.current?.save();
             else if (isRest) restRef.current?.save();
             else if (isBattle) battleRef.current?.save();
+            else if (isConditioning) conditioningRef.current?.save();
           }}
-          disabled={!isTraining && !isRest && !isBattle}
+          disabled={!isTraining && !isRest && !isBattle && !isConditioning}
           style={{
             flex: 1, background: C.accent, color: "#fff", border: "none",
             borderRadius: 8, padding: "12px 16px",
             fontFamily: FONT_DISPLAY, fontWeight: 800, fontSize: 12,
             letterSpacing: 1.5, textTransform: "uppercase",
-            cursor: (isTraining || isRest || isBattle) ? "pointer" : "not-allowed",
-            opacity: (isTraining || isRest || isBattle) ? 1 : 0.4,
+            cursor: (isTraining || isRest || isBattle || isConditioning) ? "pointer" : "not-allowed",
+            opacity: (isTraining || isRest || isBattle || isConditioning) ? 1 : 0.4,
           }}
         >
           {t("save")}

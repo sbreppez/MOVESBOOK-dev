@@ -4,30 +4,55 @@ import { BattleFormBody, emptyBattle } from "../battle/BattleFormBody";
 
 export const LogTodayBattle = forwardRef(function LogTodayBattle({
   date,
+  existingEvent,
   moves,
   battleFormats,
   setBattleFormats,
   setBattles,
   addCalendarEvent,
+  updateCalendarEvent,
   addToast,
   onClose,
 }, ref) {
   const t = useT();
-  const [battle, setBattle] = useState(() => emptyBattle(date));
+  const [battle, setBattle] = useState(() =>
+    existingEvent?.battle || emptyBattle(date)
+  );
 
   const handleSave = () => {
     if (!battle.eventName.trim()) return;
-    if (setBattles) setBattles(prev => [...prev, battle]);
-    if (addCalendarEvent) {
-      addCalendarEvent({
-        date: battle.date,
-        type: "battle",
-        title: t("battleEvent"),
-        notes: battle.eventName ? battle.eventName : "",
-        source: "logToday",
-      }, { silent: true });
+
+    setBattles?.(prev => {
+      const list = prev || [];
+      const idx = list.findIndex(b => b.id === battle.id);
+      if (idx >= 0) {
+        const next = list.slice();
+        next[idx] = battle;
+        return next;
+      }
+      return [...list, battle];
+    });
+
+    const isUpdate = !!existingEvent?.id;
+    const record = {
+      ...(isUpdate
+        ? { id: existingEvent.id, createdAt: existingEvent.createdAt }
+        : {}),
+      date: battle.date,
+      type: "battle",
+      source: "log_today",
+      title: t("battleEvent"),
+      notes: battle.eventName,
+      battle,
+    };
+
+    if (isUpdate) {
+      updateCalendarEvent?.(record);
+    } else {
+      addCalendarEvent?.(record, { silent: true });
     }
-    if (addToast) addToast({ icon: "swords", title: t("battleLogged") });
+
+    addToast?.({ icon: "swords", title: t(isUpdate ? "sessionUpdated" : "battleLogged") });
     onClose?.();
   };
 
