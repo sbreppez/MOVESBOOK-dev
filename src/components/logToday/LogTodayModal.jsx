@@ -105,15 +105,18 @@ export function LogTodayModal({
           }}>
             {titleText}
           </span>
-          {isToday && (
-            <span style={{
-              fontSize: 10, fontWeight: 700, color: C.accent,
-              background: C.accent + "18", borderRadius: 6, padding: "2px 6px",
-              letterSpacing: 0.5, fontFamily: FONT_DISPLAY,
-            }}>
-              {t("today")}
-            </span>
-          )}
+          {isToday && (() => {
+            const [y, m, d] = effectiveDate.split("-");
+            return (
+              <span style={{
+                fontSize: 10, fontWeight: 700, color: C.accent,
+                background: C.accent + "18", borderRadius: 6, padding: "2px 6px",
+                letterSpacing: 0.5, fontFamily: FONT_DISPLAY,
+              }}>
+                {`${d}/${m}/${y}`}
+              </span>
+            );
+          })()}
         </div>
         <button
           onClick={onClose}
