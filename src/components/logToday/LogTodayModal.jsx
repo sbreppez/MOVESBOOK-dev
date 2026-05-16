@@ -32,6 +32,8 @@ export function LogTodayModal({
   setBattles,
   battleFormats,
   setBattleFormats,
+  setIdeas,
+  setHomeStack,
   onClose,
 }) {
   const t = useT();
@@ -191,6 +193,8 @@ export function LogTodayModal({
             updateCalendarEvent={updateCalendarEvent}
             recordEventTraining={recordEventTraining}
             addToast={addToast}
+            setIdeas={setIdeas}
+            setHomeStack={setHomeStack}
             onClose={onClose}
           />
         </div>
@@ -205,6 +209,8 @@ export function LogTodayModal({
             injuries={injuries}
             setInjuries={setInjuries}
             addToast={addToast}
+            setIdeas={setIdeas}
+            setHomeStack={setHomeStack}
             onClose={onClose}
           />
         </div>
@@ -220,6 +226,8 @@ export function LogTodayModal({
             addCalendarEvent={addCalendarEvent}
             updateCalendarEvent={updateCalendarEvent}
             addToast={addToast}
+            setIdeas={setIdeas}
+            setHomeStack={setHomeStack}
             onClose={onClose}
           />
         </div>
@@ -231,6 +239,8 @@ export function LogTodayModal({
             addCalendarEvent={addCalendarEvent}
             updateCalendarEvent={updateCalendarEvent}
             addToast={addToast}
+            setIdeas={setIdeas}
+            setHomeStack={setHomeStack}
             onClose={onClose}
           />
         </div>

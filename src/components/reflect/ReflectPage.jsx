@@ -220,6 +220,7 @@ export const ReflectPage = ({
           onToggleBattlePrepTask={onToggleBattlePrepTask}
           onAddTrigger={calendarAddTick} reports={reports} isPremium={isPremium}
           setBattles={setBattles} battleFormats={battleFormats} setBattleFormats={setBattleFormats}
+          setHomeStack={setHomeStack}
           onAddToHome={(ctx) => setAddToHomeContext(ctx)} />
         </>
       )}

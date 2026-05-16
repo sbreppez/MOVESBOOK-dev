@@ -6,6 +6,7 @@ import { Ic } from '../shared/Ic';
 import { Txtarea } from '../shared/Txtarea';
 import { SorenessSheet } from '../shared/SorenessSheet';
 import { InjuryModal } from '../modals/InjuryModal';
+import { createHomeNoteFromLog } from '../../utils/logTodayHomeNote';
 
 const partLabelKey = (p) => p ? "bodyPart" + p.charAt(0).toUpperCase() + p.slice(1) : "";
 
@@ -24,6 +25,8 @@ export const LogTodayRest = forwardRef(function LogTodayRest({
   injuries,
   setInjuries,
   addToast: _addToast,
+  setIdeas,
+  setHomeStack,
   onClose,
 }, ref) {
   const { C } = useSettings();
@@ -36,6 +39,7 @@ export const LogTodayRest = forwardRef(function LogTodayRest({
   const [soreness, setSoreness] = useState(entry.soreness || []);
   const [sorenessExpanded, setSorenessExpanded] = useState((entry.soreness || []).length > 0);
   const [editingInjury, setEditingInjury] = useState(null); // null | injury object | "new"
+  const [addToHome, setAddToHome] = useState(false);
 
   const activeInjuries = (injuries || []).filter(i => !i.resolved);
   const sevColors = { 1: C.green, 2: C.yellow, 3: C.accent };
@@ -64,6 +68,40 @@ export const LogTodayRest = forwardRef(function LogTodayRest({
         next[date] = nextEntry;
       }
       setRestLog(next);
+
+      if (addToHome && !isEmpty) {
+        const restTypeMap = {
+          rest: "restTypeRest",
+          activeRecovery: "restTypeActiveRecovery",
+          injuryOrSick: "restTypeInjuryOrSick",
+          other: "restTypeOther",
+        };
+        const lines = [];
+        if (restType) lines.push(`${t("restType")}\n${t(restTypeMap[restType] || restType)}`);
+        if (sleep.hours != null || sleep.quality) {
+          const sleepBits = [];
+          if (sleep.hours != null) sleepBits.push(`${sleep.hours}h`);
+          if (sleep.quality) {
+            const qKey = sleep.quality === "poor" ? "restSleepPoor" : sleep.quality === "ok" ? "restSleepOk" : "restSleepGreat";
+            sleepBits.push(t(qKey));
+          }
+          lines.push(`${t("restSleep")}\n${sleepBits.join(" — ")}`);
+        }
+        if (soreness && soreness.length > 0) {
+          const labels = soreness.map(s => {
+            const part = s.bodyPart ? t(partLabelKey(s.bodyPart)) : "";
+            const side = s.side ? (s.side === "left" ? t("leftSide") : t("rightSide")) + " " : "";
+            return (side + part).trim();
+          }).filter(Boolean);
+          lines.push(`${t("restSoreness")}\n${labels.join(", ")}`);
+        }
+        if (todayNote.trim()) lines.push(`${t("todaysNote")}\n${todayNote.trim()}`);
+        createHomeNoteFromLog({
+          section: t("rest"), date, summary: lines.join("\n\n"),
+          setIdeas, setHomeStack,
+        });
+      }
+
       onClose?.();
     },
   }));
@@ -223,6 +261,30 @@ export const LogTodayRest = forwardRef(function LogTodayRest({
       {sorenessExpanded && (
         <SorenessSheet value={soreness} onChange={setSoreness} />
       )}
+
+      {/* Add to HOME checkbox */}
+      <label style={{
+        display: "flex", alignItems: "center", gap: 8,
+        marginTop: 21, cursor: "pointer", userSelect: "none",
+      }}>
+        <span style={{
+          display: "inline-flex", alignItems: "center", justifyContent: "center",
+          width: 18, height: 18, borderRadius: 4,
+          border: `2px solid ${addToHome ? C.green : C.border}`,
+          background: addToHome ? C.green : "transparent",
+        }}>
+          {addToHome && <Ic n="check" s={12} c="#fff" />}
+        </span>
+        <input
+          type="checkbox"
+          checked={addToHome}
+          onChange={e => setAddToHome(e.target.checked)}
+          style={{ position: "absolute", opacity: 0, pointerEvents: "none" }}
+        />
+        <span style={{ fontSize: 13, fontFamily: FONT_BODY, color: C.textSec }}>
+          {t("logTodayAddToHome")}
+        </span>
+      </label>
 
       {/* InjuryModal mount */}
       {editingInjury && (

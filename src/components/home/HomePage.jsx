@@ -1353,6 +1353,8 @@ export const HomePage = ({
             setBattles={setBattles}
             battleFormats={battleFormats}
             setBattleFormats={setBattleFormats}
+            setIdeas={setIdeas}
+            setHomeStack={setHomeStack}
             onClose={() => setShowLogToday(false)}
           />
         );

@@ -5,6 +5,7 @@ import { useT } from '../../hooks/useTranslation';
 import { Ic } from '../shared/Ic';
 import { Txtarea } from '../shared/Txtarea';
 import { BottomSheet } from '../shared/BottomSheet';
+import { createHomeNoteFromLog } from '../../utils/logTodayHomeNote';
 
 const STAMINA_SUBCATS = ['liss', 'miss', 'hiit'];
 const STRENGTH_SUBCATS = ['max', 'hypertrophy', 'power', 'endurance'];
@@ -52,6 +53,8 @@ export const LogTodayConditioning = forwardRef(function LogTodayConditioning({
   addCalendarEvent,
   updateCalendarEvent,
   addToast,
+  setIdeas,
+  setHomeStack,
   onClose,
 }, ref) {
   const t = useT();
@@ -109,6 +112,7 @@ export const LogTodayConditioning = forwardRef(function LogTodayConditioning({
     details: initial?.mobility?.details || '',
   });
   const [todayNote, setTodayNote] = useState(initial?.todayNote || '');
+  const [addToHome, setAddToHome] = useState(false);
   const [openSection, setOpenSection] = useState(null);
   const [infoKey, setInfoKey] = useState(null);
 
@@ -205,6 +209,40 @@ export const LogTodayConditioning = forwardRef(function LogTodayConditioning({
       updateCalendarEvent?.(record);
     } else {
       addCalendarEvent?.(record, { silent: true });
+    }
+
+    if (addToHome) {
+      const subcatLabels = (keys) => keys.map(k => t(SUBCAT_KEY[k].label)).join(', ');
+      const regionLabels = (keys) => keys.map(k => t(REGION_KEY[k])).join(', ');
+      const jointLabels = (keys) => keys.map(k => t(JOINT_KEY[k])).join(', ');
+      const lines = [];
+      if (name) lines.push(`${t('logCondSessionName')}\n${name}`);
+      if (hours > 0 || minutes > 0) lines.push(`${t('howLong')}\n${hours}h ${minutes}m`);
+      if (stamina.subCategories.length || stamina.details.trim()) {
+        const parts = [];
+        if (stamina.subCategories.length) parts.push(subcatLabels(stamina.subCategories));
+        if (stamina.details.trim()) parts.push(stamina.details.trim());
+        lines.push(`${t('logCondStamina')}\n${parts.join(' — ')}`);
+      }
+      if (strength.subCategories.length || strength.details.trim()) {
+        const parts = [];
+        if (strength.subCategories.length) parts.push(subcatLabels(strength.subCategories));
+        if (strength.regions.length) parts.push(regionLabels(strength.regions));
+        if (strength.details.trim()) parts.push(strength.details.trim());
+        lines.push(`${t('logCondStrength')}\n${parts.join(' — ')}`);
+      }
+      if (mobility.subCategories.length || mobility.details.trim()) {
+        const parts = [];
+        if (mobility.subCategories.length) parts.push(subcatLabels(mobility.subCategories));
+        if (mobility.joints.length) parts.push(jointLabels(mobility.joints));
+        if (mobility.details.trim()) parts.push(mobility.details.trim());
+        lines.push(`${t('logCondMobility')}\n${parts.join(' — ')}`);
+      }
+      if (note) lines.push(`${t('logCondTodayNote')}\n${note}`);
+      createHomeNoteFromLog({
+        section: t('conditioning'), date, summary: lines.join('\n\n'),
+        setIdeas, setHomeStack,
+      });
     }
 
     addToast?.({ icon: 'check', title: t(isUpdate ? 'sessionUpdated' : 'sessionLogged') });
@@ -414,6 +452,30 @@ export const LogTodayConditioning = forwardRef(function LogTodayConditioning({
         autoExpand
         minHeight={80}
       />
+
+      {/* Add to HOME checkbox */}
+      <label style={{
+        display: 'flex', alignItems: 'center', gap: 8,
+        marginTop: 10, cursor: 'pointer', userSelect: 'none',
+      }}>
+        <span style={{
+          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          width: 18, height: 18, borderRadius: 4,
+          border: `2px solid ${addToHome ? C.green : C.border}`,
+          background: addToHome ? C.green : 'transparent',
+        }}>
+          {addToHome && <Ic n="check" s={12} c="#fff" />}
+        </span>
+        <input
+          type="checkbox"
+          checked={addToHome}
+          onChange={e => setAddToHome(e.target.checked)}
+          style={{ position: 'absolute', opacity: 0, pointerEvents: 'none' }}
+        />
+        <span style={{ fontSize: 13, fontFamily: FONT_BODY, color: C.textSec }}>
+          {t('logTodayAddToHome')}
+        </span>
+      </label>
 
       {/* Sub-category info sheet */}
       <BottomSheet

@@ -32,6 +32,7 @@ export const CalendarOverlay = ({
   inline, onAddTrigger, reports: _reports, isPremium,
   onAddToHome,
   setBattles, battleFormats, setBattleFormats,
+  setHomeStack,
 }) => {
   const t = useT();
   const today = todayLocal();
@@ -1013,6 +1014,8 @@ export const CalendarOverlay = ({
           setBattles={setBattles}
           battleFormats={battleFormats}
           setBattleFormats={setBattleFormats}
+          setIdeas={setIdeas}
+          setHomeStack={setHomeStack}
           onClose={() => setSelectedLogTodayEvent(null)}
         />
       )}

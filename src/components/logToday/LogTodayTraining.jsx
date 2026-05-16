@@ -5,6 +5,7 @@ import { useT } from '../../hooks/useTranslation';
 import { Ic } from '../shared/Ic';
 import { Txtarea } from '../shared/Txtarea';
 import { BottomSheet } from '../shared/BottomSheet';
+import { createHomeNoteFromLog } from '../../utils/logTodayHomeNote';
 
 export const LogTodayTraining = forwardRef(function LogTodayTraining({
   date,
@@ -22,12 +23,15 @@ export const LogTodayTraining = forwardRef(function LogTodayTraining({
   recordEventTraining,
   addToast,
   existingEvent,
+  setIdeas,
+  setHomeStack,
   onClose,
 }, ref) {
   const t = useT();
 
   const [workDescription, setWorkDescription] = useState(existingEvent?.workDescription || "");
   const [howItFelt, setHowItFelt] = useState(existingEvent?.howItFelt || "");
+  const [addToHome, setAddToHome] = useState(false);
   const [durationH, setDurationH] = useState(
     existingEvent?.duration ? String(Math.floor(existingEvent.duration / 60)) : ""
   );
@@ -122,6 +126,20 @@ export const LogTodayTraining = forwardRef(function LogTodayTraining({
 
     if (recordEventTraining) {
       recordEventTraining(record.id, allMoveIdsToMark, record.date, pendingMoveReps);
+    }
+
+    if (addToHome) {
+      const lines = [];
+      if (workDescription.trim()) lines.push(`${t("whatIWorkedOn")}\n${workDescription.trim()}`);
+      if (howItFelt.trim()) lines.push(`${t("howItFelt")}\n${howItFelt.trim()}`);
+      if (totalDuration > 0) lines.push(`${t("howLong")}\n${h}h ${m}m`);
+      if (location.trim()) lines.push(`${t("location")}\n${location.trim()}`);
+      if (videoLink.trim()) lines.push(`${t("videoLink")}\n${videoLink.trim()}`);
+      if (notes.trim()) lines.push(`${t("todaysNote")}\n${notes.trim()}`);
+      createHomeNoteFromLog({
+        section: t("training"), date, summary: lines.join("\n\n"),
+        setIdeas, setHomeStack,
+      });
     }
 
     addToast?.({
@@ -352,6 +370,32 @@ export const LogTodayTraining = forwardRef(function LogTodayTraining({
         autoExpand
         minHeight={80}
       />
+
+      {/* Add to HOME checkbox */}
+      <label style={{
+        display: "flex", alignItems: "center", gap: 8,
+        marginTop: 10, cursor: "pointer", userSelect: "none",
+      }}>
+        <span style={{
+          display: "inline-flex", alignItems: "center", justifyContent: "center",
+          width: 18, height: 18, borderRadius: 4,
+          border: `2px solid ${addToHome ? C.green : C.border}`,
+          background: addToHome ? C.green : "transparent",
+        }}>
+          {addToHome && <Ic n="check" s={12} c="#fff" />}
+        </span>
+        <input
+          type="checkbox"
+          checked={addToHome}
+          onChange={e => setAddToHome(e.target.checked)}
+          style={{ position: "absolute", opacity: 0, pointerEvents: "none" }}
+        />
+        <span style={{
+          fontSize: 13, fontFamily: FONT_BODY, color: C.textSec,
+        }}>
+          {t("logTodayAddToHome")}
+        </span>
+      </label>
 
       {/* Chooser BottomSheet */}
       <BottomSheet
