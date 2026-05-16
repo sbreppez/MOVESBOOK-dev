@@ -21,7 +21,7 @@ export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEd
   }, [menu]);
 
   // Resolve data based on tile type
-  let emoji = null, fallbackIcon = null, name, description, showCheckbox = false, extraInfo = null, isOrphan = false, isPinned = false, isGoal = false;
+  let emoji = null, fallbackIcon = null, name, description, showCheckbox = false, extraInfo = null, isOrphan = false, isPinned = false, isGoal = false, journalEntries = null;
 
   if (tile.type === 'routine') {
     fallbackIcon = "list";
@@ -75,9 +75,11 @@ export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEd
     } else {
       fallbackIcon = "notebookPen";
       name = move.name;
-      const latestEntry = (move.journal || []).slice().sort((a, b) => b.date.localeCompare(a.date))[0];
+      const sortedJournal = (move.journal || []).slice().sort((a, b) => b.date.localeCompare(a.date));
+      const latestEntry = sortedJournal[0];
       description = latestEntry ? `${latestEntry.date}: ${latestEntry.text}` : move.description || "";
       extraInfo = move.category;
+      journalEntries = sortedJournal;
     }
   }
 
@@ -214,7 +216,30 @@ export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEd
         )}
 
         {/* Description (non-routine tiles only) */}
-        {description && tile.type !== 'routine' && (
+        {tile.type === 'moveUpdate' && expanded && journalEntries?.length > 0 ? (
+          <div style={{ marginTop: 3 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              {journalEntries.map(entry => (
+                <div key={entry.id} style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  <div style={{ fontSize: 10, fontFamily: FONT_DISPLAY, fontWeight: 700, color: C.textMuted }}>
+                    {entry.date}
+                  </div>
+                  <div style={{ fontSize: 12, fontFamily: FONT_BODY, color: C.text, lineHeight: 1.4 }}>
+                    {entry.text}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button onClick={e => { e.stopPropagation(); setExpanded(false); }}
+              style={{
+                display: "flex", alignItems: "center", gap: 2,
+                background: "none", border: "none", cursor: "pointer",
+                padding: "4px 0", color: C.textMuted, fontSize: 11, fontFamily: FONT_BODY,
+              }}>
+              <Ic n="chevU" s={12} c={C.textMuted}/>
+            </button>
+          </div>
+        ) : description && tile.type !== 'routine' && (
           <ExpandableText
             text={description} maxLines={2} fontSize={11}
             color={C.textSec} lineHeight={1.4}
