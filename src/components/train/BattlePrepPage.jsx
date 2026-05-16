@@ -22,7 +22,7 @@ const PHASE_CYCLE = [
 
 const PRESET_IDS = ["smoke", "prove", "mark", "custom"];
 
-export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToast, calendar, battlePrepSeed, onBattlePrepSeedUsed, addCalendarEvent, removeCalendarEvent, onAddTrigger, onOpenDay, onOpenCalendar }) => {
+export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToast, calendar, battlePrepSeed, onBattlePrepSeedUsed, addCalendarEvent, removeCalendarEvent, onAddTrigger, onOpenDay, onOpenCalendar, settings }) => {
   const t = useT();
   const plans = useMemo(() => battleprep?.plans || [], [battleprep?.plans]);
   const today = toYMD(new Date());
@@ -321,7 +321,11 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
                 </div>
                 <Ic n="chevR" s={14} c={C.textMuted} />
               </button>
-              <button onClick={(e) => { e.stopPropagation(); setConfirmDeleteUnplanned(evt); }}
+              <button onClick={(e) => {
+                  e.stopPropagation();
+                  if (settings?.confirmDelete !== false) setConfirmDeleteUnplanned(evt);
+                  else removeCalendarEvent(evt.id);
+                }}
                 style={{ background: `${C.red}10`, border: `1px solid ${C.red}30`, borderRadius: 8, padding: "6px 8px", cursor: "pointer", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <Ic n="trash" s={12} c={C.red} />
               </button>

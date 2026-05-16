@@ -693,7 +693,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
       )}
 
       {/* PREP tab */}
-      {battleTab==="prep"&&(isPremium?<><SectionBrief desc={t("battlePrepBrief")} settings={settings}/><BattlePrepPage battleprep={battleprep} setBattleprep={setBattleprep} moves={moves} sets={sets} addToast={addToast} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={onBattlePrepSeedUsed} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onAddTrigger={prepAddTick} onOpenDay={onOpenDay} onOpenCalendar={onOpenCalendar}/></>:<div style={{padding:20}}><PremiumGate feature="battlePrep" addToast={addToast}/></div>)}
+      {battleTab==="prep"&&(isPremium?<><SectionBrief desc={t("battlePrepBrief")} settings={settings}/><BattlePrepPage battleprep={battleprep} setBattleprep={setBattleprep} moves={moves} sets={sets} addToast={addToast} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={onBattlePrepSeedUsed} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} onAddTrigger={prepAddTick} onOpenDay={onOpenDay} onOpenCalendar={onOpenCalendar} settings={settings}/></>:<div style={{padding:20}}><PremiumGate feature="battlePrep" addToast={addToast}/></div>)}
 
       {/* FREESTYLE tab */}
       {battleTab==="freestyle"&&<FreestylePage moves={moves} sets={sets} settings={settings} onAddTrigger={freestyleAddTick} addToast={addToast} freestyle={freestyle} onFreestyleChange={onFreestyleChange}/>}
