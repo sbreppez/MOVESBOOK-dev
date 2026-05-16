@@ -22,7 +22,7 @@ const PHASE_CYCLE = [
 
 const PRESET_IDS = ["smoke", "prove", "mark", "custom"];
 
-export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToast, calendar, battlePrepSeed, onBattlePrepSeedUsed, addCalendarEvent, removeCalendarEvent, onAddTrigger, onOpenSharedCalendar }) => {
+export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToast, calendar, battlePrepSeed, onBattlePrepSeedUsed, addCalendarEvent, removeCalendarEvent, onAddTrigger, onOpenDay }) => {
   const t = useT();
   const plans = useMemo(() => battleprep?.plans || [], [battleprep?.plans]);
   const today = toYMD(new Date());
@@ -251,8 +251,9 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
   // ── DASHBOARD ──
   return (
     <div style={{ flex: 1, overflow: "auto", padding: "12px 12px 80px" }}>
-      {/* View Full Calendar button */}
-      <button onClick={() => onOpenSharedCalendar && onOpenSharedCalendar()}
+      {/* View HOME (today) button — was "View Full Calendar"; routed to HOME
+          as part of Phase 2 unification. Falls through to today's HOME view. */}
+      <button onClick={() => onOpenDay && onOpenDay(today)}
         style={{ width: "100%", padding: "10px 12px", background: "transparent",
           border: `1px solid ${C.border}`, borderRadius: 8, cursor: "pointer",
           fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 11, letterSpacing: 2,
@@ -285,11 +286,10 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
             onDelete={() => setConfirmDeleteId(plan.id)}
             onOpenCalendar={() => {
               const firstBattle = (plan.battles || []).sort((a, b) => a.date.localeCompare(b.date))[0];
-              if (firstBattle && onOpenSharedCalendar) {
-                const d = new Date(firstBattle.date + "T00:00:00");
-                onOpenSharedCalendar({ year: d.getFullYear(), month: d.getMonth() });
-              } else if (onOpenSharedCalendar) {
-                onOpenSharedCalendar();
+              if (firstBattle && onOpenDay) {
+                onOpenDay(firstBattle.date);
+              } else if (onOpenDay) {
+                onOpenDay(today);
               }
             }}
             updatePlan={updatePlan}
@@ -367,11 +367,10 @@ export const BattlePrepPage = ({ battleprep, setBattleprep, moves, sets, addToas
             onDelete={() => setConfirmDeleteId(plan.id)}
             onOpenCalendar={() => {
               const firstBattle = (plan.battles || []).sort((a, b) => a.date.localeCompare(b.date))[0];
-              if (firstBattle && onOpenSharedCalendar) {
-                const d = new Date(firstBattle.date + "T00:00:00");
-                onOpenSharedCalendar({ year: d.getFullYear(), month: d.getMonth() });
-              } else if (onOpenSharedCalendar) {
-                onOpenSharedCalendar();
+              if (firstBattle && onOpenDay) {
+                onOpenDay(firstBattle.date);
+              } else if (onOpenDay) {
+                onOpenDay(today);
               }
             }}
             updatePlan={updatePlan}

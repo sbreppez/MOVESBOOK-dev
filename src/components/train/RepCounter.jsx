@@ -118,6 +118,7 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onUpdateSess
         moveIds: [selectedMove.id],
         duration: Math.round(Math.floor(elapsed / 1000) / 60) || 1,
         source: "rep_counter",
+        sessionId: session.id,
       }, { silent: true });
     }
     setSavedSession(session);

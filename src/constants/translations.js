@@ -413,7 +413,7 @@ export const TRANSLATIONS = {
     tapToLock:"Tap to lock", comboNoMoves:"Add some moves to your library first",
     discard:"✕ DISCARD",
     // Music Flow
-    musicFlow:"MUSIC FLOW",
+    musicFlow:"MUSIC FLOW", sessionsHeader:"SESSIONS",
     musicFlowIntro1:"Put on a track and start moving.",
     musicFlowIntro2:"Prompts change every ~75 seconds. Stages build as you go.",
     mfStage1:"FINDING THE BEAT", mfStage2:"ALIGNING TO ELEMENTS", mfStage3:"PLAYING WITHIN THE MUSIC",
@@ -1675,7 +1675,7 @@ export const TRANSLATIONS = {
     tapToLock:"Tocca per bloccare", comboNoMoves:"Aggiungi prima qualche mossa alla tua libreria",
     discard:"✕ SCARTA",
     // Music Flow
-    musicFlow:"MUSIC FLOW",
+    musicFlow:"MUSIC FLOW", sessionsHeader:"SESSIONI",
     musicFlowIntro1:"Metti su un brano e inizia a muoverti.",
     musicFlowIntro2:"I suggerimenti cambiano ogni ~75 secondi. Le fasi crescono man mano.",
     mfStage1:"TROVARE IL RITMO", mfStage2:"ALLINEARSI AGLI ELEMENTI", mfStage3:"SUONARE CON LA MUSICA",
@@ -2918,7 +2918,7 @@ export const TRANSLATIONS = {
     tapToLock:"Toca para bloquear", comboNoMoves:"Añade primero algunos movimientos a tu biblioteca",
     discard:"✕ DESCARTAR",
     // Music Flow
-    musicFlow:"MUSIC FLOW",
+    musicFlow:"MUSIC FLOW", sessionsHeader:"SESIONES",
     musicFlowIntro1:"Pon una pista y empieza a moverte.",
     musicFlowIntro2:"Las indicaciones cambian cada ~75 segundos. Las fases avanzan contigo.",
     mfStage1:"ENCONTRANDO EL RITMO", mfStage2:"ALINEÁNDOSE A LOS ELEMENTOS", mfStage3:"JUGANDO CON LA MÚSICA",
@@ -4161,7 +4161,7 @@ export const TRANSLATIONS = {
     tapToLock:"Touchez pour verrouiller", comboNoMoves:"Ajoutez d'abord des mouvements à votre bibliothèque",
     discard:"✕ ANNULER",
     // Music Flow
-    musicFlow:"MUSIC FLOW",
+    musicFlow:"MUSIC FLOW", sessionsHeader:"SESSIONS",
     musicFlowIntro1:"Lance un morceau et commence à bouger.",
     musicFlowIntro2:"Les consignes changent toutes les ~75 secondes. Les étapes progressent.",
     mfStage1:"TROUVER LE RYTHME", mfStage2:"S'ALIGNER AUX ÉLÉMENTS", mfStage3:"JOUER AVEC LA MUSIQUE",
@@ -5404,7 +5404,7 @@ export const TRANSLATIONS = {
     tapToLock:"Toque para bloquear", comboNoMoves:"Adicione primeiro alguns movimentos à sua biblioteca",
     discard:"✕ DESCARTAR",
     // Music Flow
-    musicFlow:"MUSIC FLOW",
+    musicFlow:"MUSIC FLOW", sessionsHeader:"SESSÕES",
     musicFlowIntro1:"Coloque uma faixa e comece a se mover.",
     musicFlowIntro2:"As dicas mudam a cada ~75 segundos. As fases avançam com você.",
     mfStage1:"ENCONTRANDO O RITMO", mfStage2:"ALINHANDO AOS ELEMENTOS", mfStage3:"JOGANDO COM A MÚSICA",
@@ -6647,7 +6647,7 @@ export const TRANSLATIONS = {
     tapToLock:"Tippen zum Sperren", comboNoMoves:"Füge zuerst Moves zu deiner Bibliothek hinzu",
     discard:"✕ VERWERFEN",
     // Music Flow
-    musicFlow:"MUSIC FLOW",
+    musicFlow:"MUSIC FLOW", sessionsHeader:"SITZUNGEN",
     musicFlowIntro1:"Leg einen Track auf und fang an dich zu bewegen.",
     musicFlowIntro2:"Impulse wechseln alle ~75 Sekunden. Die Stufen bauen aufeinander auf.",
     mfStage1:"DEN BEAT FINDEN", mfStage2:"AN DIE ELEMENTE ANPASSEN", mfStage3:"MIT DER MUSIK SPIELEN",
@@ -7891,7 +7891,7 @@ export const TRANSLATIONS = {
     tapToLock:"タップしてロック", comboNoMoves:"まずライブラリにムーブを追加してください",
     discard:"✕ 破棄",
     // Music Flow
-    musicFlow:"MUSIC FLOW",
+    musicFlow:"MUSIC FLOW", sessionsHeader:"セッション",
     musicFlowIntro1:"曲をかけて動き出そう。",
     musicFlowIntro2:"プロンプトは約75秒ごとに変わります。ステージは徐々に進みます。",
     mfStage1:"ビートを感じる", mfStage2:"要素に合わせる", mfStage3:"音楽と遊ぶ",
@@ -9133,7 +9133,7 @@ export const TRANSLATIONS = {
     tapToLock:"点击锁定", comboNoMoves:"请先添加一些动作到你的库中",
     discard:"✕ 丢弃",
     // Music Flow
-    musicFlow:"MUSIC FLOW",
+    musicFlow:"MUSIC FLOW", sessionsHeader:"训练",
     musicFlowIntro1:"放一首歌，开始动起来。",
     musicFlowIntro2:"提示每约75秒更换一次，阶段逐步提升。",
     mfStage1:"感受节拍", mfStage2:"对齐元素", mfStage3:"与音乐共舞",
@@ -10375,7 +10375,7 @@ export const TRANSLATIONS = {
     tapToLock:"Нажмите для блокировки", comboNoMoves:"Сначала добавьте движения в библиотеку",
     discard:"✕ ОТМЕНИТЬ",
     // Music Flow
-    musicFlow:"MUSIC FLOW",
+    musicFlow:"MUSIC FLOW", sessionsHeader:"СЕССИИ",
     musicFlowIntro1:"Включи трек и начни двигаться.",
     musicFlowIntro2:"Подсказки меняются каждые ~75 секунд. Этапы нарастают постепенно.",
     mfStage1:"НАХОДИМ РИТМ", mfStage2:"ПОДСТРАИВАЕМСЯ ПОД ЭЛЕМЕНТЫ", mfStage3:"ИГРАЕМ С МУЗЫКОЙ",
@@ -11653,7 +11653,7 @@ export const TRANSLATIONS = {
     tapToLock:"탭하여 잠금", comboNoMoves:"먼저 라이브러리에 무브를 추가하세요",
     discard:"✕ 취소",
     // Music Flow
-    musicFlow:"MUSIC FLOW",
+    musicFlow:"MUSIC FLOW", sessionsHeader:"세션",
     musicFlowIntro1:"트랙을 틀고 움직이기 시작해.",
     musicFlowIntro2:"프롬프트는 약 75초마다 바뀌어. 단계는 점점 올라가.",
     mfStage1:"비트 찾기", mfStage2:"요소에 맞추기", mfStage3:"음악과 놀기",
@@ -12948,7 +12948,7 @@ export const TRANSLATIONS = {
     tapToLock:"แตะเพื่อล็อค", comboNoMoves:"เพิ่มท่าในคลังก่อน",
     discard:"✕ ยกเลิก",
     // Music Flow
-    musicFlow:"MUSIC FLOW",
+    musicFlow:"MUSIC FLOW", sessionsHeader:"เซสชัน",
     musicFlowIntro1:"เปิดเพลงแล้วเริ่มขยับ",
     musicFlowIntro2:"คำแนะนำเปลี่ยนทุก ~75 วินาที ขั้นตอนจะค่อยๆ เพิ่มขึ้น",
     mfStage1:"ค้นหาจังหวะ", mfStage2:"เข้ากับองค์ประกอบ", mfStage3:"เล่นกับเพลง",
@@ -14220,7 +14220,7 @@ export const TRANSLATIONS = {
     tapToLock:"Chạm để khóa", comboNoMoves:"Hãy thêm động tác vào thư viện trước",
     discard:"✕ HỦY",
     // Music Flow
-    musicFlow:"MUSIC FLOW",
+    musicFlow:"MUSIC FLOW", sessionsHeader:"BUỔI TẬP",
     musicFlowIntro1:"Bật một bài và bắt đầu di chuyển.",
     musicFlowIntro2:"Gợi ý thay đổi mỗi ~75 giây. Các giai đoạn tăng dần.",
     mfStage1:"TÌM NHỊP", mfStage2:"HÒA VÀO CÁC YẾU TỐ", mfStage3:"CHƠI VỚI ÂM NHẠC",

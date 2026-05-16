@@ -32,6 +32,7 @@ export const ReflectPage = ({
   setInjuries, restLog, setRestLog, restTypes, setRestTypes,
   isPremium,
   setBattles, battleFormats, setBattleFormats,
+  onOpenHomeDay,
 }) => {
   const t = useT();
   const { C } = useSettings();
@@ -247,7 +248,7 @@ export const ReflectPage = ({
                 moves={moves} reps={reps} sparring={sparring} musicflow={musicflow}
                 calendar={calendar} cats={cats} catColors={catColors}
                 battleprep={battleprep} rivals={null} reports={reports}
-                onSelectDay={() => setReflectTab("calendar")}
+                onSelectDay={(day) => { if (onOpenHomeDay) onOpenHomeDay(day); }}
                 onAddToHome={(ctx) => setAddToHomeContext(ctx)} />
             </div>
           </>

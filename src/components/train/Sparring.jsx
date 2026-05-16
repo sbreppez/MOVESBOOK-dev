@@ -378,6 +378,7 @@ export const Sparring = ({ moves, catColors, sparring, settings, onSaveSession, 
         notes: notes.trim() || null,
         exertion, bodyStatus,
         source: "sparring",
+        sessionId: session.id,
       }, { silent: true });
     }
 

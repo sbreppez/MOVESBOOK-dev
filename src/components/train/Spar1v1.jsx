@@ -303,6 +303,7 @@ export const Spar1v1 = ({ sparring, onSaveSession, addCalendarEvent, rivals, onR
         duration: Math.round((session.totalDuration || 0) / 60000) || 1,
         notes: session.location ? `${t("locationLabel")}: ${session.location}` : null,
         source: "spar-1v1",
+        sessionId: session.id,
       }, { silent: true });
     }
 

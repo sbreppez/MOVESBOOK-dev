@@ -7,6 +7,8 @@ import { HomeAddPicker } from './HomeAddPicker';
 import { PreSessionIntel } from './PreSessionIntel';
 import { RoutineForm } from './RoutineForm';
 import { IdeaForm } from './IdeaForm';
+import { DaySections } from './DaySections';
+import { useDayData } from '../../hooks/useDayData';
 import { GoalModal } from '../train/GoalModal';
 import { TargetGoalModal } from '../train/TargetGoalModal';
 import { TypeChooserSheet } from '../train/TypeChooserSheet';
@@ -81,9 +83,11 @@ export const HomePage = ({
   injuries, setInjuries,
   restLog, setRestLog, restTypes, setRestTypes,
   presession, setPresession,
-  ideas, setIdeas, settings, onSettingsChange: _onSettingsChange,
+  ideas, setIdeas, settings, onSettingsChange,
   homeStack, setHomeStack, homeChecks, setHomeChecks,
-  onAddTrigger, addCalendarEvent, removeCalendarEvent, updateCalendarEvent, calendar,
+  onAddTrigger, addCalendarEvent, removeCalendarEvent, updateCalendarEvent, calendar, setCalendar,
+  reps, sparring, musicflow,
+  battleprep, onGoToPrep,
   moves, setMoves, cats, catColors, sets, recordEventTraining,
   customAttrs, setCustomAttrs, isPremium,
   addToast,
@@ -143,6 +147,10 @@ export const HomePage = ({
         const el = document.getElementById('presession-' + homeSeed.field);
         if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }, 100);
+    } else if (homeSeed.kind === 'day' && homeSeed.day) {
+      // External surfaces (Reports row, BattlePrep "open day", TextStream
+      // jump-to-source for calendar/session records) land here.
+      setSelectedDate(homeSeed.day);
     }
     if (onHomeSeedUsed) onHomeSeedUsed();
   // eslint-disable-next-line react-hooks/exhaustive-deps -- seed-only by intent
@@ -269,24 +277,29 @@ export const HomePage = ({
       if (tile.type === 'note') {
         const note = ideas?.find(i => i.id === tile.id);
         if (note?.showDate === selectedDate) today.push(tile);
-        else notes.push(tile);
+        else if (note?.pinnedOn?.includes(selectedDate)) notes.push(tile);
         return;
       }
       today.push(tile);
-    });
-
-    notes.sort((a, b) => {
-      const aN = ideas?.find(i => i.id === a.id);
-      const bN = ideas?.find(i => i.id === b.id);
-      const aPin = aN?.pinnedHome ? 1 : 0;
-      const bPin = bN?.pinnedHome ? 1 : 0;
-      return bPin - aPin;
     });
 
     return { today, notes, goals };
   }, [homeStack, selectedDate, ideas, habits]);
 
   const totalTiles = sections.today.length + sections.notes.length + sections.goals.length;
+
+  // Day-content for new EVENTS / SESSIONS / MOVES TRAINED sections.
+  // Calling useDayData here (rather than inside DaySections) lets the empty
+  // state below know whether to suppress "dayStartsHere".
+  const dayData = useDayData(selectedDate, { moves, reps, sparring, musicflow, habits, ideas, calendar });
+  const hasDayContent = !!dayData && (
+    dayData.calendarEvents.length > 0 ||
+    dayData.repSessions.length > 0 ||
+    dayData.sparringSessions.length > 0 ||
+    dayData.sparringSessions1v1.length > 0 ||
+    dayData.musicflowSessions.length > 0 ||
+    dayData.movesTrained.length > 0
+  );
 
   // Filter + search state (L2)
   const [filterOpen, setFilterOpen] = useState(false);
@@ -406,11 +419,16 @@ export const HomePage = ({
   };
 
   const handleTogglePinHome = (tile) => {
-    if (tile.type === 'note') {
-      setIdeas(prev => prev.map(i =>
-        i.id === tile.id ? { ...i, pinnedHome: !i.pinnedHome, pinned: undefined } : i
-      ));
-    }
+    if (tile.type !== 'note') return;
+    const today = todayLocal();
+    setIdeas(prev => prev.map(i => {
+      if (i.id !== tile.id) return i;
+      const cur = i.pinnedOn || [];
+      const next = cur.includes(today)
+        ? cur.filter(d => d !== today)
+        : [...cur, today];
+      return { ...i, pinnedOn: next };
+    }));
   };
 
   // ── Feature 1: Remove tile ──────────────────────────────────────────────
@@ -818,9 +836,9 @@ export const HomePage = ({
           <PreSessionIntel presession={presession} setPresession={setPresession}/>
         )}
 
-        {/* Tile stack — sectioned (TODAY / NOTES / GOALS) */}
+        {/* Tile stack — sectioned (TODAY → EVENTS/SESSIONS/MOVES TRAINED → NOTES → GOALS) */}
         <div style={{ padding: "6px 12px" }}>
-          {totalTiles === 0 && (
+          {totalTiles === 0 && !hasDayContent && (
             <div style={{ textAlign: "center", padding: "40px 20px", color: C.textMuted }}>
               <div style={{ marginBottom: 10 }}><Ic n="sun" s={32} c={C.textMuted}/></div>
               <div style={{ fontSize: 14, fontWeight: 800, fontFamily: FONT_DISPLAY, marginBottom: 6, textTransform: "uppercase" }}>
@@ -830,7 +848,7 @@ export const HomePage = ({
             </div>
           )}
 
-          {totalTiles > 0 && (() => {
+          {(() => {
             const q = search.toLowerCase().trim();
             const matches = (tile) => {
               if (!q) return true;
@@ -846,6 +864,8 @@ export const HomePage = ({
 
             const totalVisible = visibleSections.reduce((sum, s) => sum + s.tiles.length, 0);
 
+            // Search filter is authored-tile only — when active and empty, show
+            // the no-results message. Day-content sections are suppressed too.
             if (totalVisible === 0 && q) {
               return (
                 <div style={{ textAlign: "center", padding: 30, color: C.textMuted }}>
@@ -854,64 +874,97 @@ export const HomePage = ({
               );
             }
 
-            return visibleSections.map(sec => {
-              if (sec.tiles.length === 0) return null;
-              return (
-                <div key={sec.key} style={{ marginBottom: 8 }}>
-                  <div style={{
-                    fontSize: 10, fontWeight: 800, fontFamily: FONT_DISPLAY,
-                    letterSpacing: 1.5, textTransform: "uppercase",
-                    color: C.textMuted, padding: "8px 4px 4px",
-                  }}>
-                    {sec.label} · {sec.tiles.length}
-                  </div>
-                  {sec.tiles.map((tile, idx) => (
-                    <div key={tile.id} style={{ position: "relative" }}>
-                      {showReorder && (
-                        <div style={{
-                          position: "absolute", right: 6, top: "50%", transform: "translateY(-50%)",
-                          zIndex: 10, display: "flex", flexDirection: "column", gap: 2,
-                        }}>
-                          <button onClick={() => moveTileUp(tile.id)} disabled={idx === 0}
-                            style={{
-                              width: 26, height: 26, borderRadius: 6,
-                              border: `1px solid ${C.border}`, background: C.bg,
-                              cursor: idx === 0 ? "default" : "pointer",
-                              color: idx === 0 ? C.border : C.accent,
-                              fontSize: 14, fontWeight: 700,
-                              display: "flex", alignItems: "center", justifyContent: "center",
-                            }}>▲</button>
-                          <button onClick={() => moveTileDown(tile.id)} disabled={idx === sec.tiles.length - 1}
-                            style={{
-                              width: 26, height: 26, borderRadius: 6,
-                              border: `1px solid ${C.border}`, background: C.bg,
-                              cursor: idx === sec.tiles.length - 1 ? "default" : "pointer",
-                              color: idx === sec.tiles.length - 1 ? C.border : C.accent,
-                              fontSize: 14, fontWeight: 700,
-                              display: "flex", alignItems: "center", justifyContent: "center",
-                            }}>▼</button>
-                        </div>
-                      )}
-                      <HomeTile tile={tile}
-                        isChecked={tile.type === 'routine' && tile.steps?.length > 0 ? dayChecks[tile.id] : !!dayChecks[tile.id]}
-                        onCheck={handleTileCheck}
-                        onCheckStep={handleStepCheck}
-                        onRemove={handleTileRemove}
-                        onEdit={handleTileEdit}
-                        onTogglePin={handleTogglePinHome}
-                        onArchive={handleSingleArchive}
-                        onOpenJournal={handleOpenJournal}
-                        onOpenUpdates={handleOpenUpdates}
-                        selectMode={selectMode}
-                        isSelected={selectedIds.has(tile.id)}
-                        onToggleSelect={() => toggleSelect(tile.id)}
-                        habits={habits} ideas={ideas} moves={moves}
-                      />
-                    </div>
-                  ))}
+            const renderTileSection = (sec) => (
+              <div key={sec.key} style={{ marginBottom: 8 }}>
+                <div style={{
+                  fontSize: 10, fontWeight: 800, fontFamily: FONT_DISPLAY,
+                  letterSpacing: 1.5, textTransform: "uppercase",
+                  color: C.textMuted, padding: "8px 4px 4px",
+                }}>
+                  {sec.label} · {sec.tiles.length}
                 </div>
-              );
+                {sec.tiles.map((tile, idx) => (
+                  <div key={tile.id} style={{ position: "relative" }}>
+                    {showReorder && (
+                      <div style={{
+                        position: "absolute", right: 6, top: "50%", transform: "translateY(-50%)",
+                        zIndex: 10, display: "flex", flexDirection: "column", gap: 2,
+                      }}>
+                        <button onClick={() => moveTileUp(tile.id)} disabled={idx === 0}
+                          style={{
+                            width: 26, height: 26, borderRadius: 6,
+                            border: `1px solid ${C.border}`, background: C.bg,
+                            cursor: idx === 0 ? "default" : "pointer",
+                            color: idx === 0 ? C.border : C.accent,
+                            fontSize: 14, fontWeight: 700,
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                          }}>▲</button>
+                        <button onClick={() => moveTileDown(tile.id)} disabled={idx === sec.tiles.length - 1}
+                          style={{
+                            width: 26, height: 26, borderRadius: 6,
+                            border: `1px solid ${C.border}`, background: C.bg,
+                            cursor: idx === sec.tiles.length - 1 ? "default" : "pointer",
+                            color: idx === sec.tiles.length - 1 ? C.border : C.accent,
+                            fontSize: 14, fontWeight: 700,
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                          }}>▼</button>
+                      </div>
+                    )}
+                    <HomeTile tile={tile}
+                      isChecked={tile.type === 'routine' && tile.steps?.length > 0 ? dayChecks[tile.id] : !!dayChecks[tile.id]}
+                      onCheck={handleTileCheck}
+                      onCheckStep={handleStepCheck}
+                      onRemove={handleTileRemove}
+                      onEdit={handleTileEdit}
+                      onTogglePin={handleTogglePinHome}
+                      onArchive={handleSingleArchive}
+                      onOpenJournal={handleOpenJournal}
+                      onOpenUpdates={handleOpenUpdates}
+                      selectMode={selectMode}
+                      isSelected={selectedIds.has(tile.id)}
+                      onToggleSelect={() => toggleSelect(tile.id)}
+                      habits={habits} ideas={ideas} moves={moves}
+                    />
+                  </div>
+                ))}
+              </div>
+            );
+
+            // Interleave: TODAY → DaySections → NOTES → GOALS. DaySections
+            // renders its own headers and handles the empty case internally.
+            const out = [];
+            visibleSections.forEach(sec => {
+              if (sec.tiles.length > 0) out.push(renderTileSection(sec));
+              if (sec.key === 'today') {
+                out.push(
+                  <DaySections
+                    key="day-sections"
+                    selectedDate={selectedDate}
+                    dayData={dayData}
+                    moves={moves} setMoves={setMoves}
+                    setIdeas={setIdeas}
+                    setCalendar={setCalendar}
+                    addCalendarEvent={addCalendarEvent}
+                    updateCalendarEvent={updateCalendarEvent}
+                    recordEventTraining={recordEventTraining}
+                    sets={sets} cats={cats} catColors={catColors}
+                    settings={settings} onSettingsChange={onSettingsChange}
+                    addToast={addToast}
+                    battleprep={battleprep} onGoToPrep={onGoToPrep}
+                    restLog={restLog} setRestLog={setRestLog}
+                    restTypes={restTypes} setRestTypes={setRestTypes}
+                    injuries={injuries} setInjuries={setInjuries}
+                    setBattles={setBattles} battleFormats={battleFormats} setBattleFormats={setBattleFormats}
+                    setHomeStack={setHomeStack}
+                    onOpenMove={(moveId) => {
+                      const m = moves?.find(x => x.id === moveId);
+                      if (m) setEditMoveFromHome(m);
+                    }}
+                  />
+                );
+              }
             });
+            return out;
           })()}
         </div>
       </div>

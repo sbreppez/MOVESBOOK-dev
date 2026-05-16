@@ -4,6 +4,7 @@ import { useSettings } from '../../hooks/useSettings';
 import { useT } from '../../hooks/useTranslation';
 import { Ic } from '../shared/Ic';
 import { ExpandableText } from '../shared/ExpandableText';
+import { todayLocal } from '../../utils/dateUtils';
 
 export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEdit, onTogglePin, onArchive, onOpenJournal, onOpenUpdates, selectMode, isSelected, onToggleSelect, habits, ideas, moves }) => {
   const { C } = useSettings();
@@ -31,7 +32,7 @@ export const HomeTile = ({ tile, isChecked, onCheck, onCheckStep, onRemove, onEd
     fallbackIcon = "fileText";
     name = note?.title || "";
     description = note?.text || "";
-    isPinned = note?.pinnedHome || false;
+    isPinned = note?.pinnedOn?.includes(todayLocal()) || false;
     if (note?.link) {
       extraInfo = note.link;
     }
