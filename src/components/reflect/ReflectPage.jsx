@@ -5,7 +5,6 @@ import { Modal } from '../shared/Modal';
 import { Btn } from '../shared/Btn';
 import { useT } from '../../hooks/useTranslation';
 import { useSettings } from '../../hooks/useSettings';
-import { CalendarOverlay } from '../calendar/CalendarOverlay';
 import { ReportsTimeline } from '../calendar/ReportsTimeline';
 import { MyStanceSection } from '../stance/MyStanceSection';
 import { DevelopmentStory } from '../stance/DevelopmentStory';
@@ -14,7 +13,7 @@ import { SectionBrief } from '../shared/SectionBrief';
 import { NoteModal } from '../train/NoteModal';
 import { getNextTrainingDay } from '../../utils/nextTrainingDay';
 
-const SUB_TABS = ["calendar", "stance", "reports", "history"];
+const SUB_TABS = ["reports", "stance", "history"];
 
 const daysBetween = (d1, d2) => {
   if (!d1 || !d2) return null;
@@ -22,23 +21,19 @@ const daysBetween = (d1, d2) => {
 };
 
 export const ReflectPage = ({
-  ideas, setIdeas, moves, setMoves, reps, sparring, musicflow, habits, setHabits,
-  homeStack: _homeStack, setHomeStack,
-  calendar, setCalendar, cats, catColors, settings, onSettingsChange,
-  addToast, stance, battleprep, onToggleBattlePrepTask,
-  onOpenStanceAssessment, addCalendarEvent, removeCalendarEvent: _removeCalendarEvent,
-  updateCalendarEvent, recordEventTraining,
-  onSubTabChange, onGoToPrep, initialMonth, initialFocus, onInitialFocusUsed, sets, onAddTrigger, parentSubTab, reports, injuries,
-  setInjuries, restLog, setRestLog, restTypes, setRestTypes,
+  ideas, setIdeas, moves, reps, sparring, musicflow,
+  setHomeStack,
+  calendar, cats, catColors, settings,
+  addToast, stance, battleprep,
+  onOpenStanceAssessment, addCalendarEvent,
+  onSubTabChange, onAddTrigger, parentSubTab, reports, injuries,
   isPremium,
-  setBattles, battleFormats, setBattleFormats,
   onOpenHomeDay,
 }) => {
   const t = useT();
   const { C } = useSettings();
-  const [reflectTab, setReflectTab] = useState(parentSubTab || "calendar");
+  const [reflectTab, setReflectTab] = useState(parentSubTab || "reports");
   const [showStanceConfirm, setShowStanceConfirm] = useState(false);
-  const [calendarAddTick, setCalendarAddTick] = useState(0);
   const [addToHomeContext, setAddToHomeContext] = useState(null);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps -- reflectTab-only by intent
@@ -52,21 +47,19 @@ export const ReflectPage = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps -- parentSubTab-only by intent
   }, [parentSubTab]);
 
-  // Add trigger — calendar/stance only; reports/history are no-ops
+  // Add trigger — stance only; reports/history are no-ops
   const prevAddTrigger = useRef(onAddTrigger);
   useEffect(() => {
     if (onAddTrigger !== prevAddTrigger.current && onAddTrigger > 0) {
       if (reflectTab === "stance") setShowStanceConfirm(true);
-      else if (reflectTab === "calendar") setCalendarAddTick(t => t + 1);
     }
     prevAddTrigger.current = onAddTrigger;
   // eslint-disable-next-line react-hooks/exhaustive-deps -- ref-compare guard prevents re-fire; reflectTab read fresh
   }, [onAddTrigger]);
 
   const subTabs = [
-    ["calendar", t("calendar")],
-    ["stance", t("stance")],
     ["reports", t("reports")],
+    ["stance", t("stance")],
     ["history", t("history")],
   ];
 
@@ -200,31 +193,6 @@ export const ReflectPage = ({
           );
         })}
       </div>
-
-      {/* CALENDAR */}
-      {reflectTab === "calendar" && (
-        <><SectionBrief desc={t("calendarBrief")} settings={settings}/>
-        <CalendarOverlay inline
-          moves={moves} setMoves={setMoves} reps={reps} sparring={sparring} musicflow={musicflow} habits={habits} ideas={ideas} setIdeas={setIdeas}
-          sets={sets}
-          calendar={calendar} setCalendar={setCalendar}
-          cats={cats} catColors={catColors} settings={settings} onSettingsChange={onSettingsChange}
-          addToast={addToast}
-          addCalendarEvent={addCalendarEvent}
-          updateCalendarEvent={updateCalendarEvent}
-          recordEventTraining={recordEventTraining}
-          injuries={injuries} setInjuries={setInjuries}
-          restLog={restLog} setRestLog={setRestLog}
-          restTypes={restTypes} setRestTypes={setRestTypes}
-          onGoToPrep={onGoToPrep}
-          battleprep={battleprep} initialMonth={initialMonth} initialFocus={initialFocus} onInitialFocusUsed={onInitialFocusUsed}
-          onToggleBattlePrepTask={onToggleBattlePrepTask}
-          onAddTrigger={calendarAddTick} reports={reports} isPremium={isPremium}
-          setBattles={setBattles} battleFormats={battleFormats} setBattleFormats={setBattleFormats}
-          setHomeStack={setHomeStack}
-          onAddToHome={(ctx) => setAddToHomeContext(ctx)} />
-        </>
-      )}
 
       {/* STANCE */}
       {reflectTab === "stance" && (

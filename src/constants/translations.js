@@ -5,7 +5,7 @@ export const TRANSLATIONS = {
     // Nav tabs
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE", home:"HOME", reflect:"REFLECT",
     // Sub-tabs
-    plan:"PLAN", freestyle:"FREESTYLE", library:"LIBRARY", stance:"STANCE", prep:"PREP", goals:"GOALS", habits:"HABITS", notes:"NOTES", calendar:"CALENDAR",
+    plan:"PLAN", freestyle:"FREESTYLE", library:"LIBRARY", stance:"STANCE", prep:"PREP", goals:"GOALS", habits:"HABITS", notes:"NOTES",
     // Common actions
     save:"Save", cancel:"Cancel", delete:"Delete", deleted:"Deleted", done:"DONE", confirm:"Confirm", exit:"Exit",
     rename:"Rename", duplicate:"Duplicate", add:"ADD", edit:"Edit",
@@ -1304,7 +1304,7 @@ export const TRANSLATIONS = {
   it: {
     updates:"Aggiornamenti", moveJournal:"Journal", /* TODO: verify */ journalEntryPlaceholder:"Cosa è cambiato? Cosa hai notato?", updatePlaceholder:"Cosa vuoi cambiare di questo movimento?", noJournalEntries:"Nessuna voce — inizia a monitorare i progressi",
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE", home:"HOME", reflect:"RIFLETTI",
-    plan:"PIANO", freestyle:"FREESTYLE", library:"LIBRERIA", stance:"POSTURA", prep:"PREP", goals:"OBIETTIVI", habits:"ABITUDINI", notes:"NOTE", calendar:"CALENDARIO",
+    plan:"PIANO", freestyle:"FREESTYLE", library:"LIBRERIA", stance:"POSTURA", prep:"PREP", goals:"OBIETTIVI", habits:"ABITUDINI", notes:"NOTE",
     save:"Salva", cancel:"Annulla", delete:"Elimina", deleted:"Eliminato", done:"FATTO", confirm:"Conferma", exit:"Esci",
     rename:"Rinomina", duplicate:"Duplica", add:"AGGIUNGI", edit:"Modifica",
     search:"Cerca…", close:"Chiudi",
@@ -2558,7 +2558,7 @@ export const TRANSLATIONS = {
   es: {
     updates:"Actualizaciones", moveJournal:"Journal", /* TODO: verify */ journalEntryPlaceholder:"¿Qué cambió? ¿Qué notaste?", updatePlaceholder:"¿Qué quieres cambiar de este movimiento?", noJournalEntries:"Sin entradas — empieza a seguir tu progreso",
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE", home:"INICIO", reflect:"REFLEXIÓN",
-    plan:"PLAN", freestyle:"FREESTYLE", library:"BIBLIOTECA", stance:"POSTURA", prep:"PREP", goals:"METAS", habits:"HÁBITOS", notes:"NOTAS", calendar:"CALENDARIO",
+    plan:"PLAN", freestyle:"FREESTYLE", library:"BIBLIOTECA", stance:"POSTURA", prep:"PREP", goals:"METAS", habits:"HÁBITOS", notes:"NOTAS",
     save:"Guardar", cancel:"Cancelar", delete:"Eliminar", deleted:"Eliminado", done:"LISTO", confirm:"Confirmar", exit:"Salir",
     rename:"Renombrar", duplicate:"Duplicar", add:"AGREGAR", edit:"Editar",
     search:"Buscar…", close:"Cerrar",
@@ -3801,7 +3801,7 @@ export const TRANSLATIONS = {
   fr: {
     updates:"Mises à jour", moveJournal:"Journal", /* TODO: verify */ journalEntryPlaceholder:"Qu'est-ce qui a changé ? Qu'as-tu remarqué ?", updatePlaceholder:"Que veux-tu changer dans ce mouvement ?", noJournalEntries:"Aucune entrée — commence à suivre tes progrès",
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE", home:"ACCUEIL", reflect:"BILAN",
-    plan:"PLAN", freestyle:"FREESTYLE", library:"BIBLIOTHÈQUE", stance:"POSTURE", prep:"PRÉP", goals:"OBJECTIFS", habits:"HABITUDES", notes:"NOTES", calendar:"CALENDRIER",
+    plan:"PLAN", freestyle:"FREESTYLE", library:"BIBLIOTHÈQUE", stance:"POSTURE", prep:"PRÉP", goals:"OBJECTIFS", habits:"HABITUDES", notes:"NOTES",
     save:"Enregistrer", cancel:"Annuler", delete:"Supprimer", deleted:"Supprimé", done:"OK", confirm:"Confirmer", exit:"Quitter",
     rename:"Renommer", duplicate:"Dupliquer", add:"AJOUTER", edit:"Modifier",
     search:"Rechercher…", close:"Fermer",
@@ -5044,7 +5044,7 @@ export const TRANSLATIONS = {
   pt: {
     updates:"Atualizações", moveJournal:"Journal", /* TODO: verify */ journalEntryPlaceholder:"O que mudou? O que você notou?", updatePlaceholder:"O que você quer mudar neste movimento?", noJournalEntries:"Sem entradas — comece a acompanhar seu progresso",
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE", home:"INÍCIO", reflect:"REFLEXÃO",
-    plan:"PLANO", freestyle:"FREESTYLE", library:"BIBLIOTECA", stance:"POSTURA", prep:"PREP", goals:"METAS", habits:"HÁBITOS", notes:"NOTAS", calendar:"CALENDÁRIO",
+    plan:"PLANO", freestyle:"FREESTYLE", library:"BIBLIOTECA", stance:"POSTURA", prep:"PREP", goals:"METAS", habits:"HÁBITOS", notes:"NOTAS",
     save:"Salvar", cancel:"Cancelar", delete:"Excluir", deleted:"Excluído", done:"PRONTO", confirm:"Confirmar", exit:"Sair",
     rename:"Renomear", duplicate:"Duplicar", add:"ADICIONAR", edit:"Editar",
     search:"Buscar…", close:"Fechar",
@@ -6287,7 +6287,7 @@ export const TRANSLATIONS = {
   de: {
     updates:"Aktualisierungen", moveJournal:"Journal", /* TODO: verify */ journalEntryPlaceholder:"Was hat sich geändert? Was ist dir aufgefallen?", updatePlaceholder:"Was möchtest du an dieser Bewegung ändern?", noJournalEntries:"Noch keine Einträge — verfolge deinen Fortschritt",
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE", home:"START", reflect:"RÜCKBLICK",
-    plan:"PLAN", freestyle:"FREESTYLE", library:"BIBLIOTHEK", stance:"HALTUNG", prep:"VORB.", goals:"ZIELE", habits:"GEWOHNHEITEN", notes:"NOTIZEN", calendar:"KALENDER",
+    plan:"PLAN", freestyle:"FREESTYLE", library:"BIBLIOTHEK", stance:"HALTUNG", prep:"VORB.", goals:"ZIELE", habits:"GEWOHNHEITEN", notes:"NOTIZEN",
     save:"Speichern", cancel:"Abbrechen", delete:"Löschen", deleted:"Gelöscht", done:"FERTIG", confirm:"Bestätigen", exit:"Beenden",
     rename:"Umbenennen", duplicate:"Duplizieren", add:"HINZUFÜGEN", edit:"Bearbeiten",
     search:"Suchen…", close:"Schließen",
@@ -7530,7 +7530,7 @@ export const TRANSLATIONS = {
   ja: {
     updates:"アップデート", moveJournal:"Journal", /* TODO: verify */ journalEntryPlaceholder:"何が変わった？何に気づいた？", updatePlaceholder:"このムーブの何を変えたい？", noJournalEntries:"まだエントリーなし — 進捗を記録しよう",
     train:"TRAIN", vocab:"MOVES", battle:"BATTLE", home:"ホーム", reflect:"ふりかえり",
-    plan:"プラン", freestyle:"フリースタイル", library:"ライブラリ", stance:"スタンス", prep:"準備", goals:"目標", habits:"習慣", notes:"ノート", calendar:"カレンダー",
+    plan:"プラン", freestyle:"フリースタイル", library:"ライブラリ", stance:"スタンス", prep:"準備", goals:"目標", habits:"習慣", notes:"ノート",
     save:"保存", cancel:"キャンセル", delete:"削除", deleted:"削除済み", done:"完了", confirm:"確認", exit:"終了",
     rename:"名前変更", duplicate:"複製", add:"追加", edit:"編集",
     search:"検索…", close:"閉じる",
@@ -8774,7 +8774,7 @@ export const TRANSLATIONS = {
   zh: {
     updates:"更新", moveJournal:"Journal", /* TODO: verify */ journalEntryPlaceholder:"有什么变化？你注意到了什么？", updatePlaceholder:"你想改变这个动作的什么？", noJournalEntries:"暂无记录 — 开始追踪你的进步",
     train:"训练", vocab:"动作", battle:"对战", home:"首页", reflect:"回顾",
-    plan:"计划", freestyle:"FREESTYLE", library:"库", stance:"姿态", prep:"备战", goals:"目标", habits:"习惯", notes:"笔记", calendar:"日历",
+    plan:"计划", freestyle:"FREESTYLE", library:"库", stance:"姿态", prep:"备战", goals:"目标", habits:"习惯", notes:"笔记",
     save:"保存", cancel:"取消", delete:"删除", deleted:"已删除", done:"完成", confirm:"确认", exit:"退出",
     rename:"重命名", duplicate:"复制", add:"添加", edit:"编辑",
     search:"搜索…", close:"关闭",
@@ -10016,7 +10016,7 @@ export const TRANSLATIONS = {
   ru: {
     updates:"Обновления", moveJournal:"Journal", /* TODO: verify */ journalEntryPlaceholder:"Что изменилось? Что ты заметил?", updatePlaceholder:"Что ты хочешь изменить в этом движении?", noJournalEntries:"Пока нет записей — начни отслеживать прогресс",
     train:"ТРЕН", vocab:"МУВЫ", battle:"БАТТЛ", home:"ГЛАВНАЯ", reflect:"ОБЗОР",
-    plan:"ПЛАН", freestyle:"ФРИСТАЙЛ", library:"БИБЛИОТЕКА", stance:"СТОЙКА", prep:"ПОДГ.", goals:"ЦЕЛИ", habits:"ПРИВЫЧКИ", notes:"ЗАМЕТКИ", calendar:"КАЛЕНДАРЬ",
+    plan:"ПЛАН", freestyle:"ФРИСТАЙЛ", library:"БИБЛИОТЕКА", stance:"СТОЙКА", prep:"ПОДГ.", goals:"ЦЕЛИ", habits:"ПРИВЫЧКИ", notes:"ЗАМЕТКИ",
     save:"Сохранить", cancel:"Отмена", delete:"Удалить", deleted:"Удалено", done:"ГОТОВО", confirm:"Подтвердить", exit:"Выйти",
     rename:"Переименовать", duplicate:"Дублировать", add:"ДОБАВИТЬ", edit:"Редактировать",
     search:"Поиск…", close:"Закрыть",
@@ -11261,7 +11261,7 @@ export const TRANSLATIONS = {
     // Nav tabs
     train:"훈련", vocab:"무브", battle:"배틀", home:"홈", reflect:"돌아보기",
     // Sub-tabs
-    plan:"플랜", freestyle:"FREESTYLE", library:"라이브러리", stance:"스탠스", prep:"준비", goals:"목표", habits:"습관", notes:"노트", calendar:"캘린더",
+    plan:"플랜", freestyle:"FREESTYLE", library:"라이브러리", stance:"스탠스", prep:"준비", goals:"목표", habits:"습관", notes:"노트",
     // Common actions
     save:"저장", cancel:"취소", delete:"삭제", deleted:"삭제됨", done:"완료", confirm:"확인", exit:"나가기",
     rename:"이름 변경", duplicate:"복제", add:"추가", edit:"편집",
@@ -12539,7 +12539,7 @@ export const TRANSLATIONS = {
     // Nav tabs
     train:"ฝึกซ้อม", vocab:"ท่า", battle:"แบทเทิล", home:"หน้าหลัก", reflect:"ทบทวน",
     // Sub-tabs
-    plan:"แพลน", freestyle:"FREESTYLE", library:"คลัง", stance:"ท่าทาง", prep:"เตรียม", goals:"เป้าหมาย", habits:"นิสัย", notes:"บันทึก", calendar:"ปฏิทิน",
+    plan:"แพลน", freestyle:"FREESTYLE", library:"คลัง", stance:"ท่าทาง", prep:"เตรียม", goals:"เป้าหมาย", habits:"นิสัย", notes:"บันทึก",
     // Common actions
     save:"บันทึก", cancel:"ยกเลิก", delete:"ลบ", deleted:"ลบแล้ว", done:"เสร็จ", confirm:"ยืนยัน", exit:"ออก",
     rename:"เปลี่ยนชื่อ", duplicate:"ทำซ้ำ", add:"เพิ่ม", edit:"แก้ไข",
@@ -13812,7 +13812,7 @@ export const TRANSLATIONS = {
     // Nav tabs
     train:"LUYỆN TẬP", vocab:"ĐỘNG TÁC", battle:"BATTLE", home:"TRANG CHỦ", reflect:"NHÌN LẠI",
     // Sub-tabs
-    plan:"KẾ HOẠCH", freestyle:"FREESTYLE", library:"THƯ VIỆN", stance:"TƯ THẾ", prep:"CHUẨN BỊ", goals:"MỤC TIÊU", habits:"THÓI QUEN", notes:"GHI CHÚ", calendar:"LỊCH",
+    plan:"KẾ HOẠCH", freestyle:"FREESTYLE", library:"THƯ VIỆN", stance:"TƯ THẾ", prep:"CHUẨN BỊ", goals:"MỤC TIÊU", habits:"THÓI QUEN", notes:"GHI CHÚ",
     // Common actions
     save:"Lưu", cancel:"Hủy", delete:"Xóa", deleted:"Đã xóa", done:"XONG", confirm:"Xác nhận", exit:"Thoát",
     rename:"Đổi tên", duplicate:"Nhân bản", add:"THÊM", edit:"Sửa",
