@@ -1299,6 +1299,8 @@ export const TRANSLATIONS = {
     // Search (TextStream)
     searchTitle:"Search", searchPlaceholder:"Search your notes, journals, plans...", searchLoading:"Loading...", searchEmptyAll:"No entries yet. Start using MovesBook to fill your textstream.",
     searchCategoryMoves:"Moves", searchCategoryIdeas:"Ideas", searchCategoryHabits:"Habits", searchCategoryRoutines:"Routines", searchCategoryCalendar:"Calendar", searchCategorySessions:"Sessions", searchCategorySets:"Sets", searchCategoryRivals:"Rivals", searchCategoryBattles:"Battles", searchCategoryBattlePrep:"Battle Prep", searchCategoryProfile:"Profile", searchCategoryReminders:"Reminders", searchCategoryPresession:"Pre-session", searchCategoryRest:"Rest",
+    // Calendar legend
+    calendarLegendRest:"Rest", calendarLegendTraining:"Training", calendarLegendBattle:"Battle", calendarLegendConditioning:"Conditioning", calendarLegendNotes:"Notes",
   },
 
   it: {
@@ -2553,6 +2555,8 @@ export const TRANSLATIONS = {
     // Search (TextStream)
     searchTitle:"Cerca", searchPlaceholder:"Cerca nelle tue note, journal, piani...", searchLoading:"Caricamento...", searchEmptyAll:"Nessuna voce ancora. Inizia a usare MovesBook per riempire il tuo textstream.",
     searchCategoryMoves:"Mosse", searchCategoryIdeas:"Idee", searchCategoryHabits:"Abitudini", searchCategoryRoutines:"Routine", searchCategoryCalendar:"Calendario", searchCategorySessions:"Sessioni", searchCategorySets:"Set", searchCategoryRivals:"Rivali", searchCategoryBattles:"Battaglie", searchCategoryBattlePrep:"Preparazione", searchCategoryProfile:"Profilo", searchCategoryReminders:"Promemoria", searchCategoryPresession:"Pre-sessione", searchCategoryRest:"Riposo",
+    // Calendar legend
+    calendarLegendRest:"Riposo", calendarLegendTraining:"Allenamento", calendarLegendBattle:"Battle", calendarLegendConditioning:"Condizionamento", calendarLegendNotes:"Note",
   },
 
   es: {
@@ -3796,6 +3800,8 @@ export const TRANSLATIONS = {
     // Search (TextStream)
     searchTitle:"Buscar", searchPlaceholder:"Busca en tus notas, journals, planes...", searchLoading:"Cargando...", searchEmptyAll:"Aún no hay entradas. Empieza a usar MovesBook para llenar tu textstream.",
     searchCategoryMoves:"Movimientos", searchCategoryIdeas:"Ideas", searchCategoryHabits:"Hábitos", searchCategoryRoutines:"Rutinas", searchCategoryCalendar:"Calendario", searchCategorySessions:"Sesiones", searchCategorySets:"Sets", searchCategoryRivals:"Rivales", searchCategoryBattles:"Batallas", searchCategoryBattlePrep:"Preparación", searchCategoryProfile:"Perfil", searchCategoryReminders:"Recordatorios", searchCategoryPresession:"Pre-sesión", searchCategoryRest:"Descanso",
+    // Calendar legend
+    calendarLegendRest:"Descanso", calendarLegendTraining:"Entrenamiento", calendarLegendBattle:"Battle", calendarLegendConditioning:"Acondicionamiento", calendarLegendNotes:"Notas",
   },
 
   fr: {
@@ -5039,6 +5045,8 @@ export const TRANSLATIONS = {
     // Search (TextStream)
     searchTitle:"Recherche", searchPlaceholder:"Cherche dans tes notes, journals, plans...", searchLoading:"Chargement...", searchEmptyAll:"Aucune entrée pour l'instant. Commence à utiliser MovesBook pour remplir ton textstream.",
     searchCategoryMoves:"Moves", searchCategoryIdeas:"Idées", searchCategoryHabits:"Habitudes", searchCategoryRoutines:"Routines", searchCategoryCalendar:"Calendrier", searchCategorySessions:"Sessions", searchCategorySets:"Sets", searchCategoryRivals:"Rivaux", searchCategoryBattles:"Battles", searchCategoryBattlePrep:"Préparation", searchCategoryProfile:"Profil", searchCategoryReminders:"Rappels", searchCategoryPresession:"Pré-session", searchCategoryRest:"Repos",
+    // Calendar legend
+    calendarLegendRest:"Repos", calendarLegendTraining:"Entraînement", calendarLegendBattle:"Battle", calendarLegendConditioning:"Conditionnement", calendarLegendNotes:"Notes",
   },
 
   pt: {
@@ -6282,6 +6290,8 @@ export const TRANSLATIONS = {
     // Search (TextStream)
     searchTitle:"Buscar", searchPlaceholder:"Busque em suas notas, journals, planos...", searchLoading:"Carregando...", searchEmptyAll:"Ainda não há entradas. Comece a usar o MovesBook para preencher seu textstream.",
     searchCategoryMoves:"Movimentos", searchCategoryIdeas:"Ideias", searchCategoryHabits:"Hábitos", searchCategoryRoutines:"Rotinas", searchCategoryCalendar:"Calendário", searchCategorySessions:"Sessões", searchCategorySets:"Sets", searchCategoryRivals:"Rivais", searchCategoryBattles:"Batalhas", searchCategoryBattlePrep:"Preparação", searchCategoryProfile:"Perfil", searchCategoryReminders:"Lembretes", searchCategoryPresession:"Pré-sessão", searchCategoryRest:"Descanso",
+    // Calendar legend
+    calendarLegendRest:"Descanso", calendarLegendTraining:"Treino", calendarLegendBattle:"Battle", calendarLegendConditioning:"Condicionamento", calendarLegendNotes:"Notas",
   },
 
   de: {
@@ -7525,6 +7535,8 @@ export const TRANSLATIONS = {
     // Search (TextStream)
     searchTitle:"Suche", searchPlaceholder:"Suche in deinen Notizen, Journals, Plänen...", searchLoading:"Lädt...", searchEmptyAll:"Noch keine Einträge. Beginne MovesBook zu nutzen, um deinen Textstream zu füllen.",
     searchCategoryMoves:"Moves", searchCategoryIdeas:"Ideen", searchCategoryHabits:"Gewohnheiten", searchCategoryRoutines:"Routinen", searchCategoryCalendar:"Kalender", searchCategorySessions:"Sessions", searchCategorySets:"Sets", searchCategoryRivals:"Rivalen", searchCategoryBattles:"Battles", searchCategoryBattlePrep:"Battle-Prep", searchCategoryProfile:"Profil", searchCategoryReminders:"Erinnerungen", searchCategoryPresession:"Vor-Session", searchCategoryRest:"Erholung",
+    // Calendar legend
+    calendarLegendRest:"Ruhe", calendarLegendTraining:"Training", calendarLegendBattle:"Battle", calendarLegendConditioning:"Konditionierung", calendarLegendNotes:"Notizen",
   },
 
   ja: {
@@ -8769,6 +8781,8 @@ export const TRANSLATIONS = {
     // Search (TextStream)
     searchTitle:"検索", searchPlaceholder:"メモ、ジャーナル、プランを検索...", searchLoading:"読み込み中...", searchEmptyAll:"まだエントリーがありません。MovesBookを使い始めてテキストストリームを満たしましょう。",
     searchCategoryMoves:"ムーブ", searchCategoryIdeas:"アイデア", searchCategoryHabits:"習慣", searchCategoryRoutines:"ルーティン", searchCategoryCalendar:"カレンダー", searchCategorySessions:"セッション", searchCategorySets:"セット", searchCategoryRivals:"ライバル", searchCategoryBattles:"バトル", searchCategoryBattlePrep:"バトル準備", searchCategoryProfile:"プロフィール", searchCategoryReminders:"リマインダー", searchCategoryPresession:"プレセッション", searchCategoryRest:"休息",
+    // Calendar legend
+    calendarLegendRest:"休息", calendarLegendTraining:"トレーニング", calendarLegendBattle:"バトル", calendarLegendConditioning:"コンディショニング", calendarLegendNotes:"ノート",
   },
 
   zh: {
@@ -10011,6 +10025,8 @@ export const TRANSLATIONS = {
     // Search (TextStream)
     searchTitle:"搜索", searchPlaceholder:"搜索你的笔记、日记、计划...", searchLoading:"加载中...", searchEmptyAll:"暂无记录。开始使用 MovesBook 来填充你的 textstream。",
     searchCategoryMoves:"动作", searchCategoryIdeas:"想法", searchCategoryHabits:"习惯", searchCategoryRoutines:"日常", searchCategoryCalendar:"日历", searchCategorySessions:"训练", searchCategorySets:"Set", searchCategoryRivals:"对手", searchCategoryBattles:"对战", searchCategoryBattlePrep:"对战准备", searchCategoryProfile:"个人资料", searchCategoryReminders:"提醒", searchCategoryPresession:"训练前", searchCategoryRest:"休息",
+    // Calendar legend
+    calendarLegendRest:"休息", calendarLegendTraining:"训练", calendarLegendBattle:"比赛", calendarLegendConditioning:"体能训练", calendarLegendNotes:"笔记",
   },
 
   ru: {
@@ -11253,6 +11269,8 @@ export const TRANSLATIONS = {
     // Search (TextStream)
     searchTitle:"Поиск", searchPlaceholder:"Поиск по заметкам, журналам, планам...", searchLoading:"Загрузка...", searchEmptyAll:"Пока нет записей. Начни использовать MovesBook, чтобы наполнить свой textstream.",
     searchCategoryMoves:"Мувы", searchCategoryIdeas:"Идеи", searchCategoryHabits:"Привычки", searchCategoryRoutines:"Рутины", searchCategoryCalendar:"Календарь", searchCategorySessions:"Сессии", searchCategorySets:"Сеты", searchCategoryRivals:"Ривалы", searchCategoryBattles:"Баттлы", searchCategoryBattlePrep:"Подготовка", searchCategoryProfile:"Профиль", searchCategoryReminders:"Напоминания", searchCategoryPresession:"Пре-сессия", searchCategoryRest:"Отдых",
+    // Calendar legend
+    calendarLegendRest:"Отдых", calendarLegendTraining:"Тренировка", calendarLegendBattle:"Батл", calendarLegendConditioning:"Кондиционирование", calendarLegendNotes:"Заметки",
   },
 
   ko: {
@@ -12531,6 +12549,8 @@ export const TRANSLATIONS = {
     // Search (TextStream)
     searchTitle:"검색", searchPlaceholder:"메모, 저널, 계획에서 검색...", searchLoading:"로딩 중...", searchEmptyAll:"아직 기록이 없습니다. MovesBook을 사용하여 텍스트스트림을 채워보세요.",
     searchCategoryMoves:"무브", searchCategoryIdeas:"아이디어", searchCategoryHabits:"습관", searchCategoryRoutines:"루틴", searchCategoryCalendar:"캘린더", searchCategorySessions:"세션", searchCategorySets:"세트", searchCategoryRivals:"라이벌", searchCategoryBattles:"배틀", searchCategoryBattlePrep:"배틀 준비", searchCategoryProfile:"프로필", searchCategoryReminders:"알림", searchCategoryPresession:"프리세션", searchCategoryRest:"휴식",
+    // Calendar legend
+    calendarLegendRest:"휴식", calendarLegendTraining:"트레이닝", calendarLegendBattle:"배틀", calendarLegendConditioning:"컨디셔닝", calendarLegendNotes:"노트",
   },
 
   th: {
@@ -13804,6 +13824,8 @@ export const TRANSLATIONS = {
     // Search (TextStream)
     searchTitle:"ค้นหา", searchPlaceholder:"ค้นหาในบันทึก ไดอารี่ แผนของคุณ...", searchLoading:"กำลังโหลด...", searchEmptyAll:"ยังไม่มีรายการ เริ่มใช้ MovesBook เพื่อเติม textstream ของคุณ",
     searchCategoryMoves:"ท่า", searchCategoryIdeas:"ไอเดีย", searchCategoryHabits:"นิสัย", searchCategoryRoutines:"กิจวัตร", searchCategoryCalendar:"ปฏิทิน", searchCategorySessions:"เซสชัน", searchCategorySets:"เซ็ต", searchCategoryRivals:"คู่แข่ง", searchCategoryBattles:"การต่อสู้", searchCategoryBattlePrep:"เตรียมต่อสู้", searchCategoryProfile:"โปรไฟล์", searchCategoryReminders:"การเตือน", searchCategoryPresession:"ก่อนเซสชัน", searchCategoryRest:"พัก",
+    // Calendar legend
+    calendarLegendRest:"พัก", calendarLegendTraining:"ฝึกซ้อม", calendarLegendBattle:"แบทเทิล", calendarLegendConditioning:"การปรับสภาพ", calendarLegendNotes:"บันทึก",
   },
 
   vi: {
@@ -15098,5 +15120,7 @@ export const TRANSLATIONS = {
     // Search (TextStream)
     searchTitle:"Tìm kiếm", searchPlaceholder:"Tìm trong ghi chú, journal, kế hoạch...", searchLoading:"Đang tải...", searchEmptyAll:"Chưa có mục nào. Bắt đầu sử dụng MovesBook để lấp đầy textstream của bạn.",
     searchCategoryMoves:"Move", searchCategoryIdeas:"Ý tưởng", searchCategoryHabits:"Thói quen", searchCategoryRoutines:"Bài tập", searchCategoryCalendar:"Lịch", searchCategorySessions:"Buổi tập", searchCategorySets:"Set", searchCategoryRivals:"Đối thủ", searchCategoryBattles:"Battle", searchCategoryBattlePrep:"Chuẩn bị battle", searchCategoryProfile:"Hồ sơ", searchCategoryReminders:"Nhắc nhở", searchCategoryPresession:"Trước buổi tập", searchCategoryRest:"Nghỉ",
+    // Calendar legend
+    calendarLegendRest:"Nghỉ", calendarLegendTraining:"Tập luyện", calendarLegendBattle:"Battle", calendarLegendConditioning:"Điều hòa thể lực", calendarLegendNotes:"Ghi chú",
   },
 };

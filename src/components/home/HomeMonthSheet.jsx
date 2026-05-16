@@ -10,24 +10,56 @@ const DAY_LETTERS = ['S','M','T','W','T','F','S'];
 const MONTH_KEYS = ['january','february','march','april','may','june',
                     'july','august','september','october','november','december'];
 
-const ymdFromYMD = (y, m, d) =>
-  `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+// Fixed legend/dot order — present buckets render in this sequence; absent skip.
+const BUCKET_ORDER = ['rest', 'training', 'battle', 'conditioning', 'notes'];
 
-// True if the day has any logged content the user would care about at a glance.
-const hasContent = (ymd, { calendar, homeChecks, habits }) => {
-  if ((calendar?.events || []).some(e => e.date === ymd)) return true;
-  if (homeChecks?.[ymd] && Object.keys(homeChecks[ymd]).length > 0) return true;
-  if ((habits || []).some(h => (h.checkIns || []).includes(ymd))) return true;
-  return false;
+// Event types that map onto each bucket (routine logs as training).
+const EVENT_TYPE_TO_BUCKET = {
+  rest: 'rest',
+  training: 'training',
+  routine: 'training',
+  battle: 'battle',
+  conditioning: 'conditioning',
+  journal: 'notes',
+};
+
+// Returns the ordered subset of BUCKET_ORDER that has content on this ymd.
+const bucketsForDay = (ymd, { calendar, homeChecks, habits, restLog }) => {
+  const present = new Set();
+  for (const e of (calendar?.events || [])) {
+    if (e.date !== ymd) continue;
+    const b = EVENT_TYPE_TO_BUCKET[e.type];
+    if (b) present.add(b);
+  }
+  if (homeChecks?.[ymd] && Object.keys(homeChecks[ymd]).length > 0) present.add('training');
+  if ((habits || []).some(h => (h.checkIns || []).includes(ymd))) present.add('training');
+  if (restLog?.[ymd]) present.add('rest');
+  return BUCKET_ORDER.filter(b => present.has(b));
 };
 
 export const HomeMonthSheet = ({
   open, onClose, selectedDate, onSelectDate,
-  calendar, homeChecks, habits,
+  calendar, homeChecks, habits, restLog,
 }) => {
   const { C } = useSettings();
   const t = useT();
   const todayStr = todayLocal();
+
+  const BUCKET_COLORS = {
+    rest:         C.green,
+    training:     C.accent,
+    battle:       C.purple,
+    conditioning: C.blue,
+    notes:        C.yellow,
+  };
+
+  const LEGEND_LABELS = {
+    rest:         t('calendarLegendRest'),
+    training:     t('calendarLegendTraining'),
+    battle:       t('calendarLegendBattle'),
+    conditioning: t('calendarLegendConditioning'),
+    notes:        t('calendarLegendNotes'),
+  };
 
   // Month being displayed in the grid. Independent from selectedDate: user
   // can scrub months via prev/next without selecting until they tap a day.
@@ -131,7 +163,7 @@ export const HomeMonthSheet = ({
         {grid.map(({ ymd, dayNum, inMonth }) => {
           const isToday = ymd === todayStr;
           const isSelected = ymd === selectedDate;
-          const showDot = hasContent(ymd, { calendar, homeChecks, habits });
+          const buckets = bucketsForDay(ymd, { calendar, homeChecks, habits, restLog });
           return (
             <button
               key={ymd}
@@ -140,8 +172,10 @@ export const HomeMonthSheet = ({
                 aspectRatio: '1 / 1',
                 display: 'flex', flexDirection: 'column',
                 alignItems: 'center', justifyContent: 'center', gap: 2,
-                background: isToday ? C.accent : isSelected ? `${C.accent}18` : 'transparent',
-                outline: isSelected && !isToday ? `1.5px solid ${C.accent}` : 'none',
+                background: isSelected && !isToday ? `${C.accent}18` : 'transparent',
+                outline: isToday
+                  ? `2px solid ${C.accent}`
+                  : isSelected ? `1.5px solid ${C.accent}` : 'none',
                 border: 'none', borderRadius: 8, cursor: 'pointer',
                 opacity: inMonth ? 1 : 0.35,
                 transition: 'all 0.15s',
@@ -149,19 +183,47 @@ export const HomeMonthSheet = ({
             >
               <span style={{
                 fontFamily: FONT_DISPLAY, fontWeight: 800, fontSize: 14,
-                color: isToday ? '#fff' : isSelected ? C.accent : C.text,
+                color: isToday || isSelected ? C.accent : C.text,
               }}>
                 {dayNum}
               </span>
               <div style={{
-                width: 4, height: 4, borderRadius: '50%',
-                background: showDot
-                  ? (isToday ? '#fff' : C.accent)
-                  : 'transparent',
-              }}/>
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                gap: 2, height: 3,
+              }}>
+                {buckets.map(b => (
+                  <div key={b} style={{
+                    width: 3, height: 3, borderRadius: '50%',
+                    background: BUCKET_COLORS[b],
+                  }}/>
+                ))}
+              </div>
             </button>
           );
         })}
+      </div>
+
+      {/* Legend */}
+      <div style={{
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        marginTop: 12, paddingBottom: 4,
+      }}>
+        {BUCKET_ORDER.map(b => (
+          <div key={b} style={{
+            display: 'flex', alignItems: 'center', gap: 5,
+          }}>
+            <div style={{
+              width: 6, height: 6, borderRadius: '50%',
+              background: BUCKET_COLORS[b],
+            }}/>
+            <span style={{
+              fontFamily: FONT_DISPLAY, fontSize: 10, fontWeight: 800,
+              letterSpacing: 1.2, textTransform: 'uppercase', color: C.textSec,
+            }}>
+              {LEGEND_LABELS[b]}
+            </span>
+          </div>
+        ))}
       </div>
     </BottomSheet>
   );

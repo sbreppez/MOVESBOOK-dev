@@ -23,6 +23,7 @@ export const buildPalette = (theme) => {
     yellow:       "#ffa726",
     blue:         "#42a5f5",
     red:          "#e53935",
+    purple:       "#8B6AAE",
   };
   return {
     bg:           "#F2F2F7",
@@ -47,6 +48,7 @@ export const buildPalette = (theme) => {
     yellow:       "#f57f17",
     blue:         "#1565c0",
     red:          "#cf0000",
+    purple:       "#8B6AAE",
   };
 };
 

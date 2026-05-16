@@ -1081,6 +1081,7 @@ export const HomePage = ({
         calendar={calendar}
         homeChecks={homeChecks}
         habits={habits}
+        restLog={restLog}
       />
 
       {/* ── Feature 4: Gear Menu ── */}
