@@ -268,6 +268,7 @@ export const LogTodayTraining = forwardRef(function LogTodayTraining({
         placeholder={t("anythingElse")}
         rows={2}
         autoExpand
+        minHeight={80}
       />
 
       {/* HOW IT FELT */}
@@ -278,6 +279,7 @@ export const LogTodayTraining = forwardRef(function LogTodayTraining({
         placeholder={t("howItFeltPlaceholder")}
         rows={3}
         autoExpand
+        minHeight={80}
       />
 
       {/* DURATION */}
@@ -348,6 +350,7 @@ export const LogTodayTraining = forwardRef(function LogTodayTraining({
         placeholder={t("todaysNotePlaceholder")}
         rows={3}
         autoExpand
+        minHeight={80}
       />
 
       {/* Chooser BottomSheet */}
