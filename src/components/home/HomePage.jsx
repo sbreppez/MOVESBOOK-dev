@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { WeekStrip } from './WeekStrip';
+import { HomeMonthSheet } from './HomeMonthSheet';
 import { HomeActiveInjuryBanner } from './HomeActiveInjuryBanner';
 import { HomeTile } from './HomeTile';
 import { HomeAddPicker } from './HomeAddPicker';
@@ -147,6 +148,7 @@ export const HomePage = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps -- seed-only by intent
   }, [homeSeed]);
   const [showGearMenu, setShowGearMenu] = useState(false);
+  const [showMonthSheet, setShowMonthSheet] = useState(false);
   const [editTile, setEditTile] = useState(null);
   const [editTileFocus, setEditTileFocus] = useState(undefined);
   const [confirmRemove, setConfirmRemove] = useState(null);
@@ -319,6 +321,15 @@ export const HomePage = ({
     const month = d.toLocaleString(lang, { month: "long" });
     return `${month.toUpperCase()} ${d.getFullYear()}`;
   }, [selectedDate, settings?.language]);
+
+  const logButtonLabel = useMemo(() => {
+    if (selectedDate === todayStr) return t("logToday");
+    const lang = settings?.language || "en";
+    const shortDate = new Date(selectedDate + "T12:00:00")
+      .toLocaleString(lang, { month: "short", day: "numeric" });
+    const key = selectedDate < todayStr ? "logDate" : "planDate";
+    return t(key).replace("{date}", shortDate);
+  }, [selectedDate, todayStr, settings?.language, t]);
 
   const isBreakingDay = isToday && sections.today.some(tile =>
     tile.type === 'routine' && (/break/i.test(tile.name))
@@ -654,9 +665,34 @@ export const HomePage = ({
       {/* Header row */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between",
         padding: "8px 16px", flexShrink: 0 }}>
-        <span style={{ fontSize: 14, fontWeight: 800, letterSpacing: 1.5, color: C.text, fontFamily: FONT_DISPLAY, textTransform: "uppercase" }}>
-          {dateLabel}
-        </span>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <button
+            onClick={() => setShowMonthSheet(true)}
+            style={{
+              background: "none", border: "none", cursor: "pointer", padding: 0,
+              display: "inline-flex", alignItems: "center", gap: 4,
+              fontSize: 14, fontWeight: 800, letterSpacing: 1.5, color: C.text,
+              fontFamily: FONT_DISPLAY, textTransform: "uppercase",
+            }}
+          >
+            <span>{dateLabel}</span>
+            <Ic n="chevD" s={13} c={C.textMuted}/>
+          </button>
+          {!isToday && (
+            <button
+              onClick={() => setSelectedDate(todayStr)}
+              style={{
+                background: C.accent + "18", color: C.accent,
+                border: "none", borderRadius: 6, padding: "2px 8px",
+                fontSize: 10, fontWeight: 700, letterSpacing: 0.5,
+                fontFamily: FONT_DISPLAY, textTransform: "uppercase",
+                cursor: "pointer",
+              }}
+            >
+              {t("today")}
+            </button>
+          )}
+        </div>
         <button onClick={() => setShowGearMenu(true)}
           style={{ background: "none", border: "none", cursor: "pointer", padding: 5, borderRadius: 5, color: C.textMuted }}>
           <Ic n="moreH" s={16} c={C.textMuted}/>
@@ -773,7 +809,7 @@ export const HomePage = ({
             textTransform: "uppercase",
             cursor: "pointer",
           }}>
-            {t("logToday")}
+            {logButtonLabel}
           </button>
         </div>
 
@@ -982,6 +1018,17 @@ export const HomePage = ({
           ))}
         </div>
       </BottomSheet>
+
+      {/* Month picker dropdown */}
+      <HomeMonthSheet
+        open={showMonthSheet}
+        onClose={() => setShowMonthSheet(false)}
+        selectedDate={selectedDate}
+        onSelectDate={setSelectedDate}
+        calendar={calendar}
+        homeChecks={homeChecks}
+        habits={habits}
+      />
 
       {/* ── Feature 4: Gear Menu ── */}
       <BottomSheet open={showGearMenu} onClose={() => setShowGearMenu(false)} title={t("home")}>
@@ -1328,7 +1375,7 @@ export const HomePage = ({
       )}
 
       {showLogToday && (() => {
-        const logTodayDate = todayLocal();
+        const logTodayDate = selectedDate;
         const existingLogTodayEvent = (calendar?.events || []).find(
           e => e.source === "log_today" && e.date === logTodayDate
         ) || null;
