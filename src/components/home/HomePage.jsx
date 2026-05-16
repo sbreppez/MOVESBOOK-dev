@@ -1388,7 +1388,7 @@ export const HomePage = ({
             </div>
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-              {(updatesMove.journal || []).map(entry => (
+              {(updatesMove.journal || []).slice().sort((a, b) => b.date.localeCompare(a.date)).map(entry => (
                 <div key={entry.id} style={{ background: C.surfaceAlt, borderRadius: 8, padding: "8px 10px" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
                     <span style={{ fontSize: 10, color: C.textMuted, fontFamily: FONT_DISPLAY, fontWeight: 700 }}>
