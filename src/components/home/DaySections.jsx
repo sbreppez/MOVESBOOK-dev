@@ -45,6 +45,7 @@ export const DaySections = ({
   const [selectedLogTodayEvent, setSelectedLogTodayEvent] = useState(null);
   const [editHomeNote, setEditHomeNote] = useState(null);
   const [confirmDeleteNote, setConfirmDeleteNote] = useState(null);
+  const [confirmDeleteEvent, setConfirmDeleteEvent] = useState(null);
   const [detailBattle, setDetailBattle] = useState(null);
 
   // Precompute battle-prep dayMaps so battle tile taps can pass the prep arc
@@ -105,7 +106,10 @@ export const DaySections = ({
       event={event}
       C={C} t={t}
       onEdit={(evt) => setEditHomeNote(evt)}
-      onDelete={(evt) => setConfirmDeleteNote(evt)}
+      onDelete={(evt) => {
+        if (settings?.confirmDelete !== false) setConfirmDeleteNote(evt);
+        else handleDeleteEvent(evt.id);
+      }}
     />
   );
 
@@ -204,7 +208,11 @@ export const DaySections = ({
               <Ic n="edit" s={14} c={C.textMuted}/>
             </button>
           )}
-          <button onClick={(ev) => { ev.stopPropagation(); handleDeleteEvent(event.id); }}
+          <button onClick={(ev) => {
+              ev.stopPropagation();
+              if (settings?.confirmDelete !== false) setConfirmDeleteEvent(event);
+              else handleDeleteEvent(event.id);
+            }}
             style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}
             aria-label={t("delete")}>
             <Ic n="trash" s={14} c={C.textMuted}/>
@@ -472,6 +480,33 @@ export const DaySections = ({
                 {t("cancel")}
               </button>
               <button onClick={() => { handleDeleteEvent(confirmDeleteNote.id); setConfirmDeleteNote(null); }}
+                style={{ flex: 1, padding: "10px", background: C.accent, border: "none",
+                  borderRadius: 8, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 13, color: "#fff" }}>
+                {t("delete")}
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      {/* Delete event confirmation */}
+      {confirmDeleteEvent && (
+        <Modal onClose={() => setConfirmDeleteEvent(null)}>
+          <div style={{ padding: 20, textAlign: "center" }}>
+            <Ic n="trash" s={28} c={C.accent}/>
+            <h3 style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 16, letterSpacing: 1, color: C.text, margin: "8px 0" }}>
+              {t("delete")}
+            </h3>
+            <p style={{ fontSize: 13, color: C.textSec, marginBottom: 16, lineHeight: 1.5 }}>
+              {t("deleteEventConfirm") || "Delete this event?"}
+            </p>
+            <div style={{ display: "flex", gap: 8 }}>
+              <button onClick={() => setConfirmDeleteEvent(null)}
+                style={{ flex: 1, padding: "10px", background: C.surfaceAlt, border: `1px solid ${C.border}`,
+                  borderRadius: 8, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 13, color: C.text }}>
+                {t("cancel")}
+              </button>
+              <button onClick={() => { handleDeleteEvent(confirmDeleteEvent.id); setConfirmDeleteEvent(null); }}
                 style={{ flex: 1, padding: "10px", background: C.accent, border: "none",
                   borderRadius: 8, cursor: "pointer", fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 13, color: "#fff" }}>
                 {t("delete")}
