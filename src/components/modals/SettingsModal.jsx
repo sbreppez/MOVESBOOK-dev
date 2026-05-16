@@ -188,6 +188,11 @@ export const SettingsModal = ({ onClose, settings, onSave, onClearMoves, onResto
             toggle("showDeadlineIndicator")
           )}
 
+          {row(t("confirmDelete"),
+            t("confirmDeleteDesc"),
+            toggle("confirmDelete")
+          )}
+
           {row(t("linkOnCard"),
             t("linkOnCardDesc"),
             <select value={s.linkOnCard||"inside"} onChange={e=>set("linkOnCard")(e.target.value)}
