@@ -1255,7 +1255,7 @@ export const HomePage = ({
       )}
       {editTile && editTile.type === 'goalhabit' && (() => {
         const habit = habits?.find(h => String(h.id) === String(editTile.refId));
-        const goal = ideas?.find(i => String(i.id) === String(editTile.refId) && (i.type === 'goal' || i.type === 'target'));
+        const goalOrTarget = ideas?.find(i => String(i.id) === String(editTile.refId) && (i.type === 'goal' || i.type === 'target'));
 
         if (habit) {
           return (
@@ -1272,21 +1272,31 @@ export const HomePage = ({
           );
         }
 
-        if (goal) {
+        if (goalOrTarget) {
+          const closeEdit = () => { setEditTile(null); setEditTileFocus(undefined); };
+          const saveEdit = (fields) => {
+            setIdeas(prev => prev.map(i =>
+              String(i.id) === String(editTile.refId) ? { ...i, ...fields } : i
+            ));
+            closeEdit();
+          };
           return (
             <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.6)", zIndex:10000, display:"flex", alignItems:"center", justifyContent:"center", padding:10 }}>
-              <GoalModal
-                onClose={() => { setEditTile(null); setEditTileFocus(undefined); }}
-                onSave={(fields) => {
-                  setIdeas(prev => prev.map(i =>
-                    String(i.id) === String(editTile.refId) ? { ...i, ...fields } : i
-                  ));
-                  setEditTile(null);
-                  setEditTileFocus(undefined);
-                }}
-                idea={goal}
-                focus={editTileFocus}
-              />
+              {goalOrTarget.type === 'target' ? (
+                <TargetGoalModal
+                  onClose={closeEdit}
+                  onSave={saveEdit}
+                  idea={goalOrTarget}
+                  moves={moves}
+                />
+              ) : (
+                <GoalModal
+                  onClose={closeEdit}
+                  onSave={saveEdit}
+                  idea={goalOrTarget}
+                  focus={editTileFocus}
+                />
+              )}
             </div>
           );
         }
@@ -1418,20 +1428,33 @@ export const HomePage = ({
         </BottomSheet>
       )}
 
-      {journalGoalTile && (
-        <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.6)", zIndex:10000, display:"flex", alignItems:"center", justifyContent:"center", padding:10 }}>
-          <GoalModal
-            onClose={() => setJournalGoalTile(null)}
-            onSave={(fields) => {
-              setIdeas(prev => prev.map(i =>
-                String(i.id) === String(journalGoalTile.tile.refId) ? { ...i, ...fields } : i
-              ));
-              setJournalGoalTile(null);
-            }}
-            idea={journalGoalTile.goal}
-          />
-        </div>
-      )}
+      {journalGoalTile && (() => {
+        const closeJournal = () => setJournalGoalTile(null);
+        const saveJournal = (fields) => {
+          setIdeas(prev => prev.map(i =>
+            String(i.id) === String(journalGoalTile.tile.refId) ? { ...i, ...fields } : i
+          ));
+          closeJournal();
+        };
+        return (
+          <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.6)", zIndex:10000, display:"flex", alignItems:"center", justifyContent:"center", padding:10 }}>
+            {journalGoalTile.goal.type === 'target' ? (
+              <TargetGoalModal
+                onClose={closeJournal}
+                onSave={saveJournal}
+                idea={journalGoalTile.goal}
+                moves={moves}
+              />
+            ) : (
+              <GoalModal
+                onClose={closeJournal}
+                onSave={saveJournal}
+                idea={journalGoalTile.goal}
+              />
+            )}
+          </div>
+        );
+      })()}
 
       {showLogToday && (() => {
         const logTodayDate = selectedDate;
