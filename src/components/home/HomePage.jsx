@@ -609,24 +609,30 @@ export const HomePage = ({
 
   // ── Feature 3: Reorder handlers ─────────────────────────────────────────
 
-  const moveTileUp = (tileId) => {
+  // Swap two tiles' positions inside defaultStack by id. Other-bucket tiles
+  // between them keep their flat positions — that's why the visible neighbor
+  // (next/prev within the same section) drives the swap, not the flat neighbor.
+  const swapTilesInStack = (idA, idB) => {
     setHomeStack(prev => {
       const arr = [...(prev.defaultStack || [])];
-      const idx = arr.findIndex(t => t.id === tileId);
-      if (idx <= 0) return prev;
-      [arr[idx - 1], arr[idx]] = [arr[idx], arr[idx - 1]];
+      const i = arr.findIndex(t => t.id === idA);
+      const j = arr.findIndex(t => t.id === idB);
+      if (i < 0 || j < 0) return prev;
+      [arr[i], arr[j]] = [arr[j], arr[i]];
       return { ...prev, defaultStack: arr };
     });
   };
 
-  const moveTileDown = (tileId) => {
-    setHomeStack(prev => {
-      const arr = [...(prev.defaultStack || [])];
-      const idx = arr.findIndex(t => t.id === tileId);
-      if (idx < 0 || idx >= arr.length - 1) return prev;
-      [arr[idx], arr[idx + 1]] = [arr[idx + 1], arr[idx]];
-      return { ...prev, defaultStack: arr };
-    });
+  const moveTileUp = (tileId, sectionTiles) => {
+    const sIdx = sectionTiles.findIndex(t => t.id === tileId);
+    if (sIdx <= 0) return;
+    swapTilesInStack(tileId, sectionTiles[sIdx - 1].id);
+  };
+
+  const moveTileDown = (tileId, sectionTiles) => {
+    const sIdx = sectionTiles.findIndex(t => t.id === tileId);
+    if (sIdx < 0 || sIdx >= sectionTiles.length - 1) return;
+    swapTilesInStack(tileId, sectionTiles[sIdx + 1].id);
   };
 
   // All routines from defaultStack (for manage routines)
@@ -895,7 +901,7 @@ export const HomePage = ({
                         position: "absolute", right: 6, top: "50%", transform: "translateY(-50%)",
                         zIndex: 10, display: "flex", flexDirection: "column", gap: 2,
                       }}>
-                        <button onClick={() => moveTileUp(tile.id)} disabled={idx === 0}
+                        <button onClick={() => moveTileUp(tile.id, sec.tiles)} disabled={idx === 0}
                           style={{
                             width: 26, height: 26, borderRadius: 6,
                             border: `1px solid ${C.border}`, background: C.bg,
@@ -904,7 +910,7 @@ export const HomePage = ({
                             fontSize: 14, fontWeight: 700,
                             display: "flex", alignItems: "center", justifyContent: "center",
                           }}>▲</button>
-                        <button onClick={() => moveTileDown(tile.id)} disabled={idx === sec.tiles.length - 1}
+                        <button onClick={() => moveTileDown(tile.id, sec.tiles)} disabled={idx === sec.tiles.length - 1}
                           style={{
                             width: 26, height: 26, borderRadius: 6,
                             border: `1px solid ${C.border}`, background: C.bg,
