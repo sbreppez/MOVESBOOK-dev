@@ -9,6 +9,7 @@ import { RoutineForm } from './RoutineForm';
 import { IdeaForm } from './IdeaForm';
 import { DaySections } from './DaySections';
 import { useDayData } from '../../hooks/useDayData';
+import { computeAllDayMaps } from '../train/battlePrepHelpers';
 import { GoalModal } from '../train/GoalModal';
 import { TargetGoalModal } from '../train/TargetGoalModal';
 import { TypeChooserSheet } from '../train/TypeChooserSheet';
@@ -87,7 +88,7 @@ export const HomePage = ({
   homeStack, setHomeStack, homeChecks, setHomeChecks,
   onAddTrigger, addCalendarEvent, removeCalendarEvent, updateCalendarEvent, calendar, setCalendar,
   reps, sparring, musicflow,
-  battleprep, onGoToPrep,
+  battleprep, onToggleBattlePrepTask, onGoToPrep,
   moves, setMoves, cats, catColors, sets, recordEventTraining,
   customAttrs, setCustomAttrs, isPremium,
   addToast,
@@ -295,13 +296,20 @@ export const HomePage = ({
   // Calling useDayData here (rather than inside DaySections) lets the empty
   // state below know whether to suppress "dayStartsHere".
   const dayData = useDayData(selectedDate, { moves, reps, sparring, musicflow, habits, ideas, calendar });
+  // Mirror DaySections' lookup so the empty state doesn't fight with a prep
+  // tasks card. Same helper, same input → memoization shares fine.
+  const hasPrepContent = useMemo(() => {
+    if (!battleprep?.plans?.length) return false;
+    return computeAllDayMaps(battleprep.plans).some(({ dayMap }) => !!dayMap[selectedDate]);
+  }, [battleprep?.plans, selectedDate]);
   const hasDayContent = !!dayData && (
     dayData.calendarEvents.length > 0 ||
     dayData.repSessions.length > 0 ||
     dayData.sparringSessions.length > 0 ||
     dayData.sparringSessions1v1.length > 0 ||
     dayData.musicflowSessions.length > 0 ||
-    dayData.movesTrained.length > 0
+    dayData.movesTrained.length > 0 ||
+    hasPrepContent
   );
 
   // Filter + search state (L2)
@@ -961,7 +969,7 @@ export const HomePage = ({
                     sets={sets} cats={cats} catColors={catColors}
                     settings={settings} onSettingsChange={onSettingsChange}
                     addToast={addToast}
-                    battleprep={battleprep} onGoToPrep={onGoToPrep}
+                    battleprep={battleprep} onToggleBattlePrepTask={onToggleBattlePrepTask} onGoToPrep={onGoToPrep}
                     restLog={restLog} setRestLog={setRestLog}
                     restTypes={restTypes} setRestTypes={setRestTypes}
                     injuries={injuries} setInjuries={setInjuries}

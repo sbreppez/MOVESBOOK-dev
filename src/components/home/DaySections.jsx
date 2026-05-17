@@ -10,7 +10,8 @@ import { IdeaForm } from './IdeaForm';
 import { LogTodayModal } from '../logToday/LogTodayModal';
 import { SessionJournal } from '../calendar/SessionJournal';
 import { BattleResultDetail } from '../reflect/BattleResultDetail';
-import { computeAllDayMaps, computeDayMap } from '../train/battlePrepHelpers';
+import { computeAllDayMaps, computeDayMap, getTasksForDay, getPrevDayTasks } from '../train/battlePrepHelpers';
+import { todayLocal } from '../../utils/dateUtils';
 import { setEventTraining, removeEventTraining } from '../../utils/trainingLog';
 
 // 4px borderLeft stripe per event source
@@ -29,7 +30,7 @@ export const DaySections = ({
   addCalendarEvent, updateCalendarEvent, recordEventTraining,
   sets, cats, catColors, settings, onSettingsChange,
   addToast,
-  battleprep, onGoToPrep,
+  battleprep, onToggleBattlePrepTask, onGoToPrep,
   restLog, setRestLog, restTypes, setRestTypes,
   injuries, setInjuries,
   setBattles, battleFormats, setBattleFormats,
@@ -348,12 +349,130 @@ export const DaySections = ({
 
   // ── Render ──
 
-  const anySection = totalEvents > 0 || totalSessions > 0 || totalMoves > 0;
+  // Active battleprep tasks/battles for selectedDate, one block per plan whose
+  // dayMap covers this date. Battle days render the BATTLE DAY tile; everything
+  // else renders the per-task checkbox card. computeAllDayMaps returns the plan
+  // identity (planId + planName + eventName) but not the live plan record, so
+  // resolve it from battleprep.plans for completedTasks lookups.
+  const todayStr = todayLocal();
+  const prepBlocks = React.useMemo(() => {
+    if (!allDayMaps.length) return [];
+    const planById = new Map((battleprep?.plans || []).map(p => [p.id, p]));
+    return allDayMaps.flatMap(({ planId, dayMap }) => {
+      const info = dayMap[selectedDate];
+      if (!info) return [];
+      const plan = planById.get(planId);
+      if (!plan) return [];
+      const prevKeys = getPrevDayTasks(planId, selectedDate, dayMap);
+      const tasks = getTasksForDay(planId, selectedDate, info, prevKeys);
+      return [{ plan, info, tasks }];
+    });
+  }, [allDayMaps, battleprep?.plans, selectedDate]);
+
+  const anySection = totalEvents > 0 || totalSessions > 0 || totalMoves > 0 || prepBlocks.length > 0;
   if (!anySection && !showJournal) return null;
 
   return (
     <>
       <div style={{ padding: "0 12px" }}>
+        {/* PREP PHASES (battleprep) */}
+        {prepBlocks.length > 0 && (
+          <div style={{ marginBottom: 8 }}>
+            <div style={sectionHeaderStyle}>
+              {t("prepPhases")} · {prepBlocks.length}
+            </div>
+            {prepBlocks.map(({ plan, info, tasks }) => {
+              const completed = plan.completedTasks || {};
+              const isPast = selectedDate < todayStr;
+              const isBattleDay = info.type === "battle";
+              const phaseColor = info.phaseColor || (isBattleDay ? C.red : C.accent);
+              const planLabel = plan.eventName || plan.planName || "";
+
+              if (isBattleDay) {
+                return (
+                  <div key={`bd-${plan.id}`}
+                    onClick={() => openBattleDetail({ date: selectedDate, title: planLabel })}
+                    style={{
+                      background: C.surface, borderRadius: 8, padding: "12px 14px", marginBottom: 4,
+                      borderLeft: `4px solid ${C.red}`, cursor: "pointer",
+                      display: "flex", alignItems: "center", gap: 10,
+                    }}>
+                    <Ic n="swords" s={18} c={C.red}/>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 900, fontSize: 13,
+                        letterSpacing: 0.5, color: C.red, textTransform: "uppercase" }}>
+                        {t("battleDay")}
+                      </div>
+                      {planLabel && (
+                        <div style={{ fontSize: 11, color: C.textSec, marginTop: 1,
+                          overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                          {planLabel}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              }
+
+              return (
+                <div key={`pt-${plan.id}`} style={{
+                  background: C.surface, borderRadius: 8, padding: "10px 12px", marginBottom: 4,
+                }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: tasks.length ? 6 : 0 }}>
+                    {planLabel && (
+                      <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11,
+                        color: C.text, flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {planLabel}
+                      </span>
+                    )}
+                    {info.phase && (
+                      <span style={{
+                        fontSize: 10, fontFamily: FONT_DISPLAY, fontWeight: 700,
+                        background: `${phaseColor}25`, color: phaseColor,
+                        borderRadius: 4, padding: "1px 6px",
+                      }}>
+                        {info.phase}
+                      </span>
+                    )}
+                  </div>
+                  {tasks.map((task, i) => {
+                    const done = !!completed[`${selectedDate}-${i}`];
+                    return (
+                      <button key={i}
+                        onClick={() => !isPast && onToggleBattlePrepTask?.(plan.id, selectedDate, i)}
+                        style={{
+                          display: "flex", alignItems: "center", gap: 8, width: "100%",
+                          padding: "7px 2px", background: "none", border: "none",
+                          cursor: isPast ? "default" : "pointer",
+                          borderBottom: i < tasks.length - 1 ? `1px solid ${C.borderLight || C.border}` : "none",
+                          textAlign: "left", opacity: isPast ? 0.5 : 1,
+                        }}>
+                        <div style={{
+                          width: 20, height: 20, borderRadius: 5,
+                          border: `2px solid ${done ? C.green : C.border}`,
+                          background: done ? C.green : "transparent",
+                          display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                        }}>
+                          {done && <Ic n="check" s={12} c="#fff"/>}
+                        </div>
+                        <span style={{ fontSize: 14, flexShrink: 0 }}>{task.emoji}</span>
+                        <span style={{
+                          flex: 1, fontSize: 11, fontFamily: FONT_BODY,
+                          color: done ? C.textMuted : C.text,
+                          textDecoration: done ? "line-through" : "none",
+                          opacity: done ? 0.45 : 1, lineHeight: 1.4,
+                        }}>
+                          {t(task.key)}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
         {/* EVENTS */}
         {totalEvents > 0 && (
           <div style={{ marginBottom: 8 }}>
