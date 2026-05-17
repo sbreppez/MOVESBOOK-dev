@@ -652,11 +652,13 @@ export const HomePage = ({
 
   const handleCreateIdea = (fields) => {
     const id = Date.now().toString();
-    setIdeas(prev => [{ id, type: 'note', title: fields.title, text: fields.text, link: fields.link, showDate: fields.showDate || null, createdDate: new Date().toISOString(), pinnedOn: [todayLocal()] }, ...prev]);
+    const userSetDate = !!fields.showDate;
+    const showDate = fields.showDate || todayLocal();
+    setIdeas(prev => [{ id, type: 'note', title: fields.title, text: fields.text, link: fields.link, showDate, createdDate: new Date().toISOString(), pinnedOn: [] }, ...prev]);
     setHomeStack(prev => ({ ...prev, defaultStack: [{ id, type: 'note' }, ...prev.defaultStack] }));
-    if (fields.showDate && addCalendarEvent) {
+    if (userSetDate && addCalendarEvent) {
       addCalendarEvent({
-        date: fields.showDate,
+        date: showDate,
         type: "journal",
         title: fields.title || "Note",
         text: fields.text || "",
