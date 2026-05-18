@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import { todayLocal } from '../utils/dateUtils';
 
-export const useMoveCrud = ({ moves, setMoves, addToast, t, st }) => {
+// Move CRUD hook — owns selection + confirm-modal state and pure mutations
+// (save / bulk import / category move). Delete-with-cleanup is owned at the
+// App level (handleDelMove / handleBulkDeleteMoves) so it can sweep all the
+// cross-store move references on every delete (#264).
+export const useMoveCrud = ({ moves: _moves, setMoves, addToast: _addToast, t: _t, st: _st }) => {
   const [confirmDeleteMove, setConfirmDeleteMove] = useState(null);
   const [selectMode, setSelectMode] = useState(false);
   const [selectedMoveIds, setSelectedMoveIds] = useState(new Set());
@@ -23,13 +27,6 @@ export const useMoveCrud = ({ moves, setMoves, addToast, t, st }) => {
     setMoves(prev => [...prev, ...w]);
   };
 
-  const delMove = (id) => setMoves(prev => prev.filter(m => m.id !== id));
-
-  const tryDelMove = (m) => {
-    if (st.confirmDelete !== false) setConfirmDeleteMove(m);
-    else delMove(m.id);
-  };
-
   const moveToCat = (id, cat) => setMoves(prev =>
     prev.map(m => m.id === id ? { ...m, category: cat } : m)
   );
@@ -48,13 +45,6 @@ export const useMoveCrud = ({ moves, setMoves, addToast, t, st }) => {
     setSelectedMoveIds(new Set());
   };
 
-  const bulkDeleteSelected = () => {
-    setMoves(prev => prev.filter(m => !selectedMoveIds.has(m.id)));
-    setConfirmBulkDeleteMoves(false);
-    exitMoveSelectMode();
-    addToast({ icon: "trash", title: t("deleted") });
-  };
-
   return {
     confirmDeleteMove,
     selectMode,
@@ -66,11 +56,8 @@ export const useMoveCrud = ({ moves, setMoves, addToast, t, st }) => {
     setConfirmBulkDeleteMoves,
     saveMove,
     bulkImport,
-    delMove,
-    tryDelMove,
     moveToCat,
     toggleMoveSelect,
     exitMoveSelectMode,
-    bulkDeleteSelected,
   };
 };

@@ -30,7 +30,7 @@ import { SetsView } from './SetsView';
 import { WipHeaderActions } from './WipHeaderActions';
 import { CategoryDetailView } from './CategoryDetailView';
 
-export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColors, catDomains: _catDomains={}, setCatDomains: _setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore: _onOpenExplore, onOpenRRR: _onOpenRRR, onOpenCombine: _onOpenCombine, onOpenMap: _onOpenMap, onOpenFlashCards, onOpenTools, isPremium, staleCount=0, onBulkTrigger, movesSeed, onMovesSeedUsed, setsSeed, onSetsSeedUsed }) => {
+export const WIPPage = ({ moves, setMoves, onDelMove, onBulkDelete, cats, setCats, catColors, setCatColors, catDomains: _catDomains={}, setCatDomains: _setCatDomains, sets=[], setSets=()=>{}, addToast, pendingDesc, clearPendingDesc, settings={}, onSettingsChange, onAddTrigger, onAddTrigger2=0, onSubTabChange, parentSubTab, onSortChange, customAttrs=[], setCustomAttrs, reminders, onRemindersChange, onDrill, onOpenManageReminders, onOpenExplore: _onOpenExplore, onOpenRRR: _onOpenRRR, onOpenCombine: _onOpenCombine, onOpenMap: _onOpenMap, onOpenFlashCards, onOpenTools, isPremium, staleCount=0, onBulkTrigger, movesSeed, onMovesSeedUsed, setsSeed, onSetsSeedUsed }) => {
   const t = useT();
   const { moveCountStr } = usePlural();
   const { C, settings:ctxSettings } = useSettings();
@@ -123,13 +123,26 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
     setConfirmBulkDeleteMoves,
     saveMove,
     bulkImport,
-    delMove,
-    tryDelMove,
     moveToCat,
     toggleMoveSelect,
     exitMoveSelectMode,
-    bulkDeleteSelected,
   } = useMoveCrud({ moves, setMoves, addToast, t, st });
+
+  // Delete entry points. The hoisted App-level handlers (onDelMove /
+  // onBulkDelete) run the cross-store sweep before deleting the move.
+  // tryDelMove respects settings.confirmDelete: when enabled it opens
+  // the confirm modal (which then calls onDelMove); when disabled it
+  // deletes directly.
+  const tryDelMove = (m) => {
+    if (st.confirmDelete !== false) setConfirmDeleteMove(m);
+    else onDelMove(m.id);
+  };
+  const bulkDeleteSelected = () => {
+    onBulkDelete(Array.from(selectedMoveIds));
+    setConfirmBulkDeleteMoves(false);
+    exitMoveSelectMode();
+    addToast({ icon: "trash", title: t("deleted") });
+  };
 
   const { allMovesFilters, setAllMovesFilters, allMovesFiltered } = useAllMovesFilter({
     view,
@@ -194,7 +207,7 @@ export const WIPPage = ({ moves, setMoves, cats, setCats, catColors, setCatColor
           title={t("deleteMove")}
           body={<>{t("deleteMoveBody1")}<span style={{ color:C.text, fontWeight:700 }}>{confirmDeleteMove.name}</span>{t("deleteMoveBody2")}</>}
           onCancel={() => setConfirmDeleteMove(null)}
-          onConfirm={() => { delMove(confirmDeleteMove.id); setConfirmDeleteMove(null); }}
+          onConfirm={() => { onDelMove(confirmDeleteMove.id); setConfirmDeleteMove(null); }}
         />
       )}
       {confirmBulkDeleteMoves && (

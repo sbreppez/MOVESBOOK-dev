@@ -1090,6 +1090,154 @@ export default function App() {
     setMoves(prev => typeof updater==="function" ? updater(prev) : updater);
   }, []);
 
+  // ── Move delete handlers (hoisted from useMoveCrud, #264) ─────────────────
+  // Sweep cross-store references first, then delete the move itself.
+  // Reverse order risks a render frame where the move is gone but stale
+  // references still render (e.g. RoundCard renders bare numeric ID chips).
+  // mb_reps is deliberately not swept — kept as historical record per #264.
+  // mb_ideas is deferred to #263 (will add its own sweep when auto-link ships).
+  const runSweeps = (idSet) => {
+    const survivingMoves = moves.filter(m => !idSet.has(m.id));
+    sweepParentIds(idSet);
+    sweepSets(idSet);
+    sweepCombos(idSet);
+    sweepBattleprep(idSet);
+    sweepBattles(idSet);
+    sweepCalendar(idSet, survivingMoves);
+    sweepSparring(idSet);
+    sweepHomeStack(idSet);
+    sweepRrr(idSet);
+    sweepFreestyle(idSet);
+  };
+
+  const handleDelMove = useCallback((id) => {
+    const idSet = new Set([id]);
+    runSweeps(idSet);
+    setMoves(prev => prev.filter(m => !idSet.has(m.id)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [moves]);
+
+  const handleBulkDeleteMoves = useCallback((ids) => {
+    const idSet = new Set(ids);
+    runSweeps(idSet);
+    setMoves(prev => prev.filter(m => !idSet.has(m.id)));
+    // Caller (WIPPage) is responsible for the bulk-delete toast (uses t()).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [moves]);
+
+  // ── Sweep helpers for cross-store move-reference cleanup (#264 Phase 1) ───
+  // Each helper takes a Set<number> of move IDs being deleted and updates one
+  // store. Helpers are pure with respect to their store (no cross-side-effects).
+  // Phase 2 wires them into handleDelMove / handleBulkDeleteMoves.
+
+  const sweepParentIds = (idSet) => setMoves(prev =>
+    prev.map(m => (m.parentId != null && idSet.has(m.parentId)) ? { ...m, parentId: null } : m)
+  );
+
+  const sweepSets = (idSet) => setSets(prev =>
+    prev.map(s => Array.isArray(s.moveIds) ? { ...s, moveIds: s.moveIds.filter(id => !idSet.has(id)) } : s)
+  );
+
+  const sweepCombos = (idSet) => setCombos(prev => {
+    if (!Array.isArray(prev?.selectedMoveIds)) return prev;
+    return { ...prev, selectedMoveIds: prev.selectedMoveIds.filter(id => !idSet.has(id)) };
+  });
+
+  const sweepBattleprep = (idSet) => setBattleprep(prev => {
+    const sweepArsenal = (p) => {
+      if (!p?.arsenal?.moveIds) return p;
+      return { ...p, arsenal: { ...p.arsenal, moveIds: p.arsenal.moveIds.filter(id => !idSet.has(id)) } };
+    };
+    return {
+      ...prev,
+      plans: (prev?.plans || []).map(sweepArsenal),
+      history: (prev?.history || []).map(sweepArsenal),
+    };
+  });
+
+  const sweepBattles = (idSet) => setBattles(prev => prev.map(b => ({
+    ...b,
+    rounds: (b.rounds || []).map(r => ({
+      ...r,
+      moves: Array.isArray(r.moves) ? r.moves.filter(id => !idSet.has(id)) : r.moves,
+      entries: (r.entries || []).map(e => ({
+        ...e,
+        items: Array.isArray(e.items)
+          ? e.items.filter(it => !(it && it.type === 'move' && idSet.has(it.refId)))
+          : e.items,
+      })),
+    })),
+  })));
+
+  // Recompute event.categories from surviving moves' categories (unique).
+  // If filtered moveIds is empty, drop the event entirely (locked decision 1).
+  const sweepCalendar = (idSet, survivingMoves) => setCalendar(prev => {
+    const moveById = new Map(survivingMoves.map(m => [m.id, m]));
+    const next = [];
+    for (const ev of (prev?.events || [])) {
+      if (!Array.isArray(ev.moveIds) || ev.moveIds.length === 0) {
+        next.push(ev);
+        continue;
+      }
+      const filteredIds = ev.moveIds.filter(id => !idSet.has(id));
+      if (filteredIds.length === 0) continue; // drop the event
+      const cats = [...new Set(filteredIds.map(id => moveById.get(id)?.category).filter(Boolean))];
+      next.push({ ...ev, moveIds: filteredIds, categories: cats });
+    }
+    return { ...prev, events: next };
+  });
+
+  const sweepSparring = (idSet) => setSparring(prev => ({
+    ...prev,
+    sessions: (prev?.sessions || []).map(s => Array.isArray(s.movesTrained)
+      ? { ...s, movesTrained: s.movesTrained.filter(id => !idSet.has(id)) }
+      : s),
+  }));
+
+  const sweepHomeStack = (idSet) => setHomeStack(prev => {
+    const filterTiles = (arr) => (arr || []).filter(t => !(t && t.type === 'moveUpdate' && idSet.has(t.moveId)));
+    const next = { ...prev, defaultStack: filterTiles(prev?.defaultStack) };
+    if (prev?.overrides && typeof prev.overrides === 'object') {
+      const nextOverrides = {};
+      for (const [date, dayOvr] of Object.entries(prev.overrides)) {
+        nextOverrides[date] = { ...dayOvr, added: filterTiles(dayOvr?.added) };
+      }
+      next.overrides = nextOverrides;
+    }
+    return next;
+  });
+
+  const sweepRrr = (idSet) => setRRR(prev => {
+    if (!prev?.lastUsed || prev.lastUsed.moveId == null || !idSet.has(prev.lastUsed.moveId)) return prev;
+    return { ...prev, lastUsed: { mode: null, moveId: null, moveName: null, date: null } };
+  });
+
+  // Freestyle list/saved live in component-local state of FreestylePage
+  // (not in App.jsx). Sweep via direct localStorage write — FreestylePage
+  // re-reads on mount, so stale in-memory state would only show if user is
+  // on Freestyle tab during delete (move delete lives on MOVES tab, so a
+  // tab switch remounts FreestylePage with clean data).
+  const sweepFreestyle = (idSet) => {
+    try {
+      const filterItems = (arr) => arr.filter(it => !(it && it.type === 'move' && idSet.has(it.refId)));
+      const rawList = localStorage.getItem('mb_freestyle_list');
+      if (rawList) {
+        const list = JSON.parse(rawList);
+        if (Array.isArray(list)) localStorage.setItem('mb_freestyle_list', JSON.stringify(filterItems(list)));
+      }
+      const rawSaved = localStorage.getItem('mb_freestyle_saved');
+      if (rawSaved) {
+        const saved = JSON.parse(rawSaved);
+        if (Array.isArray(saved)) {
+          const next = saved.map(l => ({ ...l, items: Array.isArray(l.items) ? filterItems(l.items) : l.items }));
+          localStorage.setItem('mb_freestyle_saved', JSON.stringify(next));
+        }
+      }
+    } catch (e) {
+      console.warn('[MB] sweepFreestyle failed:', e);
+    }
+  };
+
   // Secondary add trigger — used for "Add Category" and "Create Round" from bottom menu
   const [addTick2, setAddTick2] = useState(0);
 
@@ -1300,7 +1448,7 @@ export default function App() {
           )}
           <TrainModalCtx.Provider value={{ openModal:(type,idea,onSave)=>{ setTrainModal({type,idea,onSave}); } }}>
             {tab==="home" && !showCreate && <HomePage habits={habits} setHabits={setHabits} injuries={injuries} setInjuries={setInjuries} restLog={restLog} setRestLog={setRestLog} restTypes={restTypes} setRestTypes={setRestTypes} presession={presession} setPresession={setPresession} ideas={ideas} setIdeas={setIdeas} settings={appSettings} onSettingsChange={setAppSettings} homeStack={homeStack} setHomeStack={setHomeStack} homeChecks={homeChecks} setHomeChecks={setHomeChecks} onAddTrigger={addTick} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} calendar={calendar} setCalendar={setCalendar} reps={reps} sparring={sparring} musicflow={musicflow} battleprep={battleprep} onToggleBattlePrepTask={toggleBattlePrepTask} onGoToPrep={(seed)=>{setBattlePrepSeed(seed);setTab("battle");}} moves={moves} setMoves={setMovesGrad} cats={cats} catColors={catColors} sets={sets} recordEventTraining={recordEventTraining} updateCalendarEvent={updateCalendarEvent} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} isPremium={isPremium} addToast={addToast} homeSeed={homeSeed} onHomeSeedUsed={()=>setHomeSeed(null)} selectedDate={homeSelectedDate} setSelectedDate={setHomeSelectedDate} setBattles={setBattles} battleFormats={battleFormats} setBattleFormats={setBattleFormats} userTemplates={userTemplates} setUserTemplates={setUserTemplates}/>}
-            {tab==="moves" && !showCreate && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} catDomains={catDomains} setCatDomains={setCatDomains} sets={sets} setSets={setSets} addToast={addToast} settings={appSettings} onSettingsChange={setAppSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} reminders={reminders} onRemindersChange={setReminders} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}} onOpenManageReminders={()=>setShowManageReminders(true)} isPremium={isPremium} staleCount={staleCount} onOpenExplore={()=>{if(!isPremium){setGatedFeature("explore");return;}setShowLab(true);}} onOpenRRR={()=>{if(!isPremium){setGatedFeature("rrr");return;}setShowRRR(true);}} onOpenCombine={()=>{if(!isPremium){setGatedFeature("combine");return;}setShowComboMachine(true);}} onOpenMap={()=>{if(!isPremium){setGatedFeature("map");return;}setShowFlowMap(true);}} onOpenFlashCards={()=>{if(!isPremium){setGatedFeature("flashCards");return;}setShowFlashCards(true);}} onOpenTools={()=>setShowCreate(true)} onOpenFlow={()=>{if(!isPremium){setGatedFeature("flow");return;}setShowMusicFlow(true);}} onBulkTrigger={bulkTrigger} movesSeed={movesSeed} onMovesSeedUsed={()=>setMovesSeed(null)} setsSeed={setsSeed} onSetsSeedUsed={()=>setSetsSeed(null)}/>}
+            {tab==="moves" && !showCreate && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} onDelMove={handleDelMove} onBulkDelete={handleBulkDeleteMoves} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} catDomains={catDomains} setCatDomains={setCatDomains} sets={sets} setSets={setSets} addToast={addToast} settings={appSettings} onSettingsChange={setAppSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} reminders={reminders} onRemindersChange={setReminders} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}} onOpenManageReminders={()=>setShowManageReminders(true)} isPremium={isPremium} staleCount={staleCount} onOpenExplore={()=>{if(!isPremium){setGatedFeature("explore");return;}setShowLab(true);}} onOpenRRR={()=>{if(!isPremium){setGatedFeature("rrr");return;}setShowRRR(true);}} onOpenCombine={()=>{if(!isPremium){setGatedFeature("combine");return;}setShowComboMachine(true);}} onOpenMap={()=>{if(!isPremium){setGatedFeature("map");return;}setShowFlowMap(true);}} onOpenFlashCards={()=>{if(!isPremium){setGatedFeature("flashCards");return;}setShowFlashCards(true);}} onOpenTools={()=>setShowCreate(true)} onOpenFlow={()=>{if(!isPremium){setGatedFeature("flow");return;}setShowMusicFlow(true);}} onBulkTrigger={bulkTrigger} movesSeed={movesSeed} onMovesSeedUsed={()=>setMovesSeed(null)} setsSeed={setsSeed} onSetsSeedUsed={()=>setSetsSeed(null)}/>}
             {tab==="battle" && !showCreate && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} addToast={addToast} freestyle={freestyle} onFreestyleChange={setFreestyle} rivals={rivals} onRivalsChange={setRivals} battles={battles} setBattles={setBattles} battleFormats={battleFormats} setBattleFormats={setBattleFormats} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} isPremium={isPremium} onSimulate={()=>{if(!isPremium){setGatedFeature("compSim");return;}setShowCompSim(true);}} onOpenSparring={()=>setShowSparring(true)} battleprep={battleprep} setBattleprep={setBattleprep} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={()=>setBattlePrepSeed(null)} rivalsSeed={rivalsSeed} onRivalsSeedUsed={()=>setRivalsSeed(null)} onOpenDay={(day)=>{ setHomeSeed({ kind:'day', day }); setTab('home'); }} onOpenCalendar={()=>{ setHomeSeed({ kind:'calendar', day: todayLocal() }); setTab('home'); }}/>}
             {tab==="reflect" && !showCreate && <ReflectPage isPremium={isPremium} ideas={ideas} setIdeas={setIdeas} moves={moves} reps={reps} sparring={sparring} musicflow={musicflow} setHomeStack={setHomeStack} calendar={calendar} cats={cats} catColors={catColors} settings={appSettings} addToast={addToast} stance={stance} battleprep={battleprep} onOpenStanceAssessment={()=>setShowStanceAssessment(true)} addCalendarEvent={addCalendarEvent} onSubTabChange={setSubTab} onAddTrigger={addTick} parentSubTab={subTab} reports={reports} injuries={injuries} onOpenHomeDay={(day)=>{ setHomeSeed({ kind:'day', day }); setTab('home'); }}/>}
           </TrainModalCtx.Provider>
