@@ -88,7 +88,7 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
     return sums;
   }, [f.trainingLog]);
   const totalReps =
-    repsBySource.manual + repsBySource.drill + repsBySource.sparring + manualDelta;
+    (f.trainingLog || []).reduce((sum, e) => sum + e.count, 0) + manualDelta;
 
   const setAttr = (attrId, val) => {
     setF(p => ({ ...p, attrs: { ...(p.attrs || {}), [attrId]: val } }));
