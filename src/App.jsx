@@ -1304,11 +1304,27 @@ export default function App() {
             {tab==="battle" && !showCreate && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} addToast={addToast} freestyle={freestyle} onFreestyleChange={setFreestyle} rivals={rivals} onRivalsChange={setRivals} battles={battles} setBattles={setBattles} battleFormats={battleFormats} setBattleFormats={setBattleFormats} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} isPremium={isPremium} onSimulate={()=>{if(!isPremium){setGatedFeature("compSim");return;}setShowCompSim(true);}} onOpenSparring={()=>setShowSparring(true)} battleprep={battleprep} setBattleprep={setBattleprep} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={()=>setBattlePrepSeed(null)} rivalsSeed={rivalsSeed} onRivalsSeedUsed={()=>setRivalsSeed(null)} onOpenDay={(day)=>{ setHomeSeed({ kind:'day', day }); setTab('home'); }} onOpenCalendar={()=>{ setHomeSeed({ kind:'calendar', day: todayLocal() }); setTab('home'); }}/>}
             {tab==="reflect" && !showCreate && <ReflectPage isPremium={isPremium} ideas={ideas} setIdeas={setIdeas} moves={moves} reps={reps} sparring={sparring} musicflow={musicflow} setHomeStack={setHomeStack} calendar={calendar} cats={cats} catColors={catColors} settings={appSettings} addToast={addToast} stance={stance} battleprep={battleprep} onOpenStanceAssessment={()=>setShowStanceAssessment(true)} addCalendarEvent={addCalendarEvent} onSubTabChange={setSubTab} onAddTrigger={addTick} parentSubTab={subTab} reports={reports} injuries={injuries} onOpenHomeDay={(day)=>{ setHomeSeed({ kind:'day', day }); setTab('home'); }}/>}
           </TrainModalCtx.Provider>
-          {showRepCounter&&<RepCounter moves={moves} catColors={catColors} reps={reps}
+          {showRepCounter&&<RepCounter moves={moves} sets={sets} catColors={catColors} reps={reps}
             preselectedMove={repCounterPreselect}
             onSaveSession={(session)=>{
               setReps(prev=>[session,...prev]);
               setMovesState(prev=>appendTrainingEntry(prev, session.moveId, { date: toYMD(session.date), count: session.reps, source: 'drill' }));
+              lastSessionSaved.current=true;
+            }}
+            onSaveSetSession={(session)=>{
+              setReps(prev=>[session,...prev]);
+              const ymd = toYMD(session.date);
+              setMovesState(prev =>
+                session.moveIds.reduce(
+                  (acc, mid) => appendTrainingEntry(acc, mid, { date: ymd, count: session.reps, source: 'drill' }),
+                  prev
+                )
+              );
+              setSets(prev => prev.map(s =>
+                s.id === session.setId
+                  ? { ...s, drillCount: (s.drillCount || 0) + session.reps, lastDrilledAt: Date.now() }
+                  : s
+              ));
               lastSessionSaved.current=true;
             }}
             onUpdateSession={onUpdateRepSession}

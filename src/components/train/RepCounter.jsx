@@ -3,7 +3,7 @@ import { C } from '../../constants/colors';
 import { FONT_DISPLAY, FONT_BODY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
 import { TrainingLog } from '../shared/TrainingLog';
-import { useT } from '../../hooks/useTranslation';
+import { useT, usePlural } from '../../hooks/useTranslation';
 import { todayLocal } from '../../utils/dateUtils';
 
 const fmtTime = (ms) => {
@@ -12,10 +12,12 @@ const fmtTime = (ms) => {
   return `${String(m).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 };
 
-export const RepCounter = ({ moves, catColors, reps, onSaveSession, onUpdateSession, reflections, onReflectionsChange, onClose, preselectedMove, addCalendarEvent }) => {
+export const RepCounter = ({ moves, sets=[], catColors, reps, onSaveSession, onSaveSetSession, onUpdateSession, reflections, onReflectionsChange, onClose, preselectedMove, addCalendarEvent }) => {
   const t = useT();
+  const { moveCountStr } = usePlural();
   const [screen, setScreen] = useState("select");
   const [selectedMove, setSelectedMove] = useState(null);
+  const [selectedSet, setSelectedSet] = useState(null);
   const [count, setCount] = useState(0);
   const [search, setSearch] = useState("");
   const [timerStart, setTimerStart] = useState(null);
@@ -60,6 +62,18 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onUpdateSess
 
   const startCounting = (m) => {
     setSelectedMove(m);
+    setSelectedSet(null);
+    setCount(0);
+    setElapsed(0);
+    setTimerStart(Date.now());
+    setScreen("counting");
+    setResetConfirm(false);
+    setReflection("");
+  };
+
+  const startCountingSet = (s) => {
+    setSelectedSet(s);
+    setSelectedMove(null);
     setCount(0);
     setElapsed(0);
     setTimerStart(Date.now());
@@ -99,13 +113,48 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onUpdateSess
   const handleDone = (e) => {
     e.stopPropagation();
     if (count === 0) return;
+    const duration = Math.floor(elapsed / 1000);
+    if (selectedSet) {
+      const setMoves = (selectedSet.moveIds || []).map(id => moves.find(m => m.id === id)).filter(Boolean);
+      const session = {
+        id: Date.now(),
+        isSet: true,
+        setId: selectedSet.id,
+        setName: selectedSet.name,
+        setColor: selectedSet.color,
+        moveIds: selectedSet.moveIds || [],
+        moveCount: (selectedSet.moveIds || []).length,
+        reps: count,
+        duration,
+        date: new Date().toISOString(),
+      };
+      onSaveSetSession(session);
+      if (addCalendarEvent) {
+        const cats = [...new Set(setMoves.map(m => m.category))];
+        addCalendarEvent({
+          date: todayLocal(),
+          type: "training",
+          title: `Rep Counter — ${selectedSet.name}`,
+          categories: cats,
+          moveIds: selectedSet.moveIds || [],
+          duration: Math.round(duration / 60) || 1,
+          source: "rep_counter",
+          sessionId: session.id,
+          setId: selectedSet.id,
+          setIds: [selectedSet.id],
+        }, { silent: true });
+      }
+      setSavedSession(session);
+      setScreen("complete");
+      return;
+    }
     const session = {
       id: Date.now(),
       moveId: selectedMove.id,
       moveName: selectedMove.name,
       moveCategory: selectedMove.category,
       reps: count,
-      duration: Math.floor(elapsed / 1000),
+      duration,
       date: new Date().toISOString(),
     };
     onSaveSession(session);
@@ -116,7 +165,7 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onUpdateSess
         title: `Rep Counter — ${selectedMove.name}`,
         categories: [selectedMove.category],
         moveIds: [selectedMove.id],
-        duration: Math.round(Math.floor(elapsed / 1000) / 60) || 1,
+        duration: Math.round(duration / 60) || 1,
         source: "rep_counter",
         sessionId: session.id,
       }, { silent: true });
@@ -129,9 +178,10 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onUpdateSess
 
   // ── Screen 1: Move Selector ──
   if (screen === "select") {
-    const filtered = moves.filter(m =>
-      m.name.toLowerCase().includes(search.toLowerCase())
-    );
+    const q = search.toLowerCase();
+    const filtered = moves.filter(m => m.name.toLowerCase().includes(q));
+    const eligibleSets = sets.filter(s => (s.moveIds || []).length > 0);
+    const filteredSets = eligibleSets.filter(s => s.name.toLowerCase().includes(q));
     return (
       <div style={{ position:"absolute", inset:0, zIndex:500, background:C.bg, display:"flex", flexDirection:"column" }}>
         {/* Header */}
@@ -149,9 +199,9 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onUpdateSess
             style={{ width:"100%", background:C.surface, border:`1px solid ${C.border}`, borderRadius:8, padding:"9px 12px", color:C.text, fontSize:14, outline:"none", boxSizing:"border-box", fontFamily:FONT_BODY }}
           />
         </div>
-        {/* Move list */}
+        {/* Move list + Sets section */}
         <div style={{ flex:1, overflow:"auto", padding:"0 18px 18px" }}>
-          {filtered.length === 0 && (
+          {filtered.length === 0 && filteredSets.length === 0 && (
             <div style={{ textAlign:"center", color:C.textMuted, fontSize:13, padding:"40px 0" }}>{t("emptySearch")}</div>
           )}
           {filtered.map(m => (
@@ -165,6 +215,24 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onUpdateSess
               </div>
             </button>
           ))}
+          {filteredSets.length > 0 && (
+            <>
+              <div style={{ marginTop: filtered.length > 0 ? 14 : 0, paddingTop: filtered.length > 0 ? 12 : 0, paddingBottom: 8, borderTop: filtered.length > 0 ? `1px solid ${C.borderLight}` : "none" }}>
+                <span style={{ fontFamily:FONT_DISPLAY, fontWeight:800, fontSize:11, letterSpacing:1.5, color:C.brownMid }}>{t("sets")}</span>
+              </div>
+              {filteredSets.map(s => (
+                <button key={s.id} onClick={() => startCountingSet(s)}
+                  style={{ width:"100%", display:"flex", alignItems:"center", gap:12, padding:"12px 14px", marginBottom:6,
+                    background:C.surface, border:`1px solid ${C.border}`, borderRadius:10, cursor:"pointer",
+                    borderLeft:`4px solid ${s.color || C.accent}`, textAlign:"left" }}>
+                  <div>
+                    <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, color:C.text }}>{s.name}</div>
+                    <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:10, color:C.textMuted, letterSpacing:0.5, marginTop:2 }}>{moveCountStr((s.moveIds || []).length).toUpperCase()}</div>
+                  </div>
+                </button>
+              ))}
+            </>
+          )}
         </div>
       </div>
     );
@@ -172,7 +240,11 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onUpdateSess
 
   // ── Screen 2: Counting ──
   if (screen === "counting") {
-    const cc = catColor(selectedMove.category);
+    const isSetMode = !!selectedSet;
+    const cc = isSetMode ? (selectedSet.color || C.accent) : catColor(selectedMove.category);
+    const setMoveNames = isSetMode
+      ? (selectedSet.moveIds || []).map(id => moves.find(m => m.id === id)?.name).filter(Boolean)
+      : [];
     return (
       <div style={{ position:"absolute", inset:0, zIndex:500, background:C.bg, display:"flex", flexDirection:"column" }}>
         <style>{`@keyframes mb-breathe { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }`}</style>
@@ -180,7 +252,14 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onUpdateSess
         <div style={{ position:"absolute", inset:0, background:`${cc}26`, pointerEvents:"none", transition:"opacity 0.15s", opacity:flash?1:0, zIndex:1 }}/>
         {/* Top bar */}
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"13px 18px", borderBottom:`1px solid ${C.border}`, flexShrink:0, zIndex:2 }}>
-          <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, color:cc, letterSpacing:0.5 }}>{selectedMove.name}</span>
+          {isSetMode ? (
+            <div style={{ display:"flex", alignItems:"center", gap:8, minWidth:0, flex:1 }}>
+              <div style={{ width:10, height:10, borderRadius:2, background:cc, flexShrink:0 }}/>
+              <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, color:C.text, letterSpacing:0.5, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{selectedSet.name}</span>
+            </div>
+          ) : (
+            <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, color:cc, letterSpacing:0.5 }}>{selectedMove.name}</span>
+          )}
           <div style={{ display:"flex", alignItems:"center", gap:12 }}>
             <span style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:22, color:C.text }}>{fmtTime(elapsed)}</span>
             <button onClick={(e) => { e.stopPropagation(); setScreen("select"); }}
@@ -189,6 +268,12 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onUpdateSess
             </button>
           </div>
         </div>
+        {/* Set move list (set mode only) */}
+        {isSetMode && (
+          <div style={{ padding:"10px 18px", borderBottom:`1px solid ${C.borderLight}`, fontSize:12, color:C.textMuted, fontFamily:FONT_BODY, lineHeight:1.4, flexShrink:0, zIndex:2 }}>
+            {setMoveNames.join(" · ")}
+          </div>
+        )}
         {/* Giant tap zone */}
         <div onClick={handleTap}
           style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", cursor:"pointer", userSelect:"none", WebkitTapHighlightColor:"transparent", zIndex:2, position:"relative" }}>
@@ -226,7 +311,11 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onUpdateSess
 
   // ── Screen 3: Session Complete ──
   if (screen === "complete" && savedSession) {
-    const cc = catColor(savedSession.moveCategory);
+    const isSet = !!savedSession.isSet;
+    const cc = isSet ? (savedSession.setColor || C.accent) : catColor(savedSession.moveCategory);
+    const primaryName = isSet ? savedSession.setName : savedSession.moveName;
+    const subLabel = isSet ? moveCountStr(savedSession.moveCount || 0).toUpperCase() : savedSession.moveCategory;
+    const subColor = isSet ? C.textMuted : cc;
     return (
       <div style={{ position:"absolute", inset:0, zIndex:500, background:C.bg, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"flex-start", padding:24, paddingTop:48, overflowY:"auto" }}>
         {/* Close button */}
@@ -240,8 +329,8 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onUpdateSess
         <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, letterSpacing:2, color:C.green, marginBottom:24 }}>{t("sessionSaved")}</div>
         {/* Summary card */}
         <div style={{ width:"100%", maxWidth:340, background:C.surface, borderRadius:8, border:`1px solid ${C.border}`, padding:16, marginBottom:20, borderLeft:`4px solid ${cc}` }}>
-          <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, color:C.text }}>{savedSession.moveName}</div>
-          <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:10, color:cc, letterSpacing:0.5, marginTop:2 }}>{savedSession.moveCategory}</div>
+          <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:16, color:C.text }}>{primaryName}</div>
+          <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:10, color:subColor, letterSpacing:0.5, marginTop:2 }}>{subLabel}</div>
           <div style={{ display:"flex", justifyContent:"space-between", marginTop:14 }}>
             <div>
               <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:28, color:C.text }}>{savedSession.reps}</div>
@@ -261,9 +350,9 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onUpdateSess
         </div>
         {/* Buttons */}
         <div style={{ width:"100%", maxWidth:340, display:"flex", flexDirection:"column", gap:10 }}>
-          <button onClick={() => { flushReflection(); startCounting(selectedMove); }}
+          <button onClick={() => { flushReflection(); if (isSet) startCountingSet(selectedSet); else startCounting(selectedMove); }}
             style={{ width:"100%", padding:14, borderRadius:12, border:"none", background:C.accent, color:"#fff", cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:13, letterSpacing:1 }}>
-            {t("goAgain").toUpperCase()} — {savedSession.moveName.toUpperCase()}
+            {t("goAgain").toUpperCase()} — {primaryName.toUpperCase()}
           </button>
           <button onClick={() => { flushReflection(); setSearch(""); setScreen("select"); }}
             style={{ width:"100%", padding:14, borderRadius:12, border:`1px solid ${C.border}`, background:C.surfaceAlt, color:C.text, cursor:"pointer", fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:13, letterSpacing:1 }}>
@@ -301,11 +390,16 @@ export const RepCounter = ({ moves, catColors, reps, onSaveSession, onUpdateSess
           )}
           {reps.map(s => {
             const d = new Date(s.date);
+            const isSet = !!s.isSet;
+            const stripeColor = isSet ? (s.setColor || C.accent) : catColor(s.moveCategory);
+            const primary = isSet ? s.setName : s.moveName;
+            const sub = isSet ? moveCountStr(s.moveCount || 0).toUpperCase() : s.moveCategory;
+            const subColor = isSet ? C.textMuted : catColor(s.moveCategory);
             return (
-              <div key={s.id} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"12px 14px", marginBottom:6, background:C.surface, border:`1px solid ${C.border}`, borderRadius:10, borderLeft:`4px solid ${catColor(s.moveCategory)}` }}>
+              <div key={s.id} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"12px 14px", marginBottom:6, background:C.surface, border:`1px solid ${C.border}`, borderRadius:10, borderLeft:`4px solid ${stripeColor}` }}>
                 <div>
-                  <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:14, color:C.text }}>{s.moveName}</div>
-                  <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:10, color:catColor(s.moveCategory), letterSpacing:0.5, marginTop:2 }}>{s.moveCategory}</div>
+                  <div style={{ fontFamily:FONT_DISPLAY, fontWeight:900, fontSize:14, color:C.text }}>{primary}</div>
+                  <div style={{ fontFamily:FONT_DISPLAY, fontWeight:700, fontSize:10, color:subColor, letterSpacing:0.5, marginTop:2 }}>{sub}</div>
                   <div style={{ fontSize:11, color:C.textMuted, marginTop:4 }}>
                     {fmtTime(s.duration * 1000)} · {d.toLocaleDateString()} · {d.toLocaleTimeString([], { hour:"2-digit", minute:"2-digit" })}
                   </div>
