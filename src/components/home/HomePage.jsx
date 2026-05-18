@@ -95,6 +95,7 @@ export const HomePage = ({
   homeSeed, onHomeSeedUsed,
   setBattles, battleFormats, setBattleFormats,
   selectedDate, setSelectedDate,
+  userTemplates, setUserTemplates,
 }) => {
   const { C } = useSettings();
   const t = useT();
@@ -664,6 +665,20 @@ export const HomePage = ({
     setAddFormType(null);
   };
 
+  // Save the in-form routine values as a reusable template. Does NOT close
+  // the modal — the user keeps editing. Phase 1 = routine kind only.
+  const handleSaveAsRoutineTemplate = (fields) => {
+    if (!setUserTemplates) return;
+    const tpl = {
+      id: Date.now().toString(),
+      kind: 'routine',
+      createdAt: new Date().toISOString(),
+      ...fields,
+    };
+    setUserTemplates(prev => [...(prev || []), tpl]);
+    if (addToast) addToast({ icon: "check", title: t("routineTemplateSaved") });
+  };
+
   const handleCreateIdea = (fields) => {
     const id = Date.now().toString();
     const userSetDate = !!fields.showDate;
@@ -1003,7 +1018,7 @@ export const HomePage = ({
       {/* ── Create forms (opened from Add Picker tiles) ── */}
       {addFormType === "routine" && (
         <BottomSheet open onClose={() => setAddFormType(null)} title={t("createNewRoutine")}>
-          <RoutineForm onSave={handleCreateRoutine} onCancel={() => setAddFormType(null)}/>
+          <RoutineForm onSave={handleCreateRoutine} onCancel={() => setAddFormType(null)} onSaveAsTemplate={handleSaveAsRoutineTemplate}/>
         </BottomSheet>
       )}
       {addFormType === "idea" && (
@@ -1259,7 +1274,7 @@ export const HomePage = ({
       {/* Edit tile */}
       {editTile && editTile.type === 'routine' && (
         <BottomSheet open={true} onClose={() => setEditTile(null)} title={t("editRoutine")}>
-          <RoutineForm routine={editTile} onSave={handleEditSave} onCancel={() => setEditTile(null)}/>
+          <RoutineForm routine={editTile} onSave={handleEditSave} onCancel={() => setEditTile(null)} onSaveAsTemplate={handleSaveAsRoutineTemplate}/>
         </BottomSheet>
       )}
       {editTile && editTile.type === 'note' && (

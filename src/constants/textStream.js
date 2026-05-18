@@ -88,4 +88,8 @@ export const SOURCE_TYPES = Object.freeze({
 
   // Section 1.26 — Rest Log (mb_rest_log, keyed by YYYY-MM-DD)
   REST_TODAY_NOTE:                  'rest_todayNote',
+
+  // Section 1.27 — User Templates (mb_user_templates[], Phase 1 = routine kind)
+  USER_TEMPLATE_NAME:               'userTemplate_name',
+  USER_TEMPLATE_STEP:               'userTemplate_step',
 });

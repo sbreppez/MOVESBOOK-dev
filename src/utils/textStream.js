@@ -142,6 +142,11 @@ export function resolveSourceLabel(sourceType, entity, ctx = {}) {
     case SOURCE_TYPES.REST_TODAY_NOTE:
       return ctx.date || '(rest day)';
 
+    // User templates — entity is the template; label is its name.
+    case SOURCE_TYPES.USER_TEMPLATE_NAME:
+    case SOURCE_TYPES.USER_TEMPLATE_STEP:
+      return entity.name || '(template)';
+
     default:
       console.warn(`[textStream] No label resolver for source_type: ${sourceType}`);
       return '(unknown)';

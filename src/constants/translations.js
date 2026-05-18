@@ -1190,6 +1190,8 @@ export const TRANSLATIONS = {
     noPairingsYet:"No pairings evaluated yet",
     pairingDetail:"Pairing Detail",
     savedToLibrary:"Saved to library",
+    saveAsRoutineTemplate:"SAVE AS TEMPLATE",
+    routineTemplateSaved:"Template saved",
     tryIt:"TRY IT",
     skipRate:"Skip — just rate it",
     goTryIt:"Go try it. Take your time.",
@@ -2448,6 +2450,8 @@ export const TRANSLATIONS = {
     noPairingsYet:"Nessun abbinamento valutato",
     pairingDetail:"Dettaglio abbinamento",
     savedToLibrary:"Salvato nella libreria",
+    saveAsRoutineTemplate:"SAVE AS TEMPLATE", // TODO: verify
+    routineTemplateSaved:"Template saved", // TODO: verify
     tryIt:"PROVALO",
     skipRate:"Salta — valuta direttamente",
     goTryIt:"Vai a provarlo. Prenditi il tuo tempo.",
@@ -3693,6 +3697,8 @@ export const TRANSLATIONS = {
     noPairingsYet:"Ninguna combinación evaluada",
     pairingDetail:"Detalle de combinación",
     savedToLibrary:"Guardado en biblioteca",
+    saveAsRoutineTemplate:"SAVE AS TEMPLATE", // TODO: verify
+    routineTemplateSaved:"Template saved", // TODO: verify
     tryIt:"PRUÉBALO",
     skipRate:"Saltar — solo calificar",
     goTryIt:"Ve a probarlo. Tómate tu tiempo.",
@@ -4938,6 +4944,8 @@ export const TRANSLATIONS = {
     noPairingsYet:"Aucune association \u00e9valu\u00e9e",
     pairingDetail:"D\u00e9tail d'association",
     savedToLibrary:"Ajout\u00e9 \u00e0 la biblioth\u00e8que",
+    saveAsRoutineTemplate:"SAVE AS TEMPLATE", // TODO: verify
+    routineTemplateSaved:"Template saved", // TODO: verify
     tryIt:"ESSAIE-LE",
     skipRate:"Passer — juste évaluer",
     goTryIt:"Va l'essayer. Prends ton temps.",
@@ -6183,6 +6191,8 @@ export const TRANSLATIONS = {
     noPairingsYet:"Nenhuma combina\u00e7\u00e3o avaliada",
     pairingDetail:"Detalhe de combina\u00e7\u00e3o",
     savedToLibrary:"Guardado na biblioteca",
+    saveAsRoutineTemplate:"SAVE AS TEMPLATE", // TODO: verify
+    routineTemplateSaved:"Template saved", // TODO: verify
     tryIt:"TENTE",
     skipRate:"Pular — apenas avaliar",
     goTryIt:"Vai tentar. Leve o seu tempo.",
@@ -7428,6 +7438,8 @@ export const TRANSLATIONS = {
     noPairingsYet:"Keine Kombinationen bewertet",
     pairingDetail:"Kombinationsdetail",
     savedToLibrary:"In Bibliothek gespeichert",
+    saveAsRoutineTemplate:"SAVE AS TEMPLATE", // TODO: verify
+    routineTemplateSaved:"Template saved", // TODO: verify
     tryIt:"PROBIER ES",
     skipRate:"Überspringen — direkt bewerten",
     goTryIt:"Geh es ausprobieren. Lass dir Zeit.",
@@ -8674,6 +8686,8 @@ export const TRANSLATIONS = {
     noPairingsYet:"\u307e\u3060\u8a55\u4fa1\u3055\u308c\u305f\u7d44\u307f\u5408\u308f\u305b\u306a\u3057",
     pairingDetail:"\u7d44\u307f\u5408\u308f\u305b\u8a73\u7d30",
     savedToLibrary:"\u30e9\u30a4\u30d6\u30e9\u30ea\u30fc\u306b\u4fdd\u5b58\u3057\u307e\u3057\u305f",
+    saveAsRoutineTemplate:"SAVE AS TEMPLATE", // TODO: verify
+    routineTemplateSaved:"Template saved", // TODO: verify
     tryIt:"やってみよう",
     skipRate:"スキップ — 評価だけする",
     goTryIt:"やってみて。ゆっくりでいいよ。",
@@ -9918,6 +9932,8 @@ export const TRANSLATIONS = {
     noPairingsYet:"\u5c1a\u65e0\u8bc4\u4f30\u7684\u7ec4\u5408",
     pairingDetail:"\u7ec4\u5408\u8be6\u60c5",
     savedToLibrary:"\u5df2\u4fdd\u5b58\u5230\u8bcd\u5e93",
+    saveAsRoutineTemplate:"SAVE AS TEMPLATE", // TODO: verify
+    routineTemplateSaved:"Template saved", // TODO: verify
     tryIt:"试一试",
     skipRate:"跳过 — 直接评价",
     goTryIt:"去试试吧。慢慢来。",
@@ -11162,6 +11178,8 @@ export const TRANSLATIONS = {
     noPairingsYet:"\u041d\u0435\u0442 \u043e\u0446\u0435\u043d\u0451\u043d\u043d\u044b\u0445 \u043a\u043e\u043c\u0431\u0438\u043d\u0430\u0446\u0438\u0439",
     pairingDetail:"\u0414\u0435\u0442\u0430\u043b\u044c \u043a\u043e\u043c\u0431\u0438\u043d\u0430\u0446\u0438\u0438",
     savedToLibrary:"\u0421\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u043e \u0432 \u0431\u0438\u0431\u043b\u0438\u043e\u0442\u0435\u043a\u0443",
+    saveAsRoutineTemplate:"SAVE AS TEMPLATE", // TODO: verify
+    routineTemplateSaved:"Template saved", // TODO: verify
     tryIt:"ПОПРОБУЙ",
     skipRate:"Пропустить — просто оценить",
     goTryIt:"Попробуй. Не торопись.",
@@ -12442,6 +12460,8 @@ export const TRANSLATIONS = {
     noPairingsYet:"\ud3c9\uac00\ub41c \uc870\ud569 \uc5c6\uc74c",
     pairingDetail:"\uc870\ud569 \uc0c1\uc138",
     savedToLibrary:"\ub77c\uc774\ube0c\ub7ec\ub9ac\uc5d0 \uc800\uc7a5\ub428",
+    saveAsRoutineTemplate:"SAVE AS TEMPLATE", // TODO: verify
+    routineTemplateSaved:"Template saved", // TODO: verify
     tryIt:"해보기",
     skipRate:"건너뛰기 — 바로 평가",
     goTryIt:"해봐. 천천히 해도 돼.",
@@ -13700,6 +13720,8 @@ export const TRANSLATIONS = {
     noPairingsYet:"\u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e21\u0e35\u0e04\u0e39\u0e48\u0e17\u0e35\u0e48\u0e1b\u0e23\u0e30\u0e40\u0e21\u0e34\u0e19",
     pairingDetail:"\u0e23\u0e32\u0e22\u0e25\u0e30\u0e40\u0e2d\u0e35\u0e22\u0e14\u0e04\u0e39\u0e48",
     savedToLibrary:"\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e25\u0e07\u0e44\u0e25\u0e1a\u0e23\u0e32\u0e23\u0e35\u0e41\u0e25\u0e49\u0e27",
+    saveAsRoutineTemplate:"SAVE AS TEMPLATE", // TODO: verify
+    routineTemplateSaved:"Template saved", // TODO: verify
     tryIt:"ลองเลย",
     skipRate:"ข้าม — ให้คะแนนเลย",
     goTryIt:"ไปลองดู ค่อยๆ ทำ",
@@ -15013,6 +15035,8 @@ export const TRANSLATIONS = {
     noPairingsYet:"Ch\u01b0a c\u00f3 c\u1eb7p n\u00e0o \u0111\u01b0\u1ee3c \u0111\u00e1nh gi\u00e1",
     pairingDetail:"Chi ti\u1ebft c\u1eb7p",
     savedToLibrary:"\u0110\u00e3 l\u01b0u v\u00e0o th\u01b0 vi\u1ec7n",
+    saveAsRoutineTemplate:"SAVE AS TEMPLATE", // TODO: verify
+    routineTemplateSaved:"Template saved", // TODO: verify
     tryIt:"THỬ ĐI",
     skipRate:"Bỏ qua — chỉ đánh giá",
     goTryIt:"Đi thử đi. Từ từ thôi.",

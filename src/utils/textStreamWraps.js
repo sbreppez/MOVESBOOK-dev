@@ -292,6 +292,66 @@ export async function emitRoutinesChanges(prev, next, uid) {
   // Removed routines: no action (orphan handling).
 }
 
+// ─── User Templates (array of {id, kind, name, steps, ...}) ─────────────────
+//
+// Phase 1 only stores routine-kind templates. Templates are immutable
+// snapshots — there is no edit-template UI in Phase 1A — so the diff
+// reduces to "ids in next but not prev" (new templates) and we never
+// supersede. For each new template we emit the name once and each
+// non-empty step text once. Removed templates: no action (orphan).
+//
+// source_id format:
+//   USER_TEMPLATE_NAME → template.id
+//   USER_TEMPLATE_STEP → `${template.id}:${step.id}` (mirrors routine pattern)
+export async function emitUserTemplatesChanges(prev, next, uid) {
+  if (!uid) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('[textStream] emitUserTemplatesChanges called without uid; skipping');
+    }
+    return;
+  }
+
+  const prevList = prev || [];
+  const nextList = next || [];
+  const prevIds = new Set(prevList.map(t => t.id));
+
+  for (const nextT of nextList) {
+    if (prevIds.has(nextT.id)) continue;
+
+    const nameText = (nextT.name ?? '').toString();
+    if (nameText.trim()) {
+      try {
+        await emitToTextStream(uid, {
+          source_type: SOURCE_TYPES.USER_TEMPLATE_NAME,
+          source_id: nextT.id,
+          source_label: resolveSourceLabel(SOURCE_TYPES.USER_TEMPLATE_NAME, nextT),
+          text: nameText,
+          supersedes: null,
+        });
+      } catch (err) {
+        console.error(`[textStream] userTemplate ${nextT.id} name emit failed:`, err);
+      }
+    }
+
+    for (const step of (nextT.steps || [])) {
+      const stepText = (step?.text ?? '').toString();
+      if (!stepText.trim()) continue;
+      const sourceId = `${nextT.id}:${step.id}`;
+      try {
+        await emitToTextStream(uid, {
+          source_type: SOURCE_TYPES.USER_TEMPLATE_STEP,
+          source_id: sourceId,
+          source_label: resolveSourceLabel(SOURCE_TYPES.USER_TEMPLATE_STEP, nextT),
+          text: stepText,
+          supersedes: null,
+        });
+      } catch (err) {
+        console.error(`[textStream] userTemplate ${sourceId} step emit failed:`, err);
+      }
+    }
+  }
+}
+
 // ─── Ideas (array of {id, type, ...}) ───────────────────────────────────────
 //
 // Three flavors with different text-bearing shapes:

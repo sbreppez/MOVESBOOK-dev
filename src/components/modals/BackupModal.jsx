@@ -25,6 +25,8 @@ const BACKUP_KEYS = {
   presession: "mb_presession", injuries: "mb_injuries",
   // HOME tiles
   homeStack: "mb_home_stack", homeChecks: "mb_home_checks",
+  // User-saved templates (routine kind in Phase 1)
+  userTemplates: "mb_user_templates",
   // Profile photo
   profilePhoto: "mb_profile_photo",
 };

@@ -774,6 +774,40 @@ Added 2026-05-13 (Session D1). **Storage shape differs from every other store: o
 
 ---
 
+### 1.27 — User Templates (`mb_user_templates[]`)
+
+Added 2026-05-18 (Issue #202 Phase 1A). Reusable snapshots of user-authored objects. Phase 1 only stores routine-kind templates (discriminated by `kind: 'routine'`), so the text-bearing fields mirror routine (`name` + `steps[].text`). The `kind` discriminator is reserved for Phase 3 (goal / target kinds). Templates are immutable in Phase 1A — no edit-template UI — so emits never supersede.
+
+Slice wired through the canonical 12-step pattern (state in `App.jsx`, debounced Firestore save under key `userTemplates`, subscribe + initial-load handlers in `index.html`, sign-out cleanup, `BackupModal` map entry).
+
+#### `userTemplate.name`
+
+| Aspect | Value |
+|---|---|
+| Schema shape | `string` |
+| Storage location | `localStorage["mb_user_templates"]` → array entry `.name`; Firestore `users/{uid}.userTemplates` (registered at [src/App.jsx](src/App.jsx) `dbSave.current.userTemplates`, pushed at the per-state effect) |
+| Existing edit-history | None — Phase 1A templates are write-once (no edit UI). |
+| Write sites | [src/components/home/HomePage.jsx](src/components/home/HomePage.jsx) `handleSaveAsRoutineTemplate` (builds template object from `RoutineForm` payload and appends to `userTemplates`); payload originates in [src/components/home/RoutineForm.jsx](src/components/home/RoutineForm.jsx) `handleSaveAsTemplate` (Save-as-template button, both create + edit modes). |
+| Read sites | None in Phase 1A — consumption UI lands in Phase 1B. |
+| Translation keys | `saveAsRoutineTemplate` (button label), `routineTemplateSaved` (toast). |
+| Notes | Required — Save-as-template button disabled when blank, mirrors `routine.name`. TextStream source_type `USER_TEMPLATE_NAME`, source_id = `template.id`. |
+
+#### `userTemplate.steps[].text`
+
+| Aspect | Value |
+|---|---|
+| Schema shape | `Array<{ id: string, text: string }>` |
+| Storage location | Same record |
+| Existing edit-history | None — write-once in Phase 1A. |
+| Write sites | Snapshotted from `RoutineForm` state — same trim + filter-empty pass as the routine save path. |
+| Read sites | None in Phase 1A. |
+| Translation keys | Inherits routine-step keys (`step`, `addStep`) at the form level. |
+| Notes | TextStream source_type `USER_TEMPLATE_STEP`, source_id format `${template.id}:${step.id}` (mirrors routine step convention from §1.6). |
+
+**Template-level non-text fields (excluded from TextStream — not narrative):** `id`, `kind`, `createdAt`, `repeat` (structural), `timeOfDay` (enum).
+
+---
+
 ## Section 2 — Cross-cutting concerns
 
 ### Concern 1 — Timestamp format inconsistencies on text records

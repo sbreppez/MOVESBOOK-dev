@@ -15,7 +15,7 @@ const REPEAT_OPTIONS = [
 const DOW_LABELS = ['S','M','T','W','T','F','S'];
 const TOD_KEYS = { morning: "todMorning", midday: "todMidday", afternoon: "todAfternoon", evening: "todEvening" };
 
-export const RoutineForm = ({ routine, onSave, onCancel }) => {
+export const RoutineForm = ({ routine, onSave, onCancel, onSaveAsTemplate }) => {
   const { C } = useSettings();
   const t = useT();
 
@@ -29,14 +29,21 @@ export const RoutineForm = ({ routine, onSave, onCancel }) => {
 
   const set = (k) => (v) => setF(p => ({ ...p, [k]: v }));
 
+  const buildPayload = () => ({
+    name: f.name.trim(),
+    steps: f.steps.filter(s => s.text.trim()).map(s => ({ id: s.id, text: s.text.trim() })),
+    repeat: { type: f.repeatType, days: f.repeatDays },
+    timeOfDay: f.timeOfDay,
+  });
+
   const handleSave = () => {
     if (!f.name.trim()) return;
-    onSave({
-      name: f.name.trim(),
-      steps: f.steps.filter(s => s.text.trim()).map(s => ({ id: s.id, text: s.text.trim() })),
-      repeat: { type: f.repeatType, days: f.repeatDays },
-      timeOfDay: f.timeOfDay,
-    });
+    onSave(buildPayload());
+  };
+
+  const handleSaveAsTemplate = () => {
+    if (!f.name.trim()) return;
+    onSaveAsTemplate(buildPayload());
   };
 
   const pill = (active) => ({
@@ -159,9 +166,16 @@ export const RoutineForm = ({ routine, onSave, onCancel }) => {
       </div>
 
       {/* Actions */}
-      <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", marginTop: 4 }}>
-        <Btn variant="secondary" onClick={onCancel}>{t("cancel")}</Btn>
-        <Btn variant="primary" onClick={handleSave}>{t("save")}</Btn>
+      <div style={{ display: "flex", gap: 8, justifyContent: "space-between", alignItems: "center", marginTop: 4, flexWrap: "wrap" }}>
+        {onSaveAsTemplate ? (
+          <Btn variant="secondary" onClick={handleSaveAsTemplate} disabled={!f.name.trim()}>
+            {t("saveAsRoutineTemplate")}
+          </Btn>
+        ) : <span/>}
+        <div style={{ display: "flex", gap: 8 }}>
+          <Btn variant="secondary" onClick={onCancel}>{t("cancel")}</Btn>
+          <Btn variant="primary" onClick={handleSave}>{t("save")}</Btn>
+        </div>
       </div>
     </div>
   );

@@ -45,7 +45,7 @@ import { detectMilestones } from './utils/reportEngine';
 import { setEventTraining, appendTrainingEntry, lastActivityDate } from './utils/trainingLog';
 import { runHomeMigration } from './utils/homeMigration';
 import { backfillTextStream } from './utils/textStream';
-import { emitProfileChanges, emitReminderChanges, emitPresessionChanges, emitHabitsChanges, emitRoutinesChanges, emitIdeasChanges, emitMovesChanges, emitCalendarChanges, emitRepsChanges, emitSparringChanges, emitMusicflowChanges, emitRivalsChanges, emitBattleprepChanges, emitSetsChanges, emitInjuriesChanges, emitRestLogChanges, emitBattlesChanges, emitBattleFormatsChanges } from './utils/textStreamWraps';
+import { emitProfileChanges, emitReminderChanges, emitPresessionChanges, emitHabitsChanges, emitRoutinesChanges, emitIdeasChanges, emitMovesChanges, emitCalendarChanges, emitRepsChanges, emitSparringChanges, emitMusicflowChanges, emitRivalsChanges, emitBattleprepChanges, emitSetsChanges, emitInjuriesChanges, emitRestLogChanges, emitBattlesChanges, emitBattleFormatsChanges, emitUserTemplatesChanges } from './utils/textStreamWraps';
 
 // ── Firebase stubs for preview ──
 if (typeof window !== "undefined") {
@@ -258,6 +258,10 @@ export default function App() {
     try { const s=localStorage.getItem("mb_home_checks"); if(s){const p=JSON.parse(s); if(p&&typeof p==="object") return p;} } catch{}
     return {};
   });
+  const [userTemplates, setUserTemplatesState] = useState(() => {
+    try { const s=localStorage.getItem("mb_user_templates"); if(s){const p=JSON.parse(s); if(Array.isArray(p)) return p;} } catch{}
+    return [];
+  });
   const [showFlowMap, setShowFlowMap] = useState(false);
   const [showPostSessionPrompt, setShowPostSessionPrompt] = useState(false);
   // showPlusSheet removed — each page handles + via onAddTrigger
@@ -309,6 +313,7 @@ export default function App() {
   useEffect(()=>{ saveLocal("mb_home_stack", homeStack); },[homeStack]);
   useEffect(()=>{ saveLocal("mb_home_checks", homeChecks); },[homeChecks]);
   useEffect(()=>{ saveLocal("mb_ideas", ideas); },[ideas]);
+  useEffect(()=>{ saveLocal("mb_user_templates", userTemplates); },[userTemplates]);
 
   // ── Firestore sync ─────────────────────────────────────────────────────────
   const [fbUser, setFbUser] = useState(null);
@@ -538,6 +543,18 @@ export default function App() {
     });
   }, [fbUser?.uid]);
 
+  const setUserTemplates = useCallback((updater) => {
+    setUserTemplatesState(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      if (fbUser?.uid) {
+        emitUserTemplatesChanges(prev, next, fbUser.uid).catch(err => {
+          console.error('[textStream] userTemplates emit failed:', err);
+        });
+      }
+      return next;
+    });
+  }, [fbUser?.uid]);
+
   useEffect(() => {
     const save = (key, ms=1500) => debounce(
       (uid, val) => window.__MB_DB__?.save(uid, key, val), ms
@@ -580,6 +597,7 @@ export default function App() {
       homeStack:   save("homeStack"),
       homeChecks:  save("homeChecks"),
       profilePhoto: save("profilePhoto"),
+      userTemplates: save("userTemplates"),
     };
   }, []);
 
@@ -619,6 +637,7 @@ export default function App() {
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.homeStack?.(fbUser.uid, homeStack); },[homeStack, fbUser]);
   useEffect(()=>{ if(fbUser?.uid) dbSave.current.homeChecks?.(fbUser.uid, homeChecks); },[homeChecks, fbUser]);
   useEffect(()=>{ if(fbUser?.uid && profilePhoto && profilePhoto.startsWith('data:')) dbSave.current.profilePhoto?.(fbUser.uid, profilePhoto); },[profilePhoto, fbUser]);
+  useEffect(()=>{ if(fbUser?.uid) dbSave.current.userTemplates?.(fbUser.uid, userTemplates); },[userTemplates, fbUser]);
 
   // ── Flush profilePhoto on page close (debounced save may not have fired) ──
   const profilePhotoRef = useRef(profilePhoto);
@@ -719,6 +738,8 @@ export default function App() {
           if (hs) { try { const p=JSON.parse(hs); if(p&&typeof p==="object") setHomeStackState(p); } catch {} }
           const hc = localStorage.getItem("mb_home_checks");
           if (hc) { try { const p=JSON.parse(hc); if(p&&typeof p==="object") setHomeChecks(p); } catch {} }
+          const ut = localStorage.getItem("mb_user_templates");
+          if (ut) { try { const p=JSON.parse(ut); if(Array.isArray(p)) setUserTemplatesState(p); } catch {} }
           const ppho = unwrapPhoto(localStorage.getItem("mb_profile_photo"));
           if (ppho) setProfilePhoto(ppho);
           if (p) { try { const pp=JSON.parse(p); if(pp&&Object.values(pp).some(v=>v)) setProfileState(pp); } catch{} }
@@ -781,6 +802,7 @@ export default function App() {
         milestonesInitRef.current = false;
         setHomeStackState({ defaultStack:[], overrides:{} });
         setHomeChecks({});
+        setUserTemplatesState([]);
         // Jump-to-source seeds (TEXTSTREAM-SEARCH-2A) — clear stale seeds
         // so the next sign-in doesn't dispatch a navigation from prior state.
         setMovesSeed(null);
@@ -1277,7 +1299,7 @@ export default function App() {
             </div>
           )}
           <TrainModalCtx.Provider value={{ openModal:(type,idea,onSave)=>{ setTrainModal({type,idea,onSave}); } }}>
-            {tab==="home" && !showCreate && <HomePage habits={habits} setHabits={setHabits} injuries={injuries} setInjuries={setInjuries} restLog={restLog} setRestLog={setRestLog} restTypes={restTypes} setRestTypes={setRestTypes} presession={presession} setPresession={setPresession} ideas={ideas} setIdeas={setIdeas} settings={appSettings} onSettingsChange={setAppSettings} homeStack={homeStack} setHomeStack={setHomeStack} homeChecks={homeChecks} setHomeChecks={setHomeChecks} onAddTrigger={addTick} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} calendar={calendar} setCalendar={setCalendar} reps={reps} sparring={sparring} musicflow={musicflow} battleprep={battleprep} onToggleBattlePrepTask={toggleBattlePrepTask} onGoToPrep={(seed)=>{setBattlePrepSeed(seed);setTab("battle");}} moves={moves} setMoves={setMovesGrad} cats={cats} catColors={catColors} sets={sets} recordEventTraining={recordEventTraining} updateCalendarEvent={updateCalendarEvent} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} isPremium={isPremium} addToast={addToast} homeSeed={homeSeed} onHomeSeedUsed={()=>setHomeSeed(null)} selectedDate={homeSelectedDate} setSelectedDate={setHomeSelectedDate} setBattles={setBattles} battleFormats={battleFormats} setBattleFormats={setBattleFormats}/>}
+            {tab==="home" && !showCreate && <HomePage habits={habits} setHabits={setHabits} injuries={injuries} setInjuries={setInjuries} restLog={restLog} setRestLog={setRestLog} restTypes={restTypes} setRestTypes={setRestTypes} presession={presession} setPresession={setPresession} ideas={ideas} setIdeas={setIdeas} settings={appSettings} onSettingsChange={setAppSettings} homeStack={homeStack} setHomeStack={setHomeStack} homeChecks={homeChecks} setHomeChecks={setHomeChecks} onAddTrigger={addTick} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} calendar={calendar} setCalendar={setCalendar} reps={reps} sparring={sparring} musicflow={musicflow} battleprep={battleprep} onToggleBattlePrepTask={toggleBattlePrepTask} onGoToPrep={(seed)=>{setBattlePrepSeed(seed);setTab("battle");}} moves={moves} setMoves={setMovesGrad} cats={cats} catColors={catColors} sets={sets} recordEventTraining={recordEventTraining} updateCalendarEvent={updateCalendarEvent} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} isPremium={isPremium} addToast={addToast} homeSeed={homeSeed} onHomeSeedUsed={()=>setHomeSeed(null)} selectedDate={homeSelectedDate} setSelectedDate={setHomeSelectedDate} setBattles={setBattles} battleFormats={battleFormats} setBattleFormats={setBattleFormats} userTemplates={userTemplates} setUserTemplates={setUserTemplates}/>}
             {tab==="moves" && !showCreate && <WIPPage moves={vocabMoves} setMoves={setMovesGrad} cats={cats} setCats={setCats} catColors={catColors} setCatColors={setCatColors} catDomains={catDomains} setCatDomains={setCatDomains} sets={sets} setSets={setSets} addToast={addToast} settings={appSettings} onSettingsChange={setAppSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} parentSubTab={subTab} onSortChange={(key,val)=>setAppSettings(p=>({...p,[key]:val}))} customAttrs={customAttrs} setCustomAttrs={setCustomAttrs} reminders={reminders} onRemindersChange={setReminders} onDrill={(move)=>{setRepCounterPreselect(move);setShowRepCounter(true);}} onOpenManageReminders={()=>setShowManageReminders(true)} isPremium={isPremium} staleCount={staleCount} onOpenExplore={()=>{if(!isPremium){setGatedFeature("explore");return;}setShowLab(true);}} onOpenRRR={()=>{if(!isPremium){setGatedFeature("rrr");return;}setShowRRR(true);}} onOpenCombine={()=>{if(!isPremium){setGatedFeature("combine");return;}setShowComboMachine(true);}} onOpenMap={()=>{if(!isPremium){setGatedFeature("map");return;}setShowFlowMap(true);}} onOpenFlashCards={()=>{if(!isPremium){setGatedFeature("flashCards");return;}setShowFlashCards(true);}} onOpenTools={()=>setShowCreate(true)} onOpenFlow={()=>{if(!isPremium){setGatedFeature("flow");return;}setShowMusicFlow(true);}} onBulkTrigger={bulkTrigger} movesSeed={movesSeed} onMovesSeedUsed={()=>setMovesSeed(null)} setsSeed={setsSeed} onSetsSeedUsed={()=>setSetsSeed(null)}/>}
             {tab==="battle" && !showCreate && <ReadyPage moves={moves} sets={sets} setSets={setSets} rounds={rounds} setRounds={setRounds} settings={appSettings} onAddTrigger={addTick} onAddTrigger2={addTick2} onSubTabChange={setSubTab} addToast={addToast} freestyle={freestyle} onFreestyleChange={setFreestyle} rivals={rivals} onRivalsChange={setRivals} battles={battles} setBattles={setBattles} battleFormats={battleFormats} setBattleFormats={setBattleFormats} addCalendarEvent={addCalendarEvent} removeCalendarEvent={removeCalendarEvent} isPremium={isPremium} onSimulate={()=>{if(!isPremium){setGatedFeature("compSim");return;}setShowCompSim(true);}} onOpenSparring={()=>setShowSparring(true)} battleprep={battleprep} setBattleprep={setBattleprep} calendar={calendar} battlePrepSeed={battlePrepSeed} onBattlePrepSeedUsed={()=>setBattlePrepSeed(null)} rivalsSeed={rivalsSeed} onRivalsSeedUsed={()=>setRivalsSeed(null)} onOpenDay={(day)=>{ setHomeSeed({ kind:'day', day }); setTab('home'); }} onOpenCalendar={()=>{ setHomeSeed({ kind:'calendar', day: todayLocal() }); setTab('home'); }}/>}
             {tab==="reflect" && !showCreate && <ReflectPage isPremium={isPremium} ideas={ideas} setIdeas={setIdeas} moves={moves} reps={reps} sparring={sparring} musicflow={musicflow} setHomeStack={setHomeStack} calendar={calendar} cats={cats} catColors={catColors} settings={appSettings} addToast={addToast} stance={stance} battleprep={battleprep} onOpenStanceAssessment={()=>setShowStanceAssessment(true)} addCalendarEvent={addCalendarEvent} onSubTabChange={setSubTab} onAddTrigger={addTick} parentSubTab={subTab} reports={reports} injuries={injuries} onOpenHomeDay={(day)=>{ setHomeSeed({ kind:'day', day }); setTab('home'); }}/>}
