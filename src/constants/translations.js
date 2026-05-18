@@ -1192,6 +1192,12 @@ export const TRANSLATIONS = {
     savedToLibrary:"Saved to library",
     saveAsRoutineTemplate:"SAVE AS TEMPLATE",
     routineTemplateSaved:"Template saved",
+    loadRoutineTemplate:"Load template",
+    manageRoutineTemplates:"Manage templates",
+    noRoutineTemplatesYet:"No templates yet. Save one from any routine's edit screen.",
+    editRoutineTemplate:"Edit template",
+    confirmDeleteRoutineTemplate:"Delete this template?",
+    routineTemplateRowSubtitle:"{n} steps · {repeat}",
     tryIt:"TRY IT",
     skipRate:"Skip — just rate it",
     goTryIt:"Go try it. Take your time.",
@@ -2452,6 +2458,12 @@ export const TRANSLATIONS = {
     savedToLibrary:"Salvato nella libreria",
     saveAsRoutineTemplate:"SAVE AS TEMPLATE", // TODO: verify
     routineTemplateSaved:"Template saved", // TODO: verify
+    loadRoutineTemplate:"Load template", // TODO: verify
+    manageRoutineTemplates:"Manage templates", // TODO: verify
+    noRoutineTemplatesYet:"No templates yet. Save one from any routine's edit screen.", // TODO: verify
+    editRoutineTemplate:"Edit template", // TODO: verify
+    confirmDeleteRoutineTemplate:"Delete this template?", // TODO: verify
+    routineTemplateRowSubtitle:"{n} steps · {repeat}", // TODO: verify
     tryIt:"PROVALO",
     skipRate:"Salta — valuta direttamente",
     goTryIt:"Vai a provarlo. Prenditi il tuo tempo.",
@@ -3699,6 +3711,12 @@ export const TRANSLATIONS = {
     savedToLibrary:"Guardado en biblioteca",
     saveAsRoutineTemplate:"SAVE AS TEMPLATE", // TODO: verify
     routineTemplateSaved:"Template saved", // TODO: verify
+    loadRoutineTemplate:"Load template", // TODO: verify
+    manageRoutineTemplates:"Manage templates", // TODO: verify
+    noRoutineTemplatesYet:"No templates yet. Save one from any routine's edit screen.", // TODO: verify
+    editRoutineTemplate:"Edit template", // TODO: verify
+    confirmDeleteRoutineTemplate:"Delete this template?", // TODO: verify
+    routineTemplateRowSubtitle:"{n} steps · {repeat}", // TODO: verify
     tryIt:"PRUÉBALO",
     skipRate:"Saltar — solo calificar",
     goTryIt:"Ve a probarlo. Tómate tu tiempo.",
@@ -4946,6 +4964,12 @@ export const TRANSLATIONS = {
     savedToLibrary:"Ajout\u00e9 \u00e0 la biblioth\u00e8que",
     saveAsRoutineTemplate:"SAVE AS TEMPLATE", // TODO: verify
     routineTemplateSaved:"Template saved", // TODO: verify
+    loadRoutineTemplate:"Load template", // TODO: verify
+    manageRoutineTemplates:"Manage templates", // TODO: verify
+    noRoutineTemplatesYet:"No templates yet. Save one from any routine's edit screen.", // TODO: verify
+    editRoutineTemplate:"Edit template", // TODO: verify
+    confirmDeleteRoutineTemplate:"Delete this template?", // TODO: verify
+    routineTemplateRowSubtitle:"{n} steps · {repeat}", // TODO: verify
     tryIt:"ESSAIE-LE",
     skipRate:"Passer — juste évaluer",
     goTryIt:"Va l'essayer. Prends ton temps.",
@@ -6193,6 +6217,12 @@ export const TRANSLATIONS = {
     savedToLibrary:"Guardado na biblioteca",
     saveAsRoutineTemplate:"SAVE AS TEMPLATE", // TODO: verify
     routineTemplateSaved:"Template saved", // TODO: verify
+    loadRoutineTemplate:"Load template", // TODO: verify
+    manageRoutineTemplates:"Manage templates", // TODO: verify
+    noRoutineTemplatesYet:"No templates yet. Save one from any routine's edit screen.", // TODO: verify
+    editRoutineTemplate:"Edit template", // TODO: verify
+    confirmDeleteRoutineTemplate:"Delete this template?", // TODO: verify
+    routineTemplateRowSubtitle:"{n} steps · {repeat}", // TODO: verify
     tryIt:"TENTE",
     skipRate:"Pular — apenas avaliar",
     goTryIt:"Vai tentar. Leve o seu tempo.",
@@ -7440,6 +7470,12 @@ export const TRANSLATIONS = {
     savedToLibrary:"In Bibliothek gespeichert",
     saveAsRoutineTemplate:"SAVE AS TEMPLATE", // TODO: verify
     routineTemplateSaved:"Template saved", // TODO: verify
+    loadRoutineTemplate:"Load template", // TODO: verify
+    manageRoutineTemplates:"Manage templates", // TODO: verify
+    noRoutineTemplatesYet:"No templates yet. Save one from any routine's edit screen.", // TODO: verify
+    editRoutineTemplate:"Edit template", // TODO: verify
+    confirmDeleteRoutineTemplate:"Delete this template?", // TODO: verify
+    routineTemplateRowSubtitle:"{n} steps · {repeat}", // TODO: verify
     tryIt:"PROBIER ES",
     skipRate:"Überspringen — direkt bewerten",
     goTryIt:"Geh es ausprobieren. Lass dir Zeit.",
@@ -8688,6 +8724,12 @@ export const TRANSLATIONS = {
     savedToLibrary:"\u30e9\u30a4\u30d6\u30e9\u30ea\u30fc\u306b\u4fdd\u5b58\u3057\u307e\u3057\u305f",
     saveAsRoutineTemplate:"SAVE AS TEMPLATE", // TODO: verify
     routineTemplateSaved:"Template saved", // TODO: verify
+    loadRoutineTemplate:"Load template", // TODO: verify
+    manageRoutineTemplates:"Manage templates", // TODO: verify
+    noRoutineTemplatesYet:"No templates yet. Save one from any routine's edit screen.", // TODO: verify
+    editRoutineTemplate:"Edit template", // TODO: verify
+    confirmDeleteRoutineTemplate:"Delete this template?", // TODO: verify
+    routineTemplateRowSubtitle:"{n} steps · {repeat}", // TODO: verify
     tryIt:"やってみよう",
     skipRate:"スキップ — 評価だけする",
     goTryIt:"やってみて。ゆっくりでいいよ。",
@@ -9934,6 +9976,12 @@ export const TRANSLATIONS = {
     savedToLibrary:"\u5df2\u4fdd\u5b58\u5230\u8bcd\u5e93",
     saveAsRoutineTemplate:"SAVE AS TEMPLATE", // TODO: verify
     routineTemplateSaved:"Template saved", // TODO: verify
+    loadRoutineTemplate:"Load template", // TODO: verify
+    manageRoutineTemplates:"Manage templates", // TODO: verify
+    noRoutineTemplatesYet:"No templates yet. Save one from any routine's edit screen.", // TODO: verify
+    editRoutineTemplate:"Edit template", // TODO: verify
+    confirmDeleteRoutineTemplate:"Delete this template?", // TODO: verify
+    routineTemplateRowSubtitle:"{n} steps · {repeat}", // TODO: verify
     tryIt:"试一试",
     skipRate:"跳过 — 直接评价",
     goTryIt:"去试试吧。慢慢来。",
@@ -11180,6 +11228,12 @@ export const TRANSLATIONS = {
     savedToLibrary:"\u0421\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u043e \u0432 \u0431\u0438\u0431\u043b\u0438\u043e\u0442\u0435\u043a\u0443",
     saveAsRoutineTemplate:"SAVE AS TEMPLATE", // TODO: verify
     routineTemplateSaved:"Template saved", // TODO: verify
+    loadRoutineTemplate:"Load template", // TODO: verify
+    manageRoutineTemplates:"Manage templates", // TODO: verify
+    noRoutineTemplatesYet:"No templates yet. Save one from any routine's edit screen.", // TODO: verify
+    editRoutineTemplate:"Edit template", // TODO: verify
+    confirmDeleteRoutineTemplate:"Delete this template?", // TODO: verify
+    routineTemplateRowSubtitle:"{n} steps · {repeat}", // TODO: verify
     tryIt:"ПОПРОБУЙ",
     skipRate:"Пропустить — просто оценить",
     goTryIt:"Попробуй. Не торопись.",
@@ -12462,6 +12516,12 @@ export const TRANSLATIONS = {
     savedToLibrary:"\ub77c\uc774\ube0c\ub7ec\ub9ac\uc5d0 \uc800\uc7a5\ub428",
     saveAsRoutineTemplate:"SAVE AS TEMPLATE", // TODO: verify
     routineTemplateSaved:"Template saved", // TODO: verify
+    loadRoutineTemplate:"Load template", // TODO: verify
+    manageRoutineTemplates:"Manage templates", // TODO: verify
+    noRoutineTemplatesYet:"No templates yet. Save one from any routine's edit screen.", // TODO: verify
+    editRoutineTemplate:"Edit template", // TODO: verify
+    confirmDeleteRoutineTemplate:"Delete this template?", // TODO: verify
+    routineTemplateRowSubtitle:"{n} steps · {repeat}", // TODO: verify
     tryIt:"해보기",
     skipRate:"건너뛰기 — 바로 평가",
     goTryIt:"해봐. 천천히 해도 돼.",
@@ -13722,6 +13782,12 @@ export const TRANSLATIONS = {
     savedToLibrary:"\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e25\u0e07\u0e44\u0e25\u0e1a\u0e23\u0e32\u0e23\u0e35\u0e41\u0e25\u0e49\u0e27",
     saveAsRoutineTemplate:"SAVE AS TEMPLATE", // TODO: verify
     routineTemplateSaved:"Template saved", // TODO: verify
+    loadRoutineTemplate:"Load template", // TODO: verify
+    manageRoutineTemplates:"Manage templates", // TODO: verify
+    noRoutineTemplatesYet:"No templates yet. Save one from any routine's edit screen.", // TODO: verify
+    editRoutineTemplate:"Edit template", // TODO: verify
+    confirmDeleteRoutineTemplate:"Delete this template?", // TODO: verify
+    routineTemplateRowSubtitle:"{n} steps · {repeat}", // TODO: verify
     tryIt:"ลองเลย",
     skipRate:"ข้าม — ให้คะแนนเลย",
     goTryIt:"ไปลองดู ค่อยๆ ทำ",
@@ -15037,6 +15103,12 @@ export const TRANSLATIONS = {
     savedToLibrary:"\u0110\u00e3 l\u01b0u v\u00e0o th\u01b0 vi\u1ec7n",
     saveAsRoutineTemplate:"SAVE AS TEMPLATE", // TODO: verify
     routineTemplateSaved:"Template saved", // TODO: verify
+    loadRoutineTemplate:"Load template", // TODO: verify
+    manageRoutineTemplates:"Manage templates", // TODO: verify
+    noRoutineTemplatesYet:"No templates yet. Save one from any routine's edit screen.", // TODO: verify
+    editRoutineTemplate:"Edit template", // TODO: verify
+    confirmDeleteRoutineTemplate:"Delete this template?", // TODO: verify
+    routineTemplateRowSubtitle:"{n} steps · {repeat}", // TODO: verify
     tryIt:"THỬ ĐI",
     skipRate:"Bỏ qua — chỉ đánh giá",
     goTryIt:"Đi thử đi. Từ từ thôi.",

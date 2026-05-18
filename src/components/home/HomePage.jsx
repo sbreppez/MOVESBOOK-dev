@@ -261,6 +261,20 @@ export const HomePage = ({
   const [showManageRoutines, setShowManageRoutines] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
 
+  // #202 Phase 1B: routine template consumption (load/manage/edit/delete)
+  const [showLoadTemplate, setShowLoadTemplate] = useState(false);
+  const [showManageTemplates, setShowManageTemplates] = useState(false);
+  const [instantiatingFromTemplate, setInstantiatingFromTemplate] = useState(null);
+  const [editingTemplate, setEditingTemplate] = useState(null);
+  const [confirmDeleteTemplate, setConfirmDeleteTemplate] = useState(null);
+
+  const routineTemplates = useMemo(
+    () => (userTemplates || [])
+      .filter(tpl => tpl.kind === 'routine')
+      .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || '')),
+    [userTemplates]
+  );
+
   const sections = useMemo(() => {
     const tiles = getTilesForDate(homeStack, selectedDate, ideas);
 
@@ -677,6 +691,30 @@ export const HomePage = ({
     };
     setUserTemplates(prev => [...(prev || []), tpl]);
     if (addToast) addToast({ icon: "check", title: t("routineTemplateSaved") });
+  };
+
+  // #202 Phase 1B handlers
+  const handleSelectTemplate = (tpl) => {
+    setShowLoadTemplate(false);
+    setInstantiatingFromTemplate({
+      name: tpl.name,
+      steps: tpl.steps,
+      repeat: tpl.repeat,
+      timeOfDay: tpl.timeOfDay,
+    });
+  };
+
+  const handleSaveTemplateEdit = (fields) => {
+    if (!editingTemplate || !setUserTemplates) return;
+    const id = editingTemplate.id;
+    setUserTemplates(prev => (prev || []).map(t => t.id === id ? { ...t, ...fields } : t));
+    setEditingTemplate(null);
+  };
+
+  const handleDeleteTemplate = (tpl) => {
+    if (!setUserTemplates || !tpl) return;
+    setUserTemplates(prev => (prev || []).filter(t => t.id !== tpl.id));
+    setConfirmDeleteTemplate(null);
   };
 
   const handleCreateIdea = (fields) => {
@@ -1124,6 +1162,8 @@ export const HomePage = ({
           {[
             { icon: "grip", label: t("reorderTiles"), action: () => { setShowGearMenu(false); setShowReorder(true); } },
             { icon: "list", label: t("manageRoutines"), action: () => { setShowGearMenu(false); setShowManageRoutines(true); } },
+            { icon: "download", label: t("loadRoutineTemplate"), action: () => { setShowGearMenu(false); setShowLoadTemplate(true); } },
+            { icon: "archive", label: t("manageRoutineTemplates"), action: () => { setShowGearMenu(false); setShowManageTemplates(true); } },
             { icon: "refresh", label: t("resetToDefault") || "Reset today", action: () => { setShowGearMenu(false); setShowResetConfirm(true); } },
           ].map((item, i) => (
             <button key={i} onClick={item.action}
@@ -1277,6 +1317,117 @@ export const HomePage = ({
           <RoutineForm routine={editTile} onSave={handleEditSave} onCancel={() => setEditTile(null)} onSaveAsTemplate={handleSaveAsRoutineTemplate}/>
         </BottomSheet>
       )}
+
+      {/* ── #202 Phase 1B: Load template picker ── */}
+      <BottomSheet open={showLoadTemplate} onClose={() => setShowLoadTemplate(false)} title={t("loadRoutineTemplate")}>
+        {routineTemplates.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "30px 20px", color: C.textMuted, fontSize: 13 }}>
+            {t("noRoutineTemplatesYet")}
+          </div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            {routineTemplates.map(tpl => (
+              <button key={tpl.id} onClick={() => handleSelectTemplate(tpl)}
+                style={{
+                  display: "flex", alignItems: "center", gap: 10, padding: "10px 12px",
+                  borderRadius: 8, background: C.surface, border: "none", cursor: "pointer",
+                  textAlign: "left", width: "100%",
+                }}>
+                <Ic n="dumbbell" s={18} c={C.textMuted}/>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 800, fontSize: 13, fontFamily: FONT_DISPLAY, color: C.text,
+                    overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    {tpl.name}
+                  </div>
+                  <div style={{ fontSize: 10, color: C.textMuted, fontFamily: FONT_DISPLAY, marginTop: 2,
+                    textTransform: "uppercase", letterSpacing: 0.5 }}>
+                    {t("routineTemplateRowSubtitle")
+                      .replace("{n}", (tpl.steps || []).length)
+                      .replace("{repeat}", repeatLabel(tpl))}
+                  </div>
+                </div>
+                <Ic n="chevR" s={14} c={C.textMuted}/>
+              </button>
+            ))}
+          </div>
+        )}
+      </BottomSheet>
+
+      {/* ── #202 Phase 1B: Manage templates ── */}
+      <BottomSheet open={showManageTemplates} onClose={() => setShowManageTemplates(false)} title={t("manageRoutineTemplates")}>
+        {routineTemplates.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "30px 20px", color: C.textMuted, fontSize: 13 }}>
+            {t("noRoutineTemplatesYet")}
+          </div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            {routineTemplates.map(tpl => (
+              <div key={tpl.id} style={{
+                display: "flex", alignItems: "center", gap: 10, padding: "10px 12px",
+                borderRadius: 8, background: C.surface,
+              }}>
+                <Ic n="dumbbell" s={18} c={C.textMuted}/>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 800, fontSize: 13, fontFamily: FONT_DISPLAY, color: C.text,
+                    overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    {tpl.name}
+                  </div>
+                  <div style={{ fontSize: 10, color: C.textMuted, fontFamily: FONT_DISPLAY, marginTop: 2,
+                    textTransform: "uppercase", letterSpacing: 0.5 }}>
+                    {t("routineTemplateRowSubtitle")
+                      .replace("{n}", (tpl.steps || []).length)
+                      .replace("{repeat}", repeatLabel(tpl))}
+                  </div>
+                </div>
+                <button onClick={() => { setShowManageTemplates(false); setEditingTemplate(tpl); }}
+                  style={{ width: 32, height: 32, borderRadius: 8, border: `1px solid ${C.border}`,
+                    background: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <Ic n="edit" s={14} c={C.textMuted}/>
+                </button>
+                <button onClick={() => setConfirmDeleteTemplate(tpl)}
+                  style={{ width: 32, height: 32, borderRadius: 8, border: `1px solid ${C.border}`,
+                    background: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <Ic n="trash" s={14} c={C.accent}/>
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </BottomSheet>
+
+      {/* ── #202 Phase 1B: Instantiate routine from template ── */}
+      {instantiatingFromTemplate && (
+        <BottomSheet open={true} onClose={() => setInstantiatingFromTemplate(null)} title={t("createNewRoutine")}>
+          <RoutineForm
+            routine={instantiatingFromTemplate}
+            onSave={(fields) => { handleCreateRoutine(fields); setInstantiatingFromTemplate(null); }}
+            onCancel={() => setInstantiatingFromTemplate(null)}
+          />
+        </BottomSheet>
+      )}
+
+      {/* ── #202 Phase 1B: Edit template ── */}
+      {editingTemplate && (
+        <BottomSheet open={true} onClose={() => setEditingTemplate(null)} title={t("editRoutineTemplate")}>
+          <RoutineForm
+            routine={editingTemplate}
+            onSave={handleSaveTemplateEdit}
+            onCancel={() => setEditingTemplate(null)}
+          />
+        </BottomSheet>
+      )}
+
+      {/* ── #202 Phase 1B: Delete template confirm ── */}
+      {confirmDeleteTemplate && (
+        <ConfirmDialog
+          title={t("confirmDeleteRoutineTemplate")}
+          body={<span style={{ color: C.text, fontWeight: 700 }}>{confirmDeleteTemplate.name}</span>}
+          confirmLabel={t("delete")}
+          onCancel={() => setConfirmDeleteTemplate(null)}
+          onConfirm={() => handleDeleteTemplate(confirmDeleteTemplate)}
+        />
+      )}
+
       {editTile && editTile.type === 'note' && (
         <BottomSheet open={true} onClose={() => setEditTile(null)} title={t("editNote")}>
           <IdeaForm idea={ideas?.find(i => i.id === editTile.id)} onSave={handleEditSave} onCancel={() => setEditTile(null)}/>
