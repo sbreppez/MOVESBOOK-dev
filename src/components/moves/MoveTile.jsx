@@ -54,7 +54,6 @@ export const MoveTile = ({ move, onClick, onEdit: _onEdit, onDelete: _onDelete, 
 
         {/* RIGHT COLUMN — icons + mastery */}
         <div style={{ flexShrink:0, display:"flex", flexDirection:"column", alignItems:"flex-end", gap:4 }}>
-          {/* Icons row: lightbulb + external link + trained circle */}
           <div style={{ display:"flex", alignItems:"center", gap:4 }}>
             {/* Lightbulb — linked note indicator (future feature) */}
             {move.linkedNote && (
