@@ -72,7 +72,9 @@ export const WipHeaderActions = ({
                 ? ["list","all",...(isPremium?["tree"]:[])]
                 : ["list","tiles",...(isPremium?["tree"]:[]),"all"];
               const icons = { list:"list", tiles:"grid", tree:"gitFork", all:"cards" };
-              return <button onClick={()=>setView(modes[(modes.indexOf(view)+1)%modes.length])} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textSec }}><Ic n={icons[view]||"list"} s={16}/></button>;
+              const labelKeys = { list:"list", tiles:"tiles", tree:"treeView", all:"all" };
+              const label = t(labelKeys[view]||"list");
+              return <button onClick={()=>setView(modes[(modes.indexOf(view)+1)%modes.length])} aria-label={label} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.textSec, display:"flex", alignItems:"center" }}><Ic n={icons[view]||"list"} s={16}/><span style={{ fontFamily:FONT_DISPLAY, fontSize:11, letterSpacing:1.5, fontWeight:700, color:C.textSec, marginLeft:6, textTransform:"uppercase" }}>{label}</span></button>;
             })()}
           </>
         )}

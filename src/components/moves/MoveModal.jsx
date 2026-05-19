@@ -442,7 +442,7 @@ export const MoveModal = ({ onClose, onSave, move, initialCat="Footworks", initi
                     <div style={{ display:"flex", gap:4, flexWrap:"wrap", marginBottom:8, paddingRight:24 }}>
                       <button onClick={() => setBasedOnFilter("")}
                         style={chipStyle(!basedOnFilter)}>
-                        {t("all") || "All"}
+                        {t("allCategories") || "All"}
                       </button>
                       {cats.map(c => (
                         <button key={c} onClick={() => setBasedOnFilter(basedOnFilter === c ? "" : c)}
