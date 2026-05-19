@@ -1256,7 +1256,7 @@ export default function App() {
     return moves.filter(m => {
       const last = lastActivityDate(m);
       const lastMs = last ? new Date(last).getTime() : 0;
-      const days = Math.floor((todayMs - lastMs) / 86400000);
+      const days = lastMs ? Math.floor((todayMs - lastMs) / 86400000) : 9999;
       const mult = m.difficulty === "easy" ? 0.7 : m.difficulty === "advanced" ? 1.5 : 1;
       return days >= Math.round(14 * mult);
     }).length;

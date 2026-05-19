@@ -24,12 +24,12 @@ export function lastTrainedDate(move) {
 }
 
 /**
- * Returns the move's most recent activity date — last trained, or if the
- * move has never been trained, when it was created. Null if neither exists.
+ * Returns the date the move was last trained (most recent trainingLog[] entry),
+ * or null if the move has never been trained.
  * Used by staleness / decay / recency readers.
  */
 export function lastActivityDate(move) {
-  return lastTrainedDate(move) || move?.createdAt || null;
+  return lastTrainedDate(move) || null;
 }
 
 /**
