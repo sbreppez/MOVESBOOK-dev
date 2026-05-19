@@ -1,3 +1,7 @@
+> **DEPRECATED.** This document predates the `trainingLog[]` schema migration. The query rules in §1 and §2.1, and the limitation described in §8.2, reference an obsolete `move.date === today` model that is no longer how the system records training. Kept for design-history reference only. Current implementation lives in `src/utils/trainingLog.js` and its consumers.
+
+---
+
 # MovesBook — Log Today v1 — Step 3 Addendum
 
 **Status:** Step 3 design locked. Code not yet written. **Flow inventory pass resolved** (see §7).
