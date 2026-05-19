@@ -60,7 +60,7 @@ export const CategoryGrid = ({
             </div>
           )}
 
-          <div style={{ marginBottom: view !== "tiles" ? 6 : 0, flex: 1 }}>
+          <div style={{ flex: 1 }}>
             <CatTile
               name={cat}
               color={catColors[cat] || C.accent}
