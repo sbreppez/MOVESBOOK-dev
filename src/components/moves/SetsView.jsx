@@ -193,7 +193,7 @@ export const SetsView = ({
         <div>
           {sets.map((s, idx) => {
             const sColor = s.color || C.blue;
-            const isExp = expSets[s.id] !== false;
+            const isExp = expSets[s.id] === true;
             return (
               <div
                 key={s.id}
@@ -229,13 +229,6 @@ export const SetsView = ({
                       fontFamily: FONT_DISPLAY, letterSpacing: 0.5,
                       overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
                     }}>{s.name}</div>
-                    <div style={{
-                      fontSize: 11, color: C.textMuted, marginTop: 1,
-                      overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-                    }}>
-                      {moveCountStr((s.moveIds || []).length)}
-                      {s.details ? ` · ${s.details}` : s.notes ? ` · ${s.notes}` : ""}
-                    </div>
                   </div>
                   {showMastery && (
                     <div style={{
@@ -304,12 +297,6 @@ export const SetsView = ({
                     borderTop: `1px solid ${C.borderLight}`,
                     padding: "8px 12px 10px 36px",
                   }}>
-                    {s.details && (
-                      <div style={{
-                        fontSize: 11, color: C.textSec, lineHeight: 1.5,
-                        marginBottom: 8, fontStyle: "italic",
-                      }}>{s.details}</div>
-                    )}
                     {(s.moveIds || []).length > 0 ? (s.moveIds || []).map(mid => {
                       const m = moves.find(mv => mv.id === mid);
                       if (!m) return null;
