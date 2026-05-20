@@ -4,7 +4,6 @@ import { FONT_DISPLAY } from '../../constants/fonts';
 import { Ic } from '../shared/Ic';
 import { useT } from '../../hooks/useTranslation';
 import { CAT_COLORS } from '../../constants/categories';
-import { computeDecay, showDecayArrow } from '../../utils/masteryDecay';
 import { todayLocal } from '../../utils/dateUtils';
 import { lastActivityDate } from '../../utils/trainingLog';
 
@@ -109,7 +108,6 @@ export const GAPTab = ({ moves, catColors=CAT_COLORS, onDrill, settings={} }) =>
         <div style={{ display:"flex", flexDirection:"column", gap:6, padding:"10px 16px" }}>
           {staleMoves.map(m => {
             const catCol = catColors[m.category] || C.accent;
-            const { displayMastery } = computeDecay(m, settings.decaySensitivity);
             return (
               <div key={m.id} style={{ background:C.surface, border:"none", borderRadius:8,
                 borderLeft:`4px solid ${catCol}`, padding:"14px 16px 13px 16px" }}>
@@ -155,13 +153,6 @@ export const GAPTab = ({ moves, catColors=CAT_COLORS, onDrill, settings={} }) =>
                         borderRadius:4, padding:"1px 6px", background:C.surfaceAlt, color:C.textSec }}>
                         {t("difficulty_"+m.difficulty)}
                       </span>
-                    )}
-                    <div style={{ width:36, height:3, borderRadius:2, background:C.border }}>
-                      <div style={{ height:"100%", width:`${displayMastery}%`, borderRadius:2, background:catCol }}/>
-                    </div>
-                    <span style={{ fontSize:11, color:catCol, fontWeight:700, fontFamily:FONT_DISPLAY }}>{displayMastery}%</span>
-                    {showDecayArrow(m, settings.decaySensitivity) && (
-                      <span style={{ fontSize:10, color:catCol, marginLeft:2 }}>▼</span>
                     )}
                   </div>
                 </div>
