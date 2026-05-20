@@ -138,7 +138,7 @@ export const computeMonthlyReport = (year, month, data) => {
   const staleThreshold = addDays(monthEnd, -30);
   const staleCount = (moves || []).filter(m => {
     const md = lastActivityDate(m);
-    return md && md < staleThreshold;
+    return !md || md < staleThreshold;
   }).length;
 
   // Sparring frequency
