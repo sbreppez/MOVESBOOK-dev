@@ -952,9 +952,10 @@ const BattleCard = ({ plan, precomputedDayMap, precomputedPhaseSummary, isExpand
                 const complete = isDayComplete(ds);
                 const isOverridden = !!(plan.phaseOverrides || {})[ds];
                 const dateLabel = new Date(ds + "T00:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+                const isRest = info.type === "rest" || info.type === "mandatory_rest";
                 return (
                   <div key={ds}>
-                    <button onClick={() => onSelectDay(ds)} style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "9px 6px", background: isSel ? C.surfaceAlt : "transparent", border: "none", cursor: "pointer", textAlign: "left" }}>
+                    <button onClick={() => onSelectDay(ds)} style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "9px 6px", background: isSel ? C.surfaceAlt : "transparent", border: "none", cursor: "pointer", textAlign: "left", opacity: isRest ? 0.45 : 1 }}>
                       <div style={{ width: 7, height: 7, borderRadius: "50%", background: info.phaseColor, flexShrink: 0 }} />
                       <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: isToday ? C.accent : C.text, minWidth: 85 }}>{dateLabel}</span>
                       <span style={{ fontSize: 8, fontFamily: FONT_DISPLAY, fontWeight: 700, background: `${info.phaseColor}20`, color: info.phaseColor, borderRadius: 4, padding: "1px 5px", letterSpacing: 0.5 }}>
