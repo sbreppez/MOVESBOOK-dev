@@ -134,58 +134,65 @@ export const MoveTree = ({ moves, catColors, onEdit, settings: _settings = {} })
         </div>
       )}
 
-      {/* CONNECTED section */}
-      {trees.length > 0 && (
-        <div style={{ marginBottom: 16 }}>
-          <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: C.textMuted,
-            letterSpacing: 1, marginBottom: 8, textTransform: "uppercase" }}>
-            {t("connected")}
-          </div>
-          {trees.map(tree => (
-            <TreeNode key={tree.move.id} node={tree} depth={0} catColors={catColors}
-              onEdit={onEdit} collapsed={collapsed} toggleCollapse={toggleCollapse} isLast />
-          ))}
+      {/* Categories — trees + standalones merged under one heading per category */}
+      {(() => {
+        const treesByCat = trees.reduce((acc, tree) => {
+          const cat = tree.move.category || 'Uncategorized';
+          (acc[cat] ||= []).push(tree);
+          return acc;
+        }, {});
+        const standaloneByCat = standalone.reduce((acc, m) => {
+          const cat = m.category || 'Uncategorized';
+          (acc[cat] ||= []).push(m);
+          return acc;
+        }, {});
+        const ordered = Object.keys(catColors).filter(c => treesByCat[c] || standaloneByCat[c]);
+        const extras = [...new Set([...Object.keys(treesByCat), ...Object.keys(standaloneByCat)])]
+          .filter(c => !ordered.includes(c));
+        return [...ordered, ...extras].map(category => {
+          const cTrees = treesByCat[category] || [];
+          const cStandalones = standaloneByCat[category] || [];
+          return (
+            <React.Fragment key={category}>
+              <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 10,
+                color: catColors[category] || C.textMuted, letterSpacing: 1,
+                marginTop: 12, marginBottom: 6, textTransform: "uppercase" }}>
+                {category}
+              </div>
+              {cTrees.map(tree => (
+                <TreeNode key={tree.move.id} node={tree} depth={0} catColors={catColors}
+                  onEdit={onEdit} collapsed={collapsed} toggleCollapse={toggleCollapse} isLast />
+              ))}
+              {cStandalones.map(m => {
+                const catCol = catColors[m.category] || C.accent;
+                return (
+                  <div key={m.id} onClick={() => onEdit(m)}
+                    style={{ display: "flex", alignItems: "center", gap: 8, background: C.surface,
+                      borderLeft: `4px solid ${catCol}`,
+                      borderRadius: 8, padding: "10px 14px", cursor: "pointer", marginBottom: 6 }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontWeight: 700, fontSize: 14, color: C.text, fontFamily: FONT_DISPLAY,
+                        overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {m.name}
+                      </div>
+                    </div>
+                    <span style={{ fontSize: 11, fontWeight: 700, color: masteryColor(m.mastery || 0), flexShrink: 0 }}>
+                      {m.mastery || 0}%
+                    </span>
+                    <Ic n="edit" s={14} c={C.textMuted} />
+                  </div>
+                );
+              })}
+            </React.Fragment>
+          );
+        });
+      })()}
+      {moves.length === 0 && (
+        <div style={{ textAlign: "center", padding: 40, color: C.textMuted }}>
+          <div style={{ marginBottom: 8 }}><Ic n="tree" s={28} c={C.textMuted}/></div>
+          <p style={{ fontSize: 13 }}>No moves yet</p>
         </div>
       )}
-
-      {/* STANDALONE section */}
-      <div>
-        <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: C.textMuted,
-          letterSpacing: 1, marginBottom: 8, textTransform: "uppercase" }}>
-          {t("standalone")} — {standalone.length} {t("moves").toLowerCase()}
-        </div>
-        {trees.length === 0 && standalone.length > 0 && (
-          <div style={{ fontSize: 13, color: C.textMuted, marginBottom: 12, lineHeight: 1.5, fontStyle: "italic" }}>
-            {t("noConnectionsYet")}
-          </div>
-        )}
-        {standalone.map(m => {
-          const catCol = catColors[m.category] || C.accent;
-          return (
-            <div key={m.id} onClick={() => onEdit(m)}
-              style={{ display: "flex", alignItems: "center", gap: 8, background: C.surface,
-                borderLeft: `4px solid ${catCol}`,
-                borderRadius: 8, padding: "10px 14px", cursor: "pointer", marginBottom: 6 }}>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontWeight: 700, fontSize: 14, color: C.text, fontFamily: FONT_DISPLAY,
-                  overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                  {m.name}
-                </div>
-              </div>
-              <span style={{ fontSize: 11, fontWeight: 700, color: masteryColor(m.mastery || 0), flexShrink: 0 }}>
-                {m.mastery || 0}%
-              </span>
-              <Ic n="edit" s={14} c={C.textMuted} />
-            </div>
-          );
-        })}
-        {moves.length === 0 && (
-          <div style={{ textAlign: "center", padding: 40, color: C.textMuted }}>
-            <div style={{ marginBottom: 8 }}><Ic n="tree" s={28} c={C.textMuted}/></div>
-            <p style={{ fontSize: 13 }}>No moves yet</p>
-          </div>
-        )}
-      </div>
     </div>
   );
 };
