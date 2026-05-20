@@ -86,7 +86,10 @@ firebase.initializeApp({
         return _fbDb.collection('users').doc(uid).set(obj, { merge: true });
       },
       subscribe: function(uid, cb) {
-        return _fbDb.collection('users').doc(uid).onSnapshot(function(s){ if(s.exists) cb(s.data()); });
+        return _fbDb.collection('users').doc(uid).onSnapshot(
+          function(s){ if(s.exists) cb(s.data()); },
+          function(err){ console.error('[MB] user-doc subscribe error:', err && err.code, err && err.message, err); }
+        );
       },
       loadDoc: function(collection, docId) {
         return _fbDb.collection(collection).doc(docId).get().then(function(s){ return s.exists ? s.data() : null; });
