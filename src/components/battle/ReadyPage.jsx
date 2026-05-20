@@ -663,7 +663,7 @@ export const ReadyPage = ({ moves, sets, setSets, rounds, setRounds, settings={}
 
 
   // ── Sub-tab bar ──────────────────────────────────────────────────────────────
-  const subTabs = [["plan",t("plan")],["prep",t("prep")],["freestyle",t("freestyle")],["rivals",t("rivals")]];
+  const subTabs = [["prep",t("prep")],["plan",t("plan")],["freestyle",t("freestyle")],["rivals",t("rivals")]];
 
   return (
     <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column", position:"relative" }}>
